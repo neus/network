@@ -1,0 +1,53 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.neus.network/verifiers/nft-ownership/v1.0.0",
+  "title": "NFT Ownership Verifier Schema",
+  "description": "Schema for NFT ownership verification",
+  "type": "object",
+  "required": ["ownerAddress", "contractAddress", "tokenId", "chainId"],
+  "properties": {
+    "ownerAddress": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Wallet address that should own the NFT"
+    },
+    "contractAddress": {
+      "type": "string", 
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "NFT contract address on specified chain"
+    },
+    "tokenId": {
+      "type": "string",
+      "description": "Specific token ID to verify ownership of",
+      "pattern": "^[0-9]+$"
+    },
+    "chainId": {
+      "type": "integer",
+      "description": "Mainnet chain ID for asset verification",
+      "enum": [1, 137, 42161, 10, 8453]
+    },
+    "tokenType": {
+      "type": "string",
+      "enum": ["erc721", "erc1155"],
+      "default": "erc721",
+      "description": "NFT standard type"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "ownerAddress": "0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db",
+      "contractAddress": "0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D",
+      "tokenId": "1234",
+      "chainId": 1,
+      "tokenType": "erc721"
+    },
+    {
+      "ownerAddress": "0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db", 
+      "contractAddress": "0x76BE3b62873462d2142405439777e971754E8E77",
+      "tokenId": "5678",
+      "chainId": 137,
+      "tokenType": "erc1155"
+    }
+  ]
+}

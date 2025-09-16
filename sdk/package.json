@@ -1,0 +1,75 @@
+{
+  "name": "@neus/sdk",
+  "version": "1.0.0",
+  "description": "NEUS SDK - Create and verify cryptographic proofs with a simple, clean API",
+  "main": "index.js",
+  "type": "module",
+  "types": "types.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types.d.ts",
+      "import": "./index.js",
+      "require": "./index.js"
+    },
+    "./client": "./client.js",
+    "./utils": "./utils.js",
+    "./errors": "./errors.js"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint *.js",
+    "format": "prettier --write \"**/*.js\"",
+    "prepublishOnly": "cross-env NEUS_SDK_LIVE_TESTS=false npm run lint && npm test"
+  },
+  "keywords": [
+    "verification",
+    "cryptographic-proofs",
+    "identity",
+    "authentication",
+    "blockchain",
+    "cross-chain",
+    "web3",
+    "passwordless",
+    "universal-protocol"
+  ],
+  "author": "NEUS Network",
+  "license": "Apache-2.0",
+  "publishConfig": { "access": "public" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neus/network.git",
+    "directory": "sdk"
+  },
+  "bugs": {
+    "url": "https://github.com/neus/network/issues"
+  },
+  "homepage": "https://neus.network",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "ethers": "^6.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.2.0",
+    "@vitest/coverage-v8": "^1.2.0",
+    "eslint": "^8.56.0",
+    "prettier": "^3.2.0",
+    "cross-env": "^7.0.3",
+    "ethers": "^6.0.0"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "utils.js",
+    "errors.js",
+    "types.d.ts",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md"
+  ]
+}

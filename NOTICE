@@ -1,0 +1,17 @@
+NEUS Network
+Copyright 2025 NEUS Network, Inc.
+
+This repository contains components under different licenses:
+
+- Smart Contracts (contracts/): Business Source License 1.1
+- SDK and Tools (sdk/, widgets/, docs/, examples/, abis/): Apache License 2.0
+
+For complete licensing information, see the LICENSE files in this repository (e.g., `LICENSE`, `contracts/LICENSE`, `sdk/LICENSE`).
+
+This project includes the following third-party components:
+- Ethers.js (MIT License)
+- React (MIT License)
+- Vitest (MIT License)
+- Other dependencies as listed in package.json files
+
+For full license information, see individual LICENSE files and package.json dependency listings.

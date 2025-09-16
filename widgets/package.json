@@ -1,0 +1,76 @@
+{
+  "name": "@neus/widgets",
+  "version": "1.0.0",
+  "description": "NEUS React Widgets - Drop-in verification components for React applications",
+  "main": "index.js",
+  "type": "module",
+  "types": "types.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types.d.ts",
+      "import": "./index.js",
+      "require": "./index.js"
+    },
+    "./verify-gate": "./verify-gate/index.js"
+  },
+  "sideEffects": false,
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint verify-gate/*.jsx index.js --ext .js,.jsx",
+    "format": "prettier --write \"**/*.{js,jsx}\"",
+    "build": "npm run build:components",
+    "build:components": "esbuild verify-gate/VerifyGate.jsx verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=verify-gate/dist --jsx=automatic --sourcemap --legal-comments=none --external:react --external:react-dom --external:@neus/sdk --external:react/jsx-runtime",
+    "prepublishOnly": "npm run lint && npm test && npm run build"
+  },
+  "keywords": [
+    "neus",
+    "verification",
+    "react",
+    "components",
+    "widgets",
+    "cryptographic-proofs",
+    "authentication",
+    "web3"
+  ],
+  "author": "NEUS Network",
+  "license": "Apache-2.0",
+  "publishConfig": { "access": "public" },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neus/network.git",
+    "directory": "widgets"
+  },
+  "bugs": {
+    "url": "https://github.com/neus/network/issues"
+  },
+  "homepage": "https://neus.network",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@neus/sdk": "^1.0.0"
+  },
+  "peerDependencies": {
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.2.0",
+    "@vitest/coverage-v8": "^1.2.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-react": "^7.34.0",
+    "prettier": "^3.2.0",
+    "esbuild": "^0.20.2"
+  },
+  "files": [
+    "index.js",
+    "types.d.ts",
+    "README.md",
+    "LICENSE",
+    "verify-gate/index.js",
+    "verify-gate/dist/**",
+    "verify-gate/VerifyGate.jsx",
+    "verify-gate/ProofBadge.jsx"
+  ]
+}

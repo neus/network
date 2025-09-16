@@ -1,0 +1,13 @@
+{
+  "name": "neus-safe-wallet-example",
+  "version": "1.0.0",
+  "description": "Safe wallet example for NEUS Network verification",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": ["neus", "verification", "safe", "eip-1271", "eip-6492"],
+  "author": "NEUS Network",
+  "license": "Apache-2.0"
+}

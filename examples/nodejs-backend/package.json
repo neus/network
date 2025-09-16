@@ -1,0 +1,19 @@
+{
+  "name": "neus-nodejs-backend-example",
+  "version": "1.0.0",
+  "description": "Node.js backend integration with NEUS verification",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@neus/sdk": "^1.0.0",
+    "express": "^4.18.0",
+    "ethers": "^6.0.0"
+  },
+  "keywords": ["neus", "verification", "nodejs", "backend", "api"],
+  "author": "NEUS Network", 
+  "license": "Apache-2.0"
+}

@@ -1,0 +1,55 @@
+# Test files
+test/
+*.test.js
+vitest.config.js
+coverage/
+
+# Development files
+.eslintrc.json
+.prettierrc
+publish.sh
+
+# Source control
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+
+# Documentation source
+docs/
+backup-docs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Keep these
+!index.js
+!client.js
+!utils.js
+!errors.js
+!types.d.ts
+!README.md
+!LICENSE
+!SECURITY.md
+!widgets/

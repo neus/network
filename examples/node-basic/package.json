@@ -1,0 +1,16 @@
+{
+  "name": "neus-node-basic-example",
+  "version": "1.0.0",
+  "description": "Basic Node.js example for NEUS Network verification",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "ethers": "^6.0.0"
+  },
+  "keywords": ["neus", "verification", "example"],
+  "author": "NEUS Network",
+  "license": "Apache-2.0"
+}

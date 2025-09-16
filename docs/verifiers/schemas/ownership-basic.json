@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://schemas.neus.network/verifiers/ownership-basic/v1.0.0",
+  "title": "Ownership Basic Verifier Schema",
+  "description": "Schema for basic content ownership verification",
+  "type": "object",
+  "required": ["content", "owner", "reference"],
+  "properties": {
+    "content": {
+      "type": "string",
+      "description": "The content being claimed for ownership",
+      "minLength": 1,
+      "maxLength": 10000
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Wallet address of the content owner"
+    },
+    "reference": {
+      "type": "object",
+      "description": "Reference to external content",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["ethereum-tx", "on-chain-tx", "ipfs-hash", "url", "other"],
+          "description": "Type of reference"
+        },
+        "id": {
+          "type": "string",
+          "description": "Reference identifier",
+          "maxLength": 500
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional title",
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string", 
+          "description": "Optional description",
+          "maxLength": 1000
+        }
+      },
+      "required": ["type", "id"],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "content": "This is my original article content",
+      "owner": "0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db",
+      "reference": {
+        "type": "url",
+        "id": "https://example.com/my-article"
+      }
+    },
+    {
+      "content": "My creative work",
+      "owner": "0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db",
+      "reference": {
+        "type": "ipfs-hash",
+        "id": "QmXn8A9K2L5m7P3q4R6s8T1u9V0w2X4y5Z7a8B9c0D1e2",
+        "title": "My Creative Project"
+      }
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+Business Source License 1.1
+
+License text copyright (c) 2017 MariaDB Corporation Ab, All Rights Reserved.
+"Business Source License" is a trademark of MariaDB Corporation Ab.
+
+Parameters
+
+Licensor:             NEUS Network, Inc.
+Licensed Work:        NEUS Network Smart Contracts v1.0.0
+                      The Licensed Work is (c) 2024-2025 NEUS Network, Inc.
+
+Change Date:          August 1, 2028
+
+Change License:       Apache 2.0
+
+For information about alternative licensing arrangements for the Licensed Work,
+please visit: https://neus.network or contact legal@neus.network
+
+Notice
+
+The Business Source License (this document) is not an Open Source license.
+However, the Licensed Work will eventually be made available under an Open
+Source License, as stated in this License.
+
+License text:
+
+Permission is hereby granted to any person obtaining a copy of this software and
+associated documentation files (the "Software"), to deal in the Software without
+restriction, including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+
+1. The Software may be used for any purpose, including commercial use, but may
+   not be used to create a service that competes directly with the Licensed Work
+   or any other NEUS Network offerings.
+
+   Additional Use Grant: Applications, SDKs, audits, testing, and integration
+   with the Licensed Work are expressly permitted and encouraged. Users may
+   not operate competing core verification networks before the Change Date.
+
+2. The above copyright notice and this permission notice shall be included in all
+   copies or substantial portions of the Software.
+
+3. On the Change Date, or the fourth anniversary of the first publicly available
+   distribution of this version of the Software, whichever comes first, the 
+   License will be changed to the Change License.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+---
+
+## NEUS Network Contracts - Protected Infrastructure
+
+This license applies to the core NEUS protocol smart contracts that form the 
+foundation of the decentralized verification infrastructure:
+
+### Covered Components:
+- **NEUSVerifierRegistry.sol** - Core registry for verification management
+- **INEUSVerifierRegistry.sol** - Registry interface definition
+- **NEUSVoucherHub.sol** - Cross-chain verification hub
+- **NEUSVoucherSpoke.sol** - Cross-chain verification spoke contracts
+- **IVoucherHub.sol** - Voucher hub interface
+- **NEUSToken.sol** - Protocol governance and fee token
+
+### Strategic Purpose:
+These contracts represent the core infrastructure of the NEUS protocol and are
+protected under BSL 1.1 to ensure:
+
+1. **Sustainable Development** - Protocol operation supports continued development
+2. **Quality Control** - Prevents premature forks that could fragment the ecosystem
+3. **IP Protection** - Protects novel verification patterns and cross-chain architecture
+4. **Open Source Path** - Clear conversion timeline to Apache 2.0
+
+### Usage Rights:
+- YES: **Deploy and use** for verification purposes
+- YES: **Study and modify** the code for learning
+- YES: **Build applications** that interact with the protocol
+- NO: **Create competing** NEUS Network services
+
+### Conversion Timeline:
+- **Automatic**: August 1, 2028 → converts to Apache 2.0 License
+- **Early Conversion**: May be triggered by NEUS Network, Inc. governance processes
+- **Conditions**: Non-competing use allowed during protection period
+
+### Related Open Source Components:
+- **NEUS SDK** (`@neus/sdk`) - Apache 2.0 licensed client library
+- **Documentation** - Apache 2.0 licensed guides and API references
+- **OpenAPI Specifications** - Apache 2.0 licensed API documentation
+
+For SDK integration and development tools, see: https://github.com/neus/network
+
+This Business Source License 1.1 protects the NEUS Network protocol infrastructure 
+while ensuring the software will become fully open source under Apache 2.0 license 
+on August 1, 2028 or earlier if triggered by NEUS Network, Inc.

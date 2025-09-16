@@ -1,0 +1,764 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "NEUS Network API",
+    "version": "1.0.0",
+    "description": "# NEUS Network API\n\n**HTTP API for verification proof creation and status checking.**\n\n## Available Verifiers\n- `ownership-basic` - Content ownership verification\n- `nft-ownership` - NFT ownership verification\n- `token-holding` - Token balance verification  \n- `ownership-licensed` - Licensed content verification\n\n## Authentication\n- **EIP-191 signatures** - Sign with your wallet\n- **No API keys** - Wallet signature serves as authentication\n- **Replay protection** - 5-minute signature validity\n\n## Network Configuration\n- **Hub**: Base Sepolia (84532) - All verification processing\n- **Asset Verification**: Uses real mainnet data for ownership checks\n- **Proof Storage**: Optional cross-chain storage on testnet networks\n\n**Important**: Do not include hub chain (84532) in targetChains!",
+    "contact": {
+      "name": "NEUS Network",
+      "url": "https://neus.network",
+      "email": "dev@neus.network"
+    },
+    "license": {
+      "name": "Apache-2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.neus.network",
+      "description": "NEUS Network API"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "WalletAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "EIP-191",
+        "description": "EIP-191 wallet signature authentication"
+      }
+    },
+    "schemas": {
+      "VerificationRequest": {
+        "type": "object",
+        "required": [
+          "verifierIds",
+          "data",
+          "walletAddress",
+          "signature",
+          "signedTimestamp"
+        ],
+        "properties": {
+          "verifierIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "ownership-basic"
+            ],
+            "description": "Array of verifier IDs to execute"
+          },
+          "data": {
+            "type": "object",
+            "description": "Verification data (verifier-specific)",
+            "example": {
+              "content": "Hello NEUS",
+              "owner": "0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db"
+            }
+          },
+          "walletAddress": {
+            "type": "string",
+            "pattern": "^0x[a-fA-F0-9]{40}$",
+            "example": "0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db"
+          },
+          "signature": {
+            "type": "string",
+            "pattern": "^0x[a-fA-F0-9]+$",
+            "example": "0x1234567890abcdef..."
+          },
+          "signedTimestamp": {
+            "type": "number",
+            "example": 1678886400000,
+            "description": "Unix timestamp in milliseconds"
+          },
+          "chainId": {
+            "type": "integer",
+            "example": 84532,
+            "description": "Chain ID for signature context"
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "privacyLevel": {
+                "type": "string",
+                "enum": [
+                  "private",
+                  "public"
+                ],
+                "default": "private"
+              },
+              "targetChains": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                },
+                "example": [
+                  11155111
+                ],
+                "description": "Testnet chains for proof storage: 11155111, 80002, 421614, 11155420"
+              },
+              "enableIpfs": {
+                "type": "boolean",
+                "default": false
+              },
+              "publicDisplay": {
+                "type": "boolean",
+                "default": false,
+                "description": "Enable social previews and public UI display (requires privacyLevel=public)"
+              },
+              "storeOriginalContent": {
+                "type": "boolean",
+                "default": false,
+                "description": "Store original content (enables public access when combined with privacyLevel=public)"
+              },
+              "forceZK": {
+                "type": "boolean",
+                "default": false
+              },
+              "meta": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true
+          },
+          "data": {
+            "type": "object"
+          },
+          "status": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "number"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "example": "VALIDATION_ERROR"
+              },
+              "message": {
+                "type": "string",
+                "example": "Invalid input"
+              },
+              "type": {
+                "type": "string",
+                "example": "ValidationError"
+              }
+            }
+          },
+          "timestamp": {
+            "type": "number"
+          }
+        }
+      },
+      "VerificationResult": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "example": "verified"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "qHash": {
+                "type": "string",
+                "example": "0xabcdef..."
+              },
+              "status": {
+                "type": "string"
+              },
+              "walletAddress": {
+                "type": "string"
+              },
+              "verifierIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "verifiedVerifiers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "verifierId": {
+                      "type": "string"
+                    },
+                    "verified": {
+                      "type": "boolean"
+                    },
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              },
+              "options": {
+                "type": "object"
+              },
+              "createdAt": {
+                "type": "number"
+              },
+              "lastUpdated": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/v1/health": {
+      "get": {
+        "summary": "API health check",
+        "description": "Check if the API is operational",
+        "responses": {
+          "200": {
+            "description": "API is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/verification": {
+      "post": {
+        "summary": "Submit verification request",
+        "description": "Create cryptographic proof of ownership, assets, or credentials",
+        "security": [
+          {
+            "WalletAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification completed immediately",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationResult"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Verification accepted for async processing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "processing_verifiers"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Verification accepted for processing"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "qHash": {
+                          "type": "string"
+                        },
+                        "statusUrl": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid signature",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/verification/status/{qHash}": {
+      "get": {
+        "summary": "Get verification status",
+        "description": "Check status of a verification by qHash",
+        "parameters": [
+          {
+            "name": "qHash",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^0x[a-fA-F0-9]{64}$"
+            },
+            "example": "0x57ef6af456233537b63a9afe43dedd02b17d00e0a94b764cf96115bce5260329"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Status retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerificationResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Proof not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/verification/verifiers": {
+      "get": {
+        "summary": "List available verifiers",
+        "description": "Get list of public verifier IDs",
+        "responses": {
+          "200": {
+            "description": "Verifiers retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "ownership-basic",
+                        "nft-ownership",
+                        "token-holding",
+                        "ownership-licensed"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/proofs/byWallet/{address}": {
+      "get": {
+        "summary": "Get proofs by wallet",
+        "description": "Retrieve verification proofs for a wallet address",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^0x[a-fA-F0-9]{40}$"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Proofs retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/proofs/recent": {
+      "get": {
+        "summary": "Get recent proofs",
+        "description": "Get recently created public proofs",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Recent proofs retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/proofs/{qHash}/revoke-self": {
+      "post": {
+        "summary": "Revoke your own proof",
+        "description": "Revoke a proof you own using wallet signature",
+        "security": [
+          {
+            "WalletAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "qHash",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^0x[a-fA-F0-9]{64}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "walletAddress",
+                  "signature",
+                  "signedTimestamp"
+                ],
+                "properties": {
+                  "walletAddress": {
+                    "type": "string",
+                    "pattern": "^0x[a-fA-F0-9]{40}$"
+                  },
+                  "signature": {
+                    "type": "string"
+                  },
+                  "signedTimestamp": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Proof revoked successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuccessResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid signature",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Not proof owner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/verification/standardize": {
+      "post": {
+        "summary": "Build Standard Signing String",
+        "description": "Get exact string to sign for verification (helper)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "walletAddress",
+                  "verifierIds",
+                  "data",
+                  "signedTimestamp"
+                ],
+                "properties": {
+                  "walletAddress": {
+                    "type": "string",
+                    "pattern": "^0x[a-fA-F0-9]{40}$"
+                  },
+                  "verifierIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "data": {
+                    "type": "object"
+                  },
+                  "signedTimestamp": {
+                    "type": "integer",
+                    "description": "Unix timestamp in milliseconds"
+                  },
+                  "chainId": {
+                    "type": "integer",
+                    "default": 84532
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Signing string generated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "signerString": {
+                          "type": "string",
+                          "description": "Exact string to sign with wallet"
+                        },
+                        "bodyPreview": {
+                          "type": "object",
+                          "description": "Preview of normalized inputs"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/verification/diagnose": {
+      "post": {
+        "summary": "Diagnose signature issues",
+        "description": "Debug verification request failures",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "walletAddress",
+                  "verifierIds",
+                  "data",
+                  "signedTimestamp",
+                  "signature"
+                ],
+                "properties": {
+                  "walletAddress": {
+                    "type": "string",
+                    "pattern": "^0x[a-fA-F0-9]{40}$"
+                  },
+                  "verifierIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "data": {
+                    "type": "object"
+                  },
+                  "signedTimestamp": {
+                    "type": "integer"
+                  },
+                  "signature": {
+                    "type": "string"
+                  },
+                  "signedMessage": {
+                    "type": "string",
+                    "description": "Optional - exact string you signed"
+                  },
+                  "chainId": {
+                    "type": "integer",
+                    "default": 84532
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Diagnosis completed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "serverSignerString": {
+                          "type": "string"
+                        },
+                        "reason": {
+                          "type": "string",
+                          "enum": [
+                            "signature_valid",
+                            "data_mismatch",
+                            "timestamp_stale",
+                            "wallet_mismatch",
+                            "bad_signature"
+                          ]
+                        },
+                        "diagnosis": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
