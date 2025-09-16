@@ -19,9 +19,10 @@
     "test:coverage": "vitest --coverage",
     "lint": "eslint verify-gate/*.jsx index.js --ext .js,.jsx",
     "format": "prettier --write \"**/*.{js,jsx}\"",
-    "build": "npm run build:components",
-    "build:components": "esbuild verify-gate/VerifyGate.jsx verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=verify-gate/dist --jsx=automatic --sourcemap --legal-comments=none --external:react --external:react-dom --external:@neus/sdk --external:react/jsx-runtime",
-    "prepublishOnly": "npm run lint && npm test && npm run build"
+    "build": "npm run build:prod",
+    "build:dev": "esbuild verify-gate/VerifyGate.jsx verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=verify-gate/dist --jsx=automatic --sourcemap --legal-comments=none --external:react --external:react-dom --external:@neus/sdk --external:react/jsx-runtime",
+    "build:prod": "esbuild verify-gate/VerifyGate.jsx verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=verify-gate/dist --jsx=automatic --legal-comments=none --external:react --external:react-dom --external:@neus/sdk --external:react/jsx-runtime",
+    "prepublishOnly": "npm run lint && npm test && npm run build:prod"
   },
   "keywords": [
     "neus",
@@ -48,12 +49,10 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "dependencies": {
-    "@neus/sdk": "^1.0.0"
-  },
   "peerDependencies": {
     "react": ">=17.0.0",
-    "react-dom": ">=17.0.0"
+    "react-dom": ">=17.0.0",
+    "@neus/sdk": "^1.0.0"
   },
   "devDependencies": {
     "vitest": "^1.2.0",
@@ -69,8 +68,6 @@
     "README.md",
     "LICENSE",
     "verify-gate/index.js",
-    "verify-gate/dist/**",
-    "verify-gate/VerifyGate.jsx",
-    "verify-gate/ProofBadge.jsx"
+    "verify-gate/dist/*.js"
   ]
 }

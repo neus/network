@@ -2,27 +2,82 @@ name: release
 on:
   push:
     tags: ['v*']
+
 permissions:
   contents: read
-  id-token: write
+  id-token: write   # required for npm provenance
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: 20
+  NPM_REGISTRY: https://registry.npmjs.org
+
 jobs:
-  publish:
+  publish_sdk:
+    if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v') && github.repository_owner == 'neus'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        pkg: [ sdk, widgets ]
     defaults:
       run:
-        working-directory: ${{ github.workspace }}/${{ matrix.pkg }}
+        working-directory: sdk
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
-          registry-url: https://registry.npmjs.org
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_REGISTRY }}
+          cache: 'npm'
+      # Ensure package.json version matches the tag (vX.Y.Z)
+      - name: Verify version matches tag
+        run: node -e "const v=require('./package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(`package.json ${v} != tag ${t}`);process.exit(1)}"
       - run: npm ci || npm install
+      - run: npm run lint || echo "no lint"
+      - run: npm test --silent || echo "no tests"
+      - name: Production audit (high severity)
+        run: npm audit --omit=dev --audit-level=high || echo "audit warnings"
+      - run: npm pack --dry-run
       - run: npm run build || echo "no build"
-      - run: npm publish --access public --provenance
+      - name: Publish @neus/sdk
+        run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+  publish_widgets:
+    needs: publish_sdk
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: widgets
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_REGISTRY }}
+          cache: 'npm'
+      # (Optional) ensure widgets version matches tag
+      - name: Verify version matches tag
+        run: node -e "const v=require('./package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(`package.json ${v} != tag ${t}`);process.exit(1)}"
+      # Wait until the just-published SDK is visible on npm (registry propagation)
+      - name: Wait for @neus/sdk to be available
+        run: |
+          TAG=${GITHUB_REF_NAME#v}
+          for i in {1..10}; do
+            npm view @neus/sdk@${TAG} version && exit 0
+            echo "SDK ${TAG} not visible yet; retrying..."
+            sleep 6
+          done
+          echo "SDK ${TAG} not found on npm after retries"; exit 1
+      - run: npm ci || npm install
+      - run: npm run lint || echo "no lint"
+      - run: npm test --silent || echo "no tests"
+      - name: Production audit (high severity)
+        run: npm audit --omit=dev --audit-level=high || echo "audit warnings"
+      - run: npm pack --dry-run
+      - run: npm run build || echo "no build"
+      - name: Publish @neus/widgets
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

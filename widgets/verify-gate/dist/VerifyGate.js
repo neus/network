@@ -199,4 +199,3 @@ function VerifyGate({
 export {
   VerifyGate
 };
-//# sourceMappingURL=VerifyGate.js.map

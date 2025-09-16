@@ -141,4 +141,3 @@ export {
   NeusPillLink,
   ProofBadge
 };
-//# sourceMappingURL=ProofBadge.js.map

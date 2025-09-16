@@ -3,25 +3,46 @@ on:
   pull_request:
     paths: ['sdk/**','widgets/**','.github/workflows/**']
   push:
-    branches: [ main ]
+    branches: [main]
     paths: ['sdk/**','widgets/**','.github/workflows/**']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        pkg: [ sdk, widgets ]
+        pkg: [sdk, widgets]
     defaults:
       run:
-        working-directory: ${{ github.workspace }}/${{ matrix.pkg }}
+        working-directory: ${{ matrix.pkg }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
       - run: npm ci || npm install
+      # If building widgets before SDK is published, install local SDK tarball after deps
+      - name: Prepare local @neus/sdk tarball
+        if: matrix.pkg == 'widgets'
+        run: |
+          npm --prefix ../sdk ci || npm --prefix ../sdk install
+          SDK_TGZ=$(npm --prefix ../sdk pack --silent | tail -n1)
+          echo "SDK_TGZ=${SDK_TGZ}" >> $GITHUB_ENV
+      - name: Install local @neus/sdk
+        if: matrix.pkg == 'widgets'
+        run: npm install "${SDK_TGZ}" --no-save
       - run: npm run lint || echo "no lint"
       - run: npm test --silent || echo "no tests"
       - run: npm run build || echo "no build"
+      - name: Production audit (high severity)
+        run: npm audit --omit=dev --audit-level=high || echo "audit warnings"
       - run: npm pack --dry-run
-
