@@ -21,6 +21,7 @@ Each `.md` file is a standalone page. Folders become sections with subpages when
 - **[Complete Reference](./REFERENCE.md)** - Technical documentation
 - **[Privacy & Security](./PRIVACY.md)** - Privacy controls and security model
 - **[Fee Structure](./FEES.md)** - Pricing and payment options
+- **[Governance](./GOVERNANCE.md)** - Governance model and DAO
 - **[Standards & EIPs](./STANDARDS.md)** - Protocol specifications
 
 ## Integration Resources

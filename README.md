@@ -165,6 +165,7 @@ npm install @neus/widgets @neus/sdk
 - **[API Reference](./docs/api/index.md)** - HTTP API
 - **[Available Verifiers](./docs/VERIFIERS.md)** - All verification types
 - **[Complete Documentation](./docs/)** - Technical documentation
+- **[Governance](./docs/GOVERNANCE.md)** - Governance model and DAO
 - **[Legal Information](./docs/LEGAL.md)** - Terms, privacy, and legal framework
 
 ## Network Details
