@@ -22,12 +22,22 @@ jobs:
       matrix:
         pkg: [sdk, widgets]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: ${{ matrix.pkg }}/package-lock.json
+      - name: Checkout repository (manual)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git init .
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin ${GITHUB_SHA}
+          git checkout --progress --force -B ci ${GITHUB_SHA}
+      - name: Setup Node 20 (NodeSource)
+        run: |
+          if ! command -v node >/dev/null || [ "$(node -v | cut -d. -f1)" != "v20" ]; then
+            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
+          node -v
+          npm -v
       - run: npm ci || npm install
         working-directory: ${{ matrix.pkg }}
       # If building widgets before SDK is published, install local SDK tarball after deps
