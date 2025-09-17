@@ -1,7 +1,7 @@
 "use client";
 
 // verify-gate/VerifyGate.jsx
-import React, { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { NeusClient } from "@neus/sdk";
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 var BRAND_CID = "bafkreiefbrffecrifnzcn3hfksklw3vospkf244c5ijkizxtzbsm2vtnga";
@@ -110,10 +110,10 @@ function VerifyGate({
             ...verifierOptions && { verifierOptions }
           }
         });
-        const final = await client.pollProofStatus(res.qHash || res?.data?.qHash, {
-          interval: 3e3,
-          timeout: 6e4
-        });
+        const final = await client.pollProofStatus(
+          res.qHash || res?.data?.qHash,
+          { interval: 3e3, timeout: 6e4 }
+        );
         setState("verified");
         const hubTx = final?.data?.hubTransaction || {};
         const crosschain = final?.data?.crosschain || {};
@@ -199,4 +199,3 @@ function VerifyGate({
 export {
   VerifyGate
 };
-//# sourceMappingURL=VerifyGate.js.map

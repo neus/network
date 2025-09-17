@@ -6,6 +6,7 @@
 * [API](api/index.md)
 * [Deployments](DEPLOYMENTS.md)
 * [Standards](STANDARDS.md)
+* [Governance](GOVERNANCE.md)
 * [Performance](PERFORMANCE.md)
 * [Security](SECURITY.md)
 * [Privacy](PRIVACY.md)
