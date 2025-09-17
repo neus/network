@@ -1,10 +1,10 @@
-"use client";
+'use client';
 /**
  * NEUS ProofBadge Widget
  * Simple status display: verified/failed
  * @license Apache-2.0
  */
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export function ProofBadge({
   qHash,
@@ -25,15 +25,15 @@ export function ProofBadge({
   useEffect(() => {
     // Skip fetch if qHash missing or proof object provided
     if (!qHash || proof) return;
-    
+
     let cancelled = false;
-    
+
     async function checkStatus() {
       try {
         const res = await fetch(`https://api.neus.network/api/v1/verification/status/${qHash}`, {
           headers: { Accept: 'application/json' }
         });
-        
+
         if (cancelled) return;
 
         if (res.status === 401 || res.status === 403) {
@@ -48,14 +48,14 @@ export function ProofBadge({
         const verified = dataStatus.includes('verified') || dataStatus.includes('partially_verified') || dataStatus.includes('verified_propagation_failed');
 
         setStatus(verified ? 'verified' : 'failed');
-        
+
       } catch (_) {
         if (!cancelled) setStatus('failed');
       }
     }
-    
+
     checkStatus();
-    
+
     return () => {
       cancelled = true;
     };

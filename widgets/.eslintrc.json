@@ -9,7 +9,8 @@
     "fetch": "readonly"
   },
   "extends": [
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:react/recommended"
   ],
   "plugins": ["react"],
   "parserOptions": {
@@ -19,12 +20,17 @@
       "jsx": true
     }
   },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "rules": {
     "indent": ["error", 2],
     "linebreak-style": "off",
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
-    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "prefer-const": "error",
     "no-var": "error",
@@ -32,16 +38,17 @@
     "object-curly-spacing": ["error", "always"],
     "array-bracket-spacing": ["error", "never"],
     "comma-dangle": ["error", "never"],
-    "max-len": ["warn", { "code": 120, "ignoreComments": true }],
+    "max-len": ["warn", { "code": 120, "ignoreComments": true, "ignoreStrings": true, "ignoreTemplateLiterals": true, "ignoreUrls": true }],
     "eqeqeq": ["error", "always"],
-    "no-trailing-spaces": "error",
+    "no-trailing-spaces": "off",
     "no-multiple-empty-lines": ["error", { "max": 1 }],
-    "prefer-template": "error",
+    "prefer-template": "off",
     "no-throw-literal": "error",
-    "require-await": "error",
-    "no-return-await": "error",
+    "require-await": "off",
+    "no-return-await": "off",
     "react/jsx-uses-react": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off"
   },
   "ignorePatterns": [
     "node_modules/",

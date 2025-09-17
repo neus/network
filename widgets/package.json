@@ -15,7 +15,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "test": "vitest",
+    "test": "vitest run",
     "test:coverage": "vitest --coverage",
     "lint": "eslint verify-gate/*.jsx index.js --ext .js,.jsx",
     "format": "prettier --write \"**/*.{js,jsx}\"",
@@ -36,7 +36,9 @@
   ],
   "author": "NEUS Network",
   "license": "Apache-2.0",
-  "publishConfig": { "access": "public" },
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/neus/network.git",
@@ -50,17 +52,18 @@
     "node": ">=18.0.0"
   },
   "peerDependencies": {
+    "@neus/sdk": "^1.0.0",
     "react": ">=17.0.0",
-    "react-dom": ">=17.0.0",
-    "@neus/sdk": "^1.0.0"
+    "react-dom": ">=17.0.0"
   },
   "devDependencies": {
-    "vitest": "^1.2.0",
     "@vitest/coverage-v8": "^1.2.0",
+    "esbuild": "^0.20.2",
     "eslint": "^8.56.0",
     "eslint-plugin-react": "^7.34.0",
+    "jsdom": "^24.0.0",
     "prettier": "^3.2.0",
-    "esbuild": "^0.20.2"
+    "vitest": "^1.2.0"
   },
   "files": [
     "index.js",

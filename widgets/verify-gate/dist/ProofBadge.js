@@ -1,7 +1,7 @@
 "use client";
 
 // verify-gate/ProofBadge.jsx
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { jsx, jsxs } from "react/jsx-runtime";
 function ProofBadge({
   qHash,
