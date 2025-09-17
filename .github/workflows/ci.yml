@@ -40,12 +40,17 @@ jobs:
           npm -v
       - run: npm ci || npm install
         working-directory: ${{ matrix.pkg }}
-      # If building widgets before SDK is published, install local SDK from workspace after deps
-      - name: Install local @neus/sdk from ../sdk
+      # If building widgets before SDK is published, install local SDK tarball after deps
+      - name: Prepare local @neus/sdk tarball
         if: matrix.pkg == 'widgets'
         run: |
           npm --prefix ../sdk ci || npm --prefix ../sdk install
-          npm install --no-save ../sdk
+          SDK_TGZ="../sdk/$(npm --prefix ../sdk pack --silent | tail -n1)"
+          echo "SDK_TGZ=${SDK_TGZ}" >> $GITHUB_ENV
+        working-directory: ${{ matrix.pkg }}
+      - name: Install local @neus/sdk
+        if: matrix.pkg == 'widgets'
+        run: npm install "${SDK_TGZ}" --no-save
         working-directory: ${{ matrix.pkg }}
       - run: npm run lint || echo "no lint"
         working-directory: ${{ matrix.pkg }}
