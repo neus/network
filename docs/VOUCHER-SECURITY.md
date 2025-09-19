@@ -1,6 +1,6 @@
 # Voucher Security Model
 
-**Version:** 1.0.0  
+
 
 ## Overview
 

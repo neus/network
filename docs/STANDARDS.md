@@ -2,7 +2,7 @@
 
 **Technical specifications for NEUS Network protocol integration**
 
-NEUS Network follows established blockchain standards and implements secure authentication patterns for seamless integration.
+NEUS follows established blockchain standards and implements secure authentication patterns for seamless integration.
 
 ---
 
@@ -13,10 +13,13 @@ NEUS Network follows established blockchain standards and implements secure auth
 * **Numeric chain IDs only** in SDK/API and in signed messages (e.g., `1`, `8453`, `84532`).
 * **Hub (enforced):** `PRIMARY_CHAIN_ID = 84532` (Base Sepolia).
 
+See also
+- API request/response flows: [./api/index.md](./api/index.md)
+
 ### Identity (DIDs)
 
-* **did:pkh** (`did:pkh:eip155:<chainId>:<address>`) stored and emitted in proofs.
-* We **may** show CAIP strings in UI/docs, but we **don’t** send them in requests and **don’t** store them except as part of the DID string.
+* **did:pkh** (`did:pkh:eip155:<chainId>:<address>`) is stored and emitted in proofs.
+* CAIP strings may be shown in UI or documentation, but they are not sent in requests and are not stored except as part of the DID string.
 
 ### Off-chain Signatures (used today)
 
@@ -31,6 +34,9 @@ NEUS Network follows established blockchain standards and implements secure auth
   Timestamp: <unix ms, freshness window enforced>
   ```
 * Server rebuilds/validates this and enforces `PRIMARY_CHAIN_ID` (84532).
+
+Related
+- Troubleshooting signatures and standardization helpers: [./api/index.md](./api/index.md)
 
 #### Signature Contract (Normative)
 
@@ -82,8 +88,8 @@ Timestamp: <unix ms>
 
 ### On-chain Transactions
 
-* **EIP-155** applies automatically to on-chain tx (e.g., the hub transaction stored in `hubTransaction`).
-* We do **not** use EIP-155 for off-chain auth.
+* **EIP-155** applies automatically to on-chain transactions (for example, the hub transaction stored in `hubTransaction`).
+* EIP-155 is not used for off‑chain authentication.
 
 ### Cross-chain Vouchers (propagation)
 
@@ -100,6 +106,9 @@ Timestamp: <unix ms>
   }
   ```
 
+See also
+- Voucher security model and guarantees: [./VOUCHER-SECURITY.md](./VOUCHER-SECURITY.md)
+
 ### Cryptography
 
 * **SHAKE-256** → `qHash` (anchor for proofs/vouchers/storage references).
@@ -107,10 +116,10 @@ Timestamp: <unix ms>
 
 ---
 
-## What’s **not** used right now
+## Not used currently
 
-* **CAIP-2 in requests**: **Not used.** CAIP for **docs/DIDs only**.
-* **EIP-712**: **Not used yet.** (Planned; see “Future” below.)
+* **CAIP-2 in requests**: Not used. CAIP appears only in documentation/DIDs.
+* **EIP-712**: Not used yet (planned; see “Future” below).
 
 ---
 
@@ -130,7 +139,7 @@ const proof = await client.verify({
     enableIpfs: true
   },
   meta: {
-    tags: ['campaign', 'proof-of-support']
+    tags: ['program', 'proof-of-support']
   }
 });
 ```
@@ -157,11 +166,9 @@ const proof = await client.verify({
 
 ---
 
-## Future (what we’ll add when ready)
+## Future (planned)
 
-* **Hub switch:** changed to Base mainnet; everything else unchanged.
-* **EIP-712 typed data:** replace EIP-191 with 712 (domain.chainId **= hub**; include wallet, chain, timestamp, canonical payload; DID optional). Until then, **EIP-191 is the only accepted format.**
-* **DNS verifier (re-intro, optional):** `_neus.example.com  TXT  "wallet=eip155:<id>:<address>"`.
+* **Contracts switch:** changed to mainnet; everything else unchanged.
 * **Additional spokes:** expand `targetChains` set (still numeric).
 * **ZK circuits:** more verifiers using zk (RISC-Zero/STARK); current verifiers may mark `zk_not_required`.
 

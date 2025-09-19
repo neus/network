@@ -1,10 +1,10 @@
-"use client";
+'use client';
 /**
  * NEUS VerifyGate Widget
  * React component for gated content verification
  * @license Apache-2.0
  */
-import React, { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { NeusClient } from '@neus/sdk';
 
 // Brand image served from IPFS with gateway failover
@@ -55,8 +55,8 @@ export function VerifyGate({
 
   // Support multi-verifier requests
   const verifierList = useMemo(() => {
-    return Array.isArray(requiredVerifiers) && requiredVerifiers.length > 0 
-      ? requiredVerifiers 
+    return Array.isArray(requiredVerifiers) && requiredVerifiers.length > 0
+      ? requiredVerifiers
       : ['ownership-basic'];
   }, [requiredVerifiers]);
 
@@ -64,7 +64,7 @@ export function VerifyGate({
 
   const handleClick = useCallback(async () => {
     if (disabled || isProcessing) return;
-    
+
     setError(null);
     setIsProcessing(true);
     setState('signing');
@@ -75,7 +75,7 @@ export function VerifyGate({
         if (!qHash) {
           throw new Error('qHash is required for access mode');
         }
-        
+
         setState('verifying');
         
         // Use SDK's private access method with wallet signature
@@ -134,11 +134,11 @@ export function VerifyGate({
           }
         });
 
-        // Poll for completion  
-        const final = await client.pollProofStatus(res.qHash || res?.data?.qHash, { 
-          interval: 3000, 
-          timeout: 60000 
-        });
+        // Poll for completion
+        const final = await client.pollProofStatus(
+          res.qHash || res?.data?.qHash,
+          { interval: 3000, timeout: 60000 }
+        );
 
         setState('verified');
         
@@ -149,7 +149,7 @@ export function VerifyGate({
         
         // Check if all required verifiers passed
         const verifiedVerifiers = final?.data?.verifiedVerifiers || [];
-        const allVerified = verifierList.every(verifierId => 
+        const allVerified = verifierList.every(verifierId =>
           verifiedVerifiers.find(v => v.verifierId === verifierId)?.verified === true
         );
 

@@ -4,6 +4,10 @@
 
 For the formal, user-facing Privacy Policy, see: https://docs.neus.network/learn/legal/privacy-policy
 
+See also
+- API options and request examples: [./api/index.md](./api/index.md)
+- Protocol standards (message format, chains): [./STANDARDS.md](./STANDARDS.md)
+
 ## Privacy Model
 
 ### Two-Tier Privacy System
@@ -46,6 +50,9 @@ const privateProof = await client.verify({
 ```
 
 ## Security Guarantees
+
+Related
+- Security model and attack surface: [./SECURITY.md](./SECURITY.md)
 
 ### Built-in Protection
 
@@ -218,9 +225,13 @@ A: Private proofs become permanently inaccessible. Consider backup strategies.
 ### Getting Help
 
 - **Documentation**: See [5-Minute Tutorial](./QUICKSTART.md)
-- **Technical Issues**: [GitHub Issues](https://github.com/neus/network/issues)
+- **Community Questions & Ideas**: [GitHub Discussions](https://github.com/neus/network/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/neus/network/issues)
 - **Security & Technical Concerns**: dev@neus.network
 - **Business & Partnerships**: info@neus.network
+
+See also
+- End-to-end API troubleshooting: [./api/index.md#troubleshooting](./api/index.md)
 
 ---
 

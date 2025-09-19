@@ -1,6 +1,6 @@
 # NEUS Network Legal Information
 
-**Version:** 1.0.0  
+
 
 Overview of the legal framework for NEUS Network.
 
@@ -26,8 +26,6 @@ Legal terms and policies:
 
 - **[Terms of Use](https://docs.neus.network/learn/legal/terms-of-use)** - Service terms and conditions
 - **[Privacy Policy](https://docs.neus.network/learn/legal/privacy-policy)** - Data handling and privacy protection
-- **[Genesis Campaign Terms](https://docs.neus.network/ecosystem/genesis-campaign)** - Campaign participation terms
-- **[NFT Sale Terms](https://docs.neus.network/learn/legal/nft-sale-terms)** - Genesis Pass purchase terms
 - **[Governance Framework](https://docs.neus.network/ecosystem/governance)** - Decentralization path and governance structure
 - **[Security Disclosure](https://docs.neus.network/learn/legal/security-disclosure)** - Responsible disclosure policy
 - **[Export Controls](https://docs.neus.network/learn/legal/export-controls)** - Compliance requirements

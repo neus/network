@@ -44,7 +44,7 @@ Timestamp: {unix_timestamp_number}
 
 ### Rate Limiting
 
-#### Service Limits (Genesis/Pilot)
+#### Service Limits (Pilot)
 - **Verification Requests**: Strict per-wallet windows; abusive traffic is throttled or blocked
 - **Status Checks**: High-frequency status checks are rate-limited and back-off enforced
 - **Admin Operations**: Administrative operations have enhanced rate limiting
@@ -200,7 +200,5 @@ We are preparing a comprehensive bug bounty program for the mainnet launch. Deta
 - **Community contributions**: Priority support and early access features
 
 ---
-
-**Version**: 1.0.0  
 
 For the most current security information, please check our [GitHub Security Advisories](https://github.com/neus/network/security/advisories).

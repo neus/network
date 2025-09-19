@@ -1,0 +1,12 @@
+name: "⚠️ Security report (READ FIRST)"
+description: Do NOT open public issues for security. This template exists to redirect you.
+title: "security: PLEASE EMAIL dev@neus.network (do not submit)"
+labels: ["security"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **STOP – DO NOT POST DETAILS HERE.**  
+        For responsible disclosure, email **dev@neus.network** with steps to reproduce and impact.  
+        Public issues with security details will be closed and scrubbed.
+

@@ -4,6 +4,12 @@
 
 This document provides specific guidance for verifier development and submission.
 
+## How to submit
+
+- Ideas and early proposals: start a **GitHub Discussion** at https://github.com/neus/network/discussions
+- Code submissions: open a **Pull Request targeting `verifier-staging`** with spec + JSON Schemas
+- Bugs/regressions: file a **GitHub Issue** at https://github.com/neus/network/issues
+
 ## Submission Checklist
 
 Include in your PR:
@@ -189,5 +195,6 @@ What this verifier proves
 
 ## Support
 
-- **Questions**: [GitHub Issues](https://github.com/neus/network/issues)
-- **Technical Discussion**: dev@neus.network
+- **Community Questions & Ideas**: [GitHub Discussions](https://github.com/neus/network/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/neus/network/issues)
+- **Technical Integration**: dev@neus.network

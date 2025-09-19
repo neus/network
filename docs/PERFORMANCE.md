@@ -1,8 +1,6 @@
 # Performance Characteristics
 
-> "NEUS proves that global, cross-chain verification is not only feasible — it's cost-effective, scalable, and privacy-preserving. What would normally cost $10+ and require bridges, multiple signatures, and trust assumptions is collapsed into a single hub transaction under $1 — while reducing trust assumptions and increasing user privacy."
-
-> No bridging. No custodians. No shared state. Just truth, broadcast everywhere.
+NEUS provides cross‑chain verification with low cost, scalability, and strong privacy. Typical flows consolidate multiple steps into a single hub transaction while minimizing trust assumptions.
 
 **Real-world performance data and cost analysis for NEUS Network verification.**
 
@@ -47,7 +45,7 @@ Batching drives marginal cost toward sub‑cent per proof (e.g., 10‑proof batc
 - **Operational predictability**: Consistent gas footprint and tight variance across spokes enable clear planning.
 - **Universal verification**: Proofs are portable across apps and chains; no silos.
 
-### Representative runs (masked references)
+### Representative runs
 
 | qHash (masked) | Hub chain | Hub tx (masked) | All spokes finalized | Per‑spoke gas (range) |
 | --- | --- | --- | --- | --- |

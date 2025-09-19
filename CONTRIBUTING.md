@@ -32,15 +32,15 @@ Thank you for your interest in contributing to NEUS Network. We welcome contribu
 
 ## How to Contribute
 
-### Reporting Issues
+### Reporting & Proposing
 
 - **Bug Reports**: Use GitHub Issues with reproduction steps
-- **Feature Requests**: Use GitHub Issues with clear use case
+- **Feature Requests & Ideas**: Prefer GitHub Discussions
 - **Security Issues**: Email dev@neus.network (do not create public issues)
 
 ### Code Contributions
 
-1. Create feature branch from main
+1. Create feature branch from `main` (for verifiers target `verifier-staging`)
 2. Make changes following coding standards
 3. Add tests for new functionality
 4. Update documentation as needed
@@ -60,12 +60,12 @@ New verification types can extend the ecosystem through community contributions.
 
 ### Verifier Contribution Process
 
-1. **Propose Verifier**: Submit GitHub issue with specification
-2. **Technical Review**: Community and maintainer review
-3. **Implementation**: Build following verifier standards
-4. **Testing**: Comprehensive test coverage required
-5. **Documentation**: Complete examples and schemas
-6. **Deployment**: Integration into Core Registry after approval
+1. **Propose**: Start a GitHub Discussion with your verifier spec
+2. **Review**: Technical + community review in Discussion
+3. **Implement**: Build following verifier standards
+4. **Submit**: PR targeting `verifier-staging` with spec + schemas
+5. **Test**: Comprehensive tests and examples
+6. **Merge**: Maintainers promote from `verifier-staging` to `main`
 
 ### High-Priority Verifiers
 

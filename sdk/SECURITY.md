@@ -220,5 +220,3 @@ The NEUS Network is designed for:
 However, verifier implementations must ensure their own compliance based on data handled.
 
 ---
-
-*Version: 1.0.0*

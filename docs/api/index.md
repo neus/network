@@ -10,11 +10,15 @@ title: API Reference
 
 1. **Sign a standard message** with your wallet
 2. **Submit one HTTP request** with your signature
-3. **Get a cryptographic proof** that can't be faked
+3. **Get a cryptographic proof** validated cryptographically
 
 ## Authentication
 
 **Wallet signatures only** - No accounts, passwords, or API keys required.
+
+See also:
+- Standards & message format details: [../STANDARDS.md](../STANDARDS.md)
+- Privacy & access controls: [../PRIVACY.md](../PRIVACY.md)
 
 ## Available Operations
 
@@ -80,13 +84,18 @@ curl -X POST https://api.neus.network/api/v1/verification \
 
 ### Troubleshooting
 
-**Having signature issues?**
+Troubleshooting signature issues:
 
 1. Use `/api/v1/verification/diagnose` to debug signature problems
 2. Use `/api/v1/verification/standardize` to get exact message format
 3. Check: lowercase address, LF newlines, fresh timestamp
 
-**For Node.js**: Use the SDK. **For other languages**: Build the standard six-line message format.
+Common pitfalls
+- Address in the signing string must be lowercase
+- JSON must be deterministic (stable key order, no extra spaces)
+- Timestamp must be within the 5‑minute window
+
+For Node.js environments, use the SDK. For other languages, build the standard six‑line message format.
 
 ### Message Format Example
 
@@ -105,6 +114,9 @@ Timestamp: 1678886400000
 - Data must be deterministic JSON (keys sorted)
 - Timestamp must be fresh (within 5 minutes)
 - Chain must be 84532 (Base Sepolia hub)
+
+See also
+- Full protocol standards: [../STANDARDS.md](../STANDARDS.md)
 
 ## API Endpoints
 
@@ -175,6 +187,9 @@ Response contains `verifiedVerifiers[]` (one per verifier). Consider success whe
 
 Note: For multi‑verifier requests, the OpenAPI models `data` as a generic object. Validation is enforced per‑key server‑side based on each verifier ID.
 
+See also
+- Verifier schemas and inputs: [../verifiers/schemas/](../verifiers/schemas/)
+
 ## Rate Limits
 
 - **Verification creation**: Strict per-wallet limits with progressive throttling
@@ -197,7 +212,7 @@ All errors return this standard format:
 }
 ```
 
-**Common error codes**:
+Common error codes:
 - `INVALID_WALLET_ADDRESS` - Wallet address format is wrong
 - `SIGNATURE_INVALID` - Wallet signature verification failed
 - `VERIFIER_NOT_FOUND` - Verifier ID doesn't exist
@@ -209,7 +224,7 @@ All errors return this standard format:
 
 ### Getting Results Without Polling
 
-For immediate results, check the response status:
+To determine whether to poll, check the response status:
 ```javascript
 const response = await fetch('/api/v1/verification', { /* request */ });
 const result = await response.json();
@@ -391,6 +406,9 @@ Levels:
 - `public`
 - `private`
 
+See also
+- Privacy model, access rules, and IPFS behavior: [../PRIVACY.md](../PRIVACY.md)
+
 ### Zero‑knowledge proofs (ZK)
 Some verifiers are ZK‑capable. You may request ZK by setting `options.forceZK: true`. ZK availability depends on deployed circuits and access. When ZK is not available for a given verifier, the system proceeds without ZK and includes a `zkInfo` object indicating actual behavior (e.g., `zk_not_required`, `zk_unavailable`).
 
@@ -470,9 +488,8 @@ Public verifiers:
 - `ownership-basic`
 - `nft-ownership`
 - `token-holding`
-- `ownership-licensed`
 
-<!-- Partner or enterprise verifiers are not part of the public API reference -->
+
 
 ---
 

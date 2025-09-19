@@ -15,7 +15,7 @@ Machine-readable validation schemas for NEUS verifiers.
 
 ```javascript
 import Ajv from 'ajv';
-import schema from './schemas/nft-ownership.json';
+import schema from './nft-ownership.json';
 
 const ajv = new Ajv();
 const validate = ajv.compile(schema);
@@ -45,4 +45,4 @@ console.log('Errors:', validation.error);
 
 ## Schema Versioning
 
-Current version: v1.0.0 for Genesis verifiers.
+Schemas are versioned via Git history. Use the latest in this repo.

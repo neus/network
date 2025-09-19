@@ -1,0 +1,39 @@
+name: "Feature request (consider starting a Discussion)"
+description: Propose a capability with a clear user benefit and acceptance criteria. For ideas, start a Discussion first.
+title: "feat: <concise capability>"
+labels: ["feature", "needs-spec"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: "What user/job needs this? Why now?"
+    validations: { required: true }
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: "Sketch the solution. If it touches signatures or chain IDs, align with our Standards (numeric chain IDs; 6-line canonical EIP-191 message)."
+      placeholder: "Link API shape or UX flow"
+    validations: { required: true }
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: "Given/When/Then bullets"
+    validations: { required: true }
+
+  - type: checkboxes
+    id: considerations
+    attributes:
+      label: Security & privacy considerations
+      options:
+        - label: No PII or sensitive data is required (privacy by default).
+          required: true
+        - label: If public proofs are involved, they are **explicit opt-in** only.
+          required: true
+        - label: I considered rate limits/abuse vectors where relevant.
+          required: true
+

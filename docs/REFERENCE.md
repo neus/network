@@ -33,6 +33,7 @@ const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'Hello NEUS'
 });
+// See also: Verifier pages → ./verifiers/ownership-basic.md
 ```
 
 ### Configuration
@@ -56,6 +57,7 @@ const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'Content to verify'
 });
+// Pitfalls: address normalization and timestamp window; see ./api/index.md#troubleshooting
 ```
 
 **Manual Mode (Advanced):**
@@ -77,6 +79,7 @@ Get verification status.
 const status = await client.getStatus(qHash);
 console.log('Success:', status.success);
 console.log('Status:', status.data.status);
+// See also: Polling helper → `pollProofStatus`
 ```
 
 #### `getPrivateStatus(qHash, wallet)`
@@ -97,6 +100,7 @@ const finalStatus = await client.pollProofStatus(qHash, {
   timeout: 60000,
   onProgress: (status) => console.log('Status:', status.status)
 });
+// See also: API status endpoints → ./api/index.md
 ```
 
 ---
@@ -106,6 +110,7 @@ const finalStatus = await client.pollProofStatus(qHash, {
 ### Authentication
 
 All requests require wallet signatures (EIP-191).
+See also: Message format and helpers → ./api/index.md#standard-message-format
 
 ### Standard Signing String Format
 
@@ -138,6 +143,7 @@ POST /api/v1/verification
   "options": {"privacyLevel": "private"}
 }
 ```
+See also: Privacy and options → ./PRIVACY.md
 
 #### Get Status
 
@@ -237,36 +243,7 @@ Debug signature verification problems.
 }
 ```
 
-### ownership-licensed
-
-**Purpose:** Licensed content verification
-
-**Required Fields:**
-- `content` (string) - Licensed content description
-- `owner` (address) - License owner wallet
-- `license` (object) - License details
-  - `contractAddress` (address) - License NFT contract
-  - `tokenId` (string) - License token ID
-  - `chainId` (number) - Blockchain chain ID
-  - `ownerAddress` (address) - Expected license holder
-  - `type` (string) - Optional: 'erc721' or 'erc1155' (default: 'erc721')
-
-**Example:**
-```javascript
-{
-  verifier: 'ownership-licensed',
-  data: {
-    content: 'Licensed software documentation',
-    owner: '0x...',
-    license: {
-      contractAddress: '0x...',
-      tokenId: '1',
-      chainId: 1,
-      ownerAddress: '0x...'
-    }
-  }
-}
-```
+ 
 
 ---
 
@@ -453,9 +430,9 @@ Contract ABIs available at:
 
 ## Support
 
-- **Questions**: [GitHub Issues](https://github.com/neus/network/issues)
+- **Community Questions & Ideas**: [GitHub Discussions](https://github.com/neus/network/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/neus/network/issues)
 - **Technical Support**: dev@neus.network
-- **Partnership Inquiries**: info@neus.network
 - **Security Issues**: dev@neus.network
 
 ---

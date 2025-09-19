@@ -2,7 +2,7 @@
 
 ## Network Configuration
 
-NEUS Network operates on a hub-and-spoke architecture with verification processing centralized on Base Sepolia and optional cross-chain proof storage on multiple testnet networks.
+NEUS operates on a hub-and-spoke architecture with verification processing centralized on Base Sepolia and optional cross-chain proof storage on multiple testnet networks.
 
 ### Hub Chain - Base Sepolia (Chain ID: 84532)
 
@@ -26,14 +26,6 @@ Optional proof storage contracts on testnet networks:
 | **Polygon Amoy** | 80002 | `0x5746f86E6BC6AcCF34286Bc8E8803CcAc4a0306d` | [OKLink](https://www.oklink.com/amoy/address/0x5746f86E6BC6AcCF34286Bc8E8803CcAc4a0306d) |
 | **Arbitrum Sepolia** | 421614 | `0x0095E6e6A1CA0E05e56920aeaDc0c8bDDEADcdC1` | [Arbiscan](https://sepolia.arbiscan.io/address/0x0095E6e6A1CA0E05e56920aeaDc0c8bDDEADcdC1) |
 | **Optimism Sepolia** | 11155420 | `0x24f9Af19693D163576ac49DF3b7a75934bB3B1b4` | [Etherscan](https://sepolia-optimism.etherscan.io/address/0x24f9Af19693D163576ac49DF3b7a75934bB3B1b4) |
-
-## Genesis Pass Contract (Production)
-
-### Base Mainnet (Chain ID: 8453)
-
-| Contract | Address | Explorer |
-|----------|---------|----------|
-| **LicenseNFT (Genesis Pass)** | `0x056c50168C6754f7Dd03E283460B59e0438c5a79` | [BaseScan](https://basescan.org/address/0x056c50168C6754f7Dd03E283460B59e0438c5a79) |
 
 ## Contract ABIs
 
@@ -59,12 +51,10 @@ All deployed contracts have been verified on their respective blockchain explore
 
 ## Network Status
 
-Current deployment status: **Genesis Phase (Hybrid Mainnet/Testnet)**
+Current deployment status: **Hybrid mainnet/testnet phase**
 
 ### Production Components
-- **Genesis Pass NFT**: Live on Base Mainnet (8453) - production ready
 - **Asset Verification**: Uses mainnet blockchain data for all verifiers
-- **Genesis Campaign**: Active on mainnet with 7-day mint window
 
 ### Development Components  
 - **Hub Processing**: Base Sepolia (84532) - testnet for verification processing
@@ -72,7 +62,7 @@ Current deployment status: **Genesis Phase (Hybrid Mainnet/Testnet)**
 - **Protocol Infrastructure**: Testnet contracts for development and testing
 
 ### Mainnet Migration
-Protocol infrastructure (VerifierRegistry, VoucherHub, Token) will migrate to mainnet following successful Genesis campaign completion and community validation.
+Protocol infrastructure (VerifierRegistry, VoucherHub, Token) will migrate to mainnet following successful testing, audits, and community validation.
 
 ## Contact
 
@@ -82,4 +72,4 @@ For technical questions about deployments:
 
 ---
 
-**Current Status**: Genesis Phase with hybrid mainnet/testnet deployment. Genesis Pass NFT is live on Base Mainnet. Protocol infrastructure operates on testnets during Genesis campaign.
+**Current Status**: Hybrid mainnet/testnet deployment for development and testing. Protocol infrastructure operates on testnets during this phase.

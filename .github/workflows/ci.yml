@@ -3,25 +3,58 @@ on:
   pull_request:
     paths: ['sdk/**','widgets/**','.github/workflows/**']
   push:
-    branches: [ main ]
+    branches: [main]
     paths: ['sdk/**','widgets/**','.github/workflows/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  build:
+  build-test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        pkg: [ sdk, widgets ]
-    defaults:
-      run:
-        working-directory: ${{ github.workspace }}/${{ matrix.pkg }}
+        pkg: [sdk, widgets]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci || npm install
+      - name: Checkout repository (manual)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git init .
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin ${GITHUB_SHA}
+          git checkout --progress --force -B ci ${GITHUB_SHA}
+      - name: Setup Node 20 (NodeSource)
+        run: |
+          if ! command -v node >/dev/null || [ "$(node -v | cut -d. -f1)" != "v20" ]; then
+            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
+          node -v
+          npm -v
+      - name: Install dependencies (sdk)
+        if: matrix.pkg == 'sdk'
+        run: |
+          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+        working-directory: ${{ matrix.pkg }}
+      - name: Install dependencies (widgets)
+        if: matrix.pkg == 'widgets'
+        run: npm install
+        working-directory: ${{ matrix.pkg }}
       - run: npm run lint || echo "no lint"
+        working-directory: ${{ matrix.pkg }}
       - run: npm test --silent || echo "no tests"
+        working-directory: ${{ matrix.pkg }}
       - run: npm run build || echo "no build"
+        working-directory: ${{ matrix.pkg }}
+      - name: Production audit (high severity)
+        run: npm audit --omit=dev --audit-level=high || echo "audit warnings"
+        working-directory: ${{ matrix.pkg }}
       - run: npm pack --dry-run
-
+        working-directory: ${{ matrix.pkg }}

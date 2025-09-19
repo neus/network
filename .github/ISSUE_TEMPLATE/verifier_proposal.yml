@@ -1,0 +1,51 @@
+name: "Verifier proposal (use Discussions for ideas)"
+description: Propose a new verifier. Prefer starting with a Discussion; PRs should target verifier-staging.
+title: "verifier: <id>"
+labels: ["verifier", "needs-spec"]
+body:
+  - type: input
+    id: verifierId
+    attributes: { label: Verifier ID, placeholder: "ownership-github-repo" }
+    validations: { required: true }
+
+  - type: textarea
+    id: purpose
+    attributes: { label: Purpose, placeholder: "What this verifier proves and for whom" }
+    validations: { required: true }
+
+  - type: textarea
+    id: inputSchema
+    attributes:
+      label: Input schema (JSON)
+      description: "No PII. Deterministic inputs. Include field descriptions."
+      render: json
+    validations: { required: true }
+
+  - type: textarea
+    id: outputSchema
+    attributes:
+      label: Output schema (JSON)
+      render: json
+    validations: { required: true }
+
+  - type: checkboxes
+    id: standards
+    attributes:
+      label: Conformance
+      options:
+        - label: Deterministic outputs for identical inputs
+          required: true
+        - label: No PII in inputs or outputs
+          required: true
+        - label: External API usage documented with rate limits and error handling
+          required: true
+        - label: Gas/perf considerations (if on-chain)
+          required: true
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Examples & test plan
+      description: "SDK/API sample calls and how you’ll test failure modes. Link related Discussion."
+      render: bash
+
