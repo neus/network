@@ -201,6 +201,6 @@ List available verifiers.
 
 ## Links
 
-- **[Complete Reference](https://github.com/neus/network/tree/main/docs/REFERENCE.md)** - Full API and verifier documentation
-- **[All Verifiers](https://github.com/neus/network/tree/main/docs/verifiers/README.md)** - Verification types
+- **[Complete Reference](https://github.com/neus/network/blob/main/docs/REFERENCE.md)** - Full API and verifier documentation
+- **[All Verifiers](https://github.com/neus/network/blob/main/docs/verifiers/README.md)** - Verification types
 - **[GitHub Issues](https://github.com/neus/network/issues)** - Community support

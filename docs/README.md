@@ -26,11 +26,11 @@ Each page in this section is a standalone document. Navigation is defined in `SU
 
 ## Integration Resources
 
-- **[Framework Examples](https://github.com/neus/network/tree/main/examples)** - React, Next.js, Node.js applications
-- **[Message Format Utilities](https://github.com/neus/network/tree/main/signing)** - Manual signing helpers
-- **[SDK README](https://github.com/neus/network/tree/main/sdk)** - @neus/sdk usage and API
-- **[Widgets README](https://github.com/neus/network/tree/main/widgets)** - @neus/widgets components
-- **[ABIs](https://github.com/neus/network/tree/main/abis)** - Contract ABIs
+- **[Framework Examples](https://github.com/neus/network/blob/main/examples)** - React, Next.js, Node.js applications
+- **[Message Format Utilities](https://github.com/neus/network/blob/main/signing)** - Manual signing helpers
+- **[SDK README](https://github.com/neus/network/blob/main/sdk)** - @neus/sdk usage and API
+- **[Widgets README](https://github.com/neus/network/blob/main/widgets)** - @neus/widgets components
+- **[ABIs](https://github.com/neus/network/blob/main/abis)** - Contract ABIs
 - **[Contract Information](./DEPLOYMENTS.md)** - Network addresses and ABIs
 - **[Security Guidelines](./SECURITY.md)** - Security best practices
 - **[Voucher Security](./VOUCHER-SECURITY.md)** - Cross-chain security model

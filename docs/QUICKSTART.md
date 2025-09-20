@@ -194,7 +194,7 @@ try {
 
 - **[Complete Documentation](./REFERENCE.md)** - Technical reference
 - **[Available Verifiers](./verifiers/README.md)** - All verification types
-- **[Framework Examples](https://github.com/neus/network/tree/main/examples)** - React, Next.js, Node.js apps
+- **[Framework Examples](https://github.com/neus/network/blob/main/examples)** - React, Next.js, Node.js apps
 - **[Contract Information](./DEPLOYMENTS.md)** - Network addresses and ABIs
 
 ## Support

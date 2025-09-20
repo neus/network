@@ -289,7 +289,7 @@ NEUS works with any programming language via HTTP API.
 
 ### Language Examples
 
-**Multi-language signing utilities:** See signing helpers in the repository: [signing helpers](https://github.com/neus/network/tree/main/signing)
+**Multi-language signing utilities:** See signing helpers in the repository: [signing helpers](https://github.com/neus/network/blob/main/signing)
 
 ---
 

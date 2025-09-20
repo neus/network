@@ -40,7 +40,7 @@ Complete contract ABIs are available in the open-source repository:
 
 All smart contract source code is available under Business Source License 1.1:
 
-- [Smart Contracts](https://github.com/neus/network/tree/main/contracts)
+- [Smart Contracts](https://github.com/neus/network/blob/main/contracts)
 - [License Terms](https://github.com/neus/network/blob/main/contracts/LICENSE)
 
 Note: Core contracts are under BSL 1.1; the testnet NEUSToken is MIT-licensed.

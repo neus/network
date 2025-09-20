@@ -464,7 +464,7 @@ curl -X POST https://api.neus.network/api/v1/verification/diagnose \
   -d '{"walletAddress":"0x...","signature":"0x...","signedMessage":"...","verifierIds":["ownership-basic"],"data":{"content":"Hello"},"signedTimestamp":1755700135798}'
 ```
 
-See signing helpers in the repository: [signing helpers](https://github.com/neus/network/tree/main/signing)
+See signing helpers in the repository: [signing helpers](https://github.com/neus/network/blob/main/signing)
 
 Common issues:
 - Address not lowercase
@@ -496,9 +496,9 @@ Public verifiers:
 ## Next Steps
 
 ### Start
-- SDK README: [neus/network sdk#readme](https://github.com/neus/network/tree/main/sdk#readme)
+- SDK README: [neus/network sdk#readme](https://github.com/neus/network/blob/main/sdk#readme)
 - Getting started: See [5-Minute Tutorial](../QUICKSTART.md)
- - Examples: [examples](https://github.com/neus/network/tree/main/examples)
+ - Examples: [examples](https://github.com/neus/network/blob/main/examples)
 
 ### Need Help?
 - **[GitHub Issues](https://github.com/neus/network/issues)** - Community support
