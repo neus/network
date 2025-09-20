@@ -3,7 +3,7 @@
   "info": {
     "title": "NEUS Network API",
     "version": "1.0.0",
-    "description": "# NEUS Network API\n\n**HTTP API for verification proof creation and status checking.**\n\n## Available Verifiers\n- `ownership-basic` - Content ownership verification\n- `nft-ownership` - NFT ownership verification\n- `token-holding` - Token balance verification  \n\n## Authentication\n- **EIP-191 signatures** - Sign with your wallet\n- **No API keys** - Wallet signature serves as authentication\n- **Replay protection** - 5-minute signature validity\n\n## Network Configuration\n- **Hub**: Base Sepolia (84532) - All verification processing\n- **Asset Verification**: Uses real mainnet data for ownership checks\n- **Proof Storage**: Optional cross-chain storage on testnet networks\n\n**Important**: Do not include hub chain (84532) in targetChains!",
+    "description": "# NEUS Network API\n\n**HTTP API for verification proof creation and status checking.**\n\n## Available Verifiers\n- `ownership-basic` - Content ownership verification\n- `nft-ownership` - NFT ownership verification\n- `token-holding` - Token balance verification\n- `ownership-licensed` - Licensed content ownership verification  \n\n## Authentication\n- **EIP-191 signatures** - Sign with your wallet\n- **No API keys** - Wallet signature serves as authentication\n- **Replay protection** - 5-minute signature validity\n\n## Network Configuration\n- **Hub**: Base Sepolia (84532) - All verification processing\n- **Asset Verification**: Uses real mainnet data for ownership checks\n- **Proof Storage**: Optional cross-chain storage on testnet networks\n\n**Important**: Do not include hub chain (84532) in targetChains!",
     "contact": {
       "name": "NEUS Network",
       "url": "https://neus.network",
@@ -424,7 +424,8 @@
                       "example": [
                         "ownership-basic",
                         "nft-ownership",
-                        "token-holding"
+                        "token-holding",
+                        "ownership-licensed"
                       ]
                     }
                   }

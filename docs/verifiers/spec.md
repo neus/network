@@ -118,6 +118,45 @@ Technical specification for building verifiers that integrate with NEUS Network.
 }
 ```
 
+### ownership-licensed
+
+**Input:**
+```json
+{
+  "content": "string (required)",
+  "owner": "address (required)",
+  "license": {
+    "contractAddress": "address (required)",
+    "tokenId": "string (required)",
+    "chainId": "number (required) - 1|137|42161|10|8453",
+    "ownerAddress": "address (required)",
+    "type": "string (optional) - erc721|erc1155"
+  },
+  "reference": {
+    "type": "string (optional) - url|ipfs|tx|other",
+    "id": "string (optional)"
+  }
+}
+```
+
+**Output:**
+```json
+{
+  "content": "Pro Tools License",
+  "license": {
+    "contractAddress": "0x...",
+    "tokenId": "1",
+    "chainId": 1,
+    "ownerAddress": "0x...",
+    "type": "erc721"
+  },
+  "onChainData": {
+    "actualOwner": "0x..."
+  },
+  "verificationTimestamp": 1730000000000
+}
+```
+
 **Output:**
 ```json
 {

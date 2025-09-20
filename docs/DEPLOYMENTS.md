@@ -12,7 +12,7 @@ All verification processing occurs on the hub chain:
 |----------|---------|----------|
 | **NEUSVerifierRegistry** | `0x728Ba14b52d4811e2eDcE37c7e419AB47B0A17Df` | [BaseScan](https://sepolia.basescan.org/address/0x728Ba14b52d4811e2eDcE37c7e419AB47B0A17Df) |
 | **NEUSVoucherHub** | `0xD524bd93e51b29C63b921994BF2BA61f8f49FB6C` | [BaseScan](https://sepolia.basescan.org/address/0xD524bd93e51b29C63b921994BF2BA61f8f49FB6C) |
-| **NEUSToken** | `0x9e8387A563e124868aa6c6064E6f29c2ce745935` | [BaseScan](https://sepolia.basescan.org/address/0x9e8387A563e124868aa6c6064E6f29c2ce745935) |
+| **NEUSToken** | `0xBe5F4fe3ba4C28DBfB5d9518b6F68F68844e3854` | [BaseScan](https://sepolia.basescan.org/address/0xBe5F4fe3ba4C28DBfB5d9518b6F68F68844e3854) |
 
 No mainnet token. NEUSToken listed here is testnet-only (MIT) on Base Sepolia.
 

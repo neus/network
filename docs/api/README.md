@@ -160,7 +160,7 @@ You can request multiple verifiers in a single proof. Provide all IDs in `verifi
 
 ```json
 {
-  "verifierIds": ["nft-ownership", "token-holding"],
+  "verifierIds": ["nft-ownership", "token-holding", "ownership-licensed"],
   "data": {
     "nft-ownership": {
       "ownerAddress": "0x...",
@@ -173,6 +173,17 @@ You can request multiple verifiers in a single proof. Provide all IDs in `verifi
       "contractAddress": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
       "minBalance": "100.0",
       "chainId": 1
+    },
+    "ownership-licensed": {
+      "content": "Premium Software License",
+      "owner": "0x...",
+      "license": {
+        "contractAddress": "0x...",
+        "tokenId": "42",
+        "chainId": 1,
+        "ownerAddress": "0x...",
+        "type": "erc721"
+      }
     }
   },
   "walletAddress": "0x...",
@@ -488,6 +499,7 @@ Public verifiers:
 - `ownership-basic`
 - `nft-ownership`
 - `token-holding`
+- `ownership-licensed`
 
 
 

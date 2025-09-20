@@ -101,6 +101,24 @@ const proof = await client.verify({
 });
 ```
 
+### Licensed Ownership
+```javascript
+const proof = await client.verify({
+  verifier: 'ownership-licensed',
+  data: {
+    content: 'Premium Software License',
+    owner: walletAddress,
+    license: {
+      contractAddress: '0x...',
+      tokenId: '42',
+      chainId: 1,
+      ownerAddress: walletAddress,
+      type: 'erc721'
+    }
+  }
+});
+```
+
 
 
 ## React Components

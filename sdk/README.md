@@ -56,6 +56,23 @@ const proof = await client.verify({
 });
 ```
 
+// Licensed ownership
+const licensed = await client.verify({
+  verifier: 'ownership-licensed',
+  data: {
+    content: 'Premium Software License',
+    owner: walletAddress,
+    license: {
+      contractAddress: '0x...',
+      tokenId: '42',
+      chainId: 1,
+      ownerAddress: walletAddress,
+      type: 'erc721'
+    }
+  }
+});
+```
+
 ### Check Status
 
 ```javascript
