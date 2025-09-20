@@ -1,8 +1,8 @@
 # NEUS Network
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![npm version](https://badge.fury.io/js/%40neus%2Fsdk.svg)](https://badge.fury.io/js/%40neus%2Fsdk)
-[![Version](https://img.shields.io/badge/Version-1.0.0-green.svg)](https://github.com/neus/network/releases/tag/v1.0.0)
+[![License](https://img.shields.io/badge/License-BUSL--1.1%20(contracts)%20%7C%20Apache--2.0%20(SDK)-blue)](./LICENSE)
+[![npm](https://img.shields.io/npm/v/%40neus%2Fsdk?logo=npm&label=@neus/sdk)](https://www.npmjs.com/package/%40neus%2Fsdk)
+
 
 **NEUS is a proof-of-anything infrastructure—a secure, privacy-first verification network that works across all apps, chains, and identities.**
 
@@ -12,6 +12,9 @@
 - **Cross-chain proofs** - Verify once, use everywhere  
 - **Privacy controls** - Public or private verification options
 - **Multiple verifiers** - Content, NFTs, tokens, licenses
+
+⚠️ Disclaimer: Pilot Phase
+Live and open for use, but **not recommended for production deployments**. 
 
 ## Quick Start
 
@@ -162,35 +165,35 @@ npm install @neus/widgets @neus/sdk
 ## Documentation
 
 - **[5-Minute Tutorial](./docs/QUICKSTART.md)** - Quick integration guide
-- **[API Reference](./docs/api/index.md)** - HTTP API
-- **[Available Verifiers](./docs/VERIFIERS.md)** - All verification types
+- **[API Reference](./docs/api/README.md)** - HTTP API
+- **[All Verifiers](./docs/verifiers/README.md)** - Verification types
 - **[Complete Documentation](./docs/)** - Technical documentation
+- **[Governance](./docs/GOVERNANCE.md)** - Governance model and DAO
 - **[Legal Information](./docs/LEGAL.md)** - Terms, privacy, and legal framework
 
 ## Network Details
 
 **API Endpoint**: https://api.neus.network  
 **Hub Chain**: Base Sepolia (84532)  
-**Contract Addresses**: [deployments.json](./deployments.json)
+**Contract Addresses**: [Deployments](./docs/DEPLOYMENTS.md)
 
 ## Current Status
 
-**Version**: 1.0.0 - Genesis Phase  
-**Testnet**: Free verification services for development and testing  
-**Production**: Genesis Pass NFT live on Base Mainnet
+**Testnet**: Free verification services for development and testing
 
 ## Contributing
 
 We welcome contributions to the NEUS Network ecosystem:
 
 - **Bug Reports**: [GitHub Issues](https://github.com/neus/network/issues)
-- **Feature Requests**: [GitHub Issues](https://github.com/neus/network/issues)
-- **New Verifiers**: See [Contributing Guidelines](./CONTRIBUTING.md)
+- **Ideas & Feature Requests**: [GitHub Discussions](https://github.com/neus/network/discussions)
+- **New Verifiers**: See [Contributing Guidelines](./CONTRIBUTING.md) and open PRs to `verifier-staging`
 - **Documentation Improvements**: Submit pull requests
 
 ## Support
 
-- **Community Support**: [GitHub Issues](https://github.com/neus/network/issues)
+- **Community Questions & Ideas**: [GitHub Discussions](https://github.com/neus/network/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/neus/network/issues)
 - **Technical Questions**: dev@neus.network
 - **Partnership Inquiries**: info@neus.network
 - **Security Issues**: dev@neus.network
@@ -219,6 +222,6 @@ See [LICENSE](./LICENSE) for complete dual-license terms.
 
 ---
 
-**NEUS Network - Verification Infrastructure**
+**NEUS Network | The Proof Layer**
 
 © NEUS Network, Inc. All rights reserved. See LICENSE.

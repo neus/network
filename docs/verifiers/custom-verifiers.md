@@ -168,11 +168,12 @@ try {
 
 ## Submission Process
 
-1. **Propose**: Submit GitHub issue with verifier specification
-2. **Review**: Technical and community review process
-3. **Implement**: Build following standards above
-4. **Test**: Comprehensive test coverage
-5. **Deploy**: Integration into Core Registry
+1. **Propose**: Start a GitHub Discussion with your verifier specification
+2. **Review**: Technical and community review process in Discussions
+3. **Implement**: Build following the standards above
+4. **Submit**: Open a Pull Request targeting the `verifier-staging` branch with spec + schemas
+5. **Test**: Include comprehensive test coverage and examples
+6. **Merge**: Maintainers will merge from `verifier-staging` to `main` after review
 
 ### Proposal Template
 
@@ -201,5 +202,6 @@ What this verifier proves
 
 ## Support
 
-- **Technical Questions**: [GitHub Issues](https://github.com/neus/network/issues)
-- **Verifier Ideas**: dev@neus.network
+- **Community Questions & Ideas**: [GitHub Discussions](https://github.com/neus/network/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/neus/network/issues)
+- **Implementation Help**: dev@neus.network

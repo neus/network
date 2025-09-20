@@ -1,11 +1,16 @@
 # Verifiers
 
-Core verifier primitives for building proof-based experiences. For schemas and API shapes, refer to the pages in the Public and Partner sections below.
+Core verifier primitives for building proof-based experiences.
 
-- See API reference: [API](../api/index.md)
+- See API reference: [API](../api/README.md)
 - See JSON Schemas: [Verifier Schemas](./schemas/)
 
-## Sections
+## Pages
 
-- [Public](./public/README.md)
-- [Partner](./partner/README.md)
+- [Overview](./spec.md)
+- [Ownership — Basic](./ownership-basic.md)
+- [NFT Ownership](./nft-ownership.md)
+- [Token Holding](./token-holding.md)
+- [Licensed Ownership](./ownership-licensed.md)
+- [Custom Verifiers](./custom-verifiers.md)
+- [Contributing](./contributing.md)

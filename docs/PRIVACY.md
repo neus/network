@@ -2,7 +2,11 @@
 
 **Privacy controls and data visibility settings for verification proofs.**
 
-For the formal, user-facing Privacy Policy, see: https://docs.neus.network/learn/legal/privacy-policy
+For the formal, user-facing Privacy Policy, see: [Privacy Policy](https://docs.neus.network/learn/legal/privacy-policy)
+
+See also
+- API options and request examples: [./api/README.md](./api/README.md)
+- Protocol standards (message format, chains): [./STANDARDS.md](./STANDARDS.md)
 
 ## Privacy Model
 
@@ -46,6 +50,9 @@ const privateProof = await client.verify({
 ```
 
 ## Security Guarantees
+
+Related
+- Security model and attack surface: [./SECURITY.md](./SECURITY.md)
 
 ### Built-in Protection
 
@@ -145,7 +152,7 @@ function ProofDisplay({ proof }) {
     public: 'Public',
     private: 'Private'
   };
-  
+ 
   return (
     <div>
       <span>{privacyLabel[proof.privacyLevel]}</span>
@@ -180,7 +187,7 @@ function ProofDisplay({ proof }) {
 const rateLimiter = {
   lastRequest: 0,
   minInterval: 1000, // 1 second between requests
-  
+ 
   async checkStatus(qHash) {
     const now = Date.now();
     const timeSince = now - this.lastRequest;
@@ -218,9 +225,13 @@ A: Private proofs become permanently inaccessible. Consider backup strategies.
 ### Getting Help
 
 - **Documentation**: See [5-Minute Tutorial](./QUICKSTART.md)
-- **Technical Issues**: [GitHub Issues](https://github.com/neus/network/issues)
-- **Security & Technical Concerns**: dev@neus.network
-- **Business & Partnerships**: info@neus.network
+- **Community Questions & Ideas**: [GitHub Discussions](https://github.com/neus/network/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/neus/network/issues)
+- **Security & Technical Concerns**: [dev@neus.network](mailto:dev@neus.network)
+- **Business & Partnerships**: [info@neus.network](mailto:info@neus.network)
+
+See also
+- End-to-end API troubleshooting: [./api/README.md#troubleshooting](./api/README.md)
 
 ---
 

@@ -1,7 +1,5 @@
 # Voucher Security Model
 
-**Version:** 1.0.0  
-
 ## Overview
 
 Security measures that prevent fake vouchers and ensure system integrity.

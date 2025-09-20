@@ -22,11 +22,15 @@ const proof = await client.verify({
 });
 
 console.log('Proof created:', proof.qHash);
+
+// See also: Privacy controls and options → ./PRIVACY.md
+// See also: API endpoints and message format → ./api/README.md
 ```
 
 ### Configure privacy and cross-chain (optional)
 
-Add options when you need public visibility, IPFS anchoring, or cross-chain propagation. This keeps the basic example simple while highlighting launch features:
+Add options when you need specific visibility settings, IPFS anchoring, or cross-chain propagation:
+(Learn more: Privacy & options → ./PRIVACY.md; Standards → ./STANDARDS.md)
 
 ```javascript
 // Full options example: privacy + IPFS + cross-chain
@@ -58,6 +62,7 @@ const proof = await client.verify({
 ```javascript
 const status = await client.getStatus(proof.qHash);
 console.log('Verified:', status.success);
+// See also: Polling and status flow → ./REFERENCE.md#pollproofstatus
 ```
 
 ## What You Can Verify
@@ -96,22 +101,7 @@ const proof = await client.verify({
 });
 ```
 
-### Licensed Content
-```javascript
-const proof = await client.verify({
-  verifier: 'ownership-licensed',
-  data: {
-    content: 'Licensed content',
-    owner: walletAddress,
-    license: {
-      contractAddress: '0x...',
-      tokenId: '1',
-      chainId: 1,
-      ownerAddress: walletAddress
-    }
-  }
-});
-```
+
 
 ## React Components
 
@@ -133,6 +123,7 @@ Works everywhere via HTTP:
 
 ```bash
 # Single API call - sign standard format and submit
+# See also: Standard Signing String builder and troubleshooting → ./api/README.md#troubleshooting
 curl -X POST https://api.neus.network/api/v1/verification \
   -H "Content-Type: application/json" \
   -d '{
@@ -202,14 +193,15 @@ try {
 ## Next Steps
 
 - **[Complete Documentation](./REFERENCE.md)** - Technical reference
-- **[Available Verifiers](./VERIFIERS.md)** - All verification types
-- **[Framework Examples](../examples/)** - React, Next.js, Node.js apps
+- **[Available Verifiers](./verifiers/README.md)** - All verification types
+- **[Framework Examples](https://github.com/neus/network/tree/main/examples)** - React, Next.js, Node.js apps
 - **[Contract Information](./DEPLOYMENTS.md)** - Network addresses and ABIs
 
 ## Support
 
-- **Questions**: [GitHub Issues](https://github.com/neus/network/issues)
-- **Technical Support**: dev@neus.network
+- **Community Questions & Ideas**: [GitHub Discussions](https://github.com/neus/network/discussions)
+- **Bug Reports**: [GitHub Issues](https://github.com/neus/network/issues)
+- **Technical Support**: [dev@neus.network](mailto:dev@neus.network)
 
 ---
 

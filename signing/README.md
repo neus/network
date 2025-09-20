@@ -58,4 +58,4 @@ If needed, the API provides helper endpoints:
 - `/api/v1/verification/standardize` - Get exact message format
 - `/api/v1/verification/diagnose` - Debug signature issues
 
-See the [API Reference](../docs/api/index.md) for details.
+See the [API Reference](../docs/api/README.md) for details.

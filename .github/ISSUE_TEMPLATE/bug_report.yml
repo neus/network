@@ -1,0 +1,68 @@
+name: "Bug report"
+description: Report a reproducible defect in SDK, widgets, API, or contracts
+title: "bug: <clear summary>"
+labels: ["bug", "triage"]
+assignees: []
+body:
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - sdk
+        - widgets
+        - api
+        - contracts
+        - docs
+    validations: { required: true }
+
+  - type: input
+    id: version
+    attributes:
+      label: Version(s)
+      description: Package versions or git SHA
+      placeholder: "sdk@1.0.0 / widgets@1.0.0 / commit abc123"
+    validations: { required: true }
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: "Node 20.x, Chrome 123, Base Sepolia, Windows 11"
+    validations: { required: true }
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: "Code snippet or minimal repo. Redact tokens/keys. Do NOT include private proof content."
+      placeholder: "1) ... 2) ... 3) ..."
+      render: bash
+    validations: { required: true }
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected vs. actual
+      placeholder: "Expected: ...  Actual: ..."
+    validations: { required: true }
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs / screenshots
+      description: "Sanitize anything sensitive. Prefer non-identifying proof IDs (qHash) only if the proof was created as public."
+      render: text
+
+  - type: checkboxes
+    id: attestations
+    attributes:
+      label: Privacy & security attestations
+      options:
+        - label: I am **NOT** reporting a security vulnerability (if you are, email dev@neus.network).
+          required: true
+        - label: I included **no secrets, API keys, access tokens, or private keys**.
+          required: true
+        - label: I did **not** include PII or sensitive content from a private proof.
+          required: true
+

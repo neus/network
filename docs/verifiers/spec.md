@@ -50,7 +50,7 @@ Technical specification for building verifiers that integrate with NEUS Network.
 }
 ```
 
-## Genesis Verifier Schemas
+## Verifier Schemas (current)
 
 ### ownership-basic
 
@@ -134,42 +134,7 @@ Technical specification for building verifiers that integrate with NEUS Network.
 }
 ```
 
-### ownership-licensed
 
-**Input:**
-```json
-{
-  "content": "string (required)",
-  "owner": "address (required)",
-  "license": {
-    "contractAddress": "address (required)",
-    "tokenId": "string (required)",
-    "chainId": "number (required)",
-    "ownerAddress": "address (required)",
-    "type": "string (optional) - erc721|erc1155"
-  }
-}
-```
-
-**Output:**
-```json
-{
-  "owner": "0x...",
-  "content": "Licensed content description",
-  "license": {
-    "contractAddress": "0x...",
-    "tokenId": "1",
-    "chainId": 1,
-    "ownerAddress": "0x...",
-    "type": "erc721"
-  },
-  "onChainData": {
-    "actualOwner": "0x...",
-    "verified": true
-  },
-  "verificationTimestamp": 1730000000000
-}
-```
 
 ## Manual Signing
 
