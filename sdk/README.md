@@ -54,14 +54,13 @@ const proof = await client.verify({
     chainId: 1
   }
 });
-```
 
 // Licensed ownership
 const licensed = await client.verify({
   verifier: 'ownership-licensed',
   data: {
     content: 'Premium Software License',
-    owner: walletAddress,
+    ownerAddress: walletAddress,
     license: {
       contractAddress: '0x...',
       tokenId: '42',
