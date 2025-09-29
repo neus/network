@@ -18,6 +18,8 @@ npm start
 
 Server runs on http://localhost:3001
 
+This server exposes a forwarder at `/api/neus/*` for frontend apps to use as a same-origin proxy to the NEUS API. It strips `Origin/Referer/Cookie` from requests.
+
 ## API Endpoints
 
 ### Content Publishing

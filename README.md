@@ -4,7 +4,7 @@
 [![npm](https://img.shields.io/npm/v/%40neus%2Fsdk?logo=npm&label=@neus/sdk)](https://www.npmjs.com/package/%40neus%2Fsdk)
 
 
-**NEUS is a proof-of-anything infrastructure—a secure, privacy-first verification network that works across all apps, chains, and identities.**
+**NEUS is a proof-of-anything infrastructure—a secure, privacy-first verification network that works across all apps, chains, and identities. Verfy once, prove everywhere.**
 
 ## Key Features
 

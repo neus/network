@@ -6,6 +6,39 @@ const client = new NeusClient();
 
 app.use(express.json());
 
+// Simple forwarder for browser apps (same-origin proxy)
+// Frontend base: http://localhost:3001/api/neus
+const NEUS_API_BASE = 'https://api.neus.network';
+
+app.all('/api/neus/*', async (req, res) => {
+  try {
+    const basePath = '/api/neus/';
+    const idx = req.originalUrl.indexOf(basePath);
+    const suffix = idx >= 0 ? req.originalUrl.slice(idx + basePath.length) : '';
+    const targetUrl = `${NEUS_API_BASE}/${suffix}`;
+
+    const headers = new Headers();
+    headers.set('content-type', 'application/json');
+    const auth = req.headers['authorization'];
+    if (auth) headers.set('authorization', auth);
+
+    const body = ['GET', 'HEAD'].includes(req.method) ? undefined : JSON.stringify(req.body || {});
+
+    const upstream = await fetch(targetUrl, {
+      method: req.method,
+      headers,
+      body
+    });
+
+    const text = await upstream.text();
+    res.status(upstream.status);
+    res.set('content-type', upstream.headers.get('content-type') || 'application/json');
+    res.send(text);
+  } catch (err) {
+    res.status(502).json({ success: false, error: 'Upstream error', detail: String(err && err.message || err) });
+  }
+});
+
 // Verify content ownership before publishing
 app.post('/api/publish', async (req, res) => {
   try {

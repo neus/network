@@ -37,6 +37,7 @@ declare module '@neus/widgets' {
     showDot?: boolean;
     labelOverride?: string;
     proof?: { status?: string };
+    apiUrl?: string;
   }
 
   export function ProofBadge(props: ProofBadgeProps): React.ReactElement;

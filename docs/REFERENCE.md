@@ -28,7 +28,8 @@ npm install @neus/sdk
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient();
+// In browser apps, prefer a same-origin server route to avoid CORS
+const client = new NeusClient({ apiUrl: '/api/neus' });
 const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'Hello NEUS'
@@ -40,7 +41,7 @@ const proof = await client.verify({
 
 ```javascript
 const client = new NeusClient({
-  apiUrl: 'https://api.neus.network', // Default
+  apiUrl: 'https://api.neus.network', // Default (server-side). In browsers use /api/neus
   timeout: 30000                      // Request timeout in ms
 });
 ```
@@ -366,7 +367,8 @@ Display verification status with an optional status dot.
 ```jsx
 import { ProofBadge } from '@neus/widgets';
 
-<ProofBadge qHash="0x..." />
+// In dev, pass a proof object to avoid cross-origin status fetches
+<ProofBadge qHash="0x..." proof={{ status: 'verified' }} />
 <ProofBadge qHash="0x..." size="md" showDot={false} />
 <ProofBadge qHash="0x..." labelOverride="Verified Content" />
 ```

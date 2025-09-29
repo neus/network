@@ -18,7 +18,8 @@ Gate content behind verification. Two modes: **create** (default) and **access**
 import { VerifyGate } from '@neus/widgets';
 
 // Create mode - generate new proof
-<VerifyGate requiredVerifiers={['nft-ownership']}>
+// Use apiUrl to point at your same-origin route in browsers
+<VerifyGate requiredVerifiers={['nft-ownership']} apiUrl="/api/neus">
   <PremiumContent />
 </VerifyGate>
 
@@ -43,7 +44,8 @@ Display verification status with optional status dot.
 ```jsx
 import { ProofBadge } from '@neus/widgets';
 
-<ProofBadge qHash="0x..." />
+// In dev, pass proof to avoid cross-origin status fetches
+<ProofBadge qHash="0x..." proof={{ status: 'verified' }} />
 <ProofBadge qHash="0x..." size="md" showDot={false} />
 <ProofBadge qHash="0x..." labelOverride="Verified Content" />
 ```

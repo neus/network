@@ -9,7 +9,8 @@ function ProofBadge({
   uiLinkBase = "https://neus.network",
   showDot = true,
   labelOverride,
-  proof
+  proof,
+  apiUrl
 }) {
   const [status, setStatus] = useState(() => {
     if (proof) {
@@ -24,7 +25,8 @@ function ProofBadge({
     let cancelled = false;
     async function checkStatus() {
       try {
-        const res = await fetch(`https://api.neus.network/api/v1/verification/status/${qHash}`, {
+        const base = apiUrl ? String(apiUrl).replace(/\/$/, "") : "https://api.neus.network";
+        const res = await fetch(`${base}/api/v1/verification/status/${qHash}`, {
           headers: { Accept: "application/json" }
         });
         if (cancelled)

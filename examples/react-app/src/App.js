@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NeusClient } from '@neus/sdk';
 import { VerifyGate, ProofBadge } from '@neus/widgets';
 
-const client = new NeusClient();
+const client = new NeusClient({ apiUrl: '/api/neus' });
 
 function App() {
   const [proof, setProof] = useState(null);
@@ -38,7 +38,7 @@ function App() {
         {proof && (
           <div>
             <p>Proof ID: {proof.qHash}</p>
-            <ProofBadge qHash={proof.qHash} />
+            <ProofBadge qHash={proof.qHash} proof={proof} />
           </div>
         )}
       </section>
@@ -47,6 +47,7 @@ function App() {
       <section>
         <h2>2. NFT-Gated Content</h2>
         <VerifyGate 
+          apiUrl={'/api/neus'}
           requiredVerifiers={['nft-ownership']}
           verifierData={{
             'nft-ownership': {
@@ -71,6 +72,7 @@ function App() {
       <section>
         <h2>3. Token Holder Verification</h2>
         <VerifyGate
+          apiUrl={'/api/neus'}
           requiredVerifiers={['token-holding']}
           verifierData={{
             'token-holding': {

@@ -19,6 +19,8 @@ npm run dev
 
 Open http://localhost:3000
 
+The example includes a server route handler at `/api/neus/*` that forwards requests to the NEUS API with sanitized headers. No env required.
+
 ## Integration Patterns
 
 ### 1. Client-Side Verification
@@ -26,7 +28,8 @@ Open http://localhost:3000
 'use client';
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient();
+// Use same-origin proxy route to avoid CORS in dev/preview
+const client = new NeusClient({ apiUrl: '/api/neus' });
 const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'My blog post'
@@ -46,7 +49,8 @@ import { VerifyGate } from '@neus/widgets';
 ```jsx
 import { ProofBadge } from '@neus/widgets';
 
-<ProofBadge qHash={proof.qHash} />
+// In dev, pass the proof object to avoid cross-origin fetches
+<ProofBadge qHash={proof.qHash} proof={proof} />
 ```
 
 ## Real-World Use Cases

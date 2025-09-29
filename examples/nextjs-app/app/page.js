@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { NeusClient } from '@neus/sdk';
 import { VerifyGate, ProofBadge } from '@neus/widgets';
 
-const client = new NeusClient();
+const client = new NeusClient({ apiUrl: '/api/neus' });
 
 export default function HomePage() {
   const [proofs, setProofs] = useState([]);
@@ -43,9 +43,11 @@ export default function HomePage() {
         <h2>NFT Holder Area</h2>
         <VerifyGate 
           requiredVerifiers={['nft-ownership']}
+          apiUrl="/api/neus"
           verifierData={{
             'nft-ownership': {
-              contractAddress: '0x60e4d786628fea6478f785a6d7e704777c86a7c6', // MAYC
+              contractAddress: '0xBC4CA0EdA7647A8aB7C2061c2E118A18a936f13D',
+              tokenId: '1',
               chainId: 1
             }
           }}
@@ -68,7 +70,7 @@ export default function HomePage() {
             {proofs.map((proof, index) => (
               <div key={index} className="proof-card">
                 <div>Proof #{index + 1}</div>
-                <ProofBadge qHash={proof.qHash} />
+                <ProofBadge qHash={proof.qHash} proof={proof} />
                 <code>{proof.qHash.slice(0, 16)}...</code>
               </div>
             ))}

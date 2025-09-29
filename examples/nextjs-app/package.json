@@ -14,7 +14,12 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0"
   },
-  "keywords": ["neus", "verification", "nextjs", "app-router"],
+  "keywords": [
+    "neus",
+    "verification",
+    "nextjs",
+    "app-router"
+  ],
   "author": "NEUS Network",
   "license": "Apache-2.0"
 }

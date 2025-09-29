@@ -18,6 +18,11 @@ npm run dev
 
 Open http://localhost:5173
 
+Development proxy:
+
+- The Vite dev server proxies `/api/neus` to the NEUS API. No env needed.
+- Alternatively, run the Node backend example and point the browser to it.
+
 ## What's Demonstrated
 
 ### 1. Simple Verification

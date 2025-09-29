@@ -13,7 +13,8 @@ npm install @neus/sdk
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient();
+// Use same-origin route in browsers to avoid CORS in dev/preview
+const client = new NeusClient({ apiUrl: '/api/neus' /* or your server route */ });
 
 // Create a content ownership proof
 const proof = await client.verify({
@@ -141,6 +142,7 @@ Works everywhere via HTTP:
 
 ```bash
 # Single API call - sign standard format and submit
+# In browsers, call your own same-origin route (e.g., /api/neus) to avoid CORS
 # See also: Standard Signing String builder and troubleshooting → ./api/README.md#troubleshooting
 curl -X POST https://api.neus.network/api/v1/verification \
   -H "Content-Type: application/json" \
