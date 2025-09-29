@@ -182,7 +182,7 @@ For full policy, scope, and timelines, see the official Security Disclosure poli
 
 ### Security Team
 - **Email**: dev@neus.network
-- **Response Time**: 24 hours for acknowledgment
+- **Response Time**: Acknowledged ≤ 3 business days; triage ≤ 7; coordinated disclosure target 90 days (or earlier when fixed).
 - **Emergency**: Include "CRITICAL" in subject line
 
 - **General Support**: info@neus.network
@@ -195,9 +195,8 @@ For full policy, scope, and timelines, see the official Security Disclosure poli
 Bug bounty program will be announced with the mainnet launch. Security issues should be reported via [dev@neus.network](mailto:dev@neus.network).
 
 ### Current Rewards
-- **Critical vulnerabilities**: Recognition + potential token rewards
-- **Responsible disclosure**: Public acknowledgment and contributor status
-- **Community contributions**: Priority support and early access features
+-  Public acknowledgment and security contributor role
+-  Priority support and early access features
 
 ---
 
