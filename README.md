@@ -4,17 +4,11 @@
 [![npm](https://img.shields.io/npm/v/%40neus%2Fsdk?logo=npm&label=@neus/sdk)](https://www.npmjs.com/package/%40neus%2Fsdk)
 
 
-**NEUS is the open, privacy-first programmable proof layer that makes verification portable across apps, chains, and identities. Verify once, prove anywhere.**
+NEUS is an extensible, privacy-first verification infrastructure that works across apps, chains, and identities.
 
-## Key Features
+Prove something once and get a portable proof, private by default or public if you choose.
 
-- **Wallet-based authentication** - No accounts or API keys
-- **Cross-chain proofs** - Verify once, use anywhere  
-- **Privacy controls** - Public, private, and visibility options
-- **Multiple verifiers** - Content, NFTs, tokens, licenses
-
-⚠️ Disclaimer: Pilot Phase
-Live and open for use, but **not recommended for production deployments**. 
+**Verify once, prove anywhere.**
 
 ## Quick Start
 
