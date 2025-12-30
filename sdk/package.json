@@ -1,6 +1,6 @@
 {
   "name": "@neus/sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "NEUS SDK - Create and verify cryptographic proofs with simple, clean API",
   "main": "index.js",
   "type": "module",
