@@ -3,7 +3,7 @@ description: Practical, step-by-step integrations for real-world gating and veri
 icon: 🧭
 ---
 
-# Overview
+# Guides
 
 Practical, step-by-step integrations for real-world gating and verification flows.
 

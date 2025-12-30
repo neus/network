@@ -3,7 +3,7 @@ description: Core concepts you’ll use when integrating NEUS.
 icon: 🧠
 ---
 
-# Overview
+# Concepts
 
 Core concepts you’ll use when integrating NEUS.
 

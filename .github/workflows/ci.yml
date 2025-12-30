@@ -2,8 +2,18 @@ name: CI
 
 on:
   pull_request:
+    paths:
+      - "sdk/**"
+      - ".github/workflows/**"
+      - "package.json"
+      - "package-lock.json"
   push:
     branches: [main]
+    paths:
+      - "sdk/**"
+      - ".github/workflows/**"
+      - "package.json"
+      - "package-lock.json"
   workflow_dispatch:
 
 permissions:
@@ -22,54 +32,71 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git clone --depth=1 https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git .
+            git checkout ${{ github.event.pull_request.head.sha }}
+          else
+            git clone --depth=1 https://github.com/${{ github.repository }}.git .
+            git checkout ${{ github.sha }}
+          fi
 
       - name: Setup Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-          cache-dependency-path: sdk/package-lock.json
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install ${{ env.NODE_VERSION }}
+          nvm use ${{ env.NODE_VERSION }}
+          echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
+          echo "$HOME/.nvm" >> $GITHUB_PATH
+          node --version
+          npm --version
 
       - name: Install dependencies
         run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
           if [ -f package-lock.json ]; then npm ci; else npm install; fi
         working-directory: sdk
 
       - name: Lint
-        run: npm run lint
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm run lint
         working-directory: sdk
 
       - name: Test
-        run: npm test --silent
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm test --silent
         working-directory: sdk
 
       - name: Build
-        run: npm run build
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm run build
         working-directory: sdk
 
       - name: Security audit (high severity)
-        run: npm audit --omit=dev --audit-level=high
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm audit --omit=dev --audit-level=high
         working-directory: sdk
 
       - name: Package check
-        run: npm pack --dry-run
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm pack --dry-run
         working-directory: sdk
-
-  docs:
-    name: Docs (markdown + OpenAPI validation)
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Markdown lint
-        run: npx --yes markdownlint-cli2@latest --config .markdownlint-cli2.jsonc
-
-      - name: OpenAPI lint (public surface)
-        run: npx --yes @redocly/cli@2.14.1 lint docs/api/public-api.json

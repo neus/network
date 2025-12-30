@@ -23,7 +23,7 @@ Authentication is handled via request-bound wallet signatures following the [NEU
 
 ## Public OpenAPI Surface
 
-For detailed request/response schemas, parameter definitions, and error codes, refer to the [Public API Spec](public-api.json). The spec includes:
+For detailed request/response schemas, parameter definitions, and error codes, refer to the [Public API Spec](public-api.md) (canonical JSON: [`public-api.json`](public-api.json)). The spec includes:
 
 - **Health**: Liveness and readiness probes.
 - **Verification**: Submission and polling for new proofs.

@@ -1,0 +1,77 @@
+name: Docs
+
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+      - ".gitbook.yaml"
+      - ".markdownlint-cli2.jsonc"
+      - "sdk/**/*.md"
+      - "examples/**/*.md"
+      - "README.md"
+      - "SECURITY.md"
+      - "CONTRIBUTING.md"
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - ".gitbook.yaml"
+      - ".markdownlint-cli2.jsonc"
+      - "sdk/**/*.md"
+      - "examples/**/*.md"
+      - "README.md"
+      - "SECURITY.md"
+      - "CONTRIBUTING.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: docs-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 20.19.0
+
+jobs:
+  docs:
+    name: Docs (markdown + OpenAPI validation)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git clone --depth=1 https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git .
+            git checkout ${{ github.event.pull_request.head.sha }}
+          else
+            git clone --depth=1 https://github.com/${{ github.repository }}.git .
+            git checkout ${{ github.sha }}
+          fi
+
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install ${{ env.NODE_VERSION }}
+          nvm use ${{ env.NODE_VERSION }}
+          echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
+          echo "$HOME/.nvm" >> $GITHUB_PATH
+          node --version
+          npm --version
+
+      - name: Markdown lint
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npx --yes markdownlint-cli2@latest --config .markdownlint-cli2.jsonc
+
+      - name: OpenAPI lint (public surface)
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npx --yes @redocly/cli@2.14.1 lint docs/api/public-api.json
+

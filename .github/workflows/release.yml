@@ -21,37 +21,79 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        run: |
+          git clone --depth=1 --branch=${{ github.ref_name }} https://github.com/${{ github.repository }}.git .
 
       - name: Setup Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: ${{ env.NPM_REGISTRY }}
-          cache: npm
-          cache-dependency-path: sdk/package-lock.json
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install ${{ env.NODE_VERSION }}
+          nvm use ${{ env.NODE_VERSION }}
+          echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
+          echo "$HOME/.nvm" >> $GITHUB_PATH
+          node --version
+          npm --version
+          npm config set registry ${{ env.NPM_REGISTRY }}
 
       # Ensure package.json version matches the tag (vX.Y.Z)
       - name: Verify version matches tag
-        run: node -e "const v=require('./sdk/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(`package.json ${v} != tag ${t}`);process.exit(1)}"
-      - run: npm ci
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          node -e "const v=require('./sdk/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(`package.json ${v} != tag ${t}`);process.exit(1)}"
+      - name: Install dependencies
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm ci
         working-directory: sdk
-      - run: npm run lint
+      - name: Lint
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm run lint
         working-directory: sdk
-      - run: npm test --silent
+      - name: Test
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm test --silent
         working-directory: sdk
       - name: Production audit (high severity)
-        run: npm audit --omit=dev --audit-level=high
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm audit --omit=dev --audit-level=high
         working-directory: sdk
       # Build before pack checks so the dry-run validates the real publish artifact
       # (widgets/verify-gate/dist/** and cjs/** are generated during build/prepack).
-      - run: npm run build
+      - name: Build
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm run build
         working-directory: sdk
       - name: Package check
-        run: npm pack --dry-run
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm pack --dry-run
         working-directory: sdk
       - name: Publish @neus/sdk
-        run: npm publish --access public --provenance
+        run: |
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm use ${{ env.NODE_VERSION }}
+          npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: sdk
