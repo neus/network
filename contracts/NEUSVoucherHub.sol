@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: BUSL-1.1
-// Copyright (c) 2025 NEUS Network, Inc.
+// SPDX-License-Identifier: Business Source License 1.1
+// Copyright (c) 2025 NEUS
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -24,16 +24,15 @@ import "./lib/NeusTimelocks.sol"; // Import the new library
  *      This approach provides flexibility, cost efficiency, and reliability
  *      while maintaining full decentralization through event-driven architecture.
  *      
- *      Repository: https://github.com/neus/network
+ *      Repository: https://github.com/neusnetwork/neus-network
  * 
- * @custom:version 1.0.0
- * @custom:security-contact dev@neus.network
- * @custom:source https://github.com/neus/network
+ * @custom:version 1.0.0-showcase
+ * @custom:security-contact security@neus.network
  */
 contract NEUSVoucherHub is IVoucherHub, Ownable, Pausable, ReentrancyGuard {
     // Contract Metadata and Version Tracking
     string public constant CONTRACT_NAME = "NEUSVoucherHub";
-    string public constant CONTRACT_VERSION = "1.0.0";
+    string public constant CONTRACT_VERSION = "1.0.0-showcase";
     uint256 public immutable DEPLOYMENT_TIMESTAMP;
     uint256 public immutable DEPLOYMENT_BLOCK;
     bytes32 public immutable DEPLOYMENT_CODEHASH;
@@ -68,7 +67,7 @@ contract NEUSVoucherHub is IVoucherHub, Ownable, Pausable, ReentrancyGuard {
     event UpgradeScheduled(bytes32 indexed proposalId, uint256 unlockTimestamp);
     event UpgradeExecuted(bytes32 indexed proposalId);
     
-    // Enhanced events for monitoring and auditing
+    // Enhanced events for debugging and monitoring
     event VoucherCreationPausedStateChanged(bool paused, address indexed admin, uint256 timestamp, string reason);
     event EmergencyAction(string indexed action, address indexed admin, uint256 timestamp, string details);
     
@@ -114,6 +113,7 @@ contract NEUSVoucherHub is IVoucherHub, Ownable, Pausable, ReentrancyGuard {
      *      The voucherId is deterministically generated using qHash, targetChainId, verifierId, block.timestamp, and a counter.
      * @param params Array of MinimalVoucherParams structs.
      * @return voucherIds Array of unique identifiers for the created vouchers.
+     * @custom:deprecated This function is inefficient and will be removed. Use createVoucher instead.
      */
     function createMinimalVoucherBatch(
         MinimalVoucherParams[] calldata params
@@ -153,6 +153,43 @@ contract NEUSVoucherHub is IVoucherHub, Ownable, Pausable, ReentrancyGuard {
         }
         totalVouchersCreated += batchSize;
         return voucherIds;
+    }
+
+    /**
+     * @notice Creates a new verification voucher for multiple target chains.
+     * @dev This is the preferred, gas-efficient method for creating vouchers.
+     * @param qHash The quantum-resistant hash of the verified content.
+     * @param targetChainIds Array of chain IDs where the verification should be propagated.
+     * @param verifierId Identifier for the verifier context.
+     * @return voucherId The unique identifier for the created voucher.
+     */
+    function createVoucher(
+        bytes32 qHash,
+        uint256[] calldata targetChainIds,
+        bytes32 verifierId
+    ) external override onlyRegistry whenNotPaused nonReentrant returns (bytes32 voucherId) {
+        require(!voucherCreationPaused, "Voucher creation is temporarily paused");
+        require(targetChainIds.length > 0, "Target chains cannot be empty");
+
+        // Generate a single unique voucher ID for the entire batch
+        voucherId = keccak256(abi.encodePacked(qHash, verifierId, block.timestamp, totalVouchersCreated));
+        require(vouchers[voucherId].timestamp == 0, "Voucher ID collision");
+
+        // Store the voucher with all target chains
+        vouchers[voucherId] = Voucher({
+            qHash: qHash,
+            targetChainIds: targetChainIds,
+            verifierId: verifierId,
+            timestamp: block.timestamp,
+            isActive: true,
+            creator: msg.sender // The registry address
+        });
+
+        totalVouchersCreated++;
+
+        emit VoucherCreated(voucherId, qHash, targetChainIds, verifierId, block.timestamp);
+
+        return voucherId;
     }
     
     /**

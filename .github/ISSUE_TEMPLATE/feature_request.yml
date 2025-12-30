@@ -14,7 +14,7 @@ body:
     id: proposal
     attributes:
       label: Proposal
-      description: "Sketch the solution. If it touches signatures or chain IDs, align with our Standards (numeric chain IDs; 6-line canonical EIP-191 message)."
+      description: "Sketch the solution. If it touches signatures or chain IDs, align with our Standards (numeric chain IDs; 6-line standard EIP-191 message)."
       placeholder: "Link API shape or UX flow"
     validations: { required: true }
 

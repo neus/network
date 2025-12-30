@@ -7,7 +7,6 @@ coverage/
 # Development files
 .eslintrc.json
 .prettierrc
-publish.sh
 
 # Source control
 .git/
@@ -53,3 +52,4 @@ temp/
 !LICENSE
 !SECURITY.md
 !widgets/
+!widgets/verify-gate/dist/**

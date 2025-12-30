@@ -20,105 +20,38 @@ jobs:
     if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v') && github.repository_owner == 'neus'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository (manual)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git init .
-          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --no-tags --depth=1 origin ${GITHUB_SHA}
-          git checkout --progress --force -B release ${GITHUB_SHA}
-      - name: Setup Node ${{ env.NODE_VERSION }} (NodeSource)
-        run: |
-          if ! command -v node >/dev/null || [ "$(node -v | cut -d. -f1)" != "v${NODE_VERSION}" ]; then
-            curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-          fi
-          node -v
-          npm -v
-      - name: Configure npm registry
-        run: |
-          echo "registry=${NPM_REGISTRY}" > ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_REGISTRY }}
+          cache: npm
+          cache-dependency-path: sdk/package-lock.json
+
       # Ensure package.json version matches the tag (vX.Y.Z)
       - name: Verify version matches tag
         run: node -e "const v=require('./sdk/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(`package.json ${v} != tag ${t}`);process.exit(1)}"
-      - run: npm ci || npm install
+      - run: npm ci
         working-directory: sdk
-      - run: npm run lint || echo "no lint"
+      - run: npm run lint
         working-directory: sdk
-      - run: npm test --silent || echo "no tests"
+      - run: npm test --silent
         working-directory: sdk
       - name: Production audit (high severity)
-        run: npm audit --omit=dev --audit-level=high || echo "audit warnings"
+        run: npm audit --omit=dev --audit-level=high
         working-directory: sdk
-      - run: npm pack --dry-run
+      # Build before pack checks so the dry-run validates the real publish artifact
+      # (widgets/verify-gate/dist/** and cjs/** are generated during build/prepack).
+      - run: npm run build
         working-directory: sdk
-      - run: npm run build || echo "no build"
+      - name: Package check
+        run: npm pack --dry-run
         working-directory: sdk
       - name: Publish @neus/sdk
         run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: sdk
-
-  publish_widgets:
-    needs: publish_sdk
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository (manual)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git init .
-          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --no-tags --depth=1 origin ${GITHUB_SHA}
-          git checkout --progress --force -B release ${GITHUB_SHA}
-      - name: Setup Node ${{ env.NODE_VERSION }} (NodeSource)
-        run: |
-          if ! command -v node >/dev/null || [ "$(node -v | cut -d. -f1)" != "v${NODE_VERSION}" ]; then
-            curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-          fi
-          node -v
-          npm -v
-      - name: Configure npm registry
-        run: |
-          echo "registry=${NPM_REGISTRY}" > ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" >> ~/.npmrc
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      # (Optional) ensure widgets version matches tag
-      - name: Verify version matches tag
-        run: node -e "const v=require('./widgets/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(`package.json ${v} != tag ${t}`);process.exit(1)}"
-      # Wait until the just-published SDK is visible on npm (registry propagation)
-      - name: Wait for @neus/sdk to be available
-        run: |
-          TAG=${GITHUB_REF_NAME#v}
-          for i in {1..10}; do
-            npm view @neus/sdk@${TAG} version && exit 0
-            echo "SDK ${TAG} not visible yet; retrying..."
-            sleep 6
-          done
-          echo "SDK ${TAG} not found on npm after retries"; exit 1
-      - name: Install dependencies (widgets)
-        run: npm install
-        working-directory: widgets
-      - run: npm run lint || echo "no lint"
-        working-directory: widgets
-      - run: npm test --silent || echo "no tests"
-        working-directory: widgets
-      - name: Production audit (high severity)
-        run: npm audit --omit=dev --audit-level=high || echo "audit warnings"
-        working-directory: widgets
-      - run: npm pack --dry-run
-        working-directory: widgets
-      - run: npm run build || echo "no build"
-        working-directory: widgets
-      - name: Publish @neus/widgets
-        run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        working-directory: widgets

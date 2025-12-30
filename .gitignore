@@ -30,6 +30,7 @@ tmp/
 temp/
 *.tmp
 **/.next/
+sdk/cjs/
 
 # Tooling caches & configs (keep out of repo)
 .eslintcache
@@ -37,11 +38,3 @@ temp/
 
 # Local packages / tarballs
 *.tgz
-
-# Keep built ESM bundle for widgets (required by verify-gate)
-!widgets/verify-gate/dist/
-!widgets/verify-gate/dist/**
-
-# But exclude sourcemaps from the kept dist folder
-widgets/verify-gate/dist/*.map
-

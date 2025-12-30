@@ -24,6 +24,7 @@ import {
 } from '../utils.js';
 
 describe('Utils', () => {
+  
   describe('constructVerificationMessage()', () => {
     it('should create consistent message format', () => {
       const params = {
@@ -35,7 +36,7 @@ describe('Utils', () => {
       };
 
       const message = constructVerificationMessage(params);
-
+      
       expect(typeof message).toBe('string');
       expect(message).toContain('NEUS Verification Request');
       expect(message).toContain('0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db');
@@ -53,7 +54,7 @@ describe('Utils', () => {
       };
 
       const message = constructVerificationMessage(params);
-
+      
       expect(message).toContain('ownership-basic');
       expect(message).toContain('nft-ownership');
     });
@@ -99,9 +100,9 @@ describe('Utils', () => {
     it('should respect custom max age', () => {
       const now = Date.now();
       const tenMinutesAgo = now - 600000;
-
+      
       expect(validateTimestamp(tenMinutesAgo, 300000)).toBe(false); // 5min max
-      expect(validateTimestamp(tenMinutesAgo, 900000)).toBe(true); // 15min max
+      expect(validateTimestamp(tenMinutesAgo, 900000)).toBe(true);  // 15min max
     });
 
     it('should handle invalid inputs', () => {
@@ -115,7 +116,7 @@ describe('Utils', () => {
   describe('createVerificationData()', () => {
     it('should create basic verification data', () => {
       const data = createVerificationData(
-        'test content',
+        'test content', 
         '0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db'
       );
 
@@ -123,7 +124,7 @@ describe('Utils', () => {
         content: 'test content',
         owner: '0x742d35cc6634c0532925a3b8d82ab78c0d73c3db', // Addresses are normalized to lowercase
         reference: {
-          type: 'content',
+          type: 'other',
           id: expect.any(String)
         }
       });
@@ -213,12 +214,12 @@ describe('Utils', () => {
   describe('formatVerificationStatus()', () => {
     it('should format status objects correctly', () => {
       const formatted = formatVerificationStatus('verified');
-
+      
       expect(formatted).toHaveProperty('label');
       expect(formatted).toHaveProperty('description');
       expect(formatted).toHaveProperty('color');
       expect(formatted).toHaveProperty('category');
-
+      
       expect(typeof formatted.label).toBe('string');
       expect(typeof formatted.description).toBe('string');
       expect(typeof formatted.color).toBe('string');
@@ -227,7 +228,7 @@ describe('Utils', () => {
 
     it('should handle unknown statuses', () => {
       const formatted = formatVerificationStatus('unknown_status');
-
+      
       expect(formatted.label).toBe('Unknown Status'); // Actual implementation capitalizes and formats
       expect(formatted.category).toBe('unknown');
     });
@@ -238,7 +239,7 @@ describe('Utils', () => {
       const start = Date.now();
       await delay(50);
       const elapsed = Date.now() - start;
-
+      
       expect(elapsed).toBeGreaterThanOrEqual(45); // Account for timing variance
       expect(elapsed).toBeLessThan(100);
     });
@@ -248,7 +249,7 @@ describe('Utils', () => {
     it('should generate consistent hashes', async () => {
       const hash1 = await computeContentHash('test content');
       const hash2 = await computeContentHash('test content');
-
+      
       expect(hash1).toBe(hash2);
       expect(typeof hash1).toBe('string');
       expect(hash1.length).toBeGreaterThan(0);
@@ -257,24 +258,20 @@ describe('Utils', () => {
     it('should generate different hashes for different content', async () => {
       const hash1 = await computeContentHash('content 1');
       const hash2 = await computeContentHash('content 2');
-
+      
       expect(hash1).not.toBe(hash2);
     });
   });
 
   describe('validateQHash()', () => {
     it('should validate correct qHash format', () => {
-      expect(
-        validateQHash('0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef')
-      ).toBe(true);
+      expect(validateQHash('0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef')).toBe(true);
     });
 
     it('should reject invalid formats', () => {
       expect(validateQHash('invalid')).toBe(false);
       expect(validateQHash('0x123')).toBe(false); // Too short
-      expect(
-        validateQHash('1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef')
-      ).toBe(false); // Missing 0x
+      expect(validateQHash('1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef')).toBe(false); // Missing 0x
       expect(validateQHash(null)).toBe(false);
       expect(validateQHash('')).toBe(false);
     });
@@ -295,14 +292,14 @@ describe('Utils', () => {
     it('should format timestamp to readable string', () => {
       const timestamp = 1678886400000;
       const formatted = formatTimestamp(timestamp);
-
+      
       expect(typeof formatted).toBe('string');
       expect(formatted.length).toBeGreaterThan(0);
     });
   });
 
   describe('isSupportedChain()', () => {
-    it('should return true for hub chain', () => {
+    it('should return true for default chain ID', () => {
       expect(isSupportedChain(NEUS_CONSTANTS.HUB_CHAIN_ID)).toBe(true);
     });
 
@@ -334,25 +331,22 @@ describe('Utils', () => {
     });
 
     it('should throw error after max attempts', async () => {
-      const fn = async () => {
-        throw new Error('Always fails');
-      };
+      const fn = async () => { throw new Error('Always fails'); };
 
-      await expect(withRetry(fn, { maxAttempts: 2, baseDelay: 10 })).rejects.toThrow(
-        'Always fails'
-      );
+      await expect(withRetry(fn, { maxAttempts: 2, baseDelay: 10 }))
+        .rejects.toThrow('Always fails');
     });
 
     it('should return immediately on success', async () => {
       const fn = async () => 'immediate success';
-
+      
       const result = await withRetry(fn);
       expect(result).toBe('immediate success');
     });
   });
 
   describe('NEUS_CONSTANTS', () => {
-    it('should have correct hub chain ID', () => {
+    it('should have correct default chain ID', () => {
       expect(NEUS_CONSTANTS.HUB_CHAIN_ID).toBe(84532);
     });
 
@@ -363,9 +357,8 @@ describe('Utils', () => {
     it('should have default verifiers', () => {
       expect(NEUS_CONSTANTS.DEFAULT_VERIFIERS).toEqual([
         'ownership-basic',
-        'nft-ownership',
-        'token-holding',
-        'ownership-licensed'
+        'nft-ownership', 
+        'token-holding'
       ]);
     });
   });

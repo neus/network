@@ -1,51 +1,19 @@
-# NEUS Network Examples
+# Examples
 
-**Real-world integration examples for modern development frameworks.**
+Integration examples for NEUS Network.
 
-## Framework Examples
+## Index
 
-### [React App](./react-app/)
-Complete React application with NEUS verification and widgets.
-- Content verification
-- NFT-gated access
-- Token holder verification
-- Proof status display
+| Example | What it is | Source |
+|---------|------------|--------|
+| React | VerifyGate component | `./react-component/README.md` |
+| HTTP API | Direct API calls | `./curl-minimal/README.md` |
+| Node.js | Server-side verification | `./nodejs-basic/README.md` |
 
-### [Next.js App](./nextjs-app/)  
-Full Next.js App Router integration with verification patterns.
-- Modern App Router structure
-- Client-side verification
-- Access control components
-- Real-time proof badges
+## Documentation
 
-### [Node.js Backend](./nodejs-backend/)
-Backend API integration for content platforms and marketplaces.
-- Content publishing verification
-- NFT marketplace listing verification
-- DAO voting eligibility
-- Proof status API
-
-## Basic Examples
-
-### [HTTP API](./curl-minimal/)
-Minimal cURL example for any language.
-
-### [Node.js Basic](./node-basic/)
-Simple Node.js script with direct API integration.
-
-### [Safe Wallets](./safe-1271-6492/)
-Contract wallet example for Safe and EIP-1271/6492.
-
-## Use Cases Covered
-
-- **Content platforms** - Verify creators before publishing
-- **NFT communities** - Token-gated exclusive content  
-- **DAO governance** - Verify voting eligibility
-- **Social apps** - Authentic content verification
-- **Marketplaces** - Prevent fake listings
-
-## Requirements
-
-- **Framework examples**: Node.js 18+, wallet connection
-- **Basic examples**: cURL or Node.js, test wallet
-- **All examples**: Never use production private keys
+| Resource | Description |
+|----------|-------------|
+| [Quickstart](../docs/QUICKSTART.md) | Create your first proof |
+| [API Reference](../docs/api/README.md) | HTTP endpoints |
+| [Verifiers](../docs/verifiers/README.md) | Verifier catalog and schemas |

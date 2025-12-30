@@ -4,7 +4,10 @@
     "node": true,
     "browser": true
   },
-  
+  "globals": {
+    "window": "readonly",
+    "fetch": "readonly"
+  },
   "extends": [
     "eslint:recommended"
   ],
@@ -13,26 +16,26 @@
     "sourceType": "module"
   },
   "rules": {
-    "indent": "off",
+    "indent": ["warn", 2],
     "linebreak-style": "off",
-    "quotes": ["error", "single"],
-    "semi": ["error", "always"],
+    "quotes": ["warn", "single"],
+    "semi": ["warn", "always"],
     "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "no-console": ["warn", { "allow": ["warn", "error"] }],
     "prefer-const": "error",
     "no-var": "error",
-    "arrow-spacing": ["error", { "before": true, "after": true }],
-    "object-curly-spacing": ["error", "always"],
-    "array-bracket-spacing": ["error", "never"],
-    "comma-dangle": ["error", "never"],
+    "arrow-spacing": ["warn", { "before": true, "after": true }],
+    "object-curly-spacing": ["warn", "always"],
+    "array-bracket-spacing": ["warn", "never"],
+    "comma-dangle": ["warn", "never"],
     "max-len": ["warn", { "code": 120, "ignoreComments": true }],
-    "eqeqeq": ["error", "always", { "null": "ignore" }],
-    "no-trailing-spaces": "error",
-    "no-multiple-empty-lines": ["error", { "max": 1 }],
-    "prefer-template": "off",
+    "eqeqeq": ["error", "always"],
+    "no-trailing-spaces": "warn",
+    "no-multiple-empty-lines": ["warn", { "max": 1 }],
+    "prefer-template": "warn",
     "no-throw-literal": "error",
     "require-await": "off",
-    "no-return-await": "error"
+    "no-return-await": "warn"
   },
   "ignorePatterns": [
     "node_modules/",

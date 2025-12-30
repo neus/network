@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: BUSL-1.1
-// Copyright (c) 2025 NEUS Network, Inc.
+// SPDX-License-Identifier: Business Source License 1.1
+// Copyright (c) 2025 NEUS
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -27,12 +27,11 @@ import "./lib/NeusTimelocks.sol";
  *      - Built-in fee burning mechanism for deflationary tokenomics
  *      - Timelock-protected critical parameter updates
  *      
- *      Repository: https://github.com/neus/network
+ *      Repository: https://github.com/neusnetwork/neus-network
  *      Documentation: https://docs.neus.network
  * 
- * @custom:version 1.0.0
- * @custom:security-contact dev@neus.network
- * @custom:source https://github.com/neus/network
+ * @custom:version 1.0.0-showcase
+ * @custom:security-contact security@neus.network
  */
 contract NEUSVerifierRegistry is INEUSVerifierRegistry, Ownable, Pausable, ReentrancyGuard {
     using EnumerableSet for EnumerableSet.AddressSet;
@@ -40,7 +39,7 @@ contract NEUSVerifierRegistry is INEUSVerifierRegistry, Ownable, Pausable, Reent
 
     // Contract Metadata and Version Tracking
     string public constant CONTRACT_NAME = "NEUSVerifierRegistry";
-    string public constant CONTRACT_VERSION = "1.0.0";
+    string public constant CONTRACT_VERSION = "1.0.0-showcase";
     uint256 public immutable DEPLOYMENT_TIMESTAMP;
     uint256 public immutable DEPLOYMENT_BLOCK;
     bytes32 public immutable DEPLOYMENT_CODEHASH;
@@ -113,7 +112,7 @@ contract NEUSVerifierRegistry is INEUSVerifierRegistry, Ownable, Pausable, Reent
     );
     event BatchChainVerificationConfirmed(bytes32[] qHashes, uint256[] chainIds, address indexed relayer, uint256 timestamp);
     
-    // Enhanced events for monitoring and auditing
+    // Enhanced events for better debugging and monitoring
     event CrossChainPausedStateChanged(bool paused, address indexed admin, uint256 timestamp, string reason);
     event VoucherCreationFailed(bytes32 indexed qHash, uint256[] targetChainIds, string reason, uint256 timestamp);
     event FeePaymentProcessed(address indexed user, address indexed relayer, uint256 totalFee, uint256 treasuryShare, uint256 burnShare, uint256 timestamp);
@@ -225,19 +224,19 @@ contract NEUSVerifierRegistry is INEUSVerifierRegistry, Ownable, Pausable, Reent
         });
         targetChains[qHash] = targetChainIds;
 
-        // Create vouchers for target chains using the new batch method
-        bytes32[] memory allVoucherIds = _createVouchersForChains(qHash, targetChainIds, userAddress, verificationType);
+        // Create a single voucher for all target chains
+        primaryVoucherId = _createVouchersForChains(qHash, targetChainIds, userAddress, verificationType);
+
+        // For event consistency, wrap the single voucherId in an array
+        bytes32[] memory allVoucherIds = new bytes32[](targetChainIds.length > 0 ? 1 : 0);
+        if (targetChainIds.length > 0) {
+            allVoucherIds[0] = primaryVoucherId;
+        }
 
         emit VerificationSuccessful(qHash, userAddress, targetChainIds, proofId, verificationType, allVoucherIds);
 
         totalVerifications++;
 
-        if (allVoucherIds.length > 0) {
-            primaryVoucherId = allVoucherIds[0];
-        } else {
-            // Fallback if no voucher IDs were generated (e.g., hub call failed and fallback in _createVouchersForChains triggered)
-            primaryVoucherId = keccak256(abi.encodePacked(qHash, userAddress, block.timestamp, "no_voucher_ids_fallback"));
-        }
         return primaryVoucherId;
     }
 
@@ -667,7 +666,7 @@ contract NEUSVerifierRegistry is INEUSVerifierRegistry, Ownable, Pausable, Reent
         return false; // Insufficient credits, fall back to direct payment
     }
 
-    // --- Internal Voucher Logic ---
+    // --- Voucher Logic ---
 
     function _generateNonce(address user) private returns (uint256) {
         return ++nonces[user];
@@ -678,42 +677,24 @@ contract NEUSVerifierRegistry is INEUSVerifierRegistry, Ownable, Pausable, Reent
         uint256[] calldata targetChainIds,
         address userAddress,
         string calldata verificationType
-    ) private returns (bytes32[] memory) {
+    ) private returns (bytes32) { // Return a single voucherId
         
         if (address(voucherHub) == address(0) || targetChainIds.length == 0) {
-            // Fallback if no hub or no target chains: generate a local, deterministic ID array (empty if no targets)
-            // To maintain current behavior of verifyData returning a single bytes32, this path needs careful consideration.
-            // For now, returning an empty array if no chains, or a single pseudo-ID if hub is missing.
-            if (targetChainIds.length == 0) return new bytes32[](0);
-            bytes32[] memory fallbackId = new bytes32[](1);
-            fallbackId[0] = keccak256(abi.encodePacked(qHash, userAddress, block.timestamp, verificationType, "no_hub_fallback"));
-            return fallbackId;
+            if (targetChainIds.length == 0) return bytes32(0);
+            // Fallback if no hub: generate a local, deterministic ID.
+            return keccak256(abi.encodePacked(qHash, userAddress, block.timestamp, verificationType, "no_hub_fallback"));
         }
 
-        IVoucherHub.MinimalVoucherParams[] memory batchParams = new IVoucherHub.MinimalVoucherParams[](targetChainIds.length);
-        bytes32 verifierId = keccak256(bytes(verificationType)); // Derive verifierId (bytes32) from verificationType string
+        bytes32 verifierId = keccak256(bytes(verificationType)); // Derive verifierId
 
-        for (uint i = 0; i < targetChainIds.length; i++) {
-            batchParams[i] = IVoucherHub.MinimalVoucherParams({
-                qHash: qHash,
-                targetChainId: targetChainIds[i],
-                verifierId: verifierId
-            });
-        }
-
-        try voucherHub.createMinimalVoucherBatch(batchParams) returns (bytes32[] memory voucherIds) {
-            return voucherIds;
+        try voucherHub.createVoucher(qHash, targetChainIds, verifierId) returns (bytes32 voucherId) {
+            return voucherId;
         } catch Error(string memory reason) {
-            // Return an array with a single generated voucher ID even if hub creation fails
-            // This helps maintain a consistent return type for verifyData (via allVoucherIds[0])
-            bytes32[] memory errorFallbackId = new bytes32[](1);
-            errorFallbackId[0] = keccak256(abi.encodePacked(qHash, userAddress, block.timestamp, reason));
-            return errorFallbackId;
+            // Return a generated voucher ID even if hub creation fails for tracking.
+            return keccak256(abi.encodePacked(qHash, userAddress, block.timestamp, reason));
         } catch (bytes memory /*lowLevelData*/) {
             // Catch low-level errors (e.g., Panic)
-            bytes32[] memory panicFallbackId = new bytes32[](1);
-            panicFallbackId[0] = keccak256(abi.encodePacked(qHash, userAddress, block.timestamp, "hub_panic_fallback"));
-            return panicFallbackId;
+            return keccak256(abi.encodePacked(qHash, userAddress, block.timestamp, "hub_panic_fallback"));
         }
     }
 

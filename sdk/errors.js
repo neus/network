@@ -1,6 +1,5 @@
 /**
  * NEUS SDK Error Classes
- * @license Apache-2.0
  */
 
 /**
@@ -13,7 +12,7 @@ export class SDKError extends Error {
     this.code = code;
     this.details = details;
     this.timestamp = Date.now();
-
+    
     // Ensure proper prototype chain
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, SDKError);
@@ -40,7 +39,7 @@ export class ApiError extends SDKError {
     this.name = 'ApiError';
     this.statusCode = statusCode;
     this.response = response;
-
+    
     // Additional classification
     this.isClientError = statusCode >= 400 && statusCode < 500;
     this.isServerError = statusCode >= 500;
@@ -49,12 +48,11 @@ export class ApiError extends SDKError {
 
   static fromResponse(response, responseData) {
     const statusCode = response.status;
-    const message =
-      responseData?.error?.message ||
-      responseData?.message ||
-      `API request failed with status ${statusCode}`;
+    const message = responseData?.error?.message || 
+                   responseData?.message || 
+                   `API request failed with status ${statusCode}`;
     const code = responseData?.error?.code || 'API_ERROR';
-
+    
     return new ApiError(message, statusCode, code, responseData);
   }
 
@@ -103,27 +101,23 @@ export class NetworkError extends SDKError {
   }
 
   static isNetworkError(error) {
-    return (
-      error instanceof NetworkError ||
-      (error.name === 'TypeError' && error.message.includes('fetch')) ||
-      error.name === 'AbortError' ||
-      error.code === 'ENOTFOUND' ||
-      error.code === 'ECONNREFUSED' ||
-      error.code === 'ETIMEDOUT'
-    );
+    return error instanceof NetworkError ||
+           error.name === 'TypeError' && error.message.includes('fetch') ||
+           error.name === 'AbortError' ||
+           error.code === 'ENOTFOUND' ||
+           error.code === 'ECONNREFUSED' ||
+           error.code === 'ETIMEDOUT';
   }
 
   toJSON() {
     return {
       ...super.toJSON(),
       isRetryable: this.isRetryable,
-      originalError: this.originalError
-        ? {
-            name: this.originalError.name,
-            message: this.originalError.message,
-            code: this.originalError.code
-          }
-        : null
+      originalError: this.originalError ? {
+        name: this.originalError.name,
+        message: this.originalError.message,
+        code: this.originalError.code
+      } : null
     };
   }
 }
@@ -209,10 +203,11 @@ export function createErrorFromGeneric(error, context = {}) {
   }
 
   // Generic error wrapper
-  return new SDKError(error.message || 'Unknown error occurred', error.code || 'UNKNOWN_ERROR', {
-    originalError: error,
-    context
-  });
+  return new SDKError(
+    error.message || 'Unknown error occurred',
+    error.code || 'UNKNOWN_ERROR',
+    { originalError: error, context }
+  );
 }
 
 // Export all error classes as default

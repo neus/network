@@ -1,8 +1,4 @@
-/**
- * NEUS SDK - Universal Verification Protocol
- * Create and verify cryptographic proofs across applications
- * @license Apache-2.0
- */
+// NEUS SDK - Create and verify cryptographic proofs
 
 // Core client
 export { NeusClient } from './client.js';
@@ -32,10 +28,24 @@ export {
   NEUS_CONSTANTS
 } from './utils.js';
 
-// IPFS helpers
-export const IPFS_GATEWAY = 'https://ipfs.neus.network/ipfs/';
-export const toIpfsUrl = cid => `${IPFS_GATEWAY}${cid.replace(/^ipfs:\/\//, '')}`;
-export const resolveIpfsUrl = cid => toIpfsUrl(cid);
+// Gate recipes (examples, NOT defaults - pick what fits your use case)
+export {
+  // Time constants
+  HOUR,
+  DAY,
+  WEEK,
+  MONTH,
+  YEAR,
+  // Recipe gates
+  GATE_NFT_HOLDER,
+  GATE_TOKEN_HOLDER,
+  GATE_CONTRACT_ADMIN,
+  GATE_DOMAIN_OWNER,
+  GATE_LINKED_WALLETS,
+  // Helpers
+  createGate,
+  combineGates,
+} from './gates.js';
 
 // Error classes
 export {
@@ -48,23 +58,8 @@ export {
   AuthenticationError
 } from './errors.js';
 
-// Convenience functions
-export const verifyProof = async qHash => {
-  const { NeusClient } = await import('./client.js');
-  const client = new NeusClient();
-  return client.getStatus(qHash);
-};
-
-export const checkProofStatus = async proofId => {
-  const { NeusClient } = await import('./client.js');
-  const client = new NeusClient();
-  return client.getStatus(proofId);
-};
-
 // Default export
 export default {
   NeusClient: () => import('./client.js').then(m => m.NeusClient),
-  verifyProof,
-  toIpfsUrl,
-  resolveIpfsUrl
+  toString: () => '[neus/sdk]'
 };

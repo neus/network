@@ -26,7 +26,7 @@ Components covered:
 
 Components covered:
 - NEUS SDK (@neus/sdk)
-- React Widgets (@neus/widgets)
+- React Widgets (@neus/sdk/widgets)
 - Documentation and guides
 - Integration examples
 - Contract ABIs

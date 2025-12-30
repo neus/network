@@ -1,222 +1,140 @@
 # NEUS SDK
 
-JavaScript client for NEUS Network. Handles wallet signing and API calls automatically.
+JavaScript client (and optional widgets) for the NEUS Network verification API.
 
-## Installation
+## Install
 
 ```bash
 npm install @neus/sdk
 ```
 
-## Quick Start
+## Create a proof (browser wallet flow)
+
+This path requests a wallet signature in the browser and submits the verification request:
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient();
-const proof = await client.verify({
+const client = new NeusClient({ apiUrl: 'https://api.neus.network' });
+
+const res = await client.verify({
   verifier: 'ownership-basic',
-  content: 'Hello NEUS Network'
+  content: 'Hello NEUS',
+  wallet: window.ethereum
 });
 
-console.log('Proof created:', proof.qHash);
+// Proof ID (qHash): stable identifier you can store and use for status polling
+const proofId = res.qHash;
+const status = await client.getStatus(proofId);
 ```
 
-## Basic Usage
-
-### Create Proof
-
-```javascript
-// Content ownership
-const proof = await client.verify({
-  verifier: 'ownership-basic',
-  content: 'My original content'
-});
-
-// NFT ownership  
-const proof = await client.verify({
-  verifier: 'nft-ownership',
-  data: {
-    ownerAddress: walletAddress,
-    contractAddress: '0x...',
-    tokenId: '1234',
-    chainId: 1
-  }
-});
-
-// Token holdings
-const proof = await client.verify({
-  verifier: 'token-holding',
-  data: {
-    ownerAddress: walletAddress,
-    contractAddress: '0x...',
-    minBalance: '100.0',
-    chainId: 1
-  }
-});
-
-// Licensed ownership
-const licensed = await client.verify({
-  verifier: 'ownership-licensed',
-  data: {
-    content: 'Premium Software License',
-    ownerAddress: walletAddress,
-    license: {
-      contractAddress: '0x...',
-      tokenId: '42',
-      chainId: 1,
-      ownerAddress: walletAddress,
-      type: 'erc721'
-    }
-  }
-});
-```
-
-### Check Status
-
-```javascript
-// Public proof status
-const status = await client.getStatus(proof.qHash);
-console.log('Verified:', status.success);
-
-// Private proof access (requires wallet signature)
-const privateStatus = await client.getPrivateStatus(proof.qHash, wallet);
-```
-
-### Monitor Progress
-
-```javascript
-// Poll until completion
-const finalStatus = await client.pollProofStatus(proof.qHash, {
-  interval: 3000,
-  onProgress: (status) => console.log('Current status:', status.status)
-});
-```
-
-## Configuration
+## Client configuration
 
 ```javascript
 const client = new NeusClient({
-  apiUrl: 'https://api.neus.network', // Default
-  timeout: 30000                      // Request timeout
+  // Optional: point at a self-hosted deployment
+  apiUrl: 'https://api.neus.network',
+  // Optional: request timeout (ms)
+  timeout: 30000,
+  // Optional: server-side enterprise API key for higher limits on eligible endpoints
+  // (Do not embed API keys in browser apps.)
+  apiKey: process.env.NEUS_API_KEY
 });
 ```
 
-## Privacy Controls
+## Create a proof (server / manual signing)
+
+If you already have a signature over the NEUS Standard Signing String, submit it directly:
 
 ```javascript
-// Public proof - publicly accessible verification details
-const publicProof = await client.verify({
-  verifier: 'ownership-basic',
-  content: 'Public content',
-  options: { privacyLevel: 'public' }
-});
-
-// Private proof - restricted access; details require wallet authentication
-const privateProof = await client.verify({
-  verifier: 'ownership-basic', 
-  content: 'Private content',
+const res = await client.verify({
+  verifierIds: ['ownership-basic'],
+  data: {
+    owner: '0x1111111111111111111111111111111111111111',
+    content: 'Hello NEUS',
+    reference: { type: 'url', id: 'https://example.com' }
+  },
+  walletAddress: '0x1111111111111111111111111111111111111111',
+  signature: '0x...',
+  signedTimestamp: Date.now(),
+  chainId: 84532,
   options: { privacyLevel: 'private' }
 });
 ```
 
-## Cross-Chain Storage
+## What verifiers are available?
 
-Store proofs on multiple testnets:
+Use the API directly (avoids drift):
+
+- `GET /api/v1/verification/verifiers`
+
+## Gate checks (recommended for server-side gating)
+
+For production server-side gating, prefer the minimal public endpoint:
 
 ```javascript
-const proof = await client.verify({
-  verifier: 'ownership-basic',
-  content: 'Multi-chain proof',
-  options: {
-    targetChains: [11155111, 80002, 421614] // Testnet chains
-  }
+const res = await client.gateCheck({
+  address: '0x...',
+  verifierIds: ['token-holding'],
+  contractAddress: '0x...',
+  minBalance: '100',
+  chainId: 1,
+  // Optional: require a recent proof for point-in-time verifiers (example: last hour)
+  since: Date.now() - 60 * 60 * 1000
 });
-```
 
-## Error Handling
-
-```javascript
-try {
-  const proof = await client.verify({
-    verifier: 'ownership-basic',
-    content: 'Hello NEUS'
-  });
-} catch (error) {
-  if (error.code === 4001) {
-    console.log('User cancelled verification');
-  } else {
-    console.error('Verification failed:', error.message);
-  }
+if (!res.data?.eligible) {
+  throw new Error('Access denied');
 }
 ```
 
-## API Methods
+Note: `gateCheck` evaluates **existing public/discoverable proofs**. For strict real-time decisions, create a new proof via `client.verify(...)` (or `POST /api/v1/verification`) and use the final status.
 
-### `verify(params)`
+## Lookup mode (Premium, server-side only; non-persistent)
 
-Create verification proof.
+If you need a **real-time assessment** without minting/storing proofs (no `qHash`), use lookup mode:
 
-**Parameters:**
-- `verifier` (string) - Verifier ID
-- `content` (string) - Content to verify (for ownership-basic)
-- `data` (object) - Verifier-specific data
-- `options` (object) - Privacy and storage options
+- **Endpoint:** `POST /api/v1/verification/lookup`
+- **Auth:** `Authorization: Bearer sk_live_...` (or `sk_test_...`)
+- **Semantics:** runs `external_lookup` verifiers only; **does not** create a proof record
 
-**Returns:** `{ qHash, status, data }`
+Note: lookup mode is deployment-dependent and is not part of the stable public integrator OpenAPI (`docs/api/public-api.json`).
 
-### `getStatus(qHash)`
+```javascript
+const res = await client.lookup({
+  // Premium API key (keep server-side only)
+  apiKey: process.env.NEUS_API_KEY,
+  verifierIds: ['wallet-risk'],
+  targetWalletAddress: '0x...',
+  data: { chainId: 1 }
+});
 
-Get proof status.
+if (!res.data?.verified) {
+  throw new Error('Rejected');
+}
+```
 
-**Parameters:**
-- `qHash` (string) - Proof identifier
+Note: `gateCheck()` and `lookup()` are different tools.
+- Use **`gateCheck()`** when you want to gate based on **existing public/discoverable proofs** (fast, minimal response).
+- Use **`lookup()`** when you want a **fresh, non-persistent** decision (typically billable in hosted deployments).
+- Only combine them if you are intentionally doing a cache-first strategy (gate-check first to avoid unnecessary lookups).
 
-**Returns:** `{ success, status, data }`
+## Private proof reads (owner)
 
-### `getPrivateStatus(qHash, wallet)`
+- Private proof by Proof ID (qHash): `client.getPrivateStatus(qHash, wallet)`
+- Private proofs by wallet/DID: `client.getPrivateProofsByWallet(walletOrDid, { limit, offset }, wallet)`
 
-Access private proof with wallet signature.
+## React widgets
 
-**Parameters:**
-- `qHash` (string) - Proof identifier  
-- `wallet` (object) - Wallet provider
+For UI gating, see `./widgets/README.md`.
 
-**Returns:** `{ success, status, data }`
+Widget imports:
 
-### `pollProofStatus(qHash, options)`
+```javascript
+import { VerifyGate, ProofBadge } from '@neus/sdk/widgets';
+```
 
-Poll until verification completes.
+## Reference docs
 
-**Parameters:**
-- `qHash` (string) - Proof identifier
-- `options` (object) - Polling configuration
-  - `interval` (number) - Polling interval in ms
-  - `timeout` (number) - Total timeout in ms
-  - `onProgress` (function) - Progress callback
-
-**Returns:** `{ success, status, data }`
-
-### `isHealthy()`
-
-Check API connectivity.
-
-**Returns:** `boolean`
-
-### `getVerifiers()`
-
-List available verifiers.
-
-**Returns:** `string[]`
-
-## Requirements
-
-- **Node.js**: 18+ 
-- **Browser**: Modern browser with Web3 wallet
-- **Wallet**: MetaMask, WalletConnect, or ethers.js Wallet
-
-## Links
-
-- **[Complete Reference](https://github.com/neus/network/blob/main/docs/REFERENCE.md)** - Full API and verifier documentation
-- **[All Verifiers](https://github.com/neus/network/blob/main/docs/verifiers/README.md)** - Verification types
-- **[GitHub Issues](https://github.com/neus/network/issues)** - Community support
+- API Reference: `../docs/api/README.md`
+- OpenAPI (JSON): `../docs/api/public-api.json`

@@ -1,45 +1,32 @@
 {
-  "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://schemas.neus.network/verifiers/token-holding/v1.0.0", 
-  "title": "Token Holding Verifier Schema",
-  "description": "Schema for token balance verification",
   "type": "object",
-  "required": ["ownerAddress", "contractAddress", "minBalance", "chainId"],
+  "required": [
+    "contractAddress",
+    "minBalance",
+    "chainId"
+  ],
   "properties": {
     "ownerAddress": {
       "type": "string",
       "pattern": "^0x[a-fA-F0-9]{40}$",
-      "description": "Wallet address to check token balance for"
+      "description": "Token holder address (optional; defaults to request walletAddress unless sponsored mode delegates)"
     },
     "contractAddress": {
       "type": "string",
-      "pattern": "^0x[a-fA-F0-9]{40}$", 
-      "description": "ERC20 token contract address"
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Token contract address"
     },
     "minBalance": {
       "type": "string",
-      "description": "Minimum token balance required (human-readable format)",
-      "pattern": "^[0-9]+(\\.[0-9]+)?$"
+      "description": "Minimum token balance required (human-readable units, e.g., \"10.5\")"
     },
     "chainId": {
       "type": "integer",
-      "description": "Mainnet chain ID for token verification",
-      "enum": [1, 137, 42161, 10, 8453]
-    }
-  },
-  "additionalProperties": false,
-  "examples": [
-    {
-      "ownerAddress": "0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db",
-      "contractAddress": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
-      "minBalance": "100.0", 
-      "chainId": 1
+      "description": "Chain ID where the token contract is deployed (testnet or mainnet). The backend reads from this chain using server-side RPC configuration."
     },
-    {
-      "ownerAddress": "0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db",
-      "contractAddress": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-      "minBalance": "1000.0",
-      "chainId": 137
+    "blockNumber": {
+      "type": "integer",
+      "description": "Optional block number for a point-in-time balance check"
     }
-  ]
+  }
 }

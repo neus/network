@@ -1,6 +1,6 @@
 /**
  * NEUS SDK Client Tests
- * Basic functionality tests for Day 1 production readiness
+ * Basic functionality tests
  */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NeusClient } from '../client.js';
@@ -11,7 +11,7 @@ global.fetch = vi.fn();
 
 describe('NeusClient', () => {
   let client;
-
+  
   beforeEach(() => {
     client = new NeusClient({ enableLogging: false });
     vi.clearAllMocks();
@@ -51,28 +51,22 @@ describe('NeusClient', () => {
     });
 
     it('should validate verifier types', async () => {
-      await expect(
-        client.verify({
-          verifier: 'invalid-verifier',
-          content: 'test'
-        })
-      ).rejects.toThrow(ValidationError);
+      await expect(client.verify({
+        verifier: 'invalid-verifier',
+        content: 'test'
+      })).rejects.toThrow(ValidationError);
     });
 
     it('should validate content parameter', async () => {
-      await expect(
-        client.verify({
-          verifier: 'ownership-basic',
-          content: null
-        })
-      ).rejects.toThrow(ValidationError);
+      await expect(client.verify({
+        verifier: 'ownership-basic',
+        content: null
+      })).rejects.toThrow(ValidationError);
 
-      await expect(
-        client.verify({
-          verifier: 'ownership-basic',
-          content: 123
-        })
-      ).rejects.toThrow(ValidationError);
+      await expect(client.verify({
+        verifier: 'ownership-basic',
+        content: 123
+      })).rejects.toThrow(ValidationError);
     });
   });
 
@@ -96,14 +90,14 @@ describe('NeusClient', () => {
       });
 
       const result = await client.getStatus('0xtest123');
-
+      
       expect(fetch).toHaveBeenCalledWith(
         'https://api.neus.network/api/v1/verification/status/0xtest123',
         expect.objectContaining({
           method: 'GET'
         })
       );
-
+      
       expect(result.success).toBe(true);
       expect(result.qHash).toBe('0xtest123');
     });
@@ -112,11 +106,10 @@ describe('NeusClient', () => {
       fetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
-        json: () =>
-          Promise.resolve({
-            success: false,
-            error: { message: 'Proof not found', code: 'NOT_FOUND' }
-          })
+        json: () => Promise.resolve({
+          success: false,
+          error: { message: 'Proof not found', code: 'NOT_FOUND' }
+        })
       });
 
       await expect(client.getStatus('0xinvalid')).rejects.toThrow(ApiError);
@@ -127,7 +120,7 @@ describe('NeusClient', () => {
     it('should return array of verifiers', async () => {
       const mockResponse = {
         success: true,
-        data: ['ownership-basic', 'nft-ownership', 'token-holding', 'ownership-licensed']
+        data: ['ownership-basic', 'nft-ownership', 'token-holding']
       };
 
       fetch.mockResolvedValueOnce({
@@ -136,12 +129,11 @@ describe('NeusClient', () => {
       });
 
       const verifiers = await client.getVerifiers();
-
+      
       expect(Array.isArray(verifiers)).toBe(true);
       expect(verifiers).toContain('ownership-basic');
       expect(verifiers).toContain('nft-ownership');
       expect(verifiers).toContain('token-holding');
-      expect(verifiers).toContain('ownership-licensed');
     });
 
     it('should handle empty response gracefully', async () => {

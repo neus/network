@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "required": [
+    "primaryWalletAddress",
+    "secondaryWalletAddress",
+    "signature",
+    "chainId",
+    "signedTimestamp"
+  ],
+  "properties": {
+    "primaryWalletAddress": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Primary wallet (owner)"
+    },
+    "secondaryWalletAddress": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Secondary wallet (must sign)"
+    },
+    "signature": {
+      "type": "string",
+      "description": "EIP-191 signature from secondary wallet over the standard link message"
+    },
+    "chainId": {
+      "type": "integer",
+      "description": "Chain ID for link context"
+    },
+    "signedTimestamp": {
+      "type": "integer",
+      "description": "Unix timestamp (ms) when signed"
+    },
+    "relationshipType": {
+      "type": "string",
+      "enum": [
+        "primary",
+        "personal",
+        "org",
+        "affiliate",
+        "agent",
+        "linked"
+      ],
+      "description": "Relationship type for identity graph categorization"
+    },
+    "label": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "Human-readable label for this wallet"
+    }
+  }
+}

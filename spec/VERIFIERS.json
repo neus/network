@@ -1,0 +1,134 @@
+{
+  "schemaVersion": "1.0.0",
+  "verifiers": [
+    {
+      "id": "ownership-basic",
+      "tier": "public",
+      "interaction": "signature",
+      "flow": "instant",
+      "expiry": "permanent",
+      "inputSchemaPath": "docs/verifiers/schemas/ownership-basic.json",
+      "sdk": { "autoVerify": true, "verifyGateWidget": true },
+      "api": { "verificationRequest": true, "gateCheck": true },
+      "description": "Content authorship: prove a wallet bound a signature to content (or contentHash + reference)."
+    },
+    {
+      "id": "ownership-pseudonym",
+      "tier": "public",
+      "interaction": "signature",
+      "flow": "instant",
+      "expiry": "permanent",
+      "inputSchemaPath": "docs/verifiers/schemas/ownership-pseudonym.json",
+      "sdk": { "autoVerify": true, "verifyGateWidget": true },
+      "api": { "verificationRequest": true, "gateCheck": true },
+      "description": "Handle binding: bind a wallet to a pseudonymous identifier (namespace + handle)."
+    },
+    {
+      "id": "ownership-dns-txt",
+      "tier": "public",
+      "interaction": "dns_txt",
+      "flow": "external_lookup",
+      "expiry": "point_in_time",
+      "inputSchemaPath": "docs/verifiers/schemas/ownership-dns-txt.json",
+      "recommendedMaxAgeMs": 3600000,
+      "sdk": { "autoVerify": true, "verifyGateWidget": true },
+      "api": { "verificationRequest": true, "gateCheck": true },
+      "description": "Domain control: verify a TXT record at _neus.<domain>."
+    },
+    {
+      "id": "contract-ownership",
+      "tier": "public",
+      "interaction": "passive",
+      "flow": "external_lookup",
+      "expiry": "point_in_time",
+      "inputSchemaPath": "docs/verifiers/schemas/contract-ownership.json",
+      "recommendedMaxAgeMs": 3600000,
+      "sdk": { "autoVerify": true, "verifyGateWidget": true },
+      "api": { "verificationRequest": true, "gateCheck": true },
+      "description": "Contract admin: verify that a wallet controls a contract (owner/admin) on a chain."
+    },
+    {
+      "id": "nft-ownership",
+      "tier": "public",
+      "interaction": "passive",
+      "flow": "external_lookup",
+      "expiry": "point_in_time",
+      "inputSchemaPath": "docs/verifiers/schemas/nft-ownership.json",
+      "recommendedMaxAgeMs": 3600000,
+      "sdk": { "autoVerify": true, "verifyGateWidget": true },
+      "api": { "verificationRequest": true, "gateCheck": true },
+      "description": "NFT ownership: verify ERC-721/1155 ownership (tokenId / balance) at a moment in time."
+    },
+    {
+      "id": "token-holding",
+      "tier": "public",
+      "interaction": "passive",
+      "flow": "external_lookup",
+      "expiry": "point_in_time",
+      "inputSchemaPath": "docs/verifiers/schemas/token-holding.json",
+      "recommendedMaxAgeMs": 3600000,
+      "sdk": { "autoVerify": true, "verifyGateWidget": true },
+      "api": { "verificationRequest": true, "gateCheck": true },
+      "description": "Token holding: verify ERC-20 balance >= minBalance at a moment in time."
+    },
+    {
+      "id": "wallet-link",
+      "tier": "public",
+      "interaction": "signature",
+      "flow": "instant",
+      "expiry": "permanent",
+      "inputSchemaPath": "docs/verifiers/schemas/wallet-link.json",
+      "sdk": { "autoVerify": true, "verifyGateWidget": true },
+      "api": { "verificationRequest": true, "gateCheck": true },
+      "description": "Account linking: link a secondary wallet to a primary identity with a secondary signature."
+    },
+    {
+      "id": "wallet-risk",
+      "tier": "public",
+      "interaction": "passive",
+      "flow": "external_lookup",
+      "expiry": "point_in_time",
+      "inputSchemaPath": "docs/verifiers/schemas/wallet-risk.json",
+      "recommendedMaxAgeMs": 3600000,
+      "sdk": { "autoVerify": true, "verifyGateWidget": true },
+      "api": { "verificationRequest": true, "gateCheck": true },
+      "description": "Sybil resistance: risk scoring for an address (provider-backed)."
+    },
+    {
+      "id": "agent-identity",
+      "tier": "public",
+      "interaction": "signature",
+      "flow": "instant",
+      "expiry": "permanent",
+      "inputSchemaPath": "docs/verifiers/schemas/agent-identity.json",
+      "sdk": { "autoVerify": true, "verifyGateWidget": true },
+      "api": { "verificationRequest": true, "gateCheck": true },
+      "description": "Agent identity: self-attested identity for an agent/bot/service (ERC-8004 compatible)."
+    },
+    {
+      "id": "agent-delegation",
+      "tier": "public",
+      "interaction": "signature",
+      "flow": "instant",
+      "expiry": "expiring",
+      "inputSchemaPath": "docs/verifiers/schemas/agent-delegation.json",
+      "recommendedMaxAgeMs": 604800000,
+      "sdk": { "autoVerify": true, "verifyGateWidget": true },
+      "api": { "verificationRequest": true, "gateCheck": true },
+      "description": "Agent delegation: delegate scoped permissions from a controller to an agent wallet."
+    },
+    {
+      "id": "ai-content-moderation",
+      "tier": "public",
+      "interaction": "passive",
+      "flow": "external_lookup",
+      "expiry": "permanent",
+      "inputSchemaPath": "docs/verifiers/schemas/ai-content-moderation.json",
+      "sdk": { "autoVerify": true, "verifyGateWidget": true },
+      "api": { "verificationRequest": true, "gateCheck": true },
+      "description": "Content safety: provider-backed moderation snapshot for text/media."
+    }
+  ]
+}
+
+

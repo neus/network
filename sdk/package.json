@@ -1,7 +1,7 @@
 {
   "name": "@neus/sdk",
   "version": "1.0.0",
-  "description": "NEUS SDK - Create and verify cryptographic proofs with a simple, clean API",
+  "description": "NEUS SDK - Create and verify cryptographic proofs with simple, clean API",
   "main": "index.js",
   "type": "module",
   "types": "types.d.ts",
@@ -9,22 +9,49 @@
     ".": {
       "types": "./types.d.ts",
       "import": "./index.js",
-      "require": "./index.js"
+      "require": "./cjs/index.cjs"
     },
-    "./client": "./client.js",
-    "./utils": "./utils.js",
-    "./errors": "./errors.js"
+    "./client": {
+      "import": "./client.js",
+      "require": "./cjs/client.cjs"
+    },
+    "./utils": {
+      "import": "./utils.js",
+      "require": "./cjs/utils.cjs"
+    },
+    "./errors": {
+      "import": "./errors.js",
+      "require": "./cjs/errors.cjs"
+    },
+    "./gates": {
+      "import": "./gates.js",
+      "require": "./cjs/gates.cjs"
+    },
+    "./widgets": {
+      "types": "./types.d.ts",
+      "import": "./widgets/index.js",
+      "require": "./widgets.cjs"
+    },
+    "./widgets/verify-gate": {
+      "types": "./types.d.ts",
+      "import": "./widgets/verify-gate/index.js",
+      "require": "./widgets.cjs"
+    }
   },
   "sideEffects": false,
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest --coverage",
-    "lint": "eslint *.js",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . --ignore-pattern widgets/verify-gate/dist/**",
     "format": "prettier --write \"**/*.js\"",
-    "prepublishOnly": "cross-env NEUS_SDK_LIVE_TESTS=false npm run lint && npm test"
+    "build": "npm run build:widgets && npm run build:cjs",
+    "build:widgets": "esbuild widgets/verify-gate/VerifyGate.jsx widgets/verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=widgets/verify-gate/dist --jsx=automatic --legal-comments=none --external:react --external:react-dom --external:react/jsx-runtime --external:@neus/sdk/client",
+    "build:cjs": "esbuild index.js client.js utils.js errors.js gates.js --bundle --platform=node --format=cjs --outdir=cjs --out-extension:.js=.cjs --legal-comments=none --external:ethers --external:@zkpassport/sdk --external:react --external:react-dom --external:react/jsx-runtime",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run lint && npm test && npm run build"
   },
   "keywords": [
+    "neus",
     "verification",
     "cryptographic-proofs",
     "identity",
@@ -33,11 +60,13 @@
     "cross-chain",
     "web3",
     "passwordless",
-    "universal-protocol"
+    "universal-protocol",
+    "proof",
+    "ownership",
+    "sdk"
   ],
   "author": "NEUS Network",
   "license": "Apache-2.0",
-  "publishConfig": { "access": "public" },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/neus/network.git",
@@ -48,28 +77,49 @@
   },
   "homepage": "https://neus.network",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=16.0.0"
   },
   "dependencies": {},
   "peerDependencies": {
-    "ethers": "^6.0.0"
+    "ethers": "^6.0.0",
+    "react": ">=17.0.0",
+    "react-dom": ">=17.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@zkpassport/sdk": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "optionalDependencies": {
+    "@zkpassport/sdk": ">=1.0.0"
   },
   "devDependencies": {
     "vitest": "^1.2.0",
     "@vitest/coverage-v8": "^1.2.0",
     "eslint": "^8.56.0",
     "prettier": "^3.2.0",
-    "cross-env": "^7.0.3",
-    "ethers": "^6.0.0"
+    "esbuild": "^0.20.2"
   },
   "files": [
     "index.js",
     "client.js",
     "utils.js",
     "errors.js",
+    "gates.js",
+    "cjs/**",
+    "widgets.cjs",
     "types.d.ts",
     "README.md",
+    "SECURITY.md",
     "LICENSE",
-    "SECURITY.md"
+    "widgets/index.js",
+    "widgets/verify-gate/index.js",
+    "widgets/verify-gate/dist/**"
   ]
 }

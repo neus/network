@@ -1,0 +1,32 @@
+{
+  "type": "object",
+  "required": [
+    "contractAddress",
+    "chainId"
+  ],
+  "properties": {
+    "contractAddress": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Contract address to verify"
+    },
+    "chainId": {
+      "type": "integer",
+      "description": "Chain ID where the contract is deployed (testnet or mainnet). The backend reads from this chain using server-side RPC configuration."
+    },
+    "walletAddress": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Wallet claiming ownership (optional; defaults to request walletAddress unless sponsored mode delegates)"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "owner",
+        "admin",
+        "accessControl"
+      ],
+      "description": "Optional: specific method to check"
+    }
+  }
+}

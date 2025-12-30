@@ -1,0 +1,44 @@
+{
+  "type": "object",
+  "required": [
+    "agentId",
+    "agentWallet"
+  ],
+  "properties": {
+    "agentId": {
+      "type": "string",
+      "maxLength": 128,
+      "description": "Unique string identifier (e.g., neus-bot-1)"
+    },
+    "agentWallet": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Agent wallet address (must match signer)"
+    },
+    "agentLabel": {
+      "type": "string",
+      "maxLength": 128,
+      "description": "Human-readable display name"
+    },
+    "agentType": {
+      "type": "string",
+      "enum": [
+        "ai",
+        "bot",
+        "service",
+        "automation",
+        "agent"
+      ],
+      "description": "Type of agent for categorization"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Brief description of what this agent does"
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "List of capabilities (e.g., trading, posting, payments)"
+    }
+  }
+}

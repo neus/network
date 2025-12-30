@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "required": [
+    "domain"
+  ],
+  "properties": {
+    "domain": {
+      "type": "string",
+      "format": "hostname",
+      "description": "Domain name to verify (e.g., neus.network)"
+    },
+    "walletAddress": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Wallet address to match in DNS TXT record (optional; defaults to request walletAddress unless sponsored mode delegates)"
+    }
+  }
+}

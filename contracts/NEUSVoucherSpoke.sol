@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: BUSL-1.1
-// Copyright (c) 2025 NEUS Network, Inc.
+// SPDX-License-Identifier: Business Source License 1.1
+// Copyright (c) 2025 NEUS
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -21,16 +21,15 @@ import "./lib/NeusTimelocks.sol"; // Import timelock library
  *      - Batch processing for gas efficiency across multiple vouchers
  *      - Comprehensive event emission for indexing and monitoring
  *      
- *      Repository: https://github.com/neus/network
+ *      Repository: https://github.com/neusnetwork/neus-network
  * 
- * @custom:version 1.0.0
- * @custom:security-contact dev@neus.network  
- * @custom:source https://github.com/neus/network
+ * @custom:version 1.0.0-showcase
+ * @custom:security-contact security@neus.network  
  */
 contract NEUSVoucherSpoke is Ownable, Pausable, ReentrancyGuard {
     // Contract Metadata and Version Tracking
     string public constant CONTRACT_NAME = "NEUSVoucherSpoke";
-    string public constant CONTRACT_VERSION = "1.0.0";
+    string public constant CONTRACT_VERSION = "1.0.0-showcase";
     uint256 public immutable DEPLOYMENT_TIMESTAMP;
     uint256 public immutable DEPLOYMENT_BLOCK;
     bytes32 public immutable DEPLOYMENT_CODEHASH;
@@ -79,7 +78,7 @@ contract NEUSVoucherSpoke is Ownable, Pausable, ReentrancyGuard {
     event TrustedRelayerRemoved(address indexed relayer, uint256 timestamp);
     event BatchProcessed(bytes32 indexed batchId, uint256 total, uint256 fulfilled, uint256 failed, uint256 timestamp);
     
-    // Enhanced events for monitoring and auditing
+    // Enhanced events for debugging and monitoring
     event VoucherFulfillmentPausedStateChanged(bool paused, address indexed admin, uint256 timestamp, string reason);
     event EmergencyAction(string indexed action, address indexed admin, uint256 timestamp, string details);
     

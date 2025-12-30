@@ -1,5 +1,5 @@
 name: "Verifier proposal (use Discussions for ideas)"
-description: Propose a new verifier. Prefer starting with a Discussion; PRs should target verifier-staging.
+description: Propose a new verifier. Prefer starting with a Discussion; PRs should include spec + schema + docs.
 title: "verifier: <id>"
 labels: ["verifier", "needs-spec"]
 body:

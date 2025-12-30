@@ -1,0 +1,27 @@
+{
+  "type": "object",
+  "required": [
+    "pseudonymId"
+  ],
+  "properties": {
+    "pseudonymId": {
+      "type": "string",
+      "pattern": "^[a-z0-9._-]{3,64}$",
+      "description": "Handle within a namespace"
+    },
+    "namespace": {
+      "type": "string",
+      "pattern": "^[a-z0-9._-]{1,64}$",
+      "description": "Namespace (optional)"
+    },
+    "displayName": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "Human-readable display name"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "App-specific metadata"
+    }
+  }
+}

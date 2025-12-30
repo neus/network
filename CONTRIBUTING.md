@@ -1,236 +1,94 @@
-# Contributing to NEUS Network
+# Contributing
 
-Thank you for your interest in contributing to NEUS Network. We welcome contributions to extend the universal verification ecosystem.
+Thank you for your interest in contributing to NEUS Network. We welcome contributions from the community!
+
+---
 
 ## Getting Started
 
-### Development Setup
+```bash
+git clone https://github.com/neus/network.git
+cd network
 
-1. **Fork and clone the repository**
-   ```bash
-   git clone https://github.com/neus/network.git
-   cd network
-   ```
+# Install SDK dependencies
+cd sdk && npm install && cd ..
 
-2. **Install dependencies**
-   ```bash
-   # Install SDK dependencies
-   cd sdk && npm install && cd ..
-   
-   # Install widgets dependencies
-   cd widgets && npm install && cd ..
-   ```
+# Run tests
+cd sdk && npm test && cd ..
+```
 
-3. **Run tests**
-   ```bash
-   # Test SDK
-   cd sdk && npm test && cd ..
-   
-   # Test widgets
-   cd widgets && npm test && cd ..
-   ```
+---
 
 ## How to Contribute
 
-### Reporting & Proposing
+| Type | Where |
+|------|-------|
+| Bug reports | [GitHub Issues](https://github.com/neus/network/issues) |
+| Ideas & questions | [GitHub Discussions](https://github.com/neus/network/discussions) |
+| Security issues | [dev@neus.network](mailto:dev@neus.network) (do not create public issues) |
+| Code contributions | Pull requests |
 
-- **Bug Reports**: Use GitHub Issues with reproduction steps
-- **Feature Requests & Ideas**: Prefer GitHub Discussions
-- **Security Issues**: Email dev@neus.network (do not create public issues)
+---
 
-### Code Contributions
+## Pull Requests
 
-1. Create feature branch from `main` (for verifiers target `verifier-staging`)
-2. Make changes following coding standards
-3. Add tests for new functionality
-4. Update documentation as needed
+1. Fork the repository
+2. Create a feature branch from `main`
+3. Make changes following coding standards
+4. Add tests for new functionality
 5. Submit pull request with clear description
 
-### Coding Standards
+**Standards:**
+- Follow existing ESLint configuration
+- Maintain test coverage
+- Update documentation for API changes
+- Use clear commit messages
 
-- **JavaScript**: Follow existing ESLint configuration
-- **Solidity**: Follow existing contract patterns and security practices
-- **Documentation**: Update README files for API changes
-- **Tests**: Maintain test coverage for new features
-- **Commits**: Use clear, descriptive commit messages
+---
 
 ## Contributing Verifiers
 
-New verification types can extend the ecosystem through community contributions.
+New verification types can extend the ecosystem.
 
-### Verifier Contribution Process
+**Process:**
+1. **Propose** — Start a [GitHub Discussion](https://github.com/neus/network/discussions)
+2. **Implement** — Follow verifier standards
+3. **Submit** — PR with `spec/VERIFIERS.json` updates + input schema + docs
+4. **Validate** — Run `cd sdk && npm test`
+5. **Review** — Technical and community review
+6. **Merge** — Maintainers merge to `main`
 
-1. **Propose**: Start a GitHub Discussion with your verifier spec
-2. **Review**: Technical + community review in Discussion
-3. **Implement**: Build following verifier standards
-4. **Submit**: PR targeting `verifier-staging` with spec + schemas
-5. **Test**: Comprehensive tests and examples
-6. **Merge**: Maintainers promote from `verifier-staging` to `main`
-
-### High-Priority Verifiers
-
-The community has identified these high-value verifiers for development:
-
-1. **GitHub Repository Ownership** - Prove repository ownership/maintenance
-2. **Discord Server Ownership** - Prove Discord server ownership/administration
-3. **Professional Credentials** - Verify degrees, certifications, professional licenses
-4. **Geographic Verification** - Location-based proofs without revealing exact coordinates
-5. **Temporal Proofs** - Time-based claims, deadlines, scheduling verification
-
-### Verifier Requirements
-
-**Technical Standards:**
+**Requirements:**
 - Deterministic outputs for same inputs
 - No PII in inputs or outputs
-- Proper error handling for all failure modes
-- Gas optimization for on-chain operations
-- Rate limiting for external APIs
+- JSON schemas for validation
+- Test coverage
 
-**Documentation Standards:**
-- Clear API documentation with examples
-- JSON schema for input/output validation
-- Integration examples and use cases
-- Security best practices
+---
 
-**Testing Standards:**
-- Unit tests for all functions
-- Integration tests with live APIs where applicable
-- Error condition testing
-- Performance benchmarking
+## Licensing
 
-## Development Guidelines
+| Component | License |
+|-----------|---------|
+| Smart contracts (`contracts/`) | Business Source License 1.1 |
+| SDK, widgets, docs, examples | Apache 2.0 |
 
-### Verifier Specification Template
+By contributing, you agree that your contributions will be licensed under the appropriate license for each component.
 
-```markdown
-# Verifier: your-verifier-id
-
-## Purpose
-Brief description of what this verifier proves.
-
-## Input Schema
-```json
-{
-  "type": "object",
-  "required": ["field1", "field2"],
-  "properties": {
-    "field1": {"type": "string", "description": "Description"},
-    "field2": {"type": "number", "description": "Description"}
-  }
-}
-```
-
-## Output Schema
-```json
-{
-  "owner": "address",
-  "verified": "boolean", 
-  "timestamp": "number",
-  "data": "object"
-}
-```
-
-## Examples
-[SDK and HTTP API examples]
-
-## Dependencies
-- On-chain: Contract ABIs and RPC endpoints
-- External: API endpoints and rate limits
-
-## Testing
-[Test plan and validation approach]
-```
-
-### SDK Development
-- All changes must pass existing tests
-- New features require comprehensive tests
-- Maintain backward compatibility when possible
-- Follow semantic versioning for releases
-
-### Documentation
-- Keep README files up to date
-- Include code examples for new features
-- Use clear, concise language
-- Test all code examples
-
-### Testing
-- Write unit tests for new functions
-- Include integration tests for API changes
-- Test against live testnet when appropriate
-- Ensure tests run in CI environment
-
-## Pull Request Process
-
-1. **Create descriptive PR title** and description
-2. **Link related issues** if applicable
-3. **Ensure all tests pass** in CI
-4. **Request review** from maintainers
-5. **Address feedback** promptly
-6. **Squash commits** before merge if requested
-
-## Community Guidelines
-
-### Code of Conduct
-- Be respectful and inclusive
-- Focus on constructive feedback
-- Help newcomers get started
-- Maintain professional communication
-
-### Communication Channels
-- **GitHub Issues**: Bug reports and feature requests
-- **GitHub Discussions**: General questions and ideas
-- **Email**: dev@neus.network for direct contact
+---
 
 ## Developer Certificate of Origin
 
-By contributing to NEUS Network, you certify the Developer Certificate of Origin (DCO) and must include a "Signed-off-by" line in your commits:
+Include "Signed-off-by" in commits:
 
-```
+```bash
 git commit -s -m "Your commit message"
-
-Signed-off-by: Your Name <your.email@example.com>
 ```
 
-This certifies that you have the right to submit the contribution under the project's license.
-
-## Licensing for Contributions
-
-NEUS Network uses a dual-licensing structure depending on the component being contributed to:
-
-### Smart Contracts (Business Source License 1.1)
-Contributions to the `contracts/` directory are licensed under **Business Source License 1.1**:
-- **Components**: Smart contracts, interfaces, libraries in `contracts/`
-- **License**: Business Source License 1.1 (converts to Apache 2.0 on August 1, 2028)
-- **Usage**: Permitted for integration, testing, and auditing; competing networks prohibited until conversion
-
-Exception: the testnet NEUSToken contract may be MIT for interoperability; core contracts remain BSL 1.1.
-
-### Developer Tools (Apache 2.0)
-Contributions to SDK, widgets, docs, and examples are licensed under **Apache 2.0**:
-- **Components**: `sdk/`, `widgets/`, `docs/`, `examples/`, `abis/`
-- **License**: Apache License 2.0
-- **Usage**: Unrestricted commercial and open source use
-
-By contributing to NEUS Network, you agree that:
-1. **Smart contract contributions** will be licensed under Business Source License 1.1
-2. **Developer tool contributions** will be licensed under Apache License 2.0
-3. You have the right to submit the contribution under the applicable license
-4. You retain copyright but grant NEUS Network, Inc. necessary rights for the project
-
-© NEUS Network, Inc. All rights reserved. See LICENSE for complete terms.
-
-## Recognition
-
-Contributors will be recognized in:
-- Repository contributor list
-- Release notes for significant contributions
-- Project documentation where appropriate
+---
 
 ## Questions?
 
-If you have questions about contributing, please:
-1. Check existing GitHub Issues and Discussions
-2. Review this contributing guide
-3. Email dev@neus.network for direct assistance
-
-Thank you for helping make NEUS Network better!
+- [GitHub Issues](https://github.com/neus/network/issues)
+- [GitHub Discussions](https://github.com/neus/network/discussions)
+- [dev@neus.network](mailto:dev@neus.network)

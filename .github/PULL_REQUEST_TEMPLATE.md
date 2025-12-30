@@ -15,7 +15,7 @@ Explain the change and why it’s needed.
 - [ ] Tests added/updated
 - [ ] Docs updated (if user-facing)
 - [ ] For verifiers: spec + schemas provided and deterministic behavior
-- [ ] If this adds/updates a verifier, target branch is `verifier-staging`
+- [ ] If this adds/updates a verifier: `spec/VERIFIERS.json` updated and input schema added under `docs/verifiers/schemas/`
 - [ ] Linked Discussion for context (if applicable)
 
 ## Linked issues

@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "required": [],
+  "properties": {
+    "provider": {
+      "type": "string",
+      "enum": [
+        "webacy"
+      ],
+      "description": "Risk assessment provider (default: webacy)"
+    },
+    "walletAddress": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Wallet address to assess (optional; defaults to request walletAddress unless sponsored mode delegates)"
+    },
+    "chainId": {
+      "type": "integer",
+      "description": "Chain ID for context"
+    },
+    "includeDetails": {
+      "type": "boolean",
+      "description": "Include detailed risk breakdown"
+    }
+  }
+}

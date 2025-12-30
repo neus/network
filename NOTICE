@@ -4,7 +4,7 @@ Copyright 2025 NEUS Network, Inc.
 This repository contains components under different licenses:
 
 - Smart Contracts (contracts/): Business Source License 1.1
-- SDK and Tools (sdk/, widgets/, docs/, examples/, abis/): Apache License 2.0
+- SDK and Tools (sdk/, docs/, examples/, abis/): Apache License 2.0
 
 For complete licensing information, see the LICENSE files in this repository (e.g., `LICENSE`, `contracts/LICENSE`, `sdk/LICENSE`).
 

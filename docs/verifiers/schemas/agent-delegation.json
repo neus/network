@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "required": [
+    "controllerWallet",
+    "agentWallet"
+  ],
+  "properties": {
+    "controllerWallet": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Controller wallet (must sign the delegation)"
+    },
+    "agentWallet": {
+      "type": "string",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Agent receiving authority"
+    },
+    "agentId": {
+      "type": "string",
+      "maxLength": 128,
+      "description": "Agent ID for linking to agent-identity proof"
+    },
+    "scope": {
+      "type": "string",
+      "maxLength": 128,
+      "description": "Scope of delegation (e.g., payments:x402, trading, posting, global)"
+    },
+    "permissions": {
+      "type": "array",
+      "description": "Granular permission list (e.g., [\"read\", \"write\", \"execute\"])"
+    },
+    "maxSpend": {
+      "type": "string",
+      "description": "Maximum spend limit in wei (for payments:x402 scope)"
+    },
+    "allowedPaymentTypes": {
+      "type": "array",
+      "description": "Declared allowed payment protocols for this delegation (e.g., [\"x402\"]). Metadata-only.",
+      "items": { "type": "string", "maxLength": 32 }
+    },
+    "receiptDisclosure": {
+      "type": "string",
+      "enum": ["none", "summary", "full"],
+      "description": "Receipt disclosure policy for economic actions (metadata-only). Recommended: summary."
+    },
+    "expiresAt": {
+      "type": "integer",
+      "description": "Expiration timestamp (ms). Recommended for security."
+    }
+  }
+}
