@@ -1,8 +1,3 @@
----
-description: NEUS Standard Signing String, deterministic JSON rules, and replay protection.
-icon: ✍️
----
-
 # Signing
 
 Authentication in NEUS is **signature-based**.

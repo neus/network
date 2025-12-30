@@ -1,8 +1,3 @@
----
-description: Canonical terminology used throughout NEUS docs and APIs.
-icon: 📚
----
-
 # Glossary
 
 ## Proof ID (qHash)

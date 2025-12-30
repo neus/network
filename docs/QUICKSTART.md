@@ -1,8 +1,3 @@
----
-description: Create a proof, check status, and gate access using the public SDK and API surfaces.
-icon: ⚡
----
-
 # Quickstart
 
 ## Pick your path
@@ -17,17 +12,17 @@ icon: ⚡
   </thead>
   <tbody>
     <tr>
-      <td><strong>⚡ SDK proof (this page)</strong></td>
+      <td><strong>SDK proof (this page)</strong></td>
       <td>Create a proof via wallet signature and poll status.</td>
       <td><a href="./QUICKSTART.md">./QUICKSTART.md</a></td>
     </tr>
     <tr>
-      <td><strong>🧩 VerifyGate widget</strong></td>
+      <td><strong>VerifyGate widget</strong></td>
       <td>Drop-in React gating with freshness controls.</td>
       <td><a href="../sdk/widgets/README.md">../sdk/widgets/README.md</a></td>
     </tr>
     <tr>
-      <td><strong>🧪 HTTP examples</strong></td>
+      <td><strong>HTTP examples</strong></td>
       <td>Minimal curl / Node.js examples for server integrations.</td>
       <td><a href="../examples/README.md">../examples/README.md</a></td>
     </tr>

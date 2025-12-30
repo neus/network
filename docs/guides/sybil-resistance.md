@@ -1,9 +1,4 @@
----
-description: Reduce automated abuse using wallet-risk signals (point-in-time; use freshness).
-icon: 🧬
----
-
-# Sybil resistance
+# Sybil Resistance
 
 Use `wallet-risk` to add a risk signal to onboarding, allowlists, and claim flows.
 

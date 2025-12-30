@@ -1,8 +1,3 @@
----
-description: Verifier IDs, tiers, and input schemas (public + deployment-enabled).
-icon: 🛡️
----
-
 # Verifier Catalog
 
 NEUS provides public verifiers available to all developers without API keys, plus optional early-access verifiers that require deployment configuration.

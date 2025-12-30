@@ -1,8 +1,3 @@
-﻿---
-description: Public HTTP endpoints for proof creation, status polling, and gating checks.
-icon: 🧭
----
-
 # API Reference
 
 The NEUS Public API provides a trust-minimized interface for creating and resolving cryptographic proofs.

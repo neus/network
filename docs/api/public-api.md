@@ -1,8 +1,3 @@
----
-description: OpenAPI spec for the public NEUS HTTP surface.
-icon: 🧾
----
-
 # Public API Spec
 
 The NEUS Public API is defined by a single **OpenAPI 3.0** specification.
@@ -21,5 +16,5 @@ Request-bound wallet signatures. See [Signing](../concepts/signing.md).
 
 ## Interactive reference (OpenAPI)
 
-{% openapi src="public-api.json" %}
+{% openapi src="https://raw.githubusercontent.com/neus/network/main/docs/api/public-api.json" %}
 

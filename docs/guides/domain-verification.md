@@ -1,9 +1,4 @@
----
-description: Bind a domain (DNS TXT) to a wallet and gate access on domain control.
-icon: 🌐
----
-
-# Domain verification (DNS TXT)
+# Domain Verification (DNS TXT)
 
 Bind a domain (e.g. `example.com`) to a wallet by proving control of a DNS TXT record.
 

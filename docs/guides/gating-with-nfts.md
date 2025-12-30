@@ -1,9 +1,4 @@
----
-description: Gate UI routes or API routes so only NFT holders can access them.
-icon: 🪪
----
-
-# Gate content with NFTs
+# Gate Content with NFTs
 
 Gate a UI route or API route so only wallets that can prove ownership of a specific NFT token can access it.
 

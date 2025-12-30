@@ -1,9 +1,4 @@
----
-description: Create agent identity + delegation proofs for bots and services.
-icon: 🤖
----
-
-# Verifiable agents
+# Verifiable Agents
 
 Use `agent-identity` and `agent-delegation` to create verifiable identities and scoped authority for services and bots.
 

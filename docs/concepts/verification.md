@@ -1,8 +1,3 @@
----
-description: Proof lifecycle, qHash semantics, freshness, and status polling.
-icon: 🧾
----
-
 # Verification
 
 NEUS proofs are created by signing a deterministic request and submitting it to the API. The API returns a **Proof ID** (wire field: `qHash`) you can use for status checks and gating.

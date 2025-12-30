@@ -1,8 +1,3 @@
----
-description: Gate access using proof freshness strategies (UI gating vs API gate checks).
-icon: 🚪
----
-
 # Access Gating
 
 Protect your application's content or features using **VerifyGate**.
