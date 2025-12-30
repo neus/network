@@ -1,12 +1,11 @@
 ---
 description: Practical, step-by-step integrations for real-world gating and verification flows.
 icon: 🧭
-cover: ../assets/covers/guides.svg
 ---
 
-# Guides
+# Overview
 
-Practical, step-by-step integrations. Start with NFT gating for the fastest end-to-end proof + gate flow.
+Practical, step-by-step integrations for real-world gating and verification flows.
 
 <table data-view="cards">
   <thead>

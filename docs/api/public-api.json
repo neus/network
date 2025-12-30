@@ -3,7 +3,7 @@
   "info": {
     "title": "NEUS Public API",
     "version": "1.0.0",
-    "description": "# Included:\n- Health checks\n- Verification submit + status polling\n- Public verifier discovery\n- Public proof reads (byWallet)\n- Public gate checks\n- Owner-signed proof revocation\n- Owner-signed private proof access grants (viewer-specific, short-lived)\n\nNot documented here (separate internal/premium docs):\n- Hub session UX helpers\n- Premium API key endpoints and sponsored billing\n- Admin/control endpoints\n- Internal service-to-service endpoints",
+    "description": "Public interface for creating and resolving cryptographic proofs. Includes health checks, verification polling, verifier discovery, and gate evaluation. For premium features such as social/org OAuth or high-volume lookup mode, please refer to the Premium Access section in the documentation.",
     "contact": {
       "name": "NEUS",
       "url": "https://neus.network",

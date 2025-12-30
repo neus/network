@@ -1,7 +1,6 @@
 ---
 description: Verifier IDs, tiers, and input schemas (public + deployment-enabled).
 icon: 🛡️
-cover: ../assets/covers/verifiers.svg
 ---
 
 # Verifier Catalog

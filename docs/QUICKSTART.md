@@ -1,12 +1,9 @@
 ---
 description: Create a proof, check status, and gate access using the public SDK and API surfaces.
 icon: ⚡
-cover: ./assets/covers/quickstart.svg
 ---
 
 # Quickstart
-
-Create a proof, check status, and gate access using the public SDK and API surfaces.
 
 ## Pick your path
 

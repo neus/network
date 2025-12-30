@@ -1,7 +1,6 @@
 ---
 description: Canonical terminology used throughout NEUS docs and APIs.
 icon: 📚
-cover: ../assets/covers/overview.svg
 ---
 
 # Glossary

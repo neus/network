@@ -1,10 +1,11 @@
 ---
 description: SDK + HTTP API for portable proofs you can gate on.
 icon: 🌐
-cover: ./assets/covers/overview.svg
 ---
 
-NEUS provides an open verification network for creating and checking cryptographic proofs used for gating and status checks.
+# NEUS Network
+
+The open verification layer for identity, ownership, and agent authenticity.
 
 ## Get started
 
@@ -84,20 +85,14 @@ NEUS provides an open verification network for creating and checking cryptograph
   </tbody>
 </table>
 
-## Schema references
+---
 
-| Artifact | Purpose |
-| :--- | :--- |
-| `spec/VERIFIERS.json` | Verifier IDs + tiers (source of truth). |
-| `docs/api/public-api.json` | OpenAPI for the public HTTP surface. |
-| `docs/verifiers/schemas/*.json` | Verifier input schemas (public verifiers). |
+## Premium Capabilities
 
-## Need premium / sponsored capabilities?
+Hosted deployments offer **enterprise API keys** for high-volume or non-public needs:
 
-Hosted deployments may offer **enterprise API keys** for:
+- **Lookup mode**: Real-time, non-persistent checks (no proof record minted).
+- **Higher limits**: Increased capacity for large-scale gating.
+- **Premium verifiers**: Social and organization OAuth verifications.
 
-- **Lookup mode** (`POST /api/v1/verification/lookup`): non-persistent, server-to-server checks (no `qHash` minted).
-- **Higher limits** on select surfaces (deployment-dependent).
-- **Premium verifiers** (for example social and organization OAuth verifications).
-
-Start here: **[API Reference → Premium / Sponsored mode](./api/README.md#premium--sponsored-mode)**.
+[Request Premium Access](https://neus.network/profile) or contact [dev@neus.network](mailto:dev@neus.network).

@@ -1,98 +1,43 @@
----
-description: Public HTTP endpoints (OpenAPI-backed) for proof creation, status polling, and gating checks.
+﻿---
+description: Public HTTP endpoints for proof creation, status polling, and gating checks.
 icon: 🧭
-cover: ../assets/covers/api.svg
 ---
 
 # API Reference
 
-## Base URL
+The NEUS Public API provides a trust-minimized interface for creating and resolving cryptographic proofs.
+
+## Endpoints
+
+Integrators should use the following base URL for all requests:
 
 `https://api.neus.network`
 
-## Authentication model
+## Authentication
 
-- **Proof creation** uses request-bound wallet signatures (NEUS Standard Signing String).
-- **Reads** are public for public/discoverable proofs; private proof reads require owner signatures and/or explicit access grants.
-- **Premium / sponsored** deployments may additionally accept **enterprise API keys** for higher limits and non-public surfaces (server-side only).
+Authentication is handled via request-bound wallet signatures following the [NEUS Standard Signing String](../concepts/signing.md). This ensures that every verification request is cryptographically bound to the user's intent.
 
-If you are implementing the signing rules yourself, start with **[Signing](../concepts/signing.md)**.
+- **Proof Creation**: Requires a valid EIP-191 or universal signature in the request body.
+- **Status Checks**: Public proofs are globally readable; private proofs require owner authentication headers.
+- **Premium Access**: Enterprise deployments may require an API key for higher rate limits or non-public verifier lookups.
 
-## OpenAPI (public surface)
+## Public OpenAPI Surface
 
-- **OpenAPI (repo file)**: `./public-api.json`
-- **Swagger UI** (interactive): [View in Swagger UI](https://petstore.swagger.io/?url=https://raw.githubusercontent.com/neus/network/main/docs/api/public-api.json)
-- **Redoc** (enterprise-style reference): [View in Redoc](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/neus/network/main/docs/api/public-api.json)
-- **Raw spec** (GitHub): [public-api.json](https://raw.githubusercontent.com/neus/network/main/docs/api/public-api.json)
+For detailed request/response schemas, parameter definitions, and error codes, refer to the [Public API Spec](public-api.json). The spec includes:
 
-> If you are on a fork/branch, replace `main` in the links above with your branch name.
-
----
-
-## Public integrator surface (stable)
-
-### Health
-
-- `GET /api/v1/health`
-- `GET /api/v1/health/ready`
-- `GET /api/v1/health/live`
-- `GET /api/v1/health/detailed`
-
-### Verification (create + poll)
-
-- `POST /api/v1/verification` — submit a signed request and mint a proof (`qHash`).
-- `GET /api/v1/verification/status/{qHash}` — poll status (public or owner-signed for private).
-- `GET /api/v1/verification/verifiers` — discover which verifier IDs are enabled in this deployment.
-- `POST /api/v1/verification/standardize` — build the exact string-to-sign (debugging).
-- `POST /api/v1/verification/access/grant` — owner grants a viewer short-lived access to a private proof.
-
-### Proofs (reads + gating)
-
-- `GET /api/v1/proofs/byWallet/{address}` — list proofs (public/discoverable; private requires owner auth headers).
-- `GET /api/v1/proofs/gate/check` — minimal eligibility check against **public + discoverable** proofs.
-- `POST /api/v1/proofs/{qHash}/revoke-self` — owner-signed revocation.
-
----
-
-## Gate checks (recommended for server-side gating)
-
-`GET /api/v1/proofs/gate/check` is optimized for **eligibility decisions** without pulling full proof payloads.
-
-Key behavior:
-
-- Evaluates **public + discoverable** proofs only (`privacyLevel=public` and `publicDisplay=true`).
-- Supports **recency requirements** (`since` / `sinceDays`) for point-in-time verifiers.
-- Supports **match filters** used by multiple verifiers, including:
-  - **On-chain / assets**: `contractAddress`, `tokenId`, `minBalance`, `chainId`
-  - **Domains**: `domain`
-  - **Identity / handles**: `provider`, `handle` (used by handle-style verifiers and premium social surfaces)
-  - **Risk**: `riskLevel`, `sanctioned`, `poisoned`
-  - **Tags and projections**: `tags`, `select`
-
-If you need a decision that **must be true right now** and you do not have a recent proof, create a fresh proof via `POST /api/v1/verification` (or in UI use `strategy="fresh"` in `VerifyGate`).
-
----
-
-## Verifier discovery (avoid drift)
-
-`GET /api/v1/verification/verifiers` returns the verifier IDs enabled for a given deployment.
+- **Health**: Liveness and readiness probes.
+- **Verification**: Submission and polling for new proofs.
+- **Verifiers**: Real-time list of enabled verifier modules.
+- **Proofs**: Discoverability, gate checking, and revocation.
 
 ---
 
 ## Premium / Sponsored mode
 
-Some deployments offer **enterprise API keys** for server-side integrations:
+Hosted deployments may offer **enterprise API keys** for server-side integrations that require:
 
-- **Lookup mode**: `POST /api/v1/verification/lookup`
-  - **Non-persistent**: does not mint/store proofs (no `qHash`)
-  - **Real-time**: runs `external_lookup` verifiers for a target wallet
-  - **Auth**: `Authorization: Bearer sk_live_...` (or `sk_test_...`)
-- **Higher scan limits** for select surfaces (deployment-dependent)
-- **Premium verifiers** including interactive OAuth-style verifications (for example **ownership social** and **ownership org OAuth**)
+- **Lookup mode** (`POST /api/v1/verification/lookup`): Real-time, non-persistent checks (no `qHash` minted).
+- **Higher limits**: Increased scan limits for large-scale gating.
+- **Premium verifiers**: Interactive OAuth-based flows (e.g., `ownership-social`, `ownership-org-oauth`).
 
-Important constraints:
-
-- **Do not embed API keys in browser apps**. Keep them server-side only.
-- API keys **do not replace wallet authorization** for user-owned proofs (see [Security](../../SECURITY.md#enterprise-api-keys-sponsorship)).
-
-To request premium access, use [neus.network/profile](https://neus.network/profile) (hosted) or contact [dev@neus.network](mailto:dev@neus.network).
+To request premium access, visit the [NEUS Profile](https://neus.network/profile) or contact [dev@neus.network](mailto:dev@neus.network).

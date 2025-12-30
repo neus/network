@@ -1,7 +1,6 @@
 ---
 description: Create agent identity + delegation proofs for bots and services.
 icon: 🤖
-cover: ../assets/covers/guides.svg
 ---
 
 # Verifiable agents

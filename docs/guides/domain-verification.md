@@ -1,7 +1,6 @@
 ---
 description: Bind a domain (DNS TXT) to a wallet and gate access on domain control.
 icon: 🌐
-cover: ../assets/covers/guides.svg
 ---
 
 # Domain verification (DNS TXT)

@@ -1,10 +1,9 @@
 ---
 description: Core concepts you’ll use when integrating NEUS.
 icon: 🧠
-cover: ../assets/covers/overview.svg
 ---
 
-# Concepts
+# Overview
 
 Core concepts you’ll use when integrating NEUS.
 

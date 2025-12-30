@@ -1,7 +1,6 @@
 ---
 description: Reduce automated abuse using wallet-risk signals (point-in-time; use freshness).
 icon: 🧬
-cover: ../assets/covers/guides.svg
 ---
 
 # Sybil resistance

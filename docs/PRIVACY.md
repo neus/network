@@ -1,7 +1,6 @@
 ---
 description: Privacy model for proofs (private vs public vs discoverable) and safe defaults.
 icon: 🔒
-cover: ./assets/covers/privacy.svg
 ---
 
 # Privacy

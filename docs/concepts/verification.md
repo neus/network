@@ -1,7 +1,6 @@
 ---
 description: Proof lifecycle, qHash semantics, freshness, and status polling.
 icon: 🧾
-cover: ../assets/covers/overview.svg
 ---
 
 # Verification

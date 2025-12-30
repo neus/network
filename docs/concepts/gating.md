@@ -1,7 +1,6 @@
 ---
 description: Gate access using proof freshness strategies (UI gating vs API gate checks).
 icon: 🚪
-cover: ../assets/covers/overview.svg
 ---
 
 # Access Gating

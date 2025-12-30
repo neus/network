@@ -1,7 +1,6 @@
 ---
 description: NEUS Standard Signing String, deterministic JSON rules, and replay protection.
 icon: ✍️
-cover: ../assets/covers/overview.svg
 ---
 
 # Signing

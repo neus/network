@@ -1,7 +1,6 @@
 ---
 description: Gate UI routes or API routes so only NFT holders can access them.
 icon: 🪪
-cover: ../assets/covers/guides.svg
 ---
 
 # Gate content with NFTs
