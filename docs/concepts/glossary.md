@@ -1,3 +1,9 @@
+---
+description: Canonical terminology used throughout NEUS docs and APIs.
+icon: 📚
+cover: ../assets/covers/overview.svg
+---
+
 # Glossary
 
 ## Proof ID (qHash)
@@ -10,8 +16,7 @@ Use the Proof ID to:
 - Fetch status (`GET /api/v1/verification/status/{qHash}`)
 - Power gating and downstream integrations
 
-**Notes**
+### Notes
 
 - Treat the Proof ID as **opaque**. Do not parse meaning from it.
 - Proof freshness is determined by timestamps (for example `createdAt`, `completedAt`, and/or `lastUpdated` depending on the surface). A Proof ID does not change when you re-check status.
-

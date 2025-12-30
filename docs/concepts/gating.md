@@ -1,3 +1,9 @@
+---
+description: Gate access using proof freshness strategies (UI gating vs API gate checks).
+icon: 🚪
+cover: ../assets/covers/overview.svg
+---
+
 # Access Gating
 
 Protect your application's content or features using **VerifyGate**.
@@ -17,29 +23,22 @@ To enforce **real-time** checks at the moment of access:
 
 ## Usage (React)
 
-The `VerifyGate` component handles the entire flow:
-1.  Checking if the user already has a valid proof.
-2.  Prompting for a signature if they don't.
-3.  Verifying the data.
-4.  Unlocking the children components.
+`VerifyGate` can create proofs on demand and unlock content when requirements are satisfied.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
 <VerifyGate
-  // 1. Which verifiers are required?
   requiredVerifiers={['nft-ownership', 'wallet-risk']}
-  
-  // 2. Data for each verifier
   verifierData={{
     'nft-ownership': {
       contractAddress: '0x...',
       tokenId: '1',
-      chainId: 1
+      chainId: 1,
     },
     'wallet-risk': {
-      walletAddress: userAddress // Pass current user address
-    }
+      walletAddress: userAddress,
+    },
   }}
 >
   <ProtectedComponent />
@@ -99,10 +98,26 @@ const res = await client.gateCheck({
   address: '0x...',
   verifierIds: ['token-holding'],
   contractAddress: '0x...',
-  minBalance: '100'
+  minBalance: '100',
 });
 
 if (!res.data?.eligible) {
-  throw new Error('Access Denied');
+  throw new Error('Access denied');
 }
 ```
+
+## Social & organization gating (premium)
+
+Some deployments offer **interactive OAuth-based verifiers** (for example `ownership-social` and `ownership-org-oauth`). The full OAuth verification flow is not part of the public open-source docs, but integrators can still gate safely:
+
+- **Gate using existing proofs** (when the user has already completed OAuth): use `GET /api/v1/proofs/gate/check` with filters such as:
+  - `provider` (provider key; deployment-specific)
+  - `handle` (username/handle)
+  - `since` / `sinceDays` (recency for point-in-time verifiers)
+- **Require a fresh, non-persistent decision**: use `POST /api/v1/verification/lookup` with an enterprise API key (server-side only).
+
+Privacy note:
+
+- `gate/check` evaluates **public + discoverable** proofs only. If you need to keep social/org proofs private, use owner-only reads or lookup mode and do not rely on public discovery for gating.
+
+Reference: **[API Reference](../api/README.md)** and **[Privacy](../PRIVACY.md)**.

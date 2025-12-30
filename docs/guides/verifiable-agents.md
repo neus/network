@@ -1,3 +1,9 @@
+---
+description: Create agent identity + delegation proofs for bots and services.
+icon: 🤖
+cover: ../assets/covers/guides.svg
+---
+
 # Verifiable agents
 
 Use `agent-identity` and `agent-delegation` to create verifiable identities and scoped authority for services and bots.
@@ -32,7 +38,6 @@ const proof = await client.verify({
 A controller can issue a scoped delegation proof to the agent wallet.
 
 ```javascript
-// Use a dedicated controller wallet. Never commit private keys.
 const controllerWallet = new Wallet(process.env.CONTROLLER_PRIVATE_KEY);
 
 const delegationProof = await client.verify({
@@ -46,6 +51,8 @@ const delegationProof = await client.verify({
   }
 });
 ```
+
+Use a dedicated controller wallet and keep private keys out of source control and client-side code.
 
 ## 3) Verify the agent (server-side)
 
@@ -63,4 +70,3 @@ const ok = Boolean(identity.data?.eligible && delegation.data?.eligible);
 - Verifier schemas:
   - `docs/verifiers/schemas/agent-identity.json`
   - `docs/verifiers/schemas/agent-delegation.json`
-

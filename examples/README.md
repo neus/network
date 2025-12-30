@@ -1,6 +1,6 @@
 # Examples
 
-Integration examples for NEUS Network.
+Integration examples for NEUS.
 
 ## Index
 

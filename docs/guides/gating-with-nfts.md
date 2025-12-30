@@ -1,3 +1,9 @@
+---
+description: Gate UI routes or API routes so only NFT holders can access them.
+icon: 🪪
+cover: ../assets/covers/guides.svg
+---
+
 # Gate content with NFTs
 
 Gate a UI route or API route so only wallets that can prove ownership of a specific NFT token can access it.
@@ -31,14 +37,11 @@ export function ExclusiveDrop() {
         'nft-ownership': {
           contractAddress: '0x...',
           tokenId: '1',
-          chainId: 1
-        }
+          chainId: 1,
+        },
       }}
     >
-      <div>
-        <h2>Access granted</h2>
-        <button>Claim</button>
-      </div>
+      <ClaimButton />
     </VerifyGate>
   );
 }
@@ -62,8 +65,8 @@ export async function checkAccess(address) {
     contractAddress: '0x...',
     tokenId: '1',
     chainId: 1,
-    // Require a proof created recently (example: within the last hour)
-    since: Date.now() - 60 * 60 * 1000
+    // Recency requirement (example: last hour)
+    since: Date.now() - 60 * 60 * 1000,
   });
 
   return { access: Boolean(res.data?.eligible) };
@@ -76,4 +79,3 @@ If you need a **hard real-time on-chain check**, create a new proof (`POST /api/
 
 - Verifier schema: `docs/verifiers/schemas/nft-ownership.json`
 - API: `GET /api/v1/proofs/gate/check` and `POST /api/v1/verification`
-

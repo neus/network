@@ -1,3 +1,9 @@
+---
+description: Reduce automated abuse using wallet-risk signals (point-in-time; use freshness).
+icon: 🧬
+cover: ../assets/covers/guides.svg
+---
+
 # Sybil resistance
 
 Use `wallet-risk` to add a risk signal to onboarding, allowlists, and claim flows.
@@ -18,8 +24,8 @@ export async function evaluateWalletRisk(walletAddress) {
     wallet: window.ethereum
   });
 
-  const proofId = created.qHash; // Proof ID (qHash)
-  const final = await client.pollProofStatus(proofId, { interval: 3000, timeout: 60000 });
+  const qHash = created.qHash;
+  const final = await client.pollProofStatus(qHash, { interval: 3000, timeout: 60000 });
   const verifier = (final.data?.verifiedVerifiers || []).find(
     (v) => v.verifierId === 'wallet-risk' && v.verified === true
   );
@@ -48,4 +54,3 @@ Use `VerifyGate` to combine multiple requirements (e.g. “NFT owner + low risk�
 ## Reference
 
 - Verifier schema: `docs/verifiers/schemas/wallet-risk.json`
-

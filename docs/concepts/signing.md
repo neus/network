@@ -1,3 +1,9 @@
+---
+description: NEUS Standard Signing String, deterministic JSON rules, and replay protection.
+icon: ✍️
+cover: ../assets/covers/overview.svg
+---
+
 # Signing
 
 Authentication in NEUS is **signature-based**.
@@ -15,6 +21,7 @@ Authentication in NEUS is **signature-based**.
 If building a custom client (e.g., Python, Go), you must replicate the standard signing message exactly.
 
 **Template:**
+
 ```text
 NEUS Verification Request
 Wallet: {normalized_wallet}
@@ -25,6 +32,7 @@ Timestamp: {unix_ms}
 ```
 
 **Rules:**
+
 1. **Wallet normalization:** lowercase the `0x...` address for EVM (`eip155`) signing. For non-EVM `chain` namespaces, preserve the original wallet string.
 2. **Chain context:** EVM uses numeric `chainId` (example: `1`). Universal mode uses CAIP-2 `chain` (example: `solana:mainnet`). The signing string’s `Chain:` line must match what you submit in the request.
 3. **Verifiers:** comma-separated, no spaces (example: `ownership-basic,wallet-risk`).

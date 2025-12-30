@@ -1,4 +1,4 @@
-# NEUS Network Contract Verification
+# NEUS Contract Verification
 
 Verified smart contract deployments with explorer links.
 

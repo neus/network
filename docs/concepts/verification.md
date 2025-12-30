@@ -1,3 +1,9 @@
+---
+description: Proof lifecycle, qHash semantics, freshness, and status polling.
+icon: 🧾
+cover: ../assets/covers/overview.svg
+---
+
 # Verification
 
 NEUS proofs are created by signing a deterministic request and submitting it to the API. The API returns a **Proof ID** (wire field: `qHash`) you can use for status checks and gating.
@@ -43,7 +49,7 @@ Important separation:
 - **Single verifier:** `data` can be a flat object (verifier input).
 - **Multi-verifier:** prefer namespaced payloads: `data[verifierId] = { ... }` to avoid field collisions (`contractAddress`, `chainId`, `content`, etc.).
 
-## Subject wallet defaults (friction reducer)
+## Subject wallet defaults
 
 Many verifiers accept an explicit subject wallet field (e.g., `ownerAddress`, `walletAddress`) but default it to the signed `walletAddress` when omitted. If you provide a mismatched subject wallet without sponsored mode, the server will override it to the signer for signature safety.
 
@@ -73,5 +79,6 @@ Recommended defaults:
 For owner-only reads of private proofs, see the API reference section “Private proof access (owner-only)”.
 
 For third-party apps, NEUS also supports **explicit private proof sharing** without making a proof public:
+
 - The owner creates an access grant (`POST /api/v1/verification/access/grant`)
 - The viewer reads with a short-lived viewer signature on `data.action="access_private_proof"` (no session cookie required)

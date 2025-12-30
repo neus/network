@@ -1,3 +1,9 @@
+---
+description: Create a proof, check status, and gate access using the public SDK and API surfaces.
+icon: ⚡
+cover: ./assets/covers/quickstart.svg
+---
+
 # Quickstart
 
 Create a proof, check status, and gate access using the public SDK and API surfaces.
@@ -14,17 +20,17 @@ Create a proof, check status, and gate access using the public SDK and API surfa
   </thead>
   <tbody>
     <tr>
-      <td><strong>SDK proof (this page)</strong></td>
+      <td><strong>⚡ SDK proof (this page)</strong></td>
       <td>Create a proof via wallet signature and poll status.</td>
       <td><a href="./QUICKSTART.md">./QUICKSTART.md</a></td>
     </tr>
     <tr>
-      <td><strong>VerifyGate widget</strong></td>
+      <td><strong>🧩 VerifyGate widget</strong></td>
       <td>Drop-in React gating with freshness controls.</td>
       <td><a href="../sdk/widgets/README.md">../sdk/widgets/README.md</a></td>
     </tr>
     <tr>
-      <td><strong>HTTP examples</strong></td>
+      <td><strong>🧪 HTTP examples</strong></td>
       <td>Minimal curl / Node.js examples for server integrations.</td>
       <td><a href="../examples/README.md">../examples/README.md</a></td>
     </tr>
@@ -39,7 +45,7 @@ npm install @neus/sdk
 
 ## 2. Create a Client
 
-Initialize the client in your app. No API keys needed for public verifiers.
+Initialize the client in your app. Public verifiers do not require API keys.
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -49,17 +55,25 @@ const client = new NeusClient();
 
 ## 3. Verify Something
 
-Let's prove ownership of a piece of content using `ownership-basic`. This will prompt the user's wallet to sign a message.
+Create a content authorship proof using `ownership-basic`. This prompts the user’s wallet to sign a request-bound message.
 
 ```javascript
 const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'Hello NEUS',
-  wallet: window.ethereum
+  wallet: window.ethereum,
 });
 
-// Proof ID (qHash): portable reference you can store and reuse for status checks and gating.
-const proofId = proof.qHash;
+const qHash = proof.qHash; // Proof ID (qHash)
+```
+
+## 3b. Poll status (when verifiers run async)
+
+Some verifiers complete instantly; others return `202` and finish asynchronously. Poll until terminal status:
+
+```javascript
+const final = await client.pollProofStatus(qHash, { interval: 3000, timeout: 60000 });
+console.log(final.status);
 ```
 
 ## 4. Gate Your UI
@@ -77,13 +91,11 @@ export default function ProtectedPage() {
         'nft-ownership': {
           contractAddress: '0x...',
           tokenId: '1',
-          chainId: 1
-        }
+          chainId: 1,
+        },
       }}
     >
-      <div className="exclusive-content">
-        Welcome, NFT holder.
-      </div>
+      <div>Access granted.</div>
     </VerifyGate>
   );
 }
@@ -100,8 +112,8 @@ const result = await client.gateCheck({
   contractAddress: '0x...',
   minBalance: '100',
   chainId: 1,
-  // Optional: require a recent proof for point-in-time verifiers (example: last hour)
-  since: Date.now() - 60 * 60 * 1000
+  // Optional: recency requirement for point-in-time verifiers (example: last hour)
+  since: Date.now() - 60 * 60 * 1000,
 });
 ```
 

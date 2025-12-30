@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: 20
+  NODE_VERSION: 20.19.0
 
 jobs:
   sdk:
@@ -55,3 +55,21 @@ jobs:
       - name: Package check
         run: npm pack --dry-run
         working-directory: sdk
+
+  docs:
+    name: Docs (markdown + OpenAPI validation)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Markdown lint
+        run: npx --yes markdownlint-cli2@latest --config .markdownlint-cli2.jsonc
+
+      - name: OpenAPI lint (public surface)
+        run: npx --yes @redocly/cli@2.14.1 lint docs/api/public-api.json

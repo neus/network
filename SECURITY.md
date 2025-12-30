@@ -32,4 +32,3 @@ For `external_lookup` verifiers, a key holder may run delegated checks against a
 ## Rate limiting
 
 Public endpoints are rate-limited to prevent abuse and ensure fair usage.
-

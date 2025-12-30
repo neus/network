@@ -22,7 +22,7 @@ cd sdk && npm test && cd ..
 ## How to Contribute
 
 | Type | Where |
-|------|-------|
+| --- | --- |
 | Bug reports | [GitHub Issues](https://github.com/neus/network/issues) |
 | Ideas & questions | [GitHub Discussions](https://github.com/neus/network/discussions) |
 | Security issues | [dev@neus.network](mailto:dev@neus.network) (do not create public issues) |
@@ -39,6 +39,7 @@ cd sdk && npm test && cd ..
 5. Submit pull request with clear description
 
 **Standards:**
+
 - Follow existing ESLint configuration
 - Maintain test coverage
 - Update documentation for API changes
@@ -51,6 +52,7 @@ cd sdk && npm test && cd ..
 New verification types can extend the ecosystem.
 
 **Process:**
+
 1. **Propose** — Start a [GitHub Discussion](https://github.com/neus/network/discussions)
 2. **Implement** — Follow verifier standards
 3. **Submit** — PR with `spec/VERIFIERS.json` updates + input schema + docs
@@ -59,6 +61,7 @@ New verification types can extend the ecosystem.
 6. **Merge** — Maintainers merge to `main`
 
 **Requirements:**
+
 - Deterministic outputs for same inputs
 - No PII in inputs or outputs
 - JSON schemas for validation
@@ -69,7 +72,7 @@ New verification types can extend the ecosystem.
 ## Licensing
 
 | Component | License |
-|-----------|---------|
+| --- | --- |
 | Smart contracts (`contracts/`) | Business Source License 1.1 |
 | SDK, widgets, docs, examples | Apache 2.0 |
 

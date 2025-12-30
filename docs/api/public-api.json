@@ -1,11 +1,11 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "NEUS Network — Public API",
+    "title": "NEUS Public API",
     "version": "1.0.0",
-    "description": "# NEUS Network — Public API\n\nIncluded:\n- Health checks\n- Verification submit + status polling\n- Public verifier discovery\n- Public proof reads (byWallet)\n- Public gate checks\n- Owner-signed proof revocation\n- Owner-signed private proof access grants (viewer-specific, short-lived)\n\nNot documented here (separate internal/premium docs):\n- Hub session UX helpers\n- Premium API key endpoints and sponsored billing\n- Admin/control endpoints\n- Internal service-to-service endpoints",
+    "description": "# Included:\n- Health checks\n- Verification submit + status polling\n- Public verifier discovery\n- Public proof reads (byWallet)\n- Public gate checks\n- Owner-signed proof revocation\n- Owner-signed private proof access grants (viewer-specific, short-lived)\n\nNot documented here (separate internal/premium docs):\n- Hub session UX helpers\n- Premium API key endpoints and sponsored billing\n- Admin/control endpoints\n- Internal service-to-service endpoints",
     "contact": {
-      "name": "NEUS Network",
+      "name": "NEUS",
       "url": "https://neus.network",
       "email": "dev@neus.network"
     },
@@ -18,11 +18,14 @@
     {
       "url": "https://api.neus.network",
       "description": "Production API"
-    },
-    {
-      "url": "http://localhost:3000",
-      "description": "Local development server"
     }
+  ],
+  "security": [],
+  "tags": [
+    { "name": "Health", "description": "Health and readiness probes" },
+    { "name": "Verification", "description": "Submit verifications and poll status" },
+    { "name": "Verifiers", "description": "Deployment verifier discovery" },
+    { "name": "Proofs", "description": "Proof reads, gating checks, and revocation" }
   ],
   "components": {
     "schemas": {
@@ -383,6 +386,8 @@
   "paths": {
     "/api/v1/health": {
       "get": {
+        "tags": ["Health"],
+        "operationId": "healthGet",
         "summary": "API health check",
         "description": "Check if the API is operational",
         "responses": {
@@ -395,12 +400,30 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/health/ready": {
       "get": {
+        "tags": ["Health"],
+        "operationId": "healthReadyGet",
         "summary": "Readiness probe",
         "description": "Infrastructure readiness probe. Returns 200 when critical dependencies are ready.",
         "responses": {
@@ -423,12 +446,30 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/health/live": {
       "get": {
+        "tags": ["Health"],
+        "operationId": "healthLiveGet",
         "summary": "Liveness probe",
         "description": "Infrastructure liveness probe. Returns 200 if the process is alive.",
         "responses": {
@@ -441,12 +482,30 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/health/detailed": {
       "get": {
+        "tags": ["Health"],
+        "operationId": "healthDetailedGet",
         "summary": "Detailed health",
         "description": "Detailed health status (may include extra diagnostics in non-live environments).",
         "responses": {
@@ -469,12 +528,30 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/verification": {
       "post": {
+        "tags": ["Verification"],
+        "operationId": "verificationSubmit",
         "summary": "Submit verification request",
         "description": "Create cryptographic proof of ownership, assets, or credentials. Signed request-body using the NEUS Standard Signing String (6-line).",
         "requestBody": {
@@ -533,6 +610,8 @@
     },
     "/api/v1/verification/status/{qHash}": {
       "get": {
+        "tags": ["Verification"],
+        "operationId": "verificationStatusGet",
         "summary": "Get verification status",
         "description": "Check status of a verification by qHash. Public proofs return full data. Private proofs return full data only for the owner when authenticated; otherwise returns a sanitized status.",
         "parameters": [
@@ -594,12 +673,38 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Invalid signature (when attempting private access)",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/verification/verifiers": {
       "get": {
+        "tags": ["Verifiers"],
+        "operationId": "verifiersList",
         "summary": "List available verifiers",
         "description": "Get list of public verifier IDs",
         "responses": {
@@ -630,12 +735,30 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/verification/standardize": {
       "post": {
+        "tags": ["Verification"],
+        "operationId": "verificationStandardize",
         "summary": "Build Standard Signing String",
         "description": "Get exact string to sign for verification (troubleshooting)",
         "requestBody": {
@@ -677,12 +800,38 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/verification/access/grant": {
       "post": {
+        "tags": ["Verification"],
+        "operationId": "verificationAccessGrant",
         "summary": "Grant viewer access to a private proof (owner-signed, short-lived)",
         "description": "Stores a short-lived grant for a viewer wallet to read a private proof record (does not change privacyLevel/publicDisplay). Requires Redis.",
         "requestBody": {
@@ -745,12 +894,30 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/proofs/gate/check": {
       "get": {
+        "tags": ["Proofs"],
+        "operationId": "proofsGateCheckGet",
         "summary": "Gate evaluation (proof presence + criteria matching)",
         "description": "Evaluate whether a wallet satisfies verifier and metadata criteria against PUBLIC/DISCOVERABLE proofs only (privacyLevel=public + publicDisplay=true). Public endpoint; optional partner API key can increase scan limits.",
         "parameters": [
@@ -1071,12 +1238,30 @@
                 }
               }
             }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/proofs/byWallet/{address}": {
       "get": {
+        "tags": ["Proofs"],
+        "operationId": "proofsByWalletGet",
         "summary": "Get proofs by wallet",
         "description": "Retrieve verification proofs for a wallet address or DID. Public returns discoverable proofs. Owner access to private proofs requires owner authentication.",
         "parameters": [
@@ -1144,12 +1329,46 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid signature (when attempting private access)",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
           }
         }
       }
     },
     "/api/v1/proofs/{qHash}/revoke-self": {
       "post": {
+        "tags": ["Proofs"],
+        "operationId": "proofsRevokeSelf",
         "summary": "Revoke your own proof",
         "description": "Revoke a proof you own using a wallet signature (Standard Signing String).",
         "parameters": [
@@ -1201,6 +1420,22 @@
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
                 }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limited",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
               }
             }
           }

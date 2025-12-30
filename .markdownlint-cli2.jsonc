@@ -1,0 +1,21 @@
+{
+  "config": {
+    "default": true,
+
+    // GitBook pages use YAML frontmatter at the top.
+    "MD041": false,
+
+    // We intentionally use inline HTML tables for GitBook "cards".
+    "MD033": false,
+
+    // Keep docs readable; avoid noisy line-length failures.
+    "MD013": false
+  },
+  "globs": [
+    "README.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "docs/**/*.md"
+  ]
+}
+

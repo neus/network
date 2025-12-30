@@ -1,3 +1,9 @@
+---
+description: Bind a domain (DNS TXT) to a wallet and gate access on domain control.
+icon: 🌐
+cover: ../assets/covers/guides.svg
+---
+
 # Domain verification (DNS TXT)
 
 Bind a domain (e.g. `example.com`) to a wallet by proving control of a DNS TXT record.
@@ -36,12 +42,11 @@ const res = await client.gateCheck({
   address: '0x...',
   verifierIds: ['ownership-dns-txt'],
   domain: 'example.com',
-  // Require recency for point-in-time verifiers (example: last hour)
-  since: Date.now() - 60 * 60 * 1000
+  // Recency requirement (example: last hour)
+  since: Date.now() - 60 * 60 * 1000,
 });
 ```
 
 ## Reference
 
 - Verifier schema: `docs/verifiers/schemas/ownership-dns-txt.json`
-
