@@ -20,16 +20,26 @@ jobs:
     if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v') && github.repository_owner == 'neus'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.ref_name }}
+      - name: Checkout tag
+        run: |
+          git init
+          git remote add origin https://github.com/${{ github.repository }}.git
+          git fetch origin tag ${{ github.ref_name }} --no-tags
+          git checkout ${{ github.ref_name }}
 
       - name: Setup Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          registry-url: ${{ env.NPM_REGISTRY }}
+        run: |
+          NODE_VERSION="${{ env.NODE_VERSION }}"
+          curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install "$NODE_VERSION"
+          nvm use "$NODE_VERSION"
+          echo "PATH=$HOME/.nvm/versions/node/v$NODE_VERSION/bin:$PATH" >> $GITHUB_PATH
+          node --version
+          npm --version
+        env:
+          NPM_REGISTRY: ${{ env.NPM_REGISTRY }}
 
       # Ensure package.json version matches the tag (vX.Y.Z)
       - name: Verify version matches tag
@@ -60,6 +70,12 @@ jobs:
 
       - name: Package check
         run: npm pack --dry-run
+        working-directory: sdk
+
+      - name: Configure npm registry
+        run: |
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+          npm config set registry ${{ env.NPM_REGISTRY }}
         working-directory: sdk
 
       - name: Publish @neus/sdk

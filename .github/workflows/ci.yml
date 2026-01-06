@@ -29,15 +29,24 @@ jobs:
     name: SDK (lint, test, build)
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout code
+        run: |
+          git init
+          git remote add origin https://github.com/${{ github.repository }}.git
+          git fetch origin ${{ github.sha }}
+          git checkout ${{ github.sha }}
 
       - name: Setup Node ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: sdk/package-lock.json
+        run: |
+          NODE_VERSION="${{ env.NODE_VERSION }}"
+          curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+          export NVM_DIR="$HOME/.nvm"
+          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+          nvm install "$NODE_VERSION"
+          nvm use "$NODE_VERSION"
+          echo "PATH=$HOME/.nvm/versions/node/v$NODE_VERSION/bin:$PATH" >> $GITHUB_PATH
+          node --version
+          npm --version
 
       - name: Install dependencies
         run: if [ -f package-lock.json ]; then npm ci; else npm install; fi
