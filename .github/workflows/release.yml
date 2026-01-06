@@ -72,14 +72,21 @@ jobs:
         run: npm pack --dry-run
         working-directory: sdk
 
-      - name: Configure npm registry
+      - name: Configure npm authentication
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
-          npm config set registry ${{ env.NPM_REGISTRY }}
+          # Create .npmrc in the SDK directory (where npm publish runs)
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
+          echo "registry=${{ env.NPM_REGISTRY }}" >> .npmrc
+          echo "//registry.npmjs.org/:always-auth=true" >> .npmrc
+          # Verify npm can read the config
+          npm whoami --registry=${{ env.NPM_REGISTRY }} || echo "Warning: npm whoami failed, but continuing..."
         working-directory: sdk
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish @neus/sdk
         run: npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: sdk
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
