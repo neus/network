@@ -74,18 +74,25 @@ jobs:
 
       - name: Configure npm authentication
         run: |
+          # Remove any existing npm config that might interfere
+          rm -f ~/.npmrc
           # Create .npmrc in the SDK directory (where npm publish runs)
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
           echo "registry=${{ env.NPM_REGISTRY }}" >> .npmrc
           echo "//registry.npmjs.org/:always-auth=true" >> .npmrc
-          # Verify npm can read the config
-          npm whoami --registry=${{ env.NPM_REGISTRY }} || echo "Warning: npm whoami failed, but continuing..."
+          # Verify token type and authentication
+          echo "Verifying npm authentication..."
+          npm whoami --registry=${{ env.NPM_REGISTRY }} || (echo "ERROR: npm authentication failed. Ensure NPM_TOKEN is a granular access token with 'Bypass 2FA' enabled." && exit 1)
+          echo "Authentication verified successfully"
         working-directory: sdk
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Publish @neus/sdk
-        run: npm publish --access public --provenance
+        run: |
+          # Ensure we're using the .npmrc from the SDK directory
+          export NPM_CONFIG_USERCONFIG="$(pwd)/.npmrc"
+          npm publish --access public --provenance
         working-directory: sdk
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
