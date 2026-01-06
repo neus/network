@@ -1,18 +1,22 @@
 {
-  "type": "object",
+  "$id": "https://neus.network/schemas/ownership-dns-txt.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Domain ownership verification via DNS TXT records at _neus.{domain}",
+  "properties": {
+    "domain": {
+      "description": "Domain name to verify (e.g., neus.network)",
+      "format": "hostname",
+      "type": "string"
+    },
+    "walletAddress": {
+      "description": "Wallet address to match in DNS TXT record (optional; defaults to signer walletAddress)",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "type": "string"
+    }
+  },
   "required": [
     "domain"
   ],
-  "properties": {
-    "domain": {
-      "type": "string",
-      "format": "hostname",
-      "description": "Domain name to verify (e.g., neus.network)"
-    },
-    "walletAddress": {
-      "type": "string",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
-      "description": "Wallet address to match in DNS TXT record (optional; defaults to request walletAddress unless sponsored mode delegates)"
-    }
-  }
+  "title": "ownership-dns-txt",
+  "type": "object"
 }

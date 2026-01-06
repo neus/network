@@ -85,8 +85,6 @@ For server-side routes you have two options:
   - By default it reuses public/discoverable proofs (`getProofsByWallet`).
   - For private proofs, fetch owner-access proofs via `getPrivateProofsByWallet(...)` and pass them in as `proofs`.
 
-If you need a **non-persistent, server-to-server** decision (no proof minted), use `POST /api/v1/verification/lookup` (Premium API key required). Don’t use lookup mode for “existing proof gating” — that’s what `gateCheck()` is for.
-
 ```javascript
 const res = await client.gateCheck({
   address: '0x...',
@@ -99,19 +97,5 @@ if (!res.data?.eligible) {
   throw new Error('Access denied');
 }
 ```
-
-## Social & organization gating (premium)
-
-Some deployments offer **interactive OAuth-based verifiers** (for example `ownership-social` and `ownership-org-oauth`). The full OAuth verification flow is not part of the public open-source docs, but integrators can still gate safely:
-
-- **Gate using existing proofs** (when the user has already completed OAuth): use `GET /api/v1/proofs/gate/check` with filters such as:
-  - `provider` (provider key; deployment-specific)
-  - `handle` (username/handle)
-  - `since` / `sinceDays` (recency for point-in-time verifiers)
-- **Require a fresh, non-persistent decision**: use `POST /api/v1/verification/lookup` with an enterprise API key (server-side only).
-
-Privacy note:
-
-- `gate/check` evaluates **public + discoverable** proofs only. If you need to keep social/org proofs private, use owner-only reads or lookup mode and do not rely on public discovery for gating.
 
 Reference: **[API Reference](../api/README.md)** and **[Privacy](../PRIVACY.md)**.

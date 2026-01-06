@@ -1,32 +1,107 @@
 {
-  "type": "object",
-  "required": [
-    "owner"
-  ],
+  "$id": "https://neus.network/schemas/ownership-basic.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Content ownership verification with origin lock and optional provenance",
   "properties": {
     "content": {
-      "type": "string",
+      "description": "Content being claimed (max 50KB inline; use contentHash + IPFS for larger)",
       "maxLength": 50000,
-      "description": "Content being claimed (max 50KB inline; use contentHash + IPFS for larger)"
+      "type": "string"
     },
     "contentHash": {
-      "type": "string",
+      "description": "Pre-computed SHA-256 or keccak256 hash (optional if content provided)",
       "pattern": "^0x[a-fA-F0-9]{64}$",
-      "description": "Pre-computed SHA-256 or keccak256 hash (optional if content provided)"
+      "type": "string"
+    },
+    "contentType": {
+      "description": "MIME type hint for the content/reference (e.g., image/png, audio/mpeg, application/pdf)",
+      "maxLength": 100,
+      "type": "string"
     },
     "owner": {
-      "type": "string",
+      "description": "Wallet address of the owner (must match request walletAddress)",
       "pattern": "^0x[a-fA-F0-9]{40}$",
-      "description": "Wallet address of the owner (must match request walletAddress)"
+      "type": "string"
+    },
+    "provenance": {
+      "description": "Optional provenance metadata for content origin",
+      "properties": {
+        "aiContext": {
+          "description": "AI generation context (when declaredKind is ai or mixed)",
+          "properties": {
+            "generatorType": {
+              "description": "Type of AI generator",
+              "enum": [
+                "local",
+                "saas",
+                "agent"
+              ],
+              "type": "string"
+            },
+            "model": {
+              "description": "Model identifier (opaque string)",
+              "maxLength": 128,
+              "type": "string"
+            },
+            "provider": {
+              "description": "AI provider (e.g., openai, anthropic, other)",
+              "maxLength": 64,
+              "type": "string"
+            },
+            "runId": {
+              "description": "Model run identifier",
+              "maxLength": 128,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "declaredKind": {
+          "description": "Content creation type (advisory, not verified)",
+          "enum": [
+            "human",
+            "ai",
+            "mixed",
+            "unknown"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
     },
     "reference": {
-      "type": "object",
-      "required": [
-        "type"
-      ],
       "properties": {
+        "description": {
+          "description": "Optional description",
+          "maxLength": 500,
+          "type": "string"
+        },
+        "id": {
+          "description": "Reference identifier (CID, URL, tx hash, chainId:address:tokenId, etc.)",
+          "maxLength": 2048,
+          "type": "string"
+        },
+        "mime": {
+          "description": "MIME type for file references",
+          "maxLength": 100,
+          "type": "string"
+        },
+        "name": {
+          "description": "Original filename for file references",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "size": {
+          "description": "File size in bytes",
+          "type": "integer"
+        },
+        "title": {
+          "description": "Optional display title",
+          "maxLength": 200,
+          "type": "string"
+        },
         "type": {
-          "type": "string",
+          "description": "Reference type for traceability",
           "enum": [
             "ipfs",
             "ipfs-hash",
@@ -43,102 +118,18 @@
             "username-claim",
             "other"
           ],
-          "description": "Reference type for traceability"
-        },
-        "id": {
-          "type": "string",
-          "maxLength": 2048,
-          "description": "Reference identifier (CID, URL, tx hash, chainId:address:tokenId, etc.). Required for reference-only proofs (when neither content nor contentHash is provided)."
-        },
-        "title": {
-          "type": "string",
-          "maxLength": 200,
-          "description": "Optional display title"
-        },
-        "description": {
-          "type": "string",
-          "maxLength": 500,
-          "description": "Optional description"
-        },
-        "mime": {
-          "type": "string",
-          "maxLength": 100,
-          "description": "MIME type for file references"
-        },
-        "name": {
-          "type": "string",
-          "maxLength": 255,
-          "description": "Original filename for file references"
-        },
-        "size": {
-          "type": "integer",
-          "description": "File size in bytes"
-        }
-      }
-    },
-    "provenance": {
-      "type": "object",
-      "description": "Optional provenance metadata for content origin",
-      "properties": {
-        "declaredKind": {
-          "type": "string",
-          "enum": [
-            "human",
-            "ai",
-            "mixed",
-            "unknown"
-          ],
-          "description": "Content creation type (advisory, not verified)"
-        },
-        "aiContext": {
-          "type": "object",
-          "description": "AI generation context (when declaredKind is ai or mixed)",
-          "properties": {
-            "generatorType": {
-              "type": "string",
-              "enum": [
-                "local",
-                "saas",
-                "agent"
-              ],
-              "description": "Type of AI generator"
-            },
-            "provider": {
-              "type": "string",
-              "maxLength": 64,
-              "description": "AI provider (e.g., openai, anthropic, other)"
-            },
-            "model": {
-              "type": "string",
-              "maxLength": 128,
-              "description": "Model identifier (opaque string)"
-            },
-            "runId": {
-              "type": "string",
-              "maxLength": 128,
-              "description": "Optional run identifier (opaque string)"
-            }
-          }
-        }
-      }
-    }
-  },
-  "allOf": [
-    {
-      "if": {
-        "not": {
-          "anyOf": [
-            { "required": ["content"] },
-            { "required": ["contentHash"] }
-          ]
+          "type": "string"
         }
       },
-      "then": {
-        "required": ["reference"],
-        "properties": {
-          "reference": { "required": ["type", "id"] }
-        }
-      }
+      "required": [
+        "type"
+      ],
+      "type": "object"
     }
-  ]
+  },
+  "required": [
+    "owner"
+  ],
+  "title": "ownership-basic",
+  "type": "object"
 }

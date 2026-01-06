@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  NODE_VERSION: 20
+  NODE_VERSION: 20.19.0
   NPM_REGISTRY: https://registry.npmjs.org
 
 jobs:
@@ -21,79 +21,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        run: |
-          git clone --depth=1 --branch=${{ github.ref_name }} https://github.com/${{ github.repository }}.git .
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
 
       - name: Setup Node ${{ env.NODE_VERSION }}
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install ${{ env.NODE_VERSION }}
-          nvm use ${{ env.NODE_VERSION }}
-          echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
-          echo "$HOME/.nvm" >> $GITHUB_PATH
-          node --version
-          npm --version
-          npm config set registry ${{ env.NPM_REGISTRY }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_REGISTRY }}
 
       # Ensure package.json version matches the tag (vX.Y.Z)
       - name: Verify version matches tag
         run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
           node -e "const v=require('./sdk/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(`package.json ${v} != tag ${t}`);process.exit(1)}"
+
       - name: Install dependencies
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm ci
+        run: npm ci
         working-directory: sdk
+
       - name: Lint
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm run lint
+        run: npm run lint
         working-directory: sdk
+
       - name: Test
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm test --silent
+        run: npm test --silent
         working-directory: sdk
+
       - name: Production audit (high severity)
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm audit --omit=dev --audit-level=high
+        run: npm audit --omit=dev --audit-level=high
         working-directory: sdk
+
       # Build before pack checks so the dry-run validates the real publish artifact
       # (widgets/verify-gate/dist/** and cjs/** are generated during build/prepack).
       - name: Build
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm run build
+        run: npm run build
         working-directory: sdk
+
       - name: Package check
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm pack --dry-run
+        run: npm pack --dry-run
         working-directory: sdk
+
       - name: Publish @neus/sdk
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm publish --access public --provenance
+        run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         working-directory: sdk

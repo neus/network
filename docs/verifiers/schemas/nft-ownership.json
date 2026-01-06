@@ -1,37 +1,44 @@
 {
-  "type": "object",
+  "$id": "https://neus.network/schemas/nft-ownership.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "NFT ownership proof verification",
+  "properties": {
+    "blockNumber": {
+      "description": "Optional specific block number for point-in-time ownership checks",
+      "type": "integer"
+    },
+    "chainId": {
+      "description": "Chain ID where the NFT contract is deployed (testnet or mainnet; must be supported/configured server-side)",
+      "type": "integer"
+    },
+    "contractAddress": {
+      "description": "NFT contract address",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "type": "string"
+    },
+    "ownerAddress": {
+      "description": "NFT owner address (optional). If omitted, defaults to the signed request walletAddress. Deployments may allow delegated subject checks, but the server will not accept subject overrides that break signature binding.",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "type": "string"
+    },
+    "tokenId": {
+      "description": "NFT token ID",
+      "type": "string"
+    },
+    "tokenType": {
+      "description": "Token standard (default: 'erc721')",
+      "enum": [
+        "erc721",
+        "erc1155"
+      ],
+      "type": "string"
+    }
+  },
   "required": [
     "contractAddress",
     "tokenId",
     "chainId"
   ],
-  "properties": {
-    "ownerAddress": {
-      "type": "string",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
-      "description": "NFT owner address (optional; defaults to request walletAddress unless sponsored mode delegates)"
-    },
-    "contractAddress": {
-      "type": "string",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
-      "description": "NFT contract address"
-    },
-    "tokenId": {
-      "type": "string",
-      "description": "NFT token ID"
-    },
-    "tokenType": {
-      "type": "string",
-      "enum": ["erc721", "erc1155"],
-      "description": "Token standard (default: erc721)"
-    },
-    "chainId": {
-      "type": "integer",
-      "description": "Chain ID where the NFT contract is deployed (testnet or mainnet). The backend reads from this chain using server-side RPC configuration."
-    },
-    "blockNumber": {
-      "type": "integer",
-      "description": "Optional block number for a point-in-time ownership check"
-    }
-  }
+  "title": "nft-ownership",
+  "type": "object"
 }

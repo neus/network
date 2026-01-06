@@ -37,6 +37,13 @@ console.log('Status:', status.status);
 > **Proof ID = `qHash`** (field name).  
 > The Proof ID is stable for repeat verifications. **Freshness** comes from timestamps like `completedAt` / per-verifier `verifiedAt`.
 
+## Server-side gating (recommended)
+
+For backend eligibility checks, use the minimal gate endpoint (or the SDK wrapper). This avoids pulling full proof payloads and lets you enforce freshness windows for point-in-time verifiers.
+
+- HTTP: `GET /api/v1/proofs/gate/check`
+- SDK: `client.gateCheck({ address, verifierIds, since, sinceDays, ... })`
+
 ---
 
 ## Quick start (React widgets)

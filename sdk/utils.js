@@ -3,7 +3,7 @@
  * Core utility functions for proof creation and verification
  */
 
-import { SDKError } from './errors.js';
+import { SDKError, ApiError, ValidationError } from './errors.js';
 
 /**
  * Deterministic JSON stringification for consistent serialization
@@ -58,11 +58,11 @@ export function constructVerificationMessage({ walletAddress, signedTimestamp, d
     throw new SDKError('verifierIds is required and must be a non-empty array', 'INVALID_VERIFIER_IDS');
   }
 
-  // Chain context: prefer explicit `chain` when provided (reserved/preview for non-EVM),
+  // Chain context: prefer explicit `chain` when provided (e.g. "solana:mainnet"),
   // otherwise use numeric `chainId` (EVM-first public surface).
   const chainContext = (typeof chain === 'string' && chain.length > 0) ? chain : chainId;
   if (!chainContext) {
-    throw new SDKError('chainId is required (or provide chain for preview mode)', 'INVALID_CHAIN_CONTEXT');
+    throw new SDKError('chainId is required (or provide chain for universal mode)', 'INVALID_CHAIN_CONTEXT');
   }
   if (chainContext === chainId && typeof chainId !== 'number') {
     throw new SDKError('chainId must be a number when provided', 'INVALID_CHAIN_ID');
@@ -442,10 +442,28 @@ export class StatusPoller {
           setTimeout(pollAttempt, this.currentInterval);
 
         } catch (error) {
-          reject(new SDKError(
-            `Polling failed: ${error.message}`,
-            'POLLING_ERROR'
-          ));
+          if (error instanceof ValidationError) {
+            reject(error);
+            return;
+          }
+
+          if ((error instanceof ApiError && error.statusCode === 429) || error?.isRetryable === true) {
+            if (this.options.exponentialBackoff) {
+              const next = Math.min(this.currentInterval * 2, this.options.maxInterval);
+              const jitter = next * (0.5 + Math.random() * 0.5);
+              this.currentInterval = Math.max(250, Math.floor(jitter));
+            }
+
+            if (this.attempt >= this.options.maxAttempts) {
+              reject(new SDKError('Verification polling timeout', 'POLLING_TIMEOUT'));
+              return;
+            }
+
+            setTimeout(pollAttempt, this.currentInterval);
+            return;
+          }
+
+          reject(new SDKError(`Polling failed: ${error.message}`, 'POLLING_ERROR'));
         }
       };
 
@@ -564,9 +582,17 @@ export function validateVerifierPayload(verifierId, data) {
       result.warnings.push('ownerAddress omitted (most deployments default to the signed walletAddress)');
     }
   } else if (id === 'ownership-basic') {
-    ['content'].forEach((key) => {
-      if (!(key in data)) result.missing.push(key);
-    });
+    // ownership-basic requires an owner, and needs at least one binding:
+    // - content (inline), or
+    // - contentHash (recommended for large content), or
+    // - reference.id (reference-only proofs)
+    if (!('owner' in data)) result.missing.push('owner');
+    const hasContent = typeof data.content === 'string' && data.content.length > 0;
+    const hasContentHash = typeof data.contentHash === 'string' && data.contentHash.length > 0;
+    const hasRefId = typeof data.reference?.id === 'string' && data.reference.id.length > 0;
+    if (!hasContent && !hasContentHash && !hasRefId) {
+      result.missing.push('content (or contentHash or reference.id)');
+    }
   }
 
   if (result.missing.length > 0) {

@@ -5,51 +5,16 @@
  */
 
 import { ethers } from 'ethers';
+import { NeusClient } from '../../sdk/client.js';
+import { constructVerificationMessage } from '../../sdk/utils.js';
 
 const API_BASE = process.env.NEUS_API_URL || 'https://api.neus.network';
 const WALLET_PRIVATE_KEY = process.env.TEST_WALLET_PRIVATE_KEY;
+const HUB_CHAIN_ID = 84532; // NEUS Hub
 
 if (!WALLET_PRIVATE_KEY) {
   console.error('Set TEST_WALLET_PRIVATE_KEY environment variable');
   process.exit(1);
-}
-
-// Build NEUS standard signing message
-function buildSigningMessage({ walletAddress, verifierIds, data, signedTimestamp, chainId = 84532 }) {
-  const normalizedAddress = walletAddress.toLowerCase();
-  const verifiersString = verifierIds.join(',');
-  function deterministicStringify(obj) {
-    if (obj === null) return 'null';
-    if (obj === undefined) return undefined;
-    const t = typeof obj;
-    if (t !== 'object') return JSON.stringify(obj);
-    if (obj instanceof Date || obj instanceof RegExp) return JSON.stringify(obj);
-    if (Array.isArray(obj)) {
-      const els = obj.map(v => {
-        const s = deterministicStringify(v);
-        return s === undefined ? 'null' : s;
-      });
-      return '[' + els.join(',') + ']';
-    }
-    const keys = Object.keys(obj).sort();
-    const parts = [];
-    for (const k of keys) {
-      const vs = deterministicStringify(obj[k]);
-      if (vs === undefined) continue;
-      parts.push(JSON.stringify(k) + ':' + vs);
-    }
-    return '{' + parts.join(',') + '}';
-  }
-  const dataString = deterministicStringify(data);
-  
-  return [
-    'NEUS Verification Request',
-    `Wallet: ${normalizedAddress}`,
-    `Chain: ${chainId}`,
-    `Verifiers: ${verifiersString}`,
-    `Data: ${dataString}`,
-    `Timestamp: ${signedTimestamp}`
-  ].join('\n');
 }
 
 async function main() {
@@ -73,12 +38,12 @@ async function main() {
   
   // Build and sign the standard message
   console.log('Building and signing message...');
-  const message = buildSigningMessage({
+  const message = constructVerificationMessage({
     walletAddress,
-    verifierIds: ['ownership-basic'],
     data: verificationData,
     signedTimestamp,
-    chainId: 84532
+    verifierIds: ['ownership-basic'],
+    chainId: HUB_CHAIN_ID
   });
   
   const signature = await wallet.signMessage(message);
@@ -93,25 +58,42 @@ async function main() {
       verifierIds: ['ownership-basic'],
       data: verificationData,
       signedTimestamp,
-      chainId: 84532,
+      chainId: HUB_CHAIN_ID,
       signature
     })
   });
-  
-  const result = await verifyResponse.json();
+
+  const raw = await verifyResponse.text();
+  let result;
+  try {
+    result = raw ? JSON.parse(raw) : null;
+  } catch {
+    result = null;
+  }
+
+  if (!verifyResponse.ok) {
+    const msg = (result && (result.error?.message || result.error || result.message)) || raw || verifyResponse.statusText;
+    throw new Error(`Verification failed (${verifyResponse.status}): ${msg}`);
+  }
+
   const proofId = result.data?.qHash;
   console.log('Proof ID (qHash):', proofId);
   if (!proofId) {
     throw new Error('Missing Proof ID (qHash) in verification response');
   }
   
-  // Check status
-  console.log('Checking status...');
-  const statusResponse = await fetch(`${API_BASE}/api/v1/verification/status/${proofId}`);
-  const status = await statusResponse.json();
-  
-  console.log('Success:', status.success);
-  console.log('Status:', status.data?.status);
+  // Poll status
+  console.log('Polling status...');
+  const client = new NeusClient({ apiUrl: API_BASE });
+  const final = await client.pollProofStatus(proofId, {
+    interval: 3000,
+    timeout: 120000,
+    onProgress: (s) => {
+      const st = s?.status || s?.data?.status;
+      if (st) console.log('Status:', st);
+    }
+  });
+  console.log('Final Status:', final?.status || final?.data?.status);
 }
 
 main().catch(console.error);

@@ -1,6 +1,6 @@
 # Verifier Catalog
 
-NEUS provides public verifiers available to all developers without API keys, plus optional early-access verifiers that require deployment configuration.
+NEUS provides public verifiers available to all developers without API keys.
 
 Each verifier is a standardized module that accepts specific input data, validates it, and produces a cryptographic proof.
 
@@ -49,43 +49,10 @@ Machine-readable source of truth:
 
 ---
 
-## Premium / deployment-enabled verifiers (OAuth + enterprise surfaces)
-
-Some verifiers are **interactive** (OAuth / provider configuration) and are not part of the public “wallet-signature-only” flow.
-
-These typically require:
-
-- A hosted NEUS session / provider handshake (OAuth), and/or
-- An **enterprise API key** for server-side integrations.
-
-Common premium examples (names shown as integrator-facing IDs):
-
-| Verifier | Flow | Expiry | Description |
-| :--- | :--- | :--- | :--- |
-| **`ownership-social`** | Interactive (OAuth) | Point-in-Time | Bind a wallet to a social account (provider + handle) and attest current account control. |
-| **`ownership-org-oauth`** | Interactive (OAuth) | Point-in-Time | Bind a wallet to an organization membership/role claim via an OAuth-capable provider. |
-
-How to integrate without the full OAuth flow:
-
-- **Gate using existing proofs**: `GET /api/v1/proofs/gate/check` with match filters (e.g. `provider`, `handle`, `since`).
-- **Real-time server decisions (non-persistent)**: `POST /api/v1/verification/lookup` (enterprise API key; no `qHash` minted).
-
-See **[API Reference → Premium / Sponsored mode](../api/README.md#premium--sponsored-mode)** for constraints and auth.
-
-These verifiers can appear in:
-
-- `GET /api/v1/verification/verifiers` (deployment-enabled list)
-- `GET /api/v1/proofs/gate/check` (matching against existing public/discoverable proofs)
-
-For the quickstart path and SDK wallet-signature flows, the **public** verifiers listed above are available.
-
----
-
 ## Flow Types
 
 - **Instant:** The verification is purely cryptographic or self-contained. It happens immediately upon receiving the signature.
 - **External lookup:** The verification requires an external check (blockchain RPC, DNS query, AI provider).
-- **Interactive:** The verification requires a multi-step flow (OAuth / provider configuration).
 
 ## Expiry Types
 

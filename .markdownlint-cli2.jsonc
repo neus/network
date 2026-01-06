@@ -9,7 +9,10 @@
     "MD033": false,
 
     // Keep docs readable; avoid noisy line-length failures.
-    "MD013": false
+    "MD013": false,
+
+    // Allow bare URLs in custom tags/GitBook blocks.
+    "MD034": false
   },
   "globs": [
     "README.md",

@@ -80,14 +80,3 @@ The open verification layer for identity, ownership, and agent authenticity.
   </tbody>
 </table>
 
----
-
-## Premium Capabilities
-
-Hosted deployments offer **enterprise API keys** for high-volume or non-public needs:
-
-- **Lookup mode**: Real-time, non-persistent checks (no proof record minted).
-- **Higher limits**: Increased capacity for large-scale gating.
-- **Premium verifiers**: Social and organization OAuth verifications.
-
-[Request Premium Access](https://neus.network/profile) or contact [dev@neus.network](mailto:dev@neus.network).

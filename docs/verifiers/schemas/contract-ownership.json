@@ -1,32 +1,36 @@
 {
-  "type": "object",
-  "required": [
-    "contractAddress",
-    "chainId"
-  ],
+  "$id": "https://neus.network/schemas/contract-ownership.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Verifies smart contract ownership via on-chain reads (owner/admin/accessControl)",
   "properties": {
-    "contractAddress": {
-      "type": "string",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
-      "description": "Contract address to verify"
-    },
     "chainId": {
-      "type": "integer",
-      "description": "Chain ID where the contract is deployed (testnet or mainnet). The backend reads from this chain using server-side RPC configuration."
+      "description": "Chain ID where the contract is deployed (testnet or mainnet; must be supported/configured server-side)",
+      "type": "integer"
     },
-    "walletAddress": {
-      "type": "string",
+    "contractAddress": {
+      "description": "Contract address to verify",
       "pattern": "^0x[a-fA-F0-9]{40}$",
-      "description": "Wallet claiming ownership (optional; defaults to request walletAddress unless sponsored mode delegates)"
+      "type": "string"
     },
     "method": {
-      "type": "string",
+      "description": "Optional: specific method to check",
       "enum": [
         "owner",
         "admin",
         "accessControl"
       ],
-      "description": "Optional: specific method to check"
+      "type": "string"
+    },
+    "walletAddress": {
+      "description": "Wallet claiming ownership (optional; defaults to signer walletAddress)",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "type": "string"
     }
-  }
+  },
+  "required": [
+    "contractAddress",
+    "chainId"
+  ],
+  "title": "contract-ownership",
+  "type": "object"
 }

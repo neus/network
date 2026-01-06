@@ -4,6 +4,20 @@
 
 declare module '@neus/sdk' {
   /**
+   * Minimal EIP-1193 provider interface (browser wallets like MetaMask).
+   * The SDK also supports other wallet objects; use this for typing in integrations.
+   */
+  export interface Eip1193Provider {
+    request(args: { method: string; params?: unknown[] | Record<string, unknown> }): Promise<unknown>;
+  }
+
+  /**
+   * Wallet/provider object accepted by SDK methods that require signing.
+   * Prefer passing an EIP-1193 provider in browser environments.
+   */
+  export type WalletLike = Eip1193Provider | { address?: string } | { getAddress?: () => Promise<string> } | { signMessage?: (message: string) => Promise<string> };
+
+  /**
    * Main NEUS SDK client for creating and verifying proofs
    */
   export class NeusClient {
@@ -28,7 +42,7 @@ declare module '@neus/sdk' {
      * @param qHash - Proof ID (wire field: qHash)
      * @param wallet - Optional injected wallet/provider (MetaMask/ethers Wallet)
      */
-    getPrivateStatus(qHash: string, wallet?: any): Promise<StatusResult>;
+    getPrivateStatus(qHash: string, wallet?: WalletLike): Promise<StatusResult>;
     
     /**
      * Check API health
@@ -58,7 +72,7 @@ declare module '@neus/sdk' {
     revokeOwnProof(qHash: string, wallet?: { address: string }): Promise<boolean>;
 
     // ═══════════════════════════════════════════════════════════════
-    // GATE & LOOKUP METHODS
+    // PROOFS & GATING METHODS
     // ═══════════════════════════════════════════════════════════════
 
     /**
@@ -73,19 +87,13 @@ declare module '@neus/sdk' {
      * Get proofs by wallet or DID (owner access)
      * Requests private proofs using owner signature headers.
      */
-    getPrivateProofsByWallet(walletAddress: string, options?: GetProofsOptions, wallet?: any): Promise<ProofsResult>;
+    getPrivateProofsByWallet(walletAddress: string, options?: GetProofsOptions, wallet?: WalletLike): Promise<ProofsResult>;
 
     /**
      * Minimal eligibility check against public + discoverable proofs only (API-backed).
      * Prefer this for server-side integrations that do not need full proof payloads.
      */
     gateCheck(params: GateCheckApiParams): Promise<GateCheckApiResponse>;
-
-    /**
-     * Non-persistent lookup mode (API-backed, server-side only).
-     * Requires Premium API key and does NOT mint/store proofs.
-     */
-    lookup(params: LookupParams): Promise<LookupApiResponse>;
 
     /**
      * Evaluate gate requirements against existing proofs
@@ -117,7 +125,7 @@ declare module '@neus/sdk' {
   export interface NeusClientConfig {
     /** API endpoint URL (defaults to hosted public API) */
     apiUrl?: string;
-    /** Optional premium API key (server-side only; do not embed in browser apps) */
+    /** Optional deployment API key (server-side only; do not embed in browser apps) */
     apiKey?: string;
     /** Request timeout in milliseconds */
     timeout?: number;
@@ -168,12 +176,12 @@ declare module '@neus/sdk' {
     signedTimestamp?: number;
     /** Advanced/manual path: chain ID for verification context; optional, managed by protocol */
     chainId?: number;
-    /** Reserved (preview): non-EVM chain context as "namespace:reference" (not part of the stable public path) */
+    /** CAIP-2 chain reference for universal mode (e.g. eip155:1, solana:mainnet) */
     chain?: string;
-    /** Reserved (preview): signature method hint (not part of the stable public path) */
+    /** Signature method hint for universal mode (eip191, ed25519, ...) */
     signatureMethod?: string;
     /** Auto path: optional wallet instance (browser/provider) */
-    wallet?: any;
+    wallet?: WalletLike;
   }
     
   /**
@@ -548,7 +556,7 @@ declare module '@neus/sdk' {
   
   
   // ============================================================================
-  // GATE & LOOKUP TYPES
+  // PROOFS & GATING TYPES
   // ============================================================================
 
   /**
@@ -650,9 +658,9 @@ declare module '@neus/sdk' {
     domain?: string;
     minBalance?: string;
 
-    // Social / wallet filters
+    // Wallet filters
+    /** Risk assessment provider hint. Known value: webacy. */
     provider?: string;
-    handle?: string;
     ownerAddress?: string;
     riskLevel?: string;
     sanctioned?: boolean;
@@ -660,12 +668,6 @@ declare module '@neus/sdk' {
     primaryWalletAddress?: string;
     secondaryWalletAddress?: string;
     verificationMethod?: string;
-
-    // Trait checks + projections
-    traitPath?: string;
-    traitGte?: number;
-    /** Comma-separated projection fields (handle,provider,profileUrl,traits.<key>) */
-    select?: string[] | string;
   }
 
   export interface GateCheckApiResponse {
@@ -681,38 +683,6 @@ declare module '@neus/sdk' {
     error?: any;
   }
 
-  /**
-   * Parameters for lookup() (API-backed).
-   * Mirrors `POST /api/v1/verification/lookup` body.
-   */
-  export interface LookupParams {
-    /** Premium API key (sk_live_... or sk_test_...) */
-    apiKey: string;
-    /** Verifiers to run (external_lookup only) */
-    verifierIds: string[];
-    /** Wallet to evaluate */
-    targetWalletAddress: string;
-    /** Verifier input data (e.g., contractAddress/tokenId/chainId) */
-    data?: Record<string, any>;
-  }
-
-  export interface LookupApiResponse {
-    success: boolean;
-    data?: {
-      mode: 'lookup';
-      requestId: string;
-      targetWalletAddress: string;
-      payerWallet: string;
-      verifierIds: string[];
-      verified: boolean;
-      results: any[];
-      timing?: {
-        startedAt: number;
-        durationMs: number;
-      };
-    };
-    error?: any;
-  }
 
   export interface ApiResponse<T = any> {
     success: boolean;
@@ -778,12 +748,27 @@ declare module '@neus/sdk' {
   // SUPPORTING TYPES
   // ============================================================================
   
-  interface VerificationData {
-    content?: string;
+  type OwnershipBasicData = {
     owner: string;
+    content?: string;
+    contentHash?: string;
+    contentType?: string;
     reference?: {
-      type: string;
-      /** Optional reference identifier (required only for reference-only proofs). */
+      type:
+        | 'ipfs'
+        | 'ipfs-hash'
+        | 'url'
+        | 'license-nft'
+        | 'contract'
+        | 'qhash'
+        | 'ethereum-tx'
+        | 'on-chain-tx'
+        | 'tx'
+        | 'file'
+        | 'doc'
+        | 'media'
+        | 'username-claim'
+        | 'other';
       id?: string;
       title?: string;
       description?: string;
@@ -791,8 +776,135 @@ declare module '@neus/sdk' {
       name?: string;
       size?: number;
     };
+    provenance?: {
+      declaredKind?: 'human' | 'ai' | 'mixed' | 'unknown';
+      aiContext?: {
+        generatorType?: 'local' | 'saas' | 'agent';
+        provider?: string;
+        model?: string;
+        runId?: string;
+      };
+    };
     [key: string]: any;
-  }
+  };
+
+  type OwnershipPseudonymData = {
+    pseudonymId: string;
+    namespace?: string;
+    displayName?: string;
+    metadata?: Record<string, any>;
+    [key: string]: any;
+  };
+
+  type OwnershipDnsTxtData = {
+    domain: string;
+    walletAddress?: string;
+    [key: string]: any;
+  };
+
+  type ContractOwnershipData = {
+    contractAddress: string;
+    chainId: number;
+    walletAddress?: string;
+    method?: 'owner' | 'admin' | 'accessControl';
+    [key: string]: any;
+  };
+
+  type NftOwnershipData = {
+    ownerAddress?: string;
+    contractAddress: string;
+    tokenId: string;
+    tokenType?: 'erc721' | 'erc1155';
+    chainId: number;
+    blockNumber?: number;
+    [key: string]: any;
+  };
+
+  type TokenHoldingData = {
+    ownerAddress?: string;
+    contractAddress: string;
+    minBalance: string;
+    chainId: number;
+    blockNumber?: number;
+    [key: string]: any;
+  };
+
+  type WalletRiskData = {
+    /** Risk assessment provider hint. Known value: webacy. */
+    provider?: string;
+    walletAddress?: string;
+    chainId?: number;
+    includeDetails?: boolean;
+    [key: string]: any;
+  };
+
+  type WalletLinkData = {
+    primaryWalletAddress: string;
+    secondaryWalletAddress: string;
+    signature: string;
+    chainId: number;
+    signedTimestamp: number;
+    relationshipType?: 'primary' | 'personal' | 'org' | 'affiliate' | 'agent' | 'linked';
+    label?: string;
+    [key: string]: any;
+  };
+
+  type AiContentModerationData = {
+    content: string;
+    contentType:
+      | 'image/jpeg'
+      | 'image/png'
+      | 'image/webp'
+      | 'image/gif'
+      | 'text/plain'
+      | 'text/markdown'
+      | 'text/x-markdown'
+      | 'application/json'
+      | 'application/xml';
+    provider?: 'google-vision' | 'google-perspective';
+    [key: string]: any;
+  };
+
+  type AgentIdentityData = {
+    agentId: string;
+    agentWallet: string;
+    agentLabel?: string;
+    agentType?: 'ai' | 'bot' | 'service' | 'automation' | 'agent';
+    description?: string;
+    capabilities?: any[];
+    [key: string]: any;
+  };
+
+  type AgentDelegationData = {
+    controllerWallet: string;
+    agentWallet: string;
+    agentId?: string;
+    scope?: string;
+    permissions?: any[];
+    maxSpend?: string;
+    allowedPaymentTypes?: string[];
+    receiptDisclosure?: 'none' | 'summary' | 'full';
+    expiresAt?: number;
+    [key: string]: any;
+  };
+
+  type CoreVerificationData =
+    | OwnershipBasicData
+    | OwnershipPseudonymData
+    | OwnershipDnsTxtData
+    | ContractOwnershipData
+    | NftOwnershipData
+    | TokenHoldingData
+    | WalletRiskData
+    | WalletLinkData
+    | AiContentModerationData
+    | AgentIdentityData
+    | AgentDelegationData;
+
+  type VerificationData =
+    | CoreVerificationData
+    | Record<string, CoreVerificationData>
+    | Record<string, any>;
 
   
   

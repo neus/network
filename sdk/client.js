@@ -29,6 +29,68 @@ const validateVerifierData = (verifierId, data) => {
       if (!data.owner || !validateWalletAddress(data.owner)) {
         return { valid: false, error: 'owner (wallet address) is required' };
       }
+      if (data.content !== undefined && data.content !== null) {
+        if (typeof data.content !== 'string') {
+          return { valid: false, error: 'content must be a string when provided' };
+        }
+        if (data.content.length > 50000) {
+          return { valid: false, error: 'content exceeds 50KB inline limit' };
+        }
+      }
+      if (data.contentHash !== undefined && data.contentHash !== null) {
+        if (typeof data.contentHash !== 'string' || !/^0x[a-fA-F0-9]{64}$/.test(data.contentHash)) {
+          return { valid: false, error: 'contentHash must be a 32-byte hex string (0x + 64 hex chars) when provided' };
+        }
+      }
+      if (data.contentType !== undefined && data.contentType !== null) {
+        if (typeof data.contentType !== 'string' || data.contentType.length > 100) {
+          return { valid: false, error: 'contentType must be a string (max 100 chars) when provided' };
+        }
+        const base = String(data.contentType).split(';')[0].trim().toLowerCase();
+        // Minimal MIME sanity check (server validates more precisely).
+        if (!base || base.includes(' ') || !base.includes('/')) {
+          return { valid: false, error: 'contentType must be a valid MIME type when provided' };
+        }
+      }
+      if (data.provenance !== undefined && data.provenance !== null) {
+        if (!data.provenance || typeof data.provenance !== 'object' || Array.isArray(data.provenance)) {
+          return { valid: false, error: 'provenance must be an object when provided' };
+        }
+        const dk = data.provenance.declaredKind;
+        if (dk !== undefined && dk !== null) {
+          const allowed = ['human', 'ai', 'mixed', 'unknown'];
+          if (typeof dk !== 'string' || !allowed.includes(dk)) {
+            return { valid: false, error: `provenance.declaredKind must be one of: ${allowed.join(', ')}` };
+          }
+        }
+        const ai = data.provenance.aiContext;
+        if (ai !== undefined && ai !== null) {
+          if (typeof ai !== 'object' || Array.isArray(ai)) {
+            return { valid: false, error: 'provenance.aiContext must be an object when provided' };
+          }
+          if (ai.generatorType !== undefined && ai.generatorType !== null) {
+            const allowed = ['local', 'saas', 'agent'];
+            if (typeof ai.generatorType !== 'string' || !allowed.includes(ai.generatorType)) {
+              return { valid: false, error: `provenance.aiContext.generatorType must be one of: ${allowed.join(', ')}` };
+            }
+          }
+          if (ai.provider !== undefined && ai.provider !== null) {
+            if (typeof ai.provider !== 'string' || ai.provider.length > 64) {
+              return { valid: false, error: 'provenance.aiContext.provider must be a string (max 64 chars) when provided' };
+            }
+          }
+          if (ai.model !== undefined && ai.model !== null) {
+            if (typeof ai.model !== 'string' || ai.model.length > 128) {
+              return { valid: false, error: 'provenance.aiContext.model must be a string (max 128 chars) when provided' };
+            }
+          }
+          if (ai.runId !== undefined && ai.runId !== null) {
+            if (typeof ai.runId !== 'string' || ai.runId.length > 128) {
+              return { valid: false, error: 'provenance.aiContext.runId must be a string (max 128 chars) when provided' };
+            }
+          }
+        }
+      }
       if (data.reference !== undefined) {
         if (!data.reference || typeof data.reference !== 'object') {
           return { valid: false, error: 'reference must be an object when provided' };
@@ -182,6 +244,21 @@ const validateVerifierData = (verifierId, data) => {
         if (!validTypes.includes(contentType)) {
           return { valid: false, error: `contentType must be one of: ${validTypes.join(', ')}` };
         }
+        const isTextual = contentType.startsWith('text/') || contentType.includes('markdown');
+        if (isTextual) {
+          // Backend enforces 50KB UTF-8 limit for textual moderation payloads.
+          try {
+            const maxBytes = 50 * 1024;
+            const bytes = (typeof TextEncoder !== 'undefined')
+              ? new TextEncoder().encode(data.content).length
+              : String(data.content).length;
+            if (bytes > maxBytes) {
+              return { valid: false, error: `content exceeds ${maxBytes} bytes limit for ai-content-moderation verifier (text)` };
+            }
+          } catch {
+            // If encoding fails, defer to server.
+          }
+        }
       }
       if (data.content.length > 13653334) {
         return { valid: false, error: 'content exceeds 10MB limit' };
@@ -287,7 +364,7 @@ export class NeusClient {
    *   data: {
    *     content: "My content",
    *     owner: walletAddress, // or ownerAddress for nft-ownership/token-holding
-   *     reference: { type: 'content', id: 'my-unique-identifier' }
+   *     reference: { type: 'other', id: 'my-unique-identifier' }
    *   },
    *   walletAddress: '0x...',
    *   signature: '0x...',
@@ -384,6 +461,7 @@ export class NeusClient {
             reference: data.reference,
             ...(data.content && { content: data.content }),
             ...(data.contentHash && { contentHash: data.contentHash }),
+            ...(data.contentType && { contentType: data.contentType }),
             ...(data.provenance && { provenance: data.provenance })
           };
         } else {
@@ -930,10 +1008,12 @@ export class NeusClient {
     }
 
     const startTime = Date.now();
+    let consecutiveRateLimits = 0;
     
     while (Date.now() - startTime < timeout) {
       try {
         const status = await this.getStatus(qHash);
+        consecutiveRateLimits = 0;
         
         // Call progress callback if provided
         if (onProgress && typeof onProgress === 'function') {
@@ -956,7 +1036,19 @@ export class NeusClient {
         if (error instanceof ValidationError) {
           throw error;
         }
-        await new Promise(resolve => setTimeout(resolve, interval));
+        
+        let nextDelay = interval;
+        if (error instanceof ApiError && Number(error.statusCode) === 429) {
+          consecutiveRateLimits += 1;
+          const exp = Math.min(6, consecutiveRateLimits); // cap growth
+          const base = Math.max(500, Number(interval) || 0);
+          const max = 30000; // 30s cap to keep UX responsive
+          const backoff = Math.min(max, base * Math.pow(2, exp));
+          const jitter = Math.floor(backoff * (0.5 + Math.random() * 0.5)); // 50-100%
+          nextDelay = jitter;
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, nextDelay));
       }
     }
     
@@ -1059,7 +1151,7 @@ export class NeusClient {
   }
 
   // ============================================================================
-  // GATE & LOOKUP METHODS
+  // PROOFS & GATING METHODS
   // ============================================================================
 
   /**
@@ -1208,54 +1300,6 @@ export class NeusClient {
   }
 
   /**
-   * LOOKUP MODE (API) - Non-persistent server-to-server checks
-   *
-   * Runs `external_lookup` verifiers without minting/storing a proof.
-   * Requires an enterprise API key (server-side only).
-   *
-   * @param {Object} params
-   * @param {string} params.apiKey - Enterprise API key (sk_live_... or sk_test_...)
-   * @param {Array<string>} params.verifierIds - Verifiers to run (external_lookup only)
-   * @param {string} params.targetWalletAddress - Wallet to evaluate
-   * @param {Object} [params.data] - Verifier input data (e.g., contractAddress/tokenId/chainId)
-   * @returns {Promise<Object>} API response ({ success, data })
-   */
-  async lookup(params = {}) {
-    const apiKey = (params.apiKey || '').toString().trim();
-    if (!apiKey || !(apiKey.startsWith('sk_live_') || apiKey.startsWith('sk_test_'))) {
-      throw new ValidationError('lookup requires apiKey (sk_live_* or sk_test_*)');
-    }
-
-    const verifierIds = Array.isArray(params.verifierIds)
-      ? params.verifierIds.map(v => String(v).trim()).filter(Boolean)
-      : [];
-    if (verifierIds.length === 0) {
-      throw new ValidationError('lookup requires verifierIds (non-empty array)');
-    }
-
-    const targetWalletAddress = (params.targetWalletAddress || '').toString().trim();
-    if (!targetWalletAddress || !/^0x[a-fA-F0-9]{40}$/i.test(targetWalletAddress)) {
-      throw new ValidationError('lookup requires a valid targetWalletAddress (0x...)');
-    }
-
-    const body = {
-      verifierIds,
-      targetWalletAddress,
-      data: (params.data && typeof params.data === 'object') ? params.data : {}
-    };
-
-    const response = await this._makeRequest('POST', '/api/v1/verification/lookup', body, {
-      Authorization: `Bearer ${apiKey}`
-    });
-
-    if (!response.success) {
-      throw new ApiError(`Lookup failed: ${response.error?.message || 'Unknown error'}`, response.error);
-    }
-
-    return response;
-  }
-
-  /**
    * GATE CHECK (API) - Minimal eligibility check
    *
    * Calls the public gate endpoint and returns a **minimal** yes/no response
@@ -1272,7 +1316,6 @@ export class NeusClient {
    * @param {number} [params.sinceDays] - Optional time window in days
    * @param {number} [params.since] - Optional unix timestamp in ms (lower bound)
    * @param {number} [params.limit] - Max rows to scan (server may clamp)
-   * @param {string} [params.select] - Comma-separated projections (handle,provider,profileUrl,traits.<key>)
    * @returns {Promise<Object>} API response ({ success, data })
    */
   async gateCheck(params = {}) {
@@ -1314,7 +1357,6 @@ export class NeusClient {
     setIfPresent('sinceDays', params.sinceDays);
     setIfPresent('since', params.since);
     setIfPresent('limit', params.limit);
-    setCsvIfPresent('select', params.select);
 
     // Common match filters (optional)
     setIfPresent('referenceType', params.referenceType);
@@ -1332,9 +1374,8 @@ export class NeusClient {
     setIfPresent('domain', params.domain);
     setIfPresent('minBalance', params.minBalance);
 
-    // Social / identity / wallet filters
+    // Wallet filters
     setIfPresent('provider', params.provider);
-    setIfPresent('handle', params.handle);
     setIfPresent('ownerAddress', params.ownerAddress);
     setIfPresent('riskLevel', params.riskLevel);
     setBoolIfPresent('sanctioned', params.sanctioned);
@@ -1342,10 +1383,6 @@ export class NeusClient {
     setIfPresent('primaryWalletAddress', params.primaryWalletAddress);
     setIfPresent('secondaryWalletAddress', params.secondaryWalletAddress);
     setIfPresent('verificationMethod', params.verificationMethod);
-
-    // Trait checks
-    setIfPresent('traitPath', params.traitPath);
-    setIfPresent('traitGte', params.traitGte);
 
     const response = await this._makeRequest('GET', `/api/v1/proofs/gate/check?${qs.toString()}`);
     if (!response.success) {
@@ -1434,7 +1471,6 @@ export class NeusClient {
         if (match && typeof match === 'object') {
           const data = verifier.data || {};
           const input = data.input || {}; // NFT/token verifiers store fields in input
-          // No license support in public SDK
           
           for (const [key, expected] of Object.entries(match)) {
             let actualValue = null;

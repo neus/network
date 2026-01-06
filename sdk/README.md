@@ -36,9 +36,6 @@ const client = new NeusClient({
   apiUrl: 'https://api.neus.network',
   // Optional: request timeout (ms)
   timeout: 30000,
-  // Optional: server-side enterprise API key for higher limits on eligible endpoints
-  // (Do not embed API keys in browser apps.)
-  apiKey: process.env.NEUS_API_KEY
 });
 ```
 
@@ -90,36 +87,11 @@ if (!res.data?.eligible) {
 
 Note: `gateCheck` evaluates **existing public/discoverable proofs**. For strict real-time decisions, create a new proof via `client.verify(...)` (or `POST /api/v1/verification`) and use the final status.
 
-## Lookup mode (Premium, server-side only; non-persistent)
+## Resilience & Polling
 
-If you need a **real-time assessment** without minting/storing proofs (no `qHash`), use lookup mode:
-
-- **Endpoint:** `POST /api/v1/verification/lookup`
-- **Auth:** `Authorization: Bearer sk_live_...` (or `sk_test_...`)
-- **Semantics:** runs `external_lookup` verifiers only; **does not** create a proof record
-
-Note: lookup mode is deployment-dependent and is not part of the stable public integrator OpenAPI (`docs/api/public-api.json`).
-
-```javascript
-const res = await client.lookup({
-  // Premium API key (keep server-side only)
-  apiKey: process.env.NEUS_API_KEY,
-  verifierIds: ['wallet-risk'],
-  targetWalletAddress: '0x...',
-  data: { chainId: 1 }
-});
-
-if (!res.data?.verified) {
-  throw new Error('Rejected');
-}
-```
-
-Note: `gateCheck()` and `lookup()` are different tools.
-- Use **`gateCheck()`** when you want to gate based on **existing public/discoverable proofs** (fast, minimal response).
-- Use **`lookup()`** when you want a **fresh, non-persistent** decision (typically billable in hosted deployments).
-- Only combine them if you are intentionally doing a cache-first strategy (gate-check first to avoid unnecessary lookups).
-
-## Private proof reads (owner)
+The SDK is designed for production stability:
+- **Automatic Backoff**: `pollProofStatus()` automatically detects rate limiting (`429`) and applies jittered exponential backoff.
+- **Wallet Identification**: Automatically attaches headers to preferred wallet-based limiting for higher reliability behind shared IPs (NATs).
 
 - Private proof by Proof ID (qHash): `client.getPrivateStatus(qHash, wallet)`
 - Private proofs by wallet/DID: `client.getPrivateProofsByWallet(walletOrDid, { limit, offset }, wallet)`

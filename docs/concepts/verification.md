@@ -31,12 +31,12 @@ A Proof ID identifies a proof record; it is **not** a “run ID”.
 ## Chain context
 
 - **EVM (default):** provide `chainId` (number) and sign using EIP-191 (`personal_sign`).
-- **Universal (optional):** provide `chain` (CAIP-2 `namespace:reference`) + `signatureMethod` for non-EVM signers (deployment-dependent).
+- **Universal (preview):** provide `chain` (CAIP-2 `namespace:reference`) + `signatureMethod` for non-EVM signers.
 
 Important separation:
 
 - The request `chainId`/`chain` is the **signing context** (bound into the signature).
-- Some verifiers also require their own chain context inside `data` (e.g., `data.chainId` for on-chain reads). This `data.chainId` is input-selected and may be testnet or mainnet, depending on where the target contract lives.
+- Some verifiers also require their own chain context inside `data` (e.g., `data.chainId` for on-chain reads). This `data.chainId` is input-selected and may be testnet or mainnet, depending on where the target data lives.
 
 ## Verifier input shape (single vs multi-verifier)
 
@@ -45,7 +45,7 @@ Important separation:
 
 ## Subject wallet defaults
 
-Many verifiers accept an explicit subject wallet field (e.g., `ownerAddress`, `walletAddress`) but default it to the signed `walletAddress` when omitted. If you provide a mismatched subject wallet without sponsored mode, the server will override it to the signer for signature safety.
+Many verifiers accept an explicit subject wallet field (e.g., `ownerAddress`, `walletAddress`) but default it to the signed `walletAddress` when omitted. If you provide a mismatched subject wallet, the server will enforce signature binding and will not allow subject overrides that break the signed request intent.
 
 ## Status model
 

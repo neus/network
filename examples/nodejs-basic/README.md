@@ -13,91 +13,49 @@ node index.js
 Set `TEST_WALLET_PRIVATE_KEY` to a test wallet key:
 
 ```bash
-# macOS / Linux
 export TEST_WALLET_PRIVATE_KEY=0x...
-```
-
-```powershell
-# Windows PowerShell
-$env:TEST_WALLET_PRIVATE_KEY="0x..."
 ```
 
 Use a test wallet only. Do not use production keys.
 
 ## How It Works
 
-### Build signing message
+### 1. Build and sign
+The NEUS protocol requires a cryptographic signature over the request data. This example uses the hub chain ID (`84532`) for the signing context.
 
 ```javascript
-function buildSigningMessage({ walletAddress, verifierIds, data, signedTimestamp, chainId = 84532 }) {
-  const normalizedAddress = walletAddress.toLowerCase();
-  const verifiersString = verifierIds.join(',');
-  const dataString = deterministicStringify(data);
-  
-  return [
-    'NEUS Verification Request',
-    `Wallet: ${normalizedAddress}`,
-    `Chain: ${chainId}`,
-    `Verifiers: ${verifiersString}`,
-    `Data: ${dataString}`,
-    `Timestamp: ${signedTimestamp}`
-  ].join('\n');
-}
+import { constructVerificationMessage } from '../../sdk/utils.js';
+
+const message = constructVerificationMessage({
+  walletAddress,
+  verifierIds: ['ownership-basic'],
+  data,
+  signedTimestamp,
+  chainId: 84532
+});
+
+const signature = await wallet.signMessage(message);
 ```
 
-Note: `chainId` is part of the signed message. It must match what you submit in the request body.
-
-### Sign and submit
+### 2. Submit to API
+The signed request is submitted to the NEUS API.
 
 ```javascript
-const wallet = new ethers.Wallet(WALLET_PRIVATE_KEY);
-const message = buildSigningMessage({ ... });
-const signature = await wallet.signMessage(message);
-
 const response = await fetch('https://api.neus.network/api/v1/verification', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     walletAddress,
     verifierIds: ['ownership-basic'],
-    data: { content: 'Hello NEUS', owner: walletAddress, reference: { type: 'url', id: 'https://example.com' } },
-    signedTimestamp: Date.now(),
+    data,
+    signedTimestamp,
     chainId: 84532,
     signature
   })
 });
 ```
 
-## Deterministic JSON
-
-```javascript
-function deterministicStringify(obj) {
-  if (obj === null) return 'null';
-  if (typeof obj !== 'object') return JSON.stringify(obj);
-  if (Array.isArray(obj)) {
-    return '[' + obj.map(deterministicStringify).join(',') + ']';
-  }
-  const keys = Object.keys(obj).sort();
-  const parts = keys.map(k => 
-    JSON.stringify(k) + ':' + deterministicStringify(obj[k])
-  );
-  return '{' + parts.join(',') + '}';
-}
-```
-
-JSON must have sorted keys and no extra whitespace.
-
-## Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Signature invalid | Address lowercase, JSON deterministic |
-| Expired | Timestamp within 5 minutes |
-| Private key error | Check `TEST_WALLET_PRIVATE_KEY` format |
-
 ## Next Steps
 
-- [SDK](../../sdk/README.md) — JavaScript SDK (easier)
+- [SDK](../../sdk/README.md) — JavaScript SDK (recommended)
 - [API Reference](../../docs/api/README.md) — Complete API docs
-- [HTTP Example](../curl-minimal/) — Direct API calls
-

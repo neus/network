@@ -1,32 +1,36 @@
 {
-  "type": "object",
+  "$id": "https://neus.network/schemas/token-holding.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Token holding proof verification",
+  "properties": {
+    "blockNumber": {
+      "description": "Optional specific block number for point-in-time balance checks",
+      "type": "integer"
+    },
+    "chainId": {
+      "description": "Chain ID where the token contract is deployed (testnet or mainnet; must be supported/configured server-side)",
+      "type": "integer"
+    },
+    "contractAddress": {
+      "description": "Token contract address",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "type": "string"
+    },
+    "minBalance": {
+      "description": "Minimum token balance required (human-readable units, e.g., \"10.5\")",
+      "type": "string"
+    },
+    "ownerAddress": {
+      "description": "Token holder address (optional). If omitted, defaults to the signed request walletAddress. Deployments may allow delegated subject checks, but the server will not accept subject overrides that break signature binding.",
+      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "type": "string"
+    }
+  },
   "required": [
     "contractAddress",
     "minBalance",
     "chainId"
   ],
-  "properties": {
-    "ownerAddress": {
-      "type": "string",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
-      "description": "Token holder address (optional; defaults to request walletAddress unless sponsored mode delegates)"
-    },
-    "contractAddress": {
-      "type": "string",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
-      "description": "Token contract address"
-    },
-    "minBalance": {
-      "type": "string",
-      "description": "Minimum token balance required (human-readable units, e.g., \"10.5\")"
-    },
-    "chainId": {
-      "type": "integer",
-      "description": "Chain ID where the token contract is deployed (testnet or mainnet). The backend reads from this chain using server-side RPC configuration."
-    },
-    "blockNumber": {
-      "type": "integer",
-      "description": "Optional block number for a point-in-time balance check"
-    }
-  }
+  "title": "token-holding",
+  "type": "object"
 }

@@ -240,7 +240,7 @@ export function VerifyGate({
   }, []);
 
   const tryPrivateReuse = useCallback(async (address) => {
-    // Owner-signed lookup: fetch private proofs, then evaluate locally.
+    // Owner-signed private reuse: fetch private proofs, then evaluate locally.
     setOperation('reuse');
     setState('signing');
 
@@ -419,7 +419,10 @@ export function VerifyGate({
             verifierId === 'ownership-basic' && dataForVerifier === null
               ? {
                   verifier: 'ownership-basic',
-                  content: verifierData?.['ownership-basic']?.content || `NEUS verification (${verifierId})`,
+                  content:
+                    (typeof verifierData?.['ownership-basic'] === 'string'
+                      ? verifierData['ownership-basic']
+                      : verifierData?.['ownership-basic']?.content) || `NEUS verification (${verifierId})`,
                   options: resolvedProofOptions
                 }
               : {

@@ -14,7 +14,38 @@ Authentication is handled via request-bound wallet signatures following the [NEU
 
 - **Proof Creation**: Requires a valid EIP-191 or universal signature in the request body.
 - **Status Checks**: Public proofs are globally readable; private proofs require owner authentication headers.
-- **Premium Access**: Enterprise deployments may require an API key for higher rate limits or non-public verifier lookups.
+
+## Recommended integration flows
+
+- **Create a proof**: `POST /api/v1/verification` (SDK: `client.verify(...)`)
+- **Poll status**: `GET /api/v1/verification/status/{qHash}` (SDK: `client.getStatus(...)` / `client.pollProofStatus(...)`)
+- **Discover verifiers**: `GET /api/v1/verification/verifiers` (use this to avoid drift across deployments)
+- **Gate access (minimal)**: `GET /api/v1/proofs/gate/check` (SDK: `client.gateCheck(...)`)
+- **Revoke a proof (owner-signed)**: `POST /api/v1/proofs/{qHash}/revoke-self` (SDK: `client.revokeOwnProof(...)`)
+
+## Integrator checklist (production)
+
+- **Treat `qHash` as opaque**: It’s a stable proof identifier. Use timestamps/status fields for freshness, not the ID itself.
+- **Prefer minimal reads**: For gating, call `GET /api/v1/proofs/gate/check` instead of pulling full proof payloads.
+- **Enforce freshness for point-in-time verifiers**: Use `since` / `sinceDays` for balances, ownership, risk, and other stateful checks.
+- **Keep proofs private by default**: Use `options.privacyLevel="private"` and `options.publicDisplay=false` unless you intentionally need public discovery.
+- **Debug signatures with `standardize`**: `POST /api/v1/verification/standardize` returns the exact string the server expects.
+
+## Rate Limits
+
+The API enforces tiered rate limiting for stability. Limits are applied based on endpoint sensitivity and caller identity.
+
+| Tier | Typical endpoints | Default limit |
+| :--- | :--- | :--- |
+| **STATUS** | `GET /api/v1/verification/status/*` | 100 req / minute |
+| **STANDARD** | Public reads (verifier discovery, proof reads, gate checks) | 2,000 req / hour |
+| **SENSITIVE** | Verification writes (`POST /api/v1/verification`) | 50 req / 15 minutes |
+
+### Resilience and Polling
+- **Status Checks**: Successful `2xx` responses for status polling do **not** count toward the status tier limit.
+- **Client Backoff**: The official `@neus/sdk` automatically applies jittered exponential backoff when a `429 Too Many Requests` is encountered.
+
+---
 
 ## Public OpenAPI Surface
 
@@ -25,14 +56,3 @@ For detailed request/response schemas, parameter definitions, and error codes, r
 - **Verifiers**: Real-time list of enabled verifier modules.
 - **Proofs**: Discoverability, gate checking, and revocation.
 
----
-
-## Premium / Sponsored mode
-
-Hosted deployments may offer **enterprise API keys** for server-side integrations that require:
-
-- **Lookup mode** (`POST /api/v1/verification/lookup`): Real-time, non-persistent checks (no `qHash` minted).
-- **Higher limits**: Increased scan limits for large-scale gating.
-- **Premium verifiers**: Interactive OAuth-based flows (e.g., `ownership-social`, `ownership-org-oauth`).
-
-To request premium access, visit the [NEUS Profile](https://neus.network/profile) or contact [dev@neus.network](mailto:dev@neus.network).

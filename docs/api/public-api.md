@@ -14,7 +14,10 @@ The NEUS Public API is defined by a single **OpenAPI 3.0** specification.
 
 Request-bound wallet signatures. See [Signing](../concepts/signing.md).
 
+## Rate limits
+
+Rate limits are documented in the [API Reference](README.md#rate-limits).
+
 ## Interactive reference (OpenAPI)
 
 {% openapi src="https://raw.githubusercontent.com/neus/network/main/docs/api/public-api.json" %}
-

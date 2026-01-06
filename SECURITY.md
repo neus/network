@@ -23,12 +23,18 @@ All verification submissions are authenticated via wallet signatures.
 - **Replay protection**: requests include a timestamp within a short freshness window.
 - **Request binding**: signatures are bound to the full request payload (verifiers + data + chain context).
 
-### Enterprise API keys (sponsorship)
+### Delegation / sponsorship (deployment-specific)
 
-Enterprise API keys can sponsor billing and unlock deployment-specific surfaces, but they **do not replace wallet authorization** for user-owned proofs.
+Some deployments may support sponsorship or delegation for operational needs (e.g., billing, higher limits, or delegated subject checks), but these **do not replace wallet authorization** for user-owned proofs.
 
-For `external_lookup` verifiers, a key holder may run delegated checks against a subject wallet address. In that case the proof owner remains the signer (the key holder) and the subject wallet is verifier input data.
+For `external_lookup` verifiers, a delegating party may run checks against a subject wallet address. In that case the proof owner remains the signer and the subject wallet is verifier input data.
 
 ## Rate limiting
 
-Public endpoints are rate-limited to prevent abuse and ensure fair usage.
+Public endpoints are rate-limited to ensure reliability and fair use.
+
+- **Status Polling**: 100 requests per minute. Successful polls are exempted from limits.
+- **Proof Creation**: 50 requests per 15 minutes.
+- **General API**: 2,000 requests per hour.
+
+The `@neus/sdk` handles these limits automatically with jittered backoff. For higher limits, contact `dev@neus.network`.

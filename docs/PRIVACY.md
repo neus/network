@@ -21,7 +21,7 @@ Behavior:
 By default, raw input content is not stored.
 
 - `options.storeOriginalContent`: when `true`, allows storing original content (use with care).
-- `options.enableIpfs`: enables public snapshotting for public proofs (deployment-dependent).
+- `options.enableIpfs`: enables public snapshotting for public proofs (only supported in deployments with IPFS configured).
 
 ## Gate checks (minimal eligibility)
 
@@ -30,7 +30,7 @@ By default, raw input content is not stored.
 - Evaluates **public + discoverable** proofs only.
 - Returns a minimal eligibility result (and optional safe projections), not full proof payloads.
 
-If your app needs to show a user-facing attribute (for example a handle), prefer **projection fields** (`select`) over fetching full proofs.
+If your app needs to show a user-facing attribute (for example a handle), prefer the minimal surfaces (`/proofs/gate/check` and `/proofs/byWallet`) and treat any returned `projections` as optional, deployment-specific safe fields.
 
 ## Owner access (private proofs)
 

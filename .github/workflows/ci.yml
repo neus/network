@@ -4,16 +4,14 @@ on:
   pull_request:
     paths:
       - "sdk/**"
-      - ".github/workflows/**"
-      - "package.json"
-      - "package-lock.json"
+      - ".github/workflows/ci.yml"
+      - ".github/workflows/release.yml"
   push:
     branches: [main]
     paths:
       - "sdk/**"
-      - ".github/workflows/**"
-      - "package.json"
-      - "package-lock.json"
+      - ".github/workflows/ci.yml"
+      - ".github/workflows/release.yml"
   workflow_dispatch:
 
 permissions:
@@ -32,71 +30,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            git clone --depth=1 https://github.com/${{ github.event.pull_request.head.repo.full_name }}.git .
-            git checkout ${{ github.event.pull_request.head.sha }}
-          else
-            git clone --depth=1 https://github.com/${{ github.repository }}.git .
-            git checkout ${{ github.sha }}
-          fi
+        uses: actions/checkout@v4
 
       - name: Setup Node ${{ env.NODE_VERSION }}
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install ${{ env.NODE_VERSION }}
-          nvm use ${{ env.NODE_VERSION }}
-          echo "NVM_DIR=$HOME/.nvm" >> $GITHUB_ENV
-          echo "$HOME/.nvm" >> $GITHUB_PATH
-          node --version
-          npm --version
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: sdk/package-lock.json
 
       - name: Install dependencies
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          if [ -f package-lock.json ]; then npm ci; else npm install; fi
+        run: if [ -f package-lock.json ]; then npm ci; else npm install; fi
         working-directory: sdk
 
       - name: Lint
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm run lint
+        run: npm run lint
         working-directory: sdk
 
       - name: Test
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm test --silent
+        run: npm test --silent
         working-directory: sdk
 
       - name: Build
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm run build
+        run: npm run build
         working-directory: sdk
 
       - name: Security audit (high severity)
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm audit --omit=dev --audit-level=high
+        run: npm audit --omit=dev --audit-level=high
         working-directory: sdk
 
       - name: Package check
-        run: |
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm use ${{ env.NODE_VERSION }}
-          npm pack --dry-run
+        run: npm pack --dry-run
         working-directory: sdk

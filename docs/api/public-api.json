@@ -3,7 +3,7 @@
   "info": {
     "title": "NEUS Public API",
     "version": "1.0.0",
-    "description": "Public interface for creating and resolving cryptographic proofs. Includes health checks, verification polling, verifier discovery, and gate evaluation. For premium features such as social/org OAuth or high-volume lookup mode, please refer to the Premium Access section in the documentation.",
+    "description": "Public interface for creating and resolving cryptographic proofs. Includes health checks, verification polling, verifier discovery, and gate evaluation.",
     "contact": {
       "name": "NEUS",
       "url": "https://neus.network",
@@ -50,12 +50,7 @@
             "description": "Array of verifier IDs to execute"
           },
           "data": {
-            "type": "object",
-            "description": "Verification data (verifier-specific). For multi-verifier requests, prefer namespaced payloads: data[verifierId] = { ... }.",
-            "example": {
-              "content": "Hello NEUS",
-              "owner": "0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db"
-            }
+            "$ref": "#/components/schemas/VerificationData"
           },
           "walletAddress": {
             "type": "string",
@@ -164,7 +159,7 @@
             }
           },
           "data": {
-            "type": "object"
+            "$ref": "#/components/schemas/VerificationData"
           },
           "signedTimestamp": {
             "type": "integer",
@@ -283,6 +278,13 @@
               "type": {
                 "type": "string",
                 "example": "ValidationError"
+              },
+              "details": {
+                "description": "Optional structured details (field-level errors, missing fields, etc.)",
+                "oneOf": [
+                  { "type": "object" },
+                  { "type": "array" }
+                ]
               }
             }
           },
@@ -306,6 +308,7 @@
             "properties": {
               "qHash": {
                 "type": "string",
+                "pattern": "^0x[a-fA-F0-9]{64}$",
                 "example": "0xabcdef..."
               },
               "status": {
@@ -323,31 +326,36 @@
               "verifiedVerifiers": {
                 "type": "array",
                 "items": {
-                  "type": "object",
-                  "properties": {
-                    "verifierId": {
-                      "type": "string"
-                    },
-                    "verified": {
-                      "type": "boolean"
-                    },
-                    "status": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "object"
-                    }
-                  }
+                  "$ref": "#/components/schemas/VerifiedVerifier"
                 }
               },
               "options": {
                 "type": "object"
               },
+              "meta": {
+                "type": "object"
+              },
               "createdAt": {
+                "type": "number"
+              },
+              "completedAt": {
                 "type": "number"
               },
               "lastUpdated": {
                 "type": "number"
+              },
+              "revokedAt": {
+                "type": "number",
+                "nullable": true
+              },
+              "crosschain": {
+                "type": "object"
+              },
+              "hubTransaction": {
+                "type": "object"
+              },
+              "ipfs": {
+                "type": "object"
               }
             }
           }
@@ -380,6 +388,377 @@
             }
           }
         }
+      },
+      "VerifiedVerifier": {
+        "type": "object",
+        "properties": {
+          "verifierId": { "type": "string" },
+          "verified": { "type": "boolean" },
+          "status": { "type": "string" },
+          "data": { "type": "object" },
+          "zkInfo": {
+            "type": "object",
+            "properties": {
+              "zkStatus": { "type": "string" }
+            }
+          }
+        }
+      },
+      "ProofRecord": {
+        "type": "object",
+        "properties": {
+          "qHash": { "type": "string", "pattern": "^0x[a-fA-F0-9]{64}$" },
+          "status": { "type": "string" },
+          "walletAddress": { "type": "string" },
+          "verifierIds": { "type": "array", "items": { "type": "string" } },
+          "verifiedVerifiers": { "type": "array", "items": { "$ref": "#/components/schemas/VerifiedVerifier" } },
+          "options": { "type": "object" },
+          "meta": { "type": "object" },
+          "createdAt": { "type": "number" },
+          "completedAt": { "type": "number" },
+          "lastUpdated": { "type": "number" },
+          "revokedAt": { "type": "number", "nullable": true }
+        }
+      },
+      "ProofsByWalletData": {
+        "type": "object",
+        "properties": {
+          "proofs": { "type": "array", "items": { "$ref": "#/components/schemas/ProofRecord" } },
+          "totalCount": { "type": "integer", "minimum": 0 },
+          "hasMore": { "type": "boolean" },
+          "nextOffset": { "type": "integer", "minimum": 0, "nullable": true }
+        }
+      },
+      "ProofsByWalletResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": { "$ref": "#/components/schemas/ProofsByWalletData" }
+        }
+      },
+      "GateCheckData": {
+        "type": "object",
+        "properties": {
+          "eligible": { "type": "boolean" },
+          "matchedCount": { "type": "integer", "minimum": 0 },
+          "matchedQHashes": { "type": "array", "items": { "type": "string", "pattern": "^0x[a-fA-F0-9]{64}$" } },
+          "matchedTags": { "type": "array", "items": { "type": "string" } },
+          "projections": { "type": "array", "items": { "type": "object" }, "nullable": true, "description": "Optional safe projection objects returned by some deployments. Treat as informational only; may be null or omitted." },
+          "criteria": { "type": "object" }
+        }
+      },
+      "GateCheckResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": { "$ref": "#/components/schemas/GateCheckData" }
+        }
+      },
+      "HealthResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "status": { "type": "string" },
+              "timestamp": { "type": "string" },
+              "uptime": { "type": "number" },
+              "services": { "type": "object" },
+              "issues": { "type": "array" }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "HealthReadyResponse": {
+        "type": "object",
+        "properties": {
+          "ready": { "type": "boolean" },
+          "timestamp": { "type": "string" },
+          "message": { "type": "string" },
+          "details": { "type": "object" },
+          "error": { "type": "string" }
+        },
+        "additionalProperties": true
+      },
+      "HealthLiveResponse": {
+        "type": "object",
+        "properties": {
+          "alive": { "type": "boolean" },
+          "timestamp": { "type": "string" },
+          "uptime": { "type": "number" },
+          "version": { "type": "string" }
+        }
+      },
+      "VerifiersListResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": { "type": "array", "items": { "type": "string" } },
+          "meta": {
+            "type": "object",
+            "properties": {
+              "totalCount": { "type": "integer" },
+              "accessLevel": { "type": "string" },
+              "hubChainId": { "type": "integer" },
+              "supportedProtocolChainIds": { "type": "array", "items": { "type": "integer" } },
+              "supportedAssetChainIds": { "type": "array", "items": { "type": "integer" } }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "StandardizeResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": {
+            "type": "object",
+            "properties": {
+              "signerString": { "type": "string", "description": "Exact string to sign with wallet" },
+              "bodyPreview": { "type": "object", "description": "Preview of normalized inputs" }
+            }
+          }
+        }
+      },
+      "AccessGrantResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "data": {
+            "type": "object",
+            "properties": {
+              "qHash": { "type": "string", "pattern": "^0x[a-fA-F0-9]{64}$" },
+              "viewerWallet": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$" },
+              "expiresAt": { "type": "number" }
+            }
+          }
+        }
+      },
+      "RevokeSelfResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "alreadyRevoked": { "type": "boolean" },
+          "timestamp": { "type": "string" }
+        }
+      },
+      "VerificationData": {
+        "type": "object",
+        "description": "Verification data (verifier-specific). For multi-verifier requests, prefer namespaced payloads: data[verifierId] = { ... }.",
+        "anyOf": [
+          { "$ref": "#/components/schemas/VerificationDataFlat" },
+          { "$ref": "#/components/schemas/VerificationDataNamespaced" },
+          { "type": "object", "additionalProperties": true, "description": "Fallback for custom/verifier-specific payloads not covered by the open-source core verifier set." }
+        ],
+        "example": {
+          "content": "Hello NEUS",
+          "owner": "0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db",
+          "reference": { "type": "url", "id": "https://example.com" }
+        }
+      },
+      "VerificationDataFlat": {
+        "oneOf": [
+          { "$ref": "#/components/schemas/VerifierDataOwnershipBasic" },
+          { "$ref": "#/components/schemas/VerifierDataOwnershipPseudonym" },
+          { "$ref": "#/components/schemas/VerifierDataOwnershipDnsTxt" },
+          { "$ref": "#/components/schemas/VerifierDataContractOwnership" },
+          { "$ref": "#/components/schemas/VerifierDataNftOwnership" },
+          { "$ref": "#/components/schemas/VerifierDataTokenHolding" },
+          { "$ref": "#/components/schemas/VerifierDataWalletRisk" },
+          { "$ref": "#/components/schemas/VerifierDataWalletLink" },
+          { "$ref": "#/components/schemas/VerifierDataAiContentModeration" },
+          { "$ref": "#/components/schemas/VerifierDataAgentIdentity" },
+          { "$ref": "#/components/schemas/VerifierDataAgentDelegation" }
+        ]
+      },
+      "VerificationDataNamespaced": {
+        "type": "object",
+        "description": "Multi-verifier payload: keys are verifier IDs and values are that verifier's input object.",
+        "additionalProperties": { "$ref": "#/components/schemas/VerificationDataFlat" }
+      },
+      "VerifierDataOwnershipBasic": {
+        "type": "object",
+        "required": ["owner"],
+        "properties": {
+          "content": { "type": "string", "maxLength": 50000, "description": "Content being claimed (max 50KB inline; use contentHash + IPFS for larger)" },
+          "contentHash": { "type": "string", "pattern": "^0x[a-fA-F0-9]{64}$", "description": "Pre-computed SHA-256 or keccak256 hash (optional if content provided)" },
+          "contentType": { "type": "string", "maxLength": 100, "description": "MIME type hint for the content/reference (e.g., image/png, audio/mpeg, application/pdf)" },
+          "owner": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Wallet address of the owner (must match request walletAddress)" },
+          "reference": {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "ipfs",
+                  "ipfs-hash",
+                  "url",
+                  "license-nft",
+                  "contract",
+                  "qhash",
+                  "ethereum-tx",
+                  "on-chain-tx",
+                  "tx",
+                  "file",
+                  "doc",
+                  "media",
+                  "username-claim",
+                  "other"
+                ],
+                "description": "Reference type for traceability"
+              },
+              "id": { "type": "string", "maxLength": 2048, "description": "Reference identifier (CID, URL, tx hash, chainId:address:tokenId, etc.)" },
+              "title": { "type": "string", "maxLength": 200, "description": "Optional display title" },
+              "description": { "type": "string", "maxLength": 500, "description": "Optional description" },
+              "mime": { "type": "string", "maxLength": 100, "description": "MIME type for file references" },
+              "name": { "type": "string", "maxLength": 255, "description": "Original filename for file references" },
+              "size": { "type": "integer", "description": "File size in bytes" }
+            }
+          },
+          "provenance": {
+            "type": "object",
+            "description": "Optional provenance metadata for content origin",
+            "properties": {
+              "declaredKind": { "type": "string", "enum": ["human", "ai", "mixed", "unknown"], "description": "Content creation type (advisory, not verified)" },
+              "aiContext": {
+                "type": "object",
+                "description": "AI generation context (when declaredKind is ai or mixed)",
+                "properties": {
+                  "generatorType": { "type": "string", "enum": ["local", "saas", "agent"], "description": "Type of AI generator" },
+                  "provider": { "type": "string", "maxLength": 64, "description": "AI provider (e.g., openai, anthropic, other)" },
+                  "model": { "type": "string", "maxLength": 128, "description": "Model identifier (opaque string)" },
+                  "runId": { "type": "string", "maxLength": 128, "description": "Internal inference/job ID" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "VerifierDataOwnershipPseudonym": {
+        "type": "object",
+        "required": ["pseudonymId"],
+        "properties": {
+          "pseudonymId": { "type": "string", "pattern": "^[a-z0-9._-]{3,64}$", "description": "Handle within a namespace" },
+          "namespace": { "type": "string", "pattern": "^[a-z0-9._-]{1,64}$", "description": "Namespace (default: neus)" },
+          "displayName": { "type": "string", "maxLength": 64, "description": "Human-readable display name" },
+          "metadata": { "type": "object", "description": "App-specific metadata" }
+        }
+      },
+      "VerifierDataOwnershipDnsTxt": {
+        "type": "object",
+        "required": ["domain"],
+        "properties": {
+          "domain": { "type": "string", "format": "hostname", "description": "Domain name to verify (e.g., neus.network)" },
+          "walletAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Wallet address to match in DNS TXT record (optional; defaults to signer walletAddress)" }
+        }
+      },
+      "VerifierDataContractOwnership": {
+        "type": "object",
+        "required": ["contractAddress", "chainId"],
+        "properties": {
+          "contractAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Contract address to verify" },
+          "chainId": { "type": "integer", "description": "Chain ID where the contract is deployed (testnet or mainnet; must be supported/configured server-side)" },
+          "walletAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Wallet claiming ownership (optional; defaults to signer walletAddress)" },
+          "method": { "type": "string", "enum": ["owner", "admin", "accessControl"], "description": "Optional: specific method to check" }
+        }
+      },
+      "VerifierDataNftOwnership": {
+        "type": "object",
+        "required": ["contractAddress", "tokenId", "chainId"],
+        "properties": {
+          "ownerAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "NFT owner address (optional). If omitted, defaults to the signed request walletAddress. Deployments may allow delegated subject checks, but the server will not accept subject overrides that break signature binding." },
+          "contractAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "NFT contract address" },
+          "tokenId": { "type": "string", "description": "NFT token ID" },
+          "tokenType": { "type": "string", "enum": ["erc721", "erc1155"], "description": "Token standard (default: erc721)" },
+          "chainId": { "type": "integer", "description": "Chain ID where the NFT contract is deployed (testnet or mainnet; must be supported/configured server-side)" },
+          "blockNumber": { "type": "integer", "description": "Optional specific block number for point-in-time ownership checks" }
+        }
+      },
+      "VerifierDataTokenHolding": {
+        "type": "object",
+        "required": ["contractAddress", "minBalance", "chainId"],
+        "properties": {
+          "ownerAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Token holder address (optional). If omitted, defaults to the signed request walletAddress. Deployments may allow delegated subject checks, but the server will not accept subject overrides that break signature binding." },
+          "contractAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Token contract address" },
+          "minBalance": { "type": "string", "description": "Minimum token balance required (human-readable units, e.g., \"10.5\")" },
+          "chainId": { "type": "integer", "description": "Chain ID where the token contract is deployed (testnet or mainnet; must be supported/configured server-side)" },
+          "blockNumber": { "type": "integer", "description": "Optional specific block number for point-in-time balance checks" }
+        }
+      },
+      "VerifierDataWalletRisk": {
+        "type": "object",
+        "properties": {
+          "provider": { "type": "string", "description": "Risk assessment provider hint. Known value: webacy." },
+          "walletAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Wallet address to assess (optional; defaults to signer walletAddress)" },
+          "chainId": { "type": "integer", "description": "Chain ID for context" },
+          "includeDetails": { "type": "boolean", "description": "Include detailed risk breakdown" }
+        }
+      },
+      "VerifierDataWalletLink": {
+        "type": "object",
+        "required": ["primaryWalletAddress", "secondaryWalletAddress", "signature", "chainId", "signedTimestamp"],
+        "properties": {
+          "primaryWalletAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Primary wallet (owner)" },
+          "secondaryWalletAddress": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Secondary wallet (must sign)" },
+          "signature": { "type": "string", "description": "EIP-191 signature from secondary wallet over canonical message" },
+          "chainId": { "type": "integer", "description": "Chain ID for link context" },
+          "signedTimestamp": { "type": "integer", "description": "Unix timestamp (ms) when signed" },
+          "relationshipType": { "type": "string", "enum": ["primary", "personal", "org", "affiliate", "agent", "linked"], "description": "Relationship type for identity graph categorization" },
+          "label": { "type": "string", "maxLength": 64, "description": "Human-readable label for this wallet" }
+        }
+      },
+      "VerifierDataAiContentModeration": {
+        "type": "object",
+        "required": ["content", "contentType"],
+        "properties": {
+          "content": { "type": "string", "maxLength": 13653334, "description": "Moderation input. For images: base64 content or an IPFS reference (ipfs://<cid>). For text: raw UTF-8 text (size-limited)." },
+          "contentType": {
+            "type": "string",
+            "enum": [
+              "image/jpeg",
+              "image/png",
+              "image/webp",
+              "image/gif",
+              "text/plain",
+              "text/markdown",
+              "text/x-markdown",
+              "application/json",
+              "application/xml"
+            ],
+            "description": "MIME type. The server tolerates charset suffixes (e.g., \"text/plain; charset=utf-8\")."
+          },
+          "provider": { "type": "string", "description": "Moderation provider override. Known values: google-vision, google-perspective." }
+        }
+      },
+      "VerifierDataAgentIdentity": {
+        "type": "object",
+        "required": ["agentId", "agentWallet"],
+        "properties": {
+          "agentId": { "type": "string", "maxLength": 128, "description": "Unique string identifier (e.g., neus-bot-1)" },
+          "agentWallet": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Agent wallet address (must match signer)" },
+          "agentLabel": { "type": "string", "maxLength": 128, "description": "Human-readable display name" },
+          "agentType": { "type": "string", "enum": ["ai", "bot", "service", "automation", "agent"], "description": "Type of agent for categorization" },
+          "description": { "type": "string", "maxLength": 500, "description": "Brief description of what this agent does" },
+          "capabilities": { "type": "array", "description": "List of capabilities (e.g., trading, posting, payments)" }
+        }
+      },
+      "VerifierDataAgentDelegation": {
+        "type": "object",
+        "required": ["controllerWallet", "agentWallet"],
+        "properties": {
+          "controllerWallet": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Controller wallet (must sign the delegation)" },
+          "agentWallet": { "type": "string", "pattern": "^0x[a-fA-F0-9]{40}$", "description": "Agent receiving authority" },
+          "agentId": { "type": "string", "maxLength": 128, "description": "Agent ID for linking to agent-identity proof" },
+          "scope": { "type": "string", "maxLength": 128, "description": "Scope of delegation (e.g., payments:x402, trading, posting, global)" },
+          "permissions": { "type": "array", "description": "Granular permission list (e.g., [\"read\", \"write\", \"execute\"])" },
+          "maxSpend": { "type": "string", "description": "Maximum spend limit in wei (for payments:x402 scope)" },
+          "allowedPaymentTypes": { "type": "array", "description": "Declared allowed payment protocols for this delegation (e.g., [\"x402\"]). Metadata-only.", "items": { "type": "string", "maxLength": 32 } },
+          "receiptDisclosure": { "type": "string", "enum": ["none", "summary", "full"], "description": "Receipt disclosure policy for economic actions (metadata-only). Recommended: summary." },
+          "expiresAt": { "type": "integer", "description": "Expiration timestamp (ms). Recommended for security." }
+        }
       }
     }
   },
@@ -396,8 +775,16 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
+                  "$ref": "#/components/schemas/HealthResponse"
                 }
+              }
+            }
+          },
+          "503": {
+            "description": "Unhealthy",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HealthResponse" }
               }
             }
           },
@@ -432,7 +819,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
+                  "$ref": "#/components/schemas/HealthReadyResponse"
                 }
               }
             }
@@ -442,7 +829,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/HealthReadyResponse"
                 }
               }
             }
@@ -478,53 +865,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Rate limited",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal error",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/health/detailed": {
-      "get": {
-        "tags": ["Health"],
-        "operationId": "healthDetailedGet",
-        "summary": "Detailed health",
-        "description": "Detailed health status (may include extra diagnostics in non-live environments).",
-        "responses": {
-          "200": {
-            "description": "Health details",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Degraded/unhealthy",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
+                  "$ref": "#/components/schemas/HealthLiveResponse"
                 }
               }
             }
@@ -713,25 +1054,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      },
-                      "example": [
-                        "ownership-basic",
-                        "ownership-pseudonym",
-                        "ownership-dns-txt",
-                        "nft-ownership"
-                      ]
-                    }
-                  }
+                  "$ref": "#/components/schemas/VerifiersListResponse"
                 }
               }
             }
@@ -777,26 +1100,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "signerString": {
-                          "type": "string",
-                          "description": "Exact string to sign with wallet"
-                        },
-                        "bodyPreview": {
-                          "type": "object",
-                          "description": "Preview of normalized inputs"
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/StandardizeResponse"
                 }
               }
             }
@@ -850,7 +1154,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
+                  "$ref": "#/components/schemas/AccessGrantResponse"
                 }
               }
             }
@@ -919,7 +1223,7 @@
         "tags": ["Proofs"],
         "operationId": "proofsGateCheckGet",
         "summary": "Gate evaluation (proof presence + criteria matching)",
-        "description": "Evaluate whether a wallet satisfies verifier and metadata criteria against PUBLIC/DISCOVERABLE proofs only (privacyLevel=public + publicDisplay=true). Public endpoint; optional partner API key can increase scan limits.",
+        "description": "Evaluate whether a wallet satisfies verifier and metadata criteria against PUBLIC/DISCOVERABLE proofs only (privacyLevel=public + publicDisplay=true).",
         "parameters": [
           {
             "name": "address",
@@ -986,7 +1290,7 @@
               "minimum": 1,
               "maximum": 1000
             },
-            "description": "Max rows to scan (server may clamp; higher with partner API key)"
+            "description": "Max rows to scan (server may clamp)"
           },
           {
             "name": "referenceType",
@@ -1090,14 +1394,6 @@
             }
           },
           {
-            "name": "handle",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "riskLevel",
             "in": "query",
             "required": false,
@@ -1149,58 +1445,6 @@
             "description": "Contract ownership method (owner/admin/accessControl)"
           },
           {
-            "name": "neusPersonhoodId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "pattern": "^0x[a-fA-F0-9]{64}$"
-            }
-          },
-          {
-            "name": "ageMin",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "minimum": 0
-            }
-          },
-          {
-            "name": "sanctionsPassed",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "traitPath",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "traitGte",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "number",
-              "minimum": 0
-            }
-          },
-          {
-            "name": "select",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Comma-separated projection fields (handle, provider, profileUrl, traits.<key>)"
-          },
-          {
             "name": "tag",
             "in": "query",
             "required": false,
@@ -1224,7 +1468,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
+                  "$ref": "#/components/schemas/GateCheckResponse"
                 }
               }
             }
@@ -1312,10 +1556,12 @@
             }
           },
           {
-            "name": "status",
+            "name": "offset",
             "in": "query",
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "minimum": 0,
+              "default": 0
             }
           }
         ],
@@ -1325,7 +1571,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
+                  "$ref": "#/components/schemas/ProofsByWalletResponse"
                 }
               }
             }
@@ -1398,7 +1644,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SuccessResponse"
+                  "$ref": "#/components/schemas/RevokeSelfResponse"
                 }
               }
             }
