@@ -20,7 +20,7 @@ export function Page() {
     <VerifyGate
       requiredVerifiers={['nft-ownership']}
       verifierData={{
-        'nft-ownership': { contractAddress: '0x...', tokenId: '1', chainId: 1 }
+        'nft-ownership': { contractAddress: '0x...', tokenId: '1', chainId: 8453 }
       }}
     >
       <div>Unlocked</div>
@@ -36,18 +36,29 @@ export function Page() {
 - `strategy`: `'reuse-or-create' | 'reuse' | 'fresh'` (default: `'reuse-or-create'`)
 - `proofOptions`: `{ privacyLevel, publicDisplay, storeOriginalContent, enableIpfs? }` (defaults: private)
 - `mode`: `'create' | 'access'` (default: `'create'`)
-- `qHash`: string (required for `mode="access"`)
+- `proofId`: string (required for `mode="access"`)
+- `maxProofAgeMs`: `number` (optional) - max proof age override in milliseconds for reuse checks
+- `onError`: `(error: Error) => void` (optional) - called when verification/gating errors occur
+- `apiUrl`: protocol API base URL (optional)
+- `hostedCheckoutUrl`: hosted verify page URL (optional, recommended when `apiUrl` is custom)
 
 Notes:
 - Reuse without prompting can only see **public + discoverable** proofs.
 - Reusing private proofs requires an **owner signature** (wallet grants read access).
+- Interactive verifiers (`ownership-social`, `ownership-org-oauth`, `proof-of-human`) use NEUS hosted checkout automatically when required.
+- If you set a custom `apiUrl`, also set `hostedCheckoutUrl` to your hosted verify UI (for example `https://neus.network/verify`).
+  `apiUrl` is used for API calls; `hostedCheckoutUrl` is used for popup checkout routing.
 
 ## ProofBadge
 
-Display verification status by Proof ID (`qHash`).
+Display verification status by Proof ID (`proofId`).
 
 ```jsx
 import { ProofBadge } from '@neus/sdk/widgets';
 
-<ProofBadge qHash="0x..." showChains />
+<ProofBadge proofId="0x..." showChains />
 ```
+
+Notes:
+- Widgets default to a bundled NEUS logo asset (inlined at build time), so no external logo fetch is required.
+- You can override with `logoUrl` in `ProofBadge`, `SimpleProofBadge`, `NeusPillLink`, and `VerifiedIcon`.

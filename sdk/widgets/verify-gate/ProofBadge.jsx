@@ -7,37 +7,33 @@
  * - Non-intrusive, tiny by default
  * - Neutral colors - no forced green/red
  * - Integrators can theme via CSS variables
+ * - Logo: inline data URL (CSP-safe); logoUrl prop overrides for custom branding
  * 
  * @license Apache-2.0
  */
 import React, { useEffect, useState } from 'react';
+import NEUS_LOGO_DATA_URL from '../../neus-logo.svg';
 
 // Default API base - can be overridden via prop
 const DEFAULT_API_BASE = 'https://api.neus.network';
 
-// Inline logo (no external assets required)
-const NeusLogo = ({ size = 12 }) => (
-  <svg
+// Brand logo: inline SVG data URL (no external fetch, CSP-safe). logoUrl prop overrides.
+const NeusLogo = ({ size = 12, logoUrl }) => (
+  <img
+    src={logoUrl ?? NEUS_LOGO_DATA_URL}
+    alt=""
+    aria-hidden="true"
     width={size}
     height={size}
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-    focusable="false"
     style={{
       width: size,
       height: size,
       display: 'block',
       borderRadius: 2,
-      flexShrink: 0
+      flexShrink: 0,
+      objectFit: 'contain'
     }}
-  >
-    <rect x="2" y="2" width="20" height="20" rx="5" fill="currentColor" opacity="0.18" />
-    <path
-      d="M7 16V8h2.1l4.9 5.9V8H17v8h-2.1L10 10.1V16H7z"
-      fill="currentColor"
-      opacity="0.9"
-    />
-  </svg>
+  />
 );
 
 /**
@@ -45,23 +41,27 @@ const NeusLogo = ({ size = 12 }) => (
  * Tiny, non-intrusive, neutral colors by default
  */
 export function ProofBadge({
+  proofId,
   qHash,
+  proofUrlPattern = '/proof/:proofId',
   size = 'sm',
   uiLinkBase = 'https://neus.network',
   apiUrl = DEFAULT_API_BASE,
   proof = undefined,
   showChains = false,
   showLabel = true,
+  logoUrl = undefined,
   onClick = undefined,
   className = ''
 }) {
+  const resolvedProofId = proofId || qHash;
   const [status, setStatus] = useState(() => {
     if (proof) {
       const proofStatus = proof.status || '';
       return proofStatus.includes('verified') ? 'verified' : 
              proofStatus.includes('pending') || proofStatus.includes('processing') ? 'pending' : 'failed';
     }
-    return qHash ? 'pending' : 'unknown';
+    return resolvedProofId ? 'pending' : 'unknown';
   });
   
   const [chainCount, setChainCount] = useState(() => {
@@ -74,13 +74,13 @@ export function ProofBadge({
   });
 
   useEffect(() => {
-    if (!qHash || proof) return;
+    if (!resolvedProofId || proof) return;
     
     let cancelled = false;
     
     async function checkStatus() {
       try {
-        const res = await fetch(`${apiUrl}/api/v1/verification/status/${qHash}`, {
+        const res = await fetch(`${apiUrl}/api/v1/verification/status/${resolvedProofId}`, {
           headers: { Accept: 'application/json' }
         });
         
@@ -115,9 +115,12 @@ export function ProofBadge({
     checkStatus();
     
     return () => { cancelled = true; };
-  }, [qHash, proof, apiUrl, showChains]);
+  }, [resolvedProofId, proof, apiUrl, showChains]);
 
-  const href = `${String(uiLinkBase).replace(/\/$/, '')}/proof/${qHash}`;
+  const base = String(uiLinkBase).replace(/\/$/, '');
+  const href = resolvedProofId
+    ? `${base}${String(proofUrlPattern).replace(':proofId', resolvedProofId).replace(':qHash', resolvedProofId)}`
+    : base;
   
   // Minimal sizing
   const isSm = size === 'sm';
@@ -153,7 +156,7 @@ export function ProofBadge({
   const handleClick = (e) => {
     if (onClick) {
       e.preventDefault();
-      onClick({ qHash, status, chainCount });
+      onClick({ proofId: resolvedProofId, qHash: resolvedProofId, status, chainCount });
     }
   };
 
@@ -172,7 +175,7 @@ export function ProofBadge({
       title={title}
       onClick={handleClick}
     >
-      <NeusLogo size={logoSize} />
+      <NeusLogo size={logoSize} logoUrl={logoUrl} />
       {showLabel && <span>{label}</span>}
       {showChains && chainCount > 0 && (
         <span style={{ opacity: 0.7, fontSize: fontSize - 1 }}>
@@ -187,31 +190,35 @@ export function ProofBadge({
  * SimpleProofBadge - Even more compact, just logo + optional text
  */
 export function SimpleProofBadge({
+  proofId,
   qHash,
+  proofUrlPattern = '/proof/:proofId',
   uiLinkBase = 'https://neus.network',
   apiUrl = DEFAULT_API_BASE,
   size = 'sm',
   label = 'Verified',
+  logoUrl = undefined,
   proof = undefined,
   onClick = undefined,
   className = ''
 }) {
+  const resolvedProofId = proofId || qHash;
   const [status, setStatus] = useState(() => {
     if (proof) {
       const proofStatus = proof.status || '';
       return proofStatus.includes('verified') ? 'verified' : 'failed';
     }
-    return qHash ? 'pending' : 'unknown';
+    return resolvedProofId ? 'pending' : 'unknown';
   });
 
   useEffect(() => {
-    if (!qHash || proof) return;
+    if (!resolvedProofId || proof) return;
     
     let cancelled = false;
     
     async function checkStatus() {
       try {
-        const res = await fetch(`${apiUrl}/api/v1/verification/status/${qHash}`, {
+        const res = await fetch(`${apiUrl}/api/v1/verification/status/${resolvedProofId}`, {
           headers: { Accept: 'application/json' }
         });
         
@@ -234,9 +241,12 @@ export function SimpleProofBadge({
     
     checkStatus();
     return () => { cancelled = true; };
-  }, [qHash, proof, apiUrl]);
+  }, [resolvedProofId, proof, apiUrl]);
 
-  const href = `${String(uiLinkBase).replace(/\/$/, '')}/proof/${qHash}`;
+  const base = String(uiLinkBase).replace(/\/$/, '');
+  const href = resolvedProofId
+    ? `${base}${String(proofUrlPattern).replace(':proofId', resolvedProofId).replace(':qHash', resolvedProofId)}`
+    : base;
   const isSm = size === 'sm';
   const logoSize = isSm ? 12 : 14;
   const fontSize = isSm ? 10 : 11;
@@ -263,7 +273,7 @@ export function SimpleProofBadge({
   const handleClick = (e) => {
     if (onClick) {
       e.preventDefault();
-      onClick({ qHash, status });
+      onClick({ proofId: resolvedProofId, qHash: resolvedProofId, status });
     }
   };
 
@@ -280,7 +290,7 @@ export function SimpleProofBadge({
       title={displayLabel}
       onClick={handleClick}
     >
-      <NeusLogo size={logoSize} />
+      <NeusLogo size={logoSize} logoUrl={logoUrl} />
       <span>{displayLabel}</span>
     </a>
   );
@@ -290,15 +300,19 @@ export function SimpleProofBadge({
  * NeusPillLink - Minimal navigation link
  */
 export function NeusPillLink({
+  proofId,
   qHash,
+  proofUrlPattern = '/proof/:proofId',
   uiLinkBase = 'https://neus.network',
   label = 'View',
   size = 'sm',
+  logoUrl = undefined,
   onClick = undefined,
   className = ''
 }) {
+  const resolvedProofId = proofId || qHash;
   const base = String(uiLinkBase).replace(/\/$/, '');
-  const href = qHash ? `${base}/proof/${qHash}` : base;
+  const href = resolvedProofId ? `${base}${String(proofUrlPattern).replace(':proofId', resolvedProofId).replace(':qHash', resolvedProofId)}` : base;
 
   const isSm = size === 'sm';
   const logoSize = isSm ? 12 : 14;
@@ -326,7 +340,7 @@ export function NeusPillLink({
   const handleClick = (e) => {
     if (onClick) {
       e.preventDefault();
-      onClick({ qHash });
+      onClick({ proofId: resolvedProofId, qHash: resolvedProofId });
     }
   };
 
@@ -341,7 +355,7 @@ export function NeusPillLink({
       title={label}
       onClick={handleClick}
     >
-      <NeusLogo size={logoSize} />
+      <NeusLogo size={logoSize} logoUrl={logoUrl} />
       <span>{label}</span>
     </a>
   );
@@ -352,21 +366,25 @@ export function NeusPillLink({
  * For when you just want a tiny indicator
  */
 export function VerifiedIcon({
+  proofId,
   qHash,
+  proofUrlPattern = '/proof/:proofId',
   uiLinkBase = 'https://neus.network',
   size = 14,
+  logoUrl = undefined,
   tooltip = 'Proof',
   onClick = undefined,
   className = ''
 }) {
-  const href = qHash 
-    ? `${String(uiLinkBase).replace(/\/$/, '')}/proof/${qHash}` 
+  const resolvedProofId = proofId || qHash;
+  const href = resolvedProofId
+    ? `${String(uiLinkBase).replace(/\/$/, '')}${String(proofUrlPattern).replace(':proofId', resolvedProofId).replace(':qHash', resolvedProofId)}`
     : undefined;
 
   const handleClick = (e) => {
     if (onClick) {
       e.preventDefault();
-      onClick({ qHash });
+      onClick({ proofId: resolvedProofId, qHash: resolvedProofId });
     }
   };
 
@@ -381,7 +399,7 @@ export function VerifiedIcon({
         transition: 'opacity 0.15s ease'
       }}
     >
-      <NeusLogo size={size} />
+      <NeusLogo size={size} logoUrl={logoUrl} />
     </span>
   );
 

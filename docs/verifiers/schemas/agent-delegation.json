@@ -1,20 +1,17 @@
 {
   "$id": "https://neus.network/schemas/agent-delegation.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Delegates authority from a controller (human/org) to an agent wallet",
+  "description": "Delegates authority to an agent, ERC-8004 compatible",
   "properties": {
     "agentId": {
-      "description": "Agent ID for linking to agent-identity proof",
       "maxLength": 128,
       "type": "string"
     },
     "agentWallet": {
-      "description": "Agent receiving authority",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "format": "evm-address",
       "type": "string"
     },
     "allowedPaymentTypes": {
-      "description": "Declared allowed payment protocols for this delegation (e.g., [\"x402\"]). Metadata-only.",
       "items": {
         "maxLength": 32,
         "type": "string"
@@ -22,24 +19,23 @@
       "type": "array"
     },
     "controllerWallet": {
-      "description": "Controller wallet (must sign the delegation)",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "format": "evm-address",
       "type": "string"
     },
     "expiresAt": {
-      "description": "Expiration timestamp (ms). Recommended for security.",
+      "minimum": 0,
       "type": "integer"
     },
     "maxSpend": {
-      "description": "Maximum spend limit in wei (for payments:x402 scope)",
       "type": "string"
     },
     "permissions": {
-      "description": "Granular permission list (e.g., [\"read\", \"write\", \"execute\"])",
+      "items": {
+        "type": "string"
+      },
       "type": "array"
     },
     "receiptDisclosure": {
-      "description": "Receipt disclosure policy for economic actions (metadata-only). Recommended: summary.",
       "enum": [
         "none",
         "summary",
@@ -48,7 +44,6 @@
       "type": "string"
     },
     "scope": {
-      "description": "Scope of delegation (e.g., payments:x402, trading, posting, global)",
       "maxLength": 128,
       "type": "string"
     }

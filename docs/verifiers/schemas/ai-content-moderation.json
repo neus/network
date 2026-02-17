@@ -1,15 +1,13 @@
 {
   "$id": "https://neus.network/schemas/ai-content-moderation.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Verifies content safety via AI moderation (policy snapshot, bound to contentHash)",
+  "description": "Verifies content safety via AI",
   "properties": {
     "content": {
-      "description": "Moderation input. For images: base64 content or an IPFS reference (ipfs://<cid>). For text: raw UTF-8 text (size-limited).",
       "maxLength": 13653334,
       "type": "string"
     },
     "contentType": {
-      "description": "MIME type. The server tolerates charset suffixes (e.g., \"text/plain; charset=utf-8\").",
       "enum": [
         "image/jpeg",
         "image/png",
@@ -24,7 +22,6 @@
       "type": "string"
     },
     "provider": {
-      "description": "Moderation provider (default: content-type based)",
       "enum": [
         "google-vision",
         "google-perspective"

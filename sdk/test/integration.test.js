@@ -83,8 +83,8 @@ describe('NEUS SDK Integration', () => {
 
     it('should validate inputs before API calls', async () => {
       // These should fail validation before making API calls
-      await expect(client.getStatus('')).rejects.toThrow('qHash is required');
-      await expect(client.getStatus(123)).rejects.toThrow('qHash is required');
+      await expect(client.getStatus('')).rejects.toThrow('proofId is required');
+      await expect(client.getStatus(123)).rejects.toThrow('proofId is required');
       await expect(client.verify({ content: 123 })).rejects.toThrow('content is required and must be a string');
     });
   });

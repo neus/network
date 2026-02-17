@@ -17,6 +17,7 @@ coverage/
 .idea/
 *.swp
 *.swo
+.npmrc
 
 # OS
 .DS_Store

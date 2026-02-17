@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler"
+  },
+  "include": ["types.d.ts"],
+  "exclude": ["**/*.js", "**/*.cjs", "**/*.jsx", "cjs/**", "test/**", "widgets/**"]
+}

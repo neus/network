@@ -17,6 +17,8 @@ import {
   formatVerificationStatus,
   formatTimestamp,
   isSupportedChain,
+  signMessage,
+  toHexUtf8,
   withRetry,
   delay,
   computeContentHash,
@@ -264,7 +266,7 @@ describe('Utils', () => {
   });
 
   describe('validateQHash()', () => {
-    it('should validate correct qHash format', () => {
+    it('should validate correct qHash format (deprecated proofId alias)', () => {
       expect(validateQHash('0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef')).toBe(true);
     });
 
@@ -342,6 +344,43 @@ describe('Utils', () => {
       
       const result = await withRetry(fn);
       expect(result).toBe('immediate success');
+    });
+  });
+
+  describe('toHexUtf8()', () => {
+    it('should encode UTF-8 strings as 0x hex', () => {
+      expect(toHexUtf8('hello')).toBe('0x68656c6c6f');
+      expect(toHexUtf8('NEUS')).toBe('0x4e455553');
+    });
+  });
+
+  describe('signMessage()', () => {
+    it('should retry personal_sign with hex payload on encoding errors', async () => {
+      const calls = [];
+      const provider = {
+        request: async ({ method, params }) => {
+          calls.push({ method, params });
+          if (method === 'eth_accounts') {
+            return ['0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db'];
+          }
+          if (method === 'personal_sign' && params[0] === 'test message') {
+            throw new Error('invalid byte sequence');
+          }
+          if (method === 'personal_sign' && String(params[0]).startsWith('0x')) {
+            return '0xsignature';
+          }
+          throw new Error('unexpected call');
+        }
+      };
+
+      const signature = await signMessage({
+        provider,
+        walletAddress: '0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db',
+        message: 'test message'
+      });
+
+      expect(signature).toBe('0xsignature');
+      expect(calls.some((call) => call.method === 'personal_sign' && String(call.params[0]).startsWith('0x'))).toBe(true);
     });
   });
 

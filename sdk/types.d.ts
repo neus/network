@@ -32,17 +32,17 @@ declare module '@neus/sdk' {
     
     /**
      * Get verification status by proof ID
-     * @param qHash - Proof ID (wire field: qHash)
+     * @param proofId - Proof ID (standard). `qHash` is a deprecated alias (same value).
      * @returns Promise resolving to current status
      */
-    getStatus(qHash: string): Promise<StatusResult>;
+    getStatus(proofId: string): Promise<StatusResult>;
     
     /**
      * Get private proof status (owner-signed)
-     * @param qHash - Proof ID (wire field: qHash)
+     * @param proofId - Proof ID (standard). `qHash` is a deprecated alias (same value).
      * @param wallet - Optional injected wallet/provider (MetaMask/ethers Wallet)
      */
-    getPrivateStatus(qHash: string, wallet?: WalletLike): Promise<StatusResult>;
+    getPrivateStatus(proofId: string, wallet?: WalletLike | GatePrivateAuth): Promise<StatusResult>;
     
     /**
      * Check API health
@@ -55,21 +55,21 @@ declare module '@neus/sdk' {
     
   /**
    * Poll verification status until completion
-   * @param qHash - Proof ID (wire field: qHash)
+   * @param proofId - Proof ID (standard). `qHash` is a deprecated alias (same value).
    * @param options - Polling configuration options
    * @returns Promise resolving to final status
    * @example
-   * const finalStatus = await client.pollProofStatus(qHash, {
+   * const finalStatus = await client.pollProofStatus(proofId, {
    *   interval: 3000,
    *   onProgress: (status) => {
    *     // Handle status updates
    *   }
    * });
    */
-   pollProofStatus(qHash: string, options?: PollOptions): Promise<StatusResult>;
+   pollProofStatus(proofId: string, options?: PollOptions): Promise<StatusResult>;
     
     /** Revoke own proof (owner-signed) */
-    revokeOwnProof(qHash: string, wallet?: { address: string }): Promise<boolean>;
+    revokeOwnProof(proofId: string, wallet?: { address: string }): Promise<boolean>;
 
     // ═══════════════════════════════════════════════════════════════
     // PROOFS & GATING METHODS
@@ -94,6 +94,16 @@ declare module '@neus/sdk' {
      * Prefer this for server-side integrations that do not need full proof payloads.
      */
     gateCheck(params: GateCheckApiParams): Promise<GateCheckApiResponse>;
+
+    /**
+     * Pre-sign owner auth payload for repeated includePrivate gate checks (single prompt).
+     */
+    createGatePrivateAuth(params: {
+      address: string;
+      wallet?: WalletLike;
+      chain?: string;
+      signatureMethod?: string;
+    }): Promise<GatePrivateAuth>;
 
     /**
      * Evaluate gate requirements against existing proofs
@@ -125,10 +135,20 @@ declare module '@neus/sdk' {
   export interface NeusClientConfig {
     /** API endpoint URL (defaults to hosted public API) */
     apiUrl?: string;
-    /** Optional deployment API key (server-side only; do not embed in browser apps) */
+    /** Optional API key (server-side only; do not embed in browser apps) */
     apiKey?: string;
+    /** Optional public app attribution ID (maps to X-Neus-App) */
+    appId?: string;
+    /** Optional sponsor capability token (maps to X-Sponsor-Grant) */
+    sponsorGrant?: string;
+    /** Optional x402 receipt token for retry calls (maps to PAYMENT-SIGNATURE) */
+    paymentSignature?: string;
+    /** Optional extra passthrough headers for advanced integrations */
+    extraHeaders?: Record<string, string>;
     /** Request timeout in milliseconds */
     timeout?: number;
+    /** Optional chain override used by some app integrations */
+    hubChainId?: number;
     /** Enable SDK logging */
     enableLogging?: boolean;
   }
@@ -188,7 +208,9 @@ declare module '@neus/sdk' {
    * Result from proof creation
    */
   export interface ProofResult {
-    /** Proof ID (qHash) */
+    /** Proof ID (standard) */
+    proofId: string;
+    /** @deprecated qHash is a deprecated alias of proofId (same value). */
     qHash: string;
     /** Current status */
     status: string;
@@ -204,7 +226,9 @@ declare module '@neus/sdk' {
    * Verification result
    */
   export interface VerificationResult {
-    /** Proof ID (qHash) */
+    /** Proof ID (standard) */
+    proofId: string;
+    /** @deprecated qHash is a deprecated alias of proofId (same value). */
     qHash: string;
     /** Current status */
     status: VerificationStatus;
@@ -218,13 +242,19 @@ declare module '@neus/sdk' {
    * Status check result
    */
   export interface StatusResult {
+    /** Proof ID (standard) */
+    proofId?: string;
+    /** @deprecated qHash is a deprecated alias of proofId (same value). */
+    qHash?: string;
     /** Whether verification succeeded */
     success: boolean;
     /** Current status */
     status: VerificationStatus;
     /** Full verification data */
     data?: {
-      qHash: string;
+      proofId?: string;
+      /** @deprecated qHash is a deprecated alias of proofId (same value). */
+      qHash?: string;
       status: string;
       walletAddress: string;
       verifierIds?: string[];
@@ -320,13 +350,16 @@ declare module '@neus/sdk' {
   export type CoreVerifierId =
     // Public verifiers (auto-path via verify())
     | 'ownership-basic'
+    | 'ownership-social'       // Hosted OAuth social ownership
     | 'ownership-pseudonym'    // Pseudonymous identity verification
+    | 'ownership-org-oauth'    // Hosted OAuth organization ownership
     | 'nft-ownership'
     | 'token-holding'
     | 'ownership-dns-txt'
     | 'wallet-link'
     | 'contract-ownership'
     | 'wallet-risk'            // Wallet risk assessment
+    | 'proof-of-human'         // Hosted ZK personhood verification
     // AI & Agent verifiers (ERC-8004 aligned)
     | 'agent-identity'
     | 'agent-delegation'
@@ -374,13 +407,19 @@ declare module '@neus/sdk' {
     signedTimestamp: number;
     data: any;
     verifierIds: VerifierId[];
-    chainId: number;
+    chainId?: number;
+    chain?: string;
   }): string;
   
   /**
    * Validate Ethereum wallet address
    */
   export function validateWalletAddress(address: string): boolean;
+
+  /**
+   * Validate universal wallet address format (EVM/non-EVM).
+   */
+  export function validateUniversalAddress(address: string, chain?: string): boolean;
   
   /**
    * Validate timestamp freshness
@@ -388,7 +427,7 @@ declare module '@neus/sdk' {
   export function validateTimestamp(timestamp: number, maxAgeMs?: number): boolean;
   
   /**
-   * Validate Proof ID (qHash) format
+   * Validate Proof ID format (`qHash` wire alias)
    */
   export function validateQHash(qHash: string): boolean;
   
@@ -396,6 +435,71 @@ declare module '@neus/sdk' {
    * Normalize wallet address to lowercase
    */
   export function normalizeAddress(address: string): string;
+
+  /**
+   * Resolve DID from wallet identity via profile resolver endpoint.
+   * Use `chainId` for EVM wallets and `chain` (CAIP-2) for non-EVM wallets
+   * such as Solana (`solana:mainnet`).
+   */
+  export function resolveDID(
+    params: {
+      walletAddress?: string;
+      chainId?: number;
+      chain?: string;
+    },
+    options?: {
+      endpoint?: string;
+      apiUrl?: string;
+      credentials?: 'omit' | 'same-origin' | 'include';
+      headers?: Record<string, string>;
+    }
+  ): Promise<{
+    did: string;
+    data: unknown;
+    raw: unknown;
+  }>;
+
+  /**
+   * Build a server-standardized signing payload.
+   */
+  export function standardizeVerificationRequest(
+    params: Record<string, any>,
+    options?: {
+      endpoint?: string;
+      apiUrl?: string;
+      credentials?: 'omit' | 'same-origin' | 'include';
+      headers?: Record<string, string>;
+    }
+  ): Promise<any>;
+
+  /**
+   * Resolve ZK Passport default configuration.
+   */
+  export function resolveZkPassportConfig(overrides?: Record<string, any>): {
+    provider: string;
+    scope: string;
+    checkSanctions: boolean;
+    requireFaceMatch: boolean;
+    faceMatchMode: string;
+    [key: string]: any;
+  };
+
+  /**
+   * Convert a UTF-8 message string to a 0x-prefixed hex payload.
+   */
+  export function toHexUtf8(message: string): string;
+
+  /**
+   * Sign a message with an injected/provider wallet.
+   * Uses `personal_sign` and retries with UTF-8 hex payloads when providers
+   * report encoding/non-hex input issues (common with some embedded wallets).
+   */
+  export function signMessage(params: {
+    provider?: any;
+    message: string;
+    walletAddress?: string;
+    chain?: string;
+  }): Promise<string>;
 
   /**
    * Validate a verifier payload for basic structural integrity
@@ -410,9 +514,10 @@ declare module '@neus/sdk' {
     data: any;
     walletAddress: string;
     chainId?: number;
+    chain?: string;
     options?: any;
     signedTimestamp?: number;
-  }): { message: string; request: { verifierIds: string[]; data: any; walletAddress: string; signedTimestamp: number; chainId: number; options?: any } };
+  }): { message: string; request: { verifierIds: string[]; data: any; walletAddress: string; signedTimestamp: number; chainId?: number; chain?: string; options?: any } };
   
   /**
    * Check if status is terminal (complete)
@@ -443,7 +548,7 @@ declare module '@neus/sdk' {
    * Status polling utility
    */
   export class StatusPoller {
-    constructor(client: NeusClient, qHash: string, options?: { interval?: number; maxAttempts?: number; exponentialBackoff?: boolean; maxInterval?: number });
+    constructor(client: NeusClient, proofId: string, options?: { interval?: number; maxAttempts?: number; exponentialBackoff?: boolean; maxInterval?: number });
     poll(): Promise<StatusResult>;
   }
   
@@ -475,7 +580,7 @@ declare module '@neus/sdk' {
   /**
    * Proof status
    */
-  // Use NeusClient.getStatus(qHash) for status checks.
+  // Use NeusClient.getStatus(proofId) for status checks (`qHash` remains as deprecated alias).
   
   
   // ============================================================================
@@ -567,6 +672,10 @@ declare module '@neus/sdk' {
     limit?: number;
     /** Offset for pagination */
     offset?: number;
+    /** CAIP-2 signer chain for owner-signed private access (non-EVM) */
+    chain?: string;
+    /** Signature method hint for owner-signed private access (eip191, ed25519, ...) */
+    signatureMethod?: string;
   }
 
   /**
@@ -624,10 +733,10 @@ declare module '@neus/sdk' {
 
   /**
    * Parameters for gateCheck() (API-backed).
-   * Mirrors `GET /api/v1/proofs/gate/check` query parameters.
+   * Mirrors `GET /api/v1/proofs/check` query parameters.
    */
   export interface GateCheckApiParams {
-    /** Wallet address to check (0x...) */
+    /** Wallet identity to check (EVM/Solana/NEAR) */
     address: string;
     /** Verifier IDs to match (array or comma-separated string) */
     verifierIds?: string[] | string;
@@ -641,6 +750,18 @@ declare module '@neus/sdk' {
     since?: number;
     /** Max rows to scan (server may clamp) */
     limit?: number;
+    /** Include private proofs for owner-authenticated checks */
+    includePrivate?: boolean;
+    /** Include matched qHashes in response (minimal identifiers only) */
+    includeQHashes?: boolean;
+    /** Optional wallet/provider used to sign includePrivate owner checks */
+    wallet?: WalletLike;
+    /** CAIP-2 signer chain for universal owner signatures (e.g. solana:mainnet) */
+    chain?: string;
+    /** Signature method hint for universal owner signatures (eip191, ed25519, ...) */
+    signatureMethod?: string;
+    /** Optional pre-signed owner auth payload to reuse across multiple gateCheck calls */
+    privateAuth?: GatePrivateAuth;
 
     // Common match filters
     referenceType?: string;
@@ -670,12 +791,22 @@ declare module '@neus/sdk' {
     verificationMethod?: string;
   }
 
+  export interface GatePrivateAuth {
+    walletAddress: string;
+    signature: string;
+    signedTimestamp: number;
+    chain?: string;
+    signatureMethod?: string;
+  }
+
   export interface GateCheckApiResponse {
     success: boolean;
     data?: {
       eligible: boolean;
       matchedCount?: number;
       matchedQHashes?: string[];
+      /** @deprecated matchedProofIds is a legacy alias of matchedQHashes (same values when provided). */
+      matchedProofIds?: string[];
       matchedTags?: string[];
       projections?: Array<Record<string, any>> | null;
       criteria?: Record<string, any>;
@@ -842,7 +973,8 @@ declare module '@neus/sdk' {
     primaryWalletAddress: string;
     secondaryWalletAddress: string;
     signature: string;
-    chainId: number;
+    chain: string;
+    signatureMethod: string;
     signedTimestamp: number;
     relationshipType?: 'primary' | 'personal' | 'org' | 'affiliate' | 'agent' | 'linked';
     label?: string;
@@ -981,7 +1113,11 @@ declare module '@neus/sdk/widgets' {
     requiredVerifiers?: string[];
     /** Callback when verification completes successfully */
     onVerified?: (result: {
+      proofId: string;
+      /** @deprecated qHash is a deprecated alias of proofId (same value). */
       qHash: string;
+      proofIds?: string[];
+      /** @deprecated qHashes is a deprecated alias of proofIds (same values). */
       qHashes?: string[];
       address?: string;
       txHash?: string | null;
@@ -989,10 +1125,13 @@ declare module '@neus/sdk/widgets' {
       verifiedVerifiers?: any[];
       statusUrl?: string | null;
       existing?: boolean;
+      eligible?: boolean;
       mode?: 'create' | 'access';
       data?: any;
       results?: Array<{
         verifierId: string;
+        proofId: string;
+        /** @deprecated qHash is a deprecated alias of proofId (same value). */
         qHash: string;
         address?: string;
         txHash?: string | null;
@@ -1003,6 +1142,16 @@ declare module '@neus/sdk/widgets' {
     }) => void;
     /** Custom API endpoint URL */
     apiUrl?: string;
+    /** Optional public app attribution ID (maps to X-Neus-App) */
+    appId?: string;
+    /** Optional sponsor capability token (maps to X-Sponsor-Grant) */
+    sponsorGrant?: string;
+    /** Optional x402 receipt token for retry calls (maps to PAYMENT-SIGNATURE) */
+    paymentSignature?: string;
+    /** Optional extra passthrough headers for advanced integrations */
+    extraHeaders?: Record<string, string>;
+    /** Hosted checkout URL for interactive verifiers (default: https://neus.network/verify) */
+    hostedCheckoutUrl?: string;
     /** Custom inline styles */
     style?: Record<string, any>;
     /** Child content to show when verified */
@@ -1029,8 +1178,16 @@ declare module '@neus/sdk/widgets' {
     buttonText?: string;
     /** Mode: 'create' for new verification, 'access' for private proof access */
     mode?: 'create' | 'access';
-    /** qHash for private proof access (required when mode='access') */
+    /** proofId for private proof access (required when mode='access') */
+    proofId?: string | null;
+    /** @deprecated qHash is a deprecated alias of proofId (same value). */
     qHash?: string | null;
+    /** Optional injected wallet/provider for signing flows */
+    wallet?: WalletLike | any;
+    /** Optional CAIP-2 chain context for non-EVM owner signatures */
+    chain?: string;
+    /** Optional signature method hint for non-EVM owner signatures */
+    signatureMethod?: string;
     /** Callback for state changes */
     onStateChange?: (state: string) => void;
     /** Callback for errors */
@@ -1040,8 +1197,12 @@ declare module '@neus/sdk/widgets' {
   export function VerifyGate(props: VerifyGateProps): any;
 
   export interface ProofBadgeProps {
-    /** Proof ID (qHash) */
-    qHash: string;
+    /** Proof ID (standard). Provide either proofId or qHash. */
+    proofId?: string;
+    /** @deprecated qHash is a deprecated alias of proofId (same value). */
+    qHash?: string;
+    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    proofUrlPattern?: string;
     /** Badge size */
     size?: 'sm' | 'md';
     /** UI platform base URL */
@@ -1054,8 +1215,10 @@ declare module '@neus/sdk/widgets' {
     showChains?: boolean;
     /** Show status label (default: true) */
     showLabel?: boolean;
+    /** Logo URL override (defaults to bundled NEUS logo) */
+    logoUrl?: string;
     /** Custom click handler */
-    onClick?: (data: { qHash: string; status: string; chainCount?: number }) => void;
+    onClick?: (data: { proofId: string; qHash: string; status: string; chainCount?: number }) => void;
     /** Additional CSS class */
     className?: string;
   }
@@ -1063,41 +1226,59 @@ declare module '@neus/sdk/widgets' {
   export function ProofBadge(props: ProofBadgeProps): any;
 
   export interface SimpleProofBadgeProps {
-    qHash: string;
+    proofId?: string;
+    /** @deprecated qHash is a deprecated alias of proofId (same value). */
+    qHash?: string;
+    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    proofUrlPattern?: string;
     uiLinkBase?: string;
     apiUrl?: string;
     size?: 'sm' | 'md';
     /** Label text (default: 'Verified') */
     label?: string;
+    /** Logo URL override (defaults to bundled NEUS logo) */
+    logoUrl?: string;
     proof?: any;
-    onClick?: (data: { qHash: string; status: string }) => void;
+    onClick?: (data: { proofId: string; qHash: string; status: string }) => void;
     className?: string;
   }
 
   export function SimpleProofBadge(props: SimpleProofBadgeProps): any;
 
   export interface NeusPillLinkProps {
+    proofId?: string;
+    /** @deprecated qHash is a deprecated alias of proofId (same value). */
     qHash?: string;
+    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    proofUrlPattern?: string;
     uiLinkBase?: string;
     label?: string;
     size?: 'sm' | 'md';
-    onClick?: (data: { qHash?: string }) => void;
+    /** Logo URL override (defaults to bundled NEUS logo) */
+    logoUrl?: string;
+    onClick?: (data: { proofId?: string; qHash?: string }) => void;
     className?: string;
   }
 
   export function NeusPillLink(props: NeusPillLinkProps): any;
 
   export interface VerifiedIconProps {
-    /** Proof ID (qHash) for link */
+    /** Proof ID (standard) for link */
+    proofId?: string;
+    /** @deprecated qHash is a deprecated alias of proofId (same value). */
     qHash?: string;
+    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    proofUrlPattern?: string;
     /** UI platform base URL */
     uiLinkBase?: string;
     /** Icon size in pixels */
     size?: number;
+    /** Logo URL override (defaults to bundled NEUS logo) */
+    logoUrl?: string;
     /** Tooltip text */
     tooltip?: string;
     /** Custom click handler */
-    onClick?: (data: { qHash?: string }) => void;
+    onClick?: (data: { proofId?: string; qHash?: string }) => void;
     /** Additional CSS class */
     className?: string;
   }
@@ -1107,4 +1288,8 @@ declare module '@neus/sdk/widgets' {
 
 declare module '@neus/sdk/widgets/verify-gate' {
   export * from '@neus/sdk/widgets';
+}
+
+declare module '@neus/sdk/client' {
+  export { NeusClient } from '@neus/sdk';
 }

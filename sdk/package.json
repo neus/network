@@ -12,6 +12,7 @@
       "require": "./cjs/index.cjs"
     },
     "./client": {
+      "types": "./types.d.ts",
       "import": "./client.js",
       "require": "./cjs/client.cjs"
     },
@@ -45,7 +46,7 @@
     "lint": "eslint . --ignore-pattern widgets/verify-gate/dist/**",
     "format": "prettier --write \"**/*.js\"",
     "build": "npm run build:widgets && npm run build:cjs",
-    "build:widgets": "esbuild widgets/verify-gate/VerifyGate.jsx widgets/verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=widgets/verify-gate/dist --jsx=automatic --legal-comments=none --external:react --external:react-dom --external:react/jsx-runtime --external:@neus/sdk/client",
+    "build:widgets": "esbuild widgets/verify-gate/VerifyGate.jsx widgets/verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=widgets/verify-gate/dist --jsx=automatic --legal-comments=none --loader:.svg=dataurl --external:react --external:react-dom --external:react/jsx-runtime --external:@neus/sdk/client",
     "build:cjs": "esbuild index.js client.js utils.js errors.js gates.js --bundle --platform=node --format=cjs --outdir=cjs --out-extension:.js=.cjs --legal-comments=none --external:ethers --external:@zkpassport/sdk --external:react --external:react-dom --external:react/jsx-runtime",
     "prepack": "npm run build",
     "prepublishOnly": "npm run lint && npm test && npm run build"
@@ -79,7 +80,6 @@
   "engines": {
     "node": ">=16.0.0"
   },
-  "dependencies": {},
   "peerDependencies": {
     "ethers": "^6.0.0",
     "react": ">=17.0.0",
@@ -99,12 +99,15 @@
   "optionalDependencies": {
     "@zkpassport/sdk": ">=1.0.0"
   },
+  "dependencies": {
+    "bs58": "^6.0.0"
+  },
   "devDependencies": {
-    "vitest": "^1.2.0",
     "@vitest/coverage-v8": "^1.2.0",
+    "esbuild": "^0.20.2",
     "eslint": "^8.56.0",
     "prettier": "^3.2.0",
-    "esbuild": "^0.20.2"
+    "vitest": "^1.2.0"
   },
   "files": [
     "index.js",
@@ -118,6 +121,7 @@
     "README.md",
     "SECURITY.md",
     "LICENSE",
+    "neus-logo.svg",
     "widgets/index.js",
     "widgets/verify-gate/index.js",
     "widgets/verify-gate/dist/**"

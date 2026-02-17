@@ -1,13 +1,13 @@
 # Glossary
 
-## Proof ID (qHash)
+## Proof ID
 
-**Proof ID** is the stable identifier for a proof record. In the public HTTP API and SDK payloads, this identifier appears as the field **`qHash`**.
+**Proof ID** (`proofId`) is the stable identifier for a proof record.
 
 Use the Proof ID to:
 
 - Store a portable reference to a proof
-- Fetch status (`GET /api/v1/verification/status/{qHash}`)
+- Fetch status (`GET /api/v1/verification/status/{proofId}`)
 - Power gating and downstream integrations
 
 ### Notes

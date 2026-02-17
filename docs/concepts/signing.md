@@ -27,15 +27,31 @@ Timestamp: {unix_ms}
 
 **Rules:**
 
-1. **Wallet normalization:** lowercase the `0x...` address for EVM (`eip155`) signing. For non-EVM `chain` namespaces, preserve the original wallet string.
-2. **Chain context:** EVM uses numeric `chainId` (example: `1`). Universal mode uses CAIP-2 `chain` (example: `solana:mainnet`). The signing string’s `Chain:` line must match what you submit in the request.
+1. **Wallet normalization:** format depends on chain type.
+   - EVM (`eip155`): lowercase `0x...`
+   - Solana: preserve base58 address as-is (do not lowercase)
+   - NEAR: account IDs are treated as lowercase
+2. **Chain:** the `Chain:` line is bound into the signature.
+   - EVM (`0x...`): most clients should **omit** `chain` / `chainId` and let the server standardize it.
+   - Non-EVM: send `chain` as a CAIP-2 string (example: `solana:mainnet`). The signing string’s `Chain:` line must match that `chain`.
 3. **Verifiers:** comma-separated, no spaces (example: `ownership-basic,wallet-risk`).
 4. **Data:** deterministic JSON (keys sorted) with no extra whitespace.
-5. **Timestamp:** unix milliseconds, within the server’s freshness window (commonly 5 minutes).
+5. **Timestamp:** unix milliseconds, within the server’s freshness window (default max age: 5 minutes; default max future skew: 1 minute).
 
 ## Debugging
 
 Use the API to troubleshoot signature issues.
 
 - **`POST /api/v1/verification/standardize`**: Returns the exact signing string the server expects.
-  - Send `chainId` (number) and an EVM `walletAddress` (`0x...`).
+  - Use this instead of guessing the `Chain:` line or JSON standardization details.
+
+## Embedded Wallet Notes
+
+Embedded and social wallets (AppKit social, Farcaster mini apps, Privy, and similar EIP-1193 providers) can reject plain UTF-8 payloads in `personal_sign` with encoding errors.
+
+- Default path: sign the plain UTF-8 message string first (`personal_sign`).
+- Retry path: if provider errors mention byte/encoding/non-hex input, retry `personal_sign` with UTF-8 hex payload (`0x...`).
+- NEUS SDK support: use `signMessage(...)` from `@neus/sdk`; it automatically applies this retry strategy.
+- Helper export: use `toHexUtf8(...)` when implementing custom signing wrappers.
+
+This behavior aligns with EIP-191 and EIP-1193. Hex-encoding the same UTF-8 bytes preserves the signed payload format expected by backend verification.

@@ -1,28 +1,26 @@
 {
   "$id": "https://neus.network/schemas/token-holding.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Token holding proof verification",
+  "description": "Token holding verification (EVM-only)",
   "properties": {
     "blockNumber": {
-      "description": "Optional specific block number for point-in-time balance checks",
+      "minimum": 0,
       "type": "integer"
     },
     "chainId": {
-      "description": "Chain ID where the token contract is deployed (testnet or mainnet; must be supported/configured server-side)",
+      "minimum": 1,
       "type": "integer"
     },
     "contractAddress": {
-      "description": "Token contract address",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "format": "evm-address",
       "type": "string"
     },
     "minBalance": {
-      "description": "Minimum token balance required (human-readable units, e.g., \"10.5\")",
+      "minLength": 1,
       "type": "string"
     },
     "ownerAddress": {
-      "description": "Token holder address (optional). If omitted, defaults to the signed request walletAddress. Deployments may allow delegated subject checks, but the server will not accept subject overrides that break signature binding.",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "format": "evm-address",
       "type": "string"
     }
   },

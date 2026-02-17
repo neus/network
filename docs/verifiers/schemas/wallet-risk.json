@@ -1,30 +1,52 @@
 {
   "$id": "https://neus.network/schemas/wallet-risk.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Wallet risk verification via multi-provider support (sybil/fraud resistance)",
+  "description": "Wallet risk assessment",
   "properties": {
+    "chain": {
+      "enum": [
+        "eth",
+        "base",
+        "bsc",
+        "pol",
+        "opt",
+        "arb",
+        "sol",
+        "ton",
+        "sei",
+        "sui",
+        "btc",
+        "stellar"
+      ],
+      "type": "string"
+    },
     "chainId": {
-      "description": "Chain ID for context",
+      "minimum": 1,
       "type": "integer"
     },
-    "includeDetails": {
-      "description": "Include detailed risk breakdown",
-      "type": "boolean"
-    },
     "provider": {
-      "description": "Risk assessment provider (default: webacy)",
+      "default": "webacy",
       "enum": [
         "webacy"
       ],
       "type": "string"
     },
     "walletAddress": {
-      "description": "Wallet address to assess (optional; defaults to signer walletAddress)",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
-      "type": "string"
+      "anyOf": [
+        {
+          "format": "evm-address",
+          "type": "string"
+        },
+        {
+          "format": "solana-address",
+          "type": "string"
+        }
+      ]
     }
   },
-  "required": [],
+  "required": [
+    "walletAddress"
+  ],
   "title": "wallet-risk",
   "type": "object"
 }

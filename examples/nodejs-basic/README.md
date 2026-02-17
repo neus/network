@@ -21,20 +21,18 @@ Use a test wallet only. Do not use production keys.
 ## How It Works
 
 ### 1. Build and sign
-The NEUS protocol requires a cryptographic signature over the request data. This example uses the hub chain ID (`84532`) for the signing context.
+The NEUS protocol requires a cryptographic signature over the request data. The recommended way to avoid signing-string drift is to ask the API for the exact string to sign.
 
 ```javascript
-import { constructVerificationMessage } from '../../sdk/utils.js';
-
-const message = constructVerificationMessage({
-  walletAddress,
-  verifierIds: ['ownership-basic'],
-  data,
-  signedTimestamp,
-  chainId: 84532
+const standardizeRes = await fetch('https://api.neus.network/api/v1/verification/standardize', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ walletAddress, verifierIds: ['ownership-basic'], data, signedTimestamp })
 });
+const standardized = await standardizeRes.json();
+const message = standardized.data.signerString;
 
-const signature = await wallet.signMessage(message);
+const signature = await wallet.signMessage(message); // EIP-191
 ```
 
 ### 2. Submit to API
@@ -49,7 +47,6 @@ const response = await fetch('https://api.neus.network/api/v1/verification', {
     verifierIds: ['ownership-basic'],
     data,
     signedTimestamp,
-    chainId: 84532,
     signature
   })
 });

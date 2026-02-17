@@ -18,8 +18,8 @@ export async function evaluateWalletRisk(walletAddress) {
     wallet: window.ethereum
   });
 
-  const qHash = created.qHash;
-  const final = await client.pollProofStatus(qHash, { interval: 3000, timeout: 60000 });
+  const proofId = created.proofId;
+  const final = await client.pollProofStatus(proofId, { interval: 3000, timeout: 60000 });
   const verifier = (final.data?.verifiedVerifiers || []).find(
     (v) => v.verifierId === 'wallet-risk' && v.verified === true
   );

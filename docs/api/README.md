@@ -1,6 +1,6 @@
 # API Reference
 
-The NEUS Public API provides a trust-minimized interface for creating and resolving cryptographic proofs.
+The NEUS Public API provides an interface for creating and resolving cryptographic proofs.
 
 ## Endpoints
 
@@ -18,18 +18,22 @@ Authentication is handled via request-bound wallet signatures following the [NEU
 ## Recommended integration flows
 
 - **Create a proof**: `POST /api/v1/verification` (SDK: `client.verify(...)`)
-- **Poll status**: `GET /api/v1/verification/status/{qHash}` (SDK: `client.getStatus(...)` / `client.pollProofStatus(...)`)
-- **Discover verifiers**: `GET /api/v1/verification/verifiers` (use this to avoid drift across deployments)
-- **Gate access (minimal)**: `GET /api/v1/proofs/gate/check` (SDK: `client.gateCheck(...)`)
-- **Revoke a proof (owner-signed)**: `POST /api/v1/proofs/{qHash}/revoke-self` (SDK: `client.revokeOwnProof(...)`)
+- **Poll status**: `GET /api/v1/verification/status/{proofId}` (SDK: `client.getStatus(...)` / `client.pollProofStatus(...)`)
+- **Discover verifiers**: `GET /api/v1/verification/verifiers` (use this to discover what is currently available)
+- **Gate access (minimal)**: `GET /api/v1/proofs/check` (SDK: `client.gateCheck(...)`)
+- **Pseudonym preflight**: `GET /api/v1/profile/pseudonym-availability?name=<handle>` and `GET /api/v1/profile/pseudonym-lookup/{handleOrNamespace:handle}`
+- **Grant private-proof access**: `POST /api/v1/verification/access/grant` (owner issues explicit grant for private proof reads)
+- **Revoke a proof (owner-signed)**: `POST /api/v1/proofs/{proofId}/revoke-self` (SDK: `client.revokeOwnProof(...)`)
 
 ## Integrator checklist (production)
 
-- **Treat `qHash` as opaque**: It’s a stable proof identifier. Use timestamps/status fields for freshness, not the ID itself.
-- **Prefer minimal reads**: For gating, call `GET /api/v1/proofs/gate/check` instead of pulling full proof payloads.
+- **Treat `proofId` as opaque**: It is a stable proof identifier. Use timestamps/status fields for freshness, not the ID itself.
+- **Prefer minimal reads**: For gating, call `GET /api/v1/proofs/check` instead of pulling full proof payloads.
 - **Enforce freshness for point-in-time verifiers**: Use `since` / `sinceDays` for balances, ownership, risk, and other stateful checks.
 - **Keep proofs private by default**: Use `options.privacyLevel="private"` and `options.publicDisplay=false` unless you intentionally need public discovery.
 - **Debug signatures with `standardize`**: `POST /api/v1/verification/standardize` returns the exact string the server expects.
+- **Optional attribution**: Send `X-Neus-App: <appId>` for app-level analytics/attribution (public identifier, not a secret).
+- **Username claims (`ownership-pseudonym`, `namespace=neus`)**: NEUS handles payment via hosted claim/checkout. If you support on-chain payment inside your app, include `paymentTxHash` in `options` on `POST /api/v1/verification`.
 
 ## Rate Limits
 
@@ -38,10 +42,11 @@ The API enforces tiered rate limiting for stability. Limits are applied based on
 | Tier | Typical endpoints | Default limit |
 | :--- | :--- | :--- |
 | **STATUS** | `GET /api/v1/verification/status/*` | 100 req / minute |
-| **STANDARD** | Public reads (verifier discovery, proof reads, gate checks) | 2,000 req / hour |
+| **STANDARD** | Public reads (verifier discovery, proof reads, gate checks) | 60 req/min base (Pro 4×, Enterprise 10×); fallback: 2,000 req/hour |
 | **SENSITIVE** | Verification writes (`POST /api/v1/verification`) | 50 req / 15 minutes |
 
 ### Resilience and Polling
+
 - **Status Checks**: Successful `2xx` responses for status polling do **not** count toward the status tier limit.
 - **Client Backoff**: The official `@neus/sdk` automatically applies jittered exponential backoff when a `429 Too Many Requests` is encountered.
 
@@ -49,10 +54,9 @@ The API enforces tiered rate limiting for stability. Limits are applied based on
 
 ## Public OpenAPI Surface
 
-For detailed request/response schemas, parameter definitions, and error codes, refer to the [Public API Spec](public-api.md) (canonical JSON: [`public-api.json`](public-api.json)). The spec includes:
+For detailed request/response schemas, parameter definitions, and error codes, refer to the [Public API Spec](public-api.md) (standard JSON: [`public-api.json`](public-api.json)). The spec includes:
 
 - **Health**: Liveness and readiness probes.
 - **Verification**: Submission and polling for new proofs.
 - **Verifiers**: Real-time list of enabled verifier modules.
 - **Proofs**: Discoverability, gate checking, and revocation.
-

@@ -19,12 +19,11 @@ const client = new NeusClient({ apiUrl: 'https://api.neus.network' });
 
 const res = await client.verify({
   verifier: 'ownership-basic',
-  content: 'Hello NEUS',
-  wallet: window.ethereum
+  content: 'Hello NEUS'
 });
 
-// Proof ID (qHash): stable identifier you can store and use for status polling
-const proofId = res.qHash;
+// Proof ID (standard). qHash is a deprecated alias.
+const proofId = res.proofId;
 const status = await client.getStatus(proofId);
 ```
 
@@ -32,7 +31,7 @@ const status = await client.getStatus(proofId);
 
 ```javascript
 const client = new NeusClient({
-  // Optional: point at a self-hosted deployment
+  // Optional: API base URL (default: https://api.neus.network)
   apiUrl: 'https://api.neus.network',
   // Optional: request timeout (ms)
   timeout: 30000,
@@ -65,17 +64,39 @@ Use the API directly (avoids drift):
 
 - `GET /api/v1/verification/verifiers`
 
+## Hosted interactive verifiers
+
+For interactive verifiers (`ownership-social`, `ownership-org-oauth`, `proof-of-human`), use `VerifyGate` hosted checkout mode.
+These flows require NEUS-hosted popup/redirect UX (OAuth/ZK), not direct wallet-only creation via `client.verify(...)`.
+
+```jsx
+import { VerifyGate } from '@neus/sdk/widgets';
+
+export default function HostedGateExample() {
+  return (
+    <VerifyGate
+      requiredVerifiers={['ownership-social']}
+      onVerified={(result) => {
+        console.log('Hosted verification complete:', result.proofId);
+      }}
+    >
+      <button>Unlock with Social</button>
+    </VerifyGate>
+  );
+}
+```
+
 ## Gate checks (recommended for server-side gating)
 
 For production server-side gating, prefer the minimal public endpoint:
 
 ```javascript
 const res = await client.gateCheck({
-  address: '0x...',
+  address: 'YOUR_WALLET_OR_DID',
   verifierIds: ['token-holding'],
   contractAddress: '0x...',
   minBalance: '100',
-  chainId: 1,
+  chainId: 8453,
   // Optional: require a recent proof for point-in-time verifiers (example: last hour)
   since: Date.now() - 60 * 60 * 1000
 });
@@ -93,8 +114,25 @@ The SDK is designed for production stability:
 - **Automatic Backoff**: `pollProofStatus()` automatically detects rate limiting (`429`) and applies jittered exponential backoff.
 - **Wallet Identification**: Automatically attaches headers to preferred wallet-based limiting for higher reliability behind shared IPs (NATs).
 
-- Private proof by Proof ID (qHash): `client.getPrivateStatus(qHash, wallet)`
-- Private proofs by wallet/DID: `client.getPrivateProofsByWallet(walletOrDid, { limit, offset }, wallet)`
+- Private proof by Proof ID: `client.getPrivateStatus(proofId, wallet)`
+- Private proofs by wallet/DID: `client.getPrivateProofsByWallet(walletOrDid, { limit, offset }, wallet)` (owner dashboard / first-party UX only; not recommended for integrator gating)
+- Revoke your proof: `client.revokeOwnProof(proofId, wallet)`
+
+Example:
+
+```javascript
+const privateData = await client.getPrivateStatus(proofId, window.ethereum);
+
+const privateProofs = await client.getPrivateProofsByWallet(
+  'YOUR_WALLET_OR_DID',
+  { limit: 50, offset: 0 },
+  window.ethereum
+);
+
+await client.revokeOwnProof(proofId, window.ethereum);
+```
+
+Compatibility note: `qHash` remains supported as a deprecated alias (`proofId === qHash`).
 
 ## React widgets
 

@@ -45,7 +45,7 @@ export function ExclusiveDrop() {
 
 Use the gate check endpoint to evaluate eligibility without fetching full proof payloads.
 
-For point-in-time verifiers (NFT/token/contract), **require recency** via `sinceDays`/`since` if you want “must be true now” semantics without creating a new proof.
+For point-in-time verifiers (NFT/token/contract), **require recency** via `sinceDays`/`since` if you want “must be true now” behavior without creating a new proof.
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -72,4 +72,4 @@ If you need a **hard real-time on-chain check**, create a new proof (`POST /api/
 ## Reference
 
 - Verifier schema: `docs/verifiers/schemas/nft-ownership.json`
-- API: `GET /api/v1/proofs/gate/check` and `POST /api/v1/verification`
+- API: `GET /api/v1/proofs/check` and `POST /api/v1/verification`

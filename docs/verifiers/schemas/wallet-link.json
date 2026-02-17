@@ -1,24 +1,21 @@
 {
   "$id": "https://neus.network/schemas/wallet-link.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Links and verifies control of a secondary wallet via cryptographic signature",
+  "description": "Link secondary wallet via signature",
   "properties": {
-    "chainId": {
-      "description": "Chain ID for link context",
-      "type": "integer"
+    "chain": {
+      "format": "caip2-chain",
+      "type": "string"
     },
     "label": {
-      "description": "Human-readable label for this wallet",
       "maxLength": 64,
       "type": "string"
     },
     "primaryWalletAddress": {
-      "description": "Primary wallet (owner)",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "format": "universal-address",
       "type": "string"
     },
     "relationshipType": {
-      "description": "Relationship type for identity graph categorization",
       "enum": [
         "primary",
         "personal",
@@ -30,16 +27,19 @@
       "type": "string"
     },
     "secondaryWalletAddress": {
-      "description": "Secondary wallet (must sign)",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "format": "universal-address",
       "type": "string"
     },
     "signature": {
-      "description": "EIP-191 signature from secondary wallet over canonical message",
+      "minLength": 1,
+      "type": "string"
+    },
+    "signatureMethod": {
+      "minLength": 1,
       "type": "string"
     },
     "signedTimestamp": {
-      "description": "Unix timestamp (ms) when signed",
+      "minimum": 0,
       "type": "integer"
     }
   },
@@ -47,7 +47,8 @@
     "primaryWalletAddress",
     "secondaryWalletAddress",
     "signature",
-    "chainId",
+    "chain",
+    "signatureMethod",
     "signedTimestamp"
   ],
   "title": "wallet-link",

@@ -6,11 +6,9 @@
 
 import { ethers } from 'ethers';
 import { NeusClient } from '../../sdk/client.js';
-import { constructVerificationMessage } from '../../sdk/utils.js';
 
-const API_BASE = process.env.NEUS_API_URL || 'https://api.neus.network';
+const API_BASE = 'https://api.neus.network';
 const WALLET_PRIVATE_KEY = process.env.TEST_WALLET_PRIVATE_KEY;
-const HUB_CHAIN_ID = 84532; // NEUS Hub
 
 if (!WALLET_PRIVATE_KEY) {
   console.error('Set TEST_WALLET_PRIVATE_KEY environment variable');
@@ -36,16 +34,27 @@ async function main() {
     }
   };
   
-  // Build and sign the standard message
-  console.log('Building and signing message...');
-  const message = constructVerificationMessage({
-    walletAddress,
-    data: verificationData,
-    signedTimestamp,
-    verifierIds: ['ownership-basic'],
-    chainId: HUB_CHAIN_ID
+  // Ask the API for the exact signing string, then sign it
+  console.log('Standardizing and signing message...');
+  const standardizeRes = await fetch(`${API_BASE}/api/v1/verification/standardize`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      walletAddress,
+      verifierIds: ['ownership-basic'],
+      data: verificationData,
+      signedTimestamp
+    })
   });
-  
+  if (!standardizeRes.ok) {
+    throw new Error(`Standardize failed (${standardizeRes.status})`);
+  }
+  const standardized = await standardizeRes.json();
+  const message = standardized?.data?.signerString;
+  if (typeof message !== 'string' || !message.length) {
+    throw new Error('Missing signerString in standardize response');
+  }
+
   const signature = await wallet.signMessage(message);
   
   // Submit verification
@@ -58,7 +67,6 @@ async function main() {
       verifierIds: ['ownership-basic'],
       data: verificationData,
       signedTimestamp,
-      chainId: HUB_CHAIN_ID,
       signature
     })
   });
@@ -76,10 +84,10 @@ async function main() {
     throw new Error(`Verification failed (${verifyResponse.status}): ${msg}`);
   }
 
-  const proofId = result.data?.qHash;
-  console.log('Proof ID (qHash):', proofId);
+  const proofId = result.data?.proofId;
+  console.log('Proof ID:', proofId);
   if (!proofId) {
-    throw new Error('Missing Proof ID (qHash) in verification response');
+    throw new Error('Missing proofId in verification response');
   }
   
   // Poll status

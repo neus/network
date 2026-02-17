@@ -5,19 +5,37 @@
  */
 
 import { ApiError, ValidationError, NetworkError, ConfigurationError } from './errors.js';
-import { constructVerificationMessage, validateWalletAddress, NEUS_CONSTANTS } from './utils.js';
+import { constructVerificationMessage, validateWalletAddress, validateUniversalAddress, signMessage, NEUS_CONSTANTS } from './utils.js';
+
+const FALLBACK_PUBLIC_VERIFIERS = [
+  'ownership-basic',
+  'ownership-pseudonym',
+  'ownership-dns-txt',
+  'ownership-social',
+  'ownership-org-oauth',
+  'contract-ownership',
+  'nft-ownership',
+  'token-holding',
+  'wallet-link',
+  'wallet-risk',
+  'proof-of-human',
+  'agent-identity',
+  'agent-delegation',
+  'ai-content-moderation'
+];
+
+const INTERACTIVE_VERIFIERS = new Set([
+  'ownership-social',
+  'ownership-org-oauth',
+  'proof-of-human'
+]);
+
+const EVM_ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
 
 // Validation for supported verifiers
 const validateVerifierData = (verifierId, data) => {
   if (!data || typeof data !== 'object') {
     return { valid: false, error: 'Data object is required' };
-  }
-  
-  // Validate wallet address if present
-  // Validate owner/ownerAddress fields based on verifier type
-  const ownerField = (verifierId === 'nft-ownership' || verifierId === 'token-holding') ? 'ownerAddress' : 'owner';
-  if (data[ownerField] && !validateWalletAddress(data[ownerField])) {
-    return { valid: false, error: `Invalid ${ownerField} address` };
   }
   
   // Format validation for supported verifiers
@@ -26,8 +44,8 @@ const validateVerifierData = (verifierId, data) => {
       // Required: owner (must match request walletAddress).
       // Reference is optional when content/contentHash is provided.
       // If neither content nor contentHash is provided, reference.id is required (reference-only proof).
-      if (!data.owner || !validateWalletAddress(data.owner)) {
-        return { valid: false, error: 'owner (wallet address) is required' };
+      if (!data.owner || !validateUniversalAddress(data.owner, typeof data.chain === 'string' ? data.chain : undefined)) {
+        return { valid: false, error: 'owner (universal wallet address) is required' };
       }
       if (data.content !== undefined && data.content !== null) {
         if (typeof data.content !== 'string') {
@@ -168,17 +186,20 @@ const validateVerifierData = (verifierId, data) => {
       }
       break;
     case 'wallet-link':
-      if (!data.primaryWalletAddress || !validateWalletAddress(data.primaryWalletAddress)) {
+      if (!data.primaryWalletAddress || !validateUniversalAddress(data.primaryWalletAddress, data.chain)) {
         return { valid: false, error: 'primaryWalletAddress is required' };
       }
-      if (!data.secondaryWalletAddress || !validateWalletAddress(data.secondaryWalletAddress)) {
+      if (!data.secondaryWalletAddress || !validateUniversalAddress(data.secondaryWalletAddress, data.chain)) {
         return { valid: false, error: 'secondaryWalletAddress is required' };
       }
       if (!data.signature || typeof data.signature !== 'string') {
         return { valid: false, error: 'signature is required (signed by secondary wallet)' };
       }
-      if (typeof data.chainId !== 'number') {
-        return { valid: false, error: 'chainId is required' };
+      if (typeof data.chain !== 'string' || !/^[a-z0-9]+:[^\s]+$/.test(data.chain)) {
+        return { valid: false, error: 'chain is required (namespace:reference)' };
+      }
+      if (typeof data.signatureMethod !== 'string' || !data.signatureMethod.trim()) {
+        return { valid: false, error: 'signatureMethod is required' };
       }
       if (typeof data.signedTimestamp !== 'number') {
         return { valid: false, error: 'signedTimestamp is required' };
@@ -281,7 +302,7 @@ const validateVerifierData = (verifierId, data) => {
       // Note: signature is not required - envelope signature provides authentication
       break;
     case 'wallet-risk':
-      if (data.walletAddress && !validateWalletAddress(data.walletAddress)) {
+      if (data.walletAddress && !validateUniversalAddress(data.walletAddress, data.chain)) {
         return { valid: false, error: 'Invalid walletAddress' };
       }
       break;
@@ -324,6 +345,28 @@ export class NeusClient {
     if (typeof this.config.apiKey === 'string' && this.config.apiKey.trim().length > 0) {
       this.defaultHeaders['Authorization'] = `Bearer ${this.config.apiKey.trim()}`;
     }
+    // Public app attribution header (non-secret)
+    if (typeof this.config.appId === 'string' && this.config.appId.trim().length > 0) {
+      this.defaultHeaders['X-Neus-App'] = this.config.appId.trim();
+    }
+    // Ephemeral sponsor capability token
+    if (typeof this.config.sponsorGrant === 'string' && this.config.sponsorGrant.trim().length > 0) {
+      this.defaultHeaders['X-Sponsor-Grant'] = this.config.sponsorGrant.trim();
+    }
+    // x402 retry receipt header
+    if (typeof this.config.paymentSignature === 'string' && this.config.paymentSignature.trim().length > 0) {
+      this.defaultHeaders['PAYMENT-SIGNATURE'] = this.config.paymentSignature.trim();
+    }
+    // Optional caller-supplied passthrough headers.
+    if (this.config.extraHeaders && typeof this.config.extraHeaders === 'object') {
+      for (const [k, v] of Object.entries(this.config.extraHeaders)) {
+        if (!k || v === undefined || v === null) continue;
+        const key = String(k).trim();
+        const value = String(v).trim();
+        if (!key || !value) continue;
+        this.defaultHeaders[key] = value;
+      }
+    }
     try {
       // Attach origin in browser environments
       if (typeof window !== 'undefined' && window.location && window.location.origin) {
@@ -332,6 +375,135 @@ export class NeusClient {
     } catch {
       // ignore: optional browser metadata header
     }
+  }
+
+  _getHubChainId() {
+    const configured = Number(this.config?.hubChainId);
+    if (Number.isFinite(configured) && configured > 0) return Math.floor(configured);
+    return NEUS_CONSTANTS.HUB_CHAIN_ID;
+  }
+
+  _normalizeIdentity(value) {
+    let raw = String(value || '').trim();
+    if (!raw) return '';
+    const didMatch = raw.match(/^did:pkh:([^:]+):([^:]+):(.+)$/i);
+    if (didMatch && didMatch[3]) {
+      raw = String(didMatch[3]).trim();
+    }
+    return EVM_ADDRESS_RE.test(raw) ? raw.toLowerCase() : raw;
+  }
+
+  _inferChainForAddress(address, explicitChain) {
+    if (typeof explicitChain === 'string' && explicitChain.includes(':')) return explicitChain.trim();
+    const raw = String(address || '').trim();
+    const didMatch = raw.match(/^did:pkh:([^:]+):([^:]+):(.+)$/i);
+    if (didMatch && didMatch[1] && didMatch[2]) {
+      return `${didMatch[1]}:${didMatch[2]}`;
+    }
+    if (EVM_ADDRESS_RE.test(raw)) {
+      return `eip155:${this._getHubChainId()}`;
+    }
+    // Default non-EVM chain for universal wallet paths when caller omits chain.
+    return 'solana:mainnet';
+  }
+
+  async _resolveWalletSigner(wallet) {
+    if (!wallet) {
+      throw new ConfigurationError('No wallet provider available');
+    }
+
+    if (wallet.address) {
+      return { signerWalletAddress: wallet.address, provider: wallet };
+    }
+    if (wallet.publicKey && typeof wallet.publicKey.toBase58 === 'function') {
+      return { signerWalletAddress: wallet.publicKey.toBase58(), provider: wallet };
+    }
+    if (typeof wallet.getAddress === 'function') {
+      const signerWalletAddress = await wallet.getAddress().catch(() => null);
+      return { signerWalletAddress, provider: wallet };
+    }
+    if (wallet.selectedAddress || wallet.request) {
+      const provider = wallet;
+      if (wallet.selectedAddress) {
+        return { signerWalletAddress: wallet.selectedAddress, provider };
+      }
+      const accounts = await provider.request({ method: 'eth_accounts' });
+      if (!accounts || accounts.length === 0) {
+        throw new ConfigurationError('No wallet accounts available');
+      }
+      return { signerWalletAddress: accounts[0], provider };
+    }
+
+    throw new ConfigurationError('Invalid wallet provider');
+  }
+
+  _getDefaultBrowserWallet() {
+    if (typeof window === 'undefined') return null;
+    return window.ethereum || window.solana || (window.phantom && window.phantom.solana) || null;
+  }
+
+  async _buildPrivateGateAuth({ address, wallet, chain, signatureMethod } = {}) {
+    const providerWallet = wallet || this._getDefaultBrowserWallet();
+    const { signerWalletAddress, provider } = await this._resolveWalletSigner(providerWallet);
+    if (!signerWalletAddress || typeof signerWalletAddress !== 'string') {
+      throw new ConfigurationError('No wallet accounts available');
+    }
+
+    const normalizedSigner = this._normalizeIdentity(signerWalletAddress);
+    const normalizedAddress = this._normalizeIdentity(address);
+    if (!normalizedSigner || normalizedSigner !== normalizedAddress) {
+      throw new ValidationError('wallet must match address when includePrivate=true');
+    }
+
+    const signerIsEvm = EVM_ADDRESS_RE.test(normalizedSigner);
+    const resolvedChain = this._inferChainForAddress(normalizedSigner, chain);
+    const resolvedSignatureMethod = (typeof signatureMethod === 'string' && signatureMethod.trim())
+      ? signatureMethod.trim()
+      : (signerIsEvm ? 'eip191' : 'ed25519');
+
+    const signedTimestamp = Date.now();
+    const message = constructVerificationMessage({
+      walletAddress: signerWalletAddress,
+      signedTimestamp,
+      data: { action: 'gate_check_private_proofs', walletAddress: normalizedAddress },
+      verifierIds: ['ownership-basic'],
+      ...(signerIsEvm ? { chainId: this._getHubChainId() } : { chain: resolvedChain })
+    });
+
+    let signature;
+    try {
+      signature = await signMessage({
+        provider,
+        message,
+        walletAddress: signerWalletAddress,
+        ...(signerIsEvm ? {} : { chain: resolvedChain })
+      });
+    } catch (error) {
+      if (error.code === 4001) {
+        throw new ValidationError('User rejected signature request');
+      }
+      throw new ValidationError(`Failed to sign message: ${error.message}`);
+    }
+
+    return {
+      walletAddress: signerWalletAddress,
+      signature,
+      signedTimestamp,
+      ...(signerIsEvm ? {} : { chain: resolvedChain, signatureMethod: resolvedSignatureMethod })
+    };
+  }
+
+  async createGatePrivateAuth(params = {}) {
+    const address = (params.address || '').toString();
+    if (!validateUniversalAddress(address, params.chain)) {
+      throw new ValidationError('Valid address is required');
+    }
+    return this._buildPrivateGateAuth({
+      address,
+      wallet: params.wallet,
+      chain: params.chain,
+      signatureMethod: params.signatureMethod
+    });
   }
 
   // ============================================================================
@@ -356,7 +528,7 @@ export class NeusClient {
    * @param {string} [params.verifier] - Verifier ID (auto path)
    * @param {string} [params.content] - Content/description (auto path)
    * @param {Object} [params.wallet] - Optional injected wallet/provider (auto path)
-   * @returns {Promise<Object>} Verification result with qHash
+   * @returns {Promise<Object>} Verification result with proofId (qHash is a deprecated alias)
    * 
    * @example
    * const proof = await client.verify({
@@ -381,7 +553,7 @@ export class NeusClient {
    * @param {Object} [params.data] - Structured verification data
    * @param {Object} [params.wallet] - Wallet provider
    * @param {Object} [params.options] - Additional options
-   * @returns {Promise<Object>} Verification result with qHash
+   * @returns {Promise<Object>} Verification result with proofId (qHash is a deprecated alias)
    *
    * @example
    * // Simple ownership proof
@@ -401,22 +573,24 @@ export class NeusClient {
         throw new ValidationError('content is required and must be a string (or use data param with owner + reference)');
       }
 
-      const validVerifiers = [
-        'ownership-basic',
-        'ownership-pseudonym',  // Pseudonymous identity (public)
-        'nft-ownership',
-        'token-holding',
-        'ownership-dns-txt',
-        'wallet-link',
-        'contract-ownership',
-        'wallet-risk',          // Wallet risk assessment (public)
-        // AI & Agent verifiers (ERC-8004 aligned)
-        'agent-identity',
-        'agent-delegation',
-        'ai-content-moderation'
-      ];
+      let validVerifiers = FALLBACK_PUBLIC_VERIFIERS;
+      try {
+        const discovered = await this.getVerifiers();
+        if (Array.isArray(discovered) && discovered.length > 0) {
+          validVerifiers = discovered;
+        }
+      } catch {
+        // Fallback keeps SDK usable if verifier catalog endpoint is temporarily unavailable.
+      }
       if (!validVerifiers.includes(verifier)) {
         throw new ValidationError(`Invalid verifier '${verifier}'. Must be one of: ${validVerifiers.join(', ')}.`);
+      }
+
+      if (INTERACTIVE_VERIFIERS.has(verifier)) {
+        const hostedCheckoutUrl = options?.hostedCheckoutUrl || 'https://neus.network/verify';
+        throw new ValidationError(
+          `${verifier} requires hosted interactive checkout. Use VerifyGate or redirect to ${hostedCheckoutUrl}.`
+        );
       }
       
       // These verifiers require explicit data parameter (no auto-path)
@@ -439,8 +613,16 @@ export class NeusClient {
       // Auto-detect wallet and get address
       let walletAddress, provider;
       if (wallet) {
-        walletAddress = wallet.address || wallet.selectedAddress;
+        walletAddress =
+          wallet.address ||
+          wallet.selectedAddress ||
+          wallet.walletAddress ||
+          (typeof wallet.getAddress === 'function' ? await wallet.getAddress() : null);
         provider = wallet.provider || wallet;
+        if (!walletAddress && provider && typeof provider.request === 'function') {
+          const accounts = await provider.request({ method: 'eth_accounts' });
+          walletAddress = Array.isArray(accounts) ? accounts[0] : null;
+        }
       } else {
         if (typeof window === 'undefined' || !window.ethereum) {
           throw new ConfigurationError('No Web3 wallet detected. Please install MetaMask or provide wallet parameter.');
@@ -520,14 +702,18 @@ export class NeusClient {
         if (!data?.signature) {
           throw new ValidationError('wallet-link requires signature in data parameter (signed by secondary wallet)');
         }
-        if (typeof data?.chainId !== 'number') {
-          throw new ValidationError('wallet-link requires chainId (number) in data parameter');
+        if (typeof data?.chain !== 'string' || !/^[a-z0-9]+:[^\s]+$/.test(data.chain)) {
+          throw new ValidationError('wallet-link requires chain (namespace:reference) in data parameter');
+        }
+        if (typeof data?.signatureMethod !== 'string' || !data.signatureMethod.trim()) {
+          throw new ValidationError('wallet-link requires signatureMethod in data parameter');
         }
         verificationData = {
           primaryWalletAddress: walletAddress,
           secondaryWalletAddress: data.secondaryWalletAddress,
           signature: data.signature,
-          chainId: data.chainId,
+          chain: data.chain,
+          signatureMethod: data.signatureMethod,
           signedTimestamp: data?.signedTimestamp || Date.now()
         };
       } else if (verifier === 'contract-ownership') {
@@ -619,7 +805,7 @@ export class NeusClient {
         signedTimestamp,
         data: verificationData,
         verifierIds,
-        chainId: NEUS_CONSTANTS.HUB_CHAIN_ID // Protocol-managed chain
+        chainId: this._getHubChainId() // Protocol-managed chain
       });
 
       let signature;
@@ -829,18 +1015,18 @@ export class NeusClient {
   /**
    * Get verification status
    *
-   * @param {string} qHash - Verification ID (qHash or proofId)
+   * @param {string} proofId - Proof ID (standard). `qHash` is a deprecated alias (same value).
    * @returns {Promise<Object>} Verification status and data
    *
    * @example
    * const result = await client.getStatus('0x...');
    * console.log('Status:', result.status);
    */
-  async getStatus(qHash) {
-    if (!qHash || typeof qHash !== 'string') {
-      throw new ValidationError('qHash is required');
+  async getStatus(proofId) {
+    if (!proofId || typeof proofId !== 'string') {
+      throw new ValidationError('proofId is required');
     }
-    const response = await this._makeRequest('GET', `/api/v1/verification/status/${qHash}`);
+    const response = await this._makeRequest('GET', `/api/v1/verification/status/${proofId}`);
 
     if (!response.success) {
       throw new ApiError(`Failed to get status: ${response.error?.message || 'Unknown error'}`, response.error);
@@ -852,74 +1038,73 @@ export class NeusClient {
   /**
    * Get private proof status with wallet signature
    *
-   * @param {string} qHash - Verification ID
+   * @param {string} proofId - Proof ID (standard). `qHash` is a deprecated alias (same value).
    * @param {Object} wallet - Wallet provider (window.ethereum or ethers Wallet)
    * @returns {Promise<Object>} Private verification status and data
    *
    * @example
    * // Access private proof
-   * const privateData = await client.getPrivateStatus(qHash, window.ethereum);
+   * const privateData = await client.getPrivateStatus(proofId, window.ethereum);
    */
-  async getPrivateStatus(qHash, wallet = null) {
-    if (!qHash || typeof qHash !== 'string') {
-      throw new ValidationError('qHash is required');
+  async getPrivateStatus(proofId, wallet = null) {
+    if (!proofId || typeof proofId !== 'string') {
+      throw new ValidationError('proofId is required');
     }
 
-    // Auto-detect wallet if not provided
-    if (!wallet) {
-      if (typeof window === 'undefined' || !window.ethereum) {
-        throw new ConfigurationError('No wallet provider available');
+    // Allow pre-signed universal owner auth (e.g. Solana) to avoid wallet-provider assumptions.
+    const isPreSignedAuth = wallet &&
+      typeof wallet === 'object' &&
+      typeof wallet.walletAddress === 'string' &&
+      typeof wallet.signature === 'string' &&
+      typeof wallet.signedTimestamp === 'number';
+    if (isPreSignedAuth) {
+      const auth = wallet;
+      const headers = {
+        'x-wallet-address': String(auth.walletAddress),
+        'x-signature': String(auth.signature),
+        'x-signed-timestamp': String(auth.signedTimestamp),
+        ...(typeof auth.chain === 'string' && auth.chain.trim() ? { 'x-chain': auth.chain.trim() } : {}),
+        ...(typeof auth.signatureMethod === 'string' && auth.signatureMethod.trim() ? { 'x-signature-method': auth.signatureMethod.trim() } : {})
+      };
+      const response = await this._makeRequest('GET', `/api/v1/verification/status/${proofId}`, null, headers);
+      if (!response.success) {
+        throw new ApiError(
+          `Failed to access private proof: ${response.error?.message || 'Unauthorized'}`,
+          response.error
+        );
       }
-      wallet = window.ethereum;
+      return this._formatResponse(response);
     }
 
-    let walletAddress, provider;
-
-    // Handle different wallet types
-    if (wallet.address) {
-      // ethers Wallet
-      walletAddress = wallet.address;
-      provider = wallet;
-    } else if (wallet.selectedAddress || wallet.request) {
-      // Browser provider (MetaMask, etc.)
-      provider = wallet;
-      if (wallet.selectedAddress) {
-        walletAddress = wallet.selectedAddress;
-      } else {
-        const accounts = await provider.request({ method: 'eth_accounts' });
-        if (!accounts || accounts.length === 0) {
-          throw new ConfigurationError('No wallet accounts available');
-        }
-        walletAddress = accounts[0];
-      }
-    } else {
-      throw new ConfigurationError('Invalid wallet provider');
+    const providerWallet = wallet || this._getDefaultBrowserWallet();
+    const { signerWalletAddress: walletAddress, provider } = await this._resolveWalletSigner(providerWallet);
+    if (!walletAddress || typeof walletAddress !== 'string') {
+      throw new ConfigurationError('No wallet accounts available');
     }
+    const signerIsEvm = EVM_ADDRESS_RE.test(this._normalizeIdentity(walletAddress));
+    const chain = this._inferChainForAddress(walletAddress);
+    const signatureMethod = signerIsEvm ? 'eip191' : 'ed25519';
 
     const signedTimestamp = Date.now();
 
-    // IMPORTANT: This must match the server's Standard Signing String owner-access check:
-    // data.action='access_private_proof' + data.qHash, verifierIds=['ownership-basic'], chainId=default chainId.
+    // IMPORTANT: This must match the server's Standard Signing String owner-access check.
+    // Keep wire payload key `qHash` for backwards compatibility.
     const message = constructVerificationMessage({
       walletAddress,
       signedTimestamp,
-      data: { action: 'access_private_proof', qHash },
+      data: { action: 'access_private_proof', qHash: proofId },
       verifierIds: ['ownership-basic'],
-      chainId: NEUS_CONSTANTS.HUB_CHAIN_ID
+      ...(signerIsEvm ? { chainId: this._getHubChainId() } : { chain })
     });
 
     let signature;
     try {
-      if (provider.signMessage) {
-        // ethers Wallet
-        signature = await provider.signMessage(message);
-      } else {
-        // Browser provider
-        signature = await provider.request({
-          method: 'personal_sign',
-          params: [message, walletAddress]
-        });
-      }
+      signature = await signMessage({
+        provider,
+        message,
+        walletAddress,
+        ...(signerIsEvm ? {} : { chain })
+      });
     } catch (error) {
       if (error.code === 4001) {
         throw new ValidationError('User rejected signature request');
@@ -928,10 +1113,11 @@ export class NeusClient {
     }
 
     // Make request with signature headers (server reads x-wallet-address/x-signature/x-signed-timestamp)
-    const response = await this._makeRequest('GET', `/api/v1/verification/status/${qHash}`, null, {
+    const response = await this._makeRequest('GET', `/api/v1/verification/status/${proofId}`, null, {
       'x-wallet-address': walletAddress,
       'x-signature': signature,
-      'x-signed-timestamp': signedTimestamp.toString()
+      'x-signed-timestamp': signedTimestamp.toString(),
+      ...(signerIsEvm ? {} : { 'x-chain': chain, 'x-signature-method': signatureMethod })
     });
 
     if (!response.success) {
@@ -977,7 +1163,7 @@ export class NeusClient {
    * Polls the verification status until it reaches a terminal state (completed or failed).
    * Useful for providing real-time feedback to users during verification.
    * 
-   * @param {string} qHash - Verification ID to poll
+   * @param {string} proofId - Proof ID to poll (standard). `qHash` is a deprecated alias (same value).
    * @param {Object} [options] - Polling options
    * @param {number} [options.interval=5000] - Polling interval in ms
    * @param {number} [options.timeout=120000] - Total timeout in ms
@@ -985,7 +1171,7 @@ export class NeusClient {
    * @returns {Promise<Object>} Final verification status
    * 
    * @example
-   * const finalStatus = await client.pollProofStatus(qHash, {
+   * const finalStatus = await client.pollProofStatus(proofId, {
    *   interval: 3000,
    *   timeout: 60000,
    *   onProgress: (status) => {
@@ -996,15 +1182,15 @@ export class NeusClient {
    *   }
    * });
    */
-  async pollProofStatus(qHash, options = {}) {
+  async pollProofStatus(proofId, options = {}) {
     const {
       interval = 5000,
       timeout = 120000,
       onProgress
     } = options;
 
-    if (!qHash || typeof qHash !== 'string') {
-      throw new ValidationError('qHash is required');
+    if (!proofId || typeof proofId !== 'string') {
+      throw new ValidationError('proofId is required');
     }
 
     const startTime = Date.now();
@@ -1012,7 +1198,7 @@ export class NeusClient {
     
     while (Date.now() - startTime < timeout) {
       try {
-        const status = await this.getStatus(qHash);
+        const status = await this.getStatus(proofId);
         consecutiveRateLimits = 0;
         
         // Call progress callback if provided
@@ -1074,62 +1260,37 @@ export class NeusClient {
   }
 
   /** Revoke your own proof (owner-signed) */
-  async revokeOwnProof(qHash, wallet) {
-    if (!qHash || typeof qHash !== 'string') {
-      throw new ValidationError('qHash is required');
+  async revokeOwnProof(proofId, wallet) {
+    if (!proofId || typeof proofId !== 'string') {
+      throw new ValidationError('proofId is required');
     }
-    const address = wallet?.address || await this._getWalletAddress();
+    const providerWallet = wallet || this._getDefaultBrowserWallet();
+    const { signerWalletAddress: address, provider } = await this._resolveWalletSigner(providerWallet);
+    if (!address || typeof address !== 'string') {
+      throw new ConfigurationError('No wallet accounts available');
+    }
+    const signerIsEvm = EVM_ADDRESS_RE.test(this._normalizeIdentity(address));
+    const chain = this._inferChainForAddress(address);
+    const signatureMethod = signerIsEvm ? 'eip191' : 'ed25519';
     const signedTimestamp = Date.now();
-    const hubChainId = NEUS_CONSTANTS.HUB_CHAIN_ID;
 
     const message = constructVerificationMessage({
       walletAddress: address,
       signedTimestamp,
-      data: { action: 'revoke_proof', qHash },
+      // Keep wire payload key `qHash` for backwards compatibility.
+      data: { action: 'revoke_proof', qHash: proofId },
       verifierIds: ['ownership-basic'],
-      chainId: hubChainId
+      ...(signerIsEvm ? { chainId: this._getHubChainId() } : { chain })
     });
 
     let signature;
     try {
-      // UNIFIED SIGNING: Match utils/core.ts fallback order
-      const toHexUtf8 = (s) => {
-        const enc = new TextEncoder();
-        const bytes = enc.encode(s);
-        let hex = '0x';
-        for (let i = 0; i < bytes.length; i++) hex += bytes[i].toString(16).padStart(2, '0');
-        return hex;
-      };
-      
-      // Detect Farcaster wallet - requires hex-encoded messages FIRST
-      const isFarcasterWallet = (() => {
-        if (typeof window === 'undefined') return false;
-        try {
-          const w = window;
-          const fc = w.farcaster;
-          if (!fc || !fc.context) return false;
-          const fcProvider = fc.provider || fc.walletProvider || (fc.context && fc.context.walletProvider);
-          if (fcProvider === w.ethereum) return true;
-          if (w.mini && w.mini.wallet === w.ethereum && fc && fc.context) return true;
-          if (w.ethereum && fc && fc.context) return true;
-        } catch {
-          // ignore: optional Farcaster detection
-        }
-        return false;
-      })();
-      
-      if (isFarcasterWallet) {
-        try {
-          const hexMsg = toHexUtf8(message);
-          signature = await window.ethereum.request({ method: 'personal_sign', params: [hexMsg, address] });
-        } catch {
-          // ignore: fall through to standard signing
-        }
-      }
-      
-      if (!signature) {
-          signature = await window.ethereum.request({ method: 'personal_sign', params: [message, address] });
-      }
+      signature = await signMessage({
+        provider,
+        message,
+        walletAddress: address,
+        ...(signerIsEvm ? {} : { chain })
+      });
     } catch (error) {
       if (error.code === 4001) {
         throw new ValidationError('User rejected revocation signature');
@@ -1137,11 +1298,16 @@ export class NeusClient {
       throw new ValidationError(`Failed to sign revocation: ${error.message}`);
     }
 
-    const res = await fetch(`${this.config.apiUrl}/api/v1/proofs/${qHash}/revoke-self`, {
+    const res = await fetch(`${this.config.apiUrl}/api/v1/proofs/${proofId}/revoke-self`, {
       method: 'POST',
       // SECURITY: Do not put proof signatures into Authorization headers.
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ walletAddress: address, signature, signedTimestamp })
+      body: JSON.stringify({
+        walletAddress: address,
+        signature,
+        signedTimestamp,
+        ...(signerIsEvm ? {} : { chain, signatureMethod })
+      })
     });
     const json = await res.json();
     if (!json.success) {
@@ -1157,7 +1323,7 @@ export class NeusClient {
   /**
    * GET PROOFS BY WALLET - Fetch proofs for a wallet address
    * 
-   * @param {string} walletAddress - Wallet address (0x...) or DID (did:pkh:...)
+   * @param {string} walletAddress - Wallet identity (EVM/Solana/DID)
    * @param {Object} [options] - Filter options
    * @param {number} [options.limit] - Max results (default: 50; higher limits require owner access)
    * @param {number} [options.offset] - Pagination offset (default: 0)
@@ -1207,7 +1373,7 @@ export class NeusClient {
    *
    * Signs an owner-access intent and requests private proofs via signature headers.
    *
-   * @param {string} walletAddress - Wallet address (0x...) or DID (did:pkh:...)
+   * @param {string} walletAddress - Wallet identity (EVM/Solana/DID)
    * @param {Object} [options]
    * @param {number} [options.limit] - Max results (server enforces caps)
    * @param {number} [options.offset] - Pagination offset
@@ -1221,52 +1387,51 @@ export class NeusClient {
     const id = walletAddress.trim();
     const pathId = /^0x[a-fA-F0-9]{40}$/i.test(id) ? id.toLowerCase() : id;
 
+    const requestedIdentity = this._normalizeIdentity(id);
+
     // Auto-detect wallet if not provided
     if (!wallet) {
-      if (typeof window === 'undefined' || !window.ethereum) {
+      const defaultWallet = this._getDefaultBrowserWallet();
+      if (!defaultWallet) {
         throw new ConfigurationError('No wallet provider available');
       }
-      wallet = window.ethereum;
+      wallet = defaultWallet;
     }
 
-    let signerWalletAddress, provider;
-    if (wallet.address) {
-      signerWalletAddress = wallet.address;
-      provider = wallet;
-    } else if (wallet.selectedAddress || wallet.request) {
-      provider = wallet;
-      if (wallet.selectedAddress) {
-        signerWalletAddress = wallet.selectedAddress;
-      } else {
-        const accounts = await provider.request({ method: 'eth_accounts' });
-        if (!accounts || accounts.length === 0) {
-          throw new ConfigurationError('No wallet accounts available');
-        }
-        signerWalletAddress = accounts[0];
-      }
-    } else {
-      throw new ConfigurationError('Invalid wallet provider');
+    const { signerWalletAddress, provider } = await this._resolveWalletSigner(wallet);
+
+    if (!signerWalletAddress || typeof signerWalletAddress !== 'string') {
+      throw new ConfigurationError('No wallet accounts available');
     }
+
+    const normalizedSigner = this._normalizeIdentity(signerWalletAddress);
+    if (!normalizedSigner || normalizedSigner !== requestedIdentity) {
+      throw new ValidationError('wallet must match walletAddress for private proof access');
+    }
+
+    const signerIsEvm = EVM_ADDRESS_RE.test(normalizedSigner);
+    const chain = this._inferChainForAddress(normalizedSigner, options?.chain);
+    const signatureMethod = (typeof options?.signatureMethod === 'string' && options.signatureMethod.trim())
+      ? options.signatureMethod.trim()
+      : (signerIsEvm ? 'eip191' : 'ed25519');
 
     const signedTimestamp = Date.now();
     const message = constructVerificationMessage({
       walletAddress: signerWalletAddress,
       signedTimestamp,
-      data: { action: 'access_private_proofs_by_wallet', walletAddress: signerWalletAddress.toLowerCase() },
+      data: { action: 'access_private_proofs_by_wallet', walletAddress: normalizedSigner },
       verifierIds: ['ownership-basic'],
-      chainId: NEUS_CONSTANTS.HUB_CHAIN_ID
+      ...(signerIsEvm ? { chainId: this._getHubChainId() } : { chain })
     });
 
     let signature;
     try {
-      if (provider.signMessage) {
-        signature = await provider.signMessage(message);
-      } else {
-        signature = await provider.request({
-          method: 'personal_sign',
-          params: [message, signerWalletAddress]
-        });
-      }
+      signature = await signMessage({
+        provider,
+        message,
+        walletAddress: signerWalletAddress,
+        ...(signerIsEvm ? {} : { chain })
+      });
     } catch (error) {
       if (error.code === 4001) {
         throw new ValidationError('User rejected signature request');
@@ -1282,7 +1447,8 @@ export class NeusClient {
     const response = await this._makeRequest('GET', `/api/v1/proofs/byWallet/${encodeURIComponent(pathId)}${query}`, null, {
       'x-wallet-address': signerWalletAddress,
       'x-signature': signature,
-      'x-signed-timestamp': signedTimestamp.toString()
+      'x-signed-timestamp': signedTimestamp.toString(),
+      ...(signerIsEvm ? {} : { 'x-chain': chain, 'x-signature-method': signatureMethod })
     });
 
     if (!response.success) {
@@ -1302,25 +1468,31 @@ export class NeusClient {
   /**
    * GATE CHECK (API) - Minimal eligibility check
    *
-   * Calls the public gate endpoint and returns a **minimal** yes/no response
-   * against **public + discoverable** proofs only.
+   * Calls the gate endpoint and returns a **minimal** yes/no response.
+   * By default this checks **public + discoverable** proofs only.
    *
-   * Prefer this over `checkGate()` for server-side integrations that want the
+   * When `includePrivate=true`, this can perform owner-signed private checks
+   * (no full proof payloads returned) by providing a wallet/provider.
+   *
+   * Prefer this over `checkGate()` for integrations that want the
    * smallest, most stable surface area (and do NOT need full proof payloads).
    *
    * @param {Object} params - Gate check query params
-   * @param {string} params.address - Wallet address to check (0x...)
+   * @param {string} params.address - Wallet identity to check (EVM/Solana/DID)
    * @param {Array<string>|string} [params.verifierIds] - Verifier IDs to match (array or comma-separated)
    * @param {boolean} [params.requireAll] - Require all verifierIds on a single proof
    * @param {number} [params.minCount] - Minimum number of matching proofs
    * @param {number} [params.sinceDays] - Optional time window in days
    * @param {number} [params.since] - Optional unix timestamp in ms (lower bound)
    * @param {number} [params.limit] - Max rows to scan (server may clamp)
+   * @param {boolean} [params.includePrivate] - Include private proofs for owner-authenticated requests
+   * @param {boolean} [params.includeQHashes] - Include matched qHashes in response (minimal IDs only)
+   * @param {Object} [params.wallet] - Optional wallet/provider used to sign includePrivate owner checks
    * @returns {Promise<Object>} API response ({ success, data })
    */
   async gateCheck(params = {}) {
     const address = (params.address || '').toString();
-    if (!address || !/^0x[a-fA-F0-9]{40}$/i.test(address)) {
+    if (!validateUniversalAddress(address, params.chain)) {
       throw new ValidationError('Valid address is required');
     }
 
@@ -1357,6 +1529,8 @@ export class NeusClient {
     setIfPresent('sinceDays', params.sinceDays);
     setIfPresent('since', params.since);
     setIfPresent('limit', params.limit);
+    setBoolIfPresent('includePrivate', params.includePrivate);
+    setBoolIfPresent('includeQHashes', params.includeQHashes);
 
     // Common match filters (optional)
     setIfPresent('referenceType', params.referenceType);
@@ -1384,7 +1558,44 @@ export class NeusClient {
     setIfPresent('secondaryWalletAddress', params.secondaryWalletAddress);
     setIfPresent('verificationMethod', params.verificationMethod);
 
-    const response = await this._makeRequest('GET', `/api/v1/proofs/gate/check?${qs.toString()}`);
+    let headersOverride = null;
+    if (params.includePrivate === true) {
+      const provided = params.privateAuth && typeof params.privateAuth === 'object' ? params.privateAuth : null;
+      let auth = provided;
+      if (!auth) {
+        const walletCandidate = params.wallet || this._getDefaultBrowserWallet();
+        if (walletCandidate) {
+          auth = await this._buildPrivateGateAuth({
+            address,
+            wallet: walletCandidate,
+            chain: params.chain,
+            signatureMethod: params.signatureMethod
+          });
+        }
+      }
+      if (!auth) {
+        // No signer context available - proceed as public/discoverable gate check.
+      } else {
+        const normalizedAuthWallet = this._normalizeIdentity(auth.walletAddress);
+        const normalizedAddress = this._normalizeIdentity(address);
+        if (!normalizedAuthWallet || normalizedAuthWallet !== normalizedAddress) {
+          throw new ValidationError('privateAuth.walletAddress must match address when includePrivate=true');
+        }
+        const authChain = (typeof auth.chain === 'string' && auth.chain.includes(':')) ? auth.chain.trim() : null;
+        const authSignatureMethod = (typeof auth.signatureMethod === 'string' && auth.signatureMethod.trim())
+          ? auth.signatureMethod.trim()
+          : null;
+        headersOverride = {
+          'x-wallet-address': String(auth.walletAddress),
+          'x-signature': String(auth.signature),
+          'x-signed-timestamp': String(auth.signedTimestamp),
+          ...(authChain ? { 'x-chain': authChain } : {}),
+          ...(authSignatureMethod ? { 'x-signature-method': authSignatureMethod } : {})
+        };
+      }
+    }
+
+    const response = await this._makeRequest('GET', `/api/v1/proofs/check?${qs.toString()}`, null, headersOverride);
     if (!response.success) {
       throw new ApiError(`Gate check failed: ${response.error?.message || 'Unknown error'}`, response.error);
     }
@@ -1409,7 +1620,7 @@ export class NeusClient {
    *   Supports verifier-specific:
    *     - NFT/Token: 'contractAddress', 'tokenId', 'chainId', 'ownerAddress', 'minBalance'
    *     - DNS: 'domain', 'walletAddress'
-   *     - Wallet-link: 'primaryWalletAddress', 'secondaryWalletAddress', 'chainId'
+   *     - Wallet-link: 'primaryWalletAddress', 'secondaryWalletAddress', 'chain', 'signatureMethod'
    *     - Contract-ownership: 'contractAddress', 'chainId', 'owner', 'verificationMethod'
    *   Note: contentHash matching uses approximation in SDK; for exact SHA-256 matching, use backend API
    * @param {Array} [params.proofs] - Pre-fetched proofs (skip API call)
@@ -1427,7 +1638,7 @@ export class NeusClient {
   async checkGate(params) {
     const { walletAddress, requirements, proofs: preloadedProofs } = params;
 
-    if (!walletAddress || !/^0x[a-fA-F0-9]{40}$/i.test(walletAddress)) {
+    if (!validateUniversalAddress(walletAddress)) {
       throw new ValidationError('Valid walletAddress is required');
     }
     if (!Array.isArray(requirements) || requirements.length === 0) {
@@ -1668,10 +1879,20 @@ export class NeusClient {
    * @private
    */
   _formatResponse(response) {
-    const qHash = response?.data?.qHash || 
-                  response?.qHash || 
+    const proofId = response?.data?.proofId ||
+                    response?.proofId ||
+                    response?.data?.resource?.proofId ||
+                    response?.data?.qHash ||
+                    response?.qHash ||
+                    response?.data?.resource?.qHash ||
+                    response?.data?.id;
+    const qHash = response?.data?.qHash ||
+                  response?.qHash ||
                   response?.data?.resource?.qHash ||
+                  proofId ||
                   response?.data?.id;
+    const finalProofId = proofId || qHash || null;
+    const finalQHash = qHash || proofId || finalProofId;
                   
     const status = response?.data?.status || 
                    response?.status || 
@@ -1680,12 +1901,13 @@ export class NeusClient {
 
     return {
       success: response.success,
-      qHash,
+      proofId: finalProofId,
+      qHash: finalQHash,
       status,
       data: response.data,
       message: response.message,
       timestamp: Date.now(),
-      statusUrl: qHash ? `${this.baseUrl}/api/v1/verification/status/${qHash}` : null
+      statusUrl: finalProofId ? `${this.baseUrl}/api/v1/verification/status/${finalProofId}` : null
     };
   }
 

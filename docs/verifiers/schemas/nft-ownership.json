@@ -1,32 +1,30 @@
 {
   "$id": "https://neus.network/schemas/nft-ownership.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "NFT ownership proof verification",
+  "description": "NFT ownership verification (EVM-only)",
   "properties": {
     "blockNumber": {
-      "description": "Optional specific block number for point-in-time ownership checks",
+      "minimum": 0,
       "type": "integer"
     },
     "chainId": {
-      "description": "Chain ID where the NFT contract is deployed (testnet or mainnet; must be supported/configured server-side)",
+      "minimum": 1,
       "type": "integer"
     },
     "contractAddress": {
-      "description": "NFT contract address",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "format": "evm-address",
       "type": "string"
     },
     "ownerAddress": {
-      "description": "NFT owner address (optional). If omitted, defaults to the signed request walletAddress. Deployments may allow delegated subject checks, but the server will not accept subject overrides that break signature binding.",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "format": "evm-address",
       "type": "string"
     },
     "tokenId": {
-      "description": "NFT token ID",
+      "minLength": 1,
       "type": "string"
     },
     "tokenType": {
-      "description": "Token standard (default: 'erc721')",
+      "default": "erc721",
       "enum": [
         "erc721",
         "erc1155"

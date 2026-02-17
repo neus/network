@@ -5,6 +5,57 @@
 
 import { SDKError, ApiError, ValidationError } from './errors.js';
 
+const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+
+function encodeBase58Bytes(input) {
+  let source;
+  if (input instanceof Uint8Array) {
+    source = input;
+  } else if (input instanceof ArrayBuffer) {
+    source = new Uint8Array(input);
+  } else if (ArrayBuffer.isView(input)) {
+    source = new Uint8Array(input.buffer, input.byteOffset, input.byteLength);
+  } else if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer === 'function' && Buffer.isBuffer(input)) {
+    source = new Uint8Array(input);
+  } else {
+    throw new SDKError('Unsupported non-EVM signature byte format', 'INVALID_SIGNATURE_FORMAT');
+  }
+
+  if (source.length === 0) return '';
+
+  let zeroes = 0;
+  while (zeroes < source.length && source[zeroes] === 0) {
+    zeroes++;
+  }
+
+  const iFactor = Math.log(256) / Math.log(58);
+  const size = (((source.length - zeroes) * iFactor) + 1) >>> 0;
+  const b58 = new Uint8Array(size);
+
+  let length = 0;
+  for (let i = zeroes; i < source.length; i++) {
+    let carry = source[i];
+    let j = 0;
+    for (let k = size - 1; (carry !== 0 || j < length) && k >= 0; k--, j++) {
+      carry += 256 * b58[k];
+      b58[k] = carry % 58;
+      carry = (carry / 58) | 0;
+    }
+    length = j;
+  }
+
+  let it = size - length;
+  while (it < size && b58[it] === 0) {
+    it++;
+  }
+
+  let out = BASE58_ALPHABET[0].repeat(zeroes);
+  for (; it < size; it++) {
+    out += BASE58_ALPHABET[b58[it]];
+  }
+  return out;
+}
+
 /**
  * Deterministic JSON stringification for consistent serialization
  * @param {Object} obj - Object to stringify
@@ -109,6 +160,41 @@ export function validateWalletAddress(address) {
 }
 
 /**
+ * Validate universal wallet address format.
+ * Uses chain namespace when provided; otherwise applies conservative multi-chain checks.
+ *
+ * @param {string} address - Address to validate
+ * @param {string} [chain] - Optional CAIP-2 chain reference (namespace:reference)
+ * @returns {boolean} True if valid universal wallet address
+ */
+export function validateUniversalAddress(address, chain) {
+  if (!address || typeof address !== 'string') return false;
+  const value = address.trim();
+  if (!value) return false;
+
+  const chainRef = typeof chain === 'string' ? chain.trim().toLowerCase() : '';
+  const namespace = chainRef.includes(':') ? chainRef.split(':')[0] : '';
+
+  if (validateWalletAddress(value)) return true;
+  if (namespace === 'eip155') return false;
+
+  if (namespace === 'solana') {
+    return /^[1-9A-HJ-NP-Za-km-z]{32,44}$/.test(value);
+  }
+
+  if (namespace === 'bip122') {
+    return /^(bc1|tb1|bcrt1)[a-z0-9]{11,87}$/.test(value.toLowerCase()) || /^[13mn2][a-km-zA-HJ-NP-Z1-9]{25,62}$/.test(value);
+  }
+
+  if (namespace === 'near') {
+    return /^[a-z0-9._-]{2,64}$/.test(value);
+  }
+
+  // Generic fallback for universal-address style identifiers.
+  return /^[A-Za-z0-9][A-Za-z0-9._:-]{1,127}$/.test(value);
+}
+
+/**
  * Validate timestamp freshness
  * 
  * @param {number} timestamp - Timestamp to validate
@@ -151,7 +237,7 @@ export function createVerificationData(content, owner, reference = null) {
 
   return {
     content,
-    owner: owner.toLowerCase(),
+    owner: validateWalletAddress(owner) ? owner.toLowerCase() : owner,
     reference: reference || {
       // Must be a valid backend enum value; 'content' is not supported.
       type: 'other',
@@ -179,9 +265,326 @@ export function deriveDid(address, chainIdOrChain) {
   } else {
     if (typeof chainContext !== 'number') {
       throw new SDKError('deriveDid: chainId (number) or chain (namespace:reference string) is required', 'INVALID_ARGUMENT');
-  }
+    }
     return `did:pkh:eip155:${chainContext}:${address.toLowerCase()}`;
   }
+}
+
+/**
+ * Resolve DID from wallet identity via API endpoint
+ *
+ * @param {Object} params - DID resolution parameters
+ * @param {string} params.walletAddress - Wallet address to resolve
+ * @param {number} [params.chainId] - EVM chain ID
+ * @param {string} [params.chain] - Universal chain context (namespace:reference)
+ * @param {Object} [options] - Request options
+ * @param {string} [options.endpoint='/api/v1/profile/did/resolve'] - DID resolve endpoint
+ * @param {string} [options.apiUrl] - Absolute API base URL for non-relative endpoints
+ * @param {RequestCredentials} [options.credentials] - Fetch credentials mode
+ * @param {Record<string, string>} [options.headers] - Extra request headers
+ * @returns {Promise<{did: string, data: any, raw: any}>}
+ */
+export async function resolveDID(params, options = {}) {
+  const endpointPath = options.endpoint || '/api/v1/profile/did/resolve';
+  const apiUrl = typeof options.apiUrl === 'string' ? options.apiUrl.trim() : '';
+
+  const resolveEndpoint = (path) => {
+    if (!path || typeof path !== 'string') return null;
+    const trimmedPath = path.trim();
+    if (!trimmedPath) return null;
+    if (/^https?:\/\//i.test(trimmedPath)) return trimmedPath;
+    if (trimmedPath.startsWith('/')) {
+      if (!apiUrl) return trimmedPath;
+      try {
+        return new URL(trimmedPath, apiUrl.endsWith('/') ? apiUrl : `${apiUrl}/`).toString();
+      } catch {
+        return null;
+      }
+    }
+    const base = apiUrl || NEUS_CONSTANTS.API_BASE_URL;
+    if (!base || typeof base !== 'string') return null;
+    try {
+      return new URL(trimmedPath, base.endsWith('/') ? base : `${base}/`).toString();
+    } catch {
+      return null;
+    }
+  };
+
+  const endpoint = resolveEndpoint(endpointPath);
+  if (!endpoint) {
+    throw new SDKError('resolveDID requires a valid endpoint', 'INVALID_ENDPOINT');
+  }
+
+  const payload = {
+    walletAddress: params?.walletAddress,
+    chainId: params?.chainId,
+    chain: params?.chain
+  };
+
+  const isRelative = endpoint.startsWith('/') || !/^https?:\/\//i.test(endpoint);
+  const credentialsMode = options.credentials !== undefined
+    ? options.credentials
+    : (isRelative ? 'same-origin' : 'omit');
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        ...(options.headers || {})
+      },
+      body: JSON.stringify(payload),
+      credentials: credentialsMode
+    });
+
+    const json = await response.json().catch(() => null);
+
+    if (!response.ok) {
+      const msg = json?.error?.message || json?.error || json?.message || 'DID resolution failed';
+      throw new SDKError(msg, 'DID_RESOLVE_FAILED', json);
+    }
+
+    const did = json?.data?.did || json?.did;
+    if (!did || typeof did !== 'string') {
+      throw new SDKError('DID resolution missing DID', 'DID_RESOLVE_MISSING', json);
+    }
+
+    return { did, data: json?.data || null, raw: json };
+  } catch (error) {
+    if (error instanceof SDKError) throw error;
+    throw new SDKError(`DID resolution failed: ${error?.message || error}`, 'DID_RESOLVE_FAILED');
+  }
+}
+
+/**
+ * Standardize verification request via backend signer-string endpoint
+ *
+ * @param {Object} params - Verification request payload
+ * @param {Object} [options] - Request options
+ * @param {string} [options.endpoint='/api/v1/verification/standardize'] - Standardize endpoint
+ * @param {string} [options.apiUrl] - Absolute API base URL for non-relative endpoints
+ * @param {RequestCredentials} [options.credentials] - Fetch credentials mode
+ * @param {Record<string, string>} [options.headers] - Extra request headers
+ * @returns {Promise<any>}
+ */
+export async function standardizeVerificationRequest(params, options = {}) {
+  const endpointPath = options.endpoint || '/api/v1/verification/standardize';
+  const apiUrl = typeof options.apiUrl === 'string' ? options.apiUrl.trim() : '';
+
+  const resolveEndpoint = (path) => {
+    if (!path || typeof path !== 'string') return null;
+    const trimmedPath = path.trim();
+    if (!trimmedPath) return null;
+    if (/^https?:\/\//i.test(trimmedPath)) return trimmedPath;
+    if (trimmedPath.startsWith('/')) {
+      if (!apiUrl) return trimmedPath;
+      try {
+        return new URL(trimmedPath, apiUrl.endsWith('/') ? apiUrl : `${apiUrl}/`).toString();
+      } catch {
+        return null;
+      }
+    }
+    const base = apiUrl || NEUS_CONSTANTS.API_BASE_URL;
+    if (!base || typeof base !== 'string') return null;
+    try {
+      return new URL(trimmedPath, base.endsWith('/') ? base : `${base}/`).toString();
+    } catch {
+      return null;
+    }
+  };
+
+  const endpoint = resolveEndpoint(endpointPath);
+  if (!endpoint) {
+    throw new SDKError('standardizeVerificationRequest requires a valid endpoint', 'INVALID_ENDPOINT');
+  }
+
+  const isRelative = endpoint.startsWith('/') || !/^https?:\/\//i.test(endpoint);
+  const credentialsMode = options.credentials !== undefined
+    ? options.credentials
+    : (isRelative ? 'same-origin' : 'omit');
+
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        ...(options.headers || {})
+      },
+      body: JSON.stringify(params || {}),
+      credentials: credentialsMode
+    });
+
+    const json = await response.json().catch(() => null);
+    if (!response.ok) {
+      const msg = json?.error?.message || json?.error || json?.message || 'Standardize request failed';
+      throw new SDKError(msg, 'STANDARDIZE_FAILED', json);
+    }
+
+    return json?.data || json;
+  } catch (error) {
+    if (error instanceof SDKError) throw error;
+    throw new SDKError(`Standardize request failed: ${error?.message || error}`, 'STANDARDIZE_FAILED');
+  }
+}
+
+/**
+ * Resolve default ZK Passport configuration values.
+ * Kept as an SDK utility to preserve existing app integrations.
+ *
+ * @param {Object} [overrides] - Caller-provided config overrides
+ * @returns {Object}
+ */
+export function resolveZkPassportConfig(overrides = {}) {
+  const defaults = {
+    provider: 'zkpassport',
+    scope: 'basic_kyc',
+    checkSanctions: true,
+    requireFaceMatch: true,
+    faceMatchMode: 'strict'
+  };
+
+  return {
+    ...defaults,
+    ...(overrides && typeof overrides === 'object' ? overrides : {})
+  };
+}
+
+/**
+ * Convert a UTF-8 string to `0x`-prefixed hex.
+ *
+ * @param {string} value
+ * @returns {string}
+ */
+export function toHexUtf8(value) {
+  const input = typeof value === 'string' ? value : String(value || '');
+  const bytes = new TextEncoder().encode(input);
+  return `0x${Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('')}`;
+}
+
+/**
+ * Sign an arbitrary message with the provided wallet/provider.
+ * Supports EIP-1193 wallets and signer-like objects.
+ *
+ * @param {Object} params
+ * @param {Object} [params.provider] - Wallet provider/signer
+ * @param {string} params.message - Message to sign
+ * @param {string} [params.walletAddress] - Explicit signer address (recommended)
+ * @param {string} [params.chain] - Chain context (`namespace:reference`)
+ * @returns {Promise<string>}
+ */
+export async function signMessage({ provider, message, walletAddress, chain } = {}) {
+  const msg = typeof message === 'string' ? message : String(message || '');
+  if (!msg) {
+    throw new SDKError('signMessage: message is required', 'INVALID_ARGUMENT');
+  }
+
+  const resolvedProvider = provider || (
+    typeof window !== 'undefined' && window?.ethereum ? window.ethereum : null
+  );
+  if (!resolvedProvider) {
+    throw new SDKError('signMessage: provider is required', 'SIGNER_UNAVAILABLE');
+  }
+
+  const chainStr = typeof chain === 'string' && chain.trim().length > 0 ? chain.trim() : 'eip155';
+  const namespace = chainStr.includes(':') ? chainStr.split(':')[0] || 'eip155' : 'eip155';
+
+  const resolveAddress = async () => {
+    if (typeof walletAddress === 'string' && walletAddress.trim().length > 0) return walletAddress;
+    if (namespace === 'solana') {
+      if (resolvedProvider?.publicKey && typeof resolvedProvider.publicKey.toBase58 === 'function') {
+        const pk = resolvedProvider.publicKey.toBase58();
+        if (typeof pk === 'string' && pk) return pk;
+      }
+      if (typeof resolvedProvider.getAddress === 'function') {
+        const addr = await resolvedProvider.getAddress().catch(() => null);
+        if (typeof addr === 'string' && addr) return addr;
+      }
+      if (typeof resolvedProvider.address === 'string' && resolvedProvider.address) return resolvedProvider.address;
+      return null;
+    }
+    if (typeof resolvedProvider.address === 'string' && resolvedProvider.address) return resolvedProvider.address;
+    if (typeof resolvedProvider.getAddress === 'function') return await resolvedProvider.getAddress();
+    if (typeof resolvedProvider.request === 'function') {
+      let accounts = await resolvedProvider.request({ method: 'eth_accounts' }).catch(() => []);
+      if (!Array.isArray(accounts) || accounts.length === 0) {
+        accounts = await resolvedProvider.request({ method: 'eth_requestAccounts' }).catch(() => []);
+      }
+      if (Array.isArray(accounts) && accounts[0]) return accounts[0];
+    }
+    return null;
+  };
+
+  if (namespace !== 'eip155') {
+    if (typeof resolvedProvider.signMessage === 'function') {
+      const encoded = typeof msg === 'string' ? new TextEncoder().encode(msg) : msg;
+      const result = await resolvedProvider.signMessage(encoded);
+      if (typeof result === 'string' && result) return result;
+      if (result instanceof Uint8Array) return encodeBase58Bytes(result);
+      if (result instanceof ArrayBuffer) return encodeBase58Bytes(new Uint8Array(result));
+      if (ArrayBuffer.isView(result)) return encodeBase58Bytes(result);
+      if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer === 'function' && Buffer.isBuffer(result)) return encodeBase58Bytes(result);
+    }
+    throw new SDKError('Non-EVM signing requires provider.signMessage', 'SIGNER_UNAVAILABLE');
+  }
+
+  const address = await resolveAddress();
+
+  if (typeof resolvedProvider.request === 'function' && address) {
+    let firstPersonalSignError = null;
+    try {
+      const sig = await resolvedProvider.request({ method: 'personal_sign', params: [msg, address] });
+      if (typeof sig === 'string' && sig) return sig;
+    } catch (error) {
+      firstPersonalSignError = error;
+    }
+
+    let secondPersonalSignError = null;
+    try {
+      const sig = await resolvedProvider.request({ method: 'personal_sign', params: [address, msg] });
+      if (typeof sig === 'string' && sig) return sig;
+    } catch (error) {
+      secondPersonalSignError = error;
+      const signatureErrorMessage = String(
+        error?.message ||
+        error?.reason ||
+        firstPersonalSignError?.message ||
+        firstPersonalSignError?.reason ||
+        ''
+      ).toLowerCase();
+      const needsHex = /byte|bytes|invalid byte sequence|encoding|non-hex/i.test(signatureErrorMessage);
+      if (needsHex) {
+        try {
+          const hexMsg = toHexUtf8(msg);
+          const sig = await resolvedProvider.request({ method: 'personal_sign', params: [hexMsg, address] });
+          if (typeof sig === 'string' && sig) return sig;
+        } catch {
+          // Continue to additional fallbacks.
+        }
+      }
+    }
+
+    try {
+      const sig = await resolvedProvider.request({ method: 'eth_sign', params: [address, msg] });
+      if (typeof sig === 'string' && sig) return sig;
+    } catch { /* try next method */ }
+
+    if (secondPersonalSignError || firstPersonalSignError) {
+      const lastError = secondPersonalSignError || firstPersonalSignError;
+      const isUserRejection = [4001, 'ACTION_REJECTED'].includes(lastError?.code);
+      if (isUserRejection) {
+        throw lastError;
+      }
+    }
+  }
+
+  if (typeof resolvedProvider.signMessage === 'function') {
+    const result = await resolvedProvider.signMessage(msg);
+    if (typeof result === 'string' && result) return result;
+  }
+
+  throw new SDKError('Unable to sign message with provided wallet/provider', 'SIGNER_UNAVAILABLE');
 }
 
 /**
@@ -572,14 +975,14 @@ export function validateVerifierPayload(verifierId, data) {
       if (!(key in data)) result.missing.push(key);
     });
     if (!('ownerAddress' in data)) {
-      result.warnings.push('ownerAddress omitted (most deployments default to the signed walletAddress)');
+      result.warnings.push('ownerAddress omitted (defaults to the signed walletAddress)');
     }
   } else if (id === 'token-holding') {
     ['contractAddress', 'minBalance', 'chainId'].forEach((key) => {
       if (!(key in data)) result.missing.push(key);
     });
     if (!('ownerAddress' in data)) {
-      result.warnings.push('ownerAddress omitted (most deployments default to the signed walletAddress)');
+      result.warnings.push('ownerAddress omitted (defaults to the signed walletAddress)');
     }
   } else if (id === 'ownership-basic') {
     // ownership-basic requires an owner, and needs at least one binding:

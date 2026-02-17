@@ -4,33 +4,31 @@
   "description": "Content ownership verification with origin lock and optional provenance",
   "properties": {
     "content": {
-      "description": "Content being claimed (max 50KB inline; use contentHash + IPFS for larger)",
+      "description": "Content being claimed (max 50KB inline)",
       "maxLength": 50000,
       "type": "string"
     },
     "contentHash": {
-      "description": "Pre-computed SHA-256 or keccak256 hash (optional if content provided)",
+      "description": "Pre-computed verifier content hash (32-byte hex). Treated as the canonical verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match.",
       "pattern": "^0x[a-fA-F0-9]{64}$",
       "type": "string"
     },
     "contentType": {
-      "description": "MIME type hint for the content/reference (e.g., image/png, audio/mpeg, application/pdf)",
+      "description": "MIME type hint",
       "maxLength": 100,
       "type": "string"
     },
     "owner": {
-      "description": "Wallet address of the owner (must match request walletAddress)",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "description": "Owner identifier (must match request walletAddress). Supports EVM (0x..), Solana (base58), NEAR (account IDs), and other universal address formats depending on chain context.",
+      "format": "universal-address",
+      "minLength": 1,
       "type": "string"
     },
     "provenance": {
-      "description": "Optional provenance metadata for content origin",
       "properties": {
         "aiContext": {
-          "description": "AI generation context (when declaredKind is ai or mixed)",
           "properties": {
             "generatorType": {
-              "description": "Type of AI generator",
               "enum": [
                 "local",
                 "saas",
@@ -39,17 +37,14 @@
               "type": "string"
             },
             "model": {
-              "description": "Model identifier (opaque string)",
               "maxLength": 128,
               "type": "string"
             },
             "provider": {
-              "description": "AI provider (e.g., openai, anthropic, other)",
               "maxLength": 64,
               "type": "string"
             },
             "runId": {
-              "description": "Model run identifier",
               "maxLength": 128,
               "type": "string"
             }
@@ -57,7 +52,6 @@
           "type": "object"
         },
         "declaredKind": {
-          "description": "Content creation type (advisory, not verified)",
           "enum": [
             "human",
             "ai",
@@ -72,36 +66,32 @@
     "reference": {
       "properties": {
         "description": {
-          "description": "Optional description",
           "maxLength": 500,
           "type": "string"
         },
         "id": {
-          "description": "Reference identifier (CID, URL, tx hash, chainId:address:tokenId, etc.)",
+          "description": "Reference identifier",
           "maxLength": 2048,
           "type": "string"
         },
         "mime": {
-          "description": "MIME type for file references",
           "maxLength": 100,
           "type": "string"
         },
         "name": {
-          "description": "Original filename for file references",
           "maxLength": 255,
           "type": "string"
         },
         "size": {
-          "description": "File size in bytes",
+          "minimum": 0,
           "type": "integer"
         },
         "title": {
-          "description": "Optional display title",
           "maxLength": 200,
           "type": "string"
         },
         "type": {
-          "description": "Reference type for traceability",
+          "description": "Reference type",
           "enum": [
             "ipfs",
             "ipfs-hash",

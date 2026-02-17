@@ -1,20 +1,17 @@
 {
   "$id": "https://neus.network/schemas/agent-identity.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Establishes a portable agent identity anchored to a wallet (ERC-8004 compatible)",
+  "description": "Portable agent identity, ERC-8004 compatible",
   "properties": {
     "agentId": {
-      "description": "Unique string identifier (e.g., neus-bot-1)",
       "maxLength": 128,
       "type": "string"
     },
     "agentLabel": {
-      "description": "Human-readable display name",
       "maxLength": 128,
       "type": "string"
     },
     "agentType": {
-      "description": "Type of agent for categorization",
       "enum": [
         "ai",
         "bot",
@@ -25,16 +22,16 @@
       "type": "string"
     },
     "agentWallet": {
-      "description": "Agent wallet address (must match signer)",
-      "pattern": "^0x[a-fA-F0-9]{40}$",
+      "format": "evm-address",
       "type": "string"
     },
     "capabilities": {
-      "description": "List of capabilities (e.g., trading, posting, payments)",
+      "items": {
+        "type": "string"
+      },
       "type": "array"
     },
     "description": {
-      "description": "Brief description of what this agent does",
       "maxLength": 500,
       "type": "string"
     }

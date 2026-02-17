@@ -14,7 +14,7 @@
     <tr>
       <td><strong>SDK proof (this page)</strong></td>
       <td>Create a proof via wallet signature and poll status.</td>
-      <td><a href="./QUICKSTART.md">./QUICKSTART.md</a></td>
+      <td><strong>This page</strong></td>
     </tr>
     <tr>
       <td><strong>VerifyGate widget</strong></td>
@@ -56,21 +56,21 @@ const proof = await client.verify({
   wallet: window.ethereum,
 });
 
-const qHash = proof.qHash; // Proof ID (qHash)
+const proofId = proof.proofId; // Standard proof ID
 ```
 
 ## Production defaults (recommended)
 
 - **Privacy**: Default to `options: { privacyLevel: 'private', publicDisplay: false }` unless you explicitly need public discovery.
 - **Storage**: Keep `storeOriginalContent: false` unless you intentionally need raw content stored.
-- **Proof ID**: Treat `qHash` as an opaque identifier. Use timestamps/status fields to reason about freshness.
+- **Proof ID**: Treat `proofId` as an opaque identifier.
 
 ## 3b. Poll status (when verifiers run async)
 
 Some verifiers complete instantly; others return `202` and finish asynchronously. Poll until terminal status:
 
 ```javascript
-const final = await client.pollProofStatus(qHash, { interval: 3000, timeout: 60000 });
+const final = await client.pollProofStatus(proofId, { interval: 3000, timeout: 60000 });
 console.log(final.status);
 ```
 
@@ -99,9 +99,26 @@ export default function ProtectedPage() {
 }
 ```
 
+### Hosted interactive verifiers (OAuth / ZK)
+
+For `ownership-social`, `ownership-org-oauth`, and `proof-of-human`, `VerifyGate` launches NEUS hosted checkout.
+
+Hosted checkout flow details (popup + callback): **[Gating](./concepts/gating.md#hosted-checkout-interactive-verifiers)**.
+
+```jsx
+<VerifyGate
+  requiredVerifiers={['ownership-social']}
+  onVerified={(result) => {
+    console.log('Hosted verification complete', result.proofId);
+  }}
+>
+  <div>Access granted.</div>
+</VerifyGate>
+```
+
 ## 5. Server-side gating (minimal eligibility)
 
-For backend/server checks, prefer a gate check (minimal yes/no, no full proof payloads):
+For backend/server checks, prefer a gate check (minimal yes/no, no full proof payloads) via `GET /api/v1/proofs/check`:
 
 ```javascript
 const result = await client.gateCheck({

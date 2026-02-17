@@ -4,8 +4,8 @@
 
 **Verify once. Prove everywhere.**
 
-NEUS is a **universal verification protocol** for identity, ownership, and agent authenticity across platforms and chains.  
-It turns verifications into a **portable proof** you can reuse anywhere—apps, APIs, smart contracts, or AI systems—without rebuilding trust logic each time.
+NEUS is a **portable proof infrastructure** for creating and managing verifiable proofs that are designed for maximum portability and reuse.
+It turns verified claims into **portable proof** you can reuse anywhere—apps, APIs, smart contracts, or AI systems—without rebuilding trust logic each time.
 
 ## Quick start (SDK)
 
@@ -25,8 +25,8 @@ const proof = await client.verify({
   wallet: window.ethereum,
 });
 
-// Proof ID (wire field: qHash)
-const proofId = proof.qHash;
+// Proof ID (standard).
+const proofId = proof.proofId;
 console.log('Proof ID:', proofId);
 
 // Resolve status later (for gating, auditing, refresh policy, etc.)
@@ -34,14 +34,15 @@ const status = await client.getStatus(proofId);
 console.log('Status:', status.status);
 ```
 
-> **Proof ID = `qHash`** (field name).  
-> The Proof ID is stable for repeat verifications. **Freshness** comes from timestamps like `completedAt` / per-verifier `verifiedAt`.
+> **Use `proofId` as the standard ID.**  
+> `qHash` is a deprecated alias with the same value (`proofId === qHash`).  
+> Freshness comes from timestamps like `completedAt` / per-verifier `verifiedAt`.
 
 ## Server-side gating (recommended)
 
 For backend eligibility checks, use the minimal gate endpoint (or the SDK wrapper). This avoids pulling full proof payloads and lets you enforce freshness windows for point-in-time verifiers.
 
-- HTTP: `GET /api/v1/proofs/gate/check`
+- HTTP: `GET /api/v1/proofs/check`
 - SDK: `client.gateCheck({ address, verifierIds, since, sinceDays, ... })`
 
 ---
@@ -74,7 +75,7 @@ For Next.js App Router, render widgets inside a **Client Component** (widget mod
 | [Quickstart](./docs/QUICKSTART.md)       | Create your first proof            |
 | [API Reference](./docs/api/README.md)    | HTTP endpoints                     |
 | [Verifiers](./docs/verifiers/README.md)  | Verifier catalog + schemas         |
-| [Contracts](./contracts/VERIFICATION.md) | Verified deployments and explorers |
+| [Contracts](./contracts/VERIFICATION.md) | Verified contracts and explorers |
 | [Examples](./examples/)                  | Integration examples               |
 
 ---
@@ -91,5 +92,5 @@ For Next.js App Router, render widgets inside a **Client Component** (widget mod
 
 ## License
 
-* **Smart Contracts:** BUSL-1.1 → Apache-2.0 (Aug 2028)
-* **SDK & Tools:** Apache-2.0
+- **Smart Contracts:** BUSL-1.1 → Apache-2.0 (Aug 2028)
+- **SDK & Tools:** Apache-2.0

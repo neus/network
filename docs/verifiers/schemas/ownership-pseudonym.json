@@ -1,25 +1,26 @@
 {
   "$id": "https://neus.network/schemas/ownership-pseudonym.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Pseudonymous identity ownership verification - wallet ↔ namespaced handle binding",
+  "description": "Pseudonymous identity - wallet ↔ handle binding",
   "properties": {
     "displayName": {
-      "description": "Human-readable display name",
       "maxLength": 64,
       "type": "string"
     },
     "metadata": {
-      "description": "App-specific metadata",
       "type": "object"
     },
     "namespace": {
-      "description": "Namespace (default: neus)",
-      "pattern": "^[a-z0-9._-]{1,64}$",
+      "default": "neus",
+      "maxLength": 64,
+      "minLength": 1,
+      "pattern": "^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$",
       "type": "string"
     },
     "pseudonymId": {
-      "description": "Handle within a namespace",
-      "pattern": "^[a-z0-9._-]{3,64}$",
+      "maxLength": 32,
+      "minLength": 3,
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,30}[a-z0-9]$",
       "type": "string"
     }
   },

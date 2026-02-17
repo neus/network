@@ -2,7 +2,7 @@
 
 The NEUS Public API is defined by a single **OpenAPI 3.0** specification.
 
-## Canonical specification
+## Standard specification
 
 - **OpenAPI JSON**: [`public-api.json`](public-api.json)
 
@@ -13,6 +13,10 @@ The NEUS Public API is defined by a single **OpenAPI 3.0** specification.
 ## Authentication
 
 Request-bound wallet signatures. See [Signing](../concepts/signing.md).
+
+## Optional Attribution Header
+
+Use `X-Neus-App` as an optional public app identifier for attribution and analytics. It is not a secret and is not used for authentication.
 
 ## Rate limits
 

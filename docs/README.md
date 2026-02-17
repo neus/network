@@ -2,6 +2,8 @@
 
 The open verification layer for identity, ownership, and agent authenticity.
 
+Standard identifier: use `proofId` in public integrations.
+
 ## Get started
 
 <table data-view="cards">
@@ -17,6 +19,11 @@ The open verification layer for identity, ownership, and agent authenticity.
       <td><strong>Quickstart</strong></td>
       <td>Create your first proof and wire a gate.</td>
       <td><a href="./QUICKSTART.md">./QUICKSTART.md</a></td>
+    </tr>
+    <tr>
+      <td><strong>Integration</strong></td>
+      <td>Production flow: gate check, verification, status, and unlock.</td>
+      <td><a href="./integration.md">./integration.md</a></td>
     </tr>
     <tr>
       <td><strong>SDK</strong></td>
@@ -45,7 +52,6 @@ The open verification layer for identity, ownership, and agent authenticity.
     </tr>
   </tbody>
 </table>
-
 ## Learn the system
 
 <table data-view="cards">
@@ -58,25 +64,34 @@ The open verification layer for identity, ownership, and agent authenticity.
   </thead>
   <tbody>
     <tr>
-      <td><strong>Concepts</strong></td>
+      <td><strong>Core Concepts</strong></td>
       <td>Signing, verification lifecycle, gating, and widgets.</td>
       <td><a href="./concepts/README.md">./concepts/README.md</a></td>
     </tr>
     <tr>
-      <td><strong>Guides</strong></td>
+      <td><strong>Cookbook</strong></td>
       <td>Real-world patterns (NFT gating, domains, agents, sybil resistance).</td>
       <td><a href="./guides/README.md">./guides/README.md</a></td>
     </tr>
     <tr>
-      <td><strong>Privacy</strong></td>
-      <td>Public vs private proofs and safe defaults.</td>
-      <td><a href="./PRIVACY.md">./PRIVACY.md</a></td>
+      <td><strong>Learn</strong></td>
+      <td>Manifesto, standards, support, and legal policy.</td>
+      <td><a href="./learn/README.md">./learn/README.md</a></td>
+    </tr>
+    <tr>
+      <td><strong>Legal</strong></td>
+      <td>Terms, privacy policy, DMCA, security disclosure, and sale terms.</td>
+      <td><a href="./learn/legal/README.md">./learn/legal/README.md</a></td>
     </tr>
     <tr>
       <td><strong>Security</strong></td>
       <td>Threat model and integration constraints.</td>
-      <td><a href="../SECURITY.md">../SECURITY.md</a></td>
+      <td><a href="./SECURITY.md">./SECURITY.md</a></td>
+    </tr>
+    <tr>
+      <td><strong>Privacy for Integrators</strong></td>
+      <td>Public vs private proofs and safe defaults.</td>
+      <td><a href="./PRIVACY.md">./PRIVACY.md</a></td>
     </tr>
   </tbody>
 </table>
-

@@ -5,6 +5,7 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+.npmrc
 
 # Dependencies
 node_modules/

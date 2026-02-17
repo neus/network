@@ -1,0 +1,31 @@
+{
+  "$id": "https://neus.network/schemas/proof-of-human.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Unique human verification for sybil resistance",
+  "properties": {
+    "proofs": {
+      "maxItems": 10,
+      "minItems": 1,
+      "type": "array"
+    },
+    "provider": {
+      "enum": [
+        "zkpassport"
+      ],
+      "type": "string"
+    },
+    "queryResult": {
+      "type": "object"
+    },
+    "scope": {
+      "pattern": "^[a-zA-Z0-9_-]{1,64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "proofs",
+    "queryResult"
+  ],
+  "title": "proof-of-human",
+  "type": "object"
+}

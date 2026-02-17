@@ -1,6 +1,6 @@
-# Guides
+# Cookbook
 
-Step-by-step recipes for common integrations (NFT gating, domains, agents, and sybil resistance).
+High-value, production-oriented integration recipes (NFT gating, domains, agents, and sybil resistance).
 
 <table data-view="cards">
   <thead>

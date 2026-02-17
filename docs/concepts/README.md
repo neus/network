@@ -1,6 +1,6 @@
-# Concepts
+# Core Concepts
 
-Signing rules, proof lifecycle, gating semantics, and canonical terminology.
+Signing rules, proof lifecycle, how gating works, and standard terminology for NEUS integrations.
 
 <table data-view="cards">
   <thead>
@@ -13,7 +13,7 @@ Signing rules, proof lifecycle, gating semantics, and canonical terminology.
   <tbody>
     <tr>
       <td><strong>Verification</strong></td>
-      <td>Proof lifecycle, Proof ID (qHash) semantics, and status polling.</td>
+      <td>Proof lifecycle, Proof ID (`proofId`) behavior, and status polling.</td>
       <td><a href="./verification.md">./verification.md</a></td>
     </tr>
     <tr>
