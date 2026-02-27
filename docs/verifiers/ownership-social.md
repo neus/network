@@ -11,7 +11,7 @@ Social media account ownership via OAuth
 ## Required fields
 
 - `provider` (`string enum: discord, github, facebook, x, farcaster, linkedin, telegram, coinbase`)
-- `internalSocialToken` (`string`) — **issued by NEUS** via hosted OAuth exchange (do not generate or store third-party OAuth tokens in your app)
+- `internalSocialToken` (`string`)
 
 ## Optional fields
 
@@ -22,10 +22,14 @@ Social media account ownership via OAuth
 ## Example (schema-validated)
 
 ```javascript
-// Recommended: use hosted checkout for interactive verifiers.
-// Your app receives a proofId after the user completes OAuth in the NEUS UI.
-//
-// <VerifyGate requiredVerifiers={['ownership-social']} hostedCheckoutUrl="https://neus.network/verify" />
+await client.verify({
+  verifier: 'ownership-social',
+  data: {
+    "provider": "discord",
+    "internalSocialToken": "social-token-example",
+    "walletAddress": "0x2222222222222222222222222222222222222222"
+  }
+});
 
 // HTTP request envelope
 {
@@ -34,7 +38,7 @@ Social media account ownership via OAuth
   ],
   "data": {
     "provider": "discord",
-    "internalSocialToken": "<issued_by_neus_hosted_oauth_exchange>",
+    "internalSocialToken": "social-token-example",
     "walletAddress": "0x2222222222222222222222222222222222222222"
   },
   "walletAddress": "0x1234567890abcdef1234567890abcdef12345678",

@@ -21,6 +21,8 @@
 * [Domain Verification](guides/domain-verification.md)
 * [Sybil Resistance](guides/sybil-resistance.md)
 * [Verifiable Agents](guides/verifiable-agents.md)
+* [Hub Integrator Setup](guides/hub-integrator-setup.md)
+* [MCP Integration](guides/mcp.md)
 
 ## Verifiers
 
@@ -53,7 +55,11 @@
 ## Learn
 
 * [Overview](learn/README.md)
+* [Manifesto](learn/manifesto.md)
+* [How To Prove What's Real](learn/how-to-prove-whats-real.md)
 * [Standards & EIPs](learn/standards-and-eips.md)
+* [Brand Kit](learn/brand-kit.md)
+* [Support and Contact](learn/support-and-contact.md)
 
 ### Legal
 
@@ -62,6 +68,7 @@
 * [Privacy Policy](learn/legal/privacy-policy.md)
 * [DMCA](learn/legal/dmca.md)
 * [Security Disclosure](learn/legal/security-disclosure.md)
+* [NFT Sale Terms](learn/legal/nft-sale-terms.md)
 
 ## Trust & Privacy
 

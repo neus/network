@@ -18,11 +18,16 @@ This is the recommended end-to-end path for a production NEUS integration.
 - **Fresh proof required**: `strategy="fresh"` for high-stakes actions.
 - **Read-only check**: `strategy="reuse"` when you do not want to create new proofs.
 
+## Session-first integration
+
+For lowest friction: use hosted verify + auth code exchange. Redirect users to `https://neus.network/verify?intent=login&returnUrl=...`. After sign-in, the page returns an auth `code`. Partner server calls `POST https://api.neus.network/api/v1/auth/code/exchange` with the code and partner API key to obtain session/token. Subsequent API calls use cookie/Bearer — no per-request signing.
+
 ## Hosted checkout requirements
 
 Interactive verifiers (`ownership-social`, `ownership-org-oauth`, `proof-of-human`) require hosted checkout.
 
-- Default checkout URL: `https://neus.network/verify`
+- Default checkout URL: `https://neus.network/verify` (or use SDK `getHostedCheckoutUrl()`)
+- Sponsored flows should include `X-Neus-App` (public appId) and `X-Sponsor-Grant` when your backend is covering verification costs.
 
 See the hosted checkout integration flow (popup + callback) in [Gating](./concepts/gating.md#hosted-checkout-interactive-verifiers).
 
@@ -42,6 +47,7 @@ For backend policy enforcement, use `gateCheck` with explicit recency:
 
 ## Related references
 
+- [Hub Integrator Setup](./guides/hub-integrator-setup.md)
 - [Gating](./concepts/gating.md)
 - [Signing](./concepts/signing.md)
 - [API Reference](./api/README.md)

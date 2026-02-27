@@ -10,10 +10,15 @@ Integrators should use the following base URL for all requests:
 
 ## Authentication
 
-Authentication is handled via request-bound wallet signatures following the [NEUS Standard Signing String](../concepts/signing.md). This ensures that every verification request is cryptographically bound to the user's intent.
+Authentication is handled via request-bound wallet signatures following the [NEUS Standard Signing String](../concepts/signing.md), or via a valid NEUS session in first-party Hub flows. This ensures verification requests are cryptographically bound to user intent while allowing low-friction session-first UX on the NEUS Hub.
 
-- **Proof Creation**: Requires a valid EIP-191 or universal signature in the request body.
+- **Proof Creation (generic/public callers)**: Typically requires a valid EIP-191 or universal signature in the request body.
+- **Proof Creation (Hub / first-party session-first)**: A valid authenticated session for the same wallet may satisfy the proof-envelope auth requirement; verifier-specific subject-control signatures may still be required.
 - **Status Checks**: Public proofs are globally readable; private proofs require owner authentication headers.
+
+## Session-first integration (lowest friction)
+
+For integrators embedding hosted verify: redirect users to `https://neus.network/verify?intent=login&returnUrl=...`. After sign-in, the page returns an auth `code` via postMessage or redirect. Partner server exchanges the code at `POST https://api.neus.network/api/v1/auth/code/exchange` (with partner API key) to obtain session/token. Subsequent API calls use cookie/Bearer — no per-request signing required.
 
 ## Recommended integration flows
 

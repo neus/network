@@ -11,7 +11,7 @@ Organizational OAuth verification
 ## Required fields
 
 - `provider` (`string enum: google, microsoft`)
-- `internalSocialToken` (`string`) — **issued by NEUS** via hosted OAuth exchange (do not generate or store third-party OAuth tokens in your app)
+- `internalSocialToken` (`string`)
 
 ## Optional fields
 
@@ -23,10 +23,15 @@ Organizational OAuth verification
 ## Example (schema-validated)
 
 ```javascript
-// Recommended: use hosted checkout for interactive verifiers.
-// Your app receives a proofId after the user completes OAuth in the NEUS UI.
-//
-// <VerifyGate requiredVerifiers={['ownership-org-oauth']} hostedCheckoutUrl="https://neus.network/verify" />
+await client.verify({
+  verifier: 'ownership-org-oauth',
+  data: {
+    "provider": "google",
+    "internalSocialToken": "org-token-example",
+    "walletAddress": "0x4444444444444444444444444444444444444444",
+    "expectedOrgDomain": "example.com"
+  }
+});
 
 // HTTP request envelope
 {
@@ -35,7 +40,7 @@ Organizational OAuth verification
   ],
   "data": {
     "provider": "google",
-    "internalSocialToken": "<issued_by_neus_hosted_oauth_exchange>",
+    "internalSocialToken": "org-token-example",
     "walletAddress": "0x4444444444444444444444444444444444444444",
     "expectedOrgDomain": "example.com"
   },

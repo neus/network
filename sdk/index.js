@@ -31,7 +31,9 @@ export {
   validateSignatureComponents,
   withRetry,
   delay,
-  NEUS_CONSTANTS
+  NEUS_CONSTANTS,
+  DEFAULT_HOSTED_VERIFY_URL,
+  getHostedCheckoutUrl
 } from './utils.js';
 
 // Gate recipes (examples, NOT defaults - pick what fits your use case)

@@ -33,6 +33,8 @@ const status = await client.getStatus(proofId);
 const client = new NeusClient({
   // Optional: API base URL (default: https://api.neus.network)
   apiUrl: 'https://api.neus.network',
+  // Optional: public app attribution ID (non-secret)
+  appId: 'neus-network',
   // Optional: request timeout (ms)
   timeout: 30000,
 });
@@ -58,11 +60,40 @@ const res = await client.verify({
 });
 ```
 
+Note: In the NEUS Hub (first-party UI), matching authenticated sessions may allow session-first proof creation without a repeat proof-envelope signature. The SDK examples here document the generic integrator path, which should assume signature-based submissions unless you are explicitly integrating through the Hub session flow.
+
 ## What verifiers are available?
 
 Use the API directly (avoids drift):
 
 - `GET /api/v1/verification/verifiers`
+
+## App attribution (`appId`)
+
+Set `appId` on the client (or send `X-Neus-App` manually) to attribute usage and analytics to your app. `appId` is a public identifier, not a secret.
+
+```javascript
+const client = new NeusClient({
+  apiUrl: 'https://api.neus.network',
+  appId: 'acme-web',
+});
+```
+
+## Hosted checkout URL builder
+
+Use `getHostedCheckoutUrl` for a single typed entry point:
+
+```javascript
+import { getHostedCheckoutUrl } from '@neus/sdk';
+
+const url = getHostedCheckoutUrl({
+  gateId: 'my-gate',
+  returnUrl: 'https://myapp.com/callback',
+  verifiers: ['ownership-social'],
+  intent: 'login',  // for auth-code flow
+});
+// => https://neus.network/verify?gateId=my-gate&returnUrl=...&verifiers=...
+```
 
 ## Hosted interactive verifiers
 

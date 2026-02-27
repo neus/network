@@ -739,7 +739,10 @@ export class NeusClient {
           ...(data?.agentLabel && { agentLabel: data.agentLabel }),
           ...(data?.agentType && { agentType: data.agentType }),
           ...(data?.description && { description: data.description }),
-          ...(data?.capabilities && { capabilities: data.capabilities })
+          ...(data?.capabilities && { capabilities: data.capabilities }),
+          ...(data?.instructions && { instructions: data.instructions }),
+          ...(data?.skills && { skills: data.skills }),
+          ...(data?.services && { services: data.services })
         };
       } else if (verifier === 'agent-delegation') {
         if (!data?.agentWallet) {
@@ -752,7 +755,11 @@ export class NeusClient {
           ...(data?.scope && { scope: data.scope }),
           ...(data?.permissions && { permissions: data.permissions }),
           ...(data?.maxSpend && { maxSpend: data.maxSpend }),
-          ...(data?.expiresAt && { expiresAt: data.expiresAt })
+          ...(data?.allowedPaymentTypes && { allowedPaymentTypes: data.allowedPaymentTypes }),
+          ...(data?.receiptDisclosure && { receiptDisclosure: data.receiptDisclosure }),
+          ...(data?.expiresAt && { expiresAt: data.expiresAt }),
+          ...(data?.instructions && { instructions: data.instructions }),
+          ...(data?.skills && { skills: data.skills })
         };
       } else if (verifier === 'ai-content-moderation') {
         if (!data?.content) {
@@ -1682,8 +1689,16 @@ export class NeusClient {
         if (match && typeof match === 'object') {
           const data = verifier.data || {};
           const input = data.input || {}; // NFT/token verifiers store fields in input
-          
-          for (const [key, expected] of Object.entries(match)) {
+          // Gate format: match as array [{path, op, value}]. Convert to {path: value} for iteration.
+          const matchObj = Array.isArray(match)
+            ? Object.fromEntries(
+                match
+                  .filter((m) => m && m.path && String(m.value ?? '').trim() !== '')
+                  .map((m) => [String(m.path).trim(), m.value])
+              )
+            : match;
+
+          for (const [key, expected] of Object.entries(matchObj)) {
             let actualValue = null;
             
             // Handle nested field access
@@ -1713,8 +1728,9 @@ export class NeusClient {
               actualValue = data.reference?.id || data.content;
             }
             
-            // Special handling for verifier-specific fields
+            // Special handling for verifier-specific fields (claim-based, aligns with proofs/check)
             if (actualValue === undefined) {
+              const claims = data.claims || {};
               if (key === 'contractAddress') {
                 actualValue = input.contractAddress || data.contractAddress;
               } else if (key === 'tokenId') {
@@ -1733,6 +1749,18 @@ export class NeusClient {
                 actualValue = data.verificationMethod;
               } else if (key === 'domain') {
                 actualValue = data.domain;
+              } else if (key === 'claims.sanctions_passed') {
+                actualValue = claims.sanctions_passed ?? claims.sanctionsPassed;
+              } else if (key === 'claims.age_min') {
+                actualValue = claims.age_min ?? claims.ageMin;
+              } else if (key === 'neusPersonhoodId') {
+                actualValue = data.neusPersonhoodId;
+              } else if (key === 'riskLevel') {
+                actualValue = data.riskLevel;
+              } else if (key === 'sanctioned') {
+                actualValue = data.sanctioned;
+              } else if (key === 'poisoned') {
+                actualValue = data.poisoned;
               }
             }
             
@@ -1755,11 +1783,19 @@ export class NeusClient {
             
             let normalizedActual = actualValue;
             let normalizedExpected = expected;
-            
+
             if (actualValue === undefined || actualValue === null) {
               return false;
             }
-            
+
+            // Boolean claims (sanctions_passed, sanctioned, poisoned)
+            if (typeof actualValue === 'boolean' || (key && (key.includes('sanctions') || key.includes('sanctioned') || key.includes('poisoned')))) {
+              const bActual = Boolean(actualValue);
+              const bExpected = expected === true || expected === 'true' || String(expected).toLowerCase() === 'true';
+              if (bActual !== bExpected) return false;
+              continue;
+            }
+
             if (key === 'chainId' || (key === 'tokenId' && (typeof actualValue === 'number' || !isNaN(Number(actualValue))))) {
               normalizedActual = Number(actualValue);
               normalizedExpected = Number(expected);

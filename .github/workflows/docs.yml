@@ -1,27 +1,9 @@
+# Manual trigger only. Run via Actions → Docs → Run workflow.
+# Validates: markdown (docs), OpenAPI (docs/api/public-api.json), GitBook structure.
+# GitBook sync: configured in GitBook dashboard; pushes to main sync from there.
 name: Docs
 
 on:
-  pull_request:
-    paths:
-      - "docs/**"
-      - ".gitbook.yaml"
-      - ".markdownlint-cli2.jsonc"
-      - "sdk/**/*.md"
-      - "examples/**/*.md"
-      - "README.md"
-      - "SECURITY.md"
-      - "CONTRIBUTING.md"
-  push:
-    branches: [main]
-    paths:
-      - "docs/**"
-      - ".gitbook.yaml"
-      - ".markdownlint-cli2.jsonc"
-      - "sdk/**/*.md"
-      - "examples/**/*.md"
-      - "README.md"
-      - "SECURITY.md"
-      - "CONTRIBUTING.md"
   workflow_dispatch:
 
 permissions:
@@ -40,11 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        run: |
-          git init
-          git remote add origin https://github.com/${{ github.repository }}.git
-          git fetch origin ${{ github.sha }}
-          git checkout ${{ github.sha }}
+        uses: actions/checkout@v4
 
       - name: Setup Node ${{ env.NODE_VERSION }}
         run: |

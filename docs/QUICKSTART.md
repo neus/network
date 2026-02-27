@@ -26,6 +26,11 @@
       <td>Minimal curl / Node.js examples for server integrations.</td>
       <td><a href="../examples/README.md">../examples/README.md</a></td>
     </tr>
+    <tr>
+      <td><strong>Hub integrator setup</strong></td>
+      <td>Org/domain setup, app linking, sponsor grants, hosted checkout, and usage tracking.</td>
+      <td><a href="./guides/hub-integrator-setup.md">./guides/hub-integrator-setup.md</a></td>
+    </tr>
   </tbody>
 </table>
 
@@ -42,7 +47,7 @@ Initialize the client in your app. Public verifiers do not require API keys.
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient();
+const client = new NeusClient({ appId: 'neus-network' });
 ```
 
 ## 3. Verify Something
@@ -137,6 +142,7 @@ Freshness note: for point-in-time verifiers (balances, ownership, risk), always 
 ## What's Next?
 
 - **[Guides](./guides/README.md)** — Use-case walkthroughs.
+- **[Hub Integrator Setup](./guides/hub-integrator-setup.md)** — Domain/org → app link → sponsor grants → hosted checkout.
 - **[View Verifier Catalog](./verifiers/README.md)** — Verifier IDs, tiers, and input schemas.
 - **[Read API Docs](./api/README.md)** — Deep dive into the HTTP endpoints.
 - **[SDK](../sdk/README.md)** — Client usage, configuration, and widgets.

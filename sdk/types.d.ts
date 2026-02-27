@@ -590,6 +590,18 @@ declare module '@neus/sdk' {
   /**
    * NEUS Network constants
    */
+  export const DEFAULT_HOSTED_VERIFY_URL: string;
+
+  export function getHostedCheckoutUrl(opts?: {
+    gateId?: string;
+    returnUrl?: string;
+    verifiers?: string[];
+    preset?: string;
+    mode?: string;
+    intent?: string;
+    baseUrl?: string;
+  }): string;
+
   export const NEUS_CONSTANTS: {
     HUB_CHAIN_ID: number;
     TESTNET_CHAINS: number[];
@@ -1004,6 +1016,13 @@ declare module '@neus/sdk' {
     agentType?: 'ai' | 'bot' | 'service' | 'automation' | 'agent';
     description?: string;
     capabilities?: any[];
+    instructions?: string;
+    skills?: string[];
+    services?: Array<{
+      name: string;
+      endpoint: string;
+      version?: string;
+    }>;
     [key: string]: any;
   };
 
@@ -1017,6 +1036,8 @@ declare module '@neus/sdk' {
     allowedPaymentTypes?: string[];
     receiptDisclosure?: 'none' | 'summary' | 'full';
     expiresAt?: number;
+    instructions?: string;
+    skills?: string[];
     [key: string]: any;
   };
 

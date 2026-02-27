@@ -78,6 +78,8 @@ For Next.js App Router, render widgets inside a **Client Component** (widget mod
 | [Contracts](./contracts/VERIFICATION.md) | Verified contracts and explorers |
 | [Examples](./examples/)                  | Integration examples               |
 
+**Publish flow:** OpenAPI spec (`docs/api/public-api.json`) is generated from `neus-nut` routes. In a workspace with both repos, run `npm run docs` in `neus-nut` to sync; then run the [Docs workflow](.github/workflows/docs.yml) (Actions → Docs) to validate markdown + OpenAPI before GitBook sync.
+
 ---
 
 ## Support

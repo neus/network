@@ -1179,3 +1179,36 @@ export function validateSignatureComponents({ walletAddress, signature, signedTi
 
   return result;
 }
+
+/** Default hosted verify base URL */
+export const DEFAULT_HOSTED_VERIFY_URL = 'https://neus.network/verify';
+
+/**
+ * Build canonical hosted checkout/verify URL for integrators.
+ * Single typed entry point to avoid copy-paste errors.
+ * @param {Object} opts
+ * @param {string} [opts.gateId] - Gate ID for gate-backed checkout
+ * @param {string} [opts.returnUrl] - Partner return URL (postMessage/redirect)
+ * @param {string[]} [opts.verifiers] - Verifier IDs (comma-joined)
+ * @param {string} [opts.preset] - Preset name (e.g. 'human')
+ * @param {string} [opts.mode] - 'popup' or null
+ * @param {string} [opts.intent] - 'login' for auth-code flow
+ * @param {string} [opts.baseUrl] - Override base (default: https://neus.network/verify)
+ * @returns {string} Full URL
+ */
+export function getHostedCheckoutUrl(opts = {}) {
+  const base = typeof opts.baseUrl === 'string' && opts.baseUrl.trim()
+    ? opts.baseUrl.replace(/\/+$/, '')
+    : DEFAULT_HOSTED_VERIFY_URL;
+  const params = new URLSearchParams();
+  if (opts.gateId) params.set('gateId', String(opts.gateId));
+  if (opts.returnUrl) params.set('returnUrl', String(opts.returnUrl));
+  if (Array.isArray(opts.verifiers) && opts.verifiers.length > 0) {
+    params.set('verifiers', opts.verifiers.filter(Boolean).join(','));
+  }
+  if (opts.preset) params.set('preset', String(opts.preset));
+  if (opts.mode) params.set('mode', String(opts.mode));
+  if (opts.intent) params.set('intent', String(opts.intent));
+  const qs = params.toString();
+  return qs ? `${base}?${qs}` : base;
+}

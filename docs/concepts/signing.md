@@ -1,6 +1,8 @@
 # Signing
 
-Authentication in NEUS is **signature-based**.
+Proof creation and owner-authorized actions in NEUS are **signature-based**.
+
+NEUS also supports an optional **session** layer (`/api/v1/auth/*`) for first-party browser UX (wallet + passkey). Sessions reduce repeated sign-in prompts, but they do not change the verification signing contract described below.
 
 ## Supported Wallets
 
@@ -32,7 +34,9 @@ Timestamp: {unix_ms}
    - Solana: preserve base58 address as-is (do not lowercase)
    - NEAR: account IDs are treated as lowercase
 2. **Chain:** the `Chain:` line is bound into the signature.
-   - EVM (`0x...`): most clients should **omit** `chain` / `chainId` and let the server standardize it.
+   - EVM (`eip155` / `0x...`): the server **forces HUB chain context** for verification signing (the `Chain:` line is the hub chainId).
+     - Clients should not guess this value; call `POST /api/v1/verification/standardize` and sign the returned `signerString`.
+     - When submitting the verification request, include the signature + signedTimestamp; the server will normalize any EVM chain inputs to hub context.
    - Non-EVM: send `chain` as a CAIP-2 string (example: `solana:mainnet`). The signing string’s `Chain:` line must match that `chain`.
 3. **Verifiers:** comma-separated, no spaces (example: `ownership-basic,wallet-risk`).
 4. **Data:** deterministic JSON (keys sorted) with no extra whitespace.

@@ -49,25 +49,6 @@ await client.verify({
 }
 ```
 
-## Expiry and namespace behavior
-
-- The verifier response includes `expiresAt` (unix milliseconds). Integrators should enforce `Date.now() <= expiresAt`.
-- `namespace: "neus"` claims are paid username claims and include tier-based expiry.
-- Non-`neus` namespace claims are supported and still include `expiresAt` (long-lived by default unless policy changes).
-
-## Integrator claim flow (production)
-
-1. Check handle availability with `GET /api/v1/profile/pseudonym-availability?name=<handle>`.
-2. Optional ownership lookup with `GET /api/v1/profile/pseudonym-lookup/{handleOrNamespace:handle}`.
-3. If claiming in `neus` namespace, payment is handled by NEUS (hosted claim/checkout flow). If you support **on-chain payment** inside your app, provide the on-chain payment proof in `options` when calling `POST /api/v1/verification`:
-   - `options.paymentTxHash` (on-chain)
-4. Submit verification request with `verifierIds: ["ownership-pseudonym"]` and signed envelope.
-
-### Payment proof fields (request options)
-
-- `paymentTxHash` (`string`) for on-chain settlement
-- `paymentProof.chainId` (`integer`) is required for on-chain claims (Base mainnet `8453`)
-
 ## Next steps
 
 - Use this verifier in `requiredVerifiers` for `VerifyGate` or in `verifierIds` for API gate checks.

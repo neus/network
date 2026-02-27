@@ -326,22 +326,6 @@
           },
           "options": {
             "type": "object",
-            "description": "Verification options. For ownership-pseudonym claims in `neus` namespace, NEUS supports on-chain payment proof via paymentTxHash/paymentProof.",
-            "properties": {
-              "paymentTxHash": {
-                "type": "string",
-                "description": "On-chain payment transaction hash."
-              },
-              "paymentProof": {
-                "type": "object",
-                "properties": {
-                  "txHash": { "type": "string" },
-                  "chainId": { "type": "integer" },
-                  "paymentCurrency": { "type": "string" }
-                },
-                "additionalProperties": true
-              }
-            },
             "additionalProperties": true
           },
           "meta": {
@@ -2182,6 +2166,38 @@
             }
           },
           {
+            "name": "controllerWallet",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "agentWallet",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "delegationScope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "agentId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "verificationMethod",
             "in": "query",
             "required": false,
@@ -2426,72 +2442,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/v1/profile/pseudonym-lookup/{handle}": {
-      "get": {
-        "summary": "Lookup pseudonym owner by handle or namespace:handle",
-        "tags": [
-          "Profile"
-        ],
-        "parameters": [
-          {
-            "name": "handle",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Pseudonym lookup result"
-          },
-          "400": {
-            "description": "Invalid pseudonym format"
-          },
-          "404": {
-            "description": "Username not found"
-          },
-          "500": {
-            "description": "Internal error"
-          }
-        }
-      }
-    },
-    "/api/v1/profile/pseudonym-availability": {
-      "get": {
-        "summary": "Check pseudonym availability and pricing",
-        "tags": [
-          "Profile"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "handle",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Availability result"
-          },
-          "400": {
-            "description": "Missing name or handle"
           }
         }
       }

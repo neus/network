@@ -12,6 +12,16 @@ High-value, production-oriented integration recipes (NFT gating, domains, agents
   </thead>
   <tbody>
     <tr>
+      <td><strong>Hub Integrator Setup</strong></td>
+      <td>Domain/org setup, app linking, sponsor grants, hosted checkout, and usage tracking.</td>
+      <td><a href="./hub-integrator-setup.md">./hub-integrator-setup.md</a></td>
+    </tr>
+    <tr>
+      <td><strong>NEUS MCP</strong></td>
+      <td>AI-native MCP server for Cursor, Claude Desktop, and agents. One-click install.</td>
+      <td><a href="./mcp.md">./mcp.md</a></td>
+    </tr>
+    <tr>
       <td><strong>Gate Content with NFTs</strong></td>
       <td>Restrict access based on ERC-721/1155 ownership.</td>
       <td><a href="./gating-with-nfts.md">./gating-with-nfts.md</a></td>
