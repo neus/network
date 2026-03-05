@@ -5,34 +5,49 @@
   "properties": {
     "agentId": {
       "maxLength": 128,
+      "minLength": 1,
       "type": "string"
     },
     "agentWallet": {
-      "format": "evm-address",
-      "type": "string"
+      "format": "universal-address",
+      "type": "string",
+      "description": "EVM (0x + 40 hex chars) or Solana (Base58, 32-44 chars) address"
     },
     "allowedPaymentTypes": {
       "items": {
         "maxLength": 32,
         "type": "string"
       },
-      "type": "array"
+      "maxItems": 8,
+      "type": "array",
+      "description": "Declared payment protocols (e.g. [\"x402\"]). Defaults to [\"x402\"] when scope is payments:x402."
     },
     "controllerWallet": {
-      "format": "evm-address",
-      "type": "string"
+      "format": "universal-address",
+      "type": "string",
+      "description": "EVM (0x + 40 hex chars) or Solana (Base58, 32-44 chars) address. Must match the request signer."
     },
     "expiresAt": {
       "minimum": 0,
-      "type": "integer"
+      "type": "integer",
+      "description": "Expiration timestamp in Unix milliseconds. Server rejects delegations expired more than 30s ago."
+    },
+    "instructions": {
+      "maxLength": 4000,
+      "type": "string",
+      "description": "Instructions for the delegated agent (max 4000 chars)"
     },
     "maxSpend": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^[0-9]{1,78}$",
+      "description": "Maximum spend in wei (decimal string, e.g. \"1000000000000000000\" for 1 ETH)"
     },
     "permissions": {
       "items": {
+        "maxLength": 64,
         "type": "string"
       },
+      "maxItems": 32,
       "type": "array"
     },
     "receiptDisclosure": {
@@ -41,11 +56,22 @@
         "summary",
         "full"
       ],
-      "type": "string"
+      "type": "string",
+      "description": "How much of receipt/action payload may be disclosed. Defaults to \"summary\" when scope is payments:x402."
     },
     "scope": {
       "maxLength": 128,
-      "type": "string"
+      "type": "string",
+      "description": "Scope of delegation (e.g. \"payments:x402\", \"posting\", \"global\")"
+    },
+    "skills": {
+      "items": {
+        "maxLength": 64,
+        "type": "string"
+      },
+      "maxItems": 48,
+      "type": "array",
+      "description": "Declared skill identifiers granted to the agent (each max 64 chars, max 48 entries)"
     }
   },
   "required": [

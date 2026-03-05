@@ -94,7 +94,11 @@ Notes:
 For `ownership-social` and `ownership-org-oauth` to work in production:
 
 - Configure provider console redirect URIs to match your deployed callback route exactly.
-  Typical backend callback pattern: `https://api.neus.network/api/v1/auth/oauth/callback/{provider}`.
+  Standard backend callback pattern: `https://api.neus.network/api/v1/auth/oauth/callback/{provider}`.
+  **Exception — Telegram:** Telegram does not perform a server redirect. Instead, the widget sends a signed HMAC payload directly to the frontend. No redirect URI is registered in the Telegram Bot console; the bot domain is verified via the server's `TELEGRAM_BOT_TOKEN`.
+- **PKCE (X, Google, Microsoft):** PKCE is handled entirely server-side. The `code_verifier` is generated at `/oauth/start` and stored in Redis (10-minute TTL). It is never sent to the browser. If the user waits more than 10 minutes between starting OAuth and completing the exchange, they must restart the flow.
+- **OAuth start is POST:** The `/api/v1/auth/oauth/start/{provider}` endpoint is `POST` (not GET). The UI must make a POST request with `{ walletAddress, ... }` body.
+- **Callback signal is state-only:** The OAuth callback returns `{ type: 'oauth_success', state }` to the opener via `postMessage` / `BroadcastChannel`. The OAuth code is **never** sent to the browser; the exchange step retrieves it from Redis server-side.
 - Ensure your API CORS allowlist includes your app/integrator origins so popup exchange can complete.
 - Validate provider credentials and redirect URIs in staging before release (Google, Discord, GitHub, etc.).
 

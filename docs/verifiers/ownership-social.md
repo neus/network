@@ -11,7 +11,7 @@ Social media account ownership via OAuth
 ## Required fields
 
 - `provider` (`string enum: discord, github, facebook, x, farcaster, linkedin, telegram, coinbase`)
-- `internalSocialToken` (`string`)
+- `internalSocialToken` (`string`) — The short-lived NEUS token returned by `POST /api/v1/auth/oauth/:provider/exchange` after completing the hosted OAuth flow (TTL ≤60s). This is not a provider OAuth token; no raw provider tokens are ever returned to the client.
 
 ## Optional fields
 

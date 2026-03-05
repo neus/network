@@ -47,10 +47,12 @@ Add to `.cursor/mcp.json`:
 | `neus_verify` | Create proof (elicitation for human-in-the-loop) |
 | `neus_verify_or_guide` | Check gate, then guide if missing |
 | `neus_proofs_get` | Portable proof context |
+| `neus_me` | Identity context: principal, agents, auth status |
+| `neus_agent_link` | Check agent-identity + agent-delegation; guide if missing |
 
 ## Elicitation and hosted flow
 
-When `neus_verify` returns elicitation (signature required), use `hostedVerifyUrl` for wallet-less users (email, social, or wallet in browser). No extension required.
+When `neus_verify` returns elicitation (signature required), use `hostedVerifyUrl` for users to sign in with a passkey or connect a wallet in the browser. No wallet extension required for passkey users.
 
 ## Related
 

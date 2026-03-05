@@ -79,6 +79,46 @@ const client = new NeusClient({
 });
 ```
 
+## Agent verifiers
+
+`agent-identity` and `agent-delegation` support additional optional fields beyond what other verifiers expose:
+
+```javascript
+// agent-identity: optional metadata fields
+await client.verify({
+  verifier: 'agent-identity',
+  data: {
+    agentId: 'my-agent',
+    agentWallet: '0x...',           // universal-address: EVM or Solana
+    agentType: 'ai',
+    description: 'My AI assistant',
+    capabilities: ['web-search'],
+    instructions: 'System prompt (max 4000 chars)',
+    skills: ['web-search', 'code-execution'],   // max 48, each max 64 chars
+    services: [                                  // max 16
+      { name: 'metrics', endpoint: 'https://metrics.example.com/v1', version: '1.0' }
+    ]
+  }
+});
+
+// agent-delegation: optional x402 and policy fields
+await client.verify({
+  verifier: 'agent-delegation',
+  data: {
+    controllerWallet: '0x...',  // must match signer
+    agentWallet: '0x...',
+    scope: 'payments:x402',
+    permissions: ['execute', 'read'],
+    maxSpend: '1000000000000000000',   // decimal wei string
+    allowedPaymentTypes: ['x402'],     // auto-set if scope=payments:x402
+    receiptDisclosure: 'summary',      // auto-set if scope=payments:x402
+    expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
+    instructions: 'Policy instructions for the delegated agent (max 4000 chars)',
+    skills: ['market-data']
+  }
+});
+```
+
 ## Hosted checkout URL builder
 
 Use `getHostedCheckoutUrl` for a single typed entry point:

@@ -1,8 +1,70 @@
 # NEUS Widgets (VerifyGate + ProofBadge)
 
-React components for NEUS verification and access gating.
+React components for NEUS verification and access gating, plus a standalone script-tag embed for any site.
 
-## Install
+## Script Tag (No Framework Required)
+
+The fastest way to add a "Verified by NEUS" badge to any page:
+
+```html
+<script src="https://verify.neus.network/widget.js"></script>
+
+<!-- Place this where you want the badge to appear -->
+<div data-neus-proof="qHash123"></div>
+```
+
+The widget auto-scans the page on load and renders a badge for each `data-neus-proof` element.
+
+### Data attributes
+
+| Attribute              | Required | Default                          | Description                         |
+|------------------------|----------|----------------------------------|-------------------------------------|
+| `data-neus-proof`      | Yes      | —                                | qHash / proofId                     |
+| `data-neus-api-url`    | No       | `https://api.neus.network`       | Override API base URL               |
+| `data-neus-ui-base`    | No       | `https://neus.network`           | Override proof viewer base URL      |
+| `data-neus-size`       | No       | `sm`                             | `sm` or `md`                        |
+| `data-neus-show-chains`| No       | `false`                          | `true` to show chain count          |
+
+### Manual API
+
+```html
+<script src="https://verify.neus.network/widget.js"></script>
+<script>
+  // Mount a badge into a specific element
+  NeusWidget.mount(document.getElementById('my-badge'), { proofId: 'qHash123' });
+
+  // Re-scan a subtree (e.g. after dynamic content loads)
+  NeusWidget.mountAll(document.querySelector('.content-area'));
+
+  // Remove a badge
+  NeusWidget.unmount(document.getElementById('my-badge'));
+</script>
+```
+
+### CSS theming
+
+The badge uses CSS variables so it inherits your site's typography and can be themed:
+
+```css
+:root {
+  --neus-badge-bg:     rgba(148, 163, 184, 0.06);
+  --neus-badge-border: rgba(148, 163, 184, 0.2);
+  --neus-badge-text:   #94a3b8;
+  --neus-badge-font:   inherit;
+}
+```
+
+### CORS
+
+The widget fetches `GET https://api.neus.network/api/v1/verification/status/:qHash`. This endpoint responds with `Access-Control-Allow-Origin: *` for unauthenticated reads — no CORS setup required on your end.
+
+### Deploy
+
+From the `sdk/` directory: `npm run deploy:widget`. See [DEPLOY-WIDGET.md](../DEPLOY-WIDGET.md).
+
+---
+
+## React Install
 
 ```bash
 npm install @neus/sdk react react-dom

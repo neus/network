@@ -1,0 +1,46 @@
+name: deploy-widget
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'sdk/widgets/verify-gate/standalone.js'
+      - 'sdk/widgets/verify-gate/pages-headers'
+      - 'sdk/widgets/verify-gate/ProofBadge.jsx'
+      - 'sdk/package.json'
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-widget-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 20.19.0
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: sdk/package-lock.json
+
+      - name: Install SDK deps
+        working-directory: sdk
+        run: npm ci --no-audit --no-fund
+
+      - name: Build widget
+        working-directory: sdk
+        run: npm run build:widget-standalone
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: .
+          command: pages deploy sdk/widgets/verify-gate/dist --project-name=neus-verify-widget --commit-dirty=true

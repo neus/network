@@ -45,6 +45,33 @@ For backend policy enforcement, use `gateCheck` with explicit recency:
 - Public + discoverable proofs support broad reuse and discovery.
 - Private proof reads require owner-authenticated access or explicit grant-based sharing.
 
+## Verify Widget (Script Tag)
+
+The easiest integration path for non-React or non-framework sites. One script tag, one HTML attribute, no build step:
+
+```html
+<script src="https://verify.neus.network/widget.js"></script>
+<div data-neus-proof="qHash123"></div>
+```
+
+The badge auto-renders on page load. Clicking it links to the proof on `neus.network`.
+
+**CORS:** The widget calls `GET https://api.neus.network/api/v1/verification/status/:qHash` which responds with `Access-Control-Allow-Origin: *`. No configuration needed.
+
+**Optional attributes:**
+
+| Attribute               | Description                                         |
+|-------------------------|-----------------------------------------------------|
+| `data-neus-proof`       | qHash / proofId (required)                          |
+| `data-neus-api-url`     | Custom API base (default: `https://api.neus.network`)|
+| `data-neus-ui-base`     | Custom viewer base (default: `https://neus.network`) |
+| `data-neus-size`        | `sm` (default) or `md`                              |
+| `data-neus-show-chains` | `true` to show chain count                          |
+
+**Manual JS API:** `NeusWidget.mount(el, opts)` / `NeusWidget.mountAll(root?)` / `NeusWidget.unmount(el)`.
+
+See [SDK Widgets README](../sdk/widgets/README.md) for full reference.
+
 ## Related references
 
 - [Hub Integrator Setup](./guides/hub-integrator-setup.md)

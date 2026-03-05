@@ -45,7 +45,7 @@
 ## API Reference
 
 * [API Overview](api/README.md)
-* [Public API Spec](api/public-api.md)
+* [Public API Spec](api/public-api.json)
 
 ## SDK & Tools
 

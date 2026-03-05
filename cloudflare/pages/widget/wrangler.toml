@@ -1,0 +1,16 @@
+# NEUS Verify Widget — Cloudflare Pages project
+# Serves https://verify.neus.network/widget.js
+#
+# Deploy (recommended — from network/sdk):
+#   npm run deploy:widget
+#
+# Or manually:
+#   cd sdk && npm run build:widget-standalone
+#   npx wrangler pages deploy widgets/verify-gate/dist --project-name=neus-verify-widget
+#
+# Custom domain (one-time): Pages → neus-verify-widget → Custom domains → verify.neus.network
+# DNS: CNAME verify → neus-verify-widget.pages.dev
+
+name = "neus-verify-widget"
+pages_build_output_dir = "sdk/widgets/verify-gate/dist"
+account_id = "3d5f978df04d8cea0096792a57e4e087"

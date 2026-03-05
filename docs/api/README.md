@@ -22,13 +22,19 @@ For integrators embedding hosted verify: redirect users to `https://neus.network
 
 ## Recommended integration flows
 
+The following endpoints are covered in [`public-api.json`](public-api.json):
+
 - **Create a proof**: `POST /api/v1/verification` (SDK: `client.verify(...)`)
 - **Poll status**: `GET /api/v1/verification/status/{proofId}` (SDK: `client.getStatus(...)` / `client.pollProofStatus(...)`)
 - **Discover verifiers**: `GET /api/v1/verification/verifiers` (use this to discover what is currently available)
 - **Gate access (minimal)**: `GET /api/v1/proofs/check` (SDK: `client.gateCheck(...)`)
-- **Pseudonym preflight**: `GET /api/v1/profile/pseudonym-availability?name=<handle>` and `GET /api/v1/profile/pseudonym-lookup/{handleOrNamespace:handle}`
-- **Grant private-proof access**: `POST /api/v1/verification/access/grant` (owner issues explicit grant for private proof reads)
 - **Revoke a proof (owner-signed)**: `POST /api/v1/proofs/{proofId}/revoke-self` (SDK: `client.revokeOwnProof(...)`)
+
+The following endpoints are available on the API but not yet in the OpenAPI spec:
+
+- **Grant private-proof access**: `POST /api/v1/verification/access/grant` — owner signs a capability allowing a specific viewer wallet to read a private proof. Body: `{ qHash, ownerWallet, viewerWallet, signature, signedTimestamp, expiresInSeconds? }`.
+- **Pseudonym availability check**: `GET /api/v1/profile/pseudonym-availability?name=<handle>` — returns `{ available: boolean }`.
+- **Pseudonym lookup**: `GET /api/v1/profile/pseudonym-lookup/{handle}` — resolves a handle (optionally `namespace:handle`) to its proof and wallet.
 
 ## Integrator checklist (production)
 
@@ -59,9 +65,11 @@ The API enforces tiered rate limiting for stability. Limits are applied based on
 
 ## Public OpenAPI Surface
 
-For detailed request/response schemas, parameter definitions, and error codes, refer to the [Public API Spec](public-api.md) (standard JSON: [`public-api.json`](public-api.json)). The spec includes:
+For detailed request/response schemas, parameter definitions, and error codes, refer to the [Public API Spec](public-api.json). The spec includes:
 
 - **Health**: Liveness and readiness probes.
 - **Verification**: Submission and polling for new proofs.
 - **Verifiers**: Real-time list of enabled verifier modules.
 - **Proofs**: Discoverability, gate checking, and revocation.
+    
+> **Note:** The `/api/v1/auth/*` endpoints (login, passkey, OAuth, step-up, session) are first-party session endpoints used by the NEUS Hub frontend. They are **not** covered in the public OpenAPI spec because they follow the NEUS BFF (Backend-for-Frontend) pattern and are not designed for direct third-party API calls. Third-party integrators should use the `POST /api/v1/auth/code/exchange` endpoint (with a partner API key) documented in the session-first integration pattern above.

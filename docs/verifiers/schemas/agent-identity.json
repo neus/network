@@ -5,6 +5,7 @@
   "properties": {
     "agentId": {
       "maxLength": 128,
+      "minLength": 1,
       "type": "string"
     },
     "agentLabel": {
@@ -22,18 +23,59 @@
       "type": "string"
     },
     "agentWallet": {
-      "format": "evm-address",
-      "type": "string"
+      "format": "universal-address",
+      "type": "string",
+      "description": "EVM (0x + 40 hex chars) or Solana (Base58, 32-44 chars) address"
     },
     "capabilities": {
       "items": {
+        "maxLength": 128,
         "type": "string"
       },
+      "maxItems": 32,
       "type": "array"
     },
     "description": {
       "maxLength": 500,
       "type": "string"
+    },
+    "instructions": {
+      "maxLength": 4000,
+      "type": "string",
+      "description": "System prompt or behavioral instructions for the agent (max 4000 chars)"
+    },
+    "skills": {
+      "items": {
+        "maxLength": 64,
+        "type": "string"
+      },
+      "maxItems": 48,
+      "type": "array",
+      "description": "Declared skill identifiers (each max 64 chars, max 48 entries)"
+    },
+    "services": {
+      "items": {
+        "type": "object",
+        "required": ["name", "endpoint"],
+        "properties": {
+          "name": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "endpoint": {
+            "maxLength": 256,
+            "type": "string",
+            "format": "uri"
+          },
+          "version": {
+            "maxLength": 32,
+            "type": "string"
+          }
+        }
+      },
+      "maxItems": 16,
+      "type": "array",
+      "description": "Service endpoints exposed by this agent (each requires name and a valid URL endpoint)"
     }
   },
   "required": [

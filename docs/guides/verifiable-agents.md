@@ -59,6 +59,28 @@ const delegation = await client.gateCheck({ address: agentWallet.address, verifi
 const ok = Boolean(identity.data?.eligible && delegation.data?.eligible);
 ```
 
+## 4) Check agent link status (MCP-style)
+
+For AI tools (Cursor, Claude, etc.) that need to verify an agent is linked before proceeding:
+
+```javascript
+const result = await client.gateCheck({
+  address: agentWallet,
+  verifierIds: ['agent-identity', 'agent-delegation'],
+  requireAll: true
+});
+
+if (result.data?.eligible) {
+  // Agent is linked — proceed
+} else {
+  // Guide user to complete verification in browser
+  const url = `https://neus.network/verify?verifiers=agent-identity,agent-delegation&agentWallet=${encodeURIComponent(agentWallet)}`;
+  console.log('Complete agent linking:', url);
+}
+```
+
+Via MCP, this is exposed as `neus_agent_link`. See the [MCP guide](./mcp.md) for usage.
+
 ## Reference
 
 - Verifier schemas:

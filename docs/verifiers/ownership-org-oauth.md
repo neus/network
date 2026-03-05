@@ -11,7 +11,7 @@ Organizational OAuth verification
 ## Required fields
 
 - `provider` (`string enum: google, microsoft`)
-- `internalSocialToken` (`string`)
+- `internalSocialToken` (`string`) — The short-lived NEUS token returned by `POST /api/v1/auth/oauth/:provider/exchange` after completing the hosted OAuth flow (TTL ≤60s). This is not a provider OAuth token; no raw provider tokens are ever returned to the client. The org domain is inferred server-side from the token.
 
 ## Optional fields
 

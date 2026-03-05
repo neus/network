@@ -6,7 +6,7 @@ Build on the NEUS proof layer with a direct path from first integration to produ
 
 - [Quickstart](../QUICKSTART.md) for first proof creation and gating.
 - [Integration](../integration.md) for production-ready integration.
-- [API Overview](../api/README.md) and [Public API Spec](../api/public-api.md) for endpoint contracts.
+- [API Overview](../api/README.md) and [Public API Spec](../api/public-api.json) for endpoint contracts.
 - [Verifier Catalog](../verifiers/README.md) for verifier capabilities and schema links.
 - [SDK Reference](../../sdk/README.md) and [Widgets](../../sdk/widgets/README.md) for implementation details.
 

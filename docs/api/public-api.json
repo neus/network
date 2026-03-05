@@ -687,8 +687,8 @@
           "owner": {
             "type": "string",
             "description": "Owner identifier (must match request walletAddress). Supports EVM (0x..), Solana (base58), NEAR (account IDs), and other universal address formats depending on chain context.",
-            "format": "universal-address",
-            "minLength": 1
+            "minLength": 1,
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "reference": {
             "type": "object",
@@ -809,7 +809,7 @@
           },
           "walletAddress": {
             "type": "string",
-            "format": "universal-address"
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           }
         }
       },
@@ -854,7 +854,7 @@
           },
           "walletAddress": {
             "type": "string",
-            "format": "universal-address"
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           }
         }
       },
@@ -877,7 +877,7 @@
           },
           "walletAddress": {
             "type": "string",
-            "format": "universal-address"
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "expectedOrgDomain": {
             "type": "string",
@@ -1070,11 +1070,11 @@
         "properties": {
           "primaryWalletAddress": {
             "type": "string",
-            "format": "universal-address"
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "secondaryWalletAddress": {
             "type": "string",
-            "format": "universal-address"
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "signature": {
             "type": "string",
@@ -1156,7 +1156,7 @@
           },
           "agentWallet": {
             "type": "string",
-            "pattern": "^0x[a-fA-F0-9]{40}$"
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "agentLabel": {
             "type": "string",
@@ -1193,11 +1193,11 @@
         "properties": {
           "controllerWallet": {
             "type": "string",
-            "pattern": "^0x[a-fA-F0-9]{40}$"
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "agentWallet": {
             "type": "string",
-            "pattern": "^0x[a-fA-F0-9]{40}$"
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "agentId": {
             "type": "string",
