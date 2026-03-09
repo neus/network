@@ -1,316 +1,179 @@
 /* NEUS Documentation Styles */
-/* Brand: Cloud-blue accent (#98C0EF), dark-mode first, left-justified */
-/* Version: 3.0 — Optimized for Mintlify */
+/* Version: 5.0 — Industry Standard Typography and Layout */
 
 /* ============================================
-   CSS CUSTOM PROPERTIES (NEUS Brand Tokens)
-   Single source of truth aligned with app/globals.css
+   CSS CUSTOM PROPERTIES
    ============================================ */
 :root {
-  /* NEUS Brand Colors */
+  /* Brand Colors */
   --neus-accent: #98C0EF;
   --neus-accent-dim: #3D72C9;
-  --neus-accent-dark: #2F5097;
   --neus-accent-light: #bfdbfe;
   
-  /* Surface Colors (Dark-first) */
-  --neus-surface-canvas: #101113;
-  --neus-surface-rail: #141619;
-  --neus-surface-card: #1B1D21;
-  --neus-surface-card-hover: #212428;
-  --neus-surface-popover: #282B30;
+  /* Surfaces */
+  --bg-canvas: #0d1117;
+  --bg-rail: #161b22;
+  --bg-card: #21262d;
+  --bg-card-hover: #30363d;
   
-  /* Text Colors */
-  --neus-text-primary: rgba(255, 255, 255, 0.93);
-  --neus-text-secondary: rgba(255, 255, 255, 0.84);
-  --neus-text-muted: rgba(255, 255, 255, 0.68);
-  --neus-text-dimmed: rgba(255, 255, 255, 0.62);
+  /* Text */
+  --text-primary: #f0f6fc;
+  --text-secondary: #c9d1d9;
+  --text-muted: #8b949e;
   
-  /* State Colors */
-  --neus-success: #22C55E;
-  --neus-warning: #EAB308;
-  --neus-error: #EF4444;
+  /* Semantic */
+  --success: #3fb950;
+  --warning: #d29922;
+  --error: #f85149;
   
   /* Borders */
-  --neus-border: rgba(90, 90, 90, 0.2);
-  --neus-border-hover: rgba(90, 90, 90, 0.4);
-  
-  /* Shadows */
-  --neus-shadow-card: 0 10px 28px rgba(0, 0, 0, 0.28), 0 1px 0 rgba(90, 90, 90, 0.14);
-  --neus-shadow-glow: 0 0 20px rgba(152, 192, 239, 0.2);
-  
-  /* Mintlify-specific overrides */
-  --mintlify-primary: #98C0EF;
-  --mintlify-primary-dark: #3D72C9;
+  --border: rgba(240, 246, 252, 0.1);
+  --border-hover: rgba(240, 246, 252, 0.2);
 }
 
 /* ============================================
-   LOGO STYLING
+   BASE
    ============================================ */
 
-/* Logo in sidebar header */
-[class*="Logo"],
-[class*="logo"],
-img[alt*="logo"],
-img[alt*="Logo"] {
-  max-height: 32px !important;
-  width: auto !important;
-}
-
-/* Logo link container */
-a[href="/"] img,
-a[class*="logo"] {
-  opacity: 1 !important;
-}
-
-/* Ensure logo renders properly */
-img[src*="neus-logo"] {
-  filter: none !important;
+html, body {
+  background-color: var(--bg-canvas) !important;
+  color: var(--text-secondary) !important;
+  font-size: 16px !important;
+  line-height: 1.6 !important;
 }
 
 /* ============================================
-   MINTLIFY THEME OVERRIDES
+   PAGE TITLE (from frontmatter)
    ============================================ */
 
-/* Force dark mode background */
-html,
-body {
-  background-color: var(--neus-surface-canvas) !important;
-  color: var(--neus-text-primary) !important;
-}
-
-/* Force left-justified text - Industry Standard */
-body {
-  text-align: left !important;
-}
-
-article,
-.prose,
-.markdown-body,
-[class*="content"],
-[class*="Content"],
-[class*="docs-content"],
-main {
-  text-align: left !important;
-  background-color: transparent !important;
-}
-
-/* Headings always left-aligned */
-h1, h2, h3, h4, h5, h6 {
-  text-align: left !important;
-  color: var(--neus-text-primary) !important;
-}
-
-/* Page title from frontmatter - no redundant H1 */
-h1:first-of-type {
-  display: none !important;
-}
-
-/* Use H2 as the effective page title */
-.prose h2:first-of-type,
-article h2:first-of-type,
-h2:first-of-type {
-  font-size: 2rem !important;
-  font-weight: 600 !important;
+article h1,
+.prose h1,
+[class*="content"] h1,
+h1 {
+  font-size: 1.875rem !important;
+  font-weight: 700 !important;
+  line-height: 1.25 !important;
   letter-spacing: -0.025em !important;
+  color: var(--text-primary) !important;
   margin-top: 0 !important;
+  margin-bottom: 1.5rem !important;
+  padding-bottom: 0 !important;
+  border-bottom: none !important;
 }
+
+/* ============================================
+   SECTION HEADINGS
+   ============================================ */
 
 h2 {
-  font-size: 1.5rem !important;
+  font-size: 1.25rem !important;
   font-weight: 600 !important;
+  line-height: 1.4 !important;
+  color: var(--text-primary) !important;
   margin-top: 2rem !important;
+  margin-bottom: 0.75rem !important;
+  padding-bottom: 0.375rem !important;
+  border-bottom: 1px solid var(--border) !important;
 }
 
 h3 {
-  font-size: 1.25rem !important;
-  font-weight: 600 !important;
-  margin-top: 1.5rem !important;
-}
-
-/* Paragraphs left-aligned */
-p, li, td, th {
-  text-align: left;
-  color: var(--neus-text-secondary) !important;
-}
-
-/* Code blocks left-aligned */
-pre, code {
-  text-align: left !important;
-}
-
-/* ============================================
-   SIDEBAR & NAVIGATION
-   ============================================ */
-
-/* Sidebar navigation */
-nav,
-[class*="sidebar"],
-[class*="Sidebar"],
-[class*="Sidebar-container"] {
-  background-color: var(--neus-surface-rail) !important;
-}
-
-/* Sidebar links */
-nav a,
-[class*="sidebar"] a,
-[class*="Sidebar"] a {
-  color: var(--neus-text-secondary) !important;
-  border-radius: 0.5rem !important;
-  transition: all 0.15s ease !important;
-}
-
-nav a:hover,
-[class*="sidebar"] a:hover,
-nav a.active,
-[class*="sidebar"] a.active,
-[class*="Sidebar"] a.active {
-  color: var(--neus-accent) !important;
-  background-color: var(--neus-surface-card) !important;
-}
-
-/* Active navigation item */
-[class*="Sidebar"] [class*="active"],
-[class*="sidebar"] [class*="active"] {
-  color: var(--neus-accent) !important;
-  background-color: var(--neus-surface-card) !important;
-  border-left: 2px solid var(--neus-accent) !important;
-}
-
-/* ============================================
-   BRAND COLOR APPLICATION
-   ============================================ */
-
-/* Primary accent color for links */
-a,
-.link,
-[class*="link"] {
-  color: var(--neus-accent) !important;
-  transition: color 0.15s ease !important;
-}
-
-a:hover,
-.link:hover {
-  color: var(--neus-accent-light) !important;
-}
-
-/* Primary buttons */
-button.primary,
-.btn-primary,
-[class*="Button"][class*="primary"],
-button[class*="primary"] {
-  background-color: var(--neus-accent) !important;
-  color: var(--neus-surface-canvas) !important;
-  border: none !important;
-  font-weight: 600 !important;
-  border-radius: 0.5rem !important;
-  transition: all 0.15s ease !important;
-}
-
-button.primary:hover,
-.btn-primary:hover {
-  background-color: var(--neus-accent-light) !important;
-  box-shadow: var(--neus-shadow-glow) !important;
-}
-
-/* ============================================
-   CARD STYLES
-   ============================================ */
-
-/* Card groups - left-aligned, proper grid */
-[class*="CardGroup"],
-[class*="card-group"] {
-  text-align: left !important;
-  display: grid !important;
-  gap: 1rem !important;
-}
-
-/* Individual cards */
-[class*="Card"],
-.card {
-  background-color: var(--neus-surface-card) !important;
-  border: 1px solid var(--neus-border) !important;
-  border-radius: 0.75rem !important;
-  padding: 1.25rem !important;
-  text-align: left !important;
-  transition: all 0.2s ease !important;
-}
-
-[class*="Card"]:hover,
-.card:hover {
-  background-color: var(--neus-surface-card-hover) !important;
-  border-color: var(--neus-border-hover) !important;
-  box-shadow: var(--neus-shadow-card) !important;
-}
-
-/* Card titles */
-[class*="Card"] h3,
-[class*="Card"] [class*="title"],
-.card h3,
-.card-title {
-  color: var(--neus-text-primary) !important;
-  font-weight: 600 !important;
   font-size: 1rem !important;
-  text-align: left !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  color: var(--text-primary) !important;
+  margin-top: 1.5rem !important;
   margin-bottom: 0.5rem !important;
 }
 
-/* Card descriptions */
-[class*="Card"] p,
-.card p {
-  color: var(--neus-text-secondary) !important;
-  font-size: 0.875rem !important;
-  line-height: 1.5 !important;
-}
-
-/* Card icons */
-[class*="Card"] [class*="icon"],
-.card-icon {
-  color: var(--neus-accent) !important;
+h4 {
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  color: var(--text-secondary) !important;
+  margin-top: 1rem !important;
+  margin-bottom: 0.5rem !important;
 }
 
 /* ============================================
-   CODE BLOCKS
+   BODY TEXT
    ============================================ */
 
-pre,
-code,
-[class*="code"],
-[class*="Code"] {
-  background-color: var(--neus-surface-card) !important;
-  border: 1px solid var(--neus-border) !important;
-  border-radius: 0.5rem !important;
-  text-align: left !important;
+p {
+  color: var(--text-secondary) !important;
+  line-height: 1.7 !important;
+  margin-top: 0 !important;
+  margin-bottom: 1rem !important;
 }
 
-pre {
+li {
+  color: var(--text-secondary) !important;
+  line-height: 1.6 !important;
+  margin-bottom: 0.25rem !important;
+}
+
+strong, b {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+}
+
+/* ============================================
+   LINKS
+   ============================================ */
+
+a {
+  color: var(--neus-accent) !important;
+  text-decoration: none !important;
+}
+
+a:hover {
+  color: var(--neus-accent-light) !important;
+  text-decoration: underline !important;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+
+[class*="CardGroup"] {
+  display: grid !important;
+  gap: 0.75rem !important;
+  margin: 1.25rem 0 !important;
+}
+
+[class*="Card"] {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
   padding: 1rem !important;
+  transition: border-color 0.15s ease, background-color 0.15s ease !important;
 }
 
-pre code {
-  color: var(--neus-text-secondary) !important;
-  background: transparent !important;
+[class*="Card"]:hover {
+  background: var(--bg-card-hover) !important;
+  border-color: var(--border-hover) !important;
+}
+
+/* Card title */
+[class*="Card"] h3,
+[class*="Card"] [class*="title"] {
+  font-size: 0.9375rem !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  margin: 0 0 0.25rem 0 !important;
+  padding: 0 !important;
   border: none !important;
 }
 
-/* Inline code */
-code:not(pre code) {
-  padding: 0.125rem 0.375rem !important;
-  font-size: 0.875em !important;
+/* Card description */
+[class*="Card"] p {
+  font-size: 0.8125rem !important;
+  color: var(--text-muted) !important;
+  margin: 0 !important;
+  line-height: 1.5 !important;
 }
 
-/* Syntax highlighting */
-.token.keyword { color: var(--neus-accent) !important; }
-.token.string { color: var(--neus-success) !important; }
-.token.comment { color: var(--neus-text-dimmed) !important; }
-.token.function { color: var(--neus-accent-light) !important; }
-.token.number { color: var(--neus-warning) !important; }
-
-/* Code block header */
-[class*="code-block"] [class*="header"],
-[class*="CodeBlock"] [class*="header"] {
-  background-color: var(--neus-surface-rail) !important;
-  border-bottom: 1px solid var(--neus-border) !important;
+/* Card icon */
+[class*="Card"] svg {
+  color: var(--neus-accent) !important;
 }
 
 /* ============================================
@@ -319,138 +182,154 @@ code:not(pre code) {
 
 table {
   width: 100% !important;
-  text-align: left !important;
   border-collapse: collapse !important;
-}
-
-thead {
-  background-color: var(--neus-surface-card) !important;
+  margin: 1rem 0 !important;
+  font-size: 0.875rem !important;
 }
 
 th {
-  color: var(--neus-text-primary) !important;
-  font-weight: 600 !important;
   text-align: left !important;
-  padding: 0.75rem 1rem !important;
-  border-bottom: 1px solid var(--neus-border) !important;
+  padding: 0.5rem 0.75rem !important;
+  background: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  border-bottom: 1px solid var(--border) !important;
 }
 
 td {
-  color: var(--neus-text-secondary) !important;
   text-align: left !important;
-  padding: 0.75rem 1rem !important;
-  border-bottom: 1px solid var(--neus-border) !important;
+  padding: 0.5rem 0.75rem !important;
+  color: var(--text-secondary) !important;
+  border-bottom: 1px solid var(--border) !important;
 }
 
-tr:hover {
-  background-color: var(--neus-surface-card-hover) !important;
+tr:hover td {
+  background: var(--bg-card) !important;
 }
 
 /* ============================================
-   CALLOUTS / NOTES
+   CODE
+   ============================================ */
+
+pre {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  padding: 0.875rem !important;
+  margin: 1rem 0 !important;
+  overflow-x: auto !important;
+}
+
+pre code {
+  background: transparent !important;
+  font-size: 0.8125rem !important;
+  color: var(--text-secondary) !important;
+}
+
+code:not(pre code) {
+  background: rgba(152, 192, 239, 0.12) !important;
+  color: var(--neus-accent) !important;
+  padding: 0.125rem 0.375rem !important;
+  border-radius: 4px !important;
+  font-size: 0.8125em !important;
+}
+
+/* ============================================
+   NOTES / CALLOUTS
    ============================================ */
 
 [class*="Note"],
-[class*="note"],
 [class*="Callout"],
-[class*="callout"],
 .note,
 .callout {
-  background-color: var(--neus-surface-card) !important;
+  background: rgba(152, 192, 239, 0.08) !important;
+  border: 1px solid rgba(152, 192, 239, 0.15) !important;
   border-left: 3px solid var(--neus-accent) !important;
-  border-radius: 0.5rem !important;
-  padding: 1rem 1.25rem !important;
-  text-align: left !important;
+  border-radius: 6px !important;
+  padding: 0.75rem 1rem !important;
   margin: 1rem 0 !important;
 }
 
-[class*="Note"] [class*="title"],
-.note-title {
-  color: var(--neus-accent) !important;
-  font-weight: 600 !important;
+[class*="Warning"] {
+  background: rgba(210, 153, 34, 0.08) !important;
+  border-color: rgba(210, 153, 34, 0.15) !important;
+  border-left-color: var(--warning) !important;
 }
 
-/* Tip callouts */
-[class*="Tip"],
-.tip {
-  border-left-color: var(--neus-accent) !important;
+[class*="Error"] {
+  background: rgba(248, 81, 73, 0.08) !important;
+  border-color: rgba(248, 81, 73, 0.15) !important;
+  border-left-color: var(--error) !important;
 }
 
-/* Warning callouts */
-[class*="Warning"],
-.warning {
-  border-left-color: var(--neus-warning) !important;
-}
-
-[class*="Warning"] [class*="title"],
-.warning-title {
-  color: var(--neus-warning) !important;
-}
-
-/* Error callouts */
-[class*="Error"],
-.error {
-  border-left-color: var(--neus-error) !important;
-}
-
-/* Info callouts */
-[class*="Info"],
-.info {
-  border-left-color: var(--neus-accent-dim) !important;
-}
-
-/* ============================================
-   TABS
-   ============================================ */
-
-[class*="Tabs"],
-.tabs {
-  text-align: left !important;
-}
-
-[class*="TabList"],
-.tab-list {
-  border-bottom: 1px solid var(--neus-border) !important;
-}
-
-[class*="Tab"],
-.tab {
-  color: var(--neus-text-muted) !important;
-  border-bottom: 2px solid transparent !important;
-  padding: 0.75rem 1rem !important;
-}
-
-[class*="Tab"]:hover,
-.tab:hover {
-  color: var(--neus-accent) !important;
-}
-
-[class*="Tab"][class*="active"],
-.tab.active {
-  color: var(--neus-accent) !important;
-  border-bottom-color: var(--neus-accent) !important;
+[class*="Tip"] {
+  background: rgba(63, 185, 80, 0.08) !important;
+  border-color: rgba(63, 185, 80, 0.15) !important;
+  border-left-color: var(--success) !important;
 }
 
 /* ============================================
    STEPS
    ============================================ */
 
-[class*="Steps"],
-.steps {
-  text-align: left !important;
-  padding-left: 0 !important;
+[class*="Steps"] {
+  margin: 1rem 0 !important;
 }
 
-[class*="Step"],
-.step {
-  text-align: left !important;
-  position: relative !important;
+[class*="Step"] {
+  margin-bottom: 0.75rem !important;
   padding-left: 2rem !important;
 }
 
-[class*="Step"]::before,
-.step::before {
+[class*="Step"]::before {
   color: var(--neus-accent) !important;
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+
+nav,
+[class*="sidebar"],
+[class*="Sidebar"] {
+  background: var(--bg-rail) !important;
+}
+
+nav a,
+[class*="sidebar"] a,
+[class*="Sidebar"] a {
+  color: var(--text-muted) !important;
+  border-radius: 4px !important;
+  font-size: 0.875rem !important;
+}
+
+nav a:hover,
+[class*="sidebar"] a:hover {
+  color: var(--text-primary) !important;
+  background: var(--bg-card) !important;
+}
+
+nav a.active,
+[class*="sidebar"] a.active {
+  color: var(--neus-accent) !important;
+  background: rgba(152, 192, 239, 0.1) !important;
+}
+
+/* ============================================
+   HEADER & FOOTER
+   ============================================ */
+
+header,
+[class*="Header"],
+[class*="navbar"] {
+  background: var(--bg-canvas) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+footer,
+[class*="Footer"] {
+  background: var(--bg-canvas) !important;
+  border-top: 1px solid var(--border) !important;
 }
 
 /* ============================================
@@ -458,91 +337,71 @@ tr:hover {
    ============================================ */
 
 [class*="Search"],
-.search,
 [class*="search-input"] {
-  background-color: var(--neus-surface-card) !important;
-  border: 1px solid var(--neus-border) !important;
-  border-radius: 0.5rem !important;
-  color: var(--neus-text-primary) !important;
-}
-
-[class*="Search"]:focus,
-.search:focus {
-  border-color: var(--neus-accent) !important;
-  box-shadow: 0 0 0 2px rgba(152, 192, 239, 0.2) !important;
-}
-
-/* Search modal */
-[class*="SearchModal"],
-[class*="search-modal"] {
-  background-color: var(--neus-surface-popover) !important;
-  border: 1px solid var(--neus-border) !important;
-  border-radius: 0.75rem !important;
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  color: var(--text-primary) !important;
 }
 
 /* ============================================
-   HEADER / NAVBAR
+   BADGES
    ============================================ */
 
-header,
-[class*="Header"],
-[class*="navbar"],
-.navbar {
-  background-color: var(--neus-surface-canvas) !important;
-  border-bottom: 1px solid var(--neus-border) !important;
-}
-
-/* ============================================
-   FOOTER
-   ============================================ */
-
-footer,
-[class*="Footer"] {
-  background-color: var(--neus-surface-canvas) !important;
-  border-top: 1px solid var(--neus-border) !important;
-}
-
-/* ============================================
-   API REFERENCE
-   ============================================ */
-
-/* Method badges */
-[class*="method"] {
-  font-weight: 600 !important;
-  font-size: 0.75rem !important;
+[class*="badge"],
+[class*="Badge"] {
+  display: inline-flex !important;
+  align-items: center !important;
   padding: 0.125rem 0.5rem !important;
-  border-radius: 0.25rem !important;
-}
-
-[class*="method-get"],
-[class*="method-GET"] {
-  background-color: rgba(34, 197, 94, 0.15) !important;
-  color: var(--neus-success) !important;
-}
-
-[class*="method-post"],
-[class*="method-POST"] {
-  background-color: rgba(152, 192, 239, 0.15) !important;
+  border-radius: 9999px !important;
+  font-size: 0.6875rem !important;
+  font-weight: 500 !important;
+  background: rgba(152, 192, 239, 0.12) !important;
   color: var(--neus-accent) !important;
 }
 
-[class*="method-put"],
-[class*="method-PUT"] {
-  background-color: rgba(234, 179, 8, 0.15) !important;
-  color: var(--neus-warning) !important;
+/* Method badges */
+[class*="method-get"] {
+  background: rgba(63, 185, 80, 0.12) !important;
+  color: var(--success) !important;
 }
 
-[class*="method-delete"],
-[class*="method-DELETE"] {
-  background-color: rgba(239, 68, 68, 0.15) !important;
-  color: var(--neus-error) !important;
+[class*="method-post"] {
+  background: rgba(152, 192, 239, 0.12) !important;
+  color: var(--neus-accent) !important;
 }
 
-/* Endpoint path */
-[class*="endpoint"],
-[class*="path"] {
-  font-family: JetBrains Mono, Menlo, monospace !important;
-  color: var(--neus-text-secondary) !important;
+[class*="method-put"] {
+  background: rgba(210, 153, 34, 0.12) !important;
+  color: var(--warning) !important;
+}
+
+[class*="method-delete"] {
+  background: rgba(248, 81, 73, 0.12) !important;
+  color: var(--error) !important;
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+
+[class*="TabList"] {
+  border-bottom: 1px solid var(--border) !important;
+}
+
+[class*="Tab"] {
+  color: var(--text-muted) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 0.75rem !important;
+}
+
+[class*="Tab"]:hover {
+  color: var(--text-secondary) !important;
+}
+
+[class*="Tab"][class*="active"] {
+  color: var(--neus-accent) !important;
 }
 
 /* ============================================
@@ -550,73 +409,45 @@ footer,
    ============================================ */
 
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--neus-surface-canvas);
+  background: var(--bg-canvas);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--neus-surface-card-hover);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--neus-text-dimmed);
+  background: var(--bg-card-hover);
+  border-radius: 3px;
 }
 
 /* ============================================
-   ANIMATIONS
-   ============================================ */
-
-@keyframes neus-glow {
-  0%, 100% { box-shadow: 0 0 20px rgba(152, 192, 239, 0.2); }
-  50% { box-shadow: 0 0 30px rgba(152, 192, 239, 0.3); }
-}
-
-/* Glow effect for interactive elements */
-.glow,
-[class*="glow"] {
-  animation: neus-glow 3s ease-in-out infinite;
-}
-
-/* ============================================
-   RESPONSIVE ADJUSTMENTS
+   RESPONSIVE
    ============================================ */
 
 @media (max-width: 768px) {
+  article h1, h1 {
+    font-size: 1.5rem !important;
+  }
+  
+  h2 {
+    font-size: 1.125rem !important;
+  }
+  
   [class*="CardGroup"] {
     grid-template-columns: 1fr !important;
-  }
-  
-  table {
-    display: block;
-    overflow-x: auto;
-  }
-  
-  h2:first-of-type {
-    font-size: 1.5rem !important;
   }
 }
 
 /* ============================================
-   PRINT STYLES
+   PRINT
    ============================================ */
 
 @media print {
   body {
     background: white !important;
     color: black !important;
-  }
-  
-  a {
-    color: var(--neus-accent-dim) !important;
-  }
-  
-  pre, code {
-    border: 1px solid #ddd !important;
   }
   
   [class*="sidebar"],

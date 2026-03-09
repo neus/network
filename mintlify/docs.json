@@ -39,7 +39,7 @@
       {
         "name": "GitHub",
         "icon": "github",
-        "url": "https://github.com/neus-network"
+        "url": "https://github.com/neus"
       }
     ],
     "tabs": [
@@ -208,7 +208,7 @@
   "footer": {
     "socials": {
       "x": "https://twitter.com/neus_network",
-      "github": "https://github.com/neus-network"
+      "github": "https://github.com/neus"
     }
   }
 }

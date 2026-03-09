@@ -56,6 +56,6 @@ When `neus_verify` returns elicitation (signature required), use `hostedVerifyUr
 
 ## Related
 
-- [MCP README](https://github.com/neus-network/network/tree/main/mcp) (full docs)
+- [MCP README](https://github.com/neus/network/tree/main/mcp) (full docs)
 - [Hub Integrator Setup](./hub-integrator-setup.md)
 - [API Reference](../api/README.md)
