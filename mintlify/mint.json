@@ -10,7 +10,7 @@
     "light": "#818CF8",
     "dark": "#4F46E5"
   },
-  "openapi": "/openapi/public-api.json",
+  "openapi": "openapi/public-api.json",
   "navigation": [
     {
       "group": "Get Started",
@@ -72,11 +72,6 @@
     }
   ],
   "anchors": [
-    {
-      "name": "API Reference",
-      "icon": "code",
-      "url": "api-reference"
-    },
     {
       "name": "GitHub",
       "icon": "github",
