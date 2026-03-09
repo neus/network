@@ -6,12 +6,14 @@ NEUS proofs are created by signing a deterministic request and submitting it to 
 
 1. Sign the Standard Signing String ([Signing](./signing.md)).
 2. Create a proof (`POST /api/v1/verification` or `NeusClient.verify(...)`).
-3. Check status (`GET /api/v1/verification/status/{proofId}` or `NeusClient.getStatus(...)` / `pollProofStatus(...)`).
+3. Check status (`GET /api/v1/verification/status/{qHash}` or `NeusClient.getStatus(...)` / `pollProofStatus(...)`).
 4. Use the **Proof ID** for gating and downstream integrations.
 
 ## Proof ID
 
 The **Proof ID** is the stable identifier for a proof record. In public API/SDK surfaces, this identifier is `proofId`.
+
+In raw HTTP path templates and the generated OpenAPI file, the same value may still appear under the legacy path placeholder name `{qHash}`.
 
 Treat the Proof ID as an **opaque** value:
 
@@ -72,12 +74,21 @@ Recommended defaults:
 - `publicDisplay: false`
 - `storeOriginalContent: false`
 
+Important:
+
+- `privacyLevel` controls access
+- `publicDisplay` controls feed and discovery visibility for public proofs
+- `storeOriginalContent` controls whether original content is stored
+- private proofs may still store original content when `storeOriginalContent: true`
+
 For owner-only reads of private proofs, see the API reference section “Private proof access (owner-only)”.
 
 For third-party apps, NEUS also supports **explicit private proof sharing** without making a proof public:
 
 - The owner creates an access grant (`POST /api/v1/verification/access/grant`)
 - The viewer reads with a short-lived viewer signature on `data.action="access_private_proof"` (no session cookie required)
+
+This access-grant route is intentionally constrained and is not part of the stable public OpenAPI contract. Use it only when you are implementing owner-mediated private sharing, not as your default public integration path.
 
 ## Proof ID determinism (why the same request reuses the same proof)
 

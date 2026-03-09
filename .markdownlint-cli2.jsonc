@@ -12,13 +12,23 @@
     "MD013": false,
 
     // Allow bare URLs in custom tags/GitBook blocks.
-    "MD034": false
+    "MD034": false,
+
+    // Existing docs use compact pipe table style.
+    "MD060": false
   },
   "globs": [
     "README.md",
     "SECURITY.md",
     "CONTRIBUTING.md",
-    "docs/**/*.md"
+    "docs/**/*.md",
+    "sdk/README.md",
+    "sdk/SECURITY.md",
+    "sdk/DEPLOY-WIDGET.md",
+    "sdk/widgets/README.md",
+    "examples/README.md",
+    "examples/*/README.md",
+    "mintlify/**/*.mdx",
+    "mintlify/mint.json"
   ]
 }
-

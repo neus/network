@@ -1305,7 +1305,7 @@ export class NeusClient {
       throw new ValidationError(`Failed to sign revocation: ${error.message}`);
     }
 
-    const res = await fetch(`${this.config.apiUrl}/api/v1/proofs/${proofId}/revoke-self`, {
+    const res = await fetch(`${this.config.apiUrl}/api/v1/proofs/revoke-self/${proofId}`, {
       method: 'POST',
       // SECURITY: Do not put proof signatures into Authorization headers.
       headers: { 'Content-Type': 'application/json' },
@@ -1357,7 +1357,7 @@ export class NeusClient {
     const query = qs.length ? `?${qs.join('&')}` : '';
     const response = await this._makeRequest(
       'GET',
-      `/api/v1/proofs/byWallet/${encodeURIComponent(pathId)}${query}`
+      `/api/v1/proofs/by-wallet/${encodeURIComponent(pathId)}${query}`
     );
 
     if (!response.success) {
@@ -1451,7 +1451,7 @@ export class NeusClient {
     if (options.offset) qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
     const query = qs.length ? `?${qs.join('&')}` : '';
 
-    const response = await this._makeRequest('GET', `/api/v1/proofs/byWallet/${encodeURIComponent(pathId)}${query}`, null, {
+    const response = await this._makeRequest('GET', `/api/v1/proofs/by-wallet/${encodeURIComponent(pathId)}${query}`, null, {
       'x-wallet-address': signerWalletAddress,
       'x-signature': signature,
       'x-signed-timestamp': signedTimestamp.toString(),

@@ -4,27 +4,31 @@ Create verification proofs using direct HTTP requests.
 
 ## Create a Proof
 
-### 1. Build the signing message
+### 1. Ask the API for the exact string to sign
 
+Do not hand-assemble the signing string in production. Call `/standardize` and sign the returned `signerString`.
+
+```bash
+curl -X POST https://api.neus.network/api/v1/verification/standardize \
+  -H "Content-Type: application/json" \
+  -d '{
+    "walletAddress": "0x1111111111111111111111111111111111111111",
+    "verifierIds": ["ownership-basic"],
+    "data": {
+      "content": "Hello NEUS",
+      "owner": "0x1111111111111111111111111111111111111111",
+      "reference": { "type": "url", "id": "https://example.com" }
+    },
+    "signedTimestamp": 1678886400000,
+    "chainId": 84532
+  }'
 ```
-NEUS Verification Request
-Wallet: 0x1111111111111111111111111111111111111111
-Chain: 84532
-Verifiers: ownership-basic
-Data: {"content":"Hello NEUS","owner":"0x1111111111111111111111111111111111111111","reference":{"id":"https://example.com","type":"url"}}
-Timestamp: 1678886400000
-```
 
-**Requirements:**
-
-- Wallet address lowercase in message
-- JSON sorted keys, no extra whitespace
-- Timestamp Unix milliseconds, within 5 minutes
-- Chain must match what you submit (`chainId`).
+The response contains `data.signerString`. Sign that exact string with the same wallet you submit in `walletAddress`.
 
 ### 2. Sign with your wallet
 
-Get signature from MetaMask or other wallet.
+Get a signature from MetaMask, ethers, viem, or your wallet provider over `data.signerString`.
 
 ### 3. Submit verification
 
@@ -51,6 +55,7 @@ curl -X POST https://api.neus.network/api/v1/verification \
 {
   "success": true,
   "data": {
+    "proofId": "0x57ef6af456233537b63a9afe43dedd02b17d00e0...",
     "qHash": "0x57ef6af456233537b63a9afe43dedd02b17d00e0...",
     "status": "verified"
   }
@@ -60,7 +65,7 @@ curl -X POST https://api.neus.network/api/v1/verification \
 ### 4. Check status
 
 ```bash
-# Proof ID (qHash): use the qHash field from the create response
+# Proof ID (standard). The HTTP path placeholder is still named qHash in the API spec.
 curl https://api.neus.network/api/v1/verification/status/0x{qHash}
 ```
 
@@ -68,29 +73,18 @@ curl https://api.neus.network/api/v1/verification/status/0x{qHash}
 
 ### Get exact signing string
 
-```bash
-curl -X POST https://api.neus.network/api/v1/verification/standardize \
-  -H "Content-Type: application/json" \
-  -d '{
-    "walletAddress": "0x1111111111111111111111111111111111111111",
-    "verifierIds": ["ownership-basic"],
-    "data": {"content":"Hello NEUS","owner":"0x1111111111111111111111111111111111111111"},
-    "signedTimestamp": 1678886400000,
-    "chainId": 84532
-  }'
-```
+Use the `/standardize` request above and verify that the submitted body matches the same wallet, verifier IDs, `signedTimestamp`, and data payload you signed.
 
 ### Common errors
 
 | Error | Solution |
-|-------|----------|
+| --- | --- |
 | `SIGNATURE_INVALID` | Use `/standardize` endpoint |
 | `SIGNATURE_EXPIRED` | Timestamp within 5 minutes |
 | `INVALID_WALLET_ADDRESS` | Check address format |
 
 ## Next Steps
 
-- [Node.js Example](../nodejs-basic/) — Programmatic signing
-- [API Reference](../../docs/api/README.md) — Complete API docs
-- [SDK](../../sdk/README.md) — JavaScript SDK
-
+- [Node.js Example](../nodejs-basic/) - Programmatic signing
+- [API Reference](../../docs/api/README.md) - Complete API docs
+- [SDK](../../sdk/README.md) - JavaScript SDK

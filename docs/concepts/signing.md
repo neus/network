@@ -12,9 +12,19 @@ NEUS also supports an optional **session** layer (`/api/v1/auth/*`) for first-pa
 | **Smart Contract** | EIP-1271 | Contract wallets (Safe, Argent, Sequence). |
 | **Counterfactual** | EIP-6492 | Pre-deployed smart accounts not yet on-chain. |
 
+## Standardized path
+
+For manual or server-side signing, do not hand-build the message if you can avoid it.
+
+- Call `POST /api/v1/verification/standardize`
+- Sign the returned `signerString`
+- Submit the same normalized request body to `POST /api/v1/verification`
+
+This is the production-safe path because it avoids drift in chain normalization and deterministic JSON handling.
+
 ## Message Format
 
-If building a custom client (e.g., Python, Go), you must replicate the standard signing message exactly.
+If you are building a low-level custom client (for example Python or Go without the SDK), the current signing string format is:
 
 **Template:**
 
@@ -44,7 +54,7 @@ Timestamp: {unix_ms}
 
 ## Debugging
 
-Use the API to troubleshoot signature issues.
+Use the API to troubleshoot signature issues or to avoid manual string construction entirely.
 
 - **`POST /api/v1/verification/standardize`**: Returns the exact signing string the server expects.
   - Use this instead of guessing the `Chain:` line or JSON standardization details.

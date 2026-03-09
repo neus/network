@@ -1,43 +1,29 @@
+---
+title: Quickstart
+description: Create your first proof and wire a gate in minutes.
+---
+
 # Quickstart
 
 ## Pick your path
 
-<table data-view="cards">
-  <thead>
-    <tr>
-      <th></th>
-      <th></th>
-      <th data-hidden data-card-target data-type="content-ref"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>SDK proof (this page)</strong></td>
-      <td>Create a proof via wallet signature and poll status.</td>
-      <td><strong>This page</strong></td>
-    </tr>
-    <tr>
-      <td><strong>VerifyGate widget</strong></td>
-      <td>Drop-in React gating with freshness controls.</td>
-      <td><a href="../sdk/widgets/README.md">../sdk/widgets/README.md</a></td>
-    </tr>
-    <tr>
-      <td><strong>HTTP examples</strong></td>
-      <td>Minimal curl / Node.js examples for server integrations.</td>
-      <td><a href="../examples/README.md">../examples/README.md</a></td>
-    </tr>
-    <tr>
-      <td><strong>Hosted auth + verify</strong></td>
-      <td>Standardized `/verify` login flow, popup completion, and auth code exchange.</td>
-      <td><a href="./guides/auth-and-hosted-verify.md">./guides/auth-and-hosted-verify.md</a></td>
-    </tr>
-    <tr>
-      <td><strong>Hub integrator setup</strong></td>
-      <td>Org/domain setup, app linking, sponsor grants, hosted checkout, and usage tracking.</td>
-      <td><a href="./guides/hub-integrator-setup.md">./guides/hub-integrator-setup.md</a></td>
-    </tr>
-  </tbody>
-</table>
+<CardGroup cols={3}>
+  <Card title="SDK proof (this page)" icon="code" href="#">
+    Create a proof via wallet signature and poll status.
+  </Card>
+  <Card title="VerifyGate widget" icon="shield" href="../widgets/overview">
+    Drop-in React gating with freshness controls.
+  </Card>
+  <Card title="HTTP examples" icon="terminal" href="https://github.com/neus-network/network/tree/main/examples">
+    Minimal curl / Node.js examples for server integrations.
+  </Card>
+  <Card title="Hosted auth + verify" icon="key" href="../cookbook/auth-hosted-verify">
+    Standardized `/verify` login flow, popup completion, and auth code exchange.
+  </Card>
+  <Card title="Hub integrator setup" icon="building" href="../cookbook/hub-integrator">
+    Org/domain setup, app linking, sponsor grants, hosted checkout, and usage tracking.
+  </Card>
+</CardGroup>
 
 ## 1. Install SDK
 
@@ -71,9 +57,12 @@ const proofId = proof.proofId; // Standard proof ID
 
 ## Production defaults (recommended)
 
-- **Privacy**: Default to `options: { privacyLevel: 'private', publicDisplay: false }` unless you explicitly need public discovery.
-- **Storage**: Set `storeOriginalContent` separately from privacy. Private proofs can still store original content when you need owner-only access.
-- **Proof ID**: Treat `proofId` as an opaque identifier.
+<Note>
+**Privacy:** Default to `options: { privacyLevel: 'private', publicDisplay: false }` unless you explicitly need public discovery.
+</Note>
+
+- **Storage:** Set `storeOriginalContent` separately from privacy. Private proofs can still store original content when you need owner-only access.
+- **Proof ID:** Treat `proofId` as an opaque identifier.
 
 ## 3b. Poll status (when verifiers run async)
 
@@ -113,8 +102,6 @@ export default function ProtectedPage() {
 
 For `ownership-social`, `ownership-org-oauth`, and `proof-of-human`, `VerifyGate` launches NEUS hosted checkout.
 
-Hosted checkout flow details (popup + callback): **[Gating](./concepts/gating.md#hosted-checkout-interactive-verifiers)**.
-
 ```jsx
 <VerifyGate
   requiredVerifiers={['ownership-social']}
@@ -134,7 +121,9 @@ If you want hosted login plus later API calls without per-request proof-envelope
 2. If NEUS has enabled hosted auth code exchange for your deployment, your server exchanges the returned auth `code` at `POST /api/v1/auth/code/exchange` with your NEUS-issued partner credential.
 3. Use the resulting session/token for later calls.
 
-Guide: **[Auth + Hosted Verify](./guides/auth-and-hosted-verify.md)**.
+<Note>
+Guide: **[Auth + Hosted Verify](../cookbook/auth-hosted-verify)**.
+</Note>
 
 ## 5. Server-side gating (minimal eligibility)
 
@@ -152,14 +141,29 @@ const result = await client.gateCheck({
 });
 ```
 
-Freshness note: for point-in-time verifiers (balances, ownership, risk), always enforce a recency window (`since` / `sinceDays`) for high-stakes actions, or create a fresh proof and use the final status.
+<Warning>
+**Freshness note:** for point-in-time verifiers (balances, ownership, risk), always enforce a recency window (`since` / `sinceDays`) for high-stakes actions, or create a fresh proof and use the final status.
+</Warning>
 
 ## What's Next?
 
-- **[Guides](./guides/README.md)** - Use-case walkthroughs.
-- **[Auth + Hosted Verify](./guides/auth-and-hosted-verify.md)** - Standardized `/verify` login and hosted popup flow.
-- **[Hub Integrator Setup](./guides/hub-integrator-setup.md)** - Domain/org -> app link -> sponsor grants -> hosted checkout.
-- **[View Verifier Catalog](./verifiers/README.md)** - Verifier IDs, tiers, and input schemas.
-- **[Read API Docs](./api/README.md)** - Deep dive into the HTTP endpoints.
-- **[SDK](../sdk/README.md)** - Client usage, configuration, and widgets.
-- **[Examples](../examples/README.md)** - Minimal working examples.
+<CardGroup cols={3}>
+  <Card title="Guides" href="../cookbook/overview">
+    Use-case walkthroughs.
+  </Card>
+  <Card title="Auth + Hosted Verify" href="../cookbook/auth-hosted-verify">
+    Standardized `/verify` login and hosted popup flow.
+  </Card>
+  <Card title="Hub Integrator Setup" href="../cookbook/hub-integrator">
+    Domain/org -> app link -> sponsor grants -> hosted checkout.
+  </Card>
+  <Card title="View Verifier Catalog" href="../ecosystems/verifiers">
+    Verifier IDs, tiers, and input schemas.
+  </Card>
+  <Card title="Read API Docs" href="../api/overview">
+    Deep dive into the HTTP endpoints.
+  </Card>
+  <Card title="SDK" href="../sdks/javascript">
+    Client usage, configuration, and widgets.
+  </Card>
+</CardGroup>

@@ -5,7 +5,7 @@
 **Verify once. Prove everywhere.**
 
 NEUS is a **portable proof infrastructure** for creating and managing verifiable proofs that are designed for maximum portability and reuse.
-It turns verified claims into **portable proof** you can reuse anywhere—apps, APIs, smart contracts, or AI systems—without rebuilding trust logic each time.
+It turns verified claims into **portable proof** you can reuse anywhere-apps, APIs, smart contracts, or AI systems-without rebuilding trust logic each time.
 
 ## Quick start (SDK)
 
@@ -34,8 +34,8 @@ const status = await client.getStatus(proofId);
 console.log('Status:', status.status);
 ```
 
-> **Use `proofId` as the standard ID.**  
-> `qHash` is a deprecated alias with the same value (`proofId === qHash`).  
+> **Use `proofId` as the standard ID.**
+> `qHash` is a deprecated alias with the same value (`proofId === qHash`).
 > Freshness comes from timestamps like `completedAt` / per-verifier `verifiedAt`.
 
 ## Server-side gating (recommended)
@@ -69,30 +69,35 @@ For Next.js App Router, render widgets inside a **Client Component** (widget mod
 
 ## Documentation
 
-| Resource                                 | Description                        |
-| ---------------------------------------- | ---------------------------------- |
-| [Docs home](./docs/README.md)            | Protocol overview and guides       |
-| [Quickstart](./docs/QUICKSTART.md)       | Create your first proof            |
-| [API Reference](./docs/api/README.md)    | HTTP endpoints                     |
-| [Verifiers](./docs/verifiers/README.md)  | Verifier catalog + schemas         |
+| Resource | Description |
+| --- | --- |
+| [Docs home](https://docs.neus.network) | Standardized published documentation |
+| [Quickstart](https://docs.neus.network/quickstart) | First proof, gating, and hosted verify |
+| [API Reference](https://docs.neus.network/api) | Public HTTP contract + OpenAPI |
+| [Verifiers](https://docs.neus.network/verifiers) | Verifier catalog + schemas |
 | [Contracts](./contracts/VERIFICATION.md) | Verified contracts and explorers |
-| [Examples](./examples/)                  | Integration examples               |
+| [Examples](./examples/) | Integration examples |
 
-**Publish flow:** OpenAPI spec (`docs/api/public-api.json`) is generated from `neus-nut` routes. In a workspace with both repos, run `npm run docs` in `neus-nut` to sync; then run the [Docs workflow](.github/workflows/docs.yml) (Actions → Docs) to validate markdown + OpenAPI before GitBook sync.
+**Source of truth:**
+
+- Public docs source content lives in [`mintlify/`](./mintlify/) (Mintlify), [`sdk/`](./sdk/README.md), and [`examples/`](./examples/README.md).
+- Public OpenAPI is generated from `neus-nut/src/routes/*.js` into `neus-nut/docs-private/api/public-api.json`, then mirrored to `network/mintlify/openapi/public-api.json`.
+- Run the [Docs workflow](./.github/workflows/docs.yml) before publishing docs changes.
+- For a release-grade docs receipt, generate a deterministic manifest with `node scripts/generate-docs-manifest.mjs --out docs-v1-manifest.json` and use the aggregate hash in your NEUS proof flow.
 
 ---
 
 ## Support
 
-| Channel                                                           | Use For         |
-| ----------------------------------------------------------------- | --------------- |
-| [GitHub Discussions](https://github.com/neus/network/discussions) | Questions       |
-| [GitHub Issues](https://github.com/neus/network/issues)           | Bug reports     |
-| [dev@neus.network](mailto:dev@neus.network)                       | Security issues |
+| Channel | Use For |
+| --- | --- |
+| [GitHub Discussions](https://github.com/neus/network/discussions) | Questions |
+| [GitHub Issues](https://github.com/neus/network/issues) | Bug reports |
+| [dev@neus.network](mailto:dev@neus.network) | Security issues |
 
 ---
 
 ## License
 
-- **Smart Contracts:** BUSL-1.1 → Apache-2.0 (Aug 2028)
+- **Smart Contracts:** BUSL-1.1 -> Apache-2.0 (Aug 2028)
 - **SDK & Tools:** Apache-2.0

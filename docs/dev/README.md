@@ -16,3 +16,9 @@ Build on the NEUS proof layer with a direct path from first integration to produ
 - Enforce freshness for point-in-time checks (`since`, `sinceDays`, or `strategy="fresh"`).
 - Use hosted checkout for interactive verifiers.
 - Treat `proofId` as the standard identifier.
+
+## Release evidence
+
+- Public OpenAPI mirror: `docs/api/public-api.json`
+- Docs validation: `.github/workflows/docs.yml`
+- Deterministic docs manifest: `node scripts/generate-docs-manifest.mjs --out docs-v1-manifest.json`

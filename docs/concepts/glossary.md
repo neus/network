@@ -7,7 +7,7 @@
 Use the Proof ID to:
 
 - Store a portable reference to a proof
-- Fetch status (`GET /api/v1/verification/status/{proofId}`)
+- Fetch status (`GET /api/v1/verification/status/{qHash}` with the same `proofId` value)
 - Power gating and downstream integrations
 
 ### Notes

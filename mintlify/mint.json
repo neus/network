@@ -1,0 +1,102 @@
+{
+  "name": "NEUS Docs",
+  "logo": {
+    "light": "https://neus.network/images/neus-brand-pack/neus-mark-512.png",
+    "dark": "https://neus.network/images/neus-brand-pack/neus-mark-512.png"
+  },
+  "favicon": "https://neus.network/images/neus-brand-pack/neus-mark-32.png",
+  "colors": {
+    "primary": "#6366F1",
+    "light": "#818CF8",
+    "dark": "#4F46E5"
+  },
+  "openapi": "/openapi/public-api.json",
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "content/get-started/overview",
+        "content/get-started/quickstart",
+        "content/get-started/integration"
+      ]
+    },
+    {
+      "group": "API",
+      "pages": [
+        "content/api/overview",
+        "content/api/authentication",
+        "content/api/errors"
+      ]
+    },
+    {
+      "group": "SDKs",
+      "pages": [
+        "content/sdks/javascript",
+        "content/sdks/security"
+      ]
+    },
+    {
+      "group": "Widgets",
+      "pages": [
+        "content/widgets/overview",
+        "content/widgets/verifygate"
+      ]
+    },
+    {
+      "group": "Cookbook",
+      "pages": [
+        "content/cookbook/overview",
+        "content/cookbook/auth-hosted-verify",
+        "content/cookbook/nft-gating",
+        "content/cookbook/domain-verification",
+        "content/cookbook/sybil-resistance",
+        "content/cookbook/verifiable-agents",
+        "content/cookbook/hub-integrator",
+        "content/cookbook/mcp"
+      ]
+    },
+    {
+      "group": "Agents",
+      "pages": [
+        "content/agents/overview",
+        "content/agents/agent-identity",
+        "content/agents/agent-delegation"
+      ]
+    },
+    {
+      "group": "Apps & Ecosystems",
+      "pages": [
+        "content/ecosystems/overview",
+        "content/ecosystems/verifiers"
+      ]
+    }
+  ],
+  "anchors": [
+    {
+      "name": "API Reference",
+      "icon": "code",
+      "url": "api-reference"
+    },
+    {
+      "name": "GitHub",
+      "icon": "github",
+      "url": "https://github.com/neus-network"
+    }
+  ],
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
+  },
+  "footerSocials": {
+    "twitter": "https://twitter.com/neus_network",
+    "github": "https://github.com/neus-network"
+  }
+}

@@ -1,0 +1,32 @@
+---
+title: Agents Overview
+description: Verifiable agent identities and delegation for AI systems.
+---
+
+# Agents Overview
+
+NEUS provides verifiable agent identity and delegation for AI and automation systems.
+
+<CardGroup cols={2}>
+  <Card title="Agent Identity" icon="robot" href="./agent-identity">
+    Register and verify AI agent identities.
+  </Card>
+  <Card title="Agent Delegation" icon="key" href="./agent-delegation">
+    Delegate permissions to agents for scoped operations.
+  </Card>
+</CardGroup>
+
+## Why Verifiable Agents?
+
+| Problem | Solution |
+|---------|----------|
+| "Which AI is acting?" | `agent-identity` proof binds agent to controller |
+| "What can it do?" | `agent-delegation` proof defines scoped permissions |
+| "Did it act correctly?" | On-chain anchors provide audit trail |
+
+## Key Concepts
+
+- **Controller**: The wallet that owns/controls the agent
+- **Agent Wallet**: The wallet the agent uses for operations
+- **Scope**: What the agent is permitted to do
+- **Delegation Proof**: Cryptographic proof of granted permissions

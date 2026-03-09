@@ -18,23 +18,33 @@ Authentication is handled via request-bound wallet signatures following the [NEU
 
 ## Session-first integration (lowest friction)
 
-For integrators embedding hosted verify: redirect users to `https://neus.network/verify?intent=login&returnUrl=...`. After sign-in, the page returns an auth `code` via postMessage or redirect. Partner server exchanges the code at `POST https://api.neus.network/api/v1/auth/code/exchange` (with partner API key) to obtain session/token. Subsequent API calls use cookie/Bearer — no per-request signing required.
+For integrators embedding hosted verify: redirect users to `https://neus.network/verify?intent=login&returnUrl=...`. After sign-in, the page returns an auth `code` via postMessage or redirect. If NEUS has enabled partner code exchange for your deployment, your server exchanges the code at `POST https://api.neus.network/api/v1/auth/code/exchange` with your NEUS-issued partner credential to obtain a session/token. Subsequent API calls use cookie/Bearer with no per-request signing required.
+
+Reference: [Auth + Hosted Verify](../guides/auth-and-hosted-verify.md).
 
 ## Recommended integration flows
 
 The following endpoints are covered in [`public-api.json`](public-api.json):
 
 - **Create a proof**: `POST /api/v1/verification` (SDK: `client.verify(...)`)
-- **Poll status**: `GET /api/v1/verification/status/{proofId}` (SDK: `client.getStatus(...)` / `client.pollProofStatus(...)`)
+- **Poll status**: `GET /api/v1/verification/status/{qHash}` (SDK: `client.getStatus(...)` / `client.pollProofStatus(...)`; pass the returned `proofId` value)
 - **Discover verifiers**: `GET /api/v1/verification/verifiers` (use this to discover what is currently available)
 - **Gate access (minimal)**: `GET /api/v1/proofs/check` (SDK: `client.gateCheck(...)`)
-- **Revoke a proof (owner-signed)**: `POST /api/v1/proofs/{proofId}/revoke-self` (SDK: `client.revokeOwnProof(...)`)
+- **List proofs for a wallet or DID**: `GET /api/v1/proofs/by-wallet/{address}` (SDK: `client.getProofsByWallet(...)`)
+- **Revoke a proof (owner-signed)**: `POST /api/v1/proofs/revoke-self/{qHash}` (SDK: `client.revokeOwnProof(...)`; pass the returned `proofId` value)
 
-The following endpoints are available on the API but not yet in the OpenAPI spec:
+## Public OpenAPI vs constrained routes
 
-- **Grant private-proof access**: `POST /api/v1/verification/access/grant` — owner signs a capability allowing a specific viewer wallet to read a private proof. Body: `{ qHash, ownerWallet, viewerWallet, signature, signedTimestamp, expiresInSeconds? }`.
-- **Pseudonym availability check**: `GET /api/v1/profile/pseudonym-availability?name=<handle>` — returns `{ available: boolean }`.
-- **Pseudonym lookup**: `GET /api/v1/profile/pseudonym-lookup/{handle}` — resolves a handle (optionally `namespace:handle`) to its proof and wallet.
+`public-api.json` is the stable public integrator contract. If a route is not represented there, do not assume it is part of the long-term public API surface.
+
+Examples of constrained routes that exist in code but are not part of the public OpenAPI contract:
+
+- `POST /api/v1/auth/code/exchange` - partner-only auth code exchange
+- `POST /api/v1/verification/access/grant` - owner-controlled private proof sharing flow
+- `GET /api/v1/profile/pseudonym-availability`
+- `GET /api/v1/profile/pseudonym-lookup/{handle}`
+
+Use these only when you are intentionally integrating the corresponding hosted or first-party flow and have the required partner or owner credentials.
 
 ## Integrator checklist (production)
 
@@ -53,7 +63,7 @@ The API enforces tiered rate limiting for stability. Limits are applied based on
 | Tier | Typical endpoints | Default limit |
 | :--- | :--- | :--- |
 | **STATUS** | `GET /api/v1/verification/status/*` | 100 req / minute |
-| **STANDARD** | Public reads (verifier discovery, proof reads, gate checks) | 60 req/min base (Pro 4×, Enterprise 10×); fallback: 2,000 req/hour |
+| **STANDARD** | Public reads (verifier discovery, proof reads, gate checks) | 60 req/min base (Pro 4x, Enterprise 10x); fallback: 2,000 req/hour |
 | **SENSITIVE** | Verification writes (`POST /api/v1/verification`) | 50 req / 15 minutes |
 
 ### Resilience and Polling
@@ -71,5 +81,5 @@ For detailed request/response schemas, parameter definitions, and error codes, r
 - **Verification**: Submission and polling for new proofs.
 - **Verifiers**: Real-time list of enabled verifier modules.
 - **Proofs**: Discoverability, gate checking, and revocation.
-    
-> **Note:** The `/api/v1/auth/*` endpoints (login, passkey, OAuth, step-up, session) are first-party session endpoints used by the NEUS Hub frontend. They are **not** covered in the public OpenAPI spec because they follow the NEUS BFF (Backend-for-Frontend) pattern and are not designed for direct third-party API calls. Third-party integrators should use the `POST /api/v1/auth/code/exchange` endpoint (with a partner API key) documented in the session-first integration pattern above.
+
+> **Note:** Most `/api/v1/auth/*` endpoints (login, passkey, OAuth, step-up, session) are first-party session endpoints used by the NEUS Hub frontend. They are **not** part of the public OpenAPI contract. The exception documented for integrators is the constrained partner route `POST /api/v1/auth/code/exchange`, which is intentionally used only for hosted session-first flows.

@@ -1,0 +1,60 @@
+---
+title: Domain Verification
+description: Verify domain ownership with DNS TXT records.
+---
+
+# Domain Verification
+
+Verify domain ownership using the `ownership-dns-txt` verifier.
+
+## How It Works
+
+1. Add a DNS TXT record to your domain
+2. Create a proof that verifies the record matches your wallet
+3. Use the proof for domain-gated access or verification
+
+## Setup
+
+### Step 1: Add DNS TXT Record
+
+Add a TXT record at `_neus.<yourdomain.com>`:
+
+```text
+neus=<your-wallet-address>
+```
+
+Example:
+```text
+_neus.example.com TXT "neus=0x1234567890abcdef1234567890abcdef12345678"
+```
+
+### Step 2: Create Domain Proof
+
+```javascript
+const proof = await client.verify({
+  verifier: 'ownership-dns-txt',
+  data: {
+    domain: 'example.com',
+    walletAddress: '0x...',
+  },
+  walletAddress: '0x...',
+});
+```
+
+### Step 3: Verify Proof
+
+```bash
+GET /api/v1/proofs/check?verifierIds=ownership-dns-txt&address=0x...
+```
+
+## Propagation Time
+
+DNS changes typically propagate within minutes but can take up to 24 hours depending on your DNS provider.
+
+## Use Cases
+
+| Use Case | Description |
+|----------|-------------|
+| Organization verification | Prove you own a domain |
+| Domain-gated access | Restrict features to domain owners |
+| Brand verification | Link your domain to your NEUS identity |

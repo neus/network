@@ -1,8 +1,0 @@
-root: ./
-
-structure:
-  readme: docs/README.md
-  summary: docs/SUMMARY.md
-  ignore:
-    - "**/index.md"
-

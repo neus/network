@@ -1,0 +1,59 @@
+---
+title: MCP Integration
+description: Model Context Protocol for AI integrations.
+---
+
+# MCP Integration
+
+NEUS provides an MCP (Model Context Protocol) server for AI integrations.
+
+## Overview
+
+The NEUS MCP server exposes verification capabilities to AI agents and assistants:
+
+- Verify content and ownership
+- Check proof status
+- Create proofs (with proper auth)
+
+## Configuration
+
+Add to your MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "command": "node",
+      "args": ["/path/to/neus-nut/mcp/server.js"],
+      "env": {
+        "NEUS_API_URL": "https://api.neus.network"
+      }
+    }
+  }
+}
+```
+
+## Available Tools
+
+| Tool | Description |
+|------|-------------|
+| `neus_verify` | Create a verification proof |
+| `neus_check_proof` | Check proof status |
+| `neus_gate_check` | Check eligibility for a gate |
+| `neus_get_verifiers` | List available verifiers |
+
+## Hosted Verify for MCP
+
+The MCP server can direct users to hosted verify for interactive flows:
+
+```javascript
+{
+  "hostedVerifyUrl": "https://neus.network/verify"
+}
+```
+
+## Use Cases
+
+- AI assistants verifying content authenticity
+- Automated proof checking for workflows
+- Agent identity and delegation verification

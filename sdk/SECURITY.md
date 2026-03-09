@@ -26,4 +26,12 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 - `publicDisplay: false`
 - `storeOriginalContent: false`
 
+These are separate controls:
+
+- `privacyLevel` controls access
+- `publicDisplay` controls public discovery
+- `storeOriginalContent` controls whether original content is stored
+
+Private proofs can still store original content when `storeOriginalContent=true`.
+
 “Discoverable” proofs are **public** (`privacyLevel='public'`) and explicitly opted into discovery (`publicDisplay=true`).

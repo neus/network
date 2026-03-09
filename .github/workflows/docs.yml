@@ -1,9 +1,30 @@
-# Manual trigger only. Run via Actions → Docs → Run workflow.
-# Validates: markdown (docs), OpenAPI (docs/api/public-api.json), GitBook structure.
-# GitBook sync: configured in GitBook dashboard; pushes to main sync from there.
 name: Docs
 
 on:
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'SECURITY.md'
+      - 'CONTRIBUTING.md'
+      - '.markdownlint-cli2.jsonc'
+      - '.github/workflows/docs.yml'
+      - 'sdk/**/*.md'
+      - 'examples/**/*.md'
+      - 'scripts/generate-docs-manifest.mjs'
+      - 'mintlify/**/*'
+  push:
+    branches:
+      - main
+    paths:
+      - 'README.md'
+      - 'SECURITY.md'
+      - 'CONTRIBUTING.md'
+      - '.markdownlint-cli2.jsonc'
+      - '.github/workflows/docs.yml'
+      - 'sdk/**/*.md'
+      - 'examples/**/*.md'
+      - 'scripts/generate-docs-manifest.mjs'
+      - 'mintlify/**/*'
   workflow_dispatch:
 
 permissions:
@@ -14,31 +35,23 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: 20.19.0
+  NODE_VERSION: '20'
 
 jobs:
   docs:
-    name: Docs (markdown + OpenAPI validation)
+    name: Docs validation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Setup Node ${{ env.NODE_VERSION }}
-        run: |
-          NODE_VERSION="${{ env.NODE_VERSION }}"
-          curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install "$NODE_VERSION"
-          nvm use "$NODE_VERSION"
-          echo "PATH=$HOME/.nvm/versions/node/v$NODE_VERSION/bin:$PATH" >> $GITHUB_PATH
-          node --version
-          npm --version
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Markdown lint
         run: npx --yes markdownlint-cli2@latest --config .markdownlint-cli2.jsonc
 
       - name: OpenAPI lint (public surface)
-        run: npx --yes @redocly/cli@2.14.1 lint docs/api/public-api.json
-
+        run: npx --yes @redocly/cli@2.14.1 lint mintlify/openapi/public-api.json

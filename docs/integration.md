@@ -20,7 +20,9 @@ This is the recommended end-to-end path for a production NEUS integration.
 
 ## Session-first integration
 
-For lowest friction: use hosted verify + auth code exchange. Redirect users to `https://neus.network/verify?intent=login&returnUrl=...`. After sign-in, the page returns an auth `code`. Partner server calls `POST https://api.neus.network/api/v1/auth/code/exchange` with the code and partner API key to obtain session/token. Subsequent API calls use cookie/Bearer — no per-request signing.
+For lowest friction: use hosted verify + auth code exchange. Redirect users to `https://neus.network/verify?intent=login&returnUrl=...`. After sign-in, the page returns an auth `code`. If NEUS has enabled partner code exchange for your deployment, your server calls `POST https://api.neus.network/api/v1/auth/code/exchange` with the code and your NEUS-issued partner credential to obtain a session/token. Subsequent API calls use cookie/Bearer without per-request signing.
+
+Use this only for the hosted session-first path. For the full routing and popup contract, see [Auth + Hosted Verify](./guides/auth-and-hosted-verify.md).
 
 ## Hosted checkout requirements
 
@@ -51,22 +53,22 @@ The easiest integration path for non-React or non-framework sites. One script ta
 
 ```html
 <script src="https://verify.neus.network/widget.js"></script>
-<div data-neus-proof="qHash123"></div>
+<div data-neus-proof="0xYOUR_PROOF_ID"></div>
 ```
 
 The badge auto-renders on page load. Clicking it links to the proof on `neus.network`.
 
-**CORS:** The widget calls `GET https://api.neus.network/api/v1/verification/status/:qHash` which responds with `Access-Control-Allow-Origin: *`. No configuration needed.
+**CORS:** The widget calls `GET https://api.neus.network/api/v1/verification/status/:qHash` using your proof identifier value. This endpoint responds with `Access-Control-Allow-Origin: *`. No configuration needed.
 
 **Optional attributes:**
 
-| Attribute               | Description                                         |
-|-------------------------|-----------------------------------------------------|
-| `data-neus-proof`       | qHash / proofId (required)                          |
-| `data-neus-api-url`     | Custom API base (default: `https://api.neus.network`)|
-| `data-neus-ui-base`     | Custom viewer base (default: `https://neus.network`) |
-| `data-neus-size`        | `sm` (default) or `md`                              |
-| `data-neus-show-chains` | `true` to show chain count                          |
+| Attribute | Description |
+| --- | --- |
+| `data-neus-proof` | proofId / qHash (required) |
+| `data-neus-api-url` | Custom API base (default: `https://api.neus.network`) |
+| `data-neus-ui-base` | Custom viewer base (default: `https://neus.network`) |
+| `data-neus-size` | `sm` (default) or `md` |
+| `data-neus-show-chains` | `true` to show chain count |
 
 **Manual JS API:** `NeusWidget.mount(el, opts)` / `NeusWidget.mountAll(root?)` / `NeusWidget.unmount(el)`.
 
@@ -75,6 +77,7 @@ See [SDK Widgets README](../sdk/widgets/README.md) for full reference.
 ## Related references
 
 - [Hub Integrator Setup](./guides/hub-integrator-setup.md)
+- [Auth + Hosted Verify](./guides/auth-and-hosted-verify.md)
 - [Gating](./concepts/gating.md)
 - [Signing](./concepts/signing.md)
 - [API Reference](./api/README.md)

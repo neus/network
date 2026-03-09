@@ -1,0 +1,167 @@
+---
+title: Verifier Catalog
+description: Complete catalog of NEUS verifiers, their schemas, and capabilities.
+---
+
+# Verifier Catalog
+
+The verifier catalog is the single source of truth for available verification types. Access it via the public API.
+
+## Live Catalog
+
+```text
+GET https://api.neus.network/api/v1/verification/verifiers
+```
+
+This endpoint returns the authoritative list of verifiers, their input schemas, and metadata. Always query the API for the most current information.
+
+## Verifier Categories
+
+| Category | Verifiers | Use Case |
+|----------|-----------|----------|
+| **Ownership** | `ownership-basic`, `ownership-social`, `ownership-org-oauth`, `ownership-dns-txt` | Prove wallet/social/domain ownership |
+| **Assets** | `nft-ownership`, `token-holding`, `contract-ownership` | Token and NFT gating |
+| **Identity** | `proof-of-human`, `wallet-link`, `ownership-pseudonym` | Identity verification |
+| **Agents** | `agent-identity`, `agent-delegation` | AI and automation systems |
+| **Risk** | `wallet-risk`, `ai-content-moderation` | Security and safety |
+
+## Core Verifiers
+
+### ownership-basic
+
+The foundational verifier for wallet signatures. Proves control of an address.
+
+```javascript
+const proof = await client.verify({
+  verifier: 'ownership-basic',
+  content: 'Content to sign',
+  walletAddress: '0x...',
+});
+```
+
+### nft-ownership
+
+Gate access by NFT ownership.
+
+```javascript
+const proof = await client.verify({
+  verifier: 'nft-ownership',
+  data: {
+    contractAddress: '0x...',
+    tokenId: '1',
+    chainId: 8453,
+  },
+  walletAddress: '0x...',
+});
+```
+
+### token-holding
+
+Gate by token balance.
+
+```javascript
+const proof = await client.verify({
+  verifier: 'token-holding',
+  data: {
+    contractAddress: '0x...',
+    minBalance: '100',
+    chainId: 8453,
+  },
+  walletAddress: '0x...',
+});
+```
+
+### ownership-social
+
+Verify social account ownership via OAuth. Requires hosted checkout.
+
+```jsx
+<VerifyGate
+  requiredVerifiers={['ownership-social']}
+  hostedCheckoutUrl="https://neus.network/verify"
+>
+  <ProtectedContent />
+</VerifyGate>
+```
+
+### proof-of-human
+
+Anti-bot verification. Requires hosted checkout.
+
+```jsx
+<VerifyGate
+  requiredVerifiers={['proof-of-human']}
+  hostedCheckoutUrl="https://neus.network/verify"
+>
+  <ProtectedContent />
+</VerifyGate>
+```
+
+## Agent Verifiers
+
+### agent-identity
+
+Register an AI or automation agent.
+
+```javascript
+const proof = await client.verify({
+  verifier: 'agent-identity',
+  data: {
+    agentId: 'my-agent',
+    agentWallet: '0x...',
+    agentType: 'ai',
+    description: 'My AI assistant',
+  },
+  walletAddress: controllerWallet,
+});
+```
+
+### agent-delegation
+
+Delegate permissions to an agent.
+
+```javascript
+const proof = await client.verify({
+  verifier: 'agent-delegation',
+  data: {
+    controllerWallet: '0x...',
+    agentWallet: '0x...',
+    scope: 'payments:x402',
+    permissions: ['execute', 'read'],
+    expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
+  },
+  walletAddress: controllerWallet,
+});
+```
+
+## Verifier Tiers
+
+| Tier | Description | Availability |
+|------|-------------|--------------|
+| **Basic** | Instant, on-chain verification | Public |
+| **Interactive** | Requires OAuth/ZK flow | Public |
+| **Enterprise** | Custom integrations | Contact NEUS |
+
+## Using the Catalog
+
+The catalog endpoint returns:
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "ownership-basic",
+      "name": "Basic Ownership",
+      "description": "Verify wallet ownership via signature",
+      "tier": "basic",
+      "inputSchema": { ... },
+      "interactive": false
+    }
+  ]
+}
+```
+
+<Note>
+Always use the API response as the source of truth. This page provides overview and examples only.
+</Note>

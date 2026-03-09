@@ -10,20 +10,20 @@ The fastest way to add a "Verified by NEUS" badge to any page:
 <script src="https://verify.neus.network/widget.js"></script>
 
 <!-- Place this where you want the badge to appear -->
-<div data-neus-proof="qHash123"></div>
+<div data-neus-proof="0xYOUR_PROOF_ID"></div>
 ```
 
 The widget auto-scans the page on load and renders a badge for each `data-neus-proof` element.
 
 ### Data attributes
 
-| Attribute              | Required | Default                          | Description                         |
+| Attribute | Required | Default | Description |
 |------------------------|----------|----------------------------------|-------------------------------------|
-| `data-neus-proof`      | Yes      | —                                | qHash / proofId                     |
-| `data-neus-api-url`    | No       | `https://api.neus.network`       | Override API base URL               |
-| `data-neus-ui-base`    | No       | `https://neus.network`           | Override proof viewer base URL      |
-| `data-neus-size`       | No       | `sm`                             | `sm` or `md`                        |
-| `data-neus-show-chains`| No       | `false`                          | `true` to show chain count          |
+| `data-neus-proof` | Yes | - | proofId / qHash |
+| `data-neus-api-url` | No | `https://api.neus.network` | Override API base URL |
+| `data-neus-ui-base` | No | `https://neus.network` | Override proof viewer base URL |
+| `data-neus-size` | No | `sm` | `sm` or `md` |
+| `data-neus-show-chains` | No | `false` | `true` to show chain count |
 
 ### Manual API
 
@@ -31,7 +31,7 @@ The widget auto-scans the page on load and renders a badge for each `data-neus-p
 <script src="https://verify.neus.network/widget.js"></script>
 <script>
   // Mount a badge into a specific element
-  NeusWidget.mount(document.getElementById('my-badge'), { proofId: 'qHash123' });
+  NeusWidget.mount(document.getElementById('my-badge'), { proofId: '0xYOUR_PROOF_ID' });
 
   // Re-scan a subtree (e.g. after dynamic content loads)
   NeusWidget.mountAll(document.querySelector('.content-area'));
@@ -56,7 +56,7 @@ The badge uses CSS variables so it inherits your site's typography and can be th
 
 ### CORS
 
-The widget fetches `GET https://api.neus.network/api/v1/verification/status/:qHash`. This endpoint responds with `Access-Control-Allow-Origin: *` for unauthenticated reads — no CORS setup required on your end.
+The widget fetches `GET https://api.neus.network/api/v1/verification/status/:qHash` using the provided proof identifier value. This endpoint responds with `Access-Control-Allow-Origin: *` for unauthenticated reads - no CORS setup required on your end.
 
 ### Deploy
 
@@ -108,12 +108,14 @@ export function Page() {
 - `hostedCheckoutUrl`: hosted verify page URL (optional, recommended when `apiUrl` is custom)
 
 Notes:
+
 - Reuse without prompting can only see **public + discoverable** proofs.
 - Reusing private proofs requires an **owner signature** (wallet grants read access).
+- `privacyLevel`, `publicDisplay`, and `storeOriginalContent` are independent. A private proof may still store original content.
 - Interactive verifiers (`ownership-social`, `ownership-org-oauth`, `proof-of-human`) use NEUS hosted checkout automatically when required.
 - If you set a custom `apiUrl`, also set `hostedCheckoutUrl` to your hosted verify UI (for example `https://neus.network/verify`).
   `apiUrl` is used for API calls; `hostedCheckoutUrl` is used for popup checkout routing.
-- `sponsorGrant` is used when your app is sponsoring credits for users (for example after Hub “Link app” sponsor authorization).
+- `sponsorGrant` is used when your app is sponsoring credits for users (for example after Hub "Link app" sponsor authorization).
 
 ### Sponsored hosted checkout example
 
@@ -139,5 +141,6 @@ import { ProofBadge } from '@neus/sdk/widgets';
 ```
 
 Notes:
+
 - Widgets default to a bundled NEUS logo asset (inlined at build time), so no external logo fetch is required.
 - You can override with `logoUrl` in `ProofBadge`, `SimpleProofBadge`, `NeusPillLink`, and `VerifiedIcon`.

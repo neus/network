@@ -1,0 +1,119 @@
+---
+title: Integration
+description: Recommended end-to-end path for a production NEUS integration.
+---
+
+# Integration
+
+This is the recommended end-to-end path for a production NEUS integration.
+
+## Standard flow
+
+<Steps>
+  <Step title="Check gate eligibility">
+    Use `GET /api/v1/proofs/check` (or `client.gateCheck(...)`).
+    
+    Optionally include `X-Neus-App: <appId>` for attribution (non-secret).
+  </Step>
+  
+  <Step title="Run verification (if not eligible)">
+    - **Instant / lookup verifiers:** submit verification request.
+    - **Interactive verifiers:** use hosted checkout via `VerifyGate`.
+  </Step>
+  
+  <Step title="Poll status">
+    For async verifiers, poll until terminal state.
+  </Step>
+  
+  <Step title="Unlock access">
+    When eligible, persist the returned `proofId`.
+  </Step>
+</Steps>
+
+## Verification modes
+
+| Mode | Strategy | Use When |
+|------|----------|----------|
+| Reuse-first gating | `strategy="reuse-or-create"` | Standard UX |
+| Fresh proof required | `strategy="fresh"` | High-stakes actions |
+| Read-only check | `strategy="reuse"` | Don't want to create new proofs |
+
+## Session-first integration
+
+For lowest friction: use hosted verify + auth code exchange.
+
+1. Redirect users to `https://neus.network/verify?intent=login&returnUrl=...`
+2. After sign-in, the page returns an auth `code`
+3. If NEUS has enabled partner code exchange for your deployment, your server calls `POST https://api.neus.network/api/v1/auth/code/exchange` with the code and your NEUS-issued partner credential
+4. Subsequent API calls use cookie/Bearer without per-request signing
+
+<Note>
+Use this only for the hosted session-first path. For the full routing and popup contract, see **[Auth + Hosted Verify](../cookbook/auth-hosted-verify)**.
+</Note>
+
+## Hosted checkout requirements
+
+Interactive verifiers (`ownership-social`, `ownership-org-oauth`, `proof-of-human`) require hosted checkout.
+
+- **Default checkout URL:** `https://neus.network/verify` (or use SDK `getHostedCheckoutUrl()`)
+- **Sponsored flows:** include `X-Neus-App` (public appId) and `X-Sponsor-Grant` when your backend is covering verification costs.
+
+## Policy-based gate checks
+
+For backend policy enforcement, use `gateCheck` with explicit recency:
+
+| Parameter | Use For |
+|-----------|---------|
+| `since` | Exact timestamp windows |
+| `sinceDays` | Coarse policy windows |
+
+<Warning>
+Tight windows are recommended for point-in-time state verifiers.
+</Warning>
+
+## Privacy and access model
+
+- **Private-by-default** proofs are recommended.
+- **Public + discoverable** proofs support broad reuse and discovery.
+- **Private proof reads** require owner-authenticated access or explicit grant-based sharing.
+
+## Verify Widget (Script Tag)
+
+The easiest integration path for non-React or non-framework sites. One script tag, one HTML attribute, no build step:
+
+```html
+<script src="https://verify.neus.network/widget.js"></script>
+<div data-neus-proof="0xYOUR_PROOF_ID"></div>
+```
+
+The badge auto-renders on page load. Clicking it links to the proof on `neus.network`.
+
+<Note>
+**CORS:** The widget calls `GET https://api.neus.network/api/v1/verification/status/:qHash` using your proof identifier value. This endpoint responds with `Access-Control-Allow-Origin: *`. No configuration needed.
+</Note>
+
+### Optional attributes
+
+| Attribute | Description |
+|-----------|-------------|
+| `data-neus-proof` | proofId / qHash (required) |
+| `data-neus-api-url` | Custom API base (default: `https://api.neus.network`) |
+| `data-neus-ui-base` | Custom viewer base (default: `https://neus.network`) |
+| `data-neus-size` | `sm` (default) or `md` |
+| `data-neus-show-chains` | `true` to show chain count |
+
+### Manual JS API
+
+```javascript
+NeusWidget.mount(el, opts);
+NeusWidget.mountAll(root?);
+NeusWidget.unmount(el);
+```
+
+## Related references
+
+<CardGroup cols={3}>
+  <Card title="Hub Integrator Setup" href="../cookbook/hub-integrator" />
+  <Card title="Auth + Hosted Verify" href="../cookbook/auth-hosted-verify" />
+  <Card title="Gating" href="../api/overview" />
+</CardGroup>

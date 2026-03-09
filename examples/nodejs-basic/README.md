@@ -21,6 +21,7 @@ Use a test wallet only. Do not use production keys.
 ## How It Works
 
 ### 1. Build and sign
+
 The NEUS protocol requires a cryptographic signature over the request data. The recommended way to avoid signing-string drift is to ask the API for the exact string to sign.
 
 ```javascript
@@ -36,6 +37,7 @@ const signature = await wallet.signMessage(message); // EIP-191
 ```
 
 ### 2. Submit to API
+
 The signed request is submitted to the NEUS API.
 
 ```javascript

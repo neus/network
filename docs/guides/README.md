@@ -1,6 +1,6 @@
 # Cookbook
 
-High-value, production-oriented integration recipes (NFT gating, domains, agents, and sybil resistance).
+High-value, production-oriented integration recipes (NFT gating, domains, hosted auth, agents, and sybil resistance).
 
 <table data-view="cards">
   <thead>
@@ -15,6 +15,11 @@ High-value, production-oriented integration recipes (NFT gating, domains, agents
       <td><strong>Hub Integrator Setup</strong></td>
       <td>Domain/org setup, app linking, sponsor grants, hosted checkout, and usage tracking.</td>
       <td><a href="./hub-integrator-setup.md">./hub-integrator-setup.md</a></td>
+    </tr>
+    <tr>
+      <td><strong>Auth + Hosted Verify</strong></td>
+      <td>Standardized `/verify` login, popup completion, and partner auth code exchange.</td>
+      <td><a href="./auth-and-hosted-verify.md">./auth-and-hosted-verify.md</a></td>
     </tr>
     <tr>
       <td><strong>NEUS MCP</strong></td>

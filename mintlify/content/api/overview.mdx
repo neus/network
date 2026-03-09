@@ -1,0 +1,100 @@
+---
+title: API Overview
+description: Public HTTP contract for NEUS verification and proof management.
+---
+
+# API Overview
+
+## Base URL
+
+```
+https://api.neus.network
+```
+
+## Authentication
+
+Most read endpoints are public. Write operations require request-bound wallet signatures.
+
+<Note>
+For manual signing, use `POST /api/v1/verification/standardize` to get the exact signing string.
+</Note>
+
+## Core Endpoints
+
+| Operation | Method | Path |
+|-----------|--------|------|
+| Create verification | POST | `/api/v1/verification` |
+| Standardize signing string | POST | `/api/v1/verification/standardize` |
+| Poll status | GET | `/api/v1/verification/status/{qHash}` |
+| Gate check | GET | `/api/v1/proofs/check` |
+| Revoke proof | POST | `/api/v1/proofs/revoke-self/{qHash}` |
+| Verifier catalog | GET | `/api/v1/verification/verifiers` |
+
+## Proof ID
+
+Treat `proofId` as an opaque identifier. It is a stable proof identifier.
+
+Use timestamps/status fields for freshness, not the ID itself.
+
+<Note>
+In raw HTTP path templates and the generated OpenAPI file, the same value may appear as `{qHash}`. `proofId` and `qHash` are the same value.
+</Note>
+
+## Poll status
+
+```bash
+GET /api/v1/verification/status/{qHash}
+```
+
+SDK: `client.getStatus(...)` or `client.pollProofStatus(...)`
+
+Pass the returned `proofId` value as the path parameter.
+
+## Revoke a proof (owner-signed)
+
+```bash
+POST /api/v1/proofs/revoke-self/{qHash}
+```
+
+SDK: `client.revokeOwnProof(...)`
+
+Pass the returned `proofId` value as the path parameter.
+
+## Gate check (minimal eligibility)
+
+For server-side gating without pulling full proof payloads:
+
+```bash
+GET /api/v1/proofs/check?address=0x...&verifierIds=ownership-basic
+```
+
+SDK: `client.gateCheck({ address, verifierIds, since, ... })`
+
+<Warning>
+For point-in-time verifiers, always include `since` or `sinceDays` for freshness enforcement.
+</Warning>
+
+## OpenAPI Reference
+
+The full API spec is available at `/openapi/public-api.json`.
+
+<OpenAPIOperation operationId="submitVerification" />
+
+## Rate Limits
+
+Public endpoints have generous rate limits. Contact NEUS for higher limits or enterprise SLAs.
+
+## Errors
+
+All errors follow a consistent structure:
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable message",
+    "type": "error_type"
+  }
+}
+```

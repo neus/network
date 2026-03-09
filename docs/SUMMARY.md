@@ -17,6 +17,7 @@
 ## Integration Guides
 
 * [Cookbook](guides/README.md)
+* [Auth + Hosted Verify](guides/auth-and-hosted-verify.md)
 * [Gate Content with NFTs](guides/gating-with-nfts.md)
 * [Domain Verification](guides/domain-verification.md)
 * [Sybil Resistance](guides/sybil-resistance.md)

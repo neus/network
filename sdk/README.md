@@ -42,25 +42,44 @@ const client = new NeusClient({
 
 ## Create a proof (server / manual signing)
 
-If you already have a signature over the NEUS Standard Signing String, submit it directly:
+If you need manual or server-side signing, ask the API for the exact string first and sign that:
 
 ```javascript
-const res = await client.verify({
+import { standardizeVerificationRequest, signMessage } from '@neus/sdk';
+
+const provider = window.ethereum; // or any signer/provider supported by signMessage(...)
+const walletAddress = '0x1111111111111111111111111111111111111111';
+const signedTimestamp = Date.now();
+const body = {
   verifierIds: ['ownership-basic'],
   data: {
-    owner: '0x1111111111111111111111111111111111111111',
+    owner: walletAddress,
     content: 'Hello NEUS',
     reference: { type: 'url', id: 'https://example.com' }
   },
-  walletAddress: '0x1111111111111111111111111111111111111111',
-  signature: '0x...',
-  signedTimestamp: Date.now(),
+  walletAddress,
+  signedTimestamp,
   chainId: 84532,
+};
+
+const standardized = await standardizeVerificationRequest(body, {
+  apiUrl: 'https://api.neus.network',
+});
+
+const signature = await signMessage({
+  provider,
+  walletAddress,
+  message: standardized.signerString
+});
+
+const res = await client.verify({
+  ...body,
+  signature,
   options: { privacyLevel: 'private' }
 });
 ```
 
-Note: In the NEUS Hub (first-party UI), matching authenticated sessions may allow session-first proof creation without a repeat proof-envelope signature. The SDK examples here document the generic integrator path, which should assume signature-based submissions unless you are explicitly integrating through the Hub session flow.
+Note: In the NEUS Hub (first-party UI), matching authenticated sessions may allow session-first proof creation without a repeat proof-envelope signature. The SDK examples here document the generic integrator path, which should assume signature-based submissions unless you are explicitly integrating through the hosted session-first flow.
 
 ## What verifiers are available?
 
@@ -182,6 +201,7 @@ Note: `gateCheck` evaluates **existing public/discoverable proofs**. For strict 
 ## Resilience & Polling
 
 The SDK is designed for production stability:
+
 - **Automatic Backoff**: `pollProofStatus()` automatically detects rate limiting (`429`) and applies jittered exponential backoff.
 - **Wallet Identification**: Automatically attaches headers to preferred wallet-based limiting for higher reliability behind shared IPs (NATs).
 
@@ -219,3 +239,4 @@ import { VerifyGate, ProofBadge } from '@neus/sdk/widgets';
 
 - API Reference: `../docs/api/README.md`
 - OpenAPI (JSON): `../docs/api/public-api.json`
+- Auth + Hosted Verify: `../docs/guides/auth-and-hosted-verify.md`
