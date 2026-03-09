@@ -3,11 +3,11 @@ title: SDK Authentication
 description: Hosted login, session-first patterns, and deterministic signing guidance for SDK integrations.
 ---
 
-# SDK Authentication
+Hosted login, session-first patterns, and deterministic signing guidance for SDK integrations.
 
 The SDK supports two main auth patterns:
 
-## 1. Session-first hosted login
+## 1. Session-First Hosted Login
 
 Use this when you want the smoothest browser UX.
 
@@ -17,7 +17,7 @@ Use this when you want the smoothest browser UX.
 
 This avoids hand-rolling proof-envelope signing for every action when the deployment has an active authenticated session model.
 
-## 2. Signature-based verification
+## 2. Signature-Based Verification
 
 Use this when your integration needs the generic portable verification contract.
 
@@ -39,7 +39,7 @@ const signature = await signMessage({
 Prefer `standardizeVerificationRequest(...)` over manually building a signing string. That keeps your client aligned with server normalization.
 </Tip>
 
-## When to use which
+## When to Use Which
 
 | Pattern | Use when |
 |---|---|

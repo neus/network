@@ -3,11 +3,11 @@ title: Security
 description: Security best practices for NEUS SDK integrations.
 ---
 
-# Security
+Security best practices for NEUS SDK integrations.
 
 Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose them to clients, or store them in analytics.
 
-## Authentication model (public surface)
+## Authentication Model (Public Surface)
 
 | Operation | Authentication |
 |-----------|----------------|
@@ -20,7 +20,7 @@ The SDK uses these headers for owner-only operations:
 - `x-signature`
 - `x-signed-timestamp`
 
-## Do not
+## Do Not
 
 <Warning>
 - Do not treat proof signatures as bearer tokens (they are request-bound)
@@ -31,7 +31,7 @@ The SDK uses these headers for owner-only operations:
   - third-party auth credentials or provider tokens
 </Warning>
 
-## Recommended privacy defaults
+## Recommended Privacy Defaults
 
 ```javascript
 {

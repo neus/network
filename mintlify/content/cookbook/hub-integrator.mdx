@@ -3,7 +3,7 @@ title: Hub Integrator Setup
 description: Connect your domain or organization to NEUS for sponsored verifications.
 ---
 
-# Hub Integrator Setup
+Connect your domain or organization to NEUS for sponsored verifications.
 
 This guide covers connecting your domain or organization to NEUS, issuing sponsored verifications, and configuring hosted checkout.
 
@@ -83,7 +83,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>
 ```
 
-### Session-first (lowest friction)
+### Session-First (Lowest Friction)
 
 Redirect users to `https://neus.network/verify?intent=login&returnUrl=<your-url>`:
 
@@ -123,8 +123,8 @@ Track usage with your `appId` and NEUS partner reporting:
 
 The `/api/v1/proofs/check` response includes `matchCount` for your telemetry.
 
-## Operational rules
+## Operational Rules
 
-- Keep `/verify` as the single hosted path for interactive verification and login.
-- Treat `appId` as public attribution only; do not use it as a secret.
-- Keep sponsor grants and partner credentials server-issued and short-lived.
+- Keep `/verify` as the single hosted path for interactive verification
+- Route all OAuth and interactive verifier handoff through NEUS-hosted surfaces
+- Do not create parallel auth routes when NEUS already provides a canonical path

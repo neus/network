@@ -52,6 +52,7 @@
               "content/get-started/overview",
               "content/get-started/quickstart",
               "content/get-started/choose-an-integration-path",
+              "content/get-started/integration",
               "content/get-started/brand-kit"
             ]
           }
@@ -170,6 +171,18 @@
               "content/api/overview",
               "content/api/authentication",
               "content/api/errors"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Ecosystem",
+        "groups": [
+          {
+            "group": "Ecosystem",
+            "pages": [
+              "content/ecosystems/overview",
+              "content/ecosystems/verifiers"
             ]
           }
         ]

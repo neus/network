@@ -3,9 +3,9 @@ title: SDK Verification Patterns
 description: Reuse-first, fresh-proof, hosted interactive, and backend gating patterns with the NEUS SDK.
 ---
 
-# SDK Verification Patterns
+Reuse-first, fresh-proof, hosted interactive, and backend gating patterns with the NEUS SDK.
 
-## Reuse-first flow
+## Reuse-First Flow
 
 Use this as the default UX. It minimizes user prompts while still issuing new proofs when needed.
 
@@ -18,7 +18,7 @@ Use this as the default UX. It minimizes user prompts while still issuing new pr
 </VerifyGate>
 ```
 
-## Fresh proof flow
+## Fresh Proof Flow
 
 Use this when the action is high stakes and you need a newly created assertion.
 
@@ -31,7 +31,7 @@ Use this when the action is high stakes and you need a newly created assertion.
 </VerifyGate>
 ```
 
-## Hosted interactive flow
+## Hosted Interactive Flow
 
 Interactive verifiers hand off to the hosted verify surface.
 
@@ -42,7 +42,7 @@ Interactive verifiers hand off to the hosted verify surface.
 />
 ```
 
-## Backend policy check
+## Backend Policy Check
 
 For server-side access, use the SDK gate-check helper instead of reading full proof payloads.
 

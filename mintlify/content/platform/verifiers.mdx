@@ -3,11 +3,11 @@ title: Verifiers
 description: Verifier types, catalog source of truth, and how to choose the right verifier for your flow.
 ---
 
-# Verifiers
+Verifier types, catalog source of truth, and how to choose the right verifier for your flow.
 
 Verifier metadata is a backend single source of truth. Frontend apps, SDKs, widgets, MCP, and docs should consume the backend catalog instead of maintaining parallel metadata.
 
-## Verifier classes
+## Verifier Classes
 
 | Class | Example use | Typical behavior |
 |---|---|---|
@@ -16,7 +16,7 @@ Verifier metadata is a backend single source of truth. Frontend apps, SDKs, widg
 | Org and social | OAuth-linked account or org membership | Usually interactive and hosted |
 | Agent proofs | Agent identity and delegation | Used by agent registries and MCP flows |
 
-## Where to read the catalog
+## Where to Read the Catalog
 
 ```http
 GET /api/v1/verification/verifiers
@@ -30,7 +30,7 @@ Use the catalog to determine:
 - interactivity and hosted flow expectations
 - delegated-subject support where applicable
 
-## Detailed catalog reference
+## Detailed Catalog Reference
 
 For the current public catalog, IDs, and example payloads, use the detailed page:
 

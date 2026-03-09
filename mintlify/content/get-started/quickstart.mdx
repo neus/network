@@ -3,7 +3,7 @@ title: Quickstart
 description: Create your first proof and wire a gate in minutes.
 ---
 
-# Quickstart
+Create your first proof and wire a gate in minutes.
 
 ## Pick Your Path
 
@@ -58,7 +58,7 @@ const proof = await client.verify({
 const proofId = proof.proofId; // Standard SDK field; same receipt ID is used as {qHash} on HTTP paths
 ```
 
-## Production Defaults (Recommended)
+### Production Defaults
 
 <Note>
 **Privacy:** Default to `options: { privacyLevel: 'private', publicDisplay: false }` unless you explicitly need public discovery.
@@ -67,7 +67,7 @@ const proofId = proof.proofId; // Standard SDK field; same receipt ID is used as
 - **Storage:** Set `storeOriginalContent` separately from privacy. Private proofs can still store original content when you need owner-only access.
 - **Receipt ID:** Treat `proofId` as an opaque receipt identifier. On HTTP routes, the same value appears as `{qHash}`.
 
-## 3b. Poll Status (Async Verifiers)
+## 4. Poll Status (Async Verifiers)
 
 Some verifiers complete instantly; others return `202` and finish asynchronously. Poll until terminal status:
 
@@ -76,7 +76,7 @@ const final = await client.pollProofStatus(proofId, { interval: 3000, timeout: 6
 console.log(final.status);
 ```
 
-## 4. Gate Your UI
+## 5. Gate Your UI
 
 Use the React component to show content only to verified users.
 
@@ -116,7 +116,7 @@ For `ownership-social`, `ownership-org-oauth`, and `proof-of-human`, `VerifyGate
 </VerifyGate>
 ```
 
-## 4b. Lowest-Friction Auth Path
+### Lowest-Friction Auth Path
 
 If you want hosted login plus later API calls without per-request proof-envelope signing:
 
@@ -128,7 +128,7 @@ If you want hosted login plus later API calls without per-request proof-envelope
 Guide: **[Auth + Hosted Verify](../cookbook/auth-hosted-verify)**.
 </Note>
 
-## 5. Server-Side Gating (Minimal Eligibility)
+## 6. Server-Side Gating (Minimal Eligibility)
 
 For backend/server checks, prefer a gate check (minimal yes/no, no full proof payloads) via `GET /api/v1/proofs/check`:
 

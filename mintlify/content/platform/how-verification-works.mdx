@@ -3,11 +3,11 @@ title: How Verification Works
 description: The request, signer, verifier, hosted interaction, and receipt model behind NEUS verification.
 ---
 
-# How Verification Works
+The request, signer, verifier, hosted interaction, and receipt model behind NEUS verification.
 
 NEUS verification always starts from a verifier request and resolves into a proof receipt that downstream systems can reuse.
 
-## Verification model
+## Verification Model
 
 <Steps>
   <Step title="A client assembles a verification request">
@@ -24,7 +24,7 @@ NEUS verification always starts from a verifier request and resolves into a proo
   </Step>
 </Steps>
 
-## Modes you will encounter
+## Modes You Will Encounter
 
 | Mode | Best for | Notes |
 |---|---|---|
@@ -33,7 +33,7 @@ NEUS verification always starts from a verifier request and resolves into a proo
 | Hosted interactive verification | OAuth, human proof, social flows | Widgets and MCP will hand off to hosted verify automatically |
 | Gate checks | Backend policy decisions | Use `GET /api/v1/proofs/check` for minimal yes/no eligibility |
 
-## What NEUS returns
+## What NEUS Returns
 
 - A verification response that can include a proof identifier and status data
 - A hosted verify handoff for interactive flows

@@ -3,16 +3,16 @@ title: Security and Trust
 description: Public versus private boundaries, least-privilege expectations, and proof handling guidance.
 ---
 
-# Security and Trust
+Public versus private boundaries, least-privilege expectations, and proof handling guidance.
 
-## Trust boundaries
+## Trust Boundaries
 
 - Verification logic lives on the server, not in the client.
 - Billing and payer attribution are server-derived, not client-controlled.
 - Public status and gate checks should expose the minimum data needed for the product action.
 - Private proof reads require owner-authenticated access or explicit sharing semantics.
 
-## Privacy defaults
+## Privacy Defaults
 
 Use private proofs by default unless you explicitly want public discovery and reuse.
 
@@ -22,19 +22,19 @@ Use private proofs by default unless you explicitly want public discovery and re
 | `publicDisplay: false` | Prevent public proof pages from being used as a discovery surface |
 | `storeOriginalContent: false` | Minimize retained content when the product does not need it |
 
-## What should never be exposed publicly
+## What Should Never Be Exposed Publicly
 
 - Raw signatures
 - Internal payer details
 - Owner-only proof payloads
 - Private proof enumeration
 
-## Production checklist
+## Production Checklist
 
 <Checklist>
   <Item>Use server-side gate checks for policy enforcement.</Item>
   <Item>Use freshness windows for point-in-time verifiers.</Item>
   <Item>Route interactive verification through `/verify`.</Item>
-  <Item>Consume verifier metadata from the backend catalog, not duplicated frontend maps.</Item>
-  <Item>Log proof receipt IDs and business context, not raw signature material.</Item>
+  <Item>Consume verifier metadata from the backend catalog.</Item>
+  <Item>Default to private proofs unless public discovery is intentional.</Item>
 </Checklist>

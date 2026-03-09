@@ -3,9 +3,9 @@ title: SDK Error Handling
 description: Retry and recovery guidance for proof polling, private proof reads, hosted flows, and verifier failures.
 ---
 
-# SDK Error Handling
+Retry and recovery guidance for proof polling, private proof reads, hosted flows, and verifier failures.
 
-## Common failure classes
+## Common Failure Classes
 
 | Failure class | Where it appears | Recovery |
 |---|---|---|
@@ -15,7 +15,7 @@ description: Retry and recovery guidance for proof polling, private proof reads,
 | Private proof auth required | Owner-only reads | Re-authenticate the owner and retry |
 | Upstream outage | Auth/session BFF routes | Respect `Retry-After` and surface a retry path |
 
-## Polling example
+## Polling Example
 
 ```javascript
 const final = await client.pollProofStatus(proofId, {
@@ -24,7 +24,7 @@ const final = await client.pollProofStatus(proofId, {
 });
 ```
 
-## Private proof read example
+## Private Proof Read Example
 
 ```javascript
 const privateData = await client.getPrivateStatus(proofId, window.ethereum);
@@ -34,4 +34,4 @@ const privateData = await client.getPrivateStatus(proofId, window.ethereum);
 
 - Do not spam verification creation on ambiguous failures.
 - Keep proof receipt IDs so you can resume polling or display the proof later.
-- Surface interactive verifier requirements clearly; don’t hide hosted handoffs behind generic error copy.
+- Surface interactive verifier requirements clearly; don't hide hosted handoffs behind generic error copy.

@@ -3,7 +3,7 @@ title: Authentication
 description: Signature-based authentication for NEUS API operations.
 ---
 
-# Authentication
+Signature-based authentication for NEUS API operations.
 
 NEUS uses **signature-based authentication** for write operations. Most read endpoints are public.
 
@@ -15,7 +15,7 @@ NEUS uses **signature-based authentication** for write operations. Most read end
 | Smart Contract | EIP-1271 | Contract wallets (Safe, Argent, Sequence) |
 | Counterfactual | EIP-6492 | Pre-deployed smart accounts not yet on-chain |
 
-## Standardized path
+## Standardized Path
 
 For manual or server-side signing, do not hand-build the message if you can avoid it.
 
@@ -37,7 +37,7 @@ For manual or server-side signing, do not hand-build the message if you can avoi
 This is the production-safe path because it avoids drift in chain normalization and deterministic JSON handling.
 </Tip>
 
-## Low-level client rules
+## Low-Level Client Rules
 
 1. **Wallet normalization:** format depends on chain type.
    - EVM (`eip155`): lowercase `0x...`

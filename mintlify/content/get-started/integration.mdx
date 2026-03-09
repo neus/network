@@ -3,11 +3,9 @@ title: Integration
 description: Recommended end-to-end path for a production NEUS integration.
 ---
 
-# Integration
+Recommended end-to-end path for a production NEUS integration.
 
-This is the recommended end-to-end path for a production NEUS integration.
-
-## Standard flow
+## Standard Flow
 
 <Steps>
   <Step title="Check gate eligibility">
@@ -30,7 +28,7 @@ This is the recommended end-to-end path for a production NEUS integration.
   </Step>
 </Steps>
 
-## Verification modes
+## Verification Modes
 
 | Mode | Strategy | Use When |
 |------|----------|----------|
@@ -38,7 +36,7 @@ This is the recommended end-to-end path for a production NEUS integration.
 | Fresh proof required | `strategy="fresh"` | High-stakes actions |
 | Read-only check | `strategy="reuse"` | Don't want to create new proofs |
 
-## Session-first integration
+## Session-First Integration
 
 For lowest friction: use hosted verify + auth code exchange.
 
@@ -51,14 +49,14 @@ For lowest friction: use hosted verify + auth code exchange.
 Use this only for the hosted session-first path. For the full routing and popup contract, see **[Auth + Hosted Verify](../cookbook/auth-hosted-verify)**.
 </Note>
 
-## Hosted checkout requirements
+## Hosted Checkout Requirements
 
 Interactive verifiers (`ownership-social`, `ownership-org-oauth`, `proof-of-human`) require hosted checkout.
 
 - **Default checkout URL:** `https://neus.network/verify` (or use SDK `getHostedCheckoutUrl()`)
 - **Sponsored flows:** include `X-Neus-App` (public appId) and `X-Sponsor-Grant` when your backend is covering verification costs.
 
-## Policy-based gate checks
+## Policy-Based Gate Checks
 
 For backend policy enforcement, use `gateCheck` with explicit recency:
 
@@ -71,7 +69,7 @@ For backend policy enforcement, use `gateCheck` with explicit recency:
 Tight windows are recommended for point-in-time state verifiers.
 </Warning>
 
-## Privacy and access model
+## Privacy and Access Model
 
 - **Private-by-default** proofs are recommended.
 - **Public + discoverable** proofs support broad reuse and discovery.
@@ -92,7 +90,7 @@ The badge auto-renders on page load. Clicking it links to the proof on `neus.net
 **CORS:** The widget calls `GET https://api.neus.network/api/v1/verification/status/:qHash` using your proof identifier value. This endpoint responds with `Access-Control-Allow-Origin: *`. No configuration needed.
 </Note>
 
-### Optional attributes
+### Optional Attributes
 
 | Attribute | Description |
 |-----------|-------------|
@@ -110,10 +108,16 @@ NeusWidget.mountAll(root?);
 NeusWidget.unmount(el);
 ```
 
-## Related references
+## Related References
 
 <CardGroup cols={3}>
-  <Card title="Hub Integrator Setup" href="../cookbook/hub-integrator" />
-  <Card title="Auth + Hosted Verify" href="../cookbook/auth-hosted-verify" />
-  <Card title="Gating" href="../api/overview" />
+  <Card title="Hub Integrator Setup" icon="building" href="../cookbook/hub-integrator">
+    Domain and org setup.
+  </Card>
+  <Card title="Auth + Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+    Hosted login flows.
+  </Card>
+  <Card title="API Overview" icon="terminal" href="../api/overview">
+    HTTP endpoints.
+  </Card>
 </CardGroup>

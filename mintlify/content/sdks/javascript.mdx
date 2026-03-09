@@ -3,8 +3,6 @@ title: JavaScript SDK
 description: JavaScript client for the NEUS Network verification API.
 ---
 
-# JavaScript SDK
-
 JavaScript client (and optional widgets) for the NEUS Network verification API.
 
 ## Install
@@ -13,7 +11,7 @@ JavaScript client (and optional widgets) for the NEUS Network verification API.
 npm install @neus/sdk
 ```
 
-## Create a proof (browser wallet flow)
+## Create a Proof (Browser Wallet Flow)
 
 This path requests a wallet signature in the browser and submits the verification request:
 
@@ -32,7 +30,7 @@ const proofId = res.proofId;
 const status = await client.getStatus(proofId);
 ```
 
-## Client configuration
+## Client Configuration
 
 ```javascript
 const client = new NeusClient({
@@ -45,7 +43,7 @@ const client = new NeusClient({
 });
 ```
 
-## Create a proof (server / manual signing)
+## Create a Proof (Server / Manual Signing)
 
 If you need manual or server-side signing, ask the API for the exact string first:
 
@@ -88,7 +86,7 @@ const res = await client.verify({
 In the NEUS Hub (first-party UI), matching authenticated sessions may allow session-first proof creation without a repeat proof-envelope signature. The SDK examples here document the generic integrator path.
 </Note>
 
-## What verifiers are available?
+## What Verifiers Are Available?
 
 Use the API directly:
 
@@ -96,7 +94,7 @@ Use the API directly:
 GET /api/v1/verification/verifiers
 ```
 
-## App attribution (`appId`)
+## App Attribution (`appId`)
 
 Set `appId` on the client to attribute usage and analytics to your app. `appId` is a public identifier, not a secret.
 
@@ -107,7 +105,7 @@ const client = new NeusClient({
 });
 ```
 
-## Hosted checkout URL builder
+## Hosted Checkout URL Builder
 
 Use `getHostedCheckoutUrl` for a single typed entry point:
 
@@ -123,7 +121,7 @@ const url = getHostedCheckoutUrl({
 // => https://neus.network/verify?gateId=my-gate&returnUrl=...&verifiers=...
 ```
 
-## Gate checks (recommended for server-side gating)
+## Gate Checks (Recommended for Server-Side Gating)
 
 For production server-side gating, prefer the minimal public endpoint:
 
@@ -154,7 +152,7 @@ The SDK is designed for production stability:
 - **Automatic Backoff**: `pollProofStatus()` automatically detects rate limiting (`429`) and applies jittered exponential backoff
 - **Wallet Identification**: Automatically attaches headers for higher reliability behind shared IPs
 
-### Private proof operations
+### Private Proof Operations
 
 ```javascript
 // Private proof by proof receipt ID
@@ -171,7 +169,7 @@ const privateProofs = await client.getPrivateProofsByWallet(
 await client.revokeOwnProof(proofId, window.ethereum);
 ```
 
-## React widgets
+## React Widgets
 
 For UI gating, see **[Widgets](../widgets/overview)**.
 

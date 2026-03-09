@@ -3,9 +3,9 @@ title: Environments
 description: Canonical NEUS public surfaces, base URLs, and deployment expectations.
 ---
 
-# Environments
+Canonical NEUS public surfaces, base URLs, and deployment expectations.
 
-## Canonical public surfaces
+## Canonical Public Surfaces
 
 | Surface | URL | Purpose |
 |---|---|---|
@@ -15,13 +15,13 @@ description: Canonical NEUS public surfaces, base URLs, and deployment expectati
 | Docs | `https://docs.neus.network` | Public documentation |
 | IPFS | `https://ipfs.neus.network` | Content-addressed asset access |
 
-## Base URL guidance
+## Base URL Guidance
 
 - Use `https://api.neus.network` for production API traffic.
 - Use `https://neus.network/verify` as the canonical hosted verification path.
 - If you override `apiUrl` in the SDK, also set `hostedCheckoutUrl` so hosted flows stay aligned with the environment you intend to use.
 
-## Integrator notes
+## Integrator Notes
 
 - `appId` is public attribution metadata, not a secret.
 - Hosted auth code exchange, sponsor grants, and some partner capabilities are deployment-gated and must be enabled server-side.

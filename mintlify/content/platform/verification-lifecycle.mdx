@@ -3,9 +3,9 @@ title: Verification Lifecycle
 description: Creation, async processing, status polling, reuse policy, and revocation for NEUS proofs.
 ---
 
-# Verification Lifecycle
+Creation, async processing, status polling, reuse policy, and revocation for NEUS proofs.
 
-## Lifecycle stages
+## Lifecycle Stages
 
 | Stage | Meaning | Primary surface |
 |---|---|---|
@@ -17,7 +17,7 @@ description: Creation, async processing, status polling, reuse policy, and revoc
 | Reused for policy | Gate, app, API, or agent consumes the receipt | Proof checks, status, widgets, MCP |
 | Revoked or expired by policy | Proof is no longer acceptable for the target action | Revocation route or freshness rule |
 
-## Reuse strategy
+## Reuse Strategy
 
 | Strategy | What it does | Use when |
 |---|---|---|
@@ -25,7 +25,7 @@ description: Creation, async processing, status polling, reuse policy, and revoc
 | `reuse` | Only check existing proofs | Read-only access checks |
 | `fresh` | Always force new verification | High-stakes actions |
 
-## Freshness guidance
+## Freshness Guidance
 
 - Use a recency window for point-in-time verifiers such as balances, risk, and ownership.
 - Treat status checks as cheap reads; only create new proofs when policy actually demands a fresh assertion.

@@ -3,7 +3,7 @@ title: Sybil Resistance
 description: Prevent Sybil attacks with proof-based identity verification.
 ---
 
-# Sybil Resistance
+Prevent Sybil attacks with proof-based identity verification.
 
 Prevent Sybil attacks using NEUS proof-based identity verification.
 
@@ -17,7 +17,7 @@ Prevent Sybil attacks using NEUS proof-based identity verification.
 
 ## Basic Implementation
 
-### Wallet-based (One wallet per user)
+### Wallet-Based (One Wallet Per User)
 
 ```javascript
 const result = await client.gateCheck({
@@ -27,7 +27,7 @@ const result = await client.gateCheck({
 });
 ```
 
-### Social verification
+### Social Verification
 
 ```jsx
 <VerifyGate
@@ -48,7 +48,7 @@ const result = await client.gateCheck({
 - Consider combining multiple verifiers for higher assurance
 </Warning>
 
-### Multi-verifier approach
+### Multi-Verifier Approach
 
 ```javascript
 const result = await client.gateCheck({

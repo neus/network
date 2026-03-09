@@ -1,6 +1,6 @@
 /* NEUS Documentation Styles */
 /* Brand: Cloud-blue accent (#98C0EF), dark-mode first, left-justified */
-/* Version: 2.0 — Optimized for Mintlify */
+/* Version: 3.0 — Optimized for Mintlify */
 
 /* ============================================
    CSS CUSTOM PROPERTIES (NEUS Brand Tokens)
@@ -101,20 +101,31 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--neus-text-primary) !important;
 }
 
-h1 {
-  font-size: 2.25rem !important;
+/* Page title from frontmatter - no redundant H1 */
+h1:first-of-type {
+  display: none !important;
+}
+
+/* Use H2 as the effective page title */
+.prose h2:first-of-type,
+article h2:first-of-type,
+h2:first-of-type {
+  font-size: 2rem !important;
   font-weight: 600 !important;
   letter-spacing: -0.025em !important;
+  margin-top: 0 !important;
 }
 
 h2 {
   font-size: 1.5rem !important;
   font-weight: 600 !important;
+  margin-top: 2rem !important;
 }
 
 h3 {
   font-size: 1.25rem !important;
   font-weight: 600 !important;
+  margin-top: 1.5rem !important;
 }
 
 /* Paragraphs left-aligned */
@@ -239,7 +250,17 @@ button.primary:hover,
 .card-title {
   color: var(--neus-text-primary) !important;
   font-weight: 600 !important;
+  font-size: 1rem !important;
   text-align: left !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* Card descriptions */
+[class*="Card"] p,
+.card p {
+  color: var(--neus-text-secondary) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
 }
 
 /* Card icons */
@@ -575,12 +596,8 @@ footer,
     overflow-x: auto;
   }
   
-  h1 {
-    font-size: 1.75rem !important;
-  }
-  
-  h2 {
-    font-size: 1.25rem !important;
+  h2:first-of-type {
+    font-size: 1.5rem !important;
   }
 }
 

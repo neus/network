@@ -3,15 +3,15 @@ title: Rate Limits and Retries
 description: Production retry guidance for gate checks, polling, hosted flows, and outage handling.
 ---
 
-# Rate Limits and Retries
+Production retry guidance for gate checks, polling, hosted flows, and outage handling.
 
-## General guidance
+## General Guidance
 
 - Read endpoints can be retried.
 - Verification creation should only be retried when you can prove the original request did not succeed.
 - Polling loops should back off instead of hammering status endpoints.
 
-## Recommended patterns
+## Recommended Patterns
 
 | Situation | Recommendation |
 |---|---|
@@ -20,14 +20,14 @@ description: Production retry guidance for gate checks, polling, hosted flows, a
 | Gate checks | Cache only when your policy allows stale reads |
 | Hosted flows | Preserve return URLs and let users resume rather than forcing repeated starts |
 
-## SDK behavior
+## SDK Behavior
 
 The JavaScript SDK already applies production-friendly behavior in common flows:
 
 - `pollProofStatus()` backs off when it encounters rate limiting
 - wallet-identifying headers are attached where supported for better reliability
 
-## Outage behavior
+## Outage Behavior
 
 Interactive auth BFF routes normalize upstream issues into `503` responses and may include:
 

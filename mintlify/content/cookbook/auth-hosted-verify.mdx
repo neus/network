@@ -3,11 +3,11 @@ title: Auth + Hosted Verify
 description: Hosted verify and session management for NEUS integrations.
 ---
 
-# Auth + Hosted Verify
+Hosted verify and session management for NEUS integrations.
 
 NEUS supports a signature-based protocol for proofs, and an optional session layer for first-party browser UX.
 
-## Two layers
+## Two Layers
 
 | Layer | Purpose |
 |-------|---------|
@@ -21,7 +21,7 @@ When a flow requires human interaction (signature, OAuth linking, proof creation
 - Users can **sign in with a passkey** (no wallet extension required) **or connect a wallet**
 - After completion, the hosted UI returns the user to your app
 
-### Standardized hosted login URL
+### Standardized Hosted Login URL
 
 ```text
 /verify?intent=login
@@ -47,7 +47,7 @@ If you use the session layer, treat this endpoint as the **single source of trut
 - The user's identity pack (subjectId/did/address)
 - Onboarding readiness (if provided by the deployment)
 
-### Routing contract
+### Routing Contract
 
 | State | Action |
 |-------|--------|
@@ -55,7 +55,7 @@ If you use the session layer, treat this endpoint as the **single source of trut
 | `authenticated: true` + `needsOnboarding: true` | Your app decides: prompt profile setup or proceed |
 | `authenticated: true` + `needsOnboarding: false` | Route to `returnUrl` or your app's authenticated landing |
 
-## Hosted checkout URL configuration
+## Hosted Checkout URL Configuration
 
 If you run the NEUS API at a custom `apiUrl`, also set the hosted verify URL explicitly:
 
@@ -73,7 +73,7 @@ If you run the NEUS API at a custom `apiUrl`, also set the hosted verify URL exp
 Hosted verify must be same-origin with its own passkey RP ID/origin configuration.
 </Note>
 
-## Popup completion signaling
+## Popup Completion Signaling
 
 For popup login flows, the hosted window posts a completion message back to the opener after the session is confirmed.
 
@@ -81,7 +81,7 @@ For popup login flows, the hosted window posts a completion message back to the 
 - **Delivery:** `window.opener.postMessage(...)`
 - **Origin:** restricted to the supplied `origin` when it is an absolute HTTP(S) origin
 
-## Outage contract
+## Outage Contract
 
 The browser-facing NEUS BFF routes normalize upstream outages:
 

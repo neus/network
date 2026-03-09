@@ -3,7 +3,7 @@ title: MCP Server
 description: Public integration guide for the NEUS Model Context Protocol server.
 ---
 
-# NEUS MCP Server
+Public integration guide for the NEUS Model Context Protocol server.
 
 NEUS exposes a production MCP server for agents that need proof discovery, gate checks, hosted verification handoff, and portable proof context without reimplementing NEUS verification flows.
 
@@ -28,7 +28,7 @@ Use the MCP server when your agent or application needs to:
 - guide a user into hosted verify when proof creation needs human action
 - load public proof history, profile summary, and agent context for a wallet or DID
 
-Canonical agent loop:
+### Canonical Agent Loop
 
 1. `neus_verifiers_catalog`
 2. `neus_proofs_check`
@@ -57,7 +57,7 @@ The public MCP contract is intentionally narrower than the internal NEUS API and
 
 ## Supported Transports
 
-### Hosted streamable HTTP
+### Hosted Streamable HTTP
 
 This is the default go-live path for integrators.
 
@@ -72,7 +72,7 @@ This is the default go-live path for integrators.
 }
 ```
 
-### Local stdio
+### Local Stdio
 
 Use stdio when you want the MCP process to run locally or inside your own infra.
 
@@ -283,7 +283,7 @@ Checks whether an agent wallet satisfies both `agent-identity` and `agent-delega
 
 ## Response Patterns That Matter
 
-### Elicitation response
+### Elicitation Response
 
 `neus_verify` returns an elicitation block when human action is required:
 
@@ -301,17 +301,17 @@ Checks whether an agent wallet satisfies both `agent-identity` and `agent-delega
 }
 ```
 
-### Payment-required response
+### Payment-Required Response
 
 If the upstream API requires x402 payment, the MCP server surfaces a structured payment-needed error. The returned payload can include:
 
 - `error: "payment_required"`
 - `requiredCredits`
-- `pricingUrl`
+- `pricingUrls`
 - `hostedCheckoutUrl`
 - `receiptHeader` with the canonical header name to retry with
 
-### Error mapping
+### Error Mapping
 
 - 4xx upstream failures are surfaced as MCP tool errors with `errorType: "client_error"`
 - 5xx upstream failures are surfaced as `errorType: "server_error"`
@@ -351,7 +351,7 @@ Self-hosted HTTP mode exposes:
 | `/.well-known/mcp.json` | Discovery metadata |
 | `/mcp` | Canonical MCP transport |
 
-Operational behavior in HTTP mode:
+### Operational Behavior in HTTP Mode
 
 - 5 minute request timeout
 - retry with exponential backoff for retryable upstream failures
