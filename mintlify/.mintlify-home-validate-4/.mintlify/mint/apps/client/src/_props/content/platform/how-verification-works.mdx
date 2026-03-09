@@ -1,0 +1,48 @@
+---
+title: How Verification Works
+description: The request, signer, verifier, hosted interaction, and receipt model behind NEUS verification.
+---
+
+# How Verification Works
+
+NEUS verification always starts from a verifier request and resolves into a proof receipt that downstream systems can reuse.
+
+## Verification model
+
+<Steps>
+  <Step title="A client assembles a verification request">
+    The request identifies the verifier or verifier set, the subject wallet or account, and verifier-specific data.
+  </Step>
+
+  <Step title="The server standardizes the request when signing is required">
+    Use `POST /api/v1/verification/standardize` to get the exact `signerString` for low-level or server-side signing flows.
+  </Step>
+
+  <Step title="The user completes verification">
+    Instant verifiers can complete in one request. Interactive verifiers redirect or hand off to the hosted `/verify` flow.
+  </Step>
+
+  <Step title="NEUS returns a proof receipt">
+    The resulting proof can be polled, displayed, reused for gating, or consumed by downstream APIs and agents.
+  </Step>
+</Steps>
+
+## Modes you will encounter
+
+| Mode                            | Best for                         | Notes                                                                              |
+| ------------------------------- | -------------------------------- | ---------------------------------------------------------------------------------- |
+| Session-first hosted login      | Lowest-friction browser UX       | Use `/verify?intent=login` and auth code exchange when enabled for your deployment |
+| Signature-based verification    | Generic integrator path          | Use the SDK or `POST /api/v1/verification/standardize` for deterministic signing   |
+| Hosted interactive verification | OAuth, human proof, social flows | Widgets and MCP will hand off to hosted verify automatically                       |
+| Gate checks                     | Backend policy decisions         | Use `GET /api/v1/proofs/check` for minimal yes/no eligibility                      |
+
+## What NEUS returns
+
+* A verification response that can include a proof identifier and status data
+* A hosted verify handoff for interactive flows
+* A pollable status endpoint for asynchronous verifiers
+* A reusable proof receipt that can later support access, display, and policy decisions
+
+<Note>
+  In SDK surfaces, `proofId` is the standard client field name. On HTTP routes and older wire contracts, you may also see the same receipt identifier carried as `qHash`.
+</Note>

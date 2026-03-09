@@ -1,30 +1,87 @@
 ---
-title: MCP Integration
-description: Model Context Protocol for AI integrations.
+title: MCP Server
+description: Public integration guide for the NEUS Model Context Protocol server.
 ---
 
-# MCP Integration
+# NEUS MCP Server
 
-NEUS provides an MCP (Model Context Protocol) server for AI integrations.
+NEUS exposes a production MCP server for agents that need proof discovery, gate checks, hosted verification handoff, and portable proof context without reimplementing NEUS verification flows.
 
-## Overview
+## Public Endpoints
 
-The NEUS MCP server exposes verification capabilities to AI agents and assistants:
+| Surface | Canonical URL | Purpose |
+| --- | --- | --- |
+| Discovery | `https://mcp.neus.network/.well-known/mcp.json` | Server metadata and public tool listing |
+| MCP transport | `https://mcp.neus.network/mcp` | Streamable HTTP MCP endpoint |
+| Hosted verify | `https://neus.network/verify` | Wallet/passkey/browser fallback for interactive verification |
 
-- Verify content and ownership
-- Check proof status
-- Create proofs (with proper auth)
+<Note>
+`/mcp` is the canonical public transport path. The server also accepts `/` in HTTP mode, but integrators should use `/mcp` so discovery metadata and client config stay consistent.
+</Note>
 
-## Configuration
+## What The MCP Server Is For
 
-Add to your MCP client configuration:
+Use the MCP server when your agent or application needs to:
+
+- discover the live verifier catalog from the backend source of truth
+- check eligibility for one or more proofs without enumerating receipts
+- guide a user into hosted verify when proof creation needs human action
+- load public proof history, profile summary, and agent context for a wallet or DID
+
+Canonical agent loop:
+
+1. `neus_verifiers_catalog`
+2. `neus_proofs_check`
+3. `neus_verify_or_guide`
+4. `neus_proofs_get`
+
+## Public vs Internal Boundary
+
+The public MCP contract is intentionally narrower than the internal NEUS API and ops surface.
+
+**Public and safe to document**
+
+- tool names, inputs, and public response patterns
+- the hosted MCP endpoint and discovery document
+- hosted verify handoff through `https://neus.network/verify`
+- optional session-backed use with `NEUS_AUTH_TOKEN`
+- x402 and sponsor-grant behavior at a high level
+
+**Internal and intentionally not part of the public contract**
+
+- internal HMAC and hub-only access paths
+- internal payer attribution fields and billing ledgers
+- raw signatures, signer secrets, internal auth headers, and replay internals
+- private proof payloads, claims blobs, and qHash enumeration through gate checks
+- internal ops logging, admin endpoints, and deployment-only controls
+
+## Supported Transports
+
+### Hosted streamable HTTP
+
+This is the default go-live path for integrators.
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "type": "streamableHttp",
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
+}
+```
+
+### Local stdio
+
+Use stdio when you want the MCP process to run locally or inside your own infra.
 
 ```json
 {
   "mcpServers": {
     "neus": {
       "command": "node",
-      "args": ["/path/to/neus-nut/mcp/server.js"],
+      "args": ["/absolute/path/to/neus-nut/mcp/server.js"],
       "env": {
         "NEUS_API_URL": "https://api.neus.network"
       }
@@ -33,27 +90,287 @@ Add to your MCP client configuration:
 }
 ```
 
-## Available Tools
+## Client Setup
 
-| Tool | Description |
-|------|-------------|
-| `neus_verify` | Create a verification proof |
-| `neus_check_proof` | Check proof status |
-| `neus_gate_check` | Check eligibility for a gate |
-| `neus_get_verifiers` | List available verifiers |
+### Cursor
 
-## Hosted Verify for MCP
+Hosted:
 
-The MCP server can direct users to hosted verify for interactive flows:
-
-```javascript
+```json
 {
-  "hostedVerifyUrl": "https://neus.network/verify"
+  "mcpServers": {
+    "neus": {
+      "type": "streamableHttp",
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
 }
 ```
 
-## Use Cases
+Local repo checkout:
 
-- AI assistants verifying content authenticity
-- Automated proof checking for workflows
-- Agent identity and delegation verification
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "command": "node",
+      "args": ["D:/Algollo/Neus/Repos/neus-nut/mcp/server.js"],
+      "env": {
+        "NEUS_API_URL": "https://api.neus.network"
+      }
+    }
+  }
+}
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "command": "node",
+      "args": ["/absolute/path/to/neus-nut/mcp/server.js"],
+      "env": {
+        "NEUS_API_URL": "https://api.neus.network"
+      }
+    }
+  }
+}
+```
+
+## Runtime Configuration
+
+All MCP runtime env vars are read directly from `neus-nut/mcp/server.js`.
+
+| Variable | Default | Public usage |
+| --- | --- | --- |
+| `NEUS_API_URL` | `https://api.neus.network` | Backend API base URL |
+| `NEUS_MCP_APP_ID` | `neus-mcp-server` | Public app attribution header sent as `X-Neus-App` |
+| `NEUS_AUTH_TOKEN` | unset | Optional Bearer token for session-backed calls such as `neus_me` |
+| `MCP_TRANSPORT` | `stdio` | `stdio` or `http` |
+| `MCP_PUBLIC_URL` | `https://mcp.neus.network` | Discovery and public URL base in HTTP mode |
+| `PORT` | `3000` | HTTP listen port for self-hosted HTTP mode |
+| `HOST` | `127.0.0.1` | HTTP bind host |
+| `MCP_API_RETRIES` | `2` | Retry count for retryable upstream failures |
+| `MCP_API_RETRY_BASE_MS` | `250` | Exponential backoff base |
+| `MCP_SHUTDOWN_TIMEOUT_MS` | `10000` | Graceful shutdown timeout |
+| `MCP_REQUIRE_AUTH` | `false` | Optional MCP transport auth gate in self-hosted HTTP mode |
+| `MCP_AUTH_TOKEN` | unset | Shared Bearer token when `MCP_REQUIRE_AUTH=true` |
+| `MCP_ALLOWED_ORIGINS` | unset | Optional allowed origin allowlist for HTTP mode |
+| `MCP_ALLOWED_HOSTS` | unset | Optional allowed host allowlist for HTTP mode |
+
+<Warning>
+Do not run a publicly reachable MCP server with a private global backend key or other privileged credentials. The NEUS hosted MCP is open at the transport layer by design; signer checks, payment policy, and rate limits are enforced by the NEUS API.
+</Warning>
+
+## Tool Reference
+
+### `neus_verifiers_catalog`
+
+Reads the backend verifier catalog.
+
+- Upstream API: `GET /api/v1/verification/verifiers`
+- Best use: discovery before any gate or verify flow
+- Safety: public, read-only
+
+```json
+{}
+```
+
+### `neus_proofs_check`
+
+Checks eligibility for a wallet or DID against one or more verifier IDs.
+
+- Upstream API: `GET /api/v1/proofs/check`
+- Returns: `success`, `eligible`, `matchedCount`
+- Safety: eligibility only; never enumerates qHashes or private proof payloads
+
+```json
+{
+  "wallet": "did:pkh:eip155:84532:0xabc123... or 0xabc123...",
+  "verifiers": ["ownership-basic", "proof-of-human"],
+  "requireAll": true,
+  "minCount": 1
+}
+```
+
+### `neus_verify`
+
+Creates proof(s) for the provided verifier set.
+
+- Upstream APIs: `POST /api/v1/verification/standardize`, then `POST /api/v1/verification`
+- If `signature` is missing, the tool returns an elicitation payload with `signerString`, `signedTimestamp`, and `hostedVerifyUrl`
+- If `signature` is present, the tool submits verification and returns `qHash` when successful
+
+```json
+{
+  "walletAddress": "0xabc123...",
+  "verifierIds": ["ownership-basic"],
+  "data": {
+    "content": "hello"
+  },
+  "options": {
+    "returnUrl": "https://partner.example/callback"
+  }
+}
+```
+
+### `neus_verify_or_guide`
+
+Gate-first orchestration for the common agent flow.
+
+- Runs `neus_proofs_check` first
+- Returns `action: "already_verified"` when requirements are already satisfied
+- Otherwise returns `action: "verification_required"` plus `hostedVerifyUrl` and the recommended `neus_verify` params
+
+```json
+{
+  "walletAddress": "0xabc123...",
+  "verifierIds": ["proof-of-human", "wallet-risk"],
+  "requireAll": true
+}
+```
+
+### `neus_proofs_get`
+
+Loads portable public proof context for a wallet or DID.
+
+- Returns public proofs only
+- Includes resolved identifier info, profile summary, pagination, and agent context blocks when present
+- Current limit behavior: default `50`, max `100`
+
+```json
+{
+  "identifier": "0xabc123...",
+  "limit": 25,
+  "offset": 0
+}
+```
+
+### `neus_me`
+
+Returns principal and agent associations.
+
+- With `NEUS_AUTH_TOKEN` set and no `identifier`, resolves through `GET /api/v1/auth/me`
+- With `identifier`, resolves the wallet or DID and reads the profile surface
+- If auth is required, returns `status: "auth_required"` and a hosted login URL
+
+```json
+{}
+```
+
+```json
+{
+  "identifier": "did:pkh:eip155:84532:0xabc123..."
+}
+```
+
+### `neus_agent_link`
+
+Checks whether an agent wallet satisfies both `agent-identity` and `agent-delegation`.
+
+- Uses the same eligibility-safe gate logic as `neus_proofs_check`
+- Returns `linked: true` when both proofs exist
+- Otherwise returns `status: "link_required"` and a hosted verify URL preloaded for the agent link flow
+
+```json
+{
+  "agentWallet": "0xagent...",
+  "principal": "0xcontroller..."
+}
+```
+
+## Response Patterns That Matter
+
+### Elicitation response
+
+`neus_verify` returns an elicitation block when human action is required:
+
+```json
+{
+  "status": "verification_required",
+  "next_action": "verify",
+  "elicitation": {
+    "required": true,
+    "signerString": "NEUS Verification Request\\n...",
+    "signedTimestamp": 1760000000000,
+    "chain": "eip155:84532",
+    "hostedVerifyUrl": "https://neus.network/verify?verifiers=ownership-basic"
+  }
+}
+```
+
+### Payment-required response
+
+If the upstream API requires x402 payment, the MCP server surfaces a structured payment-needed error. The returned payload can include:
+
+- `error: "payment_required"`
+- `requiredCredits`
+- `pricingUrl`
+- `hostedCheckoutUrl`
+- `receiptHeader` with the canonical header name to retry with
+
+### Error mapping
+
+- 4xx upstream failures are surfaced as MCP tool errors with `errorType: "client_error"`
+- 5xx upstream failures are surfaced as `errorType: "server_error"`
+- HTTP mode also exposes JSON errors for malformed requests, auth failures, timeouts, and transport failures
+
+## Chain And Identifier Resolution
+
+The MCP server accepts either wallets or DIDs.
+
+| Input | Resolved chain | DID behavior |
+| --- | --- | --- |
+| EVM wallet (`0x...`) | `eip155:84532` by default unless explicit `chain` is supplied | normalized to lowercase `did:pkh:eip155:84532:<wallet>` |
+| Solana wallet (base58) | `solana:mainnet` | resolved to `did:pkh:solana:mainnet:<wallet>` |
+| DID (`did:pkh:...`) | derived from the DID | wallet and chain are extracted from the DID |
+
+<Tip>
+For most integrations, let the MCP server resolve chain context automatically. Only pass `chain` when you need an explicit CAIP-2 chain.
+</Tip>
+
+## Security And Billing Guardrails
+
+- Gate checks are eligibility-safe. They do not enumerate receipts.
+- Private proof payloads are not exposed through the public MCP tools.
+- The server sends `X-Neus-App` using `NEUS_MCP_APP_ID` for attribution.
+- Sponsor grants can be forwarded through `neus_proofs_check`.
+- x402 payment-required responses are passed through in a structured way instead of being swallowed.
+- HTTP mode supports optional Bearer auth plus origin/host allowlists for self-hosted deployments.
+
+## Health, Discovery, And Operations
+
+Self-hosted HTTP mode exposes:
+
+| Endpoint | Purpose |
+| --- | --- |
+| `/health` | Liveness probe |
+| `/health/ready` | Readiness probe that checks `api.neus.network` |
+| `/.well-known/mcp.json` | Discovery metadata |
+| `/mcp` | Canonical MCP transport |
+
+Operational behavior in HTTP mode:
+
+- 5 minute request timeout
+- retry with exponential backoff for retryable upstream failures
+- CORS headers for browser and Electron MCP clients
+- `mcp-protocol-version` defaulted to `2025-06-18` when omitted by clients
+
+## Recommended Go-Live Pattern
+
+For real-world deployments, keep the integration model simple:
+
+1. Use the hosted MCP endpoint for fastest production adoption.
+2. Start every flow with `neus_verifiers_catalog` or `neus_proofs_check`.
+3. When verification is missing, send users to hosted verify instead of rebuilding interactive verifier UX.
+4. Treat `qHash` as the portable proof receipt.
+5. Keep private proof handling inside NEUS; consume eligibility and receipt IDs, not raw claims.
+
+## Related Docs
+
+- [Authentication](../api/authentication)
+- [VerifyGate](../widgets/verifygate)
+- [Verifiable Agents](./verifiable-agents)
+- [Hub Integrator](./hub-integrator)

@@ -52,7 +52,7 @@ const proof = await client.verify({
   wallet: window.ethereum,
 });
 
-const proofId = proof.proofId; // Standard proof ID
+const proofId = proof.proofId; // Standard SDK field; same receipt ID is used as {qHash} on HTTP paths
 ```
 
 ## Production defaults (recommended)
@@ -62,7 +62,7 @@ const proofId = proof.proofId; // Standard proof ID
 </Note>
 
 - **Storage:** Set `storeOriginalContent` separately from privacy. Private proofs can still store original content when you need owner-only access.
-- **Proof ID:** Treat `proofId` as an opaque identifier.
+- **Receipt ID:** Treat `proofId` as an opaque receipt identifier. On HTTP routes, the same value appears as `{qHash}`.
 
 ## 3b. Poll status (when verifiers run async)
 
@@ -151,6 +151,9 @@ const result = await client.gateCheck({
   <Card title="Guides" href="../cookbook/overview">
     Use-case walkthroughs.
   </Card>
+  <Card title="Choose your path" href="./choose-an-integration-path">
+    Decide when to use SDK, Widgets, API, or MCP.
+  </Card>
   <Card title="Auth + Hosted Verify" href="../cookbook/auth-hosted-verify">
     Standardized `/verify` login and hosted popup flow.
   </Card>
@@ -163,7 +166,7 @@ const result = await client.gateCheck({
   <Card title="Read API Docs" href="../api/overview">
     Deep dive into the HTTP endpoints.
   </Card>
-  <Card title="SDK" href="../sdks/javascript">
-    Client usage, configuration, and widgets.
+  <Card title="SDK" href="../sdks/overview">
+    Client usage, signing, verification patterns, and widgets.
   </Card>
 </CardGroup>

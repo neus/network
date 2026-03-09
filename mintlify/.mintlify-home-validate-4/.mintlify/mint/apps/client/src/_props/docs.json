@@ -1,0 +1,198 @@
+{
+  "theme": "luma",
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "NEUS Docs",
+  "colors": {
+    "primary": "#98C0EF",
+    "light": "#818CF8",
+    "dark": "#4F46E5"
+  },
+  "logo": {
+    "light": "/images/neus-logo.svg",
+    "dark": "/images/neus-logo.svg"
+  },
+  "favicon": "/images/neus-logo.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Get Started",
+        "groups": [
+          {
+            "group": "Introduction",
+            "pages": [
+              "content/get-started/overview",
+              "content/get-started/quickstart",
+              "content/get-started/choose-an-integration-path"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Platform",
+        "groups": [
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "content/platform/overview",
+              "content/platform/how-verification-works",
+              "content/platform/verification-lifecycle",
+              "content/platform/receipts-and-results"
+            ]
+          },
+          {
+            "group": "Operations",
+            "pages": [
+              "content/platform/verifiers",
+              "content/platform/environments",
+              "content/platform/rate-limits-and-retries",
+              "content/platform/security-and-trust"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "SDK",
+        "groups": [
+          {
+            "group": "JavaScript SDK",
+            "pages": [
+              "content/sdks/overview",
+              "content/sdks/javascript",
+              "content/sdks/authentication",
+              "content/sdks/verifications",
+              "content/sdks/error-handling",
+              "content/sdks/security"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Widgets",
+        "groups": [
+          {
+            "group": "Widgets",
+            "pages": [
+              "content/widgets/overview",
+              "content/widgets/verifygate"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Agents",
+        "groups": [
+          {
+            "group": "Agents",
+            "pages": [
+              "content/agents/overview",
+              "content/agents/agent-identity",
+              "content/agents/agent-delegation",
+              "content/agents/agent-verification-flow"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "MCP",
+        "groups": [
+          {
+            "group": "MCP Server",
+            "pages": [
+              "content/cookbook/mcp"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Cookbook",
+        "groups": [
+          {
+            "group": "Verification Flows",
+            "pages": [
+              "content/cookbook/overview",
+              "content/cookbook/auth-hosted-verify",
+              "content/cookbook/domain-verification",
+              "content/cookbook/nft-gating"
+            ]
+          },
+          {
+            "group": "Trust and Risk",
+            "pages": [
+              "content/cookbook/sybil-resistance",
+              "content/platform/verifiers"
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
+              "content/cookbook/verifiable-agents",
+              "content/cookbook/hub-integrator"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API",
+        "groups": [
+          {
+            "group": "API Guides",
+            "pages": [
+              "content/api/overview",
+              "content/api/authentication",
+              "content/api/errors"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Health",
+            "pages": [
+              "api-reference/health/health-check"
+            ]
+          },
+          {
+            "group": "Verification",
+            "pages": [
+              "api-reference/verification/get-supported-verifiers-and-configuration",
+              "api-reference/verification/build-the-standard-signing-string",
+              "api-reference/verification/submit-a-verification-request",
+              "api-reference/verification/get-verification-status",
+              "api-reference/verification/batch-get-verification-status-minimal"
+            ]
+          },
+          {
+            "group": "Proofs",
+            "pages": [
+              "api-reference/proofs/get-proofs-by-wallet-or-did",
+              "api-reference/proofs/check-proofs-against-public-criteria",
+              "api-reference/proofs/revoke-a-proof-you-control"
+            ]
+          },
+          {
+            "group": "Payments",
+            "pages": [
+              "api-reference/payments/get-pricing-information-for-all-payment-types",
+              "api-reference/payments/get-available-payment-methods"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ],
+    "display": "header"
+  }
+}

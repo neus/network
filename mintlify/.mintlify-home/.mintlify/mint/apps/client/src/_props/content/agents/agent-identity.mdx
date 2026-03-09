@@ -1,0 +1,71 @@
+---
+title: Agent Identity
+description: Register and verify AI agent identities.
+---
+
+# Agent Identity
+
+Use `agent-identity` to register an AI or automation agent with verifiable credentials.
+
+## Basic Registration
+
+```javascript
+const proof = await client.verify({
+  verifier: 'agent-identity',
+  data: {
+    agentId: 'my-assistant',
+    agentWallet: '0x...',
+    agentType: 'ai',
+    description: 'My AI assistant',
+  },
+  walletAddress: controllerWallet,
+});
+```
+
+## Full Example
+
+```javascript
+await client.verify({
+  verifier: 'agent-identity',
+  data: {
+    agentId: 'my-agent',
+    agentWallet: '0x...',           // universal-address: EVM or Solana
+    agentType: 'ai',
+    description: 'My AI assistant',
+    capabilities: ['web-search'],
+    instructions: 'System prompt (max 4000 chars)',
+    skills: ['web-search', 'code-execution'],   // max 48, each max 64 chars
+    services: [                                  // max 16
+      { name: 'metrics', endpoint: 'https://metrics.example.com/v1', version: '1.0' }
+    ]
+  },
+  walletAddress: controllerWallet,
+});
+```
+
+## Fields
+
+| Field          | Required | Max Length | Description                    |
+| -------------- | -------- | ---------- | ------------------------------ |
+| `agentId`      | Yes      | 64 chars   | Unique identifier              |
+| `agentWallet`  | No       | -          | Agent's wallet (EVM or Solana) |
+| `agentType`    | No       | 32 chars   | `ai`, `automation`, `custom`   |
+| `description`  | No       | 500 chars  | Agent description              |
+| `capabilities` | No       | 16 items   | List of capabilities           |
+| `instructions` | No       | 4000 chars | System prompt                  |
+| `skills`       | No       | 48 items   | List of skills                 |
+| `services`     | No       | 16 items   | Service endpoints              |
+
+## Verification
+
+```bash
+GET /api/v1/proofs/check?verifierIds=agent-identity&address=0x...
+```
+
+## Use Cases
+
+| Use Case      | Description                       |
+| ------------- | --------------------------------- |
+| AI assistants | Register ChatGPT-like agents      |
+| Trading bots  | Register automated trading agents |
+| DAO delegates | Register governance delegates     |

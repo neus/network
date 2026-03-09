@@ -7,6 +7,8 @@ description: Real-world integration patterns for NEUS verification.
 
 Real-world integration patterns for NEUS verification.
 
+## Start by use case
+
 <CardGroup cols={3}>
   <Card title="Auth + Hosted Verify" icon="key" href="./auth-hosted-verify">
     Standardized `/verify` login and hosted popup flow.
@@ -26,7 +28,11 @@ Real-world integration patterns for NEUS verification.
   <Card title="Hub Integrator Setup" icon="building" href="./hub-integrator">
     Org/domain setup, app linking, sponsor grants.
   </Card>
-  <Card title="MCP Integration" icon="plug" href="./mcp">
-    Model Context Protocol for AI integrations.
-  </Card>
 </CardGroup>
+
+## Recommended reading order
+
+1. Start with **Auth + Hosted Verify** if your product needs the canonical hosted path.
+2. Move to **NFT Gating** or **Domain Verification** for concrete end-user policy examples.
+3. Use **Sybil Resistance** and **Verifiable Agents** when trust requirements become stricter.
+4. Finish with **Hub Integrator Setup** when you are operationalizing app attribution, sponsorship, and partner rollout.

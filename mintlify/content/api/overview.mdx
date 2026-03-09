@@ -30,14 +30,14 @@ For manual signing, use `POST /api/v1/verification/standardize` to get the exact
 | Revoke proof | POST | `/api/v1/proofs/revoke-self/{qHash}` |
 | Verifier catalog | GET | `/api/v1/verification/verifiers` |
 
-## Proof ID
+## Proof Receipt ID
 
-Treat `proofId` as an opaque identifier. It is a stable proof identifier.
+Treat the proof receipt ID as opaque and stable.
 
 Use timestamps/status fields for freshness, not the ID itself.
 
 <Note>
-In raw HTTP path templates and the generated OpenAPI file, the same value may appear as `{qHash}`. `proofId` and `qHash` are the same value.
+SDKs expose this value as `proofId`. In raw HTTP path templates and the generated OpenAPI file, the same value may appear as `{qHash}`.
 </Note>
 
 ## Poll status
@@ -48,7 +48,7 @@ GET /api/v1/verification/status/{qHash}
 
 SDK: `client.getStatus(...)` or `client.pollProofStatus(...)`
 
-Pass the returned `proofId` value as the path parameter.
+Pass the returned receipt identifier as the path parameter.
 
 ## Revoke a proof (owner-signed)
 
@@ -58,7 +58,7 @@ POST /api/v1/proofs/revoke-self/{qHash}
 
 SDK: `client.revokeOwnProof(...)`
 
-Pass the returned `proofId` value as the path parameter.
+Pass the returned receipt identifier as the path parameter.
 
 ## Gate check (minimal eligibility)
 

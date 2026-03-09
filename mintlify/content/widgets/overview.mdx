@@ -15,7 +15,7 @@ The fastest way to add a "Verified by NEUS" badge to any page:
 <script src="https://verify.neus.network/widget.js"></script>
 
 <!-- Place this where you want the badge to appear -->
-<div data-neus-proof="0xYOUR_PROOF_ID"></div>
+<div data-neus-proof="0xYOUR_PROOF_RECEIPT_ID"></div>
 ```
 
 The widget auto-scans the page on load and renders a badge for each `data-neus-proof` element.
@@ -24,7 +24,7 @@ The widget auto-scans the page on load and renders a badge for each `data-neus-p
 
 | Attribute | Required | Default | Description |
 |-----------|----------|---------|-------------|
-| `data-neus-proof` | Yes | - | proofId / qHash |
+| `data-neus-proof` | Yes | - | Proof receipt identifier. In SDK flows, use `proofId`. |
 | `data-neus-api-url` | No | `https://api.neus.network` | Override API base URL |
 | `data-neus-ui-base` | No | `https://neus.network` | Override proof viewer base URL |
 | `data-neus-size` | No | `sm` | `sm` or `md` |
@@ -36,7 +36,7 @@ The widget auto-scans the page on load and renders a badge for each `data-neus-p
 <script src="https://verify.neus.network/widget.js"></script>
 <script>
   // Mount a badge into a specific element
-  NeusWidget.mount(document.getElementById('my-badge'), { proofId: '0xYOUR_PROOF_ID' });
+  NeusWidget.mount(document.getElementById('my-badge'), { proofId: '0xYOUR_PROOF_RECEIPT_ID' });
 
   // Re-scan a subtree (e.g. after dynamic content loads)
   NeusWidget.mountAll(document.querySelector('.content-area'));
@@ -102,7 +102,7 @@ export function Page() {
 | `strategy` | `'reuse-or-create' \| 'reuse' \| 'fresh'` | `'reuse-or-create'` | Proof strategy |
 | `proofOptions` | `{ privacyLevel, publicDisplay, storeOriginalContent }` | private | Proof options |
 | `mode` | `'create' \| 'access'` | `'create'` | Operation mode |
-| `proofId` | `string` | - | Required for `mode="access"` |
+| `proofId` | `string` | - | Required for `mode="access"`; same receipt ID appears as `qHash` on HTTP paths |
 | `maxProofAgeMs` | `number` | - | Max proof age for reuse checks |
 | `onError` | `(error: Error) => void` | - | Error callback |
 | `apiUrl` | `string` | - | Custom API base URL |
@@ -131,7 +131,7 @@ export function Page() {
 
 ## ProofBadge
 
-Display verification status by Proof ID (`proofId`).
+Display verification status by proof receipt ID (`proofId` in SDKs).
 
 ```jsx
 import { ProofBadge } from '@neus/sdk/widgets';

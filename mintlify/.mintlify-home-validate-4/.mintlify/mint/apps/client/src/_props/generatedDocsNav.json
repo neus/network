@@ -1,0 +1,355 @@
+{
+  "tabs": [
+    {
+      "tab": "Get Started",
+      "groups": [
+        {
+          "group": "Introduction",
+          "pages": [
+            {
+              "title": "Overview",
+              "description": "The open verification layer for identity, ownership, and agent authenticity.",
+              "href": "/content/get-started/overview"
+            },
+            {
+              "title": "Quickstart",
+              "description": "Create your first proof and wire a gate in minutes.",
+              "href": "/content/get-started/quickstart"
+            },
+            {
+              "title": "Choose an Integration Path",
+              "description": "Pick the right NEUS surface for your product, trust model, and implementation speed.",
+              "href": "/content/get-started/choose-an-integration-path"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tab": "Platform",
+      "groups": [
+        {
+          "group": "Core Concepts",
+          "pages": [
+            {
+              "title": "Platform Overview",
+              "description": "How NEUS turns verification into reusable proof receipts across apps, APIs, gates, and agents.",
+              "href": "/content/platform/overview"
+            },
+            {
+              "title": "How Verification Works",
+              "description": "The request, signer, verifier, hosted interaction, and receipt model behind NEUS verification.",
+              "href": "/content/platform/how-verification-works"
+            },
+            {
+              "title": "Verification Lifecycle",
+              "description": "Creation, async processing, status polling, reuse policy, and revocation for NEUS proofs.",
+              "href": "/content/platform/verification-lifecycle"
+            },
+            {
+              "title": "Receipts and Results",
+              "description": "How to think about verification responses, identifiers, statuses, and proof receipt reuse.",
+              "href": "/content/platform/receipts-and-results"
+            }
+          ]
+        },
+        {
+          "group": "Operations",
+          "pages": [
+            {
+              "title": "Verifiers",
+              "description": "Verifier types, catalog source of truth, and how to choose the right verifier for your flow.",
+              "href": "/content/platform/verifiers"
+            },
+            {
+              "title": "Environments",
+              "description": "Canonical NEUS public surfaces, base URLs, and deployment expectations.",
+              "href": "/content/platform/environments"
+            },
+            {
+              "title": "Rate Limits and Retries",
+              "description": "Production retry guidance for gate checks, polling, hosted flows, and outage handling.",
+              "href": "/content/platform/rate-limits-and-retries"
+            },
+            {
+              "title": "Security and Trust",
+              "description": "Public versus private boundaries, least-privilege expectations, and proof handling guidance.",
+              "href": "/content/platform/security-and-trust"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tab": "SDK",
+      "groups": [
+        {
+          "group": "JavaScript SDK",
+          "pages": [
+            {
+              "title": "SDK Overview",
+              "description": "Start with the NEUS JavaScript SDK for proof creation, hosted handoff, polling, and private proof access.",
+              "href": "/content/sdks/overview"
+            },
+            {
+              "title": "JavaScript SDK",
+              "description": "JavaScript client for the NEUS Network verification API.",
+              "href": "/content/sdks/javascript"
+            },
+            {
+              "title": "SDK Authentication",
+              "description": "Hosted login, session-first patterns, and deterministic signing guidance for SDK integrations.",
+              "href": "/content/sdks/authentication"
+            },
+            {
+              "title": "SDK Verification Patterns",
+              "description": "Reuse-first, fresh-proof, hosted interactive, and backend gating patterns with the NEUS SDK.",
+              "href": "/content/sdks/verifications"
+            },
+            {
+              "title": "SDK Error Handling",
+              "description": "Retry and recovery guidance for proof polling, private proof reads, hosted flows, and verifier failures.",
+              "href": "/content/sdks/error-handling"
+            },
+            {
+              "title": "Security",
+              "description": "Security best practices for NEUS SDK integrations.",
+              "href": "/content/sdks/security"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tab": "Widgets",
+      "groups": [
+        {
+          "group": "Widgets",
+          "pages": [
+            {
+              "title": "Widgets Overview",
+              "description": "React components for NEUS verification and access gating.",
+              "href": "/content/widgets/overview"
+            },
+            {
+              "title": "VerifyGate Component",
+              "description": "React component for gating UI behind verification requirements.",
+              "href": "/content/widgets/verifygate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tab": "Agents",
+      "groups": [
+        {
+          "group": "Agents",
+          "pages": [
+            {
+              "title": "Agents Overview",
+              "description": "Verifiable agent identities and delegation for AI systems.",
+              "href": "/content/agents/overview"
+            },
+            {
+              "title": "Agent Identity",
+              "description": "Register and verify AI agent identities.",
+              "href": "/content/agents/agent-identity"
+            },
+            {
+              "title": "Agent Delegation",
+              "description": "Delegate permissions to agents for scoped operations.",
+              "href": "/content/agents/agent-delegation"
+            },
+            {
+              "title": "Agent Verification Flow",
+              "description": "How agent identity, delegation, and MCP fit together for AI-facing NEUS integrations.",
+              "href": "/content/agents/agent-verification-flow"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tab": "MCP",
+      "groups": [
+        {
+          "group": "MCP Server",
+          "pages": [
+            {
+              "title": "MCP Server",
+              "description": "Public integration guide for the NEUS Model Context Protocol server.",
+              "href": "/content/cookbook/mcp"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tab": "Cookbook",
+      "groups": [
+        {
+          "group": "Verification Flows",
+          "pages": [
+            {
+              "title": "Cookbook Overview",
+              "description": "Real-world integration patterns for NEUS verification.",
+              "href": "/content/cookbook/overview"
+            },
+            {
+              "title": "Auth + Hosted Verify",
+              "description": "Hosted verify and session management for NEUS integrations.",
+              "href": "/content/cookbook/auth-hosted-verify"
+            },
+            {
+              "title": "Domain Verification",
+              "description": "Verify domain ownership with DNS TXT records.",
+              "href": "/content/cookbook/domain-verification"
+            },
+            {
+              "title": "NFT Gating",
+              "description": "Gate content behind NFT ownership verification.",
+              "href": "/content/cookbook/nft-gating"
+            }
+          ]
+        },
+        {
+          "group": "Trust and Risk",
+          "pages": [
+            {
+              "title": "Sybil Resistance",
+              "description": "Prevent Sybil attacks with proof-based identity verification.",
+              "href": "/content/cookbook/sybil-resistance"
+            },
+            {
+              "title": "Verifiers",
+              "description": "Verifier types, catalog source of truth, and how to choose the right verifier for your flow.",
+              "href": "/content/platform/verifiers"
+            }
+          ]
+        },
+        {
+          "group": "Advanced",
+          "pages": [
+            {
+              "title": "Verifiable Agents",
+              "description": "Create and delegate agent identities for AI and automation.",
+              "href": "/content/cookbook/verifiable-agents"
+            },
+            {
+              "title": "Hub Integrator Setup",
+              "description": "Connect your domain or organization to NEUS for sponsored verifications.",
+              "href": "/content/cookbook/hub-integrator"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tab": "API",
+      "groups": [
+        {
+          "group": "API Guides",
+          "pages": [
+            {
+              "title": "API Overview",
+              "description": "Public HTTP contract for NEUS verification and proof management.",
+              "href": "/content/api/overview"
+            },
+            {
+              "title": "Authentication",
+              "description": "Signature-based authentication for NEUS API operations.",
+              "href": "/content/api/authentication"
+            },
+            {
+              "title": "Errors",
+              "description": "Error codes and responses for the NEUS API.",
+              "href": "/content/api/errors"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "tab": "API Reference",
+      "groups": [
+        {
+          "group": "Health",
+          "pages": [
+            {
+              "title": "Health check",
+              "openapi": "/openapi/public-api.json get /api/v1/health",
+              "href": "/api-reference/health/health-check"
+            }
+          ]
+        },
+        {
+          "group": "Verification",
+          "pages": [
+            {
+              "title": "Get supported verifiers and configuration",
+              "description": "Returns a list of all supported verifier IDs, full verifier metadata (schemas + flow/access semantics), and the backend chain configuration (hub chain, asset allowlists).",
+              "openapi": "/openapi/public-api.json get /api/v1/verification/verifiers",
+              "href": "/api-reference/verification/get-supported-verifiers-and-configuration"
+            },
+            {
+              "title": "Build the Standard Signing String",
+              "openapi": "/openapi/public-api.json post /api/v1/verification/standardize",
+              "href": "/api-reference/verification/build-the-standard-signing-string"
+            },
+            {
+              "title": "Submit a verification request",
+              "openapi": "/openapi/public-api.json post /api/v1/verification",
+              "href": "/api-reference/verification/submit-a-verification-request"
+            },
+            {
+              "title": "Get verification status",
+              "openapi": "/openapi/public-api.json get /api/v1/verification/status/{qHash}",
+              "href": "/api-reference/verification/get-verification-status"
+            },
+            {
+              "title": "Batch get verification status (minimal)",
+              "openapi": "/openapi/public-api.json post /api/v1/verification/status-batch",
+              "href": "/api-reference/verification/batch-get-verification-status-minimal"
+            }
+          ]
+        },
+        {
+          "group": "Proofs",
+          "pages": [
+            {
+              "title": "Get proofs by wallet or DID",
+              "openapi": "/openapi/public-api.json get /api/v1/proofs/by-wallet/{address}",
+              "href": "/api-reference/proofs/get-proofs-by-wallet-or-did"
+            },
+            {
+              "title": "Check proofs against public criteria",
+              "openapi": "/openapi/public-api.json get /api/v1/proofs/check",
+              "href": "/api-reference/proofs/check-proofs-against-public-criteria"
+            },
+            {
+              "title": "Revoke a proof you control",
+              "openapi": "/openapi/public-api.json post /api/v1/proofs/revoke-self/{qHash}",
+              "href": "/api-reference/proofs/revoke-a-proof-you-control"
+            }
+          ]
+        },
+        {
+          "group": "Payments",
+          "pages": [
+            {
+              "title": "Get pricing information for all payment types",
+              "openapi": "/openapi/public-api.json get /api/v1/payments/pricing",
+              "href": "/api-reference/payments/get-pricing-information-for-all-payment-types"
+            },
+            {
+              "title": "Get available payment methods",
+              "openapi": "/openapi/public-api.json get /api/v1/payments/methods",
+              "href": "/api-reference/payments/get-available-payment-methods"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

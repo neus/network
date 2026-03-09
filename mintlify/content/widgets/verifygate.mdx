@@ -36,7 +36,7 @@ export function Page() {
 | `strategy` | `string` | `'reuse-or-create'` | Proof strategy |
 | `proofOptions` | `object` | private | Proof options |
 | `mode` | `string` | `'create'` | Operation mode |
-| `proofId` | `string` | - | Required for `mode="access"` |
+| `proofId` | `string` | - | Required for `mode="access"`; same receipt ID appears as `qHash` on HTTP paths |
 | `maxProofAgeMs` | `number` | - | Max proof age for reuse checks |
 | `onError` | `function` | - | Error callback |
 | `apiUrl` | `string` | - | Custom API base URL |

@@ -1,0 +1,55 @@
+---
+title: Security
+description: Security best practices for NEUS SDK integrations.
+---
+
+# Security
+
+Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose them to clients, or store them in analytics.
+
+## Authentication model (public surface)
+
+| Operation                                                      | Authentication                              |
+| -------------------------------------------------------------- | ------------------------------------------- |
+| Verification submission (`POST /api/v1/verification`)          | Signature over NEUS Standard Signing String |
+| Status by Proof ID (`GET /api/v1/verification/status/{qHash}`) | Public (no auth required)                   |
+| Owner-only reads of private proofs                             | Additional owner signature                  |
+
+The SDK uses these headers for owner-only operations:
+
+* `x-wallet-address`
+* `x-signature`
+* `x-signed-timestamp`
+
+## Do not
+
+<Warning>
+  * Do not treat proof signatures as bearer tokens (they are request-bound)
+  * Do not embed API keys in browser apps — keep API keys server-side only
+  * Do not log or persist:
+    * proof signatures
+    * API keys
+    * third-party auth credentials or provider tokens
+</Warning>
+
+## Recommended privacy defaults
+
+```javascript
+{
+  privacyLevel: 'private',
+  publicDisplay: false,
+  storeOriginalContent: false
+}
+```
+
+These are separate controls:
+
+| Control                | Purpose                                     |
+| ---------------------- | ------------------------------------------- |
+| `privacyLevel`         | Controls access                             |
+| `publicDisplay`        | Controls public discovery                   |
+| `storeOriginalContent` | Controls whether original content is stored |
+
+<Note>
+  Private proofs can still store original content when you need owner-only access.
+</Note>

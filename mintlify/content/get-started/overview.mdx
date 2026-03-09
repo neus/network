@@ -7,7 +7,7 @@ description: The open verification layer for identity, ownership, and agent auth
 
 The open verification layer for identity, ownership, and agent authenticity.
 
-**Standard identifier:** use `proofId` in public integrations.
+Use this section to understand the product, pick an integration surface, and move into implementation without guessing which pages matter first.
 
 ## Get started
 
@@ -15,26 +15,32 @@ The open verification layer for identity, ownership, and agent authenticity.
   <Card title="Quickstart" icon="rocket" href="./quickstart">
     Create your first proof and wire a gate.
   </Card>
-  <Card title="Integration" icon="plug" href="./integration">
-    Production flow: gate check, verification, status, and unlock.
+  <Card title="Choose your path" icon="signpost" href="./choose-an-integration-path">
+    Pick SDK, Widgets, API, or MCP based on what you are building.
   </Card>
   <Card title="Auth + Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
     Standardized `/verify` login, popup completion, and auth code exchange.
   </Card>
-  <Card title="SDK" icon="package" href="../sdks/javascript">
-    Client usage, configuration, and common flows.
+  <Card title="Platform" icon="globe" href="../platform/overview">
+    Learn the verification model, receipts, environments, and trust boundaries.
   </Card>
-  <Card title="VerifyGate widget" icon="shield" href="../widgets/overview">
-    Drop-in React gating with freshness controls.
+  <Card title="SDK" icon="package" href="../sdks/overview">
+    JavaScript client, deterministic signing helpers, and proof lifecycle patterns.
   </Card>
-  <Card title="API reference" icon="code" href="../api/overview">
-    Public endpoints (OpenAPI-backed) + interactive viewers.
+  <Card title="Widgets" icon="shield" href="../widgets/overview">
+    Drop-in React gating and proof badge rendering.
   </Card>
-  <Card title="Verifier catalog" icon="list" href="../ecosystems/verifiers">
-    Verifier IDs, tiers, and input schemas.
+  <Card title="Agents" icon="bot" href="../agents/overview">
+    Agent identity, delegation, and reusable proof patterns.
   </Card>
-  <Card title="Examples" icon="file-code" href="https://github.com/neus-network/network/tree/main/examples">
-    Minimal curl / Node.js / React examples.
+  <Card title="MCP Server" icon="plug" href="../cookbook/mcp">
+    Hosted MCP for agents, tool calling, and human-in-the-loop verify flows.
+  </Card>
+  <Card title="Cookbook" icon="book-open" href="../cookbook/overview">
+    Production patterns for hosted verify, domains, gating, and sponsored flows.
+  </Card>
+  <Card title="API Guides" icon="code" href="../api/overview">
+    Public HTTP integration concepts, auth patterns, and error handling.
   </Card>
 </CardGroup>
 
@@ -57,13 +63,16 @@ The open verification layer for identity, ownership, and agent authenticity.
 ## Learn the system
 
 <CardGroup cols={3}>
-  <Card title="Core Concepts" icon="book" href="../api/overview">
-    Signing, verification lifecycle, gating, and widgets.
+  <Card title="Platform" icon="globe" href="../platform/overview">
+    Verification lifecycle, receipts, environments, and security model.
   </Card>
-  <Card title="Cookbook" icon="chef-hat" href="../cookbook/overview">
-    Real-world patterns (NFT gating, domains, agents, sybil resistance).
+  <Card title="SDK" icon="package" href="../sdks/overview">
+    Client usage, signing helpers, and verification strategies.
   </Card>
-  <Card title="Security" icon="shield-check" href="../sdks/security">
-    Threat model and integration constraints.
+  <Card title="Agents" icon="bot" href="../agents/overview">
+    Verifiable agents, delegation, and automation use cases.
+  </Card>
+  <Card title="MCP" icon="plug-zap" href="../cookbook/mcp">
+    Agent-facing server docs, transport setup, and runtime guardrails.
   </Card>
 </CardGroup>

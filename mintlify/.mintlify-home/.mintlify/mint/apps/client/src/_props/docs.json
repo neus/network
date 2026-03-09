@@ -1,0 +1,156 @@
+{
+  "theme": "mint",
+  "$schema": "https://mintlify.com/docs.json",
+  "name": "NEUS Docs",
+  "colors": {
+    "primary": "#98C0EF",
+    "light": "#818CF8",
+    "dark": "#4F46E5"
+  },
+  "logo": {
+    "light": "/images/neus-logo.svg",
+    "dark": "/images/neus-logo.svg"
+  },
+  "favicon": "/images/neus-logo.svg",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Get Started",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "content/get-started/overview",
+              "content/get-started/quickstart",
+              "content/get-started/integration"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Build",
+        "groups": [
+          {
+            "group": "SDKs",
+            "pages": [
+              "content/sdks/javascript",
+              "content/sdks/security"
+            ]
+          },
+          {
+            "group": "Widgets",
+            "pages": [
+              "content/widgets/overview",
+              "content/widgets/verifygate"
+            ]
+          },
+          {
+            "group": "Guides",
+            "pages": [
+              "content/cookbook/overview",
+              "content/cookbook/auth-hosted-verify",
+              "content/cookbook/nft-gating",
+              "content/cookbook/domain-verification",
+              "content/cookbook/sybil-resistance",
+              "content/cookbook/hub-integrator"
+            ]
+          },
+          {
+            "group": "Platform",
+            "pages": [
+              "content/ecosystems/overview",
+              "content/ecosystems/verifiers"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API",
+        "groups": [
+          {
+            "group": "API Guides",
+            "pages": [
+              "content/api/overview",
+              "content/api/authentication",
+              "content/api/errors"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Agents",
+        "groups": [
+          {
+            "group": "Agent Guides",
+            "pages": [
+              "content/agents/overview",
+              "content/agents/agent-identity",
+              "content/agents/agent-delegation",
+              "content/cookbook/verifiable-agents"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "MCP",
+        "groups": [
+          {
+            "group": "MCP Server",
+            "pages": [
+              "content/cookbook/mcp"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Health",
+            "pages": [
+              "api-reference/health/health-check"
+            ]
+          },
+          {
+            "group": "Verification",
+            "pages": [
+              "api-reference/verification/get-supported-verifiers-and-configuration",
+              "api-reference/verification/build-the-standard-signing-string",
+              "api-reference/verification/submit-a-verification-request",
+              "api-reference/verification/get-verification-status",
+              "api-reference/verification/batch-get-verification-status-minimal"
+            ]
+          },
+          {
+            "group": "Proofs",
+            "pages": [
+              "api-reference/proofs/get-proofs-by-wallet-or-did",
+              "api-reference/proofs/check-proofs-against-public-criteria",
+              "api-reference/proofs/revoke-a-proof-you-control"
+            ]
+          },
+          {
+            "group": "Payments",
+            "pages": [
+              "api-reference/payments/get-pricing-information-for-all-payment-types",
+              "api-reference/payments/get-available-payment-methods"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ],
+    "display": "header"
+  }
+}

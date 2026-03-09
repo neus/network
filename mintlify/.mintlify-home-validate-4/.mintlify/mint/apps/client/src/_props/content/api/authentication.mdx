@@ -1,0 +1,64 @@
+---
+title: Authentication
+description: Signature-based authentication for NEUS API operations.
+---
+
+# Authentication
+
+NEUS uses **signature-based authentication** for write operations. Most read endpoints are public.
+
+## Supported Wallets
+
+| Type           | Standard | Description                                            |
+| -------------- | -------- | ------------------------------------------------------ |
+| EOA            | EIP-191  | Standard `personal_sign` (MetaMask, Coinbase, Rainbow) |
+| Smart Contract | EIP-1271 | Contract wallets (Safe, Argent, Sequence)              |
+| Counterfactual | EIP-6492 | Pre-deployed smart accounts not yet on-chain           |
+
+## Standardized path
+
+For manual or server-side signing, do not hand-build the message if you can avoid it.
+
+<Steps>
+  <Step title="Standardize request">
+    Call `POST /api/v1/verification/standardize`
+  </Step>
+
+  <Step title="Sign the string">
+    Sign the returned `signerString`
+  </Step>
+
+  <Step title="Submit verification">
+    Submit the same normalized request body to `POST /api/v1/verification`
+  </Step>
+</Steps>
+
+<Tip>
+  This is the production-safe path because it avoids drift in chain normalization and deterministic JSON handling.
+</Tip>
+
+## Low-level client rules
+
+1. **Wallet normalization:** format depends on chain type.
+   * EVM (`eip155`): lowercase `0x...`
+   * Solana: preserve base58 address as-is (do not lowercase)
+   * NEAR: account IDs are treated as lowercase
+
+2. **Chain context:** the signing contract binds chain context into the request.
+   * EVM: the server **forces HUB chain context** for verification signing
+   * Call `POST /api/v1/verification/standardize` and sign the returned `signerString`
+   * Non-EVM: send `chain` as a CAIP-2 string (example: `solana:mainnet`)
+
+3. **Verifier set:** send explicit verifier IDs and verifier data; do not guess or reorder fields after standardization.
+
+4. **Timestamp:** `signedTimestamp` must stay within the server freshness window.
+
+5. **Message format:** do not hand-author the signing string unless you fully control the server contract. The supported path is to standardize and sign the returned `signerString`.
+
+## Embedded Wallet Notes
+
+Embedded and social wallets can reject plain UTF-8 payloads in `personal_sign` with encoding errors.
+
+* **Default path:** sign the plain UTF-8 message string first (`personal_sign`)
+* **Retry path:** if provider errors mention byte/encoding, retry with UTF-8 hex payload (`0x...`)
+* **SDK support:** use `signMessage(...)` from `@neus/sdk`; it automatically applies this retry strategy

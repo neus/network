@@ -1,0 +1,50 @@
+---
+title: Platform Overview
+description: How NEUS turns verification into reusable proof receipts across apps, APIs, gates, and agents.
+---
+
+# Platform Overview
+
+NEUS is a verification and trust layer built around one loop:
+
+1. Verify
+2. Receive a proof receipt
+3. Reuse that receipt for access, trust, monetization, and agent policy
+
+## Core platform surfaces
+
+<CardGroup cols={2}>
+  <Card title="Hosted verify" icon="key" href="../cookbook/auth-hosted-verify">
+    `/verify` is the canonical hosted path for login, checkout, and interactive verification.
+  </Card>
+  <Card title="Proof receipts" icon="receipt" href="./receipts-and-results">
+    Proof receipts become the portable trust artifact that downstream systems can inspect and reuse.
+  </Card>
+  <Card title="Verifier catalog" icon="list-tree" href="./verifiers">
+    Verifier metadata, input expectations, and access tiers come from the backend catalog.
+  </Card>
+  <Card title="Agent integrations" icon="bot" href="../agents/overview">
+    Agents can hold identity proofs, delegation proofs, and MCP-mediated access to NEUS trust signals.
+  </Card>
+</CardGroup>
+
+## Design principles
+
+- One hosted verify path, not fragmented auth and checkout routes.
+- One backend verifier catalog, not duplicated metadata maps across frontend, SDK, MCP, and docs.
+- One proof lifecycle, reused everywhere instead of re-verifying ad hoc.
+- Private by default, with explicit public and discoverable modes when needed.
+
+## Reader flow
+
+<Steps>
+  <Step title="Understand the model">
+    Read [How Verification Works](./how-verification-works) to understand requests, signer strings, verifiers, and hosted interaction.
+  </Step>
+  <Step title="Understand the lifecycle">
+    Read [Verification Lifecycle](./verification-lifecycle) for creation, async processing, terminal states, reuse, and revocation.
+  </Step>
+  <Step title="Choose an integration surface">
+    Move into [SDK](../sdks/overview), [Widgets](../widgets/overview), [API](../api/overview), or [MCP](../cookbook/mcp) depending on your product.
+  </Step>
+</Steps>

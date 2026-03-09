@@ -1,0 +1,43 @@
+---
+title: Cookbook Overview
+description: Real-world integration patterns for NEUS verification.
+---
+
+# Cookbook Overview
+
+Real-world integration patterns for NEUS verification.
+
+## Start by use case
+
+<CardGroup cols={3}>
+  <Card title="Auth + Hosted Verify" icon="key" href="./auth-hosted-verify">
+    Standardized `/verify` login and hosted popup flow.
+  </Card>
+
+  <Card title="NFT Gating" icon="image" href="./nft-gating">
+    Gate content behind NFT ownership verification.
+  </Card>
+
+  <Card title="Domain Verification" icon="globe" href="./domain-verification">
+    Verify domain ownership with DNS TXT records.
+  </Card>
+
+  <Card title="Sybil Resistance" icon="shield" href="./sybil-resistance">
+    Prevent Sybil attacks with proof-based identity.
+  </Card>
+
+  <Card title="Verifiable Agents" icon="robot" href="./verifiable-agents">
+    Create and delegate agent identities.
+  </Card>
+
+  <Card title="Hub Integrator Setup" icon="building" href="./hub-integrator">
+    Org/domain setup, app linking, sponsor grants.
+  </Card>
+</CardGroup>
+
+## Recommended reading order
+
+1. Start with **Auth + Hosted Verify** if your product needs the canonical hosted path.
+2. Move to **NFT Gating** or **Domain Verification** for concrete end-user policy examples.
+3. Use **Sybil Resistance** and **Verifiable Agents** when trust requirements become stricter.
+4. Finish with **Hub Integrator Setup** when you are operationalizing app attribution, sponsorship, and partner rollout.

@@ -1134,7 +1134,6 @@
       },
       "VerifierData_agent_delegation": {
         "type": "object",
-        "required": [],
         "anyOf": [
           {
             "required": [

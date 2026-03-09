@@ -27,7 +27,7 @@ const res = await client.verify({
   content: 'Hello NEUS'
 });
 
-// Proof ID (standard). qHash is a deprecated alias.
+// Proof ID (standard SDK field). HTTP paths may carry the same receipt as {qHash}.
 const proofId = res.proofId;
 const status = await client.getStatus(proofId);
 ```
@@ -157,7 +157,7 @@ The SDK is designed for production stability:
 ### Private proof operations
 
 ```javascript
-// Private proof by Proof ID
+// Private proof by proof receipt ID
 const privateData = await client.getPrivateStatus(proofId, window.ethereum);
 
 // Private proofs by wallet/DID (requires owner signature)

@@ -122,3 +122,9 @@ Track usage with your `appId` and NEUS partner reporting:
 - Sponsor grant consumption
 
 The `/api/v1/proofs/check` response includes `matchCount` for your telemetry.
+
+## Operational rules
+
+- Keep `/verify` as the single hosted path for interactive verification and login.
+- Treat `appId` as public attribution only; do not use it as a secret.
+- Keep sponsor grants and partner credentials server-issued and short-lived.

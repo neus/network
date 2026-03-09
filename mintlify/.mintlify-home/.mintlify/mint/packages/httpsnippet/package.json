@@ -1,0 +1,102 @@
+{
+  "name": "@mintlify/httpsnippet",
+  "version": "1.0.6",
+  "description": "Fork of @readmeio/httpsnippet that doesn't rely on node.js",
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./helpers/code-builder": {
+      "types": "./dist/helpers/code-builder.d.ts",
+      "default": "./dist/helpers/code-builder.js"
+    },
+    "./helpers/reducer": {
+      "types": "./dist/helpers/reducer.d.ts",
+      "default": "./dist/helpers/reducer.js"
+    },
+    "./targets": {
+      "types": "./dist/targets/index.d.ts",
+      "default": "./dist/targets/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "keywords": [
+    "api",
+    "clojure",
+    "csharp",
+    "curl",
+    "go",
+    "har",
+    "http",
+    "httpie",
+    "httr",
+    "java",
+    "javascript",
+    "jquery",
+    "kotlin",
+    "objc",
+    "objective-c",
+    "ocaml",
+    "php",
+    "python",
+    "requests",
+    "ruby",
+    "shell",
+    "snippet",
+    "swift",
+    "swift",
+    "xhr",
+    "xmlhttprequest"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mintlify/mint",
+    "directory": "packages/httpsnippet"
+  },
+  "scripts": {
+    "prepare": "npm run build",
+    "build": "tsc --project tsconfig.build.json",
+    "clean": "rm -rf dist/",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
+    "lint": "eslint . --cache",
+    "prebuild": "npm run clean",
+    "prettier": "prettier --check .",
+    "prettier:write": "prettier --check --write .",
+    "test": "vitest run --coverage",
+    "type": "tsc --noEmit"
+  },
+  "dependencies": {
+    "qs": "6.14.0",
+    "stringify-object": "3.3.0",
+    "type-fest": "5.2.0"
+  },
+  "devDependencies": {
+    "@mintlify/eslint-config-typescript": "1.0.13",
+    "@mintlify/prettier-config": "1.0.4",
+    "@types/har-format": "1.2.16",
+    "@types/node": "24.10.1",
+    "@types/qs": "6.14.0",
+    "@typescript-eslint/parser": "6.9.1",
+    "@vitest/coverage-v8": "4.0.13",
+    "axios": "1.13.2",
+    "eslint": "8.36.0",
+    "prettier": "3.3.2",
+    "require-directory": "2.1.1",
+    "typescript": "5.9.3",
+    "vitest": "4.0.13"
+  }
+}

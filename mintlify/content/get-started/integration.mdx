@@ -26,7 +26,7 @@ This is the recommended end-to-end path for a production NEUS integration.
   </Step>
   
   <Step title="Unlock access">
-    When eligible, persist the returned `proofId`.
+    When eligible, persist the returned receipt identifier (`proofId` in SDK responses, `{qHash}` on HTTP paths).
   </Step>
 </Steps>
 
@@ -83,7 +83,7 @@ The easiest integration path for non-React or non-framework sites. One script ta
 
 ```html
 <script src="https://verify.neus.network/widget.js"></script>
-<div data-neus-proof="0xYOUR_PROOF_ID"></div>
+<div data-neus-proof="0xYOUR_PROOF_RECEIPT_ID"></div>
 ```
 
 The badge auto-renders on page load. Clicking it links to the proof on `neus.network`.
@@ -96,7 +96,7 @@ The badge auto-renders on page load. Clicking it links to the proof on `neus.net
 
 | Attribute | Description |
 |-----------|-------------|
-| `data-neus-proof` | proofId / qHash (required) |
+| `data-neus-proof` | Proof receipt identifier (required). Use the SDK `proofId` value. |
 | `data-neus-api-url` | Custom API base (default: `https://api.neus.network`) |
 | `data-neus-ui-base` | Custom viewer base (default: `https://neus.network`) |
 | `data-neus-size` | `sm` (default) or `md` |

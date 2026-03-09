@@ -33,7 +33,7 @@ const result = await client.gateCheck({
 <VerifyGate
   requiredVerifiers={['ownership-social']}
   onVerified={(result) => {
-    // Store result.proofId for vote/claim
+    // Store the returned proof receipt ID for vote or claim replay protection
   }}
 >
   <button>Verify to Vote</button>
@@ -44,7 +44,7 @@ const result = await client.gateCheck({
 
 <Warning>
 - Always enforce recency windows for point-in-time checks
-- Store `proofId` to prevent replay attacks
+- Store the proof receipt identifier to prevent replay attacks
 - Consider combining multiple verifiers for higher assurance
 </Warning>
 

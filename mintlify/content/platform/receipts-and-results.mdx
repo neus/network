@@ -1,0 +1,41 @@
+---
+title: Receipts and Results
+description: How to think about verification responses, identifiers, statuses, and proof receipt reuse.
+---
+
+# Receipts and Results
+
+Proof receipts are the reusable output of NEUS verification. They let other systems check trust once and then consume that result without rebuilding verifier logic.
+
+## Identifier model
+
+- SDKs use `proofId` as the standard client field name.
+- HTTP paths and some wire payloads still use `{qHash}` for the same receipt identifier.
+- In current integrations, treat them as the same stable proof receipt ID unless a surface explicitly documents otherwise.
+
+## Common result shapes
+
+| Result | Meaning | Typical next step |
+|---|---|---|
+| Immediate verified result | Verifier completed in-line | Persist the receipt ID and unlock access |
+| Accepted / processing | Verifier is running asynchronously | Poll status until terminal |
+| Hosted verify handoff | Flow requires user interaction | Send the user to `/verify` or let the widget complete it |
+| Gate eligibility | Minimal yes/no check | Enforce policy without reading full proof payloads |
+
+## What to persist
+
+- Receipt identifier (`proofId` in SDK surfaces)
+- Final status when your app needs auditing or workflow progression
+- The verifier set and business context that depended on the proof
+
+Avoid persisting:
+
+- Raw signature material
+- Internal payer attribution
+- Private proof payloads unless your product has a clear owner-authorized reason
+
+## Display guidance
+
+- Link public receipts to the canonical proof page on `neus.network`.
+- Use [ProofBadge](../widgets/overview) for lightweight UI display.
+- Use private proof reads only when the owner is authenticated and the product actually needs that deeper payload.
