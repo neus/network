@@ -5,22 +5,25 @@ description: Create your first proof and wire a gate in minutes.
 
 # Quickstart
 
-## Pick your path
+## Pick Your Path
 
 <CardGroup cols={3}>
-  <Card title="SDK proof (this page)" icon="code" href="#">
+  <Card title="SDK Proof" icon="code" href="#">
     Create a proof via wallet signature and poll status.
   </Card>
-  <Card title="VerifyGate widget" icon="shield" href="../widgets/overview">
+  <Card title="VerifyGate Widget" icon="shield" href="../widgets/overview">
     Drop-in React gating with freshness controls.
   </Card>
-  <Card title="HTTP examples" icon="terminal" href="https://github.com/neus-network/network/tree/main/examples">
+  <Card title="HTTP Examples" icon="terminal" href="https://github.com/neus-network/network/tree/main/examples">
     Minimal curl / Node.js examples for server integrations.
   </Card>
-  <Card title="Hosted auth + verify" icon="key" href="../cookbook/auth-hosted-verify">
+</CardGroup>
+
+<CardGroup cols={2}>
+  <Card title="Hosted Auth + Verify" icon="key" href="../cookbook/auth-hosted-verify">
     Standardized `/verify` login flow, popup completion, and auth code exchange.
   </Card>
-  <Card title="Hub integrator setup" icon="building" href="../cookbook/hub-integrator">
+  <Card title="Hub Integrator Setup" icon="building" href="../cookbook/hub-integrator">
     Org/domain setup, app linking, sponsor grants, hosted checkout, and usage tracking.
   </Card>
 </CardGroup>
@@ -55,7 +58,7 @@ const proof = await client.verify({
 const proofId = proof.proofId; // Standard SDK field; same receipt ID is used as {qHash} on HTTP paths
 ```
 
-## Production defaults (recommended)
+## Production Defaults (Recommended)
 
 <Note>
 **Privacy:** Default to `options: { privacyLevel: 'private', publicDisplay: false }` unless you explicitly need public discovery.
@@ -64,7 +67,7 @@ const proofId = proof.proofId; // Standard SDK field; same receipt ID is used as
 - **Storage:** Set `storeOriginalContent` separately from privacy. Private proofs can still store original content when you need owner-only access.
 - **Receipt ID:** Treat `proofId` as an opaque receipt identifier. On HTTP routes, the same value appears as `{qHash}`.
 
-## 3b. Poll status (when verifiers run async)
+## 3b. Poll Status (Async Verifiers)
 
 Some verifiers complete instantly; others return `202` and finish asynchronously. Poll until terminal status:
 
@@ -98,7 +101,7 @@ export default function ProtectedPage() {
 }
 ```
 
-### Hosted interactive verifiers (OAuth / ZK)
+### Hosted Interactive Verifiers (OAuth / ZK)
 
 For `ownership-social`, `ownership-org-oauth`, and `proof-of-human`, `VerifyGate` launches NEUS hosted checkout.
 
@@ -113,7 +116,7 @@ For `ownership-social`, `ownership-org-oauth`, and `proof-of-human`, `VerifyGate
 </VerifyGate>
 ```
 
-## 4b. Lowest-friction auth path
+## 4b. Lowest-Friction Auth Path
 
 If you want hosted login plus later API calls without per-request proof-envelope signing:
 
@@ -125,7 +128,7 @@ If you want hosted login plus later API calls without per-request proof-envelope
 Guide: **[Auth + Hosted Verify](../cookbook/auth-hosted-verify)**.
 </Note>
 
-## 5. Server-side gating (minimal eligibility)
+## 5. Server-Side Gating (Minimal Eligibility)
 
 For backend/server checks, prefer a gate check (minimal yes/no, no full proof payloads) via `GET /api/v1/proofs/check`:
 
@@ -148,25 +151,25 @@ const result = await client.gateCheck({
 ## What's Next?
 
 <CardGroup cols={3}>
-  <Card title="Guides" href="../cookbook/overview">
-    Use-case walkthroughs.
+  <Card title="Cookbook" icon="book-open" href="../cookbook/overview">
+    Use-case walkthroughs and production patterns.
   </Card>
-  <Card title="Choose your path" href="./choose-an-integration-path">
+  <Card title="Choose Your Path" icon="compass" href="./choose-an-integration-path">
     Decide when to use SDK, Widgets, API, or MCP.
   </Card>
-  <Card title="Auth + Hosted Verify" href="../cookbook/auth-hosted-verify">
+  <Card title="Auth + Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
     Standardized `/verify` login and hosted popup flow.
   </Card>
-  <Card title="Hub Integrator Setup" href="../cookbook/hub-integrator">
-    Domain/org -> app link -> sponsor grants -> hosted checkout.
+</CardGroup>
+
+<CardGroup cols={3}>
+  <Card title="Hub Integrator Setup" icon="building" href="../cookbook/hub-integrator">
+    Domain/org → app link → sponsor grants → hosted checkout.
   </Card>
-  <Card title="View Verifier Catalog" href="../ecosystems/verifiers">
+  <Card title="Verifier Catalog" icon="list" href="../ecosystems/verifiers">
     Verifier IDs, tiers, and input schemas.
   </Card>
-  <Card title="Read API Docs" href="../api/overview">
+  <Card title="HTTP API Docs" icon="terminal" href="../api/overview">
     Deep dive into the HTTP endpoints.
-  </Card>
-  <Card title="SDK" href="../sdks/overview">
-    Client usage, signing, verification patterns, and widgets.
   </Card>
 </CardGroup>

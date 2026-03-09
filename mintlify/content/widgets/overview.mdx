@@ -7,6 +7,22 @@ description: React components for NEUS verification and access gating.
 
 React components for NEUS verification and access gating, plus a standalone script-tag embed for any site.
 
+## Quick Links
+
+<CardGroup cols={2}>
+  <Card title="VerifyGate Component" icon="shield" href="#verifygate">
+    Gate UI behind verification requirements.
+  </Card>
+  <Card title="ProofBadge Component" icon="badge-check" href="#proofbadge">
+    Display verification status by proof receipt ID.
+  </Card>
+  <Card title="Script Tag Embed" icon="code" href="#script-tag-no-framework-required">
+    Add a "Verified by NEUS" badge to any page without a framework.
+  </Card>
+</CardGroup>
+
+---
+
 ## Script Tag (No Framework Required)
 
 The fastest way to add a "Verified by NEUS" badge to any page:
@@ -20,7 +36,7 @@ The fastest way to add a "Verified by NEUS" badge to any page:
 
 The widget auto-scans the page on load and renders a badge for each `data-neus-proof` element.
 
-### Data attributes
+### Data Attributes
 
 | Attribute | Required | Default | Description |
 |-----------|----------|---------|-------------|
@@ -46,7 +62,7 @@ The widget auto-scans the page on load and renders a badge for each `data-neus-p
 </script>
 ```
 
-### CSS theming
+### CSS Theming
 
 The badge uses CSS variables so it inherits your site's typography:
 
@@ -71,6 +87,8 @@ The badge uses CSS variables so it inherits your site's typography:
 npm install @neus/sdk react react-dom
 ```
 
+---
+
 ## VerifyGate
 
 Gate UI behind verification requirements.
@@ -93,7 +111,7 @@ export function Page() {
 }
 ```
 
-### Key props
+### Key Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
@@ -116,7 +134,7 @@ export function Page() {
 - Interactive verifiers use NEUS hosted checkout automatically
 </Warning>
 
-### Sponsored hosted checkout example
+### Sponsored Hosted Checkout Example
 
 ```jsx
 <VerifyGate
@@ -128,6 +146,8 @@ export function Page() {
   <button>Continue</button>
 </VerifyGate>
 ```
+
+---
 
 ## ProofBadge
 

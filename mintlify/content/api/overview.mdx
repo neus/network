@@ -5,11 +5,13 @@ description: Public HTTP contract for NEUS verification and proof management.
 
 # API Overview
 
-## Base URL
+## Quick Reference
 
-```
-https://api.neus.network
-```
+| Surface | URL |
+|---------|-----|
+| Base URL | `https://api.neus.network` |
+| OpenAPI Spec | `/openapi/public-api.json` |
+| Verifier Catalog | `GET /api/v1/verification/verifiers` |
 
 ## Authentication
 
@@ -20,6 +22,29 @@ For manual signing, use `POST /api/v1/verification/standardize` to get the exact
 </Note>
 
 ## Core Endpoints
+
+<CardGroup cols={2}>
+  <Card title="Create Verification" icon="plus-circle" href="#">
+    `POST /api/v1/verification` — Submit a new verification request.
+  </Card>
+  <Card title="Standardize Signing String" icon="file-code" href="#">
+    `POST /api/v1/verification/standardize` — Get the canonical signing string.
+  </Card>
+  <Card title="Poll Status" icon="rotate" href="#">
+    `GET /api/v1/verification/status/{qHash}` — Check verification progress.
+  </Card>
+  <Card title="Gate Check" icon="shield" href="#">
+    `GET /api/v1/proofs/check` — Minimal eligibility check without full proof payloads.
+  </Card>
+  <Card title="Revoke Proof" icon="x-circle" href="#">
+    `POST /api/v1/proofs/revoke-self/{qHash}` — Revoke a proof you control.
+  </Card>
+  <Card title="Verifier Catalog" icon="list" href="#">
+    `GET /api/v1/verification/verifiers` — List all supported verifiers.
+  </Card>
+</CardGroup>
+
+## Endpoint Reference
 
 | Operation | Method | Path |
 |-----------|--------|------|
@@ -40,7 +65,7 @@ Use timestamps/status fields for freshness, not the ID itself.
 SDKs expose this value as `proofId`. In raw HTTP path templates and the generated OpenAPI file, the same value may appear as `{qHash}`.
 </Note>
 
-## Poll status
+## Poll Status
 
 ```bash
 GET /api/v1/verification/status/{qHash}
@@ -50,7 +75,7 @@ SDK: `client.getStatus(...)` or `client.pollProofStatus(...)`
 
 Pass the returned receipt identifier as the path parameter.
 
-## Revoke a proof (owner-signed)
+## Revoke a Proof (Owner-Signed)
 
 ```bash
 POST /api/v1/proofs/revoke-self/{qHash}
@@ -60,7 +85,7 @@ SDK: `client.revokeOwnProof(...)`
 
 Pass the returned receipt identifier as the path parameter.
 
-## Gate check (minimal eligibility)
+## Gate Check (Minimal Eligibility)
 
 For server-side gating without pulling full proof payloads:
 
@@ -98,3 +123,11 @@ All errors follow a consistent structure:
   }
 }
 ```
+
+## Related Docs
+
+| Topic | Link |
+|-------|------|
+| Authentication | [Auth patterns and signing](./authentication) |
+| Error Handling | [Error codes and retry strategies](./errors) |
+| SDK Reference | [JavaScript SDK](../sdks/overview) |

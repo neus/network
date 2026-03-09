@@ -1,5 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" fill="none">
+  <!-- NEUS Brand Logo - Cloud Blue Accent -->
   <rect width="512" height="512" rx="128" fill="#98C0EF"/>
+  <!-- N letterform stylized -->
   <path d="M128 352V160L256 256V160L384 352" stroke="#101113" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M128 256H384" stroke="#101113" stroke-width="40" stroke-linecap="round"/>
 </svg>

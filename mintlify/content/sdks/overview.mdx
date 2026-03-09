@@ -7,19 +7,19 @@ description: Start with the NEUS JavaScript SDK for proof creation, hosted hando
 
 The JavaScript SDK is the primary client surface for custom browser and app integrations. It wraps verification creation, deterministic signing helpers, hosted verify handoff, proof polling, and widget exports in one package.
 
-## What the SDK covers
+## What the SDK Covers
 
 <CardGroup cols={2}>
-  <Card title="Create and poll proofs" icon="code" href="./javascript">
+  <Card title="Create & Poll Proofs" icon="code" href="./javascript">
     Submit verification requests, standardize signing, and poll async proof status.
   </Card>
-  <Card title="Authentication helpers" icon="key" href="./authentication">
+  <Card title="Authentication Helpers" icon="key" href="./authentication">
     Use hosted login and auth code exchange guidance for lower-friction browser flows.
   </Card>
-  <Card title="Verification patterns" icon="shield" href="./verifications">
+  <Card title="Verification Patterns" icon="shield" href="./verifications">
     Choose reuse, fresh proof, or gate-check strategies based on policy and UX needs.
   </Card>
-  <Card title="Error handling" icon="circle-exclamation" href="./error-handling">
+  <Card title="Error Handling" icon="triangle-exclamation" href="./error-handling">
     Handle retries, hosted flow failures, interactive verifier handoff, and private proof auth.
   </Card>
 </CardGroup>
@@ -30,7 +30,7 @@ The JavaScript SDK is the primary client surface for custom browser and app inte
 npm install @neus/sdk
 ```
 
-## Typical flow
+## Quick Start
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -41,8 +41,33 @@ const client = new NeusClient({
 });
 ```
 
-From there, move into:
+## Next Steps
 
-1. [JavaScript SDK](./javascript) for API shape and examples
-2. [Verification patterns](./verifications) for proof lifecycle choices
-3. [Widgets](../widgets/overview) if you want drop-in UI instead of custom UX
+<CardGroup cols={3}>
+  <Card title="JavaScript SDK" icon="code" href="./javascript">
+    Full API shape, client methods, and examples.
+  </Card>
+  <Card title="Verification Patterns" icon="rotate" href="./verifications">
+    Proof lifecycle choices and when to use each strategy.
+  </Card>
+  <Card title="Security" icon="lock" href="./security">
+    Signing, replay protection, and private proof handling.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="fingerprint" href="./authentication">
+    Hosted login, session management, and token flows.
+  </Card>
+  <Card title="Error Handling" icon="bug" href="./error-handling">
+    Error codes, retry strategies, and edge cases.
+  </Card>
+</CardGroup>
+
+## Related Resources
+
+| Surface | Link |
+|---------|------|
+| Widgets | [React components for gating and badges](../widgets/overview) |
+| API Docs | [HTTP endpoint reference](../api/overview) |
+| MCP Server | [Agent-facing tool integration](../cookbook/mcp) |

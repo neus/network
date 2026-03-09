@@ -7,11 +7,11 @@ description: Real-world integration patterns for NEUS verification.
 
 Real-world integration patterns for NEUS verification.
 
-## Start by use case
+## By Use Case
 
 <CardGroup cols={3}>
   <Card title="Auth + Hosted Verify" icon="key" href="./auth-hosted-verify">
-    Standardized `/verify` login and hosted popup flow.
+    Standardized `/verify` login and hosted popup flow for authentication.
   </Card>
   <Card title="NFT Gating" icon="image" href="./nft-gating">
     Gate content behind NFT ownership verification.
@@ -19,20 +19,48 @@ Real-world integration patterns for NEUS verification.
   <Card title="Domain Verification" icon="globe" href="./domain-verification">
     Verify domain ownership with DNS TXT records.
   </Card>
-  <Card title="Sybil Resistance" icon="shield" href="./sybil-resistance">
-    Prevent Sybil attacks with proof-based identity.
+</CardGroup>
+
+<CardGroup cols={3}>
+  <Card title="Sybil Resistance" icon="shield-halved" href="./sybil-resistance">
+    Prevent Sybil attacks with proof-based identity verification.
   </Card>
   <Card title="Verifiable Agents" icon="robot" href="./verifiable-agents">
-    Create and delegate agent identities.
+    Create and delegate agent identities for AI systems.
   </Card>
   <Card title="Hub Integrator Setup" icon="building" href="./hub-integrator">
-    Org/domain setup, app linking, sponsor grants.
+    Org/domain setup, app linking, sponsor grants, and partner rollout.
   </Card>
 </CardGroup>
 
-## Recommended reading order
+<CardGroup cols={1}>
+  <Card title="MCP Server" icon="plug" href="./mcp">
+    Hosted MCP for agents, tool calling, and human-in-the-loop verify flows.
+  </Card>
+</CardGroup>
 
-1. Start with **Auth + Hosted Verify** if your product needs the canonical hosted path.
-2. Move to **NFT Gating** or **Domain Verification** for concrete end-user policy examples.
-3. Use **Sybil Resistance** and **Verifiable Agents** when trust requirements become stricter.
-4. Finish with **Hub Integrator Setup** when you are operationalizing app attribution, sponsorship, and partner rollout.
+## Recommended Reading Order
+
+| Step | Guide | When to Read |
+|------|-------|--------------|
+| 1 | [Auth + Hosted Verify](./auth-hosted-verify) | Your product needs the canonical hosted path |
+| 2 | [NFT Gating](./nft-gating) or [Domain Verification](./domain-verification) | Concrete end-user policy examples |
+| 3 | [Sybil Resistance](./sybil-resistance) and [Verifiable Agents](./verifiable-agents) | Trust requirements become stricter |
+| 4 | [Hub Integrator Setup](./hub-integrator) | Operationalizing app attribution, sponsorship, and partner rollout |
+
+## Integration Patterns
+
+<Steps>
+  <Step title="Choose Your Flow">
+    Pick the right pattern for your use case: hosted verify, custom SDK, or widget integration.
+  </Step>
+  <Step title="Configure Verifiers">
+    Set up the required verifiers and their input data for your specific policy.
+  </Step>
+  <Step title="Handle Verification">
+    Implement the verification flow with proper error handling and retry logic.
+  </Step>
+  <Step title="Enforce Gates">
+    Use proof receipts to gate access and enforce trust boundaries.
+  </Step>
+</Steps>

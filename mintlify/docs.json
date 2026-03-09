@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "name": "NEUS Docs",
-  "theme": "luma",
+  "name": "NEUS",
+  "theme": "mint",
   "logo": {
     "light": "/images/neus-logo.svg",
     "dark": "/images/neus-logo.svg"
@@ -9,8 +9,28 @@
   "favicon": "/images/neus-logo.svg",
   "colors": {
     "primary": "#98C0EF",
-    "light": "#818CF8",
-    "dark": "#4F46E5"
+    "light": "#98C0EF",
+    "dark": "#3D72C9"
+  },
+  "appearance": {
+    "default": "dark",
+    "strict": false
+  },
+  "styling": {
+    "custom": "styles.css"
+  },
+  "typography": {
+    "body": {
+      "fontFamily": "Inter, system-ui, -apple-system, sans-serif",
+      "fontWeight": 400
+    },
+    "heading": {
+      "fontFamily": "Inter, system-ui, -apple-system, sans-serif",
+      "fontWeight": 600
+    },
+    "code": {
+      "fontFamily": "JetBrains Mono, Menlo, monospace"
+    }
   },
   "navigation": {
     "tabs": [

@@ -1,0 +1,437 @@
+/* NEUS Documentation Styles */
+/* Brand: Cloud-blue accent (#98C0EF), dark-mode first, left-justified */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (NEUS Brand Tokens)
+   ============================================ */
+:root {
+  /* NEUS Brand Colors */
+  --neus-accent: #98C0EF;
+  --neus-accent-dim: #3D72C9;
+  --neus-accent-dark: #2F5097;
+  
+  /* Surface Colors (Dark-first) */
+  --neus-surface-canvas: #101113;
+  --neus-surface-rail: #141619;
+  --neus-surface-card: #1B1D21;
+  --neus-surface-card-hover: #212428;
+  --neus-surface-popover: #282B30;
+  
+  /* Text Colors */
+  --neus-text-primary: rgba(255, 255, 255, 0.93);
+  --neus-text-secondary: rgba(255, 255, 255, 0.84);
+  --neus-text-muted: rgba(255, 255, 255, 0.68);
+  --neus-text-dimmed: rgba(255, 255, 255, 0.62);
+  
+  /* State Colors */
+  --neus-success: #22C55E;
+  --neus-warning: #EAB308;
+  --neus-error: #EF4444;
+  
+  /* Borders */
+  --neus-border: rgba(90, 90, 90, 0.2);
+  --neus-border-hover: rgba(90, 90, 90, 0.4);
+  
+  /* Shadows */
+  --neus-shadow-card: 0 10px 28px rgba(0, 0, 0, 0.28), 0 1px 0 rgba(90, 90, 90, 0.14);
+  --neus-shadow-glow: 0 0 20px rgba(152, 192, 239, 0.2);
+}
+
+/* ============================================
+   MINTLIFY THEME OVERRIDES
+   ============================================ */
+
+/* Force left-justified text - Industry Standard */
+body {
+  text-align: left !important;
+}
+
+article,
+.prose,
+.markdown-body,
+[class*="content"],
+[class*="Content"],
+[class*="docs-content"],
+main {
+  text-align: left !important;
+}
+
+/* Headings always left-aligned */
+h1, h2, h3, h4, h5, h6 {
+  text-align: left !important;
+  color: var(--neus-text-primary) !important;
+}
+
+/* Paragraphs left-aligned */
+p, li, td, th, span, div {
+  text-align: left;
+}
+
+/* Code blocks left-aligned */
+pre, code {
+  text-align: left !important;
+}
+
+/* ============================================
+   BRAND COLOR APPLICATION
+   ============================================ */
+
+/* Primary accent color */
+a,
+.link,
+[class*="link"],
+button[class*="primary"] {
+  color: var(--neus-accent) !important;
+}
+
+a:hover,
+.link:hover {
+  color: #bfdbfe !important;
+}
+
+/* Primary buttons */
+button.primary,
+.btn-primary,
+[class*="Button"][class*="primary"] {
+  background-color: var(--neus-accent) !important;
+  color: #101113 !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+button.primary:hover,
+.btn-primary:hover {
+  background-color: #bfdbfe !important;
+  box-shadow: var(--neus-shadow-glow) !important;
+}
+
+/* Sidebar navigation */
+nav,
+[class*="sidebar"],
+[class*="Sidebar"] {
+  background-color: var(--neus-surface-rail) !important;
+}
+
+nav a,
+[class*="sidebar"] a {
+  color: var(--neus-text-secondary) !important;
+}
+
+nav a:hover,
+[class*="sidebar"] a:hover,
+nav a.active,
+[class*="sidebar"] a.active {
+  color: var(--neus-accent) !important;
+  background-color: var(--neus-surface-card) !important;
+}
+
+/* ============================================
+   CARD STYLES
+   ============================================ */
+
+/* Card groups - left-aligned, proper grid */
+[class*="CardGroup"],
+[class*="card-group"] {
+  text-align: left !important;
+  display: grid !important;
+  gap: 1rem !important;
+}
+
+/* Individual cards */
+[class*="Card"],
+.card {
+  background-color: var(--neus-surface-card) !important;
+  border: 1px solid var(--neus-border) !important;
+  border-radius: 0.75rem !important;
+  padding: 1.25rem !important;
+  text-align: left !important;
+  transition: all 0.2s ease !important;
+}
+
+[class*="Card"]:hover,
+.card:hover {
+  background-color: var(--neus-surface-card-hover) !important;
+  border-color: var(--neus-border-hover) !important;
+  box-shadow: var(--neus-shadow-card) !important;
+}
+
+/* Card titles */
+[class*="Card"] h3,
+[class*="Card"] [class*="title"],
+.card h3,
+.card-title {
+  color: var(--neus-text-primary) !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+}
+
+/* Card icons */
+[class*="Card"] [class*="icon"],
+.card-icon {
+  color: var(--neus-accent) !important;
+}
+
+/* ============================================
+   CODE BLOCKS
+   ============================================ */
+
+pre,
+code,
+[class*="code"],
+[class*="Code"] {
+  background-color: var(--neus-surface-card) !important;
+  border: 1px solid var(--neus-border) !important;
+  border-radius: 0.5rem !important;
+  text-align: left !important;
+}
+
+pre code {
+  color: var(--neus-text-secondary) !important;
+}
+
+/* Syntax highlighting */
+.token.keyword { color: var(--neus-accent) !important; }
+.token.string { color: var(--neus-success) !important; }
+.token.comment { color: var(--neus-text-dimmed) !important; }
+.token.function { color: #bfdbfe !important; }
+.token.number { color: var(--neus-warning) !important; }
+
+/* ============================================
+   TABLES
+   ============================================ */
+
+table {
+  width: 100% !important;
+  text-align: left !important;
+  border-collapse: collapse !important;
+}
+
+thead {
+  background-color: var(--neus-surface-card) !important;
+}
+
+th {
+  color: var(--neus-text-primary) !important;
+  font-weight: 600 !important;
+  text-align: left !important;
+  padding: 0.75rem 1rem !important;
+  border-bottom: 1px solid var(--neus-border) !important;
+}
+
+td {
+  color: var(--neus-text-secondary) !important;
+  text-align: left !important;
+  padding: 0.75rem 1rem !important;
+  border-bottom: 1px solid var(--neus-border) !important;
+}
+
+tr:hover {
+  background-color: var(--neus-surface-card-hover) !important;
+}
+
+/* ============================================
+   CALLOUTS / NOTES
+   ============================================ */
+
+[class*="Note"],
+[class*="note"],
+[class*="Callout"],
+[class*="callout"],
+.note,
+.callout {
+  background-color: var(--neus-surface-card) !important;
+  border-left: 3px solid var(--neus-accent) !important;
+  border-radius: 0.5rem !important;
+  padding: 1rem 1.25rem !important;
+  text-align: left !important;
+  margin: 1rem 0 !important;
+}
+
+[class*="Note"] [class*="title"],
+.note-title {
+  color: var(--neus-accent) !important;
+  font-weight: 600 !important;
+}
+
+/* Warning callouts */
+[class*="Warning"],
+.warning {
+  border-left-color: var(--neus-warning) !important;
+}
+
+[class*="Warning"] [class*="title"],
+.warning-title {
+  color: var(--neus-warning) !important;
+}
+
+/* Error callouts */
+[class*="Error"],
+.error {
+  border-left-color: var(--neus-error) !important;
+}
+
+/* ============================================
+   TABS
+   ============================================ */
+
+[class*="Tabs"],
+.tabs {
+  text-align: left !important;
+}
+
+[class*="TabList"],
+.tab-list {
+  border-bottom: 1px solid var(--neus-border) !important;
+}
+
+[class*="Tab"],
+.tab {
+  color: var(--neus-text-muted) !important;
+  border-bottom: 2px solid transparent !important;
+  padding: 0.75rem 1rem !important;
+}
+
+[class*="Tab"]:hover,
+.tab:hover {
+  color: var(--neus-accent) !important;
+}
+
+[class*="Tab"][class*="active"],
+.tab.active {
+  color: var(--neus-accent) !important;
+  border-bottom-color: var(--neus-accent) !important;
+}
+
+/* ============================================
+   STEPS
+   ============================================ */
+
+[class*="Steps"],
+.steps {
+  text-align: left !important;
+  padding-left: 0 !important;
+}
+
+[class*="Step"],
+.step {
+  text-align: left !important;
+  position: relative !important;
+  padding-left: 2rem !important;
+}
+
+[class*="Step"]::before,
+.step::before {
+  color: var(--neus-accent) !important;
+}
+
+/* ============================================
+   SEARCH
+   ============================================ */
+
+[class*="Search"],
+.search,
+[class*="search-input"] {
+  background-color: var(--neus-surface-card) !important;
+  border: 1px solid var(--neus-border) !important;
+  border-radius: 0.5rem !important;
+  color: var(--neus-text-primary) !important;
+}
+
+[class*="Search"]:focus,
+.search:focus {
+  border-color: var(--neus-accent) !important;
+  box-shadow: 0 0 0 2px rgba(152, 192, 239, 0.2) !important;
+}
+
+/* ============================================
+   HEADER / NAVBAR
+   ============================================ */
+
+header,
+[class*="Header"],
+[class*="navbar"],
+.navbar {
+  background-color: var(--neus-surface-canvas) !important;
+  border-bottom: 1px solid var(--neus-border) !important;
+}
+
+/* ============================================
+   FOOTER
+   ============================================ */
+
+footer,
+[class*="Footer"] {
+  background-color: var(--neus-surface-canvas) !important;
+  border-top: 1px solid var(--neus-border) !important;
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--neus-surface-canvas);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--neus-surface-card-hover);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neus-text-dimmed);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes neus-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(152, 192, 239, 0.2); }
+  50% { box-shadow: 0 0 30px rgba(152, 192, 239, 0.3); }
+}
+
+/* Glow effect for interactive elements */
+.glow,
+[class*="glow"] {
+  animation: neus-glow 3s ease-in-out infinite;
+}
+
+/* ============================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================ */
+
+@media (max-width: 768px) {
+  [class*="CardGroup"] {
+    grid-template-columns: 1fr !important;
+  }
+  
+  table {
+    display: block;
+    overflow-x: auto;
+  }
+}
+
+/* ============================================
+   PRINT STYLES
+   ============================================ */
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  
+  a {
+    color: var(--neus-accent-dim) !important;
+  }
+  
+  pre, code {
+    border: 1px solid #ddd !important;
+  }
+}

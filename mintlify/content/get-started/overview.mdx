@@ -9,70 +9,70 @@ The open verification layer for identity, ownership, and agent authenticity.
 
 Use this section to understand the product, pick an integration surface, and move into implementation without guessing which pages matter first.
 
-## Get started
+## Get Started
 
 <CardGroup cols={3}>
   <Card title="Quickstart" icon="rocket" href="./quickstart">
-    Create your first proof and wire a gate.
+    Create your first proof and wire a gate in minutes.
   </Card>
-  <Card title="Choose your path" icon="signpost" href="./choose-an-integration-path">
-    Pick SDK, Widgets, API, or MCP based on what you are building.
+  <Card title="Choose Your Path" icon="compass" href="./choose-an-integration-path">
+    Pick SDK, Widgets, API, or MCP based on what you're building.
   </Card>
   <Card title="Auth + Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
     Standardized `/verify` login, popup completion, and auth code exchange.
   </Card>
+</CardGroup>
+
+## Integration Surfaces
+
+<CardGroup cols={3}>
   <Card title="Platform" icon="globe" href="../platform/overview">
     Learn the verification model, receipts, environments, and trust boundaries.
   </Card>
-  <Card title="SDK" icon="package" href="../sdks/overview">
-    JavaScript client, deterministic signing helpers, and proof lifecycle patterns.
+  <Card title="JavaScript SDK" icon="code" href="../sdks/overview">
+    Client-side proof creation, deterministic signing, and polling.
   </Card>
-  <Card title="Widgets" icon="shield" href="../widgets/overview">
+  <Card title="Widgets" icon="cube" href="../widgets/overview">
     Drop-in React gating and proof badge rendering.
   </Card>
   <Card title="Agents" icon="bot" href="../agents/overview">
     Agent identity, delegation, and reusable proof patterns.
   </Card>
   <Card title="MCP Server" icon="plug" href="../cookbook/mcp">
-    Hosted MCP for agents, tool calling, and human-in-the-loop verify flows.
+    Hosted MCP for agents, tool calling, and verify flows.
   </Card>
-  <Card title="Cookbook" icon="book-open" href="../cookbook/overview">
-    Production patterns for hosted verify, domains, gating, and sponsored flows.
-  </Card>
-  <Card title="API Guides" icon="code" href="../api/overview">
+  <Card title="HTTP API" icon="terminal" href="../api/overview">
     Public HTTP integration concepts, auth patterns, and error handling.
   </Card>
 </CardGroup>
 
-## Standardized surfaces
+## Standardized Surfaces
 
 | Surface | URL |
 |---------|-----|
-| Hosted verify and hosted login | `https://neus.network/verify` |
+| Hosted verify and login | `https://neus.network/verify` |
 | Public docs | `https://docs.neus.network` |
 | Public API base | `https://api.neus.network` |
-| Public verifier catalog | `GET /api/v1/verification/verifiers` |
-| Public gate check | `GET /api/v1/proofs/check` |
+| MCP endpoint | `https://mcp.neus.network/mcp` |
+| Verifier catalog | `GET /api/v1/verification/verifiers` |
+| Gate check | `GET /api/v1/proofs/check` |
 
-## Docs contract
+## Docs Contract
 
-- `docs.neus.network` is the canonical published surface.
-- The repo-backed source content lives in this `mintlify/` tree.
-- The public OpenAPI spec at `/openapi/public-api.json` is generated from `neus-nut` route metadata.
+- `docs.neus.network` is the canonical published surface
+- The repo-backed source content lives in this `mintlify/` tree
+- The public OpenAPI spec at `/openapi/public-api.json` is generated from `neus-nut` route metadata
 
-## Learn the system
+## Learn the System
 
 <CardGroup cols={3}>
-  <Card title="Platform" icon="globe" href="../platform/overview">
-    Verification lifecycle, receipts, environments, and security model.
+  <Card title="How Verification Works" icon="shield-check" href="../platform/how-verification-works">
+    Understand requests, signer strings, verifiers, and hosted interaction.
   </Card>
-  <Card title="SDK" icon="package" href="../sdks/overview">
-    Client usage, signing helpers, and verification strategies.
+  <Card title="Verification Lifecycle" icon="rotate" href="../platform/verification-lifecycle">
+    Creation, async processing, terminal states, reuse, and revocation.
   </Card>
-  <Card title="Agents" icon="bot" href="../agents/overview">
-    Verifiable agents, delegation, and automation use cases.
-  </Card>
-  <Card title="MCP" icon="plug-zap" href="../cookbook/mcp">
-    Agent-facing server docs, transport setup, and runtime guardrails.
+  <Card title="Cookbook" icon="book-open" href="../cookbook/overview">
+    Production patterns for hosted verify, domains, gating, and sponsored flows.
   </Card>
 </CardGroup>
