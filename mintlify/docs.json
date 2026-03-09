@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "name": "NEUS",
-  "theme": "mint",
+  "theme": "palm",
   "logo": {
     "light": "/images/neus-logo.svg",
     "dark": "/images/neus-logo.svg"
