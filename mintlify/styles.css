@@ -1,14 +1,17 @@
 /* NEUS Documentation Styles */
 /* Brand: Cloud-blue accent (#98C0EF), dark-mode first, left-justified */
+/* Version: 2.0 — Optimized for Mintlify */
 
 /* ============================================
    CSS CUSTOM PROPERTIES (NEUS Brand Tokens)
+   Single source of truth aligned with app/globals.css
    ============================================ */
 :root {
   /* NEUS Brand Colors */
   --neus-accent: #98C0EF;
   --neus-accent-dim: #3D72C9;
   --neus-accent-dark: #2F5097;
+  --neus-accent-light: #bfdbfe;
   
   /* Surface Colors (Dark-first) */
   --neus-surface-canvas: #101113;
@@ -35,11 +38,46 @@
   /* Shadows */
   --neus-shadow-card: 0 10px 28px rgba(0, 0, 0, 0.28), 0 1px 0 rgba(90, 90, 90, 0.14);
   --neus-shadow-glow: 0 0 20px rgba(152, 192, 239, 0.2);
+  
+  /* Mintlify-specific overrides */
+  --mintlify-primary: #98C0EF;
+  --mintlify-primary-dark: #3D72C9;
+}
+
+/* ============================================
+   LOGO STYLING
+   ============================================ */
+
+/* Logo in sidebar header */
+[class*="Logo"],
+[class*="logo"],
+img[alt*="logo"],
+img[alt*="Logo"] {
+  max-height: 32px !important;
+  width: auto !important;
+}
+
+/* Logo link container */
+a[href="/"] img,
+a[class*="logo"] {
+  opacity: 1 !important;
+}
+
+/* Ensure logo renders properly */
+img[src*="neus-logo"] {
+  filter: none !important;
 }
 
 /* ============================================
    MINTLIFY THEME OVERRIDES
    ============================================ */
+
+/* Force dark mode background */
+html,
+body {
+  background-color: var(--neus-surface-canvas) !important;
+  color: var(--neus-text-primary) !important;
+}
 
 /* Force left-justified text - Industry Standard */
 body {
@@ -54,6 +92,7 @@ article,
 [class*="docs-content"],
 main {
   text-align: left !important;
+  background-color: transparent !important;
 }
 
 /* Headings always left-aligned */
@@ -62,9 +101,26 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--neus-text-primary) !important;
 }
 
+h1 {
+  font-size: 2.25rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.025em !important;
+}
+
+h2 {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+}
+
+h3 {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+}
+
 /* Paragraphs left-aligned */
-p, li, td, th, span, div {
+p, li, td, th {
   text-align: left;
+  color: var(--neus-text-secondary) !important;
 }
 
 /* Code blocks left-aligned */
@@ -73,56 +129,77 @@ pre, code {
 }
 
 /* ============================================
-   BRAND COLOR APPLICATION
+   SIDEBAR & NAVIGATION
    ============================================ */
-
-/* Primary accent color */
-a,
-.link,
-[class*="link"],
-button[class*="primary"] {
-  color: var(--neus-accent) !important;
-}
-
-a:hover,
-.link:hover {
-  color: #bfdbfe !important;
-}
-
-/* Primary buttons */
-button.primary,
-.btn-primary,
-[class*="Button"][class*="primary"] {
-  background-color: var(--neus-accent) !important;
-  color: #101113 !important;
-  border: none !important;
-  font-weight: 600 !important;
-}
-
-button.primary:hover,
-.btn-primary:hover {
-  background-color: #bfdbfe !important;
-  box-shadow: var(--neus-shadow-glow) !important;
-}
 
 /* Sidebar navigation */
 nav,
 [class*="sidebar"],
-[class*="Sidebar"] {
+[class*="Sidebar"],
+[class*="Sidebar-container"] {
   background-color: var(--neus-surface-rail) !important;
 }
 
+/* Sidebar links */
 nav a,
-[class*="sidebar"] a {
+[class*="sidebar"] a,
+[class*="Sidebar"] a {
   color: var(--neus-text-secondary) !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.15s ease !important;
 }
 
 nav a:hover,
 [class*="sidebar"] a:hover,
 nav a.active,
-[class*="sidebar"] a.active {
+[class*="sidebar"] a.active,
+[class*="Sidebar"] a.active {
   color: var(--neus-accent) !important;
   background-color: var(--neus-surface-card) !important;
+}
+
+/* Active navigation item */
+[class*="Sidebar"] [class*="active"],
+[class*="sidebar"] [class*="active"] {
+  color: var(--neus-accent) !important;
+  background-color: var(--neus-surface-card) !important;
+  border-left: 2px solid var(--neus-accent) !important;
+}
+
+/* ============================================
+   BRAND COLOR APPLICATION
+   ============================================ */
+
+/* Primary accent color for links */
+a,
+.link,
+[class*="link"] {
+  color: var(--neus-accent) !important;
+  transition: color 0.15s ease !important;
+}
+
+a:hover,
+.link:hover {
+  color: var(--neus-accent-light) !important;
+}
+
+/* Primary buttons */
+button.primary,
+.btn-primary,
+[class*="Button"][class*="primary"],
+button[class*="primary"] {
+  background-color: var(--neus-accent) !important;
+  color: var(--neus-surface-canvas) !important;
+  border: none !important;
+  font-weight: 600 !important;
+  border-radius: 0.5rem !important;
+  transition: all 0.15s ease !important;
+}
+
+button.primary:hover,
+.btn-primary:hover {
+  background-color: var(--neus-accent-light) !important;
+  box-shadow: var(--neus-shadow-glow) !important;
 }
 
 /* ============================================
@@ -185,16 +262,35 @@ code,
   text-align: left !important;
 }
 
+pre {
+  padding: 1rem !important;
+}
+
 pre code {
   color: var(--neus-text-secondary) !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Inline code */
+code:not(pre code) {
+  padding: 0.125rem 0.375rem !important;
+  font-size: 0.875em !important;
 }
 
 /* Syntax highlighting */
 .token.keyword { color: var(--neus-accent) !important; }
 .token.string { color: var(--neus-success) !important; }
 .token.comment { color: var(--neus-text-dimmed) !important; }
-.token.function { color: #bfdbfe !important; }
+.token.function { color: var(--neus-accent-light) !important; }
 .token.number { color: var(--neus-warning) !important; }
+
+/* Code block header */
+[class*="code-block"] [class*="header"],
+[class*="CodeBlock"] [class*="header"] {
+  background-color: var(--neus-surface-rail) !important;
+  border-bottom: 1px solid var(--neus-border) !important;
+}
 
 /* ============================================
    TABLES
@@ -253,6 +349,12 @@ tr:hover {
   font-weight: 600 !important;
 }
 
+/* Tip callouts */
+[class*="Tip"],
+.tip {
+  border-left-color: var(--neus-accent) !important;
+}
+
 /* Warning callouts */
 [class*="Warning"],
 .warning {
@@ -268,6 +370,12 @@ tr:hover {
 [class*="Error"],
 .error {
   border-left-color: var(--neus-error) !important;
+}
+
+/* Info callouts */
+[class*="Info"],
+.info {
+  border-left-color: var(--neus-accent-dim) !important;
 }
 
 /* ============================================
@@ -343,6 +451,14 @@ tr:hover {
   box-shadow: 0 0 0 2px rgba(152, 192, 239, 0.2) !important;
 }
 
+/* Search modal */
+[class*="SearchModal"],
+[class*="search-modal"] {
+  background-color: var(--neus-surface-popover) !important;
+  border: 1px solid var(--neus-border) !important;
+  border-radius: 0.75rem !important;
+}
+
 /* ============================================
    HEADER / NAVBAR
    ============================================ */
@@ -363,6 +479,49 @@ footer,
 [class*="Footer"] {
   background-color: var(--neus-surface-canvas) !important;
   border-top: 1px solid var(--neus-border) !important;
+}
+
+/* ============================================
+   API REFERENCE
+   ============================================ */
+
+/* Method badges */
+[class*="method"] {
+  font-weight: 600 !important;
+  font-size: 0.75rem !important;
+  padding: 0.125rem 0.5rem !important;
+  border-radius: 0.25rem !important;
+}
+
+[class*="method-get"],
+[class*="method-GET"] {
+  background-color: rgba(34, 197, 94, 0.15) !important;
+  color: var(--neus-success) !important;
+}
+
+[class*="method-post"],
+[class*="method-POST"] {
+  background-color: rgba(152, 192, 239, 0.15) !important;
+  color: var(--neus-accent) !important;
+}
+
+[class*="method-put"],
+[class*="method-PUT"] {
+  background-color: rgba(234, 179, 8, 0.15) !important;
+  color: var(--neus-warning) !important;
+}
+
+[class*="method-delete"],
+[class*="method-DELETE"] {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  color: var(--neus-error) !important;
+}
+
+/* Endpoint path */
+[class*="endpoint"],
+[class*="path"] {
+  font-family: JetBrains Mono, Menlo, monospace !important;
+  color: var(--neus-text-secondary) !important;
 }
 
 /* ============================================
@@ -415,6 +574,14 @@ footer,
     display: block;
     overflow-x: auto;
   }
+  
+  h1 {
+    font-size: 1.75rem !important;
+  }
+  
+  h2 {
+    font-size: 1.25rem !important;
+  }
 }
 
 /* ============================================
@@ -433,5 +600,10 @@ footer,
   
   pre, code {
     border: 1px solid #ddd !important;
+  }
+  
+  [class*="sidebar"],
+  [class*="Sidebar"] {
+    display: none !important;
   }
 }
