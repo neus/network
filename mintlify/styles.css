@@ -1,69 +1,262 @@
 /* NEUS Documentation Styles */
-/* Version: 5.0 — Industry Standard Typography and Layout */
+/* Version: 7.0 — Premium Seamless Implementation (Stripe/Linear/Vercel Standard) */
 
 /* ============================================
-   CSS CUSTOM PROPERTIES
+   ROOT TOKENS
    ============================================ */
 :root {
-  /* Brand Colors */
-  --neus-accent: #98C0EF;
-  --neus-accent-dim: #3D72C9;
-  --neus-accent-light: #bfdbfe;
-  
-  /* Surfaces */
+  /* Single canvas - everything seamless */
   --bg-canvas: #0d1117;
-  --bg-rail: #161b22;
-  --bg-card: #21262d;
-  --bg-card-hover: #30363d;
   
-  /* Text */
-  --text-primary: #f0f6fc;
-  --text-secondary: #c9d1d9;
-  --text-muted: #8b949e;
+  /* Interactive surfaces - subtle only */
+  --bg-subtle: rgba(255, 255, 255, 0.03);
+  --bg-hover: rgba(255, 255, 255, 0.06);
+  --bg-active: rgba(152, 192, 239, 0.08);
+  
+  /* Text hierarchy */
+  --text-primary: rgba(255, 255, 255, 0.92);
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-muted: rgba(255, 255, 255, 0.52);
+  --text-dim: rgba(255, 255, 255, 0.38);
+  
+  /* Brand */
+  --accent: #98C0EF;
+  --accent-light: #bfdbfe;
   
   /* Semantic */
-  --success: #3fb950;
-  --warning: #d29922;
-  --error: #f85149;
+  --green: #3fb950;
+  --yellow: #d29922;
+  --red: #f85149;
   
-  /* Borders */
-  --border: rgba(240, 246, 252, 0.1);
-  --border-hover: rgba(240, 246, 252, 0.2);
+  /* Borders - gray only, never white */
+  --border: rgba(90, 90, 90, 0.22);
+  --border-subtle: rgba(90, 90, 90, 0.12);
 }
 
 /* ============================================
-   BASE
+   GLOBAL - ONE BACKGROUND
    ============================================ */
+*, *::before, *::after {
+  border-color: var(--border) !important;
+}
 
-html, body {
+html, body, #root, .root {
+  background: var(--bg-canvas) !important;
   background-color: var(--bg-canvas) !important;
   color: var(--text-secondary) !important;
-  font-size: 16px !important;
-  line-height: 1.6 !important;
 }
 
 /* ============================================
-   PAGE TITLE (from frontmatter)
+   LAYOUT CONTAINERS - ALL SEAMLESS
    ============================================ */
+main, article, section,
+[class*="content"], [class*="Content"],
+[class*="main"], [class*="Main"],
+[class*="page"], [class*="Page"],
+[class*="container"], [class*="Container"],
+[class*="layout"], [class*="Layout"],
+[class*="wrapper"], [class*="Wrapper"] {
+  background: var(--bg-canvas) !important;
+  background-color: var(--bg-canvas) !important;
+}
 
-article h1,
-.prose h1,
-[class*="content"] h1,
-h1 {
-  font-size: 1.875rem !important;
-  font-weight: 700 !important;
+/* ============================================
+   LEFT SIDEBAR - SEAMLESS
+   ============================================ */
+nav, aside,
+[class*="sidebar"], [class*="Sidebar"],
+[class*="SidebarContainer"],
+[class*="SidebarContent"],
+[class*="SidebarWrapper"],
+[class*="SidebarGroup"],
+[class*="nav"], [class*="Nav"],
+[class*="navigation"], [class*="Navigation"],
+[class*="menu"], [class*="Menu"],
+[data-testid*="sidebar"],
+[data-testid*="navigation"] {
+  background: var(--bg-canvas) !important;
+  background-color: var(--bg-canvas) !important;
+  border: none !important;
+}
+
+/* Sidebar group containers */
+nav > div, nav > ul, nav > ol,
+[class*="sidebar"] > div, [class*="sidebar"] > ul,
+[class*="Sidebar"] > div, [class*="Sidebar"] > ul,
+nav [class*="group"], nav [class*="Group"],
+nav [class*="section"], nav [class*="Section"],
+nav [class*="list"], nav [class*="List"],
+[class*="sidebar"] [class*="group"],
+[class*="sidebar"] [class*="section"],
+[class*="Sidebar"] [class*="Group"],
+[class*="Sidebar"] [class*="Section"] {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Sidebar links */
+nav a, nav button,
+[class*="sidebar"] a, [class*="sidebar"] button,
+[class*="Sidebar"] a, [class*="Sidebar"] button,
+[class*="nav-item"], [class*="NavItem"],
+[class*="menu-item"], [class*="MenuItem"],
+[class*="sidebar-item"], [class*="SidebarItem"],
+[class*="navigation-item"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--text-muted) !important;
+  border-radius: 6px !important;
+  font-size: 0.875rem !important;
+  font-weight: 450 !important;
+  padding: 0.375rem 0.625rem !important;
+  margin: 1px 0 !important;
+  border: none !important;
+  transition: background 0.1s ease, color 0.1s ease !important;
+}
+
+nav a:hover, nav button:hover,
+[class*="sidebar"] a:hover, [class*="sidebar"] button:hover,
+[class*="nav-item"]:hover, [class*="NavItem"]:hover,
+[class*="sidebar-item"]:hover {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+nav a[aria-current="page"],
+nav a[class*="active"],
+nav [class*="active"],
+[class*="sidebar"] [class*="active"],
+[class*="Sidebar"] [class*="active"],
+[class*="nav-item"][class*="active"] {
+  background: var(--bg-active) !important;
+  color: var(--accent) !important;
+}
+
+/* Sidebar category headers */
+nav [class*="category"], nav [class*="Category"],
+nav [class*="heading"], nav [class*="Heading"],
+nav [class*="title"], nav [class*="Title"],
+nav [class*="label"], nav [class*="Label"],
+[class*="sidebar"] [class*="category"],
+[class*="sidebar"] [class*="heading"],
+[class*="Sidebar"] [class*="Category"],
+[class*="Sidebar"] [class*="Heading"] {
+  color: var(--text-dim) !important;
+  font-size: 0.6875rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.08em !important;
+  padding: 0.5rem 0.625rem !important;
+  margin-top: 1rem !important;
+  background: transparent !important;
+}
+
+/* Expandable sections */
+nav [class*="collapse"], nav [class*="Collapse"],
+nav [class*="expand"], nav [class*="Expand"],
+nav details, nav summary,
+[class*="sidebar"] details, [class*="sidebar"] summary {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+}
+
+nav summary:hover,
+[class*="sidebar"] summary:hover {
+  background: var(--bg-hover) !important;
+}
+
+/* ============================================
+   RIGHT SIDEBAR (TOC) - SEAMLESS
+   ============================================ */
+[class*="toc"], [class*="Toc"],
+[class*="TableOfContents"],
+[class*="OnThisPage"],
+[class*="right-sidebar"], [class*="RightSidebar"],
+[class*="page-nav"], [class*="PageNav"],
+[data-testid*="toc"] {
+  background: var(--bg-canvas) !important;
+  background-color: var(--bg-canvas) !important;
+  border: none !important;
+}
+
+[class*="toc"] a, [class*="Toc"] a,
+[class*="TableOfContents"] a,
+[class*="OnThisPage"] a {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  font-size: 0.8125rem !important;
+  border: none !important;
+  border-left: 2px solid transparent !important;
+  padding-left: 0.75rem !important;
+  transition: color 0.1s ease, border-color 0.1s ease !important;
+}
+
+[class*="toc"] a:hover, [class*="Toc"] a:hover {
+  color: var(--text-secondary) !important;
+  border-left-color: var(--border) !important;
+}
+
+[class*="toc"] a[class*="active"],
+[class*="toc"] a[aria-current="true"] {
+  color: var(--accent) !important;
+  border-left-color: var(--accent) !important;
+}
+
+/* ============================================
+   HEADER / TOP NAV - SEAMLESS
+   ============================================ */
+header, [class*="Header"], [class*="header"],
+[class*="navbar"], [class*="Navbar"],
+[class*="topbar"], [class*="Topbar"],
+[class*="TopBar"], [class*="AppBar"] {
+  background: var(--bg-canvas) !important;
+  background-color: var(--bg-canvas) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* Header tabs */
+header [class*="tab"], header [class*="Tab"],
+[class*="navbar"] [class*="tab"],
+[class*="Header"] [class*="Tab"] {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+}
+
+header [class*="tab"][class*="active"],
+header [class*="Tab"][class*="active"] {
+  color: var(--text-primary) !important;
+  border-bottom: 2px solid var(--accent) !important;
+}
+
+/* ============================================
+   FOOTER - SEAMLESS
+   ============================================ */
+footer, [class*="Footer"], [class*="footer"] {
+  background: var(--bg-canvas) !important;
+  background-color: var(--bg-canvas) !important;
+  border-top: 1px solid var(--border-subtle) !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1, [class*="title"] {
+  font-size: 1.75rem !important;
+  font-weight: 650 !important;
   line-height: 1.25 !important;
   letter-spacing: -0.025em !important;
   color: var(--text-primary) !important;
   margin-top: 0 !important;
-  margin-bottom: 1.5rem !important;
+  margin-bottom: 1.25rem !important;
+  border: none !important;
   padding-bottom: 0 !important;
-  border-bottom: none !important;
 }
-
-/* ============================================
-   SECTION HEADINGS
-   ============================================ */
 
 h2 {
   font-size: 1.25rem !important;
@@ -73,7 +266,7 @@ h2 {
   margin-top: 2rem !important;
   margin-bottom: 0.75rem !important;
   padding-bottom: 0.375rem !important;
-  border-bottom: 1px solid var(--border) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
 }
 
 h3 {
@@ -89,19 +282,14 @@ h4 {
   font-size: 0.9375rem !important;
   font-weight: 600 !important;
   color: var(--text-secondary) !important;
-  margin-top: 1rem !important;
-  margin-bottom: 0.5rem !important;
+  margin-top: 1.25rem !important;
+  margin-bottom: 0.375rem !important;
 }
-
-/* ============================================
-   BODY TEXT
-   ============================================ */
 
 p {
   color: var(--text-secondary) !important;
   line-height: 1.7 !important;
-  margin-top: 0 !important;
-  margin-bottom: 1rem !important;
+  margin: 0 0 1rem 0 !important;
 }
 
 li {
@@ -115,71 +303,130 @@ strong, b {
   font-weight: 600 !important;
 }
 
-/* ============================================
-   LINKS
-   ============================================ */
+small {
+  color: var(--text-muted) !important;
+}
 
+/* Links */
 a {
-  color: var(--neus-accent) !important;
+  color: var(--accent) !important;
   text-decoration: none !important;
+  transition: color 0.1s ease !important;
 }
 
 a:hover {
-  color: var(--neus-accent-light) !important;
-  text-decoration: underline !important;
+  color: var(--accent-light) !important;
 }
 
 /* ============================================
-   CARDS
+   BREADCRUMBS - MINIMAL
    ============================================ */
+[class*="breadcrumb"], [class*="Breadcrumb"],
+nav[aria-label*="breadcrumb"] {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  font-size: 0.8125rem !important;
+  margin-bottom: 1rem !important;
+}
 
-[class*="CardGroup"] {
+[class*="breadcrumb"] a {
+  color: var(--text-muted) !important;
+}
+
+[class*="breadcrumb"] a:hover {
+  color: var(--text-secondary) !important;
+}
+
+[class*="breadcrumb"] [class*="separator"],
+[class*="breadcrumb"] [class*="Separator"] {
+  color: var(--text-dim) !important;
+}
+
+/* ============================================
+   CARDS - BORDERLESS
+   ============================================ */
+[class*="CardGroup"], [class*="card-group"] {
   display: grid !important;
   gap: 0.75rem !important;
   margin: 1.25rem 0 !important;
 }
 
-[class*="Card"] {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 6px !important;
+[class*="Card"], [class*="card"] {
+  background: var(--bg-subtle) !important;
+  border: none !important;
+  border-radius: 8px !important;
   padding: 1rem !important;
-  transition: border-color 0.15s ease, background-color 0.15s ease !important;
+  transition: background 0.15s ease !important;
 }
 
-[class*="Card"]:hover {
-  background: var(--bg-card-hover) !important;
-  border-color: var(--border-hover) !important;
+[class*="Card"]:hover, [class*="card"]:hover {
+  background: var(--bg-hover) !important;
 }
 
-/* Card title */
-[class*="Card"] h3,
-[class*="Card"] [class*="title"] {
+[class*="Card"] h1, [class*="Card"] h2, [class*="Card"] h3,
+[class*="card"] h1, [class*="card"] h2, [class*="card"] h3,
+[class*="Card"] [class*="title"], [class*="card"] [class*="title"] {
   font-size: 0.9375rem !important;
   font-weight: 600 !important;
   color: var(--text-primary) !important;
   margin: 0 0 0.25rem 0 !important;
-  padding: 0 !important;
   border: none !important;
 }
 
-/* Card description */
-[class*="Card"] p {
+[class*="Card"] p, [class*="card"] p {
   font-size: 0.8125rem !important;
   color: var(--text-muted) !important;
   margin: 0 !important;
   line-height: 1.5 !important;
 }
 
-/* Card icon */
-[class*="Card"] svg {
-  color: var(--neus-accent) !important;
+[class*="Card"] svg, [class*="card"] svg {
+  color: var(--accent) !important;
+}
+
+/* ============================================
+   CODE BLOCKS - ELEVATED SURFACE
+   ============================================ */
+pre, [class*="code"], [class*="Code"],
+[class*="CodeBlock"], [class*="code-block"] {
+  background: rgba(0, 0, 0, 0.28) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 1rem !important;
+  margin: 1rem 0 !important;
+  overflow-x: auto !important;
+  font-size: 0.8125rem !important;
+  line-height: 1.6 !important;
+}
+
+pre code, [class*="code"] code, [class*="Code"] code {
+  background: transparent !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Inline code */
+code:not(pre code):not([class*="Code"] code) {
+  background: rgba(152, 192, 239, 0.1) !important;
+  color: var(--accent) !important;
+  padding: 0.125rem 0.375rem !important;
+  border-radius: 4px !important;
+  font-size: 0.8125em !important;
+  font-weight: 450 !important;
+}
+
+/* Code header/filename */
+[class*="code-header"], [class*="CodeHeader"],
+[class*="filename"], [class*="FileName"] {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  font-size: 0.75rem !important;
+  padding: 0.25rem 0.5rem !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
 }
 
 /* ============================================
    TABLES
    ============================================ */
-
 table {
   width: 100% !important;
   border-collapse: collapse !important;
@@ -190,268 +437,340 @@ table {
 th {
   text-align: left !important;
   padding: 0.5rem 0.75rem !important;
-  background: var(--bg-card) !important;
+  background: var(--bg-subtle) !important;
   color: var(--text-primary) !important;
   font-weight: 600 !important;
   border-bottom: 1px solid var(--border) !important;
 }
 
 td {
-  text-align: left !important;
   padding: 0.5rem 0.75rem !important;
   color: var(--text-secondary) !important;
-  border-bottom: 1px solid var(--border) !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
 }
 
 tr:hover td {
-  background: var(--bg-card) !important;
-}
-
-/* ============================================
-   CODE
-   ============================================ */
-
-pre {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 6px !important;
-  padding: 0.875rem !important;
-  margin: 1rem 0 !important;
-  overflow-x: auto !important;
-}
-
-pre code {
-  background: transparent !important;
-  font-size: 0.8125rem !important;
-  color: var(--text-secondary) !important;
-}
-
-code:not(pre code) {
-  background: rgba(152, 192, 239, 0.12) !important;
-  color: var(--neus-accent) !important;
-  padding: 0.125rem 0.375rem !important;
-  border-radius: 4px !important;
-  font-size: 0.8125em !important;
+  background: var(--bg-subtle) !important;
 }
 
 /* ============================================
    NOTES / CALLOUTS
    ============================================ */
-
-[class*="Note"],
-[class*="Callout"],
-.note,
-.callout {
-  background: rgba(152, 192, 239, 0.08) !important;
-  border: 1px solid rgba(152, 192, 239, 0.15) !important;
-  border-left: 3px solid var(--neus-accent) !important;
+[class*="Note"], [class*="note"],
+[class*="Callout"], [class*="callout"],
+[class*="Admonition"], [class*="admonition"] {
+  background: rgba(152, 192, 239, 0.05) !important;
+  border: none !important;
+  border-left: 3px solid var(--accent) !important;
   border-radius: 6px !important;
   padding: 0.75rem 1rem !important;
   margin: 1rem 0 !important;
 }
 
-[class*="Warning"] {
-  background: rgba(210, 153, 34, 0.08) !important;
-  border-color: rgba(210, 153, 34, 0.15) !important;
-  border-left-color: var(--warning) !important;
+[class*="Note"] [class*="title"],
+[class*="Callout"] [class*="title"] {
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  margin-bottom: 0.25rem !important;
 }
 
-[class*="Error"] {
-  background: rgba(248, 81, 73, 0.08) !important;
-  border-color: rgba(248, 81, 73, 0.15) !important;
-  border-left-color: var(--error) !important;
+[class*="Warning"], [class*="warning"] {
+  background: rgba(210, 153, 34, 0.05) !important;
+  border-left-color: var(--yellow) !important;
 }
 
-[class*="Tip"] {
-  background: rgba(63, 185, 80, 0.08) !important;
-  border-color: rgba(63, 185, 80, 0.15) !important;
-  border-left-color: var(--success) !important;
+[class*="Error"], [class*="error"],
+[class*="Danger"], [class*="danger"] {
+  background: rgba(248, 81, 73, 0.05) !important;
+  border-left-color: var(--red) !important;
+}
+
+[class*="Tip"], [class*="tip"],
+[class*="Success"], [class*="success"] {
+  background: rgba(63, 185, 80, 0.05) !important;
+  border-left-color: var(--green) !important;
 }
 
 /* ============================================
    STEPS
    ============================================ */
-
-[class*="Steps"] {
-  margin: 1rem 0 !important;
+[class*="Steps"], [class*="steps"] {
+  margin: 1.25rem 0 !important;
+  counter-reset: step !important;
 }
 
-[class*="Step"] {
-  margin-bottom: 0.75rem !important;
-  padding-left: 2rem !important;
+[class*="Step"], [class*="step"] {
+  position: relative !important;
+  padding-left: 2.5rem !important;
+  margin-bottom: 1rem !important;
 }
 
-[class*="Step"]::before {
-  color: var(--neus-accent) !important;
+[class*="Step"]::before, [class*="step"]::before {
+  counter-increment: step !important;
+  content: counter(step) !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: var(--bg-active) !important;
+  color: var(--accent) !important;
+  border-radius: 50% !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
 }
 
 /* ============================================
-   SIDEBAR
+   TABS
    ============================================ */
-
-nav,
-[class*="sidebar"],
-[class*="Sidebar"] {
-  background: var(--bg-rail) !important;
+[class*="TabList"], [class*="tab-list"],
+[role="tablist"] {
+  display: flex !important;
+  gap: 0 !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  margin-bottom: 1rem !important;
+  background: transparent !important;
 }
 
-nav a,
-[class*="sidebar"] a,
-[class*="Sidebar"] a {
+[role="tab"], [class*="Tab"], [class*="tab"] {
+  background: transparent !important;
   color: var(--text-muted) !important;
-  border-radius: 4px !important;
   font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 1rem !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  margin-bottom: -1px !important;
+  transition: color 0.1s ease, border-color 0.1s ease !important;
 }
 
-nav a:hover,
-[class*="sidebar"] a:hover {
-  color: var(--text-primary) !important;
-  background: var(--bg-card) !important;
+[role="tab"]:hover, [class*="Tab"]:hover {
+  color: var(--text-secondary) !important;
 }
 
-nav a.active,
-[class*="sidebar"] a.active {
-  color: var(--neus-accent) !important;
-  background: rgba(152, 192, 239, 0.1) !important;
-}
-
-/* ============================================
-   HEADER & FOOTER
-   ============================================ */
-
-header,
-[class*="Header"],
-[class*="navbar"] {
-  background: var(--bg-canvas) !important;
-  border-bottom: 1px solid var(--border) !important;
-}
-
-footer,
-[class*="Footer"] {
-  background: var(--bg-canvas) !important;
-  border-top: 1px solid var(--border) !important;
+[role="tab"][aria-selected="true"],
+[role="tab"][class*="active"],
+[class*="Tab"][class*="active"] {
+  color: var(--accent) !important;
+  border-bottom-color: var(--accent) !important;
 }
 
 /* ============================================
-   SEARCH
+   BADGES / PILLS
    ============================================ */
-
-[class*="Search"],
-[class*="search-input"] {
-  background: var(--bg-card) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 6px !important;
-  color: var(--text-primary) !important;
-}
-
-/* ============================================
-   BADGES
-   ============================================ */
-
-[class*="badge"],
-[class*="Badge"] {
+[class*="badge"], [class*="Badge"],
+[class*="pill"], [class*="Pill"],
+[class*="tag"], [class*="Tag"] {
   display: inline-flex !important;
   align-items: center !important;
   padding: 0.125rem 0.5rem !important;
   border-radius: 9999px !important;
   font-size: 0.6875rem !important;
   font-weight: 500 !important;
-  background: rgba(152, 192, 239, 0.12) !important;
-  color: var(--neus-accent) !important;
+  background: rgba(152, 192, 239, 0.1) !important;
+  color: var(--accent) !important;
+  border: none !important;
 }
 
-/* Method badges */
-[class*="method-get"] {
-  background: rgba(63, 185, 80, 0.12) !important;
-  color: var(--success) !important;
+/* HTTP method badges */
+[class*="method-get"], [class*="GET"] {
+  background: rgba(63, 185, 80, 0.1) !important;
+  color: var(--green) !important;
 }
 
-[class*="method-post"] {
-  background: rgba(152, 192, 239, 0.12) !important;
-  color: var(--neus-accent) !important;
+[class*="method-post"], [class*="POST"] {
+  background: rgba(152, 192, 239, 0.1) !important;
+  color: var(--accent) !important;
 }
 
-[class*="method-put"] {
-  background: rgba(210, 153, 34, 0.12) !important;
-  color: var(--warning) !important;
+[class*="method-put"], [class*="PUT"],
+[class*="method-patch"], [class*="PATCH"] {
+  background: rgba(210, 153, 34, 0.1) !important;
+  color: var(--yellow) !important;
 }
 
-[class*="method-delete"] {
-  background: rgba(248, 81, 73, 0.12) !important;
-  color: var(--error) !important;
+[class*="method-delete"], [class*="DELETE"] {
+  background: rgba(248, 81, 73, 0.1) !important;
+  color: var(--red) !important;
 }
 
 /* ============================================
-   TABS
+   API REFERENCE
    ============================================ */
-
-[class*="TabList"] {
-  border-bottom: 1px solid var(--border) !important;
+[class*="api"], [class*="Api"],
+[class*="endpoint"], [class*="Endpoint"],
+[class*="operation"], [class*="Operation"] {
+  background: transparent !important;
+  border: none !important;
 }
 
-[class*="Tab"] {
+[class*="param"], [class*="Param"],
+[class*="parameter"], [class*="Parameter"] {
+  background: var(--bg-subtle) !important;
+  border-radius: 6px !important;
+  padding: 0.75rem 1rem !important;
+  margin: 0.5rem 0 !important;
+  border: none !important;
+}
+
+[class*="param-name"], [class*="ParamName"] {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace !important;
+  font-size: 0.8125rem !important;
+  color: var(--accent) !important;
+}
+
+/* ============================================
+   SEARCH
+   ============================================ */
+[class*="Search"], [class*="search"],
+[class*="search-input"], [class*="SearchInput"],
+[role="search"], [role="searchbox"] {
+  background: var(--bg-subtle) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  color: var(--text-primary) !important;
+}
+
+[class*="Search"]::placeholder,
+[class*="search"]::placeholder {
   color: var(--text-muted) !important;
-  font-size: 0.875rem !important;
-  font-weight: 500 !important;
-  padding: 0.5rem 0.75rem !important;
 }
 
-[class*="Tab"]:hover {
-  color: var(--text-secondary) !important;
-}
-
-[class*="Tab"][class*="active"] {
-  color: var(--neus-accent) !important;
+/* Search modal/overlay */
+[class*="SearchModal"], [class*="search-modal"],
+[class*="CommandPalette"], [class*="command-palette"] {
+  background: var(--bg-canvas) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4) !important;
 }
 
 /* ============================================
-   SCROLLBAR
+   BUTTONS
    ============================================ */
+button, [role="button"],
+[class*="Button"], [class*="button"] {
+  background: var(--bg-subtle) !important;
+  color: var(--text-secondary) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 0.5rem 1rem !important;
+  font-weight: 500 !important;
+  transition: background 0.1s ease, color 0.1s ease !important;
+}
 
+button:hover, [role="button"]:hover,
+[class*="Button"]:hover {
+  background: var(--bg-hover) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Primary button */
+button[class*="primary"], [class*="Button"][class*="primary"],
+[class*="primary"], [class*="Primary"] {
+  background: var(--accent) !important;
+  color: #0d1117 !important;
+}
+
+button[class*="primary"]:hover,
+[class*="Button"][class*="primary"]:hover {
+  background: var(--accent-light) !important;
+}
+
+/* ============================================
+   FORMS / INPUTS
+   ============================================ */
+input, textarea, select,
+[class*="Input"], [class*="input"],
+[class*="TextArea"], [class*="textarea"],
+[class*="Select"], [class*="select"] {
+  background: var(--bg-subtle) !important;
+  border: none !important;
+  border-radius: 6px !important;
+  color: var(--text-primary) !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.875rem !important;
+}
+
+input:focus, textarea:focus, select:focus,
+[class*="Input"]:focus, [class*="TextArea"]:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(152, 192, 239, 0.25) !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* ============================================
+   SCROLLBAR - MINIMAL
+   ============================================ */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px !important;
+  height: 8px !important;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-canvas);
+  background: transparent !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-card-hover);
-  border-radius: 3px;
+  background: rgba(90, 90, 90, 0.3) !important;
+  border-radius: 4px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(90, 90, 90, 0.45) !important;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(90, 90, 90, 0.3) transparent !important;
+}
+
+/* ============================================
+   SELECTION
+   ============================================ */
+::selection {
+  background: rgba(152, 192, 239, 0.25) !important;
+  color: #fff !important;
 }
 
 /* ============================================
    RESPONSIVE
    ============================================ */
-
 @media (max-width: 768px) {
-  article h1, h1 {
-    font-size: 1.5rem !important;
-  }
-  
-  h2 {
-    font-size: 1.125rem !important;
-  }
+  h1 { font-size: 1.5rem !important; }
+  h2 { font-size: 1.125rem !important; }
   
   [class*="CardGroup"] {
     grid-template-columns: 1fr !important;
+  }
+  
+  [class*="sidebar"], [class*="Sidebar"],
+  [class*="toc"], [class*="Toc"] {
+    display: none !important;
   }
 }
 
 /* ============================================
    PRINT
    ============================================ */
-
 @media print {
   body {
-    background: white !important;
-    color: black !important;
+    background: #fff !important;
+    color: #000 !important;
   }
   
-  [class*="sidebar"],
-  [class*="Sidebar"] {
+  [class*="sidebar"], [class*="Sidebar"],
+  [class*="toc"], [class*="Toc"],
+  header, footer, nav {
     display: none !important;
   }
+  
+  a { color: #000 !important; }
 }
