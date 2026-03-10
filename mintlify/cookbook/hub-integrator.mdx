@@ -11,7 +11,7 @@ This guide covers connecting your domain or organization to NEUS, issuing sponso
 
 - A NEUS account with a verified wallet
 - Your integration domain or organization OAuth credentials
-- If using hosted auth code exchange, a NEUS-issued partner credential
+- If using hosted auth code exchange, partner access enabled for your deployment
 
 ## 1. Domain Verification
 
@@ -89,13 +89,13 @@ Redirect users to `https://neus.network/verify?intent=login&returnUrl=<your-url>
 
 ```bash
 curl -X POST https://api.neus.network/api/v1/auth/code/exchange \
-  -H "Authorization: Bearer <partner-credential>" \
+  -H "Authorization: Bearer <server-credential>" \
   -H "Content-Type: application/json" \
   -d '{ "code": "<auth-code>" }'
 ```
 
 <Note>
-This is a constrained partner flow requiring NEUS-issued partner credentials.
+This is a partner-enabled server flow. Confirm access during onboarding before you build against it.
 </Note>
 
 ## 5. Sponsor Grants (Covering Verification Costs)

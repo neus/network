@@ -648,7 +648,7 @@
         "type": "object",
         "required": [
           "provider",
-          "internalSocialToken"
+          "oauthAccessToken"
         ],
         "properties": {
           "provider": {
@@ -664,8 +664,9 @@
               "coinbase"
             ]
           },
-          "internalSocialToken": {
-            "type": "string"
+          "oauthAccessToken": {
+            "type": "string",
+            "description": "Provider-issued access token for direct server-side verification flows."
           },
           "walletAddress": {
             "type": "string",
@@ -722,7 +723,7 @@
         "type": "object",
         "required": [
           "provider",
-          "internalSocialToken"
+          "oauthAccessToken"
         ],
         "properties": {
           "provider": {
@@ -732,8 +733,9 @@
               "microsoft"
             ]
           },
-          "internalSocialToken": {
-            "type": "string"
+          "oauthAccessToken": {
+            "type": "string",
+            "description": "Provider-issued access token for direct server-side verification flows."
           },
           "walletAddress": {
             "type": "string",

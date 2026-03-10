@@ -24,22 +24,22 @@ For manual signing, use `POST /api/v1/verification/standardize` to get the exact
 ## Core Endpoints
 
 <CardGroup cols={2}>
-  <Card title="Create Verification" icon="plus-circle" href="#">
+  <Card title="Create Verification" icon="plus-circle" href="#create-verification">
     `POST /api/v1/verification` — Submit a new verification request.
   </Card>
-  <Card title="Standardize Signing String" icon="file-code" href="#">
+  <Card title="Standardize Signing String" icon="file-code" href="#standardize-signing-string">
     `POST /api/v1/verification/standardize` — Get the canonical signing string.
   </Card>
-  <Card title="Poll Status" icon="rotate" href="#">
+  <Card title="Poll Status" icon="rotate" href="#poll-status">
     `GET /api/v1/verification/status/{qHash}` — Check verification progress.
   </Card>
-  <Card title="Gate Check" icon="shield" href="#">
+  <Card title="Gate Check" icon="shield" href="#gate-check-minimal-eligibility">
     `GET /api/v1/proofs/check` — Minimal eligibility check without full proof payloads.
   </Card>
-  <Card title="Revoke Proof" icon="x-circle" href="#">
+  <Card title="Revoke Proof" icon="x-circle" href="#revoke-a-proof-owner-signed">
     `POST /api/v1/proofs/revoke-self/{qHash}` — Revoke a proof you control.
   </Card>
-  <Card title="Verifier Catalog" icon="list" href="#">
+  <Card title="Verifier Catalog" icon="list" href="#verifier-catalog">
     `GET /api/v1/verification/verifiers` — List all supported verifiers.
   </Card>
 </CardGroup>
@@ -64,6 +64,22 @@ Use timestamps/status fields for freshness, not the ID itself.
 <Note>
 SDKs expose this value as `proofId`. In raw HTTP path templates and the generated OpenAPI file, the same value may appear as `{qHash}`.
 </Note>
+
+## Create Verification
+
+```bash
+POST /api/v1/verification
+```
+
+Submit a new verification request after you have collected the correct signer string or are using a hosted interactive flow.
+
+## Standardize Signing String
+
+```bash
+POST /api/v1/verification/standardize
+```
+
+Use this endpoint when you need the exact request-bound message that the wallet must sign before proof submission.
 
 ## Poll Status
 
@@ -98,6 +114,14 @@ SDK: `client.gateCheck({ address, verifierIds, since, ... })`
 <Warning>
 For point-in-time verifiers, always include `since` or `sinceDays` for freshness enforcement.
 </Warning>
+
+## Verifier Catalog
+
+```bash
+GET /api/v1/verification/verifiers
+```
+
+Read the live verifier catalog instead of hardcoding verifier labels, input requirements, or hosted-flow assumptions in your integration.
 
 ## OpenAPI Reference
 

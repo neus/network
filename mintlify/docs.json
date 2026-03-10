@@ -14,10 +14,18 @@
     "dark": "#3D72C9"
   },
   "appearance": {
-    "default": "dark"
+    "default": "dark",
+    "strict": true
+  },
+  "background": {
+    "decoration": "gradient",
+    "color": {
+      "dark": "#101113"
+    }
   },
   "styling": {
-    "custom": "styles.css"
+    "custom": "styles.css",
+    "eyebrows": "breadcrumbs"
   },
   "fonts": {
     "body": {
@@ -29,19 +37,31 @@
       "weight": 600
     }
   },
-  "navigation": {
-    "anchors": [
+  "seo": {
+    "metatags": {
+      "canonical": "https://docs.neus.network",
+      "theme-color": "#101113",
+      "color-scheme": "dark"
+    }
+  },
+  "navbar": {
+    "links": [
       {
-        "name": "Brand Kit",
-        "icon": "palette",
-        "url": "https://neus.network/brand-kit"
+        "label": "GitHub",
+        "href": "https://github.com/neus/network"
       },
       {
-        "name": "GitHub",
-        "icon": "github",
-        "url": "https://github.com/neus"
+        "label": "Support",
+        "href": "https://github.com/neus/network/discussions"
       }
     ],
+    "primary": {
+      "type": "button",
+      "label": "Open Hub",
+      "href": "https://neus.network/hub"
+    }
+  },
+  "navigation": {
     "tabs": [
       {
         "tab": "Get Started",
@@ -49,11 +69,11 @@
           {
             "group": "Introduction",
             "pages": [
-              "content/get-started/overview",
-              "content/get-started/quickstart",
-              "content/get-started/choose-an-integration-path",
-              "content/get-started/integration",
-              "content/get-started/brand-kit"
+              "index",
+              "quickstart",
+              "choose-an-integration-path",
+              "integration",
+              "brand-kit"
             ]
           }
         ]
@@ -64,19 +84,19 @@
           {
             "group": "Core Concepts",
             "pages": [
-              "content/platform/overview",
-              "content/platform/how-verification-works",
-              "content/platform/verification-lifecycle",
-              "content/platform/receipts-and-results"
+              "platform/overview",
+              "platform/how-verification-works",
+              "platform/verification-lifecycle",
+              "platform/receipts-and-results"
             ]
           },
           {
             "group": "Operations",
             "pages": [
-              "content/platform/verifiers",
-              "content/platform/environments",
-              "content/platform/rate-limits-and-retries",
-              "content/platform/security-and-trust"
+              "platform/verifiers",
+              "platform/environments",
+              "platform/rate-limits-and-retries",
+              "platform/security-and-trust"
             ]
           }
         ]
@@ -87,12 +107,12 @@
           {
             "group": "JavaScript SDK",
             "pages": [
-              "content/sdks/overview",
-              "content/sdks/javascript",
-              "content/sdks/authentication",
-              "content/sdks/verifications",
-              "content/sdks/error-handling",
-              "content/sdks/security"
+              "sdks/overview",
+              "sdks/javascript",
+              "sdks/authentication",
+              "sdks/verifications",
+              "sdks/error-handling",
+              "sdks/security"
             ]
           }
         ]
@@ -103,8 +123,8 @@
           {
             "group": "Widgets",
             "pages": [
-              "content/widgets/overview",
-              "content/widgets/verifygate"
+              "widgets/overview",
+              "widgets/verifygate"
             ]
           }
         ]
@@ -115,10 +135,10 @@
           {
             "group": "Agents",
             "pages": [
-              "content/agents/overview",
-              "content/agents/agent-identity",
-              "content/agents/agent-delegation",
-              "content/agents/agent-verification-flow"
+              "agents/overview",
+              "agents/agent-identity",
+              "agents/agent-delegation",
+              "agents/agent-verification-flow"
             ]
           }
         ]
@@ -129,7 +149,7 @@
           {
             "group": "MCP Server",
             "pages": [
-              "content/cookbook/mcp"
+              "cookbook/mcp"
             ]
           }
         ]
@@ -140,24 +160,24 @@
           {
             "group": "Verification Flows",
             "pages": [
-              "content/cookbook/overview",
-              "content/cookbook/auth-hosted-verify",
-              "content/cookbook/domain-verification",
-              "content/cookbook/nft-gating"
+              "cookbook/overview",
+              "cookbook/auth-hosted-verify",
+              "cookbook/domain-verification",
+              "cookbook/nft-gating"
             ]
           },
           {
             "group": "Trust and Risk",
             "pages": [
-              "content/cookbook/sybil-resistance",
-              "content/platform/verifiers"
+              "cookbook/sybil-resistance",
+              "platform/verifiers"
             ]
           },
           {
             "group": "Advanced",
             "pages": [
-              "content/cookbook/verifiable-agents",
-              "content/cookbook/hub-integrator"
+              "cookbook/verifiable-agents",
+              "cookbook/hub-integrator"
             ]
           }
         ]
@@ -168,9 +188,9 @@
           {
             "group": "API Guides",
             "pages": [
-              "content/api/overview",
-              "content/api/authentication",
-              "content/api/errors"
+              "api/overview",
+              "api/authentication",
+              "api/errors"
             ]
           }
         ]
@@ -181,8 +201,8 @@
           {
             "group": "Ecosystem",
             "pages": [
-              "content/ecosystems/overview",
-              "content/ecosystems/verifiers"
+              "ecosystems/overview",
+              "ecosystems/verifiers"
             ]
           }
         ]
@@ -193,6 +213,204 @@
       }
     ]
   },
+  "redirects": [
+    {
+      "source": "/verifiers",
+      "destination": "/ecosystems/verifiers"
+    },
+    {
+      "source": "/overview",
+      "destination": "/"
+    },
+    {
+      "source": "/content/get-started/overview",
+      "destination": "/"
+    },
+    {
+      "source": "/content/get-started/quickstart",
+      "destination": "/quickstart"
+    },
+    {
+      "source": "/content/get-started/choose-an-integration-path",
+      "destination": "/choose-an-integration-path"
+    },
+    {
+      "source": "/content/get-started/integration",
+      "destination": "/integration"
+    },
+    {
+      "source": "/content/get-started/brand-kit",
+      "destination": "/brand-kit"
+    },
+    {
+      "source": "/get-started/overview",
+      "destination": "/"
+    },
+    {
+      "source": "/get-started/quickstart",
+      "destination": "/quickstart"
+    },
+    {
+      "source": "/get-started/choose-an-integration-path",
+      "destination": "/choose-an-integration-path"
+    },
+    {
+      "source": "/get-started/integration",
+      "destination": "/integration"
+    },
+    {
+      "source": "/get-started/brand-kit",
+      "destination": "/brand-kit"
+    },
+    {
+      "source": "/http-api",
+      "destination": "/api/overview"
+    },
+    {
+      "source": "/http-api/overview",
+      "destination": "/api/overview"
+    },
+    {
+      "source": "/http-api/authentication",
+      "destination": "/api/authentication"
+    },
+    {
+      "source": "/http-api/errors",
+      "destination": "/api/errors"
+    },
+    {
+      "source": "/content/platform/overview",
+      "destination": "/platform/overview"
+    },
+    {
+      "source": "/content/platform/how-verification-works",
+      "destination": "/platform/how-verification-works"
+    },
+    {
+      "source": "/content/platform/verification-lifecycle",
+      "destination": "/platform/verification-lifecycle"
+    },
+    {
+      "source": "/content/platform/receipts-and-results",
+      "destination": "/platform/receipts-and-results"
+    },
+    {
+      "source": "/content/platform/verifiers",
+      "destination": "/platform/verifiers"
+    },
+    {
+      "source": "/content/platform/environments",
+      "destination": "/platform/environments"
+    },
+    {
+      "source": "/content/platform/rate-limits-and-retries",
+      "destination": "/platform/rate-limits-and-retries"
+    },
+    {
+      "source": "/content/platform/security-and-trust",
+      "destination": "/platform/security-and-trust"
+    },
+    {
+      "source": "/content/sdks/overview",
+      "destination": "/sdks/overview"
+    },
+    {
+      "source": "/content/sdks/javascript",
+      "destination": "/sdks/javascript"
+    },
+    {
+      "source": "/content/sdks/authentication",
+      "destination": "/sdks/authentication"
+    },
+    {
+      "source": "/content/sdks/verifications",
+      "destination": "/sdks/verifications"
+    },
+    {
+      "source": "/content/sdks/error-handling",
+      "destination": "/sdks/error-handling"
+    },
+    {
+      "source": "/content/sdks/security",
+      "destination": "/sdks/security"
+    },
+    {
+      "source": "/content/widgets/overview",
+      "destination": "/widgets/overview"
+    },
+    {
+      "source": "/content/widgets/verifygate",
+      "destination": "/widgets/verifygate"
+    },
+    {
+      "source": "/content/agents/overview",
+      "destination": "/agents/overview"
+    },
+    {
+      "source": "/content/agents/agent-identity",
+      "destination": "/agents/agent-identity"
+    },
+    {
+      "source": "/content/agents/agent-delegation",
+      "destination": "/agents/agent-delegation"
+    },
+    {
+      "source": "/content/agents/agent-verification-flow",
+      "destination": "/agents/agent-verification-flow"
+    },
+    {
+      "source": "/content/cookbook/mcp",
+      "destination": "/cookbook/mcp"
+    },
+    {
+      "source": "/content/cookbook/overview",
+      "destination": "/cookbook/overview"
+    },
+    {
+      "source": "/content/cookbook/auth-hosted-verify",
+      "destination": "/cookbook/auth-hosted-verify"
+    },
+    {
+      "source": "/content/cookbook/domain-verification",
+      "destination": "/cookbook/domain-verification"
+    },
+    {
+      "source": "/content/cookbook/nft-gating",
+      "destination": "/cookbook/nft-gating"
+    },
+    {
+      "source": "/content/cookbook/sybil-resistance",
+      "destination": "/cookbook/sybil-resistance"
+    },
+    {
+      "source": "/content/cookbook/verifiable-agents",
+      "destination": "/cookbook/verifiable-agents"
+    },
+    {
+      "source": "/content/cookbook/hub-integrator",
+      "destination": "/cookbook/hub-integrator"
+    },
+    {
+      "source": "/content/api/overview",
+      "destination": "/api/overview"
+    },
+    {
+      "source": "/content/api/authentication",
+      "destination": "/api/authentication"
+    },
+    {
+      "source": "/content/api/errors",
+      "destination": "/api/errors"
+    },
+    {
+      "source": "/content/ecosystems/overview",
+      "destination": "/ecosystems/overview"
+    },
+    {
+      "source": "/content/ecosystems/verifiers",
+      "destination": "/ecosystems/verifiers"
+    }
+  ],
   "contextual": {
     "options": [
       "copy",

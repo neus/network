@@ -42,11 +42,11 @@ For lowest friction: use hosted verify + auth code exchange.
 
 1. Redirect users to `https://neus.network/verify?intent=login&returnUrl=...`
 2. After sign-in, the page returns an auth `code`
-3. If NEUS has enabled partner code exchange for your deployment, your server calls `POST https://api.neus.network/api/v1/auth/code/exchange` with the code and your NEUS-issued partner credential
+3. If NEUS has enabled partner code exchange for your deployment, your server calls `POST https://api.neus.network/api/v1/auth/code/exchange` with the code and the server credential issued during onboarding
 4. Subsequent API calls use cookie/Bearer without per-request signing
 
 <Note>
-Use this only for the hosted session-first path. For the full routing and popup contract, see **[Auth + Hosted Verify](../cookbook/auth-hosted-verify)**.
+Use this only for the hosted session-first path. For the full routing and popup contract, see **[Auth + Hosted Verify](./cookbook/auth-hosted-verify)**.
 </Note>
 
 ## Hosted Checkout Requirements
@@ -111,13 +111,13 @@ NeusWidget.unmount(el);
 ## Related References
 
 <CardGroup cols={3}>
-  <Card title="Hub Integrator Setup" icon="building" href="../cookbook/hub-integrator">
+  <Card title="Hub Integrator Setup" icon="building" href="./cookbook/hub-integrator">
     Domain and org setup.
   </Card>
-  <Card title="Auth + Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+  <Card title="Auth + Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
     Hosted login flows.
   </Card>
-  <Card title="API Overview" icon="terminal" href="../api/overview">
+  <Card title="API Overview" icon="terminal" href="./api/overview">
     HTTP endpoints.
   </Card>
 </CardGroup>

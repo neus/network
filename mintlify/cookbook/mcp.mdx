@@ -35,25 +35,15 @@ Use the MCP server when your agent or application needs to:
 3. `neus_verify_or_guide`
 4. `neus_proofs_get`
 
-## Public vs Internal Boundary
+## Public Contract Boundary
 
-The public MCP contract is intentionally narrower than the internal NEUS API and ops surface.
+The public MCP contract is intentionally narrow:
 
-**Public and safe to document**
-
-- tool names, inputs, and public response patterns
-- the hosted MCP endpoint and discovery document
+- hosted MCP discovery and transport endpoints
+- tool names, public inputs, and stable response patterns
 - hosted verify handoff through `https://neus.network/verify`
 - optional session-backed use with `NEUS_AUTH_TOKEN`
-- x402 and sponsor-grant behavior at a high level
-
-**Internal and intentionally not part of the public contract**
-
-- internal HMAC and hub-only access paths
-- internal payer attribution fields and billing ledgers
-- raw signatures, signer secrets, internal auth headers, and replay internals
-- private proof payloads, claims blobs, and qHash enumeration through gate checks
-- internal ops logging, admin endpoints, and deployment-only controls
+- eligibility-safe proof checks rather than raw private payload access
 
 ## Supported Transports
 
@@ -72,16 +62,16 @@ This is the default go-live path for integrators.
 }
 ```
 
-### Local Stdio
+### Self-Hosted Stdio
 
-Use stdio when you want the MCP process to run locally or inside your own infra.
+Use stdio when you want the MCP process to run locally or inside your own infrastructure.
 
 ```json
 {
   "mcpServers": {
     "neus": {
       "command": "node",
-      "args": ["/absolute/path/to/neus-nut/mcp/server.js"],
+      "args": ["/path/to/neus-mcp/server.js"],
       "env": {
         "NEUS_API_URL": "https://api.neus.network"
       }
@@ -107,14 +97,14 @@ Hosted:
 }
 ```
 
-Local repo checkout:
+Self-hosted stdio:
 
 ```json
 {
   "mcpServers": {
     "neus": {
       "command": "node",
-      "args": ["D:/Algollo/Neus/Repos/neus-nut/mcp/server.js"],
+      "args": ["/path/to/neus-mcp/server.js"],
       "env": {
         "NEUS_API_URL": "https://api.neus.network"
       }
@@ -130,7 +120,7 @@ Local repo checkout:
   "mcpServers": {
     "neus": {
       "command": "node",
-      "args": ["/absolute/path/to/neus-nut/mcp/server.js"],
+      "args": ["/path/to/neus-mcp/server.js"],
       "env": {
         "NEUS_API_URL": "https://api.neus.network"
       }
@@ -141,7 +131,7 @@ Local repo checkout:
 
 ## Runtime Configuration
 
-All MCP runtime env vars are read directly from `neus-nut/mcp/server.js`.
+Self-hosted deployments support the following runtime environment variables.
 
 | Variable | Default | Public usage |
 | --- | --- | --- |
@@ -151,7 +141,7 @@ All MCP runtime env vars are read directly from `neus-nut/mcp/server.js`.
 | `MCP_TRANSPORT` | `stdio` | `stdio` or `http` |
 | `MCP_PUBLIC_URL` | `https://mcp.neus.network` | Discovery and public URL base in HTTP mode |
 | `PORT` | `3000` | HTTP listen port for self-hosted HTTP mode |
-| `HOST` | `127.0.0.1` | HTTP bind host |
+| `HOST` | `0.0.0.0` | HTTP bind host |
 | `MCP_API_RETRIES` | `2` | Retry count for retryable upstream failures |
 | `MCP_API_RETRY_BASE_MS` | `250` | Exponential backoff base |
 | `MCP_SHUTDOWN_TIMEOUT_MS` | `10000` | Graceful shutdown timeout |
@@ -161,7 +151,7 @@ All MCP runtime env vars are read directly from `neus-nut/mcp/server.js`.
 | `MCP_ALLOWED_HOSTS` | unset | Optional allowed host allowlist for HTTP mode |
 
 <Warning>
-Do not run a publicly reachable MCP server with a private global backend key or other privileged credentials. The NEUS hosted MCP is open at the transport layer by design; signer checks, payment policy, and rate limits are enforced by the NEUS API.
+Do not run a publicly reachable MCP server with privileged backend credentials. The hosted NEUS MCP service is transport-open by design; signer checks, payment policy, and rate limits are enforced by the NEUS API.
 </Warning>
 
 ## Tool Reference
