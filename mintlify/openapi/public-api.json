@@ -121,11 +121,11 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Optional. For EVM (0x address), verification requests are normalized to the protocol hub chain. For non-EVM, include chain (CAIP-2) instead."
+            "description": "Optional. For EVM (0x address), verification requests use the protocol chain. For non-EVM, include chain (CAIP-2) instead."
           },
           "chain": {
             "type": "string",
-            "description": "Optional. For EVM (0x address), verification requests are normalized to protocol hub chain context. For non-EVM, include chain (e.g. solana:mainnet)."
+            "description": "Optional. For EVM (0x address), verification requests use the protocol chain context. For non-EVM, include chain (e.g. solana:mainnet)."
           },
           "signatureMethod": {
             "type": "string"
@@ -228,11 +228,11 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Optional. For EVM (0x address), verification requests are normalized to the protocol hub chain. For non-EVM, include chain (CAIP-2) instead."
+            "description": "Optional. For EVM (0x address), verification requests use the protocol chain. For non-EVM, include chain (CAIP-2) instead."
           },
           "chain": {
             "type": "string",
-            "description": "Optional. For EVM (0x address), verification requests are normalized to protocol hub chain context. For non-EVM, include chain (e.g. solana:mainnet)."
+            "description": "Optional. For EVM (0x address), verification requests use the protocol chain context. For non-EVM, include chain (e.g. solana:mainnet)."
           },
           "signatureMethod": {
             "type": "string"
@@ -1353,7 +1353,7 @@
       "get": {
         "operationId": "getVerifierCatalog",
         "summary": "Get supported verifiers and configuration",
-        "description": "Returns a list of all supported verifier IDs, full verifier metadata (schemas + flow/access semantics), and the backend chain configuration (hub chain, asset allowlists).",
+        "description": "Returns a list of all supported verifier IDs, full verifier metadata (schemas + flow/access semantics), and chain configuration.",
         "tags": [
           "Verification"
         ],

@@ -1,9 +1,7 @@
 ---
-title: Hub Integrator Setup
-description: Connect your domain or organization to NEUS for sponsored verifications.
+title: Partner Setup
+description: Domain verification, org OAuth, app attribution, and sponsor grants for production integrations.
 ---
-
-Connect your domain or organization to NEUS for sponsored verifications.
 
 This guide covers connecting your domain or organization to NEUS, issuing sponsored verifications, and configuring hosted checkout.
 
@@ -11,7 +9,7 @@ This guide covers connecting your domain or organization to NEUS, issuing sponso
 
 - A NEUS account with a verified wallet
 - Your integration domain or organization OAuth credentials
-- If using hosted auth code exchange, partner access enabled for your deployment
+- If using hosted auth code exchange, partner access enabled during onboarding
 
 ## 1. Domain Verification
 
@@ -48,7 +46,7 @@ GET /api/v1/proofs/check?verifierIds=ownership-dns-txt&address=0x...
 
 For organization-level verifications (`ownership-org-oauth`):
 
-1. Register the provider credentials for your NEUS deployment
+1. Register the provider credentials with NEUS during partner onboarding
 2. Add `https://api.neus.network/api/v1/auth/oauth/callback/<provider>` to allowed redirect URIs
 3. Validate provider credentials and redirect URIs before going live
 
@@ -83,7 +81,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>
 ```
 
-### Session-First (Lowest Friction)
+### Session-First (Redirect + Code Exchange)
 
 Redirect users to `https://neus.network/verify?intent=login&returnUrl=<your-url>`:
 

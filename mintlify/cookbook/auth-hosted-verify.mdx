@@ -3,8 +3,6 @@ title: Auth + Hosted Verify
 description: Hosted verify and session management for NEUS integrations.
 ---
 
-Hosted verify and session management for NEUS integrations.
-
 NEUS supports a signature-based protocol for proofs, and an optional session layer for first-party browser UX.
 
 ## Two Layers
@@ -21,19 +19,18 @@ When a flow requires human interaction (signature, OAuth linking, proof creation
 - Users can **sign in with a passkey** (no wallet extension required) **or connect a wallet**
 - After completion, the hosted UI returns the user to your app
 
-### Standardized Hosted Login URL
+### Hosted URL
 
-```text
-/verify?intent=login
-```
-
-Query params:
+**Base:** `https://neus.network/verify`
 
 | Param | Use |
 |-------|-----|
-| `returnTo=/profile` | First-party NEUS app routing only (same-origin, relative) |
-| `returnUrl=https://partner.example/callback` | Integrator-controlled redirect target |
-| `mode=popup&origin=https://partner.example` | Popup flow with `postMessage` back to opener |
+| `intent=login` | Session-first login flow |
+| `verifiers=<ids>` | Comma-separated verifier IDs (e.g. `verifiers=wallet-risk`) |
+| `preset=<id>` | Preset bundle (e.g. `preset=agent-pack`) |
+| `gateId=<id>` | Gate requirements (verifiers derived from gate) |
+| `returnUrl=<url>` | Redirect target after completion |
+| `mode=popup&origin=<url>` | Popup flow; `postMessage` to opener |
 
 <Warning>
 Do not invent a second hosted login route. `intent=login` on `/verify` is the correct implementation.
@@ -45,7 +42,7 @@ If you use the session layer, treat this endpoint as the **single source of trut
 
 - Whether the user is authenticated
 - The user's identity pack (subjectId/did/address)
-- Onboarding readiness (if provided by the deployment)
+- Onboarding readiness (if available for your integration)
 
 ### Routing Contract
 
@@ -75,15 +72,18 @@ Hosted verify must be same-origin with its own passkey RP ID/origin configuratio
 
 ## Popup Completion Signaling
 
-For popup login flows, the hosted window posts a completion message back to the opener after the session is confirmed.
+For popup flows, the hosted window posts a completion message to the opener.
 
-- **Message type:** `neus_login_complete`
-- **Delivery:** `window.opener.postMessage(...)`
-- **Origin:** restricted to the supplied `origin` when it is an absolute HTTP(S) origin
+| Message type | When |
+|--------------|------|
+| `neus_login_complete` | After session/login is confirmed |
+| `neus_checkout_done` | After verification completes (includes `qHash`, `proofId`, `verifierIds`, optional `gateId`) |
+
+**Delivery:** `window.opener.postMessage(...)`. Origin is restricted to the supplied `origin` when it is an absolute HTTP(S) URL.
 
 ## Outage Contract
 
-The browser-facing NEUS BFF routes normalize upstream outages:
+The hosted verify layer normalizes upstream outages:
 
 - Interactive auth routes return `503` for upstream `5xx` or transport timeouts
 - They include `Retry-After: 10`

@@ -1,0 +1,55 @@
+---
+title: CAIP-380 Portable Proof
+description: Chain-agnostic wallet-signed proof envelope used by NEUS verification.
+---
+
+NEUS verification uses the [CAIP-380](https://github.com/ChainAgnostic/CAIPs/pull/380) Portable Proof specification (draft). This page summarizes the integrator-relevant parts.
+
+## What CAIP-380 Defines
+
+A standardized, chain-agnostic, wallet-signed envelope that applications validate once off-chain and reference anywhere via a deterministic `qHash` anchor.
+
+- **Identities:** CAIP-10 (`did:pkh:<chainRef>:<address>`)
+- **Chains:** CAIP-2 (e.g. `eip155:1`, `solana:mainnet`)
+- **Anchor:** `qHash` = SHAKE-256 over the canonical Standard Subset
+
+## Envelope Structure
+
+The Standard Subset includes:
+
+- `did` — CAIP-10 account identifier
+- `verifierIds` — Array of verifier IDs
+- `data` — Application payload (deterministic JSON)
+- `signedTimestamp` — Unix epoch milliseconds
+- `chainId` (EVM) or `chain` (CAIP-2 for non-EVM)
+
+## Six-Line Signing Format
+
+For manual or server-side signing, the message format is:
+
+```text
+NEUS Verification Request
+Wallet: <address>
+Chain: <chainId or CAIP-2 chain>
+Verifiers: <comma-separated-ids>
+Data: <standardized-json>
+Timestamp: <unix-ms>
+```
+
+**Production path:** Call `POST /api/v1/verification/standardize` and sign the returned `signerString`. Do not hand-author the message.
+
+## EVM vs Non-EVM
+
+| Profile | Chain field | Signature |
+|---------|-------------|-----------|
+| EVM | `chainId` (integer) | EIP-191, EIP-1271, EIP-6492 |
+| Solana | `chain` (e.g. `solana:mainnet`) | Ed25519 |
+| Other | `chain` (CAIP-2) | Profile-specific |
+
+## Freshness
+
+Verifiers reject if `signedTimestamp` is older than 5 minutes or more than 60 seconds in the future.
+
+## Full Specification
+
+For the complete normative spec, see [CAIP-380 on ChainAgnostic](https://github.com/ChainAgnostic/CAIPs/pull/380).

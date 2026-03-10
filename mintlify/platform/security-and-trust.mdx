@@ -3,8 +3,6 @@ title: Security and Trust
 description: Public versus private boundaries, least-privilege expectations, and proof handling guidance.
 ---
 
-Public versus private boundaries, least-privilege expectations, and proof handling guidance.
-
 ## Trust Boundaries
 
 - Verification logic lives on the server, not in the client.
@@ -35,6 +33,6 @@ Use private proofs by default unless you explicitly want public discovery and re
   <Item>Use server-side gate checks for policy enforcement.</Item>
   <Item>Use freshness windows for point-in-time verifiers.</Item>
   <Item>Route interactive verification through `/verify`.</Item>
-  <Item>Consume verifier metadata from the backend catalog.</Item>
+  <Item>Consume verifier metadata from the API catalog.</Item>
   <Item>Default to private proofs unless public discovery is intentional.</Item>
 </Checklist>

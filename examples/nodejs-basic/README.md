@@ -57,4 +57,4 @@ const response = await fetch('https://api.neus.network/api/v1/verification', {
 ## Next Steps
 
 - [SDK](../../sdk/README.md) — JavaScript SDK (recommended)
-- [API Reference](../../docs/api/README.md) — Complete API docs
+- [API Reference](https://docs.neus.network/api/overview) — Complete API docs

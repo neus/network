@@ -3,8 +3,6 @@ title: SDK Error Handling
 description: Retry and recovery guidance for proof polling, private proof reads, hosted flows, and verifier failures.
 ---
 
-Retry and recovery guidance for proof polling, private proof reads, hosted flows, and verifier failures.
-
 ## Common Failure Classes
 
 | Failure class | Where it appears | Recovery |
@@ -13,7 +11,7 @@ Retry and recovery guidance for proof polling, private proof reads, hosted flows
 | Hosted interactive handoff | Interactive verifier in a custom flow | Redirect to hosted verify or use `VerifyGate` |
 | Async processing | Proof not finished yet | Poll status with backoff |
 | Private proof auth required | Owner-only reads | Re-authenticate the owner and retry |
-| Upstream outage | Auth/session BFF routes | Respect `Retry-After` and surface a retry path |
+| Upstream outage | Auth/session routes | Respect `Retry-After` and surface a retry path |
 
 ## Polling Example
 

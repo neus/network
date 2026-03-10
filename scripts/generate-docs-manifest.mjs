@@ -12,13 +12,17 @@ const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '..');
 
 const includeRoots = [
+  'package.json',
   'README.md',
   'SECURITY.md',
   'CONTRIBUTING.md',
   '.markdownlint-cli2.jsonc',
   '.github/workflows/docs.yml',
+  '.github/PULL_REQUEST_TEMPLATE.md',
   'sdk',
   'examples',
+  'spec/verifiers',
+  'scripts',
   'mintlify'
 ];
 
@@ -43,12 +47,14 @@ function includeFile(relativePath) {
   return (
     relativePath.endsWith('.md') ||
     relativePath.endsWith('.mdx') ||
+    relativePath === 'package.json' ||
     relativePath === 'README.md' ||
     relativePath === 'SECURITY.md' ||
     relativePath === 'CONTRIBUTING.md' ||
     relativePath === '.markdownlint-cli2.jsonc' ||
     relativePath === '.github/workflows/docs.yml' ||
-    relativePath === 'mintlify/mint.json'
+    relativePath === '.github/PULL_REQUEST_TEMPLATE.md' ||
+    relativePath === 'mintlify/docs.json'
   );
 }
 

@@ -1,13 +1,11 @@
 ---
 title: Choose an Integration Path
-description: Pick the right NEUS surface for your product, trust model, and implementation speed.
+description: Pick the right NEUS surface for your product and implementation needs.
 ---
 
-Pick the right NEUS surface for your product, trust model, and implementation speed.
+NEUS supports four integration surfaces. Start with the one that matches your needs, then add others as required.
 
-NEUS supports four primary integration surfaces. Start with the surface that matches your product constraints, then expand into additional surfaces as your trust model evolves.
-
-## Pick by Job to Be Done
+## Pick by Use Case
 
 <CardGroup cols={2}>
   <Card title="Ship a browser or app flow" icon="code" href="./sdks/overview">
@@ -17,27 +15,27 @@ NEUS supports four primary integration surfaces. Start with the surface that mat
     Use Widgets when you want the fastest hosted or embedded path with React components and script-tag badge rendering.
   </Card>
   <Card title="Integrate AI or agent tooling" icon="cpu" href="./cookbook/mcp">
-    Use the MCP server when an AI client needs verifier lookup, gate checks, or a hosted verify handoff without reimplementing backend logic.
+    Use the MCP server when an AI client needs verifier lookup, gate checks, or hosted verify handoff.
   </Card>
-  <Card title="Go deeper on backend policy" icon="terminal" href="./api/overview">
-    Use the HTTP API when your backend needs gate checks, verifier catalog reads, auth code exchange, or explicit status polling.
+  <Card title="Server-side policy enforcement" icon="terminal" href="./api/overview">
+    Use the HTTP API for gate checks, verifier catalog reads, auth code exchange, or status polling from your server.
   </Card>
 </CardGroup>
 
-## Recommended Journey
+## Integration Steps
 
 <Steps>
-  <Step title="Start with reader intent">
-    Decide whether you need onboarding, access gating, proof issuance, hosted checkout, or agent-facing trust signals.
+  <Step title="Define your requirements">
+    Identify what you need: onboarding, access gating, proof issuance, hosted checkout, or agent verification.
   </Step>
-  <Step title="Choose the thinnest viable surface">
-    Prefer Widgets for the fastest launch, the SDK for custom UX, the API for backend policy, and MCP for AI-native integrations.
+  <Step title="Choose the minimal surface that fits">
+    Use Widgets for fastest launch, SDK for custom UX, API for server-side checks, MCP for AI/agent integrations.
   </Step>
   <Step title="Keep `/verify` as the canonical hosted path">
     Interactive flows should converge on the hosted verify surface instead of inventing parallel auth or checkout routes.
   </Step>
-  <Step title="Treat proof receipts as reusable trust artifacts">
-    Status, access, and downstream policy should key off the same proof receipt rather than duplicating verification logic in every surface.
+  <Step title="Use proof receipts as the single source of truth">
+    Status, access, and policy should key off the same proof receipt instead of duplicating verification logic.
   </Step>
 </Steps>
 
@@ -46,10 +44,10 @@ NEUS supports four primary integration surfaces. Start with the surface that mat
 | If you need... | Start here | Then add |
 |---|---|---|
 | Fastest production launch | [Widgets](./widgets/overview) | [SDK](./sdks/overview) for custom UX |
-| Custom browser UX | [SDK](./sdks/overview) | [API](./api/overview) for backend checks |
-| Backend-only eligibility decisions | [API](./api/overview) | [Cookbook](./cookbook/overview) for rollout patterns |
+| Custom browser UX | [SDK](./sdks/overview) | [API](./api/overview) for server checks |
+| Server-only eligibility checks | [API](./api/overview) | [Cookbook](./cookbook/overview) for rollout patterns |
 | AI assistant or agent workflows | [MCP](./cookbook/mcp) | [Agents](./agents/overview) for proof models |
-| Org/app onboarding and sponsored flows | [Hub Integrator Setup](./cookbook/hub-integrator) | [Auth + Hosted Verify](./cookbook/auth-hosted-verify) |
+| Org/app onboarding and sponsored flows | [Partner Setup](./cookbook/hub-integrator) | [Auth + Hosted Verify](./cookbook/auth-hosted-verify) |
 
 ## Next Pages
 

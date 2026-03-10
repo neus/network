@@ -3,8 +3,6 @@ title: Integration
 description: Recommended end-to-end path for a production NEUS integration.
 ---
 
-Recommended end-to-end path for a production NEUS integration.
-
 ## Standard Flow
 
 <Steps>
@@ -38,11 +36,11 @@ Recommended end-to-end path for a production NEUS integration.
 
 ## Session-First Integration
 
-For lowest friction: use hosted verify + auth code exchange.
+For the simplest flow: use hosted verify + auth code exchange.
 
 1. Redirect users to `https://neus.network/verify?intent=login&returnUrl=...`
 2. After sign-in, the page returns an auth `code`
-3. If NEUS has enabled partner code exchange for your deployment, your server calls `POST https://api.neus.network/api/v1/auth/code/exchange` with the code and the server credential issued during onboarding
+3. When partner code exchange is enabled for your integration, your server calls `POST https://api.neus.network/api/v1/auth/code/exchange` with the code and the server credential issued during onboarding
 4. Subsequent API calls use cookie/Bearer without per-request signing
 
 <Note>
@@ -54,11 +52,11 @@ Use this only for the hosted session-first path. For the full routing and popup 
 Interactive verifiers (`ownership-social`, `ownership-org-oauth`, `proof-of-human`) require hosted checkout.
 
 - **Default checkout URL:** `https://neus.network/verify` (or use SDK `getHostedCheckoutUrl()`)
-- **Sponsored flows:** include `X-Neus-App` (public appId) and `X-Sponsor-Grant` when your backend is covering verification costs.
+- **Sponsored flows:** include `X-Neus-App` (public appId) and `X-Sponsor-Grant` when your server is covering verification costs.
 
 ## Policy-Based Gate Checks
 
-For backend policy enforcement, use `gateCheck` with explicit recency:
+For server-side policy enforcement, use `gateCheck` with explicit recency:
 
 | Parameter | Use For |
 |-----------|---------|
@@ -108,10 +106,19 @@ NeusWidget.mountAll(root?);
 NeusWidget.unmount(el);
 ```
 
+## Go-Live Checklist
+
+<Checklist>
+  <Item>Use `verifiers=` or `preset=` in hosted URLs; avoid hardcoding verifier metadata.</Item>
+  <Item>For popup flows, pass `origin=` and listen for `neus_checkout_done`.</Item>
+  <Item>Choose billing model: self-pay, sponsor-grant, or x402 pay-per-use.</Item>
+  <Item>Run a golden demo: create proof → obtain `qHash` → open `/proof/[qHash]`.</Item>
+</Checklist>
+
 ## Related References
 
 <CardGroup cols={3}>
-  <Card title="Hub Integrator Setup" icon="building" href="./cookbook/hub-integrator">
+  <Card title="Partner Setup" icon="building" href="./cookbook/hub-integrator">
     Domain and org setup.
   </Card>
   <Card title="Auth + Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">

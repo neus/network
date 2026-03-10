@@ -94,6 +94,7 @@
             "group": "Operations",
             "pages": [
               "platform/verifiers",
+              "platform/billing",
               "platform/environments",
               "platform/rate-limits-and-retries",
               "platform/security-and-trust"
@@ -169,8 +170,7 @@
           {
             "group": "Trust and Risk",
             "pages": [
-              "cookbook/sybil-resistance",
-              "platform/verifiers"
+              "cookbook/sybil-resistance"
             ]
           },
           {
@@ -208,6 +208,28 @@
         ]
       },
       {
+        "tab": "Learn",
+        "groups": [
+          {
+            "group": "Legal",
+            "pages": [
+              "learn/legal/index",
+              "learn/legal/terms-of-use",
+              "learn/legal/privacy-policy",
+              "learn/legal/security-disclosure",
+              "learn/legal/dmca",
+              "learn/legal/nft-sale-terms"
+            ]
+          },
+          {
+            "group": "Standards",
+            "pages": [
+              "learn/standards/caip-380"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "API Reference",
         "openapi": "openapi/public-api.json"
       }
@@ -215,7 +237,31 @@
   },
   "redirects": [
     {
+      "source": "/privacy",
+      "destination": "/learn/legal/privacy-policy"
+    },
+    {
+      "source": "/terms",
+      "destination": "/learn/legal/terms-of-use"
+    },
+    {
+      "source": "/legal",
+      "destination": "/learn/legal"
+    },
+    {
+      "source": "/mcp",
+      "destination": "/cookbook/mcp"
+    },
+    {
+      "source": "/learn/standards-and-eips",
+      "destination": "/ecosystems/verifiers"
+    },
+    {
       "source": "/verifiers",
+      "destination": "/ecosystems/verifiers"
+    },
+    {
+      "source": "/verifiers/:path*",
       "destination": "/ecosystems/verifiers"
     },
     {

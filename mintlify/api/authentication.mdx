@@ -3,8 +3,6 @@ title: Authentication
 description: Signature-based authentication for NEUS API operations.
 ---
 
-Signature-based authentication for NEUS API operations.
-
 NEUS uses **signature-based authentication** for write operations. Most read endpoints are public.
 
 ## Supported Wallets
@@ -36,6 +34,21 @@ For manual or server-side signing, do not hand-build the message if you can avoi
 <Tip>
 This is the production-safe path because it avoids drift in chain normalization and deterministic JSON handling.
 </Tip>
+
+### Signing Format
+
+The server returns a deterministic six-line string from `POST /api/v1/verification/standardize`. Sign that exact string. Format:
+
+```text
+NEUS Verification Request
+Wallet: <address>
+Chain: <chainId or CAIP-2 chain>
+Verifiers: <comma-separated-ids>
+Data: <standardized-json>
+Timestamp: <unix-ms>
+```
+
+Do not hand-author this message. Always use the standardize endpoint.
 
 ## Low-Level Client Rules
 

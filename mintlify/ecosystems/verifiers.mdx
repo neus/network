@@ -3,8 +3,6 @@ title: Verifier Catalog
 description: Complete catalog of NEUS verifiers, their schemas, and capabilities.
 ---
 
-Complete catalog of NEUS verifiers, their schemas, and capabilities.
-
 The verifier catalog is the single source of truth for available verification types. Access it via the public API.
 
 ## Live Catalog
@@ -24,6 +22,15 @@ This endpoint returns the authoritative list of verifiers, their input schemas, 
 | **Identity** | `proof-of-human`, `wallet-link`, `ownership-pseudonym` | Identity verification |
 | **Agents** | `agent-identity`, `agent-delegation` | AI and automation systems |
 | **Risk** | `wallet-risk`, `ai-content-moderation` | Security and safety |
+
+## Recommended Bundles
+
+| Bundle | Verifiers | Use Case |
+|--------|-----------|----------|
+| **AI trust receipt** | `ownership-basic` + `ai-content-moderation` + `proof-of-human` | AI-generated content with human attestation |
+| **Verifiable agents** | `agent-identity` + `agent-delegation` + `wallet-risk` | AI agents with delegated authority |
+| **Community gating** | `token-holding` or `nft-ownership` + `proof-of-human` | Token/NFT holders with sybil resistance |
+| **Org access** | `ownership-org-oauth` + `ownership-dns-txt` + `contract-ownership` | Organization verification and domain control |
 
 ## Core Verifiers
 
@@ -73,7 +80,7 @@ const proof = await client.verify({
 
 ### ownership-social
 
-Verify social account ownership via OAuth. Requires hosted checkout.
+Verify social account ownership via OAuth. Requires hosted checkout. For programmatic flows, use the session token returned from the hosted flow at `/verify`—not a raw provider token.
 
 ```jsx
 <VerifyGate

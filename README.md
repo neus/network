@@ -75,14 +75,18 @@ For Next.js App Router, render widgets inside a **Client Component** (widget mod
 | [Quickstart](https://docs.neus.network/quickstart) | First proof, gating, and hosted verify |
 | [API Guides](https://docs.neus.network/api/overview) | Public HTTP contract, signing, and errors |
 | [API Reference](https://docs.neus.network) | Generated OpenAPI reference in the docs navbar |
-| [Verifiers](https://docs.neus.network/verifiers) | Verifier catalog + schemas |
+| [Verifiers](https://docs.neus.network/ecosystems/verifiers) | Verifier catalog + schemas |
 | [Contracts](./contracts/VERIFICATION.md) | Verified contracts and explorers |
 | [Examples](./examples/) | Integration examples |
 
 **Source of truth:**
 
-- Public docs source content lives in [`mintlify/`](./mintlify/), [`sdk/`](./sdk/README.md), and [`examples/`](./examples/README.md).
+- Public docs prose lives in [`mintlify/`](./mintlify/).
+- Machine-readable verifier assets live in [`spec/verifiers/`](./spec/verifiers/README.md).
+- SDK and examples should link to the published docs site or canonical repo assets, never a legacy `docs/` prose tree.
 - [`mintlify/openapi/public-api.json`](./mintlify/openapi/public-api.json) is the published OpenAPI contract used by the docs API Reference tab.
+- Preview docs locally with `npm run docs:dev`.
+- Validate docs locally with `npm run docs:validate`.
 - Run the [Docs workflow](./.github/workflows/docs.yml) before publishing docs changes.
 - For a release-grade docs receipt, generate a deterministic manifest with `node scripts/generate-docs-manifest.mjs --out docs-v1-manifest.json` and use the aggregate hash in your NEUS proof flow.
 

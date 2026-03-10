@@ -86,5 +86,5 @@ Use the `/standardize` request above and verify that the submitted body matches 
 ## Next Steps
 
 - [Node.js Example](../nodejs-basic/) - Programmatic signing
-- [API Reference](../../docs/api/README.md) - Complete API docs
+- [API Reference](https://docs.neus.network/api/overview) - Complete API docs
 - [SDK](../../sdk/README.md) - JavaScript SDK

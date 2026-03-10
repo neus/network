@@ -3,27 +3,33 @@ name: Docs
 on:
   pull_request:
     paths:
+      - 'package.json'
       - 'README.md'
       - 'SECURITY.md'
       - 'CONTRIBUTING.md'
       - '.markdownlint-cli2.jsonc'
       - '.github/workflows/docs.yml'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
       - 'sdk/**/*.md'
       - 'examples/**/*.md'
-      - 'scripts/generate-docs-manifest.mjs'
+      - 'scripts/**/*.mjs'
+      - 'spec/verifiers/**/*'
       - 'mintlify/**/*'
   push:
     branches:
       - main
     paths:
+      - 'package.json'
       - 'README.md'
       - 'SECURITY.md'
       - 'CONTRIBUTING.md'
       - '.markdownlint-cli2.jsonc'
       - '.github/workflows/docs.yml'
+      - '.github/PULL_REQUEST_TEMPLATE.md'
       - 'sdk/**/*.md'
       - 'examples/**/*.md'
-      - 'scripts/generate-docs-manifest.mjs'
+      - 'scripts/**/*.mjs'
+      - 'spec/verifiers/**/*'
       - 'mintlify/**/*'
   workflow_dispatch:
 
@@ -50,8 +56,5 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Markdown lint
-        run: npx --yes markdownlint-cli2@latest --config .markdownlint-cli2.jsonc
-
-      - name: OpenAPI lint (public surface)
-        run: npx --yes @redocly/cli@2.14.1 lint mintlify/openapi/public-api.json
+      - name: Docs validation
+        run: npm run docs:validate

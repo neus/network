@@ -32,6 +32,9 @@ temp/
 *.tmp
 **/.next/
 sdk/cjs/
+.mintlify-home*/
+mintlify/.mintlify-home*/
+.tmp-docs-manifest.json
 
 # Tooling caches & configs (keep out of repo)
 .eslintcache

@@ -3,13 +3,11 @@ title: Agent Verification Flow
 description: How agent identity, delegation, and MCP fit together for AI-facing NEUS integrations.
 ---
 
-How agent identity, delegation, and MCP fit together for AI-facing NEUS integrations.
-
 NEUS agent integrations usually combine three layers:
 
 1. Agent identity proof
 2. Optional controller-to-agent delegation proof
-3. An execution surface such as MCP that can read trust signals or trigger hosted verification
+3. An execution surface such as MCP that can read verification results or trigger hosted verification
 
 ## Recommended Sequence
 
@@ -20,7 +18,7 @@ NEUS agent integrations usually combine three layers:
   <Step title="Create an agent delegation proof when a controller is authorizing the agent">
     Use delegation to define scope, permissions, and spend or disclosure constraints.
   </Step>
-  <Step title="Use MCP or API surfaces to consume the resulting trust signals">
+  <Step title="Use MCP or API surfaces to consume the verification results">
     Agents can inspect verifier catalog data, run gate checks, and hand users to hosted verify for interactive completion.
   </Step>
 </Steps>

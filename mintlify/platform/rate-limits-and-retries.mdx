@@ -3,8 +3,6 @@ title: Rate Limits and Retries
 description: Production retry guidance for gate checks, polling, hosted flows, and outage handling.
 ---
 
-Production retry guidance for gate checks, polling, hosted flows, and outage handling.
-
 ## General Guidance
 
 - Read endpoints can be retried.
@@ -29,7 +27,7 @@ The JavaScript SDK already applies production-friendly behavior in common flows:
 
 ## Outage Behavior
 
-Interactive auth BFF routes normalize upstream issues into `503` responses and may include:
+Interactive auth routes normalize upstream issues into `503` responses and may include:
 
 - `Retry-After`
 - `X-Neus-Upstream-Status`

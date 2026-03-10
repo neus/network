@@ -116,6 +116,6 @@ This is optional. The default API URL works directly in most environments.
 
 ## Next Steps
 
-- [Quickstart](../../docs/QUICKSTART.md) — Create your first proof
-- [Verifiers](../../docs/verifiers/README.md) — Verifier catalog and schemas
-- [API Reference](../../docs/api/README.md) — HTTP endpoints
+- [Quickstart](https://docs.neus.network/quickstart) — Create your first proof
+- [Verifiers](https://docs.neus.network/ecosystems/verifiers) — Verifier catalog and schemas
+- [API Reference](https://docs.neus.network/api/overview) — HTTP endpoints

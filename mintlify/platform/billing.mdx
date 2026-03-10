@@ -1,0 +1,77 @@
+---
+title: Billing and Credits
+description: Credit system, payment methods, and payer resolution for NEUS verification.
+---
+
+NEUS uses a unified credit system for verification and gating. Payer identity is **always server-derived**; clients never dictate who pays.
+
+## Payer Resolution
+
+The server resolves the payer in this order (first match wins):
+
+1. **x402 receipt** — Pay-per-use when credits are exhausted
+2. **Sponsor grant** — App-sponsored verifications (`X-Sponsor-Grant` header)
+3. **Gate billing** — Gate creator pays
+4. **Signature** — User self-pay (wallet-signed request)
+5. **No payer** — Public demo cap (limited free usage)
+
+<Info>
+Payer identity is never trusted from the request body. It is validated via cryptographic signature or receipt.
+</Info>
+
+## Credit Pricing
+
+### Verification Request
+
+- **Base:** 1 credit (gate check)
+- **Verifier costs:** Vary by verifier (see catalog)
+- **Persistence:** +2 credits (if `persist=true`)
+- **IPFS:** +20 credits (if `ipfs=true` or `pin=true`)
+- **Extra chains:** +10 credits per additional chain
+
+### Gate Check
+
+- **Base:** 1 credit
+- **Extra verifiers:** +1 credit per additional verifier
+- **Public demo cap:** Free up to 50 results (no payer required)
+
+### Status Check
+
+- **Cost:** Free (0 credits)
+
+## Payment Methods
+
+### Sponsor Grants
+
+Apps can sponsor verifications for their users.
+
+- **Header:** `X-Sponsor-Grant: <jwt>`
+- **Use case:** Onboarding where the app covers verification cost
+
+### User Self-Pay
+
+Users pay with their own credit balance via signed requests.
+
+### x402 (Pay-Per-Use)
+
+When credits are exhausted, the API returns `402 Payment Required` with a quote. The client can pay via crypto and retry with the receipt.
+
+- **Header:** `PAYMENT-SIGNATURE: <receipt>`
+- **Use case:** One-off usage without pre-loading credits
+
+## Credit Packages
+
+| Package | Credits | Use Case |
+|---------|---------|----------|
+| **Public** | 1,000/month | Testing and proof creation |
+| **Pro** | 50,000/month | Production apps |
+| **Enterprise** | 500,000/month | High-volume, SLAs |
+
+Credits reset each month (no rollover). x402 handles overflow when credits are exhausted.
+
+## Public vs Private
+
+- **Public proofs:** Anyone can check via `/api/v1/proofs/check` (no auth required)
+- **Private proofs:** Owner-only access; requires authenticated session or owner signature
+
+Billing is the same for both; access control is separate from payment.

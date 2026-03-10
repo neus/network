@@ -237,6 +237,6 @@ import { VerifyGate, ProofBadge } from '@neus/sdk/widgets';
 
 ## Reference docs
 
-- API Reference: `../docs/api/README.md`
-- OpenAPI (JSON): `../docs/api/public-api.json`
-- Auth + Hosted Verify: `../docs/guides/auth-and-hosted-verify.md`
+- API Reference: `https://docs.neus.network/api/overview`
+- OpenAPI (JSON): `../mintlify/openapi/public-api.json`
+- Auth + Hosted Verify: `https://docs.neus.network/cookbook/auth-hosted-verify`

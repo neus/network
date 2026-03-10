@@ -1,0 +1,17 @@
+{
+  "name": "@neus/network-docs",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "docs:dev": "cd mintlify && npx --yes mint@4.2.108 dev",
+    "docs:lint:markdown": "npx --yes markdownlint-cli2@0.18.1 --config .markdownlint-cli2.jsonc",
+    "docs:lint:openapi": "npx --yes @redocly/cli@2.14.1 lint mintlify/openapi/public-api.json",
+    "docs:check:content": "node scripts/check-docs-content.mjs",
+    "docs:check:refs": "node scripts/check-docs-references.mjs",
+    "docs:check:manifest": "node scripts/generate-docs-manifest.mjs --out .tmp-docs-manifest.json > /dev/null",
+    "docs:validate": "npm run docs:lint:markdown && npm run docs:lint:openapi && npm run docs:check:content && npm run docs:check:refs && npm run docs:check:manifest"
+  }
+}
