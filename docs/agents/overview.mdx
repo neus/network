@@ -1,0 +1,38 @@
+---
+title: Agents Overview
+description: Use NEUS to register agents, delegate authority, and connect agent workflows to hosted verify and MCP.
+icon: robot
+---
+
+NEUS gives agent teams one reusable trust layer for identity, delegation, hosted verification, and MCP-based retrieval.
+
+## Why Teams Use Agent Proofs
+
+| Question | NEUS answer |
+|----------|-------------|
+| Which agent is acting? | `agent-identity` binds an agent to a wallet or account |
+| What is it allowed to do? | `agent-delegation` defines scope, permissions, and limits |
+| How does it join real workflows? | Hosted verify, proof reuse, and MCP make the proofs operational |
+
+## Start Here
+
+<CardGroup cols={2}>
+  <Card title="Agent Identity" icon="badge-check" href="./agent-identity">
+    Register a verifiable AI agent, bot, or automation.
+  </Card>
+  <Card title="Agent Delegation" icon="key" href="./agent-delegation">
+    Delegate limited authority to an agent wallet.
+  </Card>
+  <Card title="Agent Verification Flow" icon="route" href="./agent-verification-flow">
+    See how identity, delegation, hosted verify, and MCP fit together.
+  </Card>
+  <Card title="Verifiable Agents Guide" icon="book-open" href="../cookbook/verifiable-agents">
+    End-to-end implementation pattern for production teams.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={1}>
+  <Card title="MCP Integration" icon="plug" href="../mcp/overview">
+    Use NEUS proofs inside Cursor, Claude, and custom agent runtimes.
+  </Card>
+</CardGroup>

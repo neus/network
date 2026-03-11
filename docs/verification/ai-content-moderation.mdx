@@ -1,0 +1,34 @@
+---
+title: ai-content-moderation
+description: Verify content safety for text or images before publication or access.
+icon: wand-magic-sparkles
+---
+
+Use `ai-content-moderation` when you need a safety signal for text or image content.
+
+## Best For
+
+- user-generated content
+- AI-generated output
+- moderation and publishing workflows
+
+## Flow Type
+
+Lookup. NEUS checks the content with a moderation provider.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `content` | Yes | Raw content or encoded payload |
+| `contentType` | Yes | MIME type |
+| `provider` | No | Example: `google-vision`, `google-perspective` |
+
+## Example
+
+```json
+{
+  "content": "<base64-or-text>",
+  "contentType": "text/plain"
+}
+```

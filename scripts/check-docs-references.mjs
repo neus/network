@@ -25,13 +25,11 @@ const ignoredDirs = new Set([
 ]);
 
 const bannedPatterns = [
-  '../docs/',
-  './docs/',
   'docs/api/README.md',
   'docs/api/public-api.json',
   'docs/verifiers/',
   'docs/QUICKSTART.md',
-  'mintlify/mint.json'
+  'docs/mint.json'
 ];
 
 function walk(dir, files = []) {

@@ -1,0 +1,62 @@
+---
+title: Errors
+description: Error codes and responses for the NEUS API.
+icon: triangle-exclamation
+---
+
+Handle API errors with consistent structure: `code`, `message`, `type`. Retry on `429`; do not retry verification creation unless you can prove the original request failed.
+
+All errors follow a consistent structure.
+
+## Error Response
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable message",
+    "type": "error_type"
+  },
+  "requestId": "req_..."
+}
+```
+
+## Common Error Codes
+
+| Code | Type | Description |
+|------|------|-------------|
+| `INVALID_SIGNATURE` | `auth` | Signature verification failed |
+| `EXPIRED_SIGNATURE` | `auth` | Signature timestamp outside freshness window |
+| `INVALID_WALLET` | `validation` | Wallet address format invalid |
+| `VERIFIER_NOT_FOUND` | `validation` | Requested verifier does not exist |
+| `VERIFICATION_FAILED` | `verification` | Verification check failed |
+| `PROOF_NOT_FOUND` | `not_found` | Proof ID does not exist |
+| `UNAUTHORIZED` | `auth` | Not authorized for this action |
+| `RATE_LIMITED` | `rate_limit` | Too many requests |
+
+## HTTP Status Codes
+
+| Status | Meaning |
+|--------|---------|
+| 200 | Success |
+| 202 | Accepted (async processing) |
+| 400 | Bad request |
+| 401 | Unauthorized |
+| 403 | Forbidden |
+| 404 | Not found |
+| 429 | Rate limited |
+| 500 | Server error |
+
+## Handling Errors
+
+```javascript
+try {
+  const result = await client.verify({ ... });
+} catch (error) {
+  if (error.code === 'VERIFICATION_FAILED') {
+    // Handle verification failure
+  }
+  console.error(error.message);
+}
+```

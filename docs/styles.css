@@ -1,0 +1,219 @@
+/* NEUS Mintlify Skin */
+/* Mintlify-native selectors. Structural elements transparent so gradient shows through. */
+
+:root {
+  --neus-bg-base: rgb(16 17 19 / 0.96);
+  --neus-bg-rail: rgb(18 20 24 / 0.42);
+  --neus-bg-card: rgb(23 25 30 / 0.68);
+  --neus-bg-card-hover: rgb(28 31 36 / 0.74);
+  --neus-bg-glass: rgb(18 20 24 / 0.56);
+  --neus-accent: rgb(152 192 239);
+  --neus-border: rgba(90, 90, 90, 0.22);
+  --neus-border-subtle: rgba(90, 90, 90, 0.12);
+  --neus-border-faint: rgba(90, 90, 90, 0.08);
+  --neus-shadow-card:
+    0 16px 36px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(90, 90, 90, 0.12),
+    inset 0 1px 0 rgba(90, 90, 90, 0.1);
+  --neus-shadow-card-hover:
+    0 20px 44px rgba(0, 0, 0, 0.38),
+    0 0 0 1px rgba(90, 90, 90, 0.16),
+    inset 0 1px 0 rgba(90, 90, 90, 0.12);
+}
+
+body {
+  font-feature-settings: "ss01" on, "cv01" on;
+  background-color: transparent;
+}
+
+/* Structural elements: fully transparent so gradient shows through */
+#header,
+#header-content,
+#navbar,
+#navigation-items,
+#sidebar,
+#sidebar-content,
+#content-area,
+#content-container,
+#body-content,
+#table-of-contents,
+#table-of-contents-content,
+#table-of-contents-content .toc,
+#table-of-contents-content .toc > div {
+  background: transparent !important;
+  backdrop-filter: none;
+}
+
+#header {
+  border-bottom: 1px solid var(--neus-border-faint);
+}
+
+#sidebar {
+  border-right: 1px solid var(--neus-border-faint);
+}
+
+#table-of-contents {
+  border-left: none;
+}
+
+#navigation-items {
+  border-right: none;
+}
+
+/* Tab bar: transparent */
+.nav-tabs {
+  background: transparent !important;
+}
+
+.sidebar-group-header {
+  color: rgb(255 255 255 / 0.9);
+  letter-spacing: 0;
+}
+
+#sidebar a {
+  border-radius: 14px;
+}
+
+#sidebar a.text-primary,
+#sidebar a[aria-current="page"] {
+  background: linear-gradient(180deg, rgb(152 192 239 / 0.16) 0%, rgb(152 192 239 / 0.1) 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.03);
+}
+
+#table-of-contents-content {
+  border-left: 1px solid var(--neus-border-faint);
+  padding-left: 1rem;
+}
+
+#table-of-contents-content .toc,
+#table-of-contents-content .toc > div {
+  background: transparent;
+}
+
+#table-of-contents-content a {
+  color: rgb(255 255 255 / 0.68);
+}
+
+#table-of-contents-content a:hover,
+#table-of-contents-content a.text-primary,
+#table-of-contents-content a[aria-current="true"] {
+  color: rgb(255 255 255 / 0.92);
+}
+
+#page-title {
+  background: transparent;
+}
+
+#page-context-menu-button {
+  background: transparent;
+  border: 1px solid var(--neus-border-faint);
+}
+
+#search-input {
+  background: rgb(12 14 18 / 0.72);
+  border: 1px solid var(--neus-border-faint);
+  box-shadow: inset 0 1px 0 rgb(90 90 90 / 0.08);
+}
+
+#search-input:focus {
+  border-color: rgb(152 192 239 / 0.28);
+  box-shadow:
+    0 0 0 4px rgb(152 192 239 / 0.1),
+    inset 0 1px 0 rgb(90 90 90 / 0.08);
+}
+
+/* Primary CTA: brand color only, no muted wrapper */
+#topbar-cta-button,
+a#topbar-cta-button,
+#navbar a[href="https://neus.network/hub"],
+#navbar a[href="https://neus.network/hub/"],
+#header a[href="https://neus.network/hub"],
+#header a[href="https://neus.network/hub/"],
+[data-testid="navbar-primary-button"],
+[data-testid="topbar-primary-button"] {
+  background: var(--neus-accent) !important;
+  border: 1px solid rgb(191 219 254 / 0.25) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  color: rgb(11 15 23) !important;
+}
+#topbar-cta-button:hover,
+a#topbar-cta-button:hover,
+#navbar a[href="https://neus.network/hub"]:hover,
+#navbar a[href="https://neus.network/hub/"]:hover,
+#header a[href="https://neus.network/hub"]:hover,
+#header a[href="https://neus.network/hub/"]:hover,
+[data-testid="navbar-primary-button"]:hover,
+[data-testid="topbar-primary-button"]:hover {
+  background: rgb(121 168 228) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+#topbar-cta-button:focus-visible,
+a#topbar-cta-button:focus-visible,
+#navbar a[href="https://neus.network/hub"]:focus-visible,
+#navbar a[href="https://neus.network/hub/"]:focus-visible,
+#header a[href="https://neus.network/hub"]:focus-visible,
+#header a[href="https://neus.network/hub/"]:focus-visible,
+[data-testid="navbar-primary-button"]:focus-visible,
+[data-testid="topbar-primary-button"]:focus-visible {
+  outline: 2px solid rgb(191 219 254 / 0.6) !important;
+  outline-offset: 2px !important;
+}
+
+.card,
+.card-group .card {
+  background: var(--neus-bg-card);
+  border: 1px solid var(--neus-border-faint);
+  box-shadow: var(--neus-shadow-card);
+  backdrop-filter: blur(18px);
+}
+
+.card:hover,
+.card-group .card:hover {
+  background: var(--neus-bg-card-hover);
+  border-color: var(--neus-border);
+  box-shadow: var(--neus-shadow-card-hover);
+}
+
+/* Fill conceptual gaps when a two-column card row ends with one item. */
+.card-group.cols-2 > div:only-child,
+.card-group[data-cols="2"] > div:only-child,
+.card-group.grid-cols-2 > div:only-child {
+  grid-column: 1 / -1;
+}
+
+::selection {
+  background: rgb(152 192 239 / 0.22);
+  color: white;
+}
+
+html {
+  scrollbar-color: rgb(90 90 90 / 0.35) transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(90 90 90 / 0.32);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(90 90 90 / 0.48);
+}
+
+@media (max-width: 1023px) {
+  #header {
+    background: transparent !important;
+  }
+}

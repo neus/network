@@ -1,0 +1,85 @@
+---
+title: Integrate
+description: "Production path for NEUS integrations: check eligibility, verify when needed, save the proof receipt ID, and unlock access."
+icon: compass
+---
+
+Most production integrations should follow a simple loop: check first, verify only when needed, then reuse the same receipt everywhere downstream.
+
+## Standard Flow
+
+<Steps>
+  <Step title="Check eligibility first">
+    Use `GET /api/v1/proofs/check` or `client.gateCheck(...)` before prompting the user again.
+  </Step>
+  <Step title="Run verification when needed">
+    Use hosted verify for interactive flows. Use direct submit for instant and lookup verifiers.
+  </Step>
+  <Step title="Save the proof receipt ID">
+    Persist `proofId` from the SDK response. Raw HTTP paths may label the same identifier as `{qHash}`.
+  </Step>
+  <Step title="Unlock access or continue the workflow">
+    Reuse the same proof receipt ID for status, display, gating, and policy.
+  </Step>
+</Steps>
+
+## Choose the Right Mode
+
+| Mode | Best for | Result |
+|------|----------|--------|
+| `reuse-or-create` | Standard product UX | Reuse an eligible proof or create one if missing |
+| `fresh` | High-stakes actions | Force a new proof |
+| `reuse` | Read-only checks | Never create new proofs |
+
+## Session-First Hosted Path
+
+Use hosted verify plus auth code exchange when you want the simplest production login flow.
+
+1. Redirect users to `https://neus.network/verify?intent=login&returnUrl=...`
+2. Receive the auth `code` on return
+3. Exchange the code at `POST https://api.neus.network/api/v1/auth/code/exchange`
+4. Use the returned session or token for later calls
+
+<Note>
+For the full hosted contract, use [Auth + Hosted Verify](./cookbook/auth-hosted-verify).
+</Note>
+
+## Verify Widget
+
+The script-tag widget is the fastest no-framework path for displaying a proof receipt on any site.
+
+```html
+<script src="https://verify.neus.network/widget.js"></script>
+<div data-neus-proof="0xYOUR_PROOF_RECEIPT_ID"></div>
+```
+
+<Note>
+The widget checks proof status with the public verification status endpoint. Raw HTTP paths still use `:qHash` for the proof receipt ID parameter.
+</Note>
+
+## Go-Live Rules
+
+<Checklist>
+  <Item>Use `/verify` as the standard hosted path for interactive flows.</Item>
+  <Item>Do not hardcode verifier metadata; read the live catalog.</Item>
+  <Item>Persist proof receipt IDs and business context, not raw signatures.</Item>
+  <Item>Use freshness windows for point-in-time verifiers.</Item>
+  <Item>Run a golden demo: create proof, save the receipt ID, open the proof page, then gate access with the same proof.</Item>
+</Checklist>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Choose Your Path" icon="route" href="./choose-an-integration-path">
+    Pick SDK, widgets, API, or MCP based on what you are building.
+  </Card>
+  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
+    Standard login and verification flow.
+  </Card>
+  <Card title="API Overview" icon="terminal" href="./api/overview">
+    HTTP endpoints and auth patterns.
+  </Card>
+  <Card title="Presets" icon="layer-group" href="./platform/presets">
+    Use hosted presets for common onboarding flows.
+  </Card>
+</CardGroup>

@@ -1,0 +1,39 @@
+---
+title: nft-ownership
+description: Gate access by proving a wallet owns a specific NFT.
+icon: image
+---
+
+Use `nft-ownership` when access depends on NFT ownership.
+
+## Best For
+
+- token-gated communities
+- premium drops
+- collector-only content
+
+## Flow Type
+
+Lookup. NEUS checks on-chain ownership.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `contractAddress` | Yes | NFT contract or mint |
+| `tokenId` | Yes | Token ID |
+| `chainId` or `chain` | Yes | EVM `chainId` or Solana CAIP-2 chain |
+
+## Example
+
+```json
+{
+  "contractAddress": "0x...",
+  "tokenId": "1",
+  "chainId": 8453
+}
+```
+
+## Reader Note
+
+For high-stakes access, pair this with freshness checks or require a fresh proof.

@@ -1,0 +1,34 @@
+---
+title: wallet-risk
+description: Evaluate wallet risk before payments, access, or high-value actions.
+icon: triangle-exclamation
+---
+
+Use `wallet-risk` when you need a risk signal before payments or sensitive product actions.
+
+## Best For
+
+- payment flows
+- fraud checks
+- high-risk onboarding
+
+## Flow Type
+
+Lookup. NEUS checks wallet risk through an external provider.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `walletAddress` | Yes | Wallet to assess |
+| `provider` | No | Example: `webacy` |
+| `chain` or `chainId` | No | Optional chain context |
+
+## Example
+
+```json
+{
+  "walletAddress": "0x...",
+  "chain": "base"
+}
+```

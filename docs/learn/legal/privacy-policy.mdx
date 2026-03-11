@@ -1,0 +1,188 @@
+---
+title: Privacy Policy
+description: Data handling practices, privacy protections, and regulatory compliance for NEUS.
+icon: shield
+---
+
+NEUS Network, Inc. ("NEUS," "we," "us," or "our") enables cryptographic proof of facts with minimal data collection. We are committed to transparency, user control, and trust through technology. This document outlines our data handling practices, privacy protections, and regulatory compliance approach.
+
+## What NEUS Is and Is Not
+
+### What NEUS Is
+
+- Decentralized Network: Protocol that operates across multiple blockchains
+- Zero-Knowledge System: Technology that proves facts without revealing underlying data
+- Verification Framework: Tools for developers to integrate verification into applications
+- Technical Infrastructure: A protocol for creating cryptographic proofs of verifiable claims
+
+### What NEUS Is NOT
+
+- Centralized Authority: We do not make authoritative claims about user identity or compliance
+- Financial Service: We are not a Money Service Business (MSB) or regulated financial institution
+- KYC Service: We do not perform Know Your Customer verification or compliance services (we integrate with third-party KYC providers)
+- Identity Provider: We do not verify, validate, or store personal identity information beyond what users choose to share
+
+## What We Collect
+
+### Technical Analytics (No Personal Data)
+
+- Network Information: Chain IDs, transaction hashes (public blockchain data)
+- Request Metadata: Timestamps, request types, success/failure status
+- Wallet Addresses: Public blockchain addresses (already public information)
+- API Usage Metrics: Request counts, response times, error rates
+
+### User-Provided Profile Data (Optional)
+
+When users choose to create profiles or link social accounts, we store:
+
+- Social Account Metadata: Public account information (follower counts, verification status, account creation dates)
+- Social Account Links: Social media handles/usernames (GitHub username, Discord ID, Twitter handle)
+- Avatars: Profile image URLs
+- Bios: User-provided biographies
+- Display Names: User-provided names (may be real names or pseudonyms)
+
+Profile Auto-Creation: For new users accessing profile features, a minimal profile is created automatically. It contains only essential data (wallet address, default display name derived from wallet address). Users can update, customize, or delete this profile at any time.
+
+User Control: All profile data is optional and user-controlled. Users can:
+
+- Delete their profile entirely
+- Revoke social account links
+- Update or delete profile data at any time
+- Choose not to link social accounts
+- Choose not to create a profile (profiles are optional for core verification features)
+
+### Credit Purchase History
+
+- Credit usage and balance information
+- Records of credit purchases (for example on-chain transaction hashes and/or Stripe payment identifiers, package types)
+
+## What We DO NOT Collect
+
+- Private keys or seed phrases
+- Government IDs or KYC documents (KYC is handled by third-party providers)
+- Physical addresses
+- Phone numbers
+- Email addresses (unless provided by OAuth providers during social linking)
+
+## Cookies
+
+NEUS Network supports stateless wallet-signature authentication and may also use an HttpOnly authentication cookie (for example `neus_auth`) for session convenience in first-party experiences. We do not use:
+
+- Session tracking
+- Persistent cookies
+- Third-party tracking cookies by default
+
+All authentication is stateless and user-controlled.
+
+## Data Processing
+
+### Legal Basis
+
+- Legal Obligation: Compliance with applicable laws and regulations
+- User Consent: Explicit consent for profile data when users choose to create profiles
+- User Consent: Explicit consent via wallet signatures for verification requests
+- Legitimate Interest: Technical analytics to maintain and improve services
+
+## Data Retention
+
+### Verification Proofs
+
+On-Chain Proofs: Proofs with on-chain references are stored permanently on public blockchains and cannot be deleted. This is inherent to blockchain technology. Users can revoke proofs, which removes them from all public feeds and interfaces, hides proof content from non-owners, and prevents further public access.
+
+Off-Chain Proofs: Proofs stored only in our database can be revoked, which removes them from public interfaces.
+
+IPFS Content: When proofs use IPFS, content is pinned via third-party services. Revoked proofs mark IPFS content as inaccessible. Users can request IPFS unpinning, but content may remain accessible via IPFS gateways until pin expires.
+
+User Consent: By creating proofs, users acknowledge that on-chain proofs are permanent and cannot be deleted, but can be revoked to remove public visibility.
+
+### Profile Data
+
+- Social Links: Deleted when profile is deleted or social link is revoked
+- Deleted Profiles: Deleted upon user request
+- Active Profiles: Retained until user deletion request
+
+### API Logs
+
+- Retention Period: 30 days for technical debugging and security monitoring
+- Automated Cleanup: Logs older than 30 days are automatically deleted
+- Exception: Security-related logs may be retained longer for investigation purposes
+
+### Analytics Data
+
+- Raw Logs: Deleted after 30 days
+- Aggregated Data: Retained indefinitely in anonymized form
+- Internal Analytics Only: NEUS Network uses internal analytics only. We do not currently use third-party analytics services. All analytics are processed internally and do not involve external data processors.
+
+### Temporary Tokens
+
+- Authentication Signatures: Not stored (stateless authentication)
+- Internal Tokens: Expire within 60 seconds, automatically invalidated
+- OAuth Tokens: Deleted immediately after use
+
+## GDPR Compliance
+
+### GDPR Rights
+
+Right to Access: Users can access their profile data through their account settings.
+
+Right to Rectification: Users can update their profile data at any time.
+
+Right to Erasure (Right to Be Forgotten): Users can request deletion of their profile data. This will permanently delete profile data from our database, delete all social account links, revoke all proofs (hide them from public view), and invalidate all caches.
+
+Proofs: Proofs with on-chain references cannot be deleted (they are permanent on public blockchains). However, users can revoke proofs to remove them from public interfaces, which satisfies GDPR visibility requirements.
+
+How to Request Deletion: Contact `info@neus.network` with your request and account information.
+
+Right to Data Portability: Users control their verification proofs directly through wallet-based authentication. Proofs can be exported.
+
+Right to Object: Users can opt out of profile creation and social account linking. All profile data is optional.
+
+### Data Minimization
+
+NEUS is designed around the principle of data minimization. We collect only:
+
+- Credit purchase history (for service functionality)
+- User-provided profile data (when users choose to share)
+- Technical analytics necessary for service operation
+
+## CCPA Compliance
+
+Right to Know: Users can access their profile data through their account settings.
+
+Right to Delete: Users can request deletion of their profile data. Contact `info@neus.network` with your request.
+
+Right to Opt-Out: Users can opt out of profile creation and social account linking. All profile data is optional.
+
+No Sale of Data: NEUS Network does not sell personal information. We do not share personal information with third parties except as necessary for service operation.
+
+## Subprocessors
+
+NEUS Network uses third-party service providers to deliver our services, including infrastructure hosting, content storage, zero-knowledge processing, and social verification providers. Material changes will be communicated through this documentation site.
+
+## Your Rights
+
+- Transparency: All data practices are publicly documented
+- Profile Deletion: Delete your profile and associated data at any time
+- Opt-Out: Discontinue service use at any time
+- User Ownership: You control your verification data through wallet signatures
+- Minimal Collection: We collect only essential technical data and user-provided profile data
+
+## Contact Information
+
+For privacy inquiries:
+
+- Subject Line: "Privacy Inquiry"
+- Email: `info@neus.network`
+
+For GDPR/CCPA requests:
+
+- Subject Line: "GDPR Request" or "CCPA Request"
+- Email: `info@neus.network`
+
+---
+
+<Info>
+**Legal Disclaimer:** This privacy policy is provided for informational purposes and does not constitute legal advice. Users should consult qualified legal counsel regarding their specific compliance requirements and obligations.
+
+**Key Principle:** NEUS is designed around the principle that the best way to protect user privacy is to minimize data collection. Our architecture ensures that privacy protection is user-managed and built into the technical foundation of the protocol.
+</Info>

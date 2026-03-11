@@ -5,8 +5,6 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { keccak256, toUtf8Bytes } from 'ethers';
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '..');
@@ -23,7 +21,7 @@ const includeRoots = [
   'examples',
   'spec/verifiers',
   'scripts',
-  'mintlify'
+  'docs'
 ];
 
 const ignoredDirs = new Set(['.git', 'node_modules', 'dist', 'coverage']);
@@ -41,7 +39,7 @@ function parseArgs(argv) {
 
 function includeFile(relativePath) {
   if (relativePath.endsWith('.json')) {
-    return relativePath === 'mintlify/openapi/public-api.json';
+    return relativePath === 'docs/openapi/public-api.json';
   }
 
   return (
@@ -54,7 +52,7 @@ function includeFile(relativePath) {
     relativePath === '.markdownlint-cli2.jsonc' ||
     relativePath === '.github/workflows/docs.yml' ||
     relativePath === '.github/PULL_REQUEST_TEMPLATE.md' ||
-    relativePath === 'mintlify/docs.json'
+    relativePath === 'docs/docs.json'
   );
 }
 
@@ -108,7 +106,7 @@ const manifest = {
   root: repoRoot.split(path.sep).join('/'),
   fileCount: uniqueFiles.length,
   files: fileHashes,
-  aggregateHash: keccak256(toUtf8Bytes(aggregateInput))
+  aggregateHash: `0x${createHash('sha256').update(aggregateInput, 'utf8').digest('hex')}`
 };
 
 const output = `${JSON.stringify(manifest, null, 2)}\n`;

@@ -1,0 +1,73 @@
+---
+title: Sybil Resistance
+description: Prevent Sybil attacks with proof-based identity verification.
+icon: shield-halved
+---
+
+Prevent Sybil attacks using NEUS proof-based identity verification.
+
+## Strategy Overview
+
+| Approach | Verifier | Use Case |
+|----------|----------|----------|
+| Wallet uniqueness | `ownership-basic` | Basic one-wallet-one-vote |
+| Social verification | `ownership-social` | Link social accounts |
+| Human verification | `proof-of-human` | Anti-bot protection |
+
+## Basic Implementation
+
+### Wallet-Based (One Wallet Per User)
+
+```javascript
+const result = await client.gateCheck({
+  address: walletAddress,
+  verifierIds: ['ownership-basic'],
+  since: Date.now() - 24 * 60 * 60 * 1000, // 24 hours
+});
+```
+
+### Social Verification
+
+```jsx
+<VerifyGate
+  requiredVerifiers={['ownership-social']}
+  onVerified={(result) => {
+    // Store the returned proof receipt ID for vote or claim replay protection
+  }}
+>
+  <button>Verify to Vote</button>
+</VerifyGate>
+```
+
+## Best Practices
+
+<Warning>
+- Always enforce recency windows for point-in-time checks
+- Store the proof receipt identifier to prevent replay attacks
+- Consider combining multiple verifiers for higher assurance
+</Warning>
+
+### Multi-Verifier Approach
+
+```javascript
+const result = await client.gateCheck({
+  address: walletAddress,
+  verifierIds: ['ownership-basic', 'proof-of-human'],
+  since: Date.now() - 60 * 60 * 1000,
+});
+```
+
+## Airdrop Protection
+
+```javascript
+// Check before airdrop claim
+const proofs = await client.gateCheck({
+  address: claimerAddress,
+  verifierIds: ['proof-of-human'],
+  since: Date.now() - 7 * 24 * 60 * 60 * 1000, // 7 days
+});
+
+if (!proofs.data?.eligible) {
+  throw new Error('Human verification required');
+}
+```

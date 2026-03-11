@@ -1,0 +1,38 @@
+---
+title: MCP Overview
+description: Use the hosted NEUS MCP server for verifier lookup, gate checks, proof context, and hosted verify handoff.
+icon: plug
+---
+
+Use the hosted NEUS MCP server when an AI client needs verifier lookup, gate checks, proof context, or a clean handoff into hosted verify.
+
+## What MCP Gives You
+
+- verifier catalog discovery
+- eligibility-safe proof checks
+- hosted verify guidance when human action is required
+- public proof and profile context for wallets or DIDs
+
+## Standard Agent Loop
+
+1. `neus_verifiers_catalog`
+2. `neus_proofs_check`
+3. `neus_verify_or_guide`
+4. `neus_proofs_get`
+
+## Start Here
+
+<CardGroup cols={2}>
+  <Card title="Discovery and Endpoints" icon="globe" href="./endpoints">
+    Public MCP URLs, discovery files, and transport.
+  </Card>
+  <Card title="Setup" icon="code" href="./setup">
+    Cursor, VS Code, Claude Desktop, and local stdio setup.
+  </Card>
+  <Card title="Auth and Security" icon="lock" href="./auth">
+    Session-backed access, tokens, and safety boundaries.
+  </Card>
+  <Card title="Tools Overview" icon="wrench" href="./tools">
+    Choose the right tool before you drill into task-specific pages.
+  </Card>
+</CardGroup>

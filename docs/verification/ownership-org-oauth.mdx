@@ -1,0 +1,39 @@
+---
+title: ownership-org-oauth
+description: Prove organization membership through Google or Microsoft hosted verification.
+icon: building
+---
+
+Use `ownership-org-oauth` when you need to prove team or organization membership.
+
+## Best For
+
+- enterprise onboarding
+- employee-only product access
+- org-scoped agent or app controls
+
+## Flow Type
+
+Interactive. Users complete hosted Google or Microsoft verification first.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `provider` | Yes | `google` or `microsoft` |
+| `internalSocialToken` | Yes | Returned by hosted verify |
+| `expectedOrgDomain` | No | Restrict the allowed org domain |
+
+## Example
+
+```json
+{
+  "provider": "google",
+  "internalSocialToken": "<from-hosted-flow>",
+  "expectedOrgDomain": "acme.com"
+}
+```
+
+## Use Hosted Verify
+
+This verifier should resolve through `/verify` instead of a custom OAuth UI.

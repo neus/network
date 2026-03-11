@@ -1,0 +1,57 @@
+---
+title: Platform Overview
+description: What ships with the first-party NEUS product surface across verify, proof pages, profiles, and discovery.
+icon: globe
+---
+
+NEUS ships a first-party product surface for hosted verify, proof pages, profiles, and discovery. That surface turns verification into a reusable product primitive instead of a one-off backend check.
+
+## What Ships With NEUS
+
+<CardGroup cols={2}>
+  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+    `/verify` is the standard path for login, checkout, and interactive verification.
+  </Card>
+  <Card title="Hub and profiles" icon="user-circle" href="./hub">
+    Manage identity, apps, credits, agents, and discovery from the first-party product.
+  </Card>
+  <Card title="Proof receipt pages" icon="receipt" href="./receipts-and-results">
+    Every proof can resolve to a standard shareable page on `neus.network`.
+  </Card>
+  <Card title="Hosted presets" icon="layer-group" href="./presets">
+    Preload `/verify` for common onboarding and verification flows.
+  </Card>
+</CardGroup>
+
+## Core Product Loop
+
+1. **Verify** through the hosted NEUS flow or SDK
+2. **Receive** a proof receipt ID
+3. **Share or display** the proof page and badge
+4. **Reuse** the same proof receipt for access, monetization, and policy
+
+## Why This Matters
+
+| Need | NEUS surface |
+|------|--------------|
+| Frictionless onboarding | Hosted verify and login |
+| Public trust page | Standard proof page |
+| Identity and app management | Hub and profile surfaces |
+| Reusable business logic | Proof receipt reuse across products |
+
+## Next Pages
+
+<CardGroup cols={2}>
+  <Card title="Hub" icon="layout-sidebar" href="./hub">
+    Explore the first-party profile, app, and discovery surfaces.
+  </Card>
+  <Card title="Receipts and Results" icon="badge-check" href="./receipts-and-results">
+    Understand what to save and how to reuse it.
+  </Card>
+  <Card title="Presets" icon="sparkles" href="./presets">
+    Launch common hosted flows without rebuilding routing.
+  </Card>
+  <Card title="Verification Overview" icon="file-signature" href="../verification/overview">
+    Learn the technical contract behind the hosted product surface.
+  </Card>
+</CardGroup>

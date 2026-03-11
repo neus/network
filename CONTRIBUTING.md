@@ -90,6 +90,14 @@ git commit -s -m "Your commit message"
 
 ---
 
+## Docs Maintenance
+
+- **Source:** `docs/` (prose, OpenAPI at `docs/openapi/public-api.json`), `spec/verifiers/`
+- **Commands:** `npm run docs:dev`, `npm run docs:validate`
+- **Release manifest:** `node scripts/generate-docs-manifest.mjs --out docs-v1-manifest.json`
+
+---
+
 ## Questions?
 
 - [GitHub Issues](https://github.com/neus/network/issues)

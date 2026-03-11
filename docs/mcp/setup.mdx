@@ -1,0 +1,110 @@
+---
+title: Setup
+description: Config snippets for Cursor, VS Code, and env vars for the NEUS MCP server.
+icon: code
+---
+
+## Client Setup
+
+### Cursor
+
+Hosted:
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "type": "streamableHttp",
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
+}
+```
+
+Stdio (local):
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "command": "npx",
+      "args": ["-y", "@neus/mcp-server"],
+      "env": {
+        "NEUS_API_URL": "https://api.neus.network"
+      }
+    }
+  }
+}
+```
+
+### Claude Desktop
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "command": "npx",
+      "args": ["-y", "@neus/mcp-server"],
+      "env": {
+        "NEUS_API_URL": "https://api.neus.network"
+      }
+    }
+  }
+}
+```
+
+### VS Code
+
+Use the same JSON structure in your MCP client config (e.g. MCP extension settings). Hosted URL:
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "type": "streamableHttp",
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
+}
+```
+
+## Runtime Configuration (Stdio)
+
+For local stdio mode, the following environment variables are supported:
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `NEUS_API_URL` | `https://api.neus.network` | API base URL |
+| `NEUS_MCP_APP_ID` | `neus-mcp-server` | Public app attribution header sent as `X-Neus-App` |
+| `NEUS_AUTH_TOKEN` | unset | Optional Bearer token for session-backed calls such as `neus_me` |
+
+<Warning>
+Do not run a publicly reachable MCP server with privileged API credentials. The hosted NEUS MCP service is transport-open by design; signer checks, payment policy, and rate limits are enforced by the NEUS API.
+</Warning>
+
+## Recommended Go-Live Pattern
+
+For production integrations, keep the integration model simple:
+
+1. Use the hosted MCP endpoint for fastest production adoption.
+2. Start every flow with `neus_verifiers_catalog` or `neus_proofs_check`.
+3. When verification is missing, send users to hosted verify instead of rebuilding interactive verifier UX.
+4. Treat the proof receipt ID as the portable receipt you can reuse across apps and agents.
+5. Keep private proof handling inside NEUS; consume eligibility and receipt IDs, not raw claims.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="MCP Overview" icon="plug" href="./overview">
+    What the server is for.
+  </Card>
+  <Card title="Endpoints & Discovery" icon="globe" href="./endpoints">
+    Public URLs and transport.
+  </Card>
+  <Card title="Tools" icon="wrench" href="./tools">
+    Tool reference.
+  </Card>
+  <Card title="Auth & Security" icon="lock" href="./auth">
+    NEUS_AUTH_TOKEN and session-backed use.
+  </Card>
+</CardGroup>

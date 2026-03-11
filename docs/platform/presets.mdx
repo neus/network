@@ -1,0 +1,65 @@
+---
+title: Presets
+description: Preconfigured verifier bundles for hosted verify. Use preset IDs in URLs instead of listing verifiers.
+icon: layer-group
+---
+
+Presets are preconfigured verifier bundles. Use `preset=<id>` in hosted verify URLs instead of listing verifiers manually. The preset catalog is defined in `neus/utils/verifierRegistry.ts` (`PRESET_VERIFIER_IDS`).
+
+## URL Format
+
+```text
+https://neus.network/verify?preset=<id>
+```
+
+Optional params: `returnUrl`, `gateId`, `mode=popup`, `origin`.
+
+## Preset Catalog
+
+| Preset ID | Verifiers | Use Case |
+|-----------|-----------|----------|
+| `basic-pack` | ownership-basic | Wallet ownership only |
+| `human-pack` | proof-of-human | Sybil resistance, human verification |
+| `project-pack` | contract-ownership, ownership-dns-txt | dApp/protocol verification |
+| `creator-pack` | ownership-basic, ai-content-moderation | Content ownership + AI safety |
+| `agent-pack` | agent-identity, agent-delegation, wallet-risk | Agent registration and delegation |
+| `holder-pack` | token-holding, ownership-basic, wallet-risk | Token gating with risk check |
+| `social-pack` | ownership-social | Social account ownership |
+| `domain-pack` | ownership-dns-txt | Domain ownership |
+| `org-pack` | ownership-org-oauth | Organization membership |
+| `nft-pack` | nft-ownership | NFT gating |
+| `wallet-link-pack` | wallet-link | Secondary wallet linking |
+| `pseudonym-pack` | ownership-pseudonym | Username/handle claim |
+| `username-pack` | ownership-pseudonym | Alias for pseudonym-pack |
+
+## Examples
+
+```text
+https://neus.network/verify?preset=agent-pack
+https://neus.network/verify?preset=basic-pack&returnUrl=https://myapp.com/callback
+https://neus.network/verify?preset=social-pack&mode=popup&origin=https://myapp.com
+```
+
+## SDK and Widgets
+
+Pass `preset` when building hosted checkout URLs:
+
+```javascript
+import { getHostedCheckoutUrl } from '@neus/sdk';
+
+const url = getHostedCheckoutUrl({
+  preset: 'agent-pack',
+  returnUrl: 'https://myapp.com/callback',
+});
+```
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Auth + Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+    Hosted URL params and popup flow.
+  </Card>
+  <Card title="Verifier Catalog" icon="list-tree" href="../verification/verifiers">
+    Per-verifier fields and options.
+  </Card>
+</CardGroup>

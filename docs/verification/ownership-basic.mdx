@@ -1,0 +1,41 @@
+---
+title: ownership-basic
+description: Prove wallet control and bind content or metadata to that wallet.
+icon: wallet
+---
+
+Use `ownership-basic` when you need the simplest proof that a wallet controls a claim, piece of content, or identity action.
+
+## Best For
+
+- content authorship
+- wallet ownership
+- base proof for richer verifier bundles
+
+## Flow Type
+
+Instant. The signer creates the proof directly after signing the standardized request.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `owner` | Yes | Must match the signer wallet |
+| `content` | No | Human-readable content or claim |
+| `contentHash` | No | Precomputed hash |
+| `reference` | No | URL, IPFS, contract, or other resource link |
+
+## Example
+
+```json
+{
+  "owner": "0x...",
+  "content": "Hello NEUS"
+}
+```
+
+## Related Bundles
+
+- AI trust receipt
+- wallet plus social or org verification
+- agent identity foundations

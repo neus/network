@@ -1,0 +1,34 @@
+---
+title: ownership-pseudonym
+description: Bind a pseudonymous handle to a wallet without exposing a real-world identity.
+icon: id-badge
+---
+
+Use `ownership-pseudonym` when you need a portable username or handle tied to a wallet.
+
+## Best For
+
+- product handles
+- portable public names
+- pseudonymous creator identity
+
+## Flow Type
+
+Instant. The user signs once and the pseudonym binding is created.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `pseudonymId` | Yes | Handle string |
+| `namespace` | No | Defaults to `neus` |
+| `displayName` | No | Human-readable label |
+
+## Example
+
+```json
+{
+  "pseudonymId": "alice123",
+  "displayName": "Alice"
+}
+```

@@ -1,0 +1,60 @@
+---
+title: Hub
+description: The first-party NEUS surface for discovery, profiles, proof pages, apps, credits, and agents.
+icon: layout-sidebar
+---
+
+The Hub is the first-party NEUS product surface at `https://neus.network/hub`. It brings together discovery, identity, apps, credits, proof pages, and agents in one place.
+
+## What Users See
+
+| Surface | Why it matters |
+|---------|----------------|
+| Public proof feed | Discover public proof activity and reusable trust signals |
+| Profile dashboard | Manage identity, agents, apps, and credits |
+| Proof pages | Share one standard page per proof receipt |
+| App linking | Connect domains and attribution to a real integration |
+
+## Connected Account Tabs
+
+| Tab | Purpose |
+|-----|---------|
+| Dashboard | Quick actions, proof summaries, and account health |
+| Identity | Domains, org verification, social proofs, and privacy |
+| Agents | Agent identity and delegation management |
+| Apps | Domain linking, app attribution, and credit setup |
+| Credits | Balance, top-ups, and subscription state |
+| Activity | History and usage |
+| Settings | Preferences and account controls |
+
+## Proof Pages
+
+Every proof can resolve to a standard page at `https://neus.network/proof/[proof-receipt-id]`.
+
+That page is where teams can:
+
+- share a verifiable result
+- show visibility state
+- display the proof receipt and integrity details
+- route users back into related profile or app surfaces
+
+<Note>
+User-facing docs should call this value a **proof receipt ID**. The path still uses `{qHash}` for compatibility with the current product and API contract.
+</Note>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Receipts and Results" icon="receipt" href="./receipts-and-results">
+    What to save and how to reuse a proof receipt.
+  </Card>
+  <Card title="Partner Setup" icon="building" href="../cookbook/hub-integrator">
+    Link your domain, app, and hosted flow setup.
+  </Card>
+  <Card title="Billing" icon="credit-card" href="./billing">
+    Credits, payer resolution, and payment methods.
+  </Card>
+  <Card title="Agents" icon="robot" href="../agents/overview">
+    Agent identity and delegation on top of the Hub surface.
+  </Card>
+</CardGroup>

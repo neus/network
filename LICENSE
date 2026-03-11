@@ -21,7 +21,7 @@ Components covered:
 - Supporting interfaces
 
 ### SDK and Developer Tools - Apache 2.0
-**Location**: `sdk/`, `widgets/`, `mintlify/`, `examples/`, `abis/`  
+**Location**: `sdk/`, `widgets/`, `docs/`, `examples/`, `abis/`  
 **License File**: [`sdk/LICENSE`](./sdk/LICENSE)
 
 Components covered:

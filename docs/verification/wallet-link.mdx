@@ -1,0 +1,39 @@
+---
+title: wallet-link
+description: Link a secondary wallet to a primary wallet with a signed relationship proof.
+icon: link
+---
+
+Use `wallet-link` when a user needs to prove that multiple wallets belong to the same identity or workflow.
+
+## Best For
+
+- multi-wallet identity
+- agent and controller relationships
+- app account portability
+
+## Flow Type
+
+Instant. The secondary wallet signs the linking payload.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `primaryWalletAddress` | Yes | Primary wallet |
+| `secondaryWalletAddress` | Yes | Secondary wallet |
+| `signature` | Yes | Secondary wallet signature |
+| `chain` | Yes | CAIP-2 chain |
+| `signedTimestamp` | Yes | Unix ms timestamp |
+
+## Example
+
+```json
+{
+  "primaryWalletAddress": "0x...",
+  "secondaryWalletAddress": "0x...",
+  "signature": "0x...",
+  "chain": "eip155:8453",
+  "signedTimestamp": 1730000000000
+}
+```

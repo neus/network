@@ -1,0 +1,45 @@
+---
+title: Widgets Overview
+description: NEUS widgets give you the fastest path to proof badges and gated UI.
+icon: cube
+---
+
+Use NEUS widgets when you want the fastest drop-in path for proof badges and gated UI.
+
+## What You Can Add Quickly
+
+<CardGroup cols={2}>
+  <Card title="VerifyGate" icon="shield" href="./verifygate">
+    Gate React UI behind verification requirements.
+  </Card>
+  <Card title="ProofBadge" icon="badge-check" href="#proofbadge">
+    Display a proof receipt on any page.
+  </Card>
+</CardGroup>
+
+## Script Tag Badge
+
+```html
+<script src="https://verify.neus.network/widget.js"></script>
+<div data-neus-proof="0xYOUR_PROOF_RECEIPT_ID"></div>
+```
+
+The widget renders a badge for the provided proof receipt ID and links back to the standard proof page.
+
+<Note>
+The widget reads proof status from the public verification status route. Raw HTTP paths still use `:qHash` for the proof receipt ID parameter.
+</Note>
+
+## React Install
+
+```bash
+npm install @neus/sdk react react-dom
+```
+
+## ProofBadge
+
+```jsx
+import { ProofBadge } from '@neus/sdk/widgets';
+
+<ProofBadge proofId="0x..." showChains />
+```

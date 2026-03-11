@@ -1,0 +1,35 @@
+---
+title: token-holding
+description: Gate access by proving a wallet holds a minimum token balance.
+icon: coins
+---
+
+Use `token-holding` when access depends on a threshold token balance rather than a single NFT.
+
+## Best For
+
+- balance-based access
+- governance or membership tiers
+- token utility products
+
+## Flow Type
+
+Lookup. NEUS checks current token balances.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `contractAddress` | Yes | Token contract or mint |
+| `minBalance` | Yes | Required minimum balance |
+| `chainId` or `chain` | Yes | EVM `chainId` or Solana CAIP-2 chain |
+
+## Example
+
+```json
+{
+  "contractAddress": "0x...",
+  "minBalance": "100",
+  "chainId": 8453
+}
+```

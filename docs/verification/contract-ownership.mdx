@@ -1,0 +1,34 @@
+---
+title: contract-ownership
+description: Prove that a wallet controls a smart contract through owner or admin authority.
+icon: file-contract
+---
+
+Use `contract-ownership` when you need to prove control over a deployed smart contract.
+
+## Best For
+
+- app ownership
+- contract admin verification
+- protocol and ecosystem trust pages
+
+## Flow Type
+
+Lookup. NEUS checks owner or admin authority on-chain.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `contractAddress` | Yes | EVM contract address |
+| `chainId` | Yes | EVM chain ID |
+| `method` | No | `owner`, `admin`, or access-control style check |
+
+## Example
+
+```json
+{
+  "contractAddress": "0x...",
+  "chainId": 8453
+}
+```

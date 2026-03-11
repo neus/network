@@ -1,0 +1,56 @@
+---
+title: VerifyGate Component
+description: Gate React UI behind verification requirements with hosted verify built in.
+icon: shield
+---
+
+`VerifyGate` is the fastest React path for checking eligibility, launching hosted verify, and unlocking content.
+
+## Basic Usage
+
+```jsx
+import { VerifyGate } from '@neus/sdk/widgets';
+
+export function Page() {
+  return (
+    <VerifyGate
+      requiredVerifiers={['nft-ownership']}
+      verifierData={{
+        'nft-ownership': {
+          contractAddress: '0x...',
+          tokenId: '1',
+          chainId: 8453
+        }
+      }}
+      appId="neus-network"
+    >
+      <div>Unlocked</div>
+    </VerifyGate>
+  );
+}
+```
+
+## Key Props
+
+| Prop | What it does |
+|------|--------------|
+| `requiredVerifiers` | Sets the verification policy |
+| `verifierData` | Supplies verifier-specific inputs |
+| `strategy` | Chooses reuse, reuse-or-create, or fresh |
+| `proofOptions` | Controls privacy and content storage |
+| `mode` | Chooses create vs access behavior |
+| `proofId` | Pass a proof receipt ID directly for access mode |
+| `appId` | Sends public app attribution |
+| `sponsorGrant` | Enables sponsored proof creation |
+| `hostedCheckoutUrl` | Overrides the hosted verify URL when needed |
+
+<Note>
+In raw HTTP contracts the same proof receipt ID may appear as `{qHash}`.
+</Note>
+
+## Best Use Cases
+
+- gating paid or premium content
+- checking NFT or token access
+- launching hosted social or org verification
+- requiring fresh proof creation for high-stakes actions

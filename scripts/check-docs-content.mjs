@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, '..');
-const mintlifyRoot = path.join(repoRoot, 'mintlify');
+const docsRoot = path.join(repoRoot, 'docs');
 
 const bannedPhrases = [
   'for your deployment',
@@ -22,7 +22,7 @@ function walkMdx(dir, files = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const absolutePath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (entry.name.startsWith('.mintlify-home')) continue;
+      if (entry.name.startsWith('.mintlify-home')) continue; // Mintlify CLI cache
       walkMdx(absolutePath, files);
       continue;
     }
@@ -69,7 +69,7 @@ function getFirstParagraph(content) {
 
 const failures = [];
 
-for (const absolutePath of walkMdx(mintlifyRoot)) {
+for (const absolutePath of walkMdx(docsRoot)) {
   const relativePath = path.relative(repoRoot, absolutePath).split(path.sep).join('/');
   const content = fs.readFileSync(absolutePath, 'utf8');
   const description = getFrontmatterDescription(content);

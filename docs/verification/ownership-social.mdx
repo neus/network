@@ -1,0 +1,38 @@
+---
+title: ownership-social
+description: Prove ownership of a social account through the hosted NEUS flow.
+icon: share-nodes
+---
+
+Use `ownership-social` when you need to prove control of a social account such as X, Discord, GitHub, Farcaster, or Telegram.
+
+## Best For
+
+- social-linked trust pages
+- community onboarding
+- account reputation and discovery
+
+## Flow Type
+
+Interactive. Users complete the hosted NEUS flow first and return with the internal social token.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `provider` | Yes | Example: `github`, `discord`, `x`, `farcaster` |
+| `internalSocialToken` | Yes | Returned by hosted verify |
+| `walletAddress` | No | Optional subject override |
+
+## Example
+
+```json
+{
+  "provider": "github",
+  "internalSocialToken": "<from-hosted-flow>"
+}
+```
+
+## Use Hosted Verify
+
+Always route users through `/verify` or `VerifyGate` for this verifier. Do not ask users for raw OAuth tokens.

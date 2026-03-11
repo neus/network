@@ -1,0 +1,35 @@
+---
+title: agent-identity
+description: Register a verifiable AI agent, bot, or automation identity.
+icon: robot
+---
+
+Use `agent-identity` when you need a verifiable identity for an AI agent, bot, or automation.
+
+## Best For
+
+- agent registration
+- public agent discovery
+- trust packaging for automation systems
+
+## Flow Type
+
+Instant. The controller or agent wallet signs the registration request.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `agentId` | Yes | Stable agent identifier |
+| `agentAccountId` or `agentWallet` | One required | Agent wallet or account |
+| `agentLabel` | No | Human-readable display name |
+| `agentType` | No | `ai`, `bot`, `service`, `automation`, or `agent` |
+
+## Example
+
+```json
+{
+  "agentId": "support-bot-1",
+  "agentWallet": "0x..."
+}
+```

@@ -1,0 +1,38 @@
+---
+title: proof-of-human
+description: Add a strong anti-bot and human verification layer through the hosted NEUS flow.
+icon: user-check
+---
+
+Use `proof-of-human` when you need a strong anti-bot signal before access, payouts, or sensitive actions.
+
+## Best For
+
+- sybil resistance
+- reward programs
+- high-value onboarding
+
+## Flow Type
+
+Interactive. Users complete the hosted human-verification flow first.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `proofs` | Yes | Provider proof payload |
+| `queryResult` | Yes | Provider result object |
+| `provider` | No | Usually `zkpassport` |
+
+## Example
+
+```json
+{
+  "proofs": ["..."],
+  "queryResult": { "result": "ok" }
+}
+```
+
+## Use Hosted Verify
+
+This verifier should be launched through `/verify` or a widget-driven hosted flow.

@@ -1,0 +1,28 @@
+---
+title: neus_verify_or_guide
+description: Run gate-first logic and return hosted verify guidance when verification is missing.
+icon: route
+---
+
+Use `neus_verify_or_guide` when you want one MCP tool to decide whether the user is already eligible or should be sent into hosted verify.
+
+## Best For
+
+- agent assistants
+- guided onboarding
+- hosted verify handoff
+
+## Input
+
+```json
+{
+  "walletAddress": "0xabc123...",
+  "verifierIds": ["proof-of-human", "wallet-risk"],
+  "requireAll": true
+}
+```
+
+## Returns
+
+- `action: "already_verified"` when the policy is already satisfied
+- `action: "verification_required"` plus `hostedVerifyUrl` when the user must verify

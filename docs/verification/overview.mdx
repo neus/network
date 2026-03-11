@@ -1,0 +1,41 @@
+---
+title: Verification Overview
+description: The NEUS verification contract from request and signing through proof receipt reuse.
+icon: file-signature
+---
+
+Verification is the core NEUS contract: you create a request, sign the normalized message, submit it, receive a proof receipt, and reuse that proof receipt anywhere you need trust.
+
+## The Contract
+
+1. **Prepare the request** with verifier IDs, subject, and verifier-specific data
+2. **Standardize the signing string** so the wallet signs the exact request payload
+3. **Submit the verification**
+4. **Receive a proof receipt ID** immediately or after async completion
+5. **Reuse the same proof receipt** for status, display, access, and policy
+
+## Key Terms
+
+| Term | Meaning |
+|------|---------|
+| Request | The verifier set plus the normalized proof payload |
+| Signing string | The deterministic wallet message returned by `POST /api/v1/verification/standardize` |
+| Proof receipt ID | The stable identifier returned for a proof |
+| `qHash` | The HTTP/path name for the same proof receipt ID in raw API contracts |
+
+## Where To Go Next
+
+<CardGroup cols={2}>
+  <Card title="How Verification Works" icon="shield-check" href="./how-it-works">
+    Understand request flow, signing, and hosted interaction.
+  </Card>
+  <Card title="Lifecycle" icon="rotate" href="./lifecycle">
+    See async processing, terminal states, reuse, and revocation.
+  </Card>
+  <Card title="Signing Format" icon="file-code" href="./signing-format">
+    Read the canonical signing format and production rules.
+  </Card>
+  <Card title="Verifier Catalog" icon="list-tree" href="./verifiers">
+    Pick the verifier that matches the real-world claim you need.
+  </Card>
+</CardGroup>

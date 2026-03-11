@@ -1,0 +1,29 @@
+---
+title: neus_proofs_check
+description: Run eligibility-safe proof checks without loading private proof payloads.
+icon: shield-check
+---
+
+Use `neus_proofs_check` when your agent only needs to know whether a wallet or DID satisfies a policy.
+
+## Best For
+
+- access checks
+- gate enforcement
+- avoiding private proof payload reads
+
+## Input
+
+```json
+{
+  "wallet": "0xabc123...",
+  "verifiers": ["ownership-basic", "proof-of-human"],
+  "requireAll": true
+}
+```
+
+## Returns
+
+- `eligible`
+- `matchedCount`
+- `success`

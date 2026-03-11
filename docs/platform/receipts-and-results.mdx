@@ -1,0 +1,51 @@
+---
+title: Receipts and Results
+description: What a proof receipt ID is, what to persist, and how to reuse it across products.
+icon: receipt
+---
+
+Proof receipts are the reusable output of NEUS verification. Save the proof receipt ID once, then reuse it for display, gating, status checks, and policy.
+
+## Identifier Model
+
+- SDKs use `proofId` as the standard client field name.
+- HTTP paths and some wire payloads still use `{qHash}` for the same proof receipt ID.
+- In product and user-facing copy, treat it as a **proof receipt ID** unless you are documenting raw API compatibility.
+
+## What to Persist
+
+- Proof receipt ID
+- Final status when your workflow depends on completion
+- Verifier set and business context tied to that proof
+
+### Avoid Persisting
+
+- Raw signature material
+- Internal payer attribution
+- Private proof payloads unless you have a clear owner-authorized need
+
+## Common Outcomes
+
+| Result | Meaning | Next step |
+|--------|---------|-----------|
+| Verified immediately | Verifier completed inline | Save the receipt and continue |
+| Accepted / processing | Verifier is still running | Poll status until terminal |
+| Hosted verify handoff | Human action is required | Send the user to `/verify` |
+| Gate eligibility | Minimal yes/no check | Enforce policy without loading full proof payloads |
+
+## Proof Page
+
+Each proof can render at `https://neus.network/proof/[proof-receipt-id]`.
+
+| Element | Purpose |
+|---------|---------|
+| Share button | Send the proof page anywhere |
+| Visibility badge | Show public, private, or unlisted state |
+| Content hash | Integrity signal |
+| Proof receipt ID | Stable identifier for reuse |
+
+## Display Guidance
+
+- Link public proofs to the standard proof page on `neus.network`.
+- Use `ProofBadge` for lightweight display.
+- For server-side access checks, prefer `GET /api/v1/proofs/check` over loading a full proof payload.

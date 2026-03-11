@@ -1,0 +1,23 @@
+---
+title: neus_verifiers_catalog
+description: Read the live NEUS verifier catalog from MCP before building policy or UI.
+icon: list-tree
+---
+
+Use `neus_verifiers_catalog` at the start of an MCP workflow when the client needs the live verifier catalog.
+
+## Best For
+
+- tool-driven discovery
+- verifier selection
+- avoiding hardcoded verifier metadata
+
+## Upstream API
+
+`GET /api/v1/verification/verifiers`
+
+## Input
+
+```json
+{}
+```

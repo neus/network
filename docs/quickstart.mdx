@@ -1,0 +1,140 @@
+---
+title: Quickstart
+description: Create a proof receipt, check status, and gate access with the fastest NEUS path.
+icon: rocket
+---
+
+This guide is the shortest path from zero setup to a reusable NEUS proof in a real app flow.
+
+## What You'll Do
+
+1. Install the SDK
+2. Create a proof with `ownership-basic`
+3. Save the returned proof receipt ID
+4. Poll status for async flows
+5. Gate UI or server access with that receipt
+
+## Pick Your Starting Surface
+
+<CardGroup cols={2}>
+  <Card title="SDK Flow" icon="code" href="#3-create-a-proof">
+    Best for custom browser and app UX.
+  </Card>
+  <Card title="Widgets" icon="cube" href="./widgets/overview">
+    Fastest path for React gating and proof badges.
+  </Card>
+  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
+    Standard login and interactive verification flow.
+  </Card>
+  <Card title="HTTP Examples" icon="terminal" href="https://github.com/neus/network/tree/main/examples">
+    Minimal curl and Node.js examples for server integrations.
+  </Card>
+</CardGroup>
+
+## 1. Install the SDK
+
+```bash
+npm install @neus/sdk
+```
+
+## 2. Create a Client
+
+```javascript
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient({ appId: 'neus-network' });
+```
+
+## 3. Create a Proof
+
+Create a basic ownership proof. This prompts the user to sign a request-bound message.
+
+```javascript
+const proof = await client.verify({
+  verifier: 'ownership-basic',
+  content: 'Hello NEUS',
+  wallet: window.ethereum,
+});
+
+const proofId = proof.proofId;
+```
+
+<Note>
+`proofId` is the standard SDK name for the proof receipt ID. Raw HTTP paths may use `{qHash}` for the same identifier.
+</Note>
+
+## 4. Poll Status
+
+Some verifiers complete immediately. Others return `202` and finish asynchronously.
+
+```javascript
+const final = await client.pollProofStatus(proofId, {
+  interval: 3000,
+  timeout: 60000,
+});
+
+console.log(final.status);
+```
+
+## 5. Gate Access
+
+Use `VerifyGate` when you want the UI to check eligibility before showing content.
+
+```jsx
+import { VerifyGate } from '@neus/sdk/widgets';
+
+export default function ProtectedPage() {
+  return (
+    <VerifyGate
+      requiredVerifiers={['nft-ownership']}
+      verifierData={{
+        'nft-ownership': {
+          contractAddress: '0x...',
+          tokenId: '1',
+          chainId: 1,
+        },
+      }}
+    >
+      <div>Access granted.</div>
+    </VerifyGate>
+  );
+}
+```
+
+## Hosted Interactive Verifiers
+
+For `ownership-social`, `ownership-org-oauth`, and `proof-of-human`, use the hosted NEUS flow.
+
+```jsx
+<VerifyGate
+  requiredVerifiers={['ownership-social']}
+  onVerified={(result) => {
+    console.log('Hosted verification complete', result.proofId);
+  }}
+>
+  <div>Access granted.</div>
+</VerifyGate>
+```
+
+## Production Defaults
+
+- Prefer private proofs unless you explicitly need public discovery.
+- Persist the proof receipt ID, not raw signature material.
+- Use freshness windows for point-in-time verifiers such as balances, ownership, and risk.
+
+## Next Pages
+
+<CardGroup cols={2}>
+  <Card title="Integrate" icon="compass" href="./integration">
+    Follow the end-to-end production path.
+  </Card>
+  <Card title="Verification Catalog" icon="list-tree" href="./verification/verifiers">
+    Pick the right verifier for your use case.
+  </Card>
+  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
+    Standard login and popup completion flow.
+  </Card>
+  <Card title="Examples" icon="code" href="./examples">
+    See Node.js, React, and curl implementations.
+  </Card>
+</CardGroup>

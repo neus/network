@@ -1,0 +1,37 @@
+---
+title: agent-delegation
+description: Delegate scoped authority from a controller wallet to an agent wallet.
+icon: key
+---
+
+Use `agent-delegation` when a controller needs to grant limited authority to an agent.
+
+## Best For
+
+- payment delegation
+- scoped actions
+- auditable agent permissions
+
+## Flow Type
+
+Instant. The controller signs the delegation request.
+
+## Required Fields
+
+| Field | Required | Notes |
+|------|----------|-------|
+| `controllerWallet` | Yes | Must match the signer |
+| `agentWallet` | Yes | Target agent wallet |
+| `scope` | No | Example: `payments:x402` |
+| `permissions` | No | Allowed actions |
+| `expiresAt` | No | Unix ms expiry |
+
+## Example
+
+```json
+{
+  "controllerWallet": "0x...",
+  "agentWallet": "0x...",
+  "scope": "payments:x402"
+}
+```
