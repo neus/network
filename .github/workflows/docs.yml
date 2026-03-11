@@ -15,7 +15,6 @@ on:
       - 'scripts/**/*.mjs'
       - 'spec/verifiers/**/*'
       - 'docs/**/*'
-      - 'mint.json'
   push:
     branches:
       - main
@@ -32,7 +31,6 @@ on:
       - 'scripts/**/*.mjs'
       - 'spec/verifiers/**/*'
       - 'docs/**/*'
-      - 'mint.json'
   workflow_dispatch:
 
 permissions:

@@ -86,11 +86,13 @@
               "verification/lifecycle",
               "verification/signing-format",
               {
-                "group": "Verifier Catalog",
+                "group": "Verifiers",
+                "icon": "list-check",
                 "pages": [
                   "verification/verifiers",
                   {
                     "group": "Identity and Ownership",
+                    "icon": "fingerprint",
                     "pages": [
                       "verification/ownership-basic",
                       "verification/ownership-social",
@@ -102,6 +104,7 @@
                   },
                   {
                     "group": "Assets and Access",
+                    "icon": "coins",
                     "pages": [
                       "verification/nft-ownership",
                       "verification/token-holding",
@@ -110,6 +113,7 @@
                   },
                   {
                     "group": "Trust and Risk",
+                    "icon": "shield-halved",
                     "pages": [
                       "verification/proof-of-human",
                       "verification/wallet-risk",
@@ -118,6 +122,7 @@
                   },
                   {
                     "group": "Agent Verifiers",
+                    "icon": "microchip",
                     "pages": [
                       "verification/agent-identity",
                       "verification/agent-delegation"
@@ -125,14 +130,6 @@
                   }
                 ]
               }
-            ]
-          },
-          {
-            "group": "Learn",
-            "icon": "book-open",
-            "pages": [
-              "brand-kit",
-              "learn/standards/caip-380"
             ]
           },
           {
@@ -144,6 +141,14 @@
               "platform/receipts-and-results",
               "platform/presets"
             ]
+          },
+          {
+            "group": "Learn",
+            "icon": "graduation-cap",
+            "pages": [
+              "brand-kit",
+              "learn/standards/caip-380"
+            ]
           }
         ]
       },
@@ -152,7 +157,7 @@
         "groups": [
           {
             "group": "SDK Essentials",
-            "icon": "code",
+            "icon": "layer-group",
             "pages": [
               "sdks/overview",
               "sdks/javascript",
@@ -164,7 +169,7 @@
           },
           {
             "group": "Widgets",
-            "icon": "cube",
+            "icon": "puzzle-piece",
             "pages": [
               "widgets/overview",
               "widgets/verifygate"
