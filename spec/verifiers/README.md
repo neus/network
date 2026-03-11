@@ -2,7 +2,7 @@
 
 Machine-readable verifier assets live here.
 
-- [`VERIFIERS.json`](../VERIFIERS.json) is the canonical verifier index used by tooling.
+- [`VERIFIERS.json`](../VERIFIERS.json) is the standardized verifier index used by tooling.
 - [`schemas/`](./schemas/) contains the public input schemas for each verifier.
 - The public human-readable catalog is published at `https://docs.neus.network/ecosystems/verifiers`.
 

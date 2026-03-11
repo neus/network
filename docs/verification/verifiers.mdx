@@ -1,48 +1,74 @@
 ---
 title: Verifier Catalog
-description: Pick the right NEUS verifier by use case, flow type, and input requirements.
+description: Choose the right verifier by the outcome you want, then open the family that matches your use case.
 icon: list-tree
 ---
 
-Use this page to choose the right verifier family before you drill into the per-verifier pages.
+Start with the outcome you need. Then open the matching family below for the simplest production path.
 
 <Note>
 The backend verifier registry remains the single source of truth for validation rules and catalog metadata. These docs package the catalog in reader-friendly language.
 </Note>
 
-## Choose by Outcome
+## Start With the Outcome
 
-| What you need | Start with |
-|---------------|------------|
-| Prove wallet, domain, org, or social ownership | Identity and ownership verifiers |
-| Gate by token, NFT, or contract control | Asset and access verifiers |
-| Reduce bots or evaluate risk | Trust and risk verifiers |
-| Register and control agents | Agent verifiers |
+| If you need to... | Open this family |
+|-------------------|------------------|
+| Prove a wallet, domain, org, or social account | Identity and Ownership |
+| Unlock access with token, NFT, or contract state | Assets and Access |
+| Reduce bots or add risk review | Trust and Risk |
+| Register an agent or delegate authority | Agent Verifiers |
 
-## Flow Types
+## How To Read These Verifiers
 
-| Flow type | What it means | Examples |
-|-----------|---------------|----------|
-| Instant | Signature-driven, completes in one request | ownership-basic, wallet-link, agent-identity |
-| Interactive | User must complete a hosted flow first | ownership-social, ownership-org-oauth, proof-of-human |
-| Lookup | NEUS checks external or on-chain state | nft-ownership, token-holding, wallet-risk |
+| Type | What it means | Best when |
+|------|---------------|-----------|
+| Instant | Signed and completed in one request | You want the fastest wallet-based proof |
+| Interactive | User finishes a hosted NEUS flow | You need OAuth, human proof, or guided verification |
+| Lookup | NEUS checks external or on-chain state | You need a yes or no result from live state |
 
 ## Verifier Families
 
-<CardGroup cols={2}>
-  <Card title="Identity and Ownership" icon="user-check" href="./ownership-basic">
-    Wallets, domains, social accounts, org membership, pseudonyms, and wallet linking.
-  </Card>
-  <Card title="Assets and Access" icon="key" href="./nft-ownership">
-    NFT ownership, token holding, and smart contract control.
-  </Card>
-  <Card title="Trust and Risk" icon="shield-halved" href="./proof-of-human">
-    Human verification, wallet risk, and content moderation.
-  </Card>
-  <Card title="Agent Verifiers" icon="robot" href="./agent-identity">
-    Agent identity and delegation for AI and automation systems.
-  </Card>
-</CardGroup>
+<AccordionGroup>
+  <Accordion title="Identity and Ownership">
+    Use these when the core question is "who controls this account, wallet, domain, org, or public identity?"
+
+    | Verifier | Type | Best for |
+    |----------|------|----------|
+    | [ownership-basic](./ownership-basic) | Instant | Simple wallet ownership and signed claims |
+    | [ownership-social](./ownership-social) | Interactive | Social account verification |
+    | [ownership-dns-txt](./ownership-dns-txt) | Lookup | Domain ownership |
+    | [ownership-org-oauth](./ownership-org-oauth) | Interactive | Team or org membership |
+    | [ownership-pseudonym](./ownership-pseudonym) | Instant | Pseudonymous identity binding |
+    | [wallet-link](./wallet-link) | Instant | Bind one wallet identity to another |
+  </Accordion>
+  <Accordion title="Assets and Access">
+    Use these when access depends on something the user holds or controls on-chain.
+
+    | Verifier | Type | Best for |
+    |----------|------|----------|
+    | [nft-ownership](./nft-ownership) | Lookup | NFT-gated products, drops, and communities |
+    | [token-holding](./token-holding) | Lookup | Token-balance thresholds |
+    | [contract-ownership](./contract-ownership) | Lookup | Smart contract admin or creator control |
+  </Accordion>
+  <Accordion title="Trust and Risk">
+    Use these when you need stronger abuse resistance, human checks, or content risk signals.
+
+    | Verifier | Type | Best for |
+    |----------|------|----------|
+    | [proof-of-human](./proof-of-human) | Interactive | Anti-bot and sybil resistance |
+    | [wallet-risk](./wallet-risk) | Lookup | Risk checks before access or payouts |
+    | [ai-content-moderation](./ai-content-moderation) | Lookup | AI or UGC moderation workflows |
+  </Accordion>
+  <Accordion title="Agent Verifiers">
+    Use these when agents need identity, delegated authority, and a reusable proof trail.
+
+    | Verifier | Type | Best for |
+    |----------|------|----------|
+    | [agent-identity](./agent-identity) | Instant | Register a verifiable agent identity |
+    | [agent-delegation](./agent-delegation) | Instant | Scope what an agent may do |
+  </Accordion>
+</AccordionGroup>
 
 ## Recommended Bundles
 

@@ -1184,7 +1184,7 @@ export function validateSignatureComponents({ walletAddress, signature, signedTi
 export const DEFAULT_HOSTED_VERIFY_URL = 'https://neus.network/verify';
 
 /**
- * Build canonical hosted checkout/verify URL for integrators.
+ * Build standardized hosted checkout/verify URL for integrators.
  * Single typed entry point to avoid copy-paste errors.
  * @param {Object} opts
  * @param {string} [opts.gateId] - Gate ID for gate-backed checkout

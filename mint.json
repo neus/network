@@ -78,24 +78,6 @@
             ]
           },
           {
-            "group": "Learn",
-            "icon": "book-open",
-            "pages": [
-              "docs/brand-kit",
-              "docs/learn/standards/caip-380"
-            ]
-          },
-          {
-            "group": "Platform",
-            "icon": "globe",
-            "pages": [
-              "docs/platform/overview",
-              "docs/platform/hub",
-              "docs/platform/receipts-and-results",
-              "docs/platform/presets"
-            ]
-          },
-          {
             "group": "Verification",
             "icon": "file-signature",
             "pages": [
@@ -138,6 +120,24 @@
                   "docs/verification/agent-delegation"
                 ]
               }
+            ]
+          },
+          {
+            "group": "Learn",
+            "icon": "book-open",
+            "pages": [
+              "docs/brand-kit",
+              "docs/learn/standards/caip-380"
+            ]
+          },
+          {
+            "group": "Platform",
+            "icon": "globe",
+            "pages": [
+              "docs/platform/overview",
+              "docs/platform/hub",
+              "docs/platform/receipts-and-results",
+              "docs/platform/presets"
             ]
           }
         ]
