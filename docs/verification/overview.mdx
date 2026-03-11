@@ -4,15 +4,12 @@ description: The NEUS verification contract from request and signing through pro
 icon: file-signature
 ---
 
-Verification is the core NEUS contract: you create a request, sign the normalized message, submit it, receive a proof receipt, and reuse that proof receipt anywhere you need trust.
+## Default Path
 
-## The Contract
-
-1. **Prepare the request** with verifier IDs, subject, and verifier-specific data
-2. **Standardize the signing string** so the wallet signs the exact request payload
-3. **Submit the verification**
-4. **Receive a proof receipt ID** immediately or after async completion
-5. **Reuse the same proof receipt** for status, display, access, and policy
+1. **Choose the verifier you need**
+2. **Launch hosted verify or use the SDK**
+3. **Receive a proof receipt ID**
+4. **Reuse that receipt for access, display, and policy**
 
 ## Key Terms
 
@@ -33,7 +30,7 @@ Verification is the core NEUS contract: you create a request, sign the normalize
     See async processing, terminal states, reuse, and revocation.
   </Card>
   <Card title="Signing Format" icon="file-code" href="./signing-format">
-    Read the standarized signing format and production rules.
+    Read the standardized signing format and production rules.
   </Card>
   <Card title="Verifier Catalog" icon="list-tree" href="./verifiers">
     Pick the verifier that matches the real-world claim you need.

@@ -4,8 +4,6 @@ description: Signature-based authentication for NEUS API operations.
 icon: fingerprint
 ---
 
-NEUS uses **signature-based authentication** for write operations. Most read endpoints are public.
-
 ## Supported Wallets
 
 | Type | Standard | Description |
@@ -14,26 +12,26 @@ NEUS uses **signature-based authentication** for write operations. Most read end
 | Smart Contract | EIP-1271 | Contract wallets (Safe, Argent, Sequence) |
 | Counterfactual | EIP-6492 | Pre-deployed smart accounts not yet on-chain |
 
-## Standardized Path
+## Default Path
 
-For manual or server-side signing, do not hand-build the message if you can avoid it.
+For most products, use hosted verify or SDK helpers. Only use this section when you are building a low-level or server-side signing client.
 
 <Steps>
-  <Step title="Standardize request">
+  <Step title="Ask NEUS for the exact signing string">
     Call `POST /api/v1/verification/standardize`
   </Step>
   
-  <Step title="Sign the string">
+  <Step title="Sign the exact returned string">
     Sign the returned `signerString`
   </Step>
   
-  <Step title="Submit verification">
+  <Step title="Submit the verification request">
     Submit the same normalized request body to `POST /api/v1/verification`
   </Step>
 </Steps>
 
 <Tip>
-This is the production-safe path because it avoids drift in chain normalization and deterministic JSON handling.
+This is the supported low-level path because it avoids drift in chain normalization and deterministic JSON handling.
 </Tip>
 
 ### Signing Format
@@ -49,7 +47,7 @@ Data: <standardized-json>
 Timestamp: <unix-ms>
 ```
 
-Do not hand-author this message. Always use the standardize endpoint.
+Do not hand-author or edit this message.
 
 ## Low-Level Client Rules
 

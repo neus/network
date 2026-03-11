@@ -4,7 +4,7 @@ description: Prove organization membership through Google or Microsoft hosted ve
 icon: building
 ---
 
-Use `ownership-org-oauth` when you need to prove team or organization membership.
+Use `ownership-org-oauth` when you need to prove that a user belongs to a company or workspace.
 
 ## Best For
 
@@ -14,7 +14,15 @@ Use `ownership-org-oauth` when you need to prove team or organization membership
 
 ## Flow Type
 
-Interactive. Users complete hosted Google or Microsoft verification first.
+Interactive. Users complete hosted NEUS verification with Google or Microsoft first.
+
+## Simplest Integration
+
+For most products, do not build your own OAuth UI. Launch hosted `/verify` and let NEUS run the provider flow.
+
+```text
+https://neus.network/verify?preset=org-pack&returnUrl=https://app.example.com/verified
+```
 
 ## Required Fields
 
@@ -22,9 +30,9 @@ Interactive. Users complete hosted Google or Microsoft verification first.
 |------|----------|-------|
 | `provider` | Yes | `google` or `microsoft` |
 | `internalSocialToken` | Yes | Returned by hosted verify |
-| `expectedOrgDomain` | No | Restrict the allowed org domain |
+| `expectedOrgDomain` | No | Restrict the proof to one company domain such as `acme.com` |
 
-## Example
+## Example Payload
 
 ```json
 {
@@ -37,3 +45,7 @@ Interactive. Users complete hosted Google or Microsoft verification first.
 ## Use Hosted Verify
 
 This verifier should resolve through `/verify` instead of a custom OAuth UI.
+
+<Tip>
+Only send `expectedOrgDomain` when access should be limited to a specific company domain. If any valid Google Workspace or Microsoft 365 membership is acceptable, leave it out.
+</Tip>

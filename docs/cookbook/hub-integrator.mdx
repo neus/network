@@ -1,15 +1,15 @@
 ---
 title: Partner Setup
-description: Domain verification, org OAuth, app attribution, and sponsor grants for production integrations.
+description: Domain verification, hosted organization verification, app attribution, and sponsor grants for production integrations.
 icon: building
 ---
 
-This guide covers connecting your domain or organization to NEUS, issuing sponsored verifications, and configuring hosted checkout.
+Use this guide when you are connecting a production app to NEUS hosted verify, app attribution, and sponsored verification flows.
 
 ## Prerequisites
 
 - A NEUS account with a verified wallet
-- Your integration domain or organization OAuth credentials
+- Your public app domain
 - If using hosted auth code exchange, partner access enabled during onboarding
 
 ## 1. Domain Verification
@@ -43,13 +43,51 @@ const proof = await client.verify({
 GET /api/v1/proofs/check?verifierIds=ownership-dns-txt&address=0x...
 ```
 
-## 2. Organization OAuth Setup
+## 2. Organization Membership Verification
 
-For organization-level verifications (`ownership-org-oauth`):
+For `ownership-org-oauth`, the public integration path is simple: send the user to hosted NEUS verify and let NEUS handle Google or Microsoft.
 
-1. Register the provider credentials with NEUS during partner onboarding
-2. Add `https://api.neus.network/api/v1/auth/oauth/callback/<provider>` to allowed redirect URIs
-3. Validate provider credentials and redirect URIs before going live
+### What You Actually Need To Do
+
+1. Launch `https://neus.network/verify`
+2. Use `preset=org-pack` when organization membership is the only requirement
+3. Add `returnUrl` or popup mode for completion handling
+4. Read the returned proof receipt ID after the hosted flow finishes
+
+### Recommended Hosted URL
+
+```text
+https://neus.network/verify?preset=org-pack&returnUrl=https://app.example.com/verified
+```
+
+Popup example:
+
+```text
+https://neus.network/verify?preset=org-pack&mode=popup&origin=https://app.example.com
+```
+
+### Restrict to One Company Domain Only When You Need It
+
+If access should only succeed for members of one company, pass `expectedOrgDomain`.
+
+```jsx
+<VerifyGate
+  hostedCheckoutUrl="https://neus.network/verify"
+  requiredVerifiers={['ownership-org-oauth']}
+  verifierData={{
+    'ownership-org-oauth': {
+      provider: 'google',
+      expectedOrgDomain: 'acme.com',
+    },
+  }}
+>
+  <ProtectedContent />
+</VerifyGate>
+```
+
+<Note>
+Most integrators do not need to create their own Google or Microsoft OAuth app, manage redirect URIs, or register provider credentials just to use the hosted NEUS flow. If NEUS coordinates a custom enterprise provider setup, treat that as a private onboarding task, not the default public integration path.
+</Note>
 
 ## 3. Link App (Hub UI)
 
@@ -57,11 +95,11 @@ Link your integration domain in the Hub to receive credits and attribution:
 
 | Step | Action |
 |------|--------|
-| 1 | Go to [Hub](https://neus.network/hub) → Profile → Apps |
-| 2 | Enter app domain (e.g. `acme.com` or `https://acme.com`) |
-| 3 | Set daily credit cap (default 10,000) |
+| 1 | Go to [Hub](https://neus.network/hub) -> Profile -> Apps |
+| 2 | Enter app domain, for example `app.example.com` or `https://app.example.com` |
+| 3 | Set daily credit cap |
 | 4 | Use `*` for any origin only in development |
-| 5 | Send `X-Neus-App` and `Origin` headers from your whitelisted domain |
+| 5 | Send `X-Neus-App` and `Origin` headers from your approved domain |
 
 <Card title="Hub" icon="globe" href="../platform/hub">
   Explorer, profile tabs, and identity management.
@@ -89,15 +127,15 @@ Verify domains and organizations directly in the Hub:
 
 | Flow | Where | Notes |
 |------|-------|------|
-| **Domain** | Profile → Identity → Domains | Add DNS TXT at `_neus.<domain>` first |
-| **Organization** | Profile → Identity → Organizations | OAuth: Google Workspace, Microsoft 365 |
-| **Privacy** | Per proof | Public (discoverable) or Private (owner-only) |
+| Domain | Profile -> Identity -> Domains | Add DNS TXT at `_neus.<domain>` first |
+| Organization | Profile -> Identity -> Organizations | Hosted NEUS verify for Google Workspace or Microsoft 365 |
+| Privacy | Per proof | Public or private proof visibility |
 
-We do not store your email. Link your app first (Profile → Apps), then verify your domain.
+Link your app first in Profile -> Apps, then verify your domain or organization.
 
 ## 6. Hosted Checkout for Interactive Verifiers
 
-Interactive verifiers (`ownership-social`, `ownership-org-oauth`, `proof-of-human`) require NEUS-hosted flow.
+Interactive verifiers (`ownership-social`, `ownership-org-oauth`, `proof-of-human`) should resolve through the NEUS-hosted flow.
 
 ### React (VerifyGate)
 
@@ -107,12 +145,20 @@ import { VerifyGate } from '@neus/sdk/widgets';
 <VerifyGate
   apiUrl="https://api.neus.network"
   hostedCheckoutUrl="https://neus.network/verify"
-  requiredVerifiers={['ownership-social']}
+  requiredVerifiers={['ownership-org-oauth']}
+  verifierData={{
+    'ownership-org-oauth': {
+      provider: 'google',
+      expectedOrgDomain: 'acme.com',
+    },
+  }}
   onVerified={(result) => console.log('Verified:', result.proofId)}
 >
   <ProtectedContent />
 </VerifyGate>
 ```
+
+If you do not need to restrict the company domain, prefer the simpler preset URL and avoid custom verifier payloads.
 
 ### Session-First (Redirect + Code Exchange)
 
@@ -129,7 +175,7 @@ curl -X POST https://api.neus.network/api/v1/auth/code/exchange \
 This is a partner-enabled server flow. Confirm access during onboarding before you build against it.
 </Note>
 
-## 7. Sponsor Grants (Covering Verification Costs)
+## 7. Sponsor Grants
 
 If your integration sponsors verification costs:
 

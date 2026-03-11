@@ -46,9 +46,9 @@
     "lint": "eslint . --ignore-pattern widgets/verify-gate/dist/**",
     "format": "prettier --write \"**/*.js\"",
     "build": "npm run build:widgets && npm run build:widget-standalone && npm run build:cjs",
-    "build:widgets": "esbuild widgets/verify-gate/VerifyGate.jsx widgets/verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=widgets/verify-gate/dist --jsx=automatic --legal-comments=none --loader:.svg=dataurl --external:react --external:react-dom --external:react/jsx-runtime --external:@neus/sdk/client",
-    "build:cjs": "esbuild index.js client.js utils.js errors.js gates.js --bundle --platform=node --format=cjs --outdir=cjs --out-extension:.js=.cjs --legal-comments=none --external:ethers --external:@zkpassport/sdk --external:react --external:react-dom --external:react/jsx-runtime",
-    "build:widget-standalone": "esbuild widgets/verify-gate/standalone.js --platform=browser --outfile=widgets/verify-gate/dist/widget.js --legal-comments=none && node -e \"require('fs').copyFileSync('widgets/verify-gate/pages-headers','widgets/verify-gate/dist/_headers')\"",
+    "build:widgets": "npx esbuild widgets/verify-gate/VerifyGate.jsx widgets/verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=widgets/verify-gate/dist --jsx=automatic --legal-comments=none --loader:.svg=dataurl --external:react --external:react-dom --external:react/jsx-runtime --external:@neus/sdk/client",
+    "build:cjs": "npx esbuild index.js client.js utils.js errors.js gates.js --bundle --platform=node --format=cjs --outdir=cjs --out-extension:.js=.cjs --legal-comments=none --external:ethers --external:@zkpassport/sdk --external:react --external:react-dom --external:react/jsx-runtime",
+    "build:widget-standalone": "npx esbuild widgets/verify-gate/standalone.js --platform=browser --outfile=widgets/verify-gate/dist/widget.js --legal-comments=none && node -e \"require('fs').copyFileSync('widgets/verify-gate/pages-headers','widgets/verify-gate/dist/_headers')\"",
     "deploy:widget": "npm run build:widget-standalone && npx wrangler pages deploy widgets/verify-gate/dist --project-name=neus-verify-widget",
     "prepack": "npm run build",
     "prepublishOnly": "npm run lint && npm test && npm run build"
