@@ -1,6 +1,6 @@
 ---
 title: Discovery & Endpoints
-description: Public MCP endpoints, .well-known discovery, and transport (hosted HTTP vs stdio).
+description: Public MCP endpoints, discovery metadata, and hosted transport.
 icon: globe
 ---
 
@@ -10,15 +10,13 @@ icon: globe
 | --- | --- | --- |
 | Discovery | `https://mcp.neus.network/.well-known/mcp.json` | Server metadata and public tool listing |
 | MCP transport | `https://mcp.neus.network/mcp` | Streamable HTTP MCP endpoint |
-| Hosted verify | `https://neus.network/verify` | Wallet/passkey/browser fallback for interactive verification |
+| Hosted verify | `https://neus.network/verify` | Browser handoff for interactive verification |
 
 <Note>
-`/mcp` is the standard public transport path. The server also accepts `/` in HTTP mode, but integrators should use `/mcp` so discovery metadata and client config stay consistent.
+Use `/mcp` as the public MCP transport path.
 </Note>
 
-## Supported Transports
-
-### Hosted Streamable HTTP
+## Hosted Transport
 
 This is the default go-live path for integrators.
 
@@ -33,25 +31,7 @@ This is the default go-live path for integrators.
 }
 ```
 
-### Stdio (Local)
-
-Use stdio when you want the MCP process to run locally or inside your own infrastructure.
-
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "command": "npx",
-      "args": ["-y", "@neus/mcp-server"],
-      "env": {
-        "NEUS_API_URL": "https://api.neus.network"
-      }
-    }
-  }
-}
-```
-
-## Health and Discovery (Hosted)
+## Health and Discovery
 
 The hosted MCP at `mcp.neus.network` exposes:
 
@@ -66,15 +46,15 @@ The hosted MCP at `mcp.neus.network` exposes:
 
 <CardGroup cols={2}>
   <Card title="MCP Overview" icon="plug" href="./overview">
-    What the server is for and contract boundary.
+    What the server is for and where it fits.
   </Card>
   <Card title="Tools" icon="wrench" href="./tools">
     Tool names, inputs, and usage.
   </Card>
   <Card title="Setup" icon="code" href="./setup">
-    Cursor and IDE config.
+    Client config for hosted MCP.
   </Card>
   <Card title="Auth & Security" icon="lock" href="./auth">
-    NEUS_AUTH_TOKEN and eligibility-safe behavior.
+    Auth-required behavior and eligibility-safe boundaries.
   </Card>
 </CardGroup>

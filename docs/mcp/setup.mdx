@@ -1,6 +1,6 @@
 ---
 title: Setup
-description: Config snippets for Cursor, VS Code, and env vars for the NEUS MCP server.
+description: Config snippets for Cursor, Claude Desktop, and VS Code using the hosted NEUS MCP endpoint.
 icon: code
 ---
 
@@ -8,30 +8,12 @@ icon: code
 
 ### Cursor
 
-Hosted:
-
 ```json
 {
   "mcpServers": {
     "neus": {
       "type": "streamableHttp",
       "url": "https://mcp.neus.network/mcp"
-    }
-  }
-}
-```
-
-Stdio (local):
-
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "command": "npx",
-      "args": ["-y", "@neus/mcp-server"],
-      "env": {
-        "NEUS_API_URL": "https://api.neus.network"
-      }
     }
   }
 }
@@ -43,11 +25,8 @@ Stdio (local):
 {
   "mcpServers": {
     "neus": {
-      "command": "npx",
-      "args": ["-y", "@neus/mcp-server"],
-      "env": {
-        "NEUS_API_URL": "https://api.neus.network"
-      }
+      "type": "streamableHttp",
+      "url": "https://mcp.neus.network/mcp"
     }
   }
 }
@@ -55,7 +34,7 @@ Stdio (local):
 
 ### VS Code
 
-Use the same JSON structure in your MCP client config (e.g. MCP extension settings). Hosted URL:
+Use the same JSON structure in your MCP client config or extension settings.
 
 ```json
 {
@@ -67,20 +46,6 @@ Use the same JSON structure in your MCP client config (e.g. MCP extension settin
   }
 }
 ```
-
-## Runtime Configuration (Stdio)
-
-For local stdio mode, the following environment variables are supported:
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `NEUS_API_URL` | `https://api.neus.network` | API base URL |
-| `NEUS_MCP_APP_ID` | `neus-mcp-server` | Public app attribution header sent as `X-Neus-App` |
-| `NEUS_AUTH_TOKEN` | unset | Optional Bearer token for session-backed calls such as `neus_me` |
-
-<Warning>
-Do not run a publicly reachable MCP server with privileged API credentials. The hosted NEUS MCP service is transport-open by design; signer checks, payment policy, and rate limits are enforced by the NEUS API.
-</Warning>
 
 ## Recommended Go-Live Pattern
 
@@ -105,6 +70,6 @@ For production integrations, keep the integration model simple:
     Tool reference.
   </Card>
   <Card title="Auth & Security" icon="lock" href="./auth">
-    NEUS_AUTH_TOKEN and session-backed use.
+    Authentication boundaries and eligibility-safe behavior.
   </Card>
 </CardGroup>

@@ -71,10 +71,6 @@ If you run the NEUS API at a custom `apiUrl`, also set the hosted verify URL exp
 </VerifyGate>
 ```
 
-<Note>
-Hosted verify must be same-origin with its own passkey RP ID/origin configuration.
-</Note>
-
 ## Popup Completion Signaling
 
 For popup flows, the hosted window posts a completion message to the opener.
@@ -82,7 +78,7 @@ For popup flows, the hosted window posts a completion message to the opener.
 | Message type | When |
 |--------------|------|
 | `neus_login_complete` | After session/login is confirmed |
-| `neus_checkout_done` | After verification completes (includes the proof receipt ID, `proofId`, raw `qHash`, `verifierIds`, and optional `gateId`) |
+| `neus_checkout_done` | After verification completes (includes the proof receipt ID, `proofId`, `verifierIds`, and optional `gateId`) |
 
 **Delivery:** `window.opener.postMessage(...)`. Origin is restricted to the supplied `origin` when it is an absolute HTTP(S) URL.
 

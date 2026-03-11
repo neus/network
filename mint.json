@@ -85,39 +85,44 @@
               "docs/verification/how-it-works",
               "docs/verification/lifecycle",
               "docs/verification/signing-format",
-              "docs/verification/verifiers",
               {
-                "group": "Identity and Ownership",
+                "group": "Verifier Catalog",
                 "pages": [
-                  "docs/verification/ownership-basic",
-                  "docs/verification/ownership-social",
-                  "docs/verification/ownership-dns-txt",
-                  "docs/verification/ownership-org-oauth",
-                  "docs/verification/ownership-pseudonym",
-                  "docs/verification/wallet-link"
-                ]
-              },
-              {
-                "group": "Assets and Access",
-                "pages": [
-                  "docs/verification/nft-ownership",
-                  "docs/verification/token-holding",
-                  "docs/verification/contract-ownership"
-                ]
-              },
-              {
-                "group": "Trust and Risk",
-                "pages": [
-                  "docs/verification/proof-of-human",
-                  "docs/verification/wallet-risk",
-                  "docs/verification/ai-content-moderation"
-                ]
-              },
-              {
-                "group": "Agent Verifiers",
-                "pages": [
-                  "docs/verification/agent-identity",
-                  "docs/verification/agent-delegation"
+                  "docs/verification/verifiers",
+                  {
+                    "group": "Identity and Ownership",
+                    "pages": [
+                      "docs/verification/ownership-basic",
+                      "docs/verification/ownership-social",
+                      "docs/verification/ownership-dns-txt",
+                      "docs/verification/ownership-org-oauth",
+                      "docs/verification/ownership-pseudonym",
+                      "docs/verification/wallet-link"
+                    ]
+                  },
+                  {
+                    "group": "Assets and Access",
+                    "pages": [
+                      "docs/verification/nft-ownership",
+                      "docs/verification/token-holding",
+                      "docs/verification/contract-ownership"
+                    ]
+                  },
+                  {
+                    "group": "Trust and Risk",
+                    "pages": [
+                      "docs/verification/proof-of-human",
+                      "docs/verification/wallet-risk",
+                      "docs/verification/ai-content-moderation"
+                    ]
+                  },
+                  {
+                    "group": "Agent Verifiers",
+                    "pages": [
+                      "docs/verification/agent-identity",
+                      "docs/verification/agent-delegation"
+                    ]
+                  }
                 ]
               }
             ]

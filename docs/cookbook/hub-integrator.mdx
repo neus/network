@@ -160,21 +160,6 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 If you do not need to restrict the company domain, prefer the simpler preset URL and avoid custom verifier payloads.
 
-### Session-First (Redirect + Code Exchange)
-
-Redirect users to `https://neus.network/verify?intent=login&returnUrl=<your-url>`:
-
-```bash
-curl -X POST https://api.neus.network/api/v1/auth/code/exchange \
-  -H "Authorization: Bearer <server-credential>" \
-  -H "Content-Type: application/json" \
-  -d '{ "code": "<auth-code>" }'
-```
-
-<Note>
-This is a partner-enabled server flow. Confirm access during onboarding before you build against it.
-</Note>
-
 ## 7. Sponsor Grants
 
 If your integration sponsors verification costs:

@@ -1,42 +1,40 @@
 ---
 title: MCP Auth & Security
-description: NEUS_AUTH_TOKEN, session-backed use, and eligibility-safe behavior for the NEUS MCP server.
+description: Hosted auth-required behavior and eligibility-safe public MCP usage.
 icon: lock
 ---
 
-## Session-Backed Use
+## Auth-Required Behavior
 
-Set `NEUS_AUTH_TOKEN` in the MCP server environment when you want session-backed calls:
+When a hosted MCP tool needs authentication:
 
-- **`neus_me`** — With no `identifier`, resolves the principal through `GET /api/v1/auth/me`.
-- **Private proof access** — Eligibility checks remain eligibility-safe; the token is used for authenticated API calls where your integration has been granted access.
+- **`neus_me`** resolves the current principal through `GET /api/v1/auth/me` when auth is present.
+- **Private proof access** stays behind NEUS auth boundaries; public MCP tools remain eligibility-safe.
 
 <Warning>
-Do not run a publicly reachable MCP server with privileged API credentials. The hosted NEUS MCP service is transport-open by design; signer checks, payment policy, and rate limits are enforced by the NEUS API.
+Do not expect public MCP tools to expose private proof payloads or internal credentials.
 </Warning>
 
 ## Eligibility-Safe Behavior
 
 - Gate checks are **eligibility-safe**. They do not enumerate receipts.
 - Private proof payloads are **not exposed** through the public MCP tools.
-- The server sends `X-Neus-App` using `NEUS_MCP_APP_ID` for attribution.
 - Sponsor grants can be forwarded through `neus_proofs_check`.
 - x402 payment-required responses are passed through in a structured way instead of being swallowed.
-- HTTP mode supports optional Bearer auth plus origin/host allowlists for local HTTP instances.
 
 ## Auth-Required Responses
 
 When a tool needs authentication and none is present, the server can return:
 
 - `status: "auth_required"` with a hosted login URL for the user to complete sign-in.
-- Use the returned URL to hand off to `https://neus.network/verify` (or your configured hosted verify base).
+- Use the returned URL to hand off to `https://neus.network/verify`.
 
 ## Related Docs
 
-- [Authentication](../api/authentication) — API auth patterns and signing.
-- [VerifyGate](../widgets/verifygate) — Widget gating and hosted checkout.
-- [Verifiable Agents](../cookbook/verifiable-agents) — Agent identity and delegation.
-- [Partner Setup](../cookbook/hub-integrator) — Domain verification and sponsor grants.
+- [Authentication](../api/authentication) - API auth patterns and signing.
+- [VerifyGate](../widgets/verifygate) - Widget gating and hosted checkout.
+- [Verifiable Agents](../cookbook/verifiable-agents) - Agent identity and delegation.
+- [Partner Setup](../cookbook/hub-integrator) - Domain verification and sponsor grants.
 
 ## Related
 
@@ -48,7 +46,7 @@ When a tool needs authentication and none is present, the server can return:
     Tool reference and eligibility semantics.
   </Card>
   <Card title="Setup" icon="code" href="./setup">
-    Env vars and IDE config.
+    Hosted client config.
   </Card>
   <Card title="API Authentication" icon="key" href="../api/authentication">
     HTTP auth and signing.

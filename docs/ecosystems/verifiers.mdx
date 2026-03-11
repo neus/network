@@ -4,14 +4,14 @@ description: Complete list of NEUS verifiers with real-world use cases, required
 icon: list-tree
 ---
 
-The verifier catalog is code-first. Backend `verifierRegistry.js` is the single source of truth; the API exposes it:
+The verifier catalog is API-first. The public catalog endpoint is the source of truth:
 
 ```text
 GET https://api.neus.network/api/v1/verification/verifiers
 ```
 
 <Note>
-**Code-first:** Always use the API response as the source of truth. This page provides use cases and field reference. Full schema and validation rules come from `GET /api/v1/verification/verifiers` or OpenAPI `VerifierData_<id>`. Backend: `neus-nut/src/services/verification/verifiers/verifierRegistry.js`.
+Always use the API response as the source of truth. This page provides use cases and field reference. Full schema and validation rules come from `GET /api/v1/verification/verifiers` or OpenAPI `VerifierData_<id>`.
 </Note>
 
 ## By Use Case
@@ -69,7 +69,7 @@ GET https://api.neus.network/api/v1/verification/verifiers
 | Field | Required | Type | Use |
 |-------|----------|------|-----|
 | `provider` | Yes | enum | discord, github, facebook, x, farcaster, linkedin, telegram, coinbase |
-| `internalSocialToken` | Yes | string | From hosted flow (do not pass raw OAuth token) |
+| `internalSocialToken` | Yes | string | Filled by hosted NEUS verify; do not pass raw OAuth tokens |
 | `walletAddress` | No | universal-address | Optional override |
 
 **Example:** `{ "provider": "github", "internalSocialToken": "<from-hosted-flow>" }`
@@ -100,7 +100,7 @@ GET https://api.neus.network/api/v1/verification/verifiers
 | Field | Required | Type | Use |
 |-------|----------|------|-----|
 | `provider` | Yes | enum | google, microsoft |
-| `internalSocialToken` | Yes | string | From hosted flow |
+| `internalSocialToken` | Yes | string | Filled by hosted NEUS verify |
 | `walletAddress` | No | universal-address | Optional |
 | `expectedOrgDomain` | No | hostname | Restrict to org domain |
 

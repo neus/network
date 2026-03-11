@@ -125,10 +125,6 @@ body {
 /* Primary CTA: brand color only, no muted wrapper */
 #topbar-cta-button,
 a#topbar-cta-button,
-#navbar a[href="https://neus.network/hub"],
-#navbar a[href="https://neus.network/hub/"],
-#header a[href="https://neus.network/hub"],
-#header a[href="https://neus.network/hub/"],
 [data-testid="navbar-primary-button"],
 [data-testid="topbar-primary-button"] {
   background: var(--neus-accent) !important;
@@ -139,10 +135,6 @@ a#topbar-cta-button,
 }
 #topbar-cta-button:hover,
 a#topbar-cta-button:hover,
-#navbar a[href="https://neus.network/hub"]:hover,
-#navbar a[href="https://neus.network/hub/"]:hover,
-#header a[href="https://neus.network/hub"]:hover,
-#header a[href="https://neus.network/hub/"]:hover,
 [data-testid="navbar-primary-button"]:hover,
 [data-testid="topbar-primary-button"]:hover {
   background: rgb(121 168 228) !important;
@@ -152,10 +144,6 @@ a#topbar-cta-button:hover,
 
 #topbar-cta-button:focus-visible,
 a#topbar-cta-button:focus-visible,
-#navbar a[href="https://neus.network/hub"]:focus-visible,
-#navbar a[href="https://neus.network/hub/"]:focus-visible,
-#header a[href="https://neus.network/hub"]:focus-visible,
-#header a[href="https://neus.network/hub/"]:focus-visible,
 [data-testid="navbar-primary-button"]:focus-visible,
 [data-testid="topbar-primary-button"]:focus-visible {
   outline: 2px solid rgb(191 219 254 / 0.6) !important;
