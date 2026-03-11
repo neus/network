@@ -3,6 +3,8 @@ title: Integration
 description: Recommended end-to-end path for a production NEUS integration.
 ---
 
+Recommended end-to-end path for production: check gate eligibility, run verification, poll status, unlock access. Use hosted verify for interactive flows.
+
 ## Standard Flow
 
 <Steps>
@@ -123,6 +125,9 @@ NeusWidget.unmount(el);
   </Card>
   <Card title="Auth + Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
     Hosted login flows.
+  </Card>
+  <Card title="Presets" icon="layer-group" href="./platform/presets">
+    Preset catalog for hosted verify URLs.
   </Card>
   <Card title="API Overview" icon="terminal" href="./api/overview">
     HTTP endpoints.

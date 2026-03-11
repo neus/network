@@ -3,6 +3,8 @@ title: Billing and Credits
 description: Credit system, payment methods, and payer resolution for NEUS verification.
 ---
 
+Credits power verification. Payer is always server-derived. You choose: self-pay, sponsor, or x402.
+
 NEUS uses a unified credit system for verification and gating. Payer identity is **always server-derived**; clients never dictate who pays.
 
 ## Payer Resolution
@@ -59,15 +61,30 @@ When credits are exhausted, the API returns `402 Payment Required` with a quote.
 - **Header:** `PAYMENT-SIGNATURE: <receipt>`
 - **Use case:** One-off usage without pre-loading credits
 
+<Card title="x402 Pay-Per-Use" icon="credit-card" href="./x402">
+  Full guide: quote, pay, retry with receipt.
+</Card>
+
 ## Credit Packages
 
-| Package | Credits | Use Case |
-|---------|---------|----------|
-| **Public** | 1,000/month | Testing and proof creation |
-| **Pro** | 50,000/month | Production apps |
-| **Enterprise** | 500,000/month | High-volume, SLAs |
+| Package | Credits | Price | Use Case |
+|---------|---------|-------|----------|
+| **Public** | 1,000/month | Free | Testing and proof creation |
+| **Pro** | 50,000/month | $99.99/month | Production apps |
+| **Enterprise** | Custom | Contact | High-volume, custom SLAs |
 
 Credits reset each month (no rollover). x402 handles overflow when credits are exhausted.
+
+## Pro Upgrade
+
+- **Price:** $99.99/month
+- **Credits:** 50,000 per month
+- **Checkout:** Card payment via Hub (Profile → Credits → Upgrade)
+- **Top-ups:** Separate from subscription; managed in Credits tab
+
+<Card title="Hub" icon="globe" href="./hub">
+  Upgrade from Profile → Credits.
+</Card>
 
 ## Public vs Private
 

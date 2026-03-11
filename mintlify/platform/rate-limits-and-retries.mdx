@@ -3,6 +3,8 @@ title: Rate Limits and Retries
 description: Production retry guidance for gate checks, polling, hosted flows, and outage handling.
 ---
 
+When to retry: read endpoints can be retried; verification creation only when you can prove the original request did not succeed. Polling should back off on `429` or transport issues.
+
 ## General Guidance
 
 - Read endpoints can be retried.

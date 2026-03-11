@@ -537,7 +537,7 @@
           "contentHash": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{64}$",
-            "description": "Pre-computed verifier content hash (32-byte hex). Treated as the canonical verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match."
+            "description": "Pre-computed verifier content hash (32-byte hex). Treated as the standard verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match."
           },
           "contentType": {
             "type": "string",
@@ -648,7 +648,7 @@
         "type": "object",
         "required": [
           "provider",
-          "oauthAccessToken"
+          "internalSocialToken"
         ],
         "properties": {
           "provider": {
@@ -664,9 +664,9 @@
               "coinbase"
             ]
           },
-          "oauthAccessToken": {
+          "internalSocialToken": {
             "type": "string",
-            "description": "Provider-issued access token for direct server-side verification flows."
+            "description": "Short-lived OAuth session token (TTL ≤60s). Obtain from hosted OAuth flow at /verify or /api/v1/auth/oauth/:provider/exchange; not a raw provider token."
           },
           "walletAddress": {
             "type": "string",
@@ -723,7 +723,7 @@
         "type": "object",
         "required": [
           "provider",
-          "oauthAccessToken"
+          "internalSocialToken"
         ],
         "properties": {
           "provider": {
@@ -733,9 +733,9 @@
               "microsoft"
             ]
           },
-          "oauthAccessToken": {
+          "internalSocialToken": {
             "type": "string",
-            "description": "Provider-issued access token for direct server-side verification flows."
+            "description": "Short-lived OAuth session token (TTL ≤60s). Obtain from hosted OAuth flow; not a raw provider token."
           },
           "walletAddress": {
             "type": "string",
@@ -805,19 +805,14 @@
       },
       "VerifierData_nft_ownership": {
         "type": "object",
-        "required": [
-          "contractAddress",
-          "tokenId",
-          "chainId"
-        ],
         "properties": {
           "ownerAddress": {
             "type": "string",
-            "pattern": "^0x[a-fA-F0-9]{40}$"
+            "description": "EVM (0x...) or Solana (base58). Optional; defaults to signer."
           },
           "contractAddress": {
             "type": "string",
-            "pattern": "^0x[a-fA-F0-9]{40}$"
+            "description": "EVM contract or Solana mint address (base58)"
           },
           "tokenId": {
             "type": "string",
@@ -833,29 +828,45 @@
           },
           "chainId": {
             "type": "integer",
-            "minimum": 1
+            "minimum": 1,
+            "description": "EVM chain ID. Use chain for Solana."
+          },
+          "chain": {
+            "type": "string",
+            "description": "CAIP-2 chain for Solana (e.g. solana:mainnet)"
           },
           "blockNumber": {
             "type": "integer",
             "minimum": 0
           }
-        }
+        },
+        "required": [
+          "contractAddress",
+          "tokenId"
+        ],
+        "oneOf": [
+          { "required": ["chainId"] },
+          { "required": ["chain"] }
+        ]
       },
       "VerifierData_token_holding": {
         "type": "object",
         "required": [
           "contractAddress",
-          "minBalance",
-          "chainId"
+          "minBalance"
+        ],
+        "oneOf": [
+          { "required": ["chainId"] },
+          { "required": ["chain"] }
         ],
         "properties": {
           "ownerAddress": {
             "type": "string",
-            "pattern": "^0x[a-fA-F0-9]{40}$"
+            "description": "EVM (0x...) or Solana (base58). Optional; defaults to signer."
           },
           "contractAddress": {
             "type": "string",
-            "pattern": "^0x[a-fA-F0-9]{40}$"
+            "description": "EVM token contract or Solana SPL mint (base58)"
           },
           "minBalance": {
             "type": "string",
@@ -863,7 +874,12 @@
           },
           "chainId": {
             "type": "integer",
-            "minimum": 1
+            "minimum": 1,
+            "description": "EVM chain ID. Use chain for Solana."
+          },
+          "chain": {
+            "type": "string",
+            "description": "CAIP-2 chain for Solana (e.g. solana:mainnet)"
           },
           "blockNumber": {
             "type": "integer",

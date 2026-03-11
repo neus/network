@@ -3,6 +3,8 @@ title: API Overview
 description: Public HTTP contract for NEUS verification and proof management.
 ---
 
+Public HTTP endpoints for verification, proof creation, gate checks, and status polling. Use the SDK when possible; use these endpoints for server-side or custom integrations.
+
 ## Quick Reference
 
 | Surface | URL |
@@ -26,7 +28,7 @@ For manual signing, use `POST /api/v1/verification/standardize` to get the exact
     `POST /api/v1/verification` — Submit a new verification request.
   </Card>
   <Card title="Standardize Signing String" icon="file-code" href="#standardize-signing-string">
-    `POST /api/v1/verification/standardize` — Get the canonical signing string.
+    `POST /api/v1/verification/standardize` — Get the standard signing string.
   </Card>
   <Card title="Poll Status" icon="rotate" href="#poll-status">
     `GET /api/v1/verification/status/{qHash}` — Check verification progress.
@@ -123,9 +125,13 @@ Read the live verifier catalog instead of hardcoding verifier labels, input requ
 
 ## OpenAPI Reference
 
-The full API spec is available at `/openapi/public-api.json`.
+The full API spec is available in the **API Reference** tab. Use it for code generation, client SDKs, and integration tooling.
 
 <OpenAPIOperation operationId="submitVerification" />
+
+<Note>
+**AI discovery:** Mintlify serves `/llms.txt` and `/llms-full.txt` for AI tool ingestion. Use them to give LLMs structured access to the docs.
+</Note>
 
 ## Rate Limits
 
@@ -153,3 +159,4 @@ All errors follow a consistent structure:
 | Authentication | [Auth patterns and signing](./authentication) |
 | Error Handling | [Error codes and retry strategies](./errors) |
 | SDK Reference | [JavaScript SDK](../sdks/overview) |
+| MCP Server | [MCP for agents](../cookbook/mcp) |

@@ -3,60 +3,62 @@ title: Cookbook Overview
 description: Real-world integration patterns for NEUS verification.
 ---
 
-## By Use Case
+Production patterns for hosted verify, domain verification, NFT gating, sybil resistance, and agent flows. Pick the guide that matches your use case.
 
-<CardGroup cols={3}>
+## Authentication
+
+<CardGroup cols={2}>
   <Card title="Auth + Hosted Verify" icon="key" href="./auth-hosted-verify">
-    Standardized `/verify` login and hosted popup flow for authentication.
-  </Card>
-  <Card title="NFT Gating" icon="image" href="./nft-gating">
-    Gate content behind NFT ownership verification.
-  </Card>
-  <Card title="Domain Verification" icon="globe" href="./domain-verification">
-    Verify domain ownership with DNS TXT records.
+    Standardized login and hosted checkout for wallet and passkey.
   </Card>
 </CardGroup>
 
-<CardGroup cols={3}>
-  <Card title="Sybil Resistance" icon="shield-halved" href="./sybil-resistance">
-    Prevent Sybil attacks with proof-based identity verification.
+## Verification
+
+<CardGroup cols={2}>
+  <Card title="Domain Verification" icon="globe" href="./domain-verification">
+    Verify domain ownership with DNS TXT records.
   </Card>
+  <Card title="NFT Gating" icon="image" href="./nft-gating">
+    Gate content behind NFT ownership.
+  </Card>
+</CardGroup>
+
+## Trust and Risk
+
+<CardGroup cols={2}>
+  <Card title="Sybil Resistance" icon="shield-halved" href="./sybil-resistance">
+    Prevent Sybil attacks with proof-based identity.
+  </Card>
+</CardGroup>
+
+## Advanced
+
+<CardGroup cols={2}>
   <Card title="Verifiable Agents" icon="robot" href="./verifiable-agents">
     Create and delegate agent identities for AI systems.
   </Card>
   <Card title="Partner Setup" icon="building" href="./hub-integrator">
-    Org/domain setup, app linking, sponsor grants, and partner rollout.
+    Org verification, domain setup, sponsor grants.
   </Card>
-</CardGroup>
-
-<CardGroup cols={1}>
   <Card title="MCP Server" icon="plug" href="./mcp">
-    Hosted MCP for agents, tool calling, and human-in-the-loop verify flows.
+    AI tools: verifier catalog, gate checks, hosted verify handoff.
   </Card>
 </CardGroup>
 
-## Recommended Reading Order
-
-| Step | Guide | When to Read |
-|------|-------|--------------|
-| 1 | [Auth + Hosted Verify](./auth-hosted-verify) | Your product needs the canonical hosted path |
-| 2 | [NFT Gating](./nft-gating) or [Domain Verification](./domain-verification) | Concrete end-user policy examples |
-| 3 | [Sybil Resistance](./sybil-resistance) and [Verifiable Agents](./verifiable-agents) | Trust requirements become stricter |
-| 4 | [Partner Setup](./hub-integrator) | Domain verification, org OAuth, app attribution, sponsor grants |
-
-## Integration Patterns
+## Integration Flow
 
 <Steps>
   <Step title="Choose Your Flow">
-    Pick the right pattern for your use case: hosted verify, custom SDK, or widget integration.
+    Hosted verify, SDK, or widget—pick based on your stack.
   </Step>
   <Step title="Configure Verifiers">
-    Set up the required verifiers and their input data for your specific policy.
+    Set verifiers and input data for your policy.
   </Step>
   <Step title="Handle Verification">
-    Implement the verification flow with proper error handling and retry logic.
+    Implement flow with error handling and retries.
   </Step>
   <Step title="Enforce Gates">
-    Use proof receipts to gate access and enforce trust boundaries.
+    Use proof receipts to gate access.
   </Step>
 </Steps>

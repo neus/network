@@ -7,14 +7,14 @@ NEUS exposes a production MCP server for agents that need proof discovery, gate 
 
 ## Public Endpoints
 
-| Surface | Canonical URL | Purpose |
+| Surface | Standard URL | Purpose |
 | --- | --- | --- |
 | Discovery | `https://mcp.neus.network/.well-known/mcp.json` | Server metadata and public tool listing |
 | MCP transport | `https://mcp.neus.network/mcp` | Streamable HTTP MCP endpoint |
 | Hosted verify | `https://neus.network/verify` | Wallet/passkey/browser fallback for interactive verification |
 
 <Note>
-`/mcp` is the canonical public transport path. The server also accepts `/` in HTTP mode, but integrators should use `/mcp` so discovery metadata and client config stay consistent.
+`/mcp` is the standard public transport path. The server also accepts `/` in HTTP mode, but integrators should use `/mcp` so discovery metadata and client config stay consistent.
 </Note>
 
 ## What The MCP Server Is For
@@ -26,7 +26,7 @@ Use the MCP server when your agent or application needs to:
 - guide a user into hosted verify when proof creation needs human action
 - load public proof history, profile summary, and agent context for a wallet or DID
 
-### Canonical Agent Loop
+### Standard Agent Loop
 
 1. `neus_verifiers_catalog`
 2. `neus_proofs_check`
@@ -286,7 +286,7 @@ If the upstream API requires x402 payment, the MCP server surfaces a structured 
 - `requiredCredits`
 - `pricingUrls`
 - `hostedCheckoutUrl`
-- `receiptHeader` with the canonical header name to retry with
+- `receiptHeader` with the standard header name to retry with
 
 ### Error Mapping
 
@@ -324,7 +324,7 @@ The hosted MCP at `mcp.neus.network` exposes:
 | Endpoint | Purpose |
 | --- | --- |
 | `/.well-known/mcp.json` | Discovery metadata and tool listing |
-| `/mcp` | Canonical MCP transport |
+| `/mcp` | Standard MCP transport |
 | `/health` | Liveness probe |
 | `/health/ready` | Readiness probe |
 

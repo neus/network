@@ -3,6 +3,8 @@ title: Errors
 description: Error codes and responses for the NEUS API.
 ---
 
+Handle API errors with consistent structure: `code`, `message`, `type`. Retry on `429`; do not retry verification creation unless you can prove the original request failed.
+
 All errors follow a consistent structure.
 
 ## Error Response

@@ -1,5 +1,5 @@
 /* NEUS Mintlify Skin */
-/* Mintlify-native selectors only. No substring selector overrides. */
+/* Mintlify-native selectors. Structural elements transparent so gradient shows through. */
 
 :root {
   --neus-bg-base: rgb(16 17 19 / 0.96);
@@ -26,23 +26,26 @@ body {
   background-color: transparent;
 }
 
-#header {
-  background:
-    linear-gradient(180deg, rgb(16 17 19 / 0.94) 0%, rgb(16 17 19 / 0.84) 100%);
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--neus-border-subtle);
-}
-
+/* Structural elements: fully transparent so gradient shows through */
+#header,
 #header-content,
+#navbar,
+#navigation-items,
+#sidebar,
+#sidebar-content,
 #content-area,
-#sidebar-content {
-  background: transparent;
+#content-container,
+#body-content,
+#table-of-contents,
+#table-of-contents-content,
+#table-of-contents-content .toc,
+#table-of-contents-content .toc > div {
+  background: transparent !important;
+  backdrop-filter: none;
 }
 
-#sidebar,
-#table-of-contents {
-  background: transparent;
-  backdrop-filter: none;
+#header {
+  border-bottom: 1px solid var(--neus-border-faint);
 }
 
 #sidebar {
@@ -54,13 +57,12 @@ body {
 }
 
 #navigation-items {
-  background: transparent;
   border-right: none;
 }
 
-#sidebar-content {
-  background:
-    radial-gradient(circle at top, rgb(152 192 239 / 0.06), transparent 38%);
+/* Tab bar: transparent */
+.nav-tabs {
+  background: transparent !important;
 }
 
 .sidebar-group-header {
@@ -79,7 +81,6 @@ body {
 }
 
 #table-of-contents-content {
-  background: transparent;
   border-left: 1px solid var(--neus-border-faint);
   padding-left: 1rem;
 }
@@ -104,9 +105,8 @@ body {
 }
 
 #page-context-menu-button {
-  background: rgb(23 25 30 / 0.56);
+  background: transparent;
   border: 1px solid var(--neus-border-faint);
-  backdrop-filter: blur(14px);
 }
 
 #search-input {
@@ -122,20 +122,18 @@ body {
     inset 0 1px 0 rgb(90 90 90 / 0.08);
 }
 
+/* Primary CTA: brand color only, no square wrapper */
 #topbar-cta-button {
-  background: linear-gradient(180deg, rgb(152 192 239 / 0.96) 0%, rgb(121 168 228 / 0.96) 100%);
-  border: 1px solid rgb(191 219 254 / 0.2);
-  box-shadow:
-    0 10px 26px rgb(14 18 28 / 0.28),
-    inset 0 1px 0 rgb(255 255 255 / 0.2);
-  color: rgb(11 15 23);
+  background: var(--neus-accent) !important;
+  border: 1px solid rgb(191 219 254 / 0.25) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  color: rgb(11 15 23) !important;
 }
-
 #topbar-cta-button:hover {
-  transform: translateY(-1px);
-  box-shadow:
-    0 14px 30px rgb(14 18 28 / 0.34),
-    inset 0 1px 0 rgb(255 255 255 / 0.24);
+  background: rgb(121 168 228) !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .card,
@@ -183,6 +181,6 @@ html {
 
 @media (max-width: 1023px) {
   #header {
-    background: rgb(16 17 19 / 0.84);
+    background: transparent !important;
   }
 }

@@ -1,0 +1,36 @@
+---
+title: Examples
+description: Ready-to-run examples for Node.js, React, and curl integrations.
+---
+
+Copy-paste examples for common integration patterns. All examples live in the [network repo](https://github.com/neus/network/tree/main/examples).
+
+## Available Examples
+
+| Example | Stack | What It Covers |
+|---------|-------|----------------|
+| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Node.js | Server-side verification with ethers.js, standardize → sign → submit |
+| [react-component](https://github.com/neus/network/tree/main/examples/react-component) | React | VerifyGate integration, NFT gating, Next.js proxy route |
+| [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | curl | Raw HTTP: standardize, submit, poll status |
+
+## Quick Start
+
+```bash
+# Clone and run Node.js example
+git clone https://github.com/neus/network
+cd network/examples/nodejs-basic
+npm install
+export TEST_WALLET_PRIVATE_KEY=0x...
+node index.js
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="./quickstart">
+    Create your first proof in minutes.
+  </Card>
+  <Card title="Choose Your Path" icon="compass" href="./choose-an-integration-path">
+    SDK, Widgets, API, or MCP.
+  </Card>
+</CardGroup>

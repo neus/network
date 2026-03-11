@@ -3,6 +3,16 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Delegates authority to an agent, ERC-8004 compatible",
   "properties": {
+    "agentAccountId": {
+      "format": "caip10-account",
+      "type": "string",
+      "description": "CAIP-10 account ID for the agent. Alternative to agentWallet + agentChainRef."
+    },
+    "agentChainRef": {
+      "format": "caip2-chain",
+      "type": "string",
+      "description": "CAIP-2 chain reference when using agentWallet"
+    },
     "agentId": {
       "maxLength": 128,
       "minLength": 1,
@@ -21,6 +31,16 @@
       "maxItems": 8,
       "type": "array",
       "description": "Declared payment protocols (e.g. [\"x402\"]). Defaults to [\"x402\"] when scope is payments:x402."
+    },
+    "controllerAccountId": {
+      "format": "caip10-account",
+      "type": "string",
+      "description": "CAIP-10 account ID for the controller. Alternative to controllerWallet + controllerChainRef. Must match signer."
+    },
+    "controllerChainRef": {
+      "format": "caip2-chain",
+      "type": "string",
+      "description": "CAIP-2 chain reference when using controllerWallet"
     },
     "controllerWallet": {
       "format": "universal-address",
@@ -74,9 +94,9 @@
       "description": "Declared skill identifiers granted to the agent (each max 64 chars, max 48 entries)"
     }
   },
-  "required": [
-    "controllerWallet",
-    "agentWallet"
+  "anyOf": [
+    { "required": ["controllerAccountId", "agentAccountId"] },
+    { "required": ["controllerWallet", "agentWallet"] }
   ],
   "title": "agent-delegation",
   "type": "object"

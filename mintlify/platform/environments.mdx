@@ -1,9 +1,11 @@
 ---
 title: Environments
-description: Canonical NEUS public surfaces, base URLs, and deployment expectations.
+description: Standard NEUS public surfaces, base URLs, and deployment expectations.
 ---
 
-## Canonical Public Surfaces
+Use these URLs for production integrations. Override only when pointing to a custom or dev environment.
+
+## Standard Public Surfaces
 
 | Surface | URL | Purpose |
 |---|---|---|
@@ -11,11 +13,14 @@ description: Canonical NEUS public surfaces, base URLs, and deployment expectati
 | API | `https://api.neus.network` | Public API surface |
 | Docs | `https://docs.neus.network` | Public documentation |
 | IPFS | `https://ipfs.neus.network` | Content-addressed asset access |
+| MCP | `https://mcp.neus.network` | Hosted MCP for agents (discovery: `/.well-known/mcp.json`) |
+| Dev API | `https://dev.api.neus.network` | Development and pre-production testing (when enabled) |
 
 ## Base URL Guidance
 
 - Use `https://api.neus.network` for production API traffic.
-- Use `https://neus.network/verify` as the canonical hosted verification path.
+- Use `https://dev.api.neus.network` only for development and pre-production testing; access may be restricted.
+- Use `https://neus.network/verify` as the standard hosted verification path.
 - If you override `apiUrl` in the SDK, also set `hostedCheckoutUrl` so hosted flows stay aligned with the environment you intend to use.
 
 ## Integrator Notes

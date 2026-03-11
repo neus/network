@@ -1,37 +1,29 @@
 ---
 title: Verifiers
-description: Verifier types, catalog source of truth, and how to choose the right verifier for your flow.
+description: How to choose and use NEUS verifiers for your flow.
 ---
 
-Verifier metadata is a single source of truth. Frontend apps, SDKs, widgets, MCP, and docs consume the API catalog instead of maintaining parallel metadata.
+Verifiers define what you prove. The API catalog is code-first: backend `verifierRegistry.js` is the single source of truth; SDKs, widgets, and MCP consume it via `GET /api/v1/verification/verifiers`.
 
-## Verifier Classes
+Verifiers are the building blocks of NEUS. Each verifier proves something specific—wallet ownership, domain control, NFT holding, human verification, and more.
 
-| Class | Example use | Typical behavior |
-|---|---|---|
-| Ownership | Wallet, domain, NFT, token assertions | Often instant or lookup-based |
-| Risk and anti-sybil | Bot, risk, human checks | Often freshness-sensitive |
-| Org and social | OAuth-linked account or org membership | Usually interactive and hosted |
-| Agent proofs | Agent identity and delegation | Used by agent registries and MCP flows |
+## How Verifiers Work
 
-## Where to Read the Catalog
+| Type | What It Proves | Flow |
+|------|----------------|------|
+| **Ownership** | Wallet, domain, NFT, token | Instant or lookup |
+| **Identity** | Human verification, org membership | Interactive |
+| **Risk** | Wallet safety, bot resistance | Lookup |
+| **Agents** | AI identity, delegation | Instant |
+
+## Get the Live Catalog
 
 ```http
 GET /api/v1/verification/verifiers
 ```
 
-Use the catalog to determine:
+The API returns all verifiers, required fields, and metadata. Use it as the source of truth—SDKs, widgets, and MCP consume the same catalog.
 
-- `verifierId`
-- availability tier or access constraints
-- required verifier data
-- interactivity and hosted flow expectations
-- delegated-subject support where applicable
-
-## Detailed Catalog Reference
-
-For the current public catalog, IDs, and example payloads, use the detailed page:
-
-<Card title="Verifier Catalog" icon="list-tree" href="../ecosystems/verifiers">
-  Detailed verifier IDs, categories, and input examples.
+<Card title="Full Verifier Catalog" icon="list-tree" href="../ecosystems/verifiers">
+  All verifiers with use cases, fields, and integration patterns.
 </Card>

@@ -3,6 +3,8 @@ title: Auth + Hosted Verify
 description: Hosted verify and session management for NEUS integrations.
 ---
 
+Use hosted verify when users need to sign, link OAuth, or complete interactive verifiers. NEUS provides a hosted UI for these flows.
+
 NEUS supports a signature-based protocol for proofs, and an optional session layer for first-party browser UX.
 
 ## Two Layers
@@ -19,6 +21,8 @@ When a flow requires human interaction (signature, OAuth linking, proof creation
 - Users can **sign in with a passkey** (no wallet extension required) **or connect a wallet**
 - After completion, the hosted UI returns the user to your app
 
+After successful verification, users can be redirected to the [Hub](https://neus.network/hub) or [Profile](https://neus.network/profile) to manage identity, link apps, or view proofs.
+
 ### Hosted URL
 
 **Base:** `https://neus.network/verify`
@@ -27,7 +31,7 @@ When a flow requires human interaction (signature, OAuth linking, proof creation
 |-------|-----|
 | `intent=login` | Session-first login flow |
 | `verifiers=<ids>` | Comma-separated verifier IDs (e.g. `verifiers=wallet-risk`) |
-| `preset=<id>` | Preset bundle (e.g. `preset=agent-pack`) |
+| `preset=<id>` | Preset bundle (e.g. `preset=agent-pack`). See [Presets](../platform/presets) for full catalog. |
 | `gateId=<id>` | Gate requirements (verifiers derived from gate) |
 | `returnUrl=<url>` | Redirect target after completion |
 | `mode=popup&origin=<url>` | Popup flow; `postMessage` to opener |

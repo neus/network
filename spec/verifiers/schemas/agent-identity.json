@@ -8,6 +8,16 @@
       "minLength": 1,
       "type": "string"
     },
+    "agentAccountId": {
+      "format": "caip10-account",
+      "type": "string",
+      "description": "CAIP-10 account ID (e.g. eip155:8453:0x...). Alternative to agentWallet + agentChainRef."
+    },
+    "agentChainRef": {
+      "format": "caip2-chain",
+      "type": "string",
+      "description": "CAIP-2 chain reference when using agentWallet (e.g. eip155:8453)"
+    },
     "agentLabel": {
       "maxLength": 128,
       "type": "string"
@@ -78,9 +88,9 @@
       "description": "Service endpoints exposed by this agent (each requires name and a valid URL endpoint)"
     }
   },
-  "required": [
-    "agentId",
-    "agentWallet"
+  "anyOf": [
+    { "required": ["agentId", "agentAccountId"] },
+    { "required": ["agentId", "agentWallet"] }
   ],
   "title": "agent-identity",
   "type": "object"

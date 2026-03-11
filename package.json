@@ -6,7 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "docs:dev": "cd mintlify && npx --yes mint@4.2.108 dev",
+    "docs:dev": "cd mintlify && npx --yes cross-env NODE_OPTIONS=--max-old-space-size=8192 npx --yes mint@4.2.108 dev",
     "docs:lint:markdown": "npx --yes markdownlint-cli2@0.18.1 --config .markdownlint-cli2.jsonc",
     "docs:lint:openapi": "npx --yes @redocly/cli@2.14.1 lint mintlify/openapi/public-api.json",
     "docs:check:content": "node scripts/check-docs-content.mjs",

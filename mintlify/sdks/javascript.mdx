@@ -41,6 +41,18 @@ const client = new NeusClient({
 });
 ```
 
+## Verification Options
+
+| Option | When to Use |
+|--------|-------------|
+| `persist: true` | Store proof on NEUS (+2 credits). Use when you need proof receipt. |
+| `ipfs: true` / `pin: true` | Pin proof to IPFS (+20 credits). Use for portable receipts. |
+| `strategy: 'reuse-or-create'` | Check existing proof first, create if missing. Default. |
+| `strategy: 'fresh'` | Always create new proof. Use for high-stakes checks. |
+| `strategy: 'reuse'` | Only check existing proofs; never create. |
+
+See [Verification Patterns](./verifications) for privacy levels and widget options.
+
 ## Create a Proof (Server / Manual Signing)
 
 If you need manual or server-side signing, ask the API for the exact string first:

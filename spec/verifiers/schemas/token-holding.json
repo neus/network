@@ -1,34 +1,39 @@
 {
   "$id": "https://neus.network/schemas/token-holding.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Token holding verification (EVM-only)",
+  "description": "Token holding verification (EVM or Solana)",
+  "type": "object",
+  "required": ["contractAddress", "minBalance"],
+  "oneOf": [
+    { "required": ["chainId"] },
+    { "required": ["chain"] }
+  ],
   "properties": {
-    "blockNumber": {
-      "minimum": 0,
-      "type": "integer"
-    },
-    "chainId": {
-      "minimum": 1,
-      "type": "integer"
-    },
     "contractAddress": {
-      "format": "evm-address",
-      "type": "string"
+      "type": "string",
+      "description": "EVM token contract or Solana SPL mint (base58)"
+    },
+    "ownerAddress": {
+      "type": "string",
+      "description": "EVM (0x...) or Solana (base58). Optional; defaults to signer."
     },
     "minBalance": {
       "minLength": 1,
       "type": "string"
     },
-    "ownerAddress": {
-      "format": "evm-address",
-      "type": "string"
+    "chainId": {
+      "minimum": 1,
+      "type": "integer",
+      "description": "EVM chain ID"
+    },
+    "chain": {
+      "type": "string",
+      "description": "CAIP-2 for Solana (e.g. solana:mainnet)"
+    },
+    "blockNumber": {
+      "minimum": 0,
+      "type": "integer"
     }
   },
-  "required": [
-    "contractAddress",
-    "minBalance",
-    "chainId"
-  ],
-  "title": "token-holding",
-  "type": "object"
+  "title": "token-holding"
 }

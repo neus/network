@@ -23,6 +23,17 @@ NEUS agent integrations usually combine three layers:
   </Step>
 </Steps>
 
+## Hosted Agent Link
+
+When `neus_agent_link` (MCP) returns `status: "link_required"`, the user is sent to hosted verify to complete agent identity and delegation. The URL can include:
+
+| Param | Use |
+|-------|-----|
+| `preset=agent-pack` | Preload agent-identity, agent-delegation, wallet-risk |
+| `agent=<wallet>` | Pre-fill agent wallet when linking |
+
+Example: `https://neus.network/verify?preset=agent-pack&agent=0x...`
+
 ## Related Pages
 
 <CardGroup cols={3}>

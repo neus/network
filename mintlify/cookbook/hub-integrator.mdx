@@ -50,9 +50,25 @@ For organization-level verifications (`ownership-org-oauth`):
 2. Add `https://api.neus.network/api/v1/auth/oauth/callback/<provider>` to allowed redirect URIs
 3. Validate provider credentials and redirect URIs before going live
 
-## 3. App Linking and Attribution
+## 3. Link App (Hub UI)
 
-To track usage per integration:
+Link your integration domain in the Hub to receive credits and attribution:
+
+| Step | Action |
+|------|--------|
+| 1 | Go to [Hub](https://neus.network/hub) → Profile → Apps |
+| 2 | Enter app domain (e.g. `acme.com` or `https://acme.com`) |
+| 3 | Set daily credit cap (default 10,000) |
+| 4 | Use `*` for any origin only in development |
+| 5 | Send `X-Neus-App` and `Origin` headers from your whitelisted domain |
+
+<Card title="Hub" icon="globe" href="../platform/hub">
+  Explorer, profile tabs, and identity management.
+</Card>
+
+## 4. App Attribution (API)
+
+To track usage per integration via API:
 
 1. Create or obtain an `appId` for your integration
 2. Treat `appId` as a public attribution identifier, not a secret
@@ -62,7 +78,23 @@ To track usage per integration:
 const client = new NeusClient({ appId: 'your-app-id' });
 ```
 
-## 4. Hosted Checkout for Interactive Verifiers
+<Card title="Billing" icon="credit-card" href="../platform/billing">
+  Credit pricing and payment methods.
+</Card>
+
+## 5. Verify with NEUS (Hub UI)
+
+Verify domains and organizations directly in the Hub:
+
+| Flow | Where | Notes |
+|------|-------|------|
+| **Domain** | Profile → Identity → Domains | Add DNS TXT at `_neus.<domain>` first |
+| **Organization** | Profile → Identity → Organizations | OAuth: Google Workspace, Microsoft 365 |
+| **Privacy** | Per proof | Public (discoverable) or Private (owner-only) |
+
+We do not store your email. Link your app first (Profile → Apps), then verify your domain.
+
+## 6. Hosted Checkout for Interactive Verifiers
 
 Interactive verifiers (`ownership-social`, `ownership-org-oauth`, `proof-of-human`) require NEUS-hosted flow.
 
@@ -96,7 +128,7 @@ curl -X POST https://api.neus.network/api/v1/auth/code/exchange \
 This is a partner-enabled server flow. Confirm access during onboarding before you build against it.
 </Note>
 
-## 5. Sponsor Grants (Covering Verification Costs)
+## 7. Sponsor Grants (Covering Verification Costs)
 
 If your integration sponsors verification costs:
 
@@ -111,7 +143,7 @@ const client = new NeusClient({
 Sponsor grant tokens are short-lived. Re-issue them per session. Do not embed long-lived API keys in client-side code.
 </Warning>
 
-## 6. Usage and Analytics
+## 8. Usage and Analytics
 
 Track usage with your `appId` and NEUS partner reporting:
 
@@ -125,4 +157,4 @@ The `/api/v1/proofs/check` response includes `matchCount` for your telemetry.
 
 - Keep `/verify` as the single hosted path for interactive verification
 - Route all OAuth and interactive verifier handoff through NEUS-hosted surfaces
-- Do not create parallel auth routes when NEUS already provides a canonical path
+- Do not create parallel auth routes when NEUS already provides a standard path

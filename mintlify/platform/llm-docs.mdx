@@ -1,0 +1,50 @@
+---
+title: LLM Docs
+description: Use NEUS documentation in LLMs, Cursor, Zed, and AI-powered editors.
+---
+
+Mintlify serves structured doc indexes for AI tool ingestion. Use them to give LLMs context about NEUS verification, MCP, and API.
+
+## Smaller Context (Routes)
+
+`llms.txt` returns a markdown index with page routes and descriptions. Use when token budget is limited:
+
+```bash
+curl https://docs.neus.network/llms.txt
+```
+
+## Larger Context (Full Docs)
+
+`llms-full.txt` returns the full documentation in one file. Use when you need complete context:
+
+```bash
+curl https://docs.neus.network/llms-full.txt
+```
+
+## Cursor and MCP
+
+For Cursor or other MCP-compatible editors, add the NEUS MCP server for live verification tools:
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "type": "streamableHttp",
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
+}
+```
+
+See [MCP Server](../cookbook/mcp) for tool reference and setup.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="MCP Server" icon="plug" href="../cookbook/mcp">
+    Verifier catalog, gate checks, hosted verify handoff.
+  </Card>
+  <Card title="API Overview" icon="terminal" href="../api/overview">
+    HTTP endpoints and OpenAPI.
+  </Card>
+</CardGroup>

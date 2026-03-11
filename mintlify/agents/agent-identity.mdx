@@ -3,7 +3,7 @@ title: Agent Identity
 description: Register and verify AI agent identities.
 ---
 
-Use `agent-identity` to register an AI or automation agent with verifiable credentials.
+Use `agent-identity` to register an AI or automation agent with verifiable credentials. ERC-8004 compatible. See [ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) for the identity standard.
 
 ## Basic Registration
 
@@ -45,11 +45,11 @@ await client.verify({
 
 | Field | Required | Max Length | Description |
 |-------|----------|------------|-------------|
-| `agentId` | Yes | 64 chars | Unique identifier |
-| `agentWallet` | No | - | Agent's wallet (EVM or Solana) |
-| `agentType` | No | 32 chars | `ai`, `automation`, `custom` |
+| `agentId` | Yes | 1–128 chars | Unique identifier |
+| `agentWallet` | Yes | - | Agent's wallet (EVM or Solana) |
+| `agentType` | No | enum | `ai`, `bot`, `service`, `automation`, `agent` |
 | `description` | No | 500 chars | Agent description |
-| `capabilities` | No | 16 items | List of capabilities |
+| `capabilities` | No | 32 items | List of capabilities |
 | `instructions` | No | 4000 chars | System prompt |
 | `skills` | No | 48 items | List of skills |
 | `services` | No | 16 items | Service endpoints |

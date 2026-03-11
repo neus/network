@@ -1,9 +1,14 @@
 ---
 title: Overview
-description: The open verification layer for identity, ownership, and agent authenticity.
+description: The verification layer for identity, ownership, and agent authenticity. Verify once, trust everywhere.
 ---
 
-Use this section to understand the product, pick an integration surface, and move into implementation without guessing which pages matter first.
+NEUS is the verification layer for identity, ownership, and agent authenticity. **Verify once, trust everywhere.**
+
+- **Portable proof receipts** — Get a `qHash` you can reuse across apps, gates, and agents
+- **Gate content** — Check eligibility before serving protected content
+- **Sponsor flows** — Apps cover verification cost for frictionless onboarding
+- **Agent delegation** — Verifiable agent identity and payment scopes
 
 ## Get Started
 
@@ -17,13 +22,40 @@ Use this section to understand the product, pick an integration surface, and mov
   <Card title="Auth + Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
     Standardized `/verify` login, popup completion, and auth code exchange.
   </Card>
+  <Card title="Examples" icon="code" href="./examples">
+    Node.js, React, and curl examples.
+  </Card>
 </CardGroup>
+
+## Standardized Surfaces
+
+| Surface | URL |
+|---------|-----|
+| Hub (explorer + profile) | `https://neus.network/hub` |
+| Profile | `https://neus.network/profile` |
+| Hosted verify and login | `https://neus.network/verify` |
+| Proof page | `https://neus.network/proof/[qHash]` |
+| Presets | `https://neus.network/verify?preset=<id>` |
+| Public API base | `https://api.neus.network` |
+| MCP endpoint | `https://mcp.neus.network/mcp` |
+| MCP discovery | `https://mcp.neus.network/.well-known/mcp.json` |
+| Verify widget script | `https://verify.neus.network/widget.js` |
+| Verifier catalog | `GET /api/v1/verification/verifiers` |
+| Gate check | `GET /api/v1/proofs/check` |
+| Examples (Node.js, React, curl) | [GitHub examples](https://github.com/neus/network/tree/main/examples) |
+| AI doc index | `https://docs.neus.network/llms.txt` |
+
+## Docs Contract
+
+- **`docs.neus.network`** is the canonical published surface
+- This **`mintlify/`** tree is the published source for docs content, navigation, and theming
+- The public OpenAPI spec at **`/openapi/public-api.json`** is the reference contract for the API Reference tab
 
 ## Integration Surfaces
 
 <CardGroup cols={3}>
   <Card title="Platform" icon="globe" href="./platform/overview">
-    Learn the verification model, receipts, environments, and trust boundaries.
+    Verification model, receipts, environments, and trust boundaries.
   </Card>
   <Card title="JavaScript SDK" icon="code" href="./sdks/overview">
     Client-side proof creation, deterministic signing, and polling.
@@ -38,37 +70,23 @@ Use this section to understand the product, pick an integration surface, and mov
     Hosted MCP for agents, tool calling, and verify flows.
   </Card>
   <Card title="API" icon="terminal" href="./api/overview">
-    Public HTTP integration concepts, auth patterns, and error handling.
+    HTTP integration, auth patterns, and error handling.
   </Card>
 </CardGroup>
-
-## Standardized Surfaces
-
-| Surface | URL |
-|---------|-----|
-| Hosted verify and login | `https://neus.network/verify` |
-| Public docs | `https://docs.neus.network` |
-| Public API base | `https://api.neus.network` |
-| MCP endpoint | `https://mcp.neus.network/mcp` |
-| Verifier catalog | `GET /api/v1/verification/verifiers` |
-| Gate check | `GET /api/v1/proofs/check` |
-
-## Docs Contract
-
-- `docs.neus.network` is the canonical published surface
-- This `mintlify/` tree is the published source for docs content, navigation, and theming
-- The public OpenAPI spec at `/openapi/public-api.json` is the reference contract for the API Reference tab
 
 ## Learn the System
 
 <CardGroup cols={3}>
   <Card title="How Verification Works" icon="shield-check" href="./platform/how-verification-works">
-    Understand requests, signer strings, verifiers, and hosted interaction.
+    Requests, signer strings, verifiers, and hosted interaction.
   </Card>
   <Card title="Verification Lifecycle" icon="rotate" href="./platform/verification-lifecycle">
     Creation, async processing, terminal states, reuse, and revocation.
   </Card>
-  <Card title="Cookbook" icon="book-open" href="./cookbook/overview">
+  <Card title="Guides" icon="book-open" href="./cookbook/overview">
     Production patterns for hosted verify, domains, gating, and sponsored flows.
+  </Card>
+  <Card title="LLM Docs" icon="sparkles" href="./platform/llm-docs">
+    llms.txt, Cursor, and MCP setup for AI tools.
   </Card>
 </CardGroup>

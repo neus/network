@@ -109,7 +109,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "NFT ownership verification (EVM-only)",
+      "description": "NFT ownership verification (EVM or Solana)",
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "nft-ownership",
@@ -127,7 +127,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Token holding verification (EVM-only)",
+      "description": "Token holding verification (EVM or Solana)",
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "token-holding",
@@ -180,7 +180,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Verifies smart contract ownership (EVM-only)",
+      "description": "Verifies smart contract ownership (EVM chains)",
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "contract-ownership",

@@ -45,6 +45,16 @@ NEUS provides verifiable agent identity and delegation for AI and automation sys
 | **Scope** | What the agent is permitted to do |
 | **Delegation Proof** | Cryptographic proof of granted permissions |
 
+## Agent Preset
+
+Use the `agent-pack` preset for hosted verify. It bundles agent-identity, agent-delegation, and wallet-risk:
+
+```text
+https://neus.network/verify?preset=agent-pack
+```
+
+Optional: add `agent=<wallet>` when linking an agent wallet to a controller. See [Presets](../platform/presets) for the full catalog.
+
 ## Integration Path
 
 <Steps>

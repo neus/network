@@ -3,6 +3,17 @@ title: SDK Verification Patterns
 description: Reuse-first, fresh-proof, hosted interactive, and server-side gating patterns with the NEUS SDK.
 ---
 
+## Privacy and Visibility
+
+| Option | When to Use |
+|--------|-------------|
+| `privacyLevel: 'private'` | Owner-only proofs; not discoverable. Default for most flows. |
+| `privacyLevel: 'public'` | Discoverable in Hub; use when you want proof sharing. |
+| `publicDisplay: false` | Hide proof from public profile even when stored. |
+| `publicDisplay: true` | Show proof on public profile (requires `public` privacy). |
+
+Default to `{ privacyLevel: 'private', publicDisplay: false }` unless you explicitly need public discovery.
+
 ## Reuse-First Flow
 
 Use this as the default UX. It minimizes user prompts while still issuing new proofs when needed.
