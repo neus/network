@@ -1,30 +1,19 @@
 ---
 title: Verifiers
-description: How to choose and use NEUS verifiers for your flow.
+description: How to choose the right NEUS capability for your product flow.
 icon: list-tree
 ---
 
-Verifiers define what you prove. The API catalog is code-first: backend `verifierRegistry.js` is the single source of truth; SDKs, widgets, and MCP consume it via `GET /api/v1/verification/verifiers`.
+Quick reference for verifier selection.
 
-Verifiers are the building blocks of NEUS. Each verifier proves something specific—wallet ownership, domain control, NFT holding, human verification, and more.
+## In Short
 
-## How Verifiers Work
+- Identify the proof or policy outcome required.
+- Match that outcome to the correct verifier.
+- Save the proof receipt ID after completion so the result can be reused.
 
-| Type | What It Proves | Flow |
-|------|----------------|------|
-| **Ownership** | Wallet, domain, NFT, token | Instant or lookup |
-| **Identity** | Human verification, org membership | Interactive |
-| **Risk** | Wallet safety, bot resistance | Lookup |
-| **Agents** | AI identity, delegation | Instant |
+## Open the Verifier Catalog
 
-## Get the Live Catalog
-
-```http
-GET /api/v1/verification/verifiers
-```
-
-The API returns all verifiers, required fields, and metadata. Use it as the source of truth—SDKs, widgets, and MCP consume the same catalog.
-
-<Card title="Full Verifier Catalog" icon="list-tree" href="../ecosystems/verifiers">
-  All verifiers with use cases, fields, and integration patterns.
+<Card title="Verifier Catalog" icon="list-tree" href="../verification/verifiers">
+  Browse the full verifier list with use cases, inputs, and expected results.
 </Card>

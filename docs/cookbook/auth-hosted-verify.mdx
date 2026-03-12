@@ -6,7 +6,7 @@ icon: key
 
 Use hosted verify when users need to sign, link OAuth, or complete interactive verifiers. NEUS provides a hosted UI for these flows.
 
-NEUS supports a signature-based protocol for proofs, and an optional session layer for first-party browser UX.
+NEUS supports a signature-based proof model and an optional session layer for smoother browser UX.
 
 ## Two Layers
 
@@ -41,9 +41,9 @@ After successful verification, users can be redirected to the [Hub](https://neus
 Do not invent a second hosted login route. `intent=login` on `/verify` is the correct implementation.
 </Warning>
 
-## Session SSOT: `GET /api/v1/auth/me`
+## Session Check: `GET /api/v1/auth/me`
 
-If you use the session layer, treat this endpoint as the **single source of truth** for:
+If you use the session layer, treat this endpoint as the main check for:
 
 - Whether the user is authenticated
 - The user's identity pack (subjectId/did/address)

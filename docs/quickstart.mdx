@@ -1,35 +1,10 @@
 ---
 title: Quickstart
-description: Create a proof receipt, check status, and gate access with the fastest NEUS path.
+description: Create your first proof-backed action, save the proof receipt ID, and reuse it in a real app flow.
 icon: rocket
 ---
 
-This guide is the shortest path from zero setup to a reusable NEUS proof in a real app flow.
-
-## What You'll Do
-
-1. Install the SDK
-2. Create a proof with `ownership-basic`
-3. Save the returned proof receipt ID
-4. Poll status for async flows
-5. Gate UI or server access with that receipt
-
-## Pick Your Starting Surface
-
-<CardGroup cols={2}>
-  <Card title="SDK Flow" icon="code" href="#3-create-a-proof">
-    Best for custom browser and app UX.
-  </Card>
-  <Card title="Widgets" icon="cube" href="./widgets/overview">
-    Fastest path for React gating and proof badges.
-  </Card>
-  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Standard login and interactive verification flow.
-  </Card>
-  <Card title="HTTP Examples" icon="terminal" href="https://github.com/neus/network/tree/main/examples">
-    Minimal curl and Node.js examples for server integrations.
-  </Card>
-</CardGroup>
+Create a proof, save the proof receipt ID, and reuse it in a product flow.
 
 ## 1. Install the SDK
 
@@ -42,12 +17,12 @@ npm install @neus/sdk
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient({ appId: 'neus-network' });
+const client = new NeusClient({ appId: 'acme-web' });
 ```
 
 ## 3. Create a Proof
 
-Create a basic ownership proof. This prompts the user to sign a request-bound message.
+Use the ownership and provenance verifier for the first build. It is the simplest way to bind a wallet to content or a claim and get back a reusable proof receipt.
 
 ```javascript
 const proof = await client.verify({
@@ -60,12 +35,16 @@ const proofId = proof.proofId;
 ```
 
 <Note>
-`proofId` is the standard SDK name for the proof receipt ID. Raw HTTP paths may use `{qHash}` for the same identifier.
+Public docs call this value the proof receipt ID. The SDK field name is `proofId`.
 </Note>
 
-## 4. Poll Status
+## 4. Save the Proof Receipt ID
 
-Some verifiers complete immediately. Others return `202` and finish asynchronously.
+Persist it with the product record that will need trust later, such as a submission, profile, claim, or access decision.
+
+## 5. Check Status Only When Needed
+
+Some flows complete immediately. Others return `202` and finish asynchronously.
 
 ```javascript
 const final = await client.pollProofStatus(proofId, {
@@ -76,9 +55,9 @@ const final = await client.pollProofStatus(proofId, {
 console.log(final.status);
 ```
 
-## 5. Gate Access
+## 6. Reuse It
 
-Use `VerifyGate` when you want the UI to check eligibility before showing content.
+Use the saved proof receipt ID to show a proof page, run a server check, or gate UI. For React gating, `VerifyGate` is the fastest path:
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -101,40 +80,25 @@ export default function ProtectedPage() {
 }
 ```
 
-## Hosted Interactive Verifiers
+## When To Use Hosted Verify
 
-For `ownership-social`, `ownership-org-oauth`, and `proof-of-human`, use the hosted NEUS flow.
+- Prefer hosted verify when the flow is interactive or user-guided.
+- Save the proof receipt ID after completion.
+- Reuse existing proofs before asking the user to verify again.
 
-```jsx
-<VerifyGate
-  requiredVerifiers={['ownership-social']}
-  onVerified={(result) => {
-    console.log('Hosted verification complete', result.proofId);
-  }}
->
-  <div>Access granted.</div>
-</VerifyGate>
-```
-
-## Production Defaults
-
-- Prefer private proofs unless you explicitly need public discovery.
-- Persist the proof receipt ID, not raw signature material.
-- Use freshness windows for point-in-time verifiers such as balances, ownership, and risk.
-
-## Next Pages
+## Related Pages
 
 <CardGroup cols={2}>
-  <Card title="Integrate" icon="compass" href="./integration">
-    Follow the end-to-end production path.
+  <Card title="Choose a Path" icon="route" href="./choose-an-integration-path">
+    Pick SDK, widgets, API, hosted verify, or MCP.
   </Card>
-  <Card title="Verification Catalog" icon="list-tree" href="./verification/verifiers">
-    Pick the right verifier for your use case.
+  <Card title="Verifier Catalog" icon="list-tree" href="./verification/verifiers">
+    Choose the right capability next.
   </Card>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Standard login and popup completion flow.
+    Use the standard interactive flow.
   </Card>
-  <Card title="Examples" icon="code" href="./examples">
-    See Node.js, React, and curl implementations.
+  <Card title="Integration Guide" icon="compass" href="./integration">
+    Move from a demo flow to a production setup.
   </Card>
 </CardGroup>

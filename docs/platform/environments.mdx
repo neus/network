@@ -4,28 +4,25 @@ description: Standard NEUS public surfaces, base URLs, and deployment expectatio
 icon: server
 ---
 
-Use these URLs for production integrations. Override only when pointing to a custom or dev environment.
+Use these URLs for production integrations. If you test against a separate environment, make sure your API and hosted verify URLs stay aligned.
 
 ## Standard Public Surfaces
 
 | Surface | URL | Purpose |
 |---|---|---|
-| App | `https://neus.network` | Hosted verify, proof pages, and first-party user flows |
+| App | `https://neus.network` | Hosted verify, proof pages, and user-facing product flows |
 | API | `https://api.neus.network` | Public API surface |
 | Docs | `https://docs.neus.network` | Public documentation |
 | IPFS | `https://ipfs.neus.network` | Content-addressed asset access |
 | MCP | `https://mcp.neus.network` | Hosted MCP for agents (discovery: `/.well-known/mcp.json`) |
-| Dev API | `https://dev.api.neus.network` | Development and pre-production testing (when enabled) |
 
 ## Base URL Guidance
 
 - Use `https://api.neus.network` for production API traffic.
-- Use `https://dev.api.neus.network` only for development and pre-production testing; access may be restricted.
 - Use `https://neus.network/verify` as the standard hosted verification path.
 - If you override `apiUrl` in the SDK, also set `hostedCheckoutUrl` so hosted flows stay aligned with the environment you intend to use.
 
 ## Integrator Notes
 
 - `appId` is public attribution metadata, not a secret.
-- Hosted auth code exchange, sponsor grants, and other advanced capabilities.
-- Run preview and validation commands from the Mintlify directory that contains `docs.json`.
+- Keep your hosted verify URL aligned with your API environment.

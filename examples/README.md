@@ -16,4 +16,4 @@ Integration examples for NEUS.
 |----------|-------------|
 | [Quickstart](https://docs.neus.network/quickstart) | Create your first proof |
 | [API Reference](https://docs.neus.network/api/overview) | HTTP endpoints |
-| [Verifiers](https://docs.neus.network/ecosystems/verifiers) | Verifier catalog and schemas |
+| [Verifier Catalog](https://docs.neus.network/verification/verifiers) | Outcome-first verifier guide |

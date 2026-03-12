@@ -4,44 +4,36 @@ description: Pay per use when credits run out. Verification API, gate checks, ho
 icon: coins
 ---
 
-x402 lets you pay per use when credits are exhausted. Request → 402 with quote → pay USDC → retry with receipt.
+x402 lets a request pay at the time it runs. If credits are not available, the API returns a quote, the client pays, and the request is retried with the receipt.
 
 ## Where x402 Applies
 
 | Surface | When 402 Happens |
 |---------|------------------|
-| **Verification API** | `POST /api/v1/verification` — caller has no credits |
-| **Gate check API** | `GET /api/v1/proofs/check` — caller has no credits |
+| **Verification API** | `POST /api/v1/verification` when the caller has no credits |
+| **Gate check API** | `GET /api/v1/proofs/check` when the caller has no credits |
 | **MCP tools** | Tool call returns payment-needed when no credits |
-| **Hosted checkout** | When the embedding app or server makes billable API calls without credits |
+| **Hosted flows** | When the calling app or server makes billable requests without credits |
 
 ## Flow
 
 1. **Request** — Call verification or gate check.
 2. **402** — API returns `402 Payment Required` with quote.
-3. **Pay** — Pay quoted amount in USDC (e.g., Base).
+3. **Pay** — Pay the quoted amount.
 4. **Retry** — Resend request with `PAYMENT-SIGNATURE: <receipt>`.
 
 ## Using x402 Through Verifiers and Checkout
 
-- **Verifiers** — Verification consumes credits. If you call the API directly and have no credits, you get 402. Pay, retry with receipt, verification proceeds.
-- **Gates** — Gate checks consume credits. Use `VerifyGate` or `GET /api/v1/proofs/check`. Same flow: no credits → 402 → pay → retry.
-- **Hosted checkout** — Users at `https://neus.network/verify` complete verifiers. Payer is resolved server-side (sponsor, gate creator, or user signature). x402 applies when your server makes gate checks or verification calls on behalf of users and runs out of credits.
-- **Agents** — Delegate with `scope: "payments:x402"` so the agent can pay per use when acting on your behalf.
+- **Verifiers** — Direct API verification can fall back to x402 when credits are missing.
+- **Gates** — Gate checks can do the same.
+- **Hosted flows** — x402 matters when the calling app or server is the billable party.
+- **Agents** — Delegation can allow pay-per-use on behalf of a controller.
 
 ## Header
 
 ```text
 PAYMENT-SIGNATURE: <receipt>
 ```
-
-## Who Pays (Server Resolution)
-
-1. **x402 receipt** — Pay-per-use (you just paid)
-2. **Sponsor grant** — App-sponsored
-3. **Gate billing** — Gate creator pays
-4. **Signature** — User self-pay
-5. **No payer** — Demo cap (limited free)
 
 ## Related
 

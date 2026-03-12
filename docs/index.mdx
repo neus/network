@@ -1,84 +1,86 @@
 ---
 title: Overview
-description: NEUS gives apps, marketplaces, and agents one hosted verification system with reusable proof receipts.
+description: Verify once, reuse anywhere with portable proof receipts for people, teams, apps, communities, and agents.
 icon: house
 ---
 
-## Why Teams Use NEUS
+Portable proof receipts for login, trust, access, and agent workflows.
+
+## Ship Core Flows
 
 <CardGroup cols={2}>
-  <Card title="Hosted verify and login" icon="key" href="./cookbook/auth-hosted-verify">
-    Use the standard `/verify` flow for login, checkout, and interactive verification.
+  <Card title="Hosted verify" icon="key" href="./cookbook/auth-hosted-verify">
+    Handle login, social linking, org checks, and human verification.
   </Card>
-  <Card title="Reusable proof receipts" icon="receipt" href="./platform/receipts-and-results">
-    Save one proof receipt ID and reuse it for status, gating, display, and policy.
+  <Card title="Proof reuse" icon="receipt" href="./platform/receipts-and-results">
+    Save one receipt ID and reuse it across product surfaces.
   </Card>
-  <Card title="Proof and profile pages" icon="globe" href="./platform/hub">
-    Give every verified result a standard page on `neus.network` with sharing and visibility controls.
+  <Card title="Profiles" icon="globe" href="./platform/hub">
+    Turn wallets, domains, socials, and proofs into one public identity.
   </Card>
-  <Card title="Gating and agent policy" icon="shield-check" href="./verification/overview">
-    Check eligibility before access, payments, or agent actions without rebuilding verifier logic.
+  <Card title="Access gates" icon="shield-check" href="./verification/overview">
+    Unlock content, onboarding, payouts, and premium routes with one trust layer.
   </Card>
 </CardGroup>
 
-## Start Here
+## Start Building
 
 <CardGroup cols={2}>
   <Card title="Quickstart" icon="rocket" href="./quickstart">
-    Create your first proof receipt and wire a gate in minutes.
+    Go from first proof to stored receipt in minutes.
   </Card>
-  <Card title="Integrate" icon="compass" href="./integration">
-    Follow the recommended production path from gate check to hosted verify and unlock.
+  <Card title="Choose your stack" icon="route" href="./choose-an-integration-path">
+    Pick Hosted Verify, SDK, Widgets, API, or MCP.
   </Card>
-  <Card title="SDK" icon="code" href="./sdks/overview">
-    Build a custom browser or app flow with the JavaScript SDK and widgets.
+  <Card title="Production guide" icon="compass" href="./integration">
+    Wire verification, storage, redirects, and reuse end to end.
   </Card>
-  <Card title="Hosted Verify" icon="window-restore" href="./cookbook/auth-hosted-verify">
-    Launch the standard login and verification flow without inventing a parallel UX.
-  </Card>
-</CardGroup>
-
-## What You Can Build
-
-<CardGroup cols={2}>
-  <Card title="App and content gating" icon="shield" href="./cookbook/nft-gating">
-    Check proof eligibility before showing premium content, communities, or app features.
-  </Card>
-  <Card title="Org onboarding" icon="building" href="./cookbook/hub-integrator">
-    Combine hosted verify, domain setup, sponsorship, and app attribution for production onboarding.
-  </Card>
-  <Card title="Proof pages and receipts" icon="badge-check" href="./platform/hub">
-    Share verifiable proof pages, profile surfaces, and reusable receipts across products.
-  </Card>
-  <Card title="AI agents and MCP" icon="robot" href="./mcp/overview">
-    Give AI tools verifier lookup, gate checks, and hosted verify handoff through the NEUS MCP server.
+  <Card title="Examples" icon="code" href="./examples">
+    Open focused SDK, widget, and HTTP integrations.
   </Card>
 </CardGroup>
 
-## Core Product Surfaces
+## Popular Paths
+
+| Use case | Page |
+|---|---|
+| Launch the standard user flow | [Auth + Hosted Verify](./cookbook/auth-hosted-verify) |
+| Build custom browser or server UX | [SDK Overview](./sdks/overview) |
+| Gate a React page or route quickly | [Widgets Overview](./widgets/overview) |
+| Choose the right verifier | [Verifier Catalog](./verification/verifiers) |
+| Set up partner onboarding | [Partner Setup](./cookbook/hub-integrator) |
+| Add proof-aware agent flows | [Agents Overview](./agents/overview) |
+
+## The Core Loop
+
+1. Verify a person, account, artifact, domain, team, asset, or agent.
+2. Receive a proof receipt ID.
+3. Reuse that proof receipt for access, profile trust, proof pages, and policy.
+4. Send users back through hosted verify only when a fresh or interactive check is required.
+
+## Public Surfaces
 
 | Surface | What it gives you |
 |---------|-------------------|
-| `https://neus.network/verify` | Hosted login, checkout, and interactive verification |
-| `https://neus.network/proof/[proof-receipt-id]` | Standard proof page for any proof receipt |
-| `https://neus.network/profile` | Connected account dashboard and identity management |
-| `https://neus.network/hub` | Discovery, proof feed, public profiles, and first-party explorer |
-| `https://api.neus.network` | Public API and verifier catalog |
+| `https://neus.network/verify` | Hosted verify for login and interactive checks |
+| `https://neus.network/proof/[proof-receipt-id]` | Standard proof page for a saved proof receipt |
+| `https://neus.network/hub` | Public profiles, proof discovery, apps, credits, and agents |
+| `https://api.neus.network` | Public API for verification, status, and gate checks |
 | `https://mcp.neus.network/mcp` | Hosted MCP endpoint for agent integrations |
 
-## Go Next
+## Keep Exploring
 
 <CardGroup cols={2}>
-  <Card title="Platform" icon="globe" href="./platform/overview">
-    See what ships with the first-party NEUS product surface.
+  <Card title="Quickstart" icon="rocket" href="./quickstart">
+    Build the shortest end-to-end flow.
   </Card>
-  <Card title="Verification" icon="file-signature" href="./verification/overview">
-    Understand the request, signing, receipt, and reuse model.
+  <Card title="Verifier Catalog" icon="list-tree" href="./verification/verifiers">
+    Match a product requirement to the right capability.
+  </Card>
+  <Card title="SDK Overview" icon="package" href="./sdks/overview">
+    Use the JavaScript SDK for browser and server flows.
   </Card>
   <Card title="Guides" icon="book-open" href="./cookbook/overview">
-    Use production patterns for onboarding, gating, and agent workflows.
-  </Card>
-  <Card title="API Guides" icon="terminal" href="./api/overview">
-    Learn the HTTP contract before you drop into the generated API reference.
+    Open implementation guides for common flows.
   </Card>
 </CardGroup>

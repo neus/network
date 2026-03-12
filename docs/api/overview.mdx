@@ -4,6 +4,8 @@ description: Public HTTP contract for verification, proof receipt polling, gate 
 icon: terminal
 ---
 
+Start with hosted verify or the SDK if you want the fastest product path. Use the HTTP API directly when your backend needs full control over verification and access checks.
+
 ## Quick Reference
 
 | Surface | URL |
@@ -12,13 +14,15 @@ icon: terminal
 | OpenAPI Spec | `/openapi/public-api.json` |
 | Verifier Catalog | `GET /api/v1/verification/verifiers` |
 
+## Recommended Order
+
+1. Hosted verify for guided user flows
+2. SDK for browser or server integrations
+3. Raw HTTP for advanced or server-owned integrations
+
 ## Authentication
 
-Most read endpoints are public. Write operations require request-bound wallet signatures.
-
-<Note>
-For manual signing, use `POST /api/v1/verification/standardize` to get the exact signing string.
-</Note>
+Most read endpoints are public. Verification creation and private proof actions require the right user or wallet authorization.
 
 ## Core Endpoints
 
@@ -31,6 +35,17 @@ For manual signing, use `POST /api/v1/verification/standardize` to get the exact
 | Revoke proof | POST | `/api/v1/proofs/revoke-self/{qHash}` |
 | Verifier catalog | GET | `/api/v1/verification/verifiers` |
 
+## What To Use Each For
+
+| Need | Endpoint |
+|---|---|
+| Start a new verification | `POST /api/v1/verification` |
+| Get the exact string to sign | `POST /api/v1/verification/standardize` |
+| Check async status | `GET /api/v1/verification/status/{qHash}` |
+| Enforce policy with a yes or no answer | `GET /api/v1/proofs/check` |
+| Revoke a proof you own | `POST /api/v1/proofs/revoke-self/{qHash}` |
+| Read verifier metadata | `GET /api/v1/verification/verifiers` |
+
 ## Proof Receipt Naming
 
 Treat the proof receipt ID as opaque and stable.
@@ -38,29 +53,6 @@ Treat the proof receipt ID as opaque and stable.
 <Note>
 `qHash` is the HTTP and path name for the same proof receipt ID used elsewhere as `proofId`.
 </Note>
-
-## What Each Endpoint Is For
-
-<CardGroup cols={2}>
-  <Card title="Create Verification" icon="plus-circle" href="#create-verification">
-    Submit a new verification request.
-  </Card>
-  <Card title="Standardize Signing String" icon="file-code" href="#standardize-signing-string">
-    Get the exact wallet message to sign.
-  </Card>
-  <Card title="Poll Status" icon="rotate" href="#poll-status">
-    Check processing state for a proof receipt.
-  </Card>
-  <Card title="Gate Check" icon="shield" href="#gate-check">
-    Run minimal eligibility checks without loading full proof payloads.
-  </Card>
-  <Card title="Revoke Proof" icon="x-circle" href="#revoke-proof">
-    Revoke a proof you control.
-  </Card>
-  <Card title="Verifier Catalog" icon="list" href="#verifier-catalog">
-    Read the live verifier definitions instead of hardcoding them.
-  </Card>
-</CardGroup>
 
 ## Create Verification
 

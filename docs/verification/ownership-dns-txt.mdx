@@ -1,10 +1,12 @@
 ---
-title: ownership-dns-txt
+title: Domain Verification
 description: Prove domain control by publishing a DNS TXT record.
 icon: globe
 ---
 
-Use `ownership-dns-txt` when you need to prove that a wallet controls a domain.
+**Verifier ID:** `ownership-dns-txt`
+
+Use this verifier when you need to prove that a wallet controls a domain.
 
 ## Best For
 
@@ -14,7 +16,7 @@ Use `ownership-dns-txt` when you need to prove that a wallet controls a domain.
 
 ## Flow Type
 
-Lookup. NEUS checks the DNS TXT record after the user publishes it.
+Lookup. NEUS checks the DNS TXT record after it is published.
 
 ## Required Fields
 
@@ -31,6 +33,4 @@ Lookup. NEUS checks the DNS TXT record after the user publishes it.
 }
 ```
 
-## Reader Note
-
-Use this when you want a strong public binding between a brand domain and a wallet identity.
+This proof can then be reused for partner onboarding, profile trust, or public proof display.

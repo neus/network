@@ -4,26 +4,29 @@ description: "Production path for NEUS integrations: check eligibility, verify w
 icon: compass
 ---
 
-Most production integrations should follow a simple loop: check first, verify only when needed, then reuse the same receipt everywhere downstream.
+Most production integrations should follow one loop: check first, verify only when needed, save the proof receipt ID, then reuse it everywhere downstream.
 
-## Standard Flow
+## Production Checklist
 
 <Steps>
-  <Step title="Check eligibility first">
-    Use `GET /api/v1/proofs/check` or `client.gateCheck(...)` before prompting the user again.
+  <Step title="Start with the lightest surface">
+    Use hosted verify, widgets, SDK, API, or MCP based on the product job.
   </Step>
-  <Step title="Run verification when needed">
-    Use hosted verify for interactive flows. Use direct submit for instant and lookup verifiers.
+  <Step title="Check eligibility before creating a new proof">
+    Use gate checks or reuse-first behavior so returning users are not prompted again without reason.
+  </Step>
+  <Step title="Use hosted verify for interactive work">
+    Social accounts, team checks, and human verification should resolve through `/verify`.
   </Step>
   <Step title="Save the proof receipt ID">
-    Persist `proofId` from the SDK response. Raw HTTP paths may label the same identifier as `{qHash}`.
+    Persist the returned proof receipt ID with the record that needs it later.
   </Step>
-  <Step title="Unlock access or continue the workflow">
-    Reuse the same proof receipt ID for status, display, gating, and policy.
+  <Step title="Reuse the same proof receipt">
+    Use it for status, display, proof pages, access checks, and policy instead of rebuilding trust logic per feature.
   </Step>
 </Steps>
 
-## Choose the Right Mode
+## Choose a Verification Strategy
 
 | Mode | Best for | Result |
 |------|----------|--------|
@@ -31,55 +34,39 @@ Most production integrations should follow a simple loop: check first, verify on
 | `fresh` | High-stakes actions | Force a new proof |
 | `reuse` | Read-only checks | Never create new proofs |
 
-## Session-First Hosted Path
+## Default Public Paths
 
-Use hosted verify plus auth code exchange when you want the simplest production login flow.
-
-1. Redirect users to `https://neus.network/verify?intent=login&returnUrl=...`
-2. Receive the auth `code` on return
-3. Exchange the code at `POST https://api.neus.network/api/v1/auth/code/exchange`
-4. Use the returned session or token for later calls
-
-<Note>
-For the full hosted contract, use [Auth + Hosted Verify](./cookbook/auth-hosted-verify).
-</Note>
-
-## Verify Widget
-
-The script-tag widget is the fastest no-framework path for displaying a proof receipt on any site.
-
-```html
-<script src="https://verify.neus.network/widget.js"></script>
-<div data-neus-proof="0xYOUR_PROOF_RECEIPT_ID"></div>
-```
-
-<Note>
-The widget checks proof status with the public verification status endpoint. Raw HTTP paths still use `:qHash` for the proof receipt ID parameter.
-</Note>
+| Need | Recommended path |
+|---|---|
+| Guided user verification | `https://neus.network/verify` |
+| Browser or server integration | `@neus/sdk` |
+| Server-side checks | `GET /api/v1/proofs/check` |
+| Proof page display | `https://neus.network/proof/[proof-receipt-id]` |
+| Agent tooling | `https://mcp.neus.network/mcp` |
 
 ## Go-Live Rules
 
 <Checklist>
-  <Item>Use `/verify` as the standard hosted path for interactive flows.</Item>
-  <Item>Do not hardcode verifier metadata; read the live catalog.</Item>
-  <Item>Persist proof receipt IDs and business context, not raw signatures.</Item>
-  <Item>Use freshness windows for point-in-time verifiers.</Item>
-  <Item>Run a golden demo: create proof, save the receipt ID, open the proof page, then gate access with the same proof.</Item>
+  <Item>Use `/verify` as the single hosted path for interactive flows.</Item>
+  <Item>Read verifier metadata from the live catalog.</Item>
+  <Item>Persist proof receipt IDs, not raw signing material.</Item>
+  <Item>Use freshness windows for point-in-time checks.</Item>
+  <Item>Test the full loop: create proof, save ID, open proof page, reuse proof for access.</Item>
 </Checklist>
 
 ## Related
 
 <CardGroup cols={2}>
   <Card title="Choose Your Path" icon="route" href="./choose-an-integration-path">
-    Pick SDK, widgets, API, or MCP based on what you are building.
+    Pick the lightest starting surface.
   </Card>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Standard login and verification flow.
+    Use the standard guided user flow.
   </Card>
-  <Card title="API Overview" icon="terminal" href="./api/overview">
-    HTTP endpoints and auth patterns.
+  <Card title="Verifier Catalog" icon="list-tree" href="./verification/verifiers">
+    Choose the exact capabilities for your product.
   </Card>
-  <Card title="Presets" icon="layer-group" href="./platform/presets">
-    Use hosted presets for common onboarding flows.
+  <Card title="Receipts and Results" icon="receipt" href="./platform/receipts-and-results">
+    Learn what to save and what to show.
   </Card>
 </CardGroup>

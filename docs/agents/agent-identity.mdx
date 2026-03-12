@@ -4,7 +4,9 @@ description: Register and verify AI agent identities.
 icon: id-card
 ---
 
-Use `agent-identity` to register an AI or automation agent with verifiable credentials. ERC-8004 compatible. See [ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) for the identity standard.
+Use `agent-identity` to register an AI or automation agent with a reusable proof receipt.
+
+**Verifier ID:** `agent-identity`
 
 ## Basic Registration
 
@@ -54,6 +56,10 @@ await client.verify({
 | `instructions` | No | 4000 chars | System prompt |
 | `skills` | No | 48 items | List of skills |
 | `services` | No | 16 items | Service endpoints |
+
+## What You Get Back
+
+You receive a proof receipt ID that can be reused for public agent identity, profile trust, and agent-aware product flows.
 
 ## Verification
 

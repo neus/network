@@ -4,7 +4,9 @@ description: Create and delegate agent identities for AI and automation.
 icon: robot
 ---
 
-## Agent Identity
+Use this guide when you want a public agent flow: register an agent, grant scoped permissions, and reuse those proofs in product or MCP workflows.
+
+## 1. Register the Agent
 
 Use `agent-identity` to register an AI or automation agent:
 
@@ -27,12 +29,12 @@ await client.verify({
 });
 ```
 
-### Fields
+### Main Fields
 
 | Field | Required | Description |
 |-------|----------|-------------|
 | `agentId` | Yes | Unique agent identifier |
-| `agentWallet` or `agentAccountId` | One required | Agent's wallet (EVM/Solana) or CAIP-10 account |
+| `agentWallet` or `agentAccountId` | One required | Agent wallet or account |
 | `agentType` | No | `ai`, `bot`, `service`, `automation`, `agent` |
 | `description` | No | Agent description |
 | `capabilities` | No | List of capabilities |
@@ -40,7 +42,7 @@ await client.verify({
 | `skills` | No | List of skills (max 48) |
 | `services` | No | Service endpoints (max 16) |
 
-## Agent Delegation
+## 2. Delegate Authority
 
 Use `agent-delegation` to grant permissions to an agent:
 
@@ -63,7 +65,7 @@ await client.verify({
 });
 ```
 
-### Delegation Fields
+### Main Fields
 
 | Field | Required | Description |
 |-------|----------|-------------|
@@ -74,19 +76,9 @@ await client.verify({
 | `maxSpend` | No | Maximum spend in wei |
 | `expiresAt` | No | Expiration timestamp |
 
-## Agent Identity + Linked Proofs (OpenClaw / MCP)
+## 3. Consume the Proofs
 
-When you use an agent identity wallet with linked proofs (e.g., as your OpenClaw agent identity):
-
-1. **Wallet is the anchor.** Your agent-identity proof attests that a wallet controls the agent. All other proofs (ownership, social, domain, etc.) are linked to that same wallet.
-
-2. **Resolve by wallet.** Consumers (OpenClaw, MCP, gate checks) resolve proof context via `GET /api/v1/proofs/byWallet/{address}`. No need to embed proof IDs in the agent-identity proof—the wallet is the lookup key.
-
-3. **Reference pattern (optional).** To explicitly reference another proof in content, use `ownership-basic` with `reference: { type: 'qhash', id: '<proofId>' }`. The raw reference type remains `qhash` for compatibility, but the value is still the proof receipt ID. For agent-identity, `skills` holds semantic identifiers (e.g., `openclaw-agent`); proof IDs are resolved by wallet, not embedded.
-
-<Note>
-**Best practice:** Use the agent wallet as the single identity. Fetch all proofs for that wallet when building agent context. The agent-identity proof attests control; linked proofs provide additional trust signals.
-</Note>
+Once both proofs exist, use MCP or API checks to confirm whether the agent is registered and what it is allowed to do. Treat the agent wallet as the anchor for related trust signals.
 
 ## Use Cases
 

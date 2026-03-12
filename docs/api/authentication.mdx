@@ -4,6 +4,8 @@ description: Signature-based authentication for NEUS API operations.
 icon: fingerprint
 ---
 
+Use Hosted Verify or the SDK unless the integration requires direct HTTP signing.
+
 ## Supported Wallets
 
 | Type | Standard | Description |
@@ -14,7 +16,7 @@ icon: fingerprint
 
 ## Default Path
 
-For most products, use hosted verify or SDK helpers. Only use this section when you are building a low-level or server-side signing client.
+Most products should use Hosted Verify or SDK helpers. Use this flow for advanced or server-side signing clients.
 
 <Steps>
   <Step title="Ask NEUS for the exact signing string">
@@ -34,7 +36,7 @@ For most products, use hosted verify or SDK helpers. Only use this section when 
 This is the supported low-level path because it avoids drift in chain normalization and deterministic JSON handling.
 </Tip>
 
-### Signing Format
+## Signing Format
 
 The server returns a deterministic six-line string from `POST /api/v1/verification/standardize`. Sign that exact string. See [Signing Format](../platform/signing-format) for the protocol overview. Format:
 
@@ -49,7 +51,7 @@ Timestamp: <unix-ms>
 
 Do not hand-author or edit this message.
 
-## Low-Level Client Rules
+## Advanced Client Rules
 
 1. **Wallet normalization:** format depends on chain type.
    - EVM (`eip155`): lowercase `0x...`

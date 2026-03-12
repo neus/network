@@ -669,7 +669,7 @@
           },
           "internalSocialToken": {
             "type": "string",
-            "description": "Short-lived OAuth session token (TTL ≤60s). Obtain from hosted OAuth flow at /verify or /api/v1/auth/oauth/:provider/exchange; not a raw provider token."
+            "description": "Set by the hosted NEUS flow. Do not generate or ask users to supply this value manually."
           },
           "walletAddress": {
             "type": "string",
@@ -738,7 +738,7 @@
           },
           "internalSocialToken": {
             "type": "string",
-            "description": "Short-lived OAuth session token (TTL ≤60s). Obtain from hosted OAuth flow; not a raw provider token."
+            "description": "Set by the hosted NEUS flow. Do not generate or ask users to supply this value manually."
           },
           "walletAddress": {
             "type": "string",
@@ -1434,7 +1434,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1526,7 +1526,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1684,7 +1684,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1895,7 +1895,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2360,7 +2360,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2462,7 +2462,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {

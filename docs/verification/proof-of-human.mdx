@@ -1,10 +1,12 @@
 ---
-title: proof-of-human
+title: Human Verification
 description: Add a strong anti-bot and human verification layer through the hosted NEUS flow.
 icon: user-check
 ---
 
-Use `proof-of-human` when you need a strong anti-bot signal before access, payouts, or sensitive actions.
+**Verifier ID:** `proof-of-human`
+
+Use this verifier when you need a strong anti-bot or anti-sybil signal before access, payouts, or sensitive actions.
 
 ## Best For
 
@@ -12,26 +14,25 @@ Use `proof-of-human` when you need a strong anti-bot signal before access, payou
 - reward programs
 - high-value onboarding
 
-## Flow Type
+## Starts in hosted verify
 
-Interactive. Users complete the hosted human-verification flow first.
+Launch hosted verify or `VerifyGate`. The user completes the human-verification step in the NEUS flow.
 
-## Required Fields
+## What You Configure
 
 | Field | Required | Notes |
 |------|----------|-------|
-| `proofs` | Yes | Provider proof payload |
-| `queryResult` | Yes | Provider result object |
-| `provider` | No | Usually `zkpassport` |
+| `provider` | No | Use when you need to request a specific supported provider |
 
-## Example
+## What the User Does
 
-```json
-{
-  "proofs": ["..."],
-  "queryResult": { "result": "ok" }
-}
-```
+- Starts the hosted human-verification flow
+- Completes the provider step
+- Returns to your app after completion
+
+## What Your App Receives
+
+Your app receives a proof receipt ID that can be reused for gated actions, reward programs, or abuse reduction policies.
 
 ## Use Hosted Verify
 

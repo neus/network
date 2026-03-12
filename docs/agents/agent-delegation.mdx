@@ -4,7 +4,9 @@ description: Delegate permissions to agents for scoped operations.
 icon: handshake
 ---
 
-Use `agent-delegation` to grant scoped permissions to an agent. ERC-8004 compatible. See [ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) for the delegation standard.
+Use `agent-delegation` to grant scoped permissions to an agent.
+
+**Verifier ID:** `agent-delegation`
 
 ## Basic Delegation
 
@@ -56,6 +58,10 @@ await client.verify({
 | `expiresAt` | No | Expiration timestamp |
 | `instructions` | No | Policy instructions (max 4000 chars) |
 | `skills` | No | Allowed skills |
+
+## What You Get Back
+
+You receive a proof receipt ID that can be reused for agent policy checks and delegated actions.
 
 ## Verification
 

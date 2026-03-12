@@ -1,10 +1,12 @@
 ---
-title: agent-delegation
+title: Agent Permissions
 description: Delegate scoped authority from a controller wallet to an agent wallet.
 icon: handshake
 ---
 
-Use `agent-delegation` when a controller needs to grant limited authority to an agent.
+**Verifier ID:** `agent-delegation`
+
+Use this verifier when a controller needs to grant limited authority to an agent.
 
 ## Best For
 
@@ -35,3 +37,5 @@ Instant. The controller signs the delegation request.
   "scope": "payments:x402"
 }
 ```
+
+This proof can be reused for agent policy checks, delegated actions, and payment-aware agent flows.

@@ -4,58 +4,55 @@ description: The request, signer, verifier, hosted interaction, and receipt mode
 icon: shield-check
 ---
 
-Verification starts from a verifier request and resolves into a proof receipt. Downstream systems reuse that receipt for gating, display, and policy.
+Verification starts from a request and ends with a proof receipt. That proof receipt can then be checked, displayed, or reused across products.
 
-## Verification Model
+## What Happens
 
 <Steps>
-  <Step title="A client assembles a verification request">
-    The request identifies the verifier or verifier set, the subject wallet or account, and verifier-specific data.
+  <Step title="Your app starts a verification flow">
+    The flow can begin in hosted verify, the SDK, or the raw API.
   </Step>
-  <Step title="The server standardizes the request when signing is required">
-    Use `POST /api/v1/verification/standardize` to get the exact `signerString` for low-level or server-side signing flows.
+  <Step title="The user or wallet completes the needed action">
+    That can be a wallet signature, a hosted account link, a human-verification step, or a lookup against live state.
   </Step>
-  <Step title="The user completes verification">
-    Instant verifiers can complete in one request. Interactive verifiers redirect or hand off to the hosted `/verify` flow.
+  <Step title="NEUS runs the verification">
+    Some verifiers finish immediately. Others complete asynchronously and need a status check.
   </Step>
-  <Step title="NEUS returns a proof receipt">
-    The resulting proof can be polled, displayed, reused for gating, or consumed by downstream APIs and agents.
+  <Step title="Your app receives a proof receipt ID">
+    Save it and reuse it for proof pages, access checks, policy, and profile trust.
   </Step>
 </Steps>
 
-## Modes You Will Encounter
+## Main Flow Types
 
-| Mode | Best for | Notes |
+| Mode | Use case | Notes |
 |---|---|---|
-| Session-first hosted login | Simplest browser UX | Use `/verify?intent=login` and auth code exchange when available for your integration |
-| Signature-based verification | Generic integrator path | Use the SDK or `POST /api/v1/verification/standardize` for deterministic signing |
+| Hosted verify | Guided login and interactive verification | Standard path for social accounts, team checks, and human verification |
+| SDK verification | Browser or server product flows | Direct control over verification requests |
+| Raw HTTP verification | Advanced or server-owned integrations | Use only when you need direct API control |
 | Hosted interactive verification | OAuth, human proof, social flows | Widgets and MCP will hand off to hosted verify automatically |
 | Gate checks | Server-side policy decisions | Use `GET /api/v1/proofs/check` for minimal yes/no eligibility |
 
-## What NEUS Returns
+## What You Get Back
 
-- A verification response that can include a proof identifier and status data
+- A verification response that can include status data
 - A hosted verify handoff for interactive flows
 - A pollable status endpoint for asynchronous verifiers
-- A reusable proof receipt that can later support access, display, and policy decisions
-
-<Note>
-In SDK surfaces, `proofId` is the standard client field name. On HTTP routes and older wire contracts, you may also see the same receipt identifier carried as `qHash`.
-</Note>
+- A reusable proof receipt ID
 
 ## Related
 
 <CardGroup cols={2}>
   <Card title="Verification Lifecycle" icon="rotate" href="./lifecycle">
-    Creation, async processing, reuse, and revocation.
+    Statuses, polling, reuse, and revocation.
   </Card>
   <Card title="Signing Format" icon="file-signature" href="./signing-format">
-    Canonical signing string and production path.
+    Hosted, SDK, and advanced signing guidance.
   </Card>
   <Card title="Verifier Catalog" icon="list-tree" href="./verifiers">
-    All verifiers with use cases and fields.
+    Choose the right verification capability.
   </Card>
   <Card title="API Overview" icon="terminal" href="../api/overview">
-    HTTP endpoints and OpenAPI.
+    HTTP endpoints and advanced API usage.
   </Card>
 </CardGroup>

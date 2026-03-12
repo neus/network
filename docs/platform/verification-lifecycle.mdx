@@ -4,42 +4,17 @@ description: Creation, async processing, status polling, reuse policy, and revoc
 icon: rotate
 ---
 
-## Lifecycle Stages
+Quick reference for proof creation, processing, reuse, and revocation.
 
-| Stage | Meaning | Primary surface |
-|---|---|---|
-| Request assembled | Verifier IDs, subject, and verifier data are prepared | SDK or API |
-| Standardized for signing | Server returns deterministic `signerString` when needed | `POST /api/v1/verification/standardize` |
-| Verification submitted | Request is accepted for execution | `POST /api/v1/verification` |
-| Verification processing | Async verifier is still resolving | Poll status |
-| Verification complete | Proof receipt is ready for reuse | Status endpoint, SDK result, widget callback |
-| Reused for policy | Gate, app, API, or agent consumes the receipt | Proof checks, status, widgets, MCP |
-| Revoked or expired by policy | Proof is no longer acceptable for the target action | Revocation route or freshness rule |
+## In Short
 
-## Reuse Strategy
+- A request is created.
+- Some verifiers finish immediately and others move through async status updates.
+- Your app can poll status when a flow is still processing.
+- Completed proofs can be checked, reused, or revoked later.
 
-| Strategy | What it does | Use when |
-|---|---|---|
-| `reuse-or-create` | Reuse an existing eligible proof, otherwise create one | Default product UX |
-| `reuse` | Only check existing proofs | Read-only access checks |
-| `fresh` | Always force new verification | High-stakes actions |
+## Read the Full Guide
 
-## Freshness Guidance
-
-- Use a recency window for point-in-time verifiers such as balances, risk, and ownership.
-- Treat status checks as cheap reads; only create new proofs when policy actually demands a fresh assertion.
-- Prefer `since` or `sinceDays` in gate checks instead of re-verifying on every request.
-
-## Revocation
-
-If a user needs to invalidate a proof they own, use the self-revocation flow:
-
-```http
-POST /api/v1/proofs/revoke-self/{qHash}
-```
-
-In the JavaScript SDK, the equivalent is:
-
-```javascript
-await client.revokeOwnProof(proofId, wallet);
-```
+<Card title="Verification Lifecycle" icon="rotate" href="../verification/lifecycle">
+  Full lifecycle guide for statuses, polling, reuse, and revocation.
+</Card>

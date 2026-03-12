@@ -1,10 +1,12 @@
 ---
 title: SDK Overview
-description: Start with the NEUS JavaScript SDK for proof creation, hosted handoff, polling, and private proof access.
+description: JavaScript SDK for proof creation, hosted handoff, polling, and private proof access.
 icon: package
 ---
 
-## What the SDK Covers
+Use the JavaScript SDK to create proofs, hand off hosted flows, and reuse results.
+
+## Build With the SDK
 
 <CardGroup cols={2}>
   <Card title="Create & Poll Proofs" icon="terminal" href="./javascript">
@@ -17,7 +19,7 @@ icon: package
     Choose reuse, fresh proof, or gate-check strategies based on policy and UX needs.
   </Card>
   <Card title="Error Handling" icon="triangle-exclamation" href="./error-handling">
-    Handle retries, hosted flow failures, interactive verifier handoff, and private proof auth.
+    Handle retries, hosted flow failures, and private proof auth.
   </Card>
 </CardGroup>
 
@@ -38,14 +40,14 @@ const client = new NeusClient({
 });
 ```
 
-## Next Steps
+## Go Deeper
 
 <CardGroup cols={3}>
   <Card title="JavaScript SDK" icon="bracket-curly" href="./javascript">
-    Full API shape, client methods, and examples.
+    Client methods, request shapes, and examples.
   </Card>
   <Card title="Verification Patterns" icon="rotate" href="./verifications">
-    Proof lifecycle choices and when to use each strategy.
+    Reuse, fresh proof, and gate-check strategies.
   </Card>
   <Card title="Security" icon="lock" href="./security">
     Signing, replay protection, and private proof handling.
@@ -61,10 +63,10 @@ const client = new NeusClient({
   </Card>
 </CardGroup>
 
-## Related Resources
+## Related Surfaces
 
-|| Surface | Link |
-||---------|------|
-|| Widgets | [React components for gating and badges](../widgets/overview) |
-|| API Docs | [HTTP endpoint reference](../api/overview) |
-|| MCP Server | [Agent-facing tool integration](../mcp/overview) |
+| Surface | Link |
+|---------|------|
+| Widgets | [React components for gating and badges](../widgets/overview) |
+| API Docs | [HTTP endpoint reference](../api/overview) |
+| MCP Server | [Agent-facing tool integration](../mcp/overview) |

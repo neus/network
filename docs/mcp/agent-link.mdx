@@ -1,5 +1,5 @@
 ---
-title: neus_agent_link
+title: Agent Link Check (`neus_agent_link`)
 description: Check whether an agent wallet satisfies both identity and delegation requirements.
 icon: robot
 ---
@@ -20,3 +20,8 @@ Use `neus_agent_link` when an MCP client needs to confirm that an agent wallet i
   "principal": "0xcontroller..."
 }
 ```
+
+## Stable Output
+
+- `linked: true` when the required proofs exist
+- `status: "link_required"` plus hosted guidance when the user must complete the link flow

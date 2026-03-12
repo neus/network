@@ -7,7 +7,6 @@ icon: lock
 ## Trust Boundaries
 
 - Verification logic lives on the server, not in the client.
-- Billing and payer attribution are server-derived, not client-controlled.
 - Public status and gate checks should expose the minimum data needed for the product action.
 - Private proof reads require owner-authenticated access or explicit sharing semantics.
 
@@ -24,7 +23,6 @@ Use private proofs by default unless you explicitly want public discovery and re
 ## What Should Never Be Exposed Publicly
 
 - Raw signatures
-- Internal payer details
 - Owner-only proof payloads
 - Private proof enumeration
 

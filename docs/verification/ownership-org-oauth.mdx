@@ -1,10 +1,12 @@
 ---
-title: ownership-org-oauth
+title: Team and Organization Verification
 description: Prove organization membership through Google or Microsoft hosted verification.
 icon: building
 ---
 
-Use `ownership-org-oauth` when you need to prove that a user belongs to a company or workspace.
+**Verifier ID:** `ownership-org-oauth`
+
+Use this verifier when you need to prove that a user belongs to a company, workspace, or team.
 
 ## Best For
 
@@ -12,9 +14,9 @@ Use `ownership-org-oauth` when you need to prove that a user belongs to a compan
 - employee-only product access
 - org-scoped agent or app controls
 
-## Flow Type
+## Starts in hosted verify
 
-Interactive. Users complete hosted NEUS verification with Google or Microsoft first.
+Launch hosted verify or `VerifyGate`. The user completes the workspace verification step in the NEUS flow.
 
 ## Simplest Integration
 
@@ -24,23 +26,22 @@ For most products, do not build your own OAuth UI. Launch hosted `/verify` and l
 https://neus.network/verify?preset=org-pack&returnUrl=https://app.example.com/verified
 ```
 
-## Required Fields
+## What You Configure
 
 | Field | Required | Notes |
 |------|----------|-------|
 | `provider` | Yes | `google` or `microsoft` |
-| `internalSocialToken` | Yes | Filled by the hosted NEUS flow; do not generate it manually |
 | `expectedOrgDomain` | No | Restrict the proof to one company domain such as `acme.com` |
 
-## Example Payload
+## What the User Does
 
-```json
-{
-  "provider": "google",
-  "internalSocialToken": "<from-hosted-flow>",
-  "expectedOrgDomain": "acme.com"
-}
-```
+- Starts the hosted flow
+- Signs in with the selected provider
+- Returns to your app after the check completes
+
+## What Your App Receives
+
+Your app receives a proof receipt ID after completion. Save it and reuse it for onboarding, access checks, or profile trust.
 
 ## Use Hosted Verify
 

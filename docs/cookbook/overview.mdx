@@ -1,39 +1,41 @@
 ---
 title: Cookbook Overview
-description: Production patterns for hosted verify, app onboarding, gating, and agent workflows.
+description: Guides for hosted verify, onboarding, portability, gating, and agent workflows.
 icon: book-open
 ---
 
-## Start Here
+Short implementation guides for common NEUS flows.
+
+## Core Guides
 
 <CardGroup cols={2}>
   <Card title="Auth + Hosted Verify" icon="key" href="./auth-hosted-verify">
-    Standard login and hosted verification flow.
+    Hosted popup and return flow for interactive verification.
   </Card>
   <Card title="Partner Setup" icon="building" href="./hub-integrator">
-    Domain linking, sponsorship, and production onboarding.
+    Domain linking, app attribution, sponsorship, and production onboarding.
   </Card>
 </CardGroup>
 
-## Use Cases
+## Workflow Guides
 
 <CardGroup cols={2}>
   <Card title="Domain Verification" icon="globe" href="./domain-verification">
-    Verify ownership of a domain with DNS TXT records.
+    Prove control of a site, app, or community domain.
   </Card>
   <Card title="NFT Gating" icon="image" href="./nft-gating">
-    Gate access with NFT ownership.
+    Unlock premium access for verified holders.
   </Card>
   <Card title="Sybil Resistance" icon="shield-halved" href="./sybil-resistance">
-    Add a strong anti-bot and proof-of-human layer.
+    Add a stronger human-verification layer before higher-risk actions.
   </Card>
   <Card title="Verifiable Agents" icon="robot" href="./verifiable-agents">
-    Register and delegate agent identity for AI systems.
+    Register agents and grant scoped permissions for AI systems.
   </Card>
 </CardGroup>
 
 <CardGroup cols={1}>
   <Card title="MCP" icon="plug" href="../mcp/overview">
-    Connect AI tools to verifier lookup, gate checks, and hosted verify handoff.
+    Connect agent tools to verifier lookup and hosted handoff.
   </Card>
 </CardGroup>

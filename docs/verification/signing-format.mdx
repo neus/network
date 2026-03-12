@@ -6,13 +6,21 @@ icon: file-code
 
 ## Default Recommendation
 
-Use hosted `/verify` or the SDK unless you explicitly need low-level signing control.
+Use hosted `/verify` or the SDK unless you explicitly need advanced HTTP signing control.
 
 ## Why This Exists
 
 The signature proves the wallet actually approves the verification request. That is what lets NEUS issue a reusable proof receipt instead of trusting a client-side claim.
 
-## Low-Level API Path
+## Recommended Paths
+
+| Path | Use when |
+|---|---|
+| Hosted verify | You want the standard user flow |
+| SDK signing helpers | You want direct app control without hand-building the request |
+| Raw HTTP signing | You need advanced server-side or low-level API control |
+
+## Advanced HTTP Path
 
 <Steps>
   <Step title="Get the exact signing string from NEUS">
@@ -26,11 +34,7 @@ The signature proves the wallet actually approves the verification request. That
   </Step>
 </Steps>
 
-<Tip>
-This is an implementation detail for low-level clients. If you want the simplest product path, use hosted verify and avoid exposing this flow directly in your UX.
-</Tip>
-
-## Canonical Message Format
+## Verification Message Format
 
 The server returns a deterministic six-line string from `POST /api/v1/verification/standardize`. Sign that exact string:
 

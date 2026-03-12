@@ -1,10 +1,16 @@
 ---
-title: ownership-social
+title: Linked Social Accounts
 description: Prove ownership of a social account through the hosted NEUS flow.
 icon: share-nodes
 ---
 
-Use `ownership-social` when you need to prove control of a social account such as X, Discord, GitHub, Farcaster, or Telegram.
+**Verifier ID:** `ownership-social`
+
+Use this verifier when you need to prove that a user controls a social account such as X, Discord, GitHub, Farcaster, or Telegram.
+
+## Starts in hosted verify
+
+Launch hosted verify or `VerifyGate`. The user completes the account-link step in the NEUS flow.
 
 ## Best For
 
@@ -12,26 +18,22 @@ Use `ownership-social` when you need to prove control of a social account such a
 - community onboarding
 - account reputation and discovery
 
-## Flow Type
-
-Interactive. Users complete the hosted NEUS flow first and return with the internal social token.
-
-## Required Fields
+## What You Configure
 
 | Field | Required | Notes |
 |------|----------|-------|
-| `provider` | Yes | Example: `github`, `discord`, `x`, `farcaster` |
-| `internalSocialToken` | Yes | Filled by the hosted NEUS flow; do not generate it manually |
+| `provider` | Yes | Example: `github`, `discord`, `x`, or `farcaster` |
 | `walletAddress` | No | Optional subject override |
 
-## Example
+## What the User Does
 
-```json
-{
-  "provider": "github",
-  "internalSocialToken": "<from-hosted-flow>"
-}
-```
+- Chooses the social provider
+- Signs in or authorizes access through the provider
+- Returns to your app through the hosted flow
+
+## What Your App Receives
+
+Your app receives a proof receipt ID after the hosted flow completes. Save it and reuse it for profiles, access checks, or proof display.
 
 ## Use Hosted Verify
 

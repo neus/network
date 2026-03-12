@@ -4,9 +4,9 @@ description: Security best practices for NEUS SDK integrations.
 icon: lock
 ---
 
-Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose them to clients, or store them in analytics.
+Use the SDK with the same rule as the rest of NEUS: expose the minimum possible data, use hosted verify for interactive work, and keep owner-only proof access behind explicit authorization.
 
-## Authentication Model (Public Surface)
+## Authentication Model
 
 | Operation | Authentication |
 |-----------|----------------|

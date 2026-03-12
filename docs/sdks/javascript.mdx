@@ -4,6 +4,8 @@ description: JavaScript client for the NEUS Network verification API.
 icon: bracket-curly
 ---
 
+Use the SDK when your app wants direct control over proof creation, hosted handoff, and status polling without managing raw HTTP requests by hand.
+
 ## Install
 
 ```bash
@@ -46,8 +48,8 @@ const client = new NeusClient({
 
 | Option | When to Use |
 |--------|-------------|
-| `persist: true` | Store proof on NEUS (+2 credits). Use when you need proof receipt. |
-| `ipfs: true` / `pin: true` | Pin proof to IPFS (+20 credits). Use for portable receipts. |
+| `persist: true` | Store the proof when you need a reusable proof receipt |
+| `ipfs: true` / `pin: true` | Use when you need IPFS-backed storage |
 | `strategy: 'reuse-or-create'` | Check existing proof first, create if missing. Default. |
 | `strategy: 'fresh'` | Always create new proof. Use for high-stakes checks. |
 | `strategy: 'reuse'` | Only check existing proofs; never create. |
@@ -92,10 +94,6 @@ const res = await client.verify({
   options: { privacyLevel: 'private' }
 });
 ```
-
-<Note>
-In the NEUS Hub (first-party UI), matching authenticated sessions may allow session-first proof creation without a repeat proof-envelope signature. The SDK examples here document the generic integrator path.
-</Note>
 
 ## What Verifiers Are Available?
 
@@ -163,7 +161,7 @@ The SDK is designed for production stability:
 - **Automatic Backoff**: `pollProofStatus()` automatically detects rate limiting (`429`) and applies jittered exponential backoff
 - **Wallet Identification**: Automatically attaches headers for higher reliability behind shared IPs
 
-### Private Proof Operations
+## Advanced: Private Proof Operations
 
 ```javascript
 // Private proof by proof receipt ID

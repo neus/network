@@ -5,7 +5,7 @@
 
 **Verify once. Prove everywhere.**
 
-NEUS is a **portable proof infrastructure** for creating and managing verifiable proofs. 
+NEUS is a **portable proof infrastructure** for creating and managing reusable proofs.
 
 > Turn verified claims into portable proofs you can reuse anywhere—apps, APIs, smart contracts, or AI systems—without rebuilding trust logic each time.
 
@@ -29,7 +29,7 @@ const proof = await client.verify({
   wallet: window.ethereum,
 });
 
-// Use proofId for status, gating, and reuse
+// Save the proof receipt ID for status checks, gating, and reuse.
 const proofId = proof.proofId;
 const status = await client.getStatus(proofId);
 ```
@@ -38,7 +38,7 @@ const status = await client.getStatus(proofId);
 
 ## Server-Side Gating
 
-For backend eligibility checks, use the minimal gate endpoint:
+For server-side eligibility checks, use the minimal gate endpoint:
 
 - **HTTP:** `GET /api/v1/proofs/check`
 - **SDK:** `client.gateCheck({ address, verifierIds, since, sinceDays, ... })`
@@ -70,7 +70,7 @@ For Next.js App Router, render widgets inside a **Client Component**.
 | [Docs](https://docs.neus.network) | Full documentation |
 | [Quickstart](https://docs.neus.network/quickstart) | First proof, gating, hosted verify |
 | [API Reference](https://docs.neus.network/api-reference) | OpenAPI reference |
-| [Verifiers](https://docs.neus.network/ecosystems/verifiers) | Verifier catalog and schemas |
+| [Verifier Catalog](https://docs.neus.network/verification/verifiers) | Outcome-first verifier guide |
 | [Examples](./examples/) | Node.js, React, curl |
 
 ---

@@ -44,7 +44,6 @@
     "CONTRIBUTING.md",
     "sdk/README.md",
     "sdk/SECURITY.md",
-    "sdk/DEPLOY-WIDGET.md",
     "sdk/widgets/README.md",
     "examples/README.md",
     "examples/*/README.md"

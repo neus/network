@@ -4,7 +4,7 @@ description: Error codes and responses for the NEUS API.
 icon: triangle-exclamation
 ---
 
-Handle API errors with consistent structure: `code`, `message`, `type`. Retry on `429`; do not retry verification creation unless you can prove the original request failed.
+Handle API errors with the same basic pattern: `code`, `message`, and `type`. The main goal is to know whether to fix the request, retry later, or send the user into a hosted flow.
 
 All errors follow a consistent structure.
 
@@ -24,16 +24,16 @@ All errors follow a consistent structure.
 
 ## Common Error Codes
 
-| Code | Type | Description |
+| Code | Meaning | What to do |
 |------|------|-------------|
-| `INVALID_SIGNATURE` | `auth` | Signature verification failed |
-| `EXPIRED_SIGNATURE` | `auth` | Signature timestamp outside freshness window |
-| `INVALID_WALLET` | `validation` | Wallet address format invalid |
-| `VERIFIER_NOT_FOUND` | `validation` | Requested verifier does not exist |
-| `VERIFICATION_FAILED` | `verification` | Verification check failed |
-| `PROOF_NOT_FOUND` | `not_found` | Proof ID does not exist |
-| `UNAUTHORIZED` | `auth` | Not authorized for this action |
-| `RATE_LIMITED` | `rate_limit` | Too many requests |
+| `INVALID_SIGNATURE` | Signature verification failed | Rebuild the signing flow and retry |
+| `EXPIRED_SIGNATURE` | Signature timestamp is too old | Generate a fresh request and sign again |
+| `INVALID_WALLET` | Wallet address format is invalid | Fix the request before retrying |
+| `VERIFIER_NOT_FOUND` | Requested verifier does not exist | Read the live verifier catalog and correct the request |
+| `VERIFICATION_FAILED` | The requested check did not pass | Treat as a failed verification, not a transport error |
+| `PROOF_NOT_FOUND` | Proof receipt was not found | Confirm the proof receipt ID and visibility |
+| `UNAUTHORIZED` | The caller is not allowed to perform this action | Re-authenticate the right owner or user |
+| `RATE_LIMITED` | Too many requests | Back off and retry later |
 
 ## HTTP Status Codes
 
@@ -55,7 +55,9 @@ try {
   const result = await client.verify({ ... });
 } catch (error) {
   if (error.code === 'VERIFICATION_FAILED') {
-    // Handle verification failure
+    // The check did not pass
+  } else if (error.code === 'RATE_LIMITED') {
+    // Back off and retry later
   }
   console.error(error.message);
 }

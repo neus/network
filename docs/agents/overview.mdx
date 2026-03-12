@@ -1,28 +1,30 @@
 ---
 title: Agents Overview
-description: Use NEUS to register agents, delegate authority, and connect agent workflows to hosted verify and MCP.
+description: Use NEUS to register agents, grant scoped permissions, and connect agent workflows to hosted verify and MCP.
 icon: robot
 ---
 
-## Why Teams Use Agent Proofs
+Agent workflows issue proof receipts that can be reused across tools and automation.
+
+## Why Teams Use Agent Flows
 
 | Question | NEUS answer |
 |----------|-------------|
-| Which agent is acting? | `agent-identity` binds an agent to a wallet or account |
-| What is it allowed to do? | `agent-delegation` defines scope, permissions, and limits |
-| How does it join real workflows? | Hosted verify, proof reuse, and MCP make the proofs operational |
+| Which agent is acting? | Agent registration binds an agent to a wallet or account |
+| What is it allowed to do? | Agent permissions define scope, permissions, and limits |
+| How does it join real workflows? | Hosted verify, proof receipts, and MCP make the proofs usable |
 
-## Start Here
+## Core Pages
 
 <CardGroup cols={2}>
-  <Card title="Agent Identity" icon="badge-check" href="./agent-identity">
+  <Card title="Agent Registration" icon="badge-check" href="./agent-identity">
     Register a verifiable AI agent, bot, or automation.
   </Card>
-  <Card title="Agent Delegation" icon="key" href="./agent-delegation">
+  <Card title="Agent Permissions" icon="key" href="./agent-delegation">
     Delegate limited authority to an agent wallet.
   </Card>
   <Card title="Agent Verification Flow" icon="route" href="./agent-verification-flow">
-    See how identity, delegation, hosted verify, and MCP fit together.
+    See how registration, permissions, hosted verify, and MCP fit together.
   </Card>
   <Card title="Verifiable Agents Guide" icon="book-open" href="../cookbook/verifiable-agents">
     End-to-end implementation pattern for production teams.

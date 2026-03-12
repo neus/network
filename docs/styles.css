@@ -129,16 +129,30 @@ a#topbar-cta-button,
 [data-testid="topbar-primary-button"],
 .navbar-primary-button,
 .navbar-button-primary,
-header a[href*="hub"],
-#header a[href*="hub"] {
+#header a[href="https://neus.network/hub"],
+#header a[href*="neus.network/hub"],
+#header a[href$="/hub"] {
   background: var(--neus-accent) !important;
   background-color: var(--neus-accent) !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
   border: none !important;
-  border-radius: 8px !important;
+  border-radius: 10px !important;
   box-shadow: none !important;
   color: rgb(11 15 23) !important;
+  display: inline-flex !important;
   font-weight: 600 !important;
-  padding: 8px 16px !important;
+  gap: 0.5rem !important;
+  height: 40px !important;
+  isolation: isolate !important;
+  line-height: 1 !important;
+  min-height: 40px !important;
+  min-width: auto !important;
+  overflow: hidden !important;
+  padding: 0 18px !important;
+  text-decoration: none !important;
+  white-space: nowrap !important;
+  width: auto !important;
 }
 #topbar-cta-button:hover,
 a#topbar-cta-button:hover,
@@ -146,26 +160,88 @@ a#topbar-cta-button:hover,
 [data-testid="topbar-primary-button"]:hover,
 .navbar-primary-button:hover,
 .navbar-button-primary:hover,
-header a[href*="hub"]:hover,
-#header a[href*="hub"]:hover {
+#header a[href="https://neus.network/hub"]:hover,
+#header a[href*="neus.network/hub"]:hover,
+#header a[href$="/hub"]:hover {
   background: rgb(121 168 228) !important;
   background-color: rgb(121 168 228) !important;
+  background-image: none !important;
   transform: none !important;
   box-shadow: none !important;
 }
 /* Kill any parent wrapper backgrounds */
 #topbar-cta-button-wrapper,
 .navbar-primary-wrapper,
-.navbar-button-wrapper {
+.navbar-button-wrapper,
+#header div:has(> a[href="https://neus.network/hub"]),
+#header div:has(> a[href*="neus.network/hub"]),
+#header div:has(> a[href$="/hub"]),
+#header li:has(> a[href="https://neus.network/hub"]),
+#header li:has(> a[href*="neus.network/hub"]),
+#header li:has(> a[href$="/hub"]),
+#header span:has(> a[href="https://neus.network/hub"]),
+#header span:has(> a[href*="neus.network/hub"]),
+#header span:has(> a[href$="/hub"]),
+#header [class*="button"]:has(a[href*="neus.network/hub"]),
+#header [class*="Button"]:has(a[href*="neus.network/hub"]),
+#header [class*="primary"]:has(a[href*="neus.network/hub"]) {
   background: transparent !important;
   background-color: transparent !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  filter: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#topbar-cta-button::before,
+#topbar-cta-button::after,
+a#topbar-cta-button::before,
+a#topbar-cta-button::after,
+[data-testid="navbar-primary-button"]::before,
+[data-testid="navbar-primary-button"]::after,
+[data-testid="topbar-primary-button"]::before,
+[data-testid="topbar-primary-button"]::after,
+.navbar-primary-button::before,
+.navbar-primary-button::after,
+.navbar-button-primary::before,
+.navbar-button-primary::after,
+#topbar-cta-button-wrapper::before,
+#topbar-cta-button-wrapper::after,
+.navbar-primary-wrapper::before,
+.navbar-primary-wrapper::after,
+.navbar-button-wrapper::before,
+.navbar-button-wrapper::after {
+  background: transparent !important;
+  background-image: none !important;
   border: none !important;
   box-shadow: none !important;
+}
+#topbar-cta-button *,
+a#topbar-cta-button *,
+[data-testid="navbar-primary-button"] *,
+[data-testid="topbar-primary-button"] *,
+.navbar-primary-button *,
+.navbar-button-primary *,
+#header a[href="https://neus.network/hub"] *,
+#header a[href*="neus.network/hub"] *,
+#header a[href$="/hub"] * {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: inherit !important;
 }
 #topbar-cta-button:focus-visible,
 a#topbar-cta-button:focus-visible,
 [data-testid="navbar-primary-button"]:focus-visible,
-[data-testid="topbar-primary-button"]:focus-visible {
+[data-testid="topbar-primary-button"]:focus-visible,
+#header a[href="https://neus.network/hub"]:focus-visible,
+#header a[href*="neus.network/hub"]:focus-visible,
+#header a[href$="/hub"]:focus-visible {
   outline: 2px solid rgb(191 219 254 / 0.6) !important;
   outline-offset: 2px !important;
 }

@@ -1,20 +1,33 @@
 ---
 title: Partner Setup
-description: Domain verification, hosted organization verification, app attribution, and sponsor grants for production integrations.
+description: Production onboarding for websites, communities, apps, teams, and partners using hosted verify, linked identity, and proof receipt reuse.
 icon: building
 ---
 
-Use this guide when you are connecting a production app to NEUS hosted verify, app attribution, and sponsored verification flows.
+Use this guide when you are connecting a website, community, app, team, or partner flow to NEUS. The public integration story is simple:
+
+1. Use hosted verify as the standard guided flow.
+2. Save the proof receipt ID.
+3. Reuse that proof receipt for profile trust, onboarding, access checks, proof pages, and app attribution.
+
+## What NEUS Gives You
+
+| Surface | What it solves |
+|---|---|
+| Portable profile trust | A person can link wallets, socials, domains, team association, and proof-backed badges over time |
+| Domain and namespace trust | Sites, communities, and orgs can prove control of a domain and use that trust in onboarding and identity flows |
+| Linked apps | Apps and platforms can attribute usage and connect a real integration surface to the same proof layer |
+| Proof receipts | Every completed flow returns a reusable proof receipt ID instead of a one-time verification dead end |
+| Hosted verify | Interactive checks stay on the hosted `/verify` flow instead of forcing partners to build custom UX |
 
 ## Prerequisites
 
 - A NEUS account with a verified wallet
-- Your public app domain
-- If using hosted auth code exchange, partner access enabled during onboarding
+- Your public app or site domain
 
 ## 1. Domain Verification
 
-Link your domain to your wallet by setting a DNS TXT record.
+Link your domain to your wallet by setting a DNS TXT record. This is the foundation for site trust, partner onboarding, app linking, and namespaced identity surfaces.
 
 **Step 1:** Add a DNS TXT record at `_neus.<yourdomain.com>`:
 
@@ -43,9 +56,9 @@ const proof = await client.verify({
 GET /api/v1/proofs/check?verifierIds=ownership-dns-txt&address=0x...
 ```
 
-## 2. Organization Membership Verification
+## 2. Team and Organization Verification
 
-For `ownership-org-oauth`, the public integration path is simple: send the user to hosted NEUS verify and let NEUS handle Google or Microsoft.
+When a site, partner, or company needs to verify that someone belongs to a workspace, send them to hosted verify and let NEUS handle the guided Google or Microsoft flow.
 
 ### What You Actually Need To Do
 
@@ -68,7 +81,7 @@ https://neus.network/verify?preset=org-pack&mode=popup&origin=https://app.exampl
 
 ### Restrict to One Company Domain Only When You Need It
 
-If access should only succeed for members of one company, pass `expectedOrgDomain`.
+If access should only succeed for members of one company or team domain, pass `expectedOrgDomain`.
 
 ```jsx
 <VerifyGate
@@ -86,12 +99,12 @@ If access should only succeed for members of one company, pass `expectedOrgDomai
 ```
 
 <Note>
-Most integrators do not need to create their own Google or Microsoft OAuth app, manage redirect URIs, or register provider credentials just to use the hosted NEUS flow. If NEUS coordinates a custom enterprise provider setup, treat that as a private onboarding task, not the default public integration path.
+Most integrators do not need to create their own Google or Microsoft OAuth app just to use the hosted NEUS flow.
 </Note>
 
-## 3. Link App (Hub UI)
+## 3. Link the App or Site in Hub
 
-Link your integration domain in the Hub to receive credits and attribution:
+Link your integration domain in the Hub to receive attribution, usage tracking, and credit controls:
 
 | Step | Action |
 |------|--------|
@@ -107,7 +120,7 @@ Link your integration domain in the Hub to receive credits and attribution:
 
 ## 4. App Attribution (API)
 
-To track usage per integration via API:
+To track usage per integration through the same proof layer:
 
 1. Create or obtain an `appId` for your integration
 2. Treat `appId` as a public attribution identifier, not a secret
@@ -118,24 +131,36 @@ const client = new NeusClient({ appId: 'your-app-id' });
 ```
 
 <Card title="Billing" icon="credit-card" href="../platform/billing">
-  Credit pricing and payment methods.
+  Credits and payment options.
 </Card>
 
-## 5. Verify with NEUS (Hub UI)
+## 5. Build the Portable Trust Surface
 
-Verify domains and organizations directly in the Hub:
+These live capabilities can already be combined into a portable identity and trust surface:
+
+- linked apps
+- domain verification
+- team and organization verification
+- username and namespace claims
+- linked wallets
+- public, private, and unlisted proof visibility
+- proof pages and profile surfaces
+
+In Hub, the most common flows are:
 
 | Flow | Where | Notes |
 |------|-------|------|
 | Domain | Profile -> Identity -> Domains | Add DNS TXT at `_neus.<domain>` first |
 | Organization | Profile -> Identity -> Organizations | Hosted NEUS verify for Google Workspace or Microsoft 365 |
-| Privacy | Per proof | Public or private proof visibility |
+| Username | Profile / Claim flows | Use portable handle and namespace claim surfaces |
+| Linked wallets | Profile identity flows | Treat multiple wallets as one reusable trust surface |
+| Privacy | Per proof | Public, private, or unlisted proof visibility |
 
-Link your app first in Profile -> Apps, then verify your domain or organization.
+Link the app first in Profile -> Apps, then connect whichever trust signals your product actually needs.
 
-## 6. Hosted Checkout for Interactive Verifiers
+## 6. Hosted Verify for Interactive Flows
 
-Interactive verifiers (`ownership-social`, `ownership-org-oauth`, `proof-of-human`) should resolve through the NEUS-hosted flow.
+Interactive checks such as linked accounts, team verification, and human verification should resolve through hosted verify.
 
 ### React (VerifyGate)
 
@@ -158,7 +183,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>
 ```
 
-If you do not need to restrict the company domain, prefer the simpler preset URL and avoid custom verifier payloads.
+If you do not need to restrict a specific company domain, prefer the simpler preset URL and avoid custom payloads.
 
 ## 7. Sponsor Grants
 
@@ -177,13 +202,23 @@ Sponsor grant tokens are short-lived. Re-issue them per session. Do not embed lo
 
 ## 8. Usage and Analytics
 
-Track usage with your `appId` and NEUS partner reporting:
+Track usage with your `appId` and your own reporting:
 
-- Proof creation volume per verifier
-- Gate check counts by app
-- Sponsor grant consumption
+- proof creation volume by capability
+- gate check counts by app
+- sponsor grant consumption
 
-The `/api/v1/proofs/check` response includes `matchCount` for your telemetry.
+The `/api/v1/proofs/check` response includes `matchCount` for telemetry.
+
+## Portability Model
+
+NEUS is most useful when you keep one clean mental model:
+
+- a person has a reusable trust surface
+- that surface can collect wallets, linked accounts, domains, team association, and proof-backed badges over time
+- apps can attribute usage and gate access using the same proof layer
+- domains and namespaces can anchor site, community, and organization identity
+- proof receipts are the portable artifact shared across all of it
 
 ## Operational Rules
 

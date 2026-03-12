@@ -4,7 +4,7 @@ description: Hosted login, session-first patterns, and deterministic signing gui
 icon: key
 ---
 
-The SDK supports two main auth patterns:
+The SDK supports two main auth patterns. Start with hosted login when you want the smoothest user experience.
 
 ## 1. Session-First Hosted Login
 
@@ -14,7 +14,7 @@ Use this when you want the smoothest browser UX.
 2. Let NEUS complete sign-in and any hosted interaction.
 3. When auth code exchange is available for your integration, redeem the returned `code` at `POST /api/v1/auth/code/exchange`.
 
-This avoids hand-rolling proof-envelope signing for every action when your integration uses the hosted session model.
+This avoids rebuilding signing steps for every action when your integration uses the hosted session model.
 
 ## 2. Signature-Based Verification
 
@@ -43,4 +43,4 @@ Prefer `standardizeVerificationRequest(...)` over manually building a signing st
 | Pattern | Use when |
 |---|---|
 | Hosted login | You want the simplest browser UX and session/code exchange is available for your integration |
-| Direct signing | You need a generic integrator path that works without relying on a hosted session |
+| Direct signing | You need a direct SDK or API verification flow without hosted session state |

@@ -8,13 +8,12 @@ icon: rotate
 
 | Stage | Meaning | Primary surface |
 |---|---|---|
-| Request assembled | Verifier IDs, subject, and verifier data are prepared | SDK or API |
-| Standardized for signing | Server returns deterministic `signerString` when needed | `POST /api/v1/verification/standardize` |
-| Verification submitted | Request is accepted for execution | `POST /api/v1/verification` |
-| Verification processing | Async verifier is still resolving | Poll status |
-| Verification complete | Proof receipt is ready for reuse | Status endpoint, SDK result, widget callback |
-| Reused for policy | Gate, app, API, or agent consumes the receipt | Proof checks, status, widgets, MCP |
-| Revoked or expired by policy | Proof is no longer acceptable for the target action | Revocation route or freshness rule |
+| Flow starts | Verification is launched | Hosted verify, SDK, or API |
+| Request accepted | NEUS accepts the verification | SDK or `POST /api/v1/verification` |
+| Processing | An async verifier is still running | Status endpoint or SDK polling |
+| Complete | The proof receipt is ready | SDK result, widget callback, or status endpoint |
+| Reused | Another product check uses the saved proof receipt | Proof page, gate check, policy, MCP |
+| Revoked or stale | The proof no longer meets the target policy | Revocation route or freshness rule |
 
 ## Reuse Strategy
 
@@ -54,7 +53,7 @@ await client.revokeOwnProof(proofId, wallet);
     Proof receipt structure and field semantics.
   </Card>
   <Card title="Verifier Catalog" icon="list-tree" href="./verifiers">
-    Verifier IDs and input schemas.
+    Verifier pages and use cases.
   </Card>
   <Card title="API Overview" icon="terminal" href="../api/overview">
     HTTP endpoints.

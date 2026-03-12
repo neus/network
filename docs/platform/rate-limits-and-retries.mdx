@@ -4,7 +4,7 @@ description: Production retry guidance for gate checks, polling, hosted flows, a
 icon: clock
 ---
 
-When to retry: read endpoints can be retried; verification creation only when you can prove the original request did not succeed. Polling should back off on `429` or transport issues.
+Read requests can be retried. Verification creation should only be retried when you can show the original request did not succeed. Polling should back off on `429` and temporary transport failures.
 
 ## General Guidance
 
@@ -19,7 +19,7 @@ When to retry: read endpoints can be retried; verification creation only when yo
 | Async verification polling | Poll every few seconds and back off on `429` or transport issues |
 | Browser auth/session routes | Respect `Retry-After` when present |
 | Gate checks | Cache only when your policy allows stale reads |
-| Hosted flows | Preserve return URLs and let users resume rather than forcing repeated starts |
+| Hosted flows | Preserve return URLs and let users resume instead of forcing repeated starts |
 
 ## SDK Behavior
 

@@ -11,7 +11,7 @@
   "colors": {
     "primary": "#98C0EF",
     "light": "#98C0EF",
-    "dark": "#3D72C9"
+    "dark": "#98C0EF"
   },
   "appearance": {
     "default": "dark",
@@ -39,7 +39,6 @@
   },
   "seo": {
     "metatags": {
-      "canonical": "https://docs.neus.network",
       "theme-color": "#101113",
       "color-scheme": "dark"
     }
@@ -64,11 +63,11 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Overview",
+        "tab": "Start Here",
         "groups": [
           {
-            "group": "Get Started",
-            "icon": "rocket",
+            "group": "Essentials",
+            "icon": "compass",
             "pages": [
               "index",
               "quickstart",
@@ -78,63 +77,8 @@
             ]
           },
           {
-            "group": "Verification",
-            "icon": "file-signature",
-            "pages": [
-              "verification/overview",
-              "verification/how-it-works",
-              "verification/lifecycle",
-              "verification/signing-format",
-              {
-                "group": "Verifiers",
-                "icon": "list-check",
-                "pages": [
-                  "verification/verifiers",
-                  {
-                    "group": "Identity and Ownership",
-                    "icon": "fingerprint",
-                    "pages": [
-                      "verification/ownership-basic",
-                      "verification/ownership-social",
-                      "verification/ownership-dns-txt",
-                      "verification/ownership-org-oauth",
-                      "verification/ownership-pseudonym",
-                      "verification/wallet-link"
-                    ]
-                  },
-                  {
-                    "group": "Assets and Access",
-                    "icon": "coins",
-                    "pages": [
-                      "verification/nft-ownership",
-                      "verification/token-holding",
-                      "verification/contract-ownership"
-                    ]
-                  },
-                  {
-                    "group": "Trust and Risk",
-                    "icon": "shield-halved",
-                    "pages": [
-                      "verification/proof-of-human",
-                      "verification/wallet-risk",
-                      "verification/ai-content-moderation"
-                    ]
-                  },
-                  {
-                    "group": "Agent Verifiers",
-                    "icon": "microchip",
-                    "pages": [
-                      "verification/agent-identity",
-                      "verification/agent-delegation"
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Platform",
-            "icon": "globe",
+            "group": "Platform Surfaces",
+            "icon": "blocks",
             "pages": [
               "platform/overview",
               "platform/hub",
@@ -143,21 +87,52 @@
             ]
           },
           {
-            "group": "Learn",
-            "icon": "graduation-cap",
+            "group": "Hosted Flows",
+            "icon": "route",
             "pages": [
-              "brand-kit",
-              "learn/standards/caip-380"
+              "cookbook/auth-hosted-verify",
+              "cookbook/hub-integrator"
             ]
           }
         ]
       },
       {
-        "tab": "SDK",
+        "tab": "Build",
         "groups": [
           {
-            "group": "SDK Essentials",
-            "icon": "layer-group",
+            "group": "Verification",
+            "icon": "shield-check",
+            "pages": [
+              "verification/overview",
+              "verification/how-it-works",
+              "verification/lifecycle",
+              "verification/signing-format",
+              "verification/verifiers",
+              {
+                "group": "Capability Reference",
+                "icon": "list-tree",
+                "pages": [
+                  "verification/ownership-basic",
+                  "verification/ownership-social",
+                  "verification/ownership-dns-txt",
+                  "verification/ownership-org-oauth",
+                  "verification/ownership-pseudonym",
+                  "verification/wallet-link",
+                  "verification/nft-ownership",
+                  "verification/token-holding",
+                  "verification/contract-ownership",
+                  "verification/proof-of-human",
+                  "verification/wallet-risk",
+                  "verification/ai-content-moderation",
+                  "verification/agent-identity",
+                  "verification/agent-delegation"
+                ]
+              }
+            ]
+          },
+          {
+            "group": "SDK",
+            "icon": "bracket-curly",
             "pages": [
               "sdks/overview",
               "sdks/javascript",
@@ -168,82 +143,15 @@
             ]
           },
           {
-            "group": "Widgets",
-            "icon": "puzzle-piece",
+            "group": "Widget UI",
+            "icon": "sparkles",
             "pages": [
               "widgets/overview",
               "widgets/verifygate"
             ]
-          }
-        ]
-      },
-      {
-        "tab": "Agents",
-        "groups": [
-          {
-            "group": "Agent Docs",
-            "icon": "robot",
-            "pages": [
-              "agents/overview",
-              "agents/agent-identity",
-              "agents/agent-delegation",
-              "agents/agent-verification-flow"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "MCP",
-        "groups": [
-          {
-            "group": "Start Here",
-            "icon": "plug",
-            "pages": [
-              "mcp/overview",
-              "mcp/endpoints",
-              "mcp/setup",
-              "mcp/auth",
-              "mcp/tools"
-            ]
           },
           {
-            "group": "Tool Flows",
-            "icon": "wrench",
-            "pages": [
-              "mcp/verifiers-catalog",
-              "mcp/proofs-check",
-              "mcp/verify-or-guide",
-              "mcp/proofs-get",
-              "mcp/me",
-              "mcp/agent-link"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Start Here",
-            "icon": "book-open",
-            "pages": [
-              "cookbook/overview",
-              "cookbook/auth-hosted-verify",
-              "cookbook/hub-integrator"
-            ]
-          },
-          {
-            "group": "Use Cases",
-            "icon": "sparkles",
-            "pages": [
-              "cookbook/domain-verification",
-              "cookbook/nft-gating",
-              "cookbook/sybil-resistance",
-              "cookbook/verifiable-agents"
-            ]
-          },
-          {
-            "group": "HTTP Guides",
+            "group": "API",
             "icon": "terminal",
             "pages": [
               "api/overview",
@@ -260,7 +168,90 @@
               "platform/rate-limits-and-retries",
               "platform/security-and-trust",
               "platform/x402",
-              "platform/llm-docs"
+              "platform/llm-docs",
+              "brand-kit"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Playbooks",
+            "icon": "book-open",
+            "pages": [
+              "cookbook/overview",
+              "cookbook/domain-verification",
+              "cookbook/nft-gating",
+              "cookbook/sybil-resistance",
+              "cookbook/verifiable-agents"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Agents",
+        "groups": [
+          {
+            "group": "Agent Trust",
+            "icon": "badge-check",
+            "pages": [
+              "agents/overview",
+              "agents/agent-identity",
+              "agents/agent-delegation",
+              "agents/agent-verification-flow"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "MCP",
+        "groups": [
+          {
+            "group": "MCP Basics",
+            "icon": "globe",
+            "pages": [
+              "mcp/overview",
+              "mcp/endpoints",
+              "mcp/setup",
+              "mcp/auth",
+              "mcp/tools"
+            ]
+          },
+          {
+            "group": "Tool Pages",
+            "icon": "wrench",
+            "pages": [
+              "mcp/verifiers-catalog",
+              "mcp/proofs-check",
+              "mcp/verify-or-guide",
+              "mcp/proofs-get",
+              "mcp/me",
+              "mcp/agent-link"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Legal",
+        "groups": [
+          {
+            "group": "Policies",
+            "icon": "scale-balanced",
+            "pages": [
+              "learn/legal/index",
+              "learn/legal/privacy-policy",
+              "learn/legal/terms-of-use",
+              "learn/legal/security-disclosure",
+              "learn/legal/dmca"
+            ]
+          },
+          {
+            "group": "Standards",
+            "icon": "graduation-cap",
+            "pages": [
+              "learn/standards/caip-380"
             ]
           }
         ]
@@ -291,30 +282,6 @@
     {
       "source": "/mcp",
       "destination": "/mcp/overview"
-    },
-    {
-      "source": "/cookbook/mcp",
-      "destination": "/mcp/overview"
-    },
-    {
-      "source": "/platform/verifiers",
-      "destination": "/verification/verifiers"
-    },
-    {
-      "source": "/platform/how-verification-works",
-      "destination": "/verification/how-it-works"
-    },
-    {
-      "source": "/platform/verification-lifecycle",
-      "destination": "/verification/lifecycle"
-    },
-    {
-      "source": "/platform/signing-format",
-      "destination": "/verification/signing-format"
-    },
-    {
-      "source": "/ecosystems/verifiers",
-      "destination": "/verification/verifiers"
     },
     {
       "source": "/learn/standards-and-eips",
@@ -401,20 +368,8 @@
       "destination": "/platform/overview"
     },
     {
-      "source": "/content/platform/how-verification-works",
-      "destination": "/verification/how-it-works"
-    },
-    {
-      "source": "/content/platform/verification-lifecycle",
-      "destination": "/verification/lifecycle"
-    },
-    {
       "source": "/content/platform/receipts-and-results",
       "destination": "/platform/receipts-and-results"
-    },
-    {
-      "source": "/content/platform/verifiers",
-      "destination": "/verification/verifiers"
     },
     {
       "source": "/content/platform/hub",
@@ -435,10 +390,6 @@
     {
       "source": "/content/platform/security-and-trust",
       "destination": "/platform/security-and-trust"
-    },
-    {
-      "source": "/content/platform/signing-format",
-      "destination": "/verification/signing-format"
     },
     {
       "source": "/content/sdks/overview",
@@ -489,10 +440,6 @@
       "destination": "/agents/agent-verification-flow"
     },
     {
-      "source": "/content/cookbook/mcp",
-      "destination": "/mcp/overview"
-    },
-    {
       "source": "/content/cookbook/overview",
       "destination": "/cookbook/overview"
     },
@@ -535,10 +482,6 @@
     {
       "source": "/content/ecosystems/overview",
       "destination": "/ecosystems/overview"
-    },
-    {
-      "source": "/content/ecosystems/verifiers",
-      "destination": "/verification/verifiers"
     },
     {
       "source": "/content/learn/legal/nft-sale-terms",

@@ -1,10 +1,12 @@
 ---
-title: wallet-link
+title: Linked Wallets
 description: Link a secondary wallet to a primary wallet with a signed relationship proof.
 icon: link
 ---
 
-Use `wallet-link` when a user needs to prove that multiple wallets belong to the same identity or workflow.
+**Verifier ID:** `wallet-link`
+
+Use this verifier when a user needs to prove that multiple wallets belong to the same identity or workflow.
 
 ## Best For
 
@@ -37,3 +39,5 @@ Instant. The secondary wallet signs the linking payload.
   "signedTimestamp": 1730000000000
 }
 ```
+
+This proof can then be reused anywhere your product needs to treat multiple wallets as one identity surface.
