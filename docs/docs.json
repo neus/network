@@ -93,6 +93,13 @@
               "cookbook/auth-hosted-verify",
               "cookbook/hub-integrator"
             ]
+          },
+          {
+            "group": "Standards",
+            "icon": "graduation-cap",
+            "pages": [
+              "learn/standards/caip-380"
+            ]
           }
         ]
       },
@@ -245,13 +252,6 @@
               "learn/legal/terms-of-use",
               "learn/legal/security-disclosure",
               "learn/legal/dmca"
-            ]
-          },
-          {
-            "group": "Standards",
-            "icon": "graduation-cap",
-            "pages": [
-              "learn/standards/caip-380"
             ]
           }
         ]
