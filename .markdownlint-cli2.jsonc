@@ -2,16 +2,16 @@
   "config": {
     "default": true,
 
-    // GitBook pages use YAML frontmatter at the top.
+    // Mintlify pages use YAML frontmatter at the top.
     "MD041": false,
 
-    // We intentionally use inline HTML tables for GitBook "cards".
+    // We intentionally use inline HTML tables for Mintlify cards.
     "MD033": false,
 
     // Keep docs readable; avoid noisy line-length failures.
     "MD013": false,
 
-    // Allow bare URLs in custom tags/GitBook blocks.
+    // Allow bare URLs in custom tags/Mintlify blocks.
     "MD034": false,
 
     // Existing docs use compact pipe table style.
