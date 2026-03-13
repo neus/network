@@ -11,6 +11,7 @@ Public MCP tools expose only the data required for the task. This page defines w
 When a hosted MCP tool needs authentication:
 
 - **`neus_me`** resolves the current principal through `GET /api/v1/auth/me` when auth is present.
+- **`NEUS_AUTH_TOKEN`** is only the same NEUS session token in Bearer form for non-cookie contexts such as MCP or server runtimes.
 - **Private proof access** stays behind NEUS auth boundaries; public MCP tools remain eligibility-safe.
 
 <Warning>
@@ -29,7 +30,7 @@ Do not expect public MCP tools to expose private proof payloads or credentials.
 When a tool needs authentication and none is present, the server can return:
 
 - `status: "auth_required"` with a hosted login URL for the user to complete sign-in.
-- Use the returned URL to hand off to `https://neus.network/verify`.
+- Use the returned URL to hand off to `https://neus.network/verify?intent=login`.
 
 ## Related Docs
 

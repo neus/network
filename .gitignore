@@ -42,3 +42,5 @@ docs/.mintlify-home*/
 
 # Local packages / tarballs
 *.tgz
+.CLAUDE
+docs-private/

@@ -23,6 +23,24 @@ const proof = await client.verify({
 });
 ```
 
+### Using CAIP-10 Account ID
+
+For cross-chain compatibility, use `agentAccountId`:
+
+```javascript
+const proof = await client.verify({
+  verifier: 'agent-identity',
+  data: {
+    agentId: 'my-assistant',
+    agentAccountId: 'eip155:8453:0x...',
+    agentLabel: 'My Assistant',
+    agentType: 'ai',
+    description: 'My AI assistant',
+  },
+  walletAddress: controllerWallet,
+});
+```
+
 ## Full Example
 
 ```javascript
@@ -48,14 +66,17 @@ await client.verify({
 
 | Field | Required | Max Length | Description |
 |-------|----------|------------|-------------|
-| `agentId` | Yes | 1–128 chars | Unique identifier |
-| `agentWallet` | Yes | - | Agent's wallet (EVM or Solana) |
-| `agentType` | No | enum | `ai`, `bot`, `service`, `automation`, `agent` |
+| `agentId` | Yes | 1–128 chars | Unique identifier for the agent |
+| `agentWallet` | One of wallet or accountId | — | Agent wallet address (EVM or Solana) |
+| `agentAccountId` | One of wallet or accountId | — | CAIP-10 account ID (e.g., `eip155:8453:0x...`) |
+| `agentChainRef` | No | — | CAIP-2 chain reference when using `agentWallet` |
+| `agentLabel` | No | 128 chars | Human-readable display name |
+| `agentType` | No | enum | `ai`, `bot`, `service`, `automation`, or `agent` |
 | `description` | No | 500 chars | Agent description |
-| `capabilities` | No | 32 items | List of capabilities |
-| `instructions` | No | 4000 chars | System prompt |
-| `skills` | No | 48 items | List of skills |
-| `services` | No | 16 items | Service endpoints |
+| `capabilities` | No | 32 items | List of declared capabilities |
+| `instructions` | No | 4000 chars | System prompt or behavioral instructions |
+| `skills` | No | 48 items | List of skill identifiers |
+| `services` | No | 16 items | Service endpoint definitions |
 
 ## What You Get Back
 

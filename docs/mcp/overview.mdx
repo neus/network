@@ -4,7 +4,7 @@ description: Use the hosted NEUS MCP server for verifier lookup, gate checks, pr
 icon: plug
 ---
 
-The hosted MCP server exposes verifier lookup, gate checks, proof context, and hosted verify handoff.
+The hosted MCP server exposes verifier lookup, gate checks, proof context, and hosted verify handoff while reusing the same NEUS auth/session contracts as the browser.
 
 ## What MCP Gives You
 
@@ -13,12 +13,20 @@ The hosted MCP server exposes verifier lookup, gate checks, proof context, and h
 - hosted verify guidance when human action is required
 - public proof and profile context for wallets or DIDs
 
-## Standard Agent Loop
+## Standard Agent Loops
+
+### Zero-setup
 
 1. `neus_verifiers_catalog`
 2. `neus_proofs_check`
 3. `neus_verify_or_guide`
-4. `neus_proofs_get`
+
+### Personalized
+
+1. `neus_me`
+2. `neus_agent_link`
+3. `neus_proofs_get`
+4. `neus_verifiers_catalog`
 
 ## Core Docs
 

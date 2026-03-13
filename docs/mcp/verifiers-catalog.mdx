@@ -27,3 +27,23 @@ Use `neus_verifiers_catalog` at the start of an MCP workflow when the client nee
 - verifier list
 - verifier labels and types
 - field metadata needed for policy or UI
+
+## Response Structure
+
+```json
+{
+  "data": [
+    {
+      "id": "ownership-basic",
+      "description": "Content ownership verification",
+      "flow": "instant",
+      "interaction": "signature",
+      "tier": "public"
+    }
+  ],
+  "meta": {
+    "count": 14,
+    "schemaVersion": "1.0.0"
+  }
+}
+```

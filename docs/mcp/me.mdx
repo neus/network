@@ -6,6 +6,8 @@ icon: user-circle
 
 Use `neus_me` when an MCP client needs to resolve the current principal or session-backed context.
 
+With `NEUS_AUTH_TOKEN` set, the tool resolves the same NEUS session used by hosted login through `GET /api/v1/auth/me`.
+
 ## Tool Name
 
 `neus_me`
@@ -27,3 +29,20 @@ Use `neus_me` when an MCP client needs to resolve the current principal or sessi
 - the current principal
 - session-backed identity context
 - associated agent links when available
+
+## Response Structure
+
+```json
+{
+  "authenticated": true,
+  "subjectId": "did:neus:...",
+  "address": "0x...",
+  "chainId": 8453,
+  "agentLinks": [
+    {
+      "agentWallet": "0x...",
+      "linked": true
+    }
+  ]
+}
+```

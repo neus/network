@@ -15,7 +15,8 @@ Use the hosted MCP endpoint unless you have a separate reason to run your own tr
   "mcpServers": {
     "neus": {
       "type": "streamableHttp",
-      "url": "https://mcp.neus.network/mcp"
+      "url": "https://mcp.neus.network/mcp",
+      "description": "NEUS MCP (live)"
     }
   }
 }
@@ -28,7 +29,8 @@ Use the hosted MCP endpoint unless you have a separate reason to run your own tr
   "mcpServers": {
     "neus": {
       "type": "streamableHttp",
-      "url": "https://mcp.neus.network/mcp"
+      "url": "https://mcp.neus.network/mcp",
+      "description": "NEUS MCP (live)"
     }
   }
 }
@@ -43,7 +45,8 @@ Use the same JSON structure in your MCP client config or extension settings.
   "mcpServers": {
     "neus": {
       "type": "streamableHttp",
-      "url": "https://mcp.neus.network/mcp"
+      "url": "https://mcp.neus.network/mcp",
+      "description": "NEUS MCP (live)"
     }
   }
 }
@@ -54,10 +57,11 @@ Use the same JSON structure in your MCP client config or extension settings.
 For production integrations, keep the integration model simple:
 
 1. Use the hosted MCP endpoint for fastest production adoption.
-2. Start every flow with `neus_verifiers_catalog` or `neus_proofs_check`.
-3. When verification is missing, send users to hosted verify instead of rebuilding interactive verifier UX.
-4. Treat the proof receipt ID as the portable receipt you can reuse across apps and agents.
-5. Keep private proof handling inside NEUS; consume eligibility and receipt IDs, not raw claims.
+2. Let users try it immediately without transport auth.
+3. When personalized context is needed, send users to `https://neus.network/verify?intent=login`.
+4. Reuse the same NEUS session outside the browser by setting `NEUS_AUTH_TOKEN`.
+5. Start personalized bootstrap with `neus_me`, then `neus_agent_link`, then `neus_proofs_get`, then `neus_verifiers_catalog`.
+6. Keep private proof handling inside NEUS; consume eligibility and receipt IDs, not raw claims.
 
 ## Related
 

@@ -33,14 +33,15 @@ await client.verify({
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `agentId` | Yes | Unique agent identifier |
-| `agentWallet` or `agentAccountId` | One required | Agent wallet or account |
-| `agentType` | No | `ai`, `bot`, `service`, `automation`, `agent` |
-| `description` | No | Agent description |
-| `capabilities` | No | List of capabilities |
+| `agentId` | Yes | Unique agent identifier (1–128 chars) |
+| `agentWallet` or `agentAccountId` | One required | Agent wallet or CAIP-10 account ID |
+| `agentLabel` | No | Human-readable display name (max 128 chars) |
+| `agentType` | No | `ai`, `bot`, `service`, `automation`, or `agent` |
+| `description` | No | Agent description (max 500 chars) |
+| `capabilities` | No | List of capabilities (max 32 items) |
 | `instructions` | No | System prompt (max 4000 chars) |
-| `skills` | No | List of skills (max 48) |
-| `services` | No | Service endpoints (max 16) |
+| `skills` | No | List of skills (max 48 items) |
+| `services` | No | Service endpoints (max 16 items) |
 
 ## 2. Delegate Authority
 
@@ -69,11 +70,14 @@ await client.verify({
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `controllerWallet` | Yes | Must match signer |
-| `agentWallet` | Yes | Agent's wallet |
-| `scope` | No | Permission scope |
-| `permissions` | No | `execute`, `read`, etc. |
+| `controllerWallet` or `controllerAccountId` | Yes | Controller identity; must match signer |
+| `agentWallet` or `agentAccountId` | Yes | Agent identity |
+| `agentId` | No | Reference to registered agent |
+| `scope` | No | Permission scope (e.g., `payments:x402`) |
+| `permissions` | No | Allowed actions |
 | `maxSpend` | No | Maximum spend in wei |
+| `allowedPaymentTypes` | No | Payment types allowed |
+| `receiptDisclosure` | No | `summary`, `full`, or `none` |
 | `expiresAt` | No | Expiration timestamp |
 
 ## 3. Consume the Proofs

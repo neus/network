@@ -26,3 +26,26 @@ Use `neus_verify_or_guide` when you want one MCP tool to decide whether the user
 
 - `action: "already_verified"` when the policy is already satisfied
 - `action: "verification_required"` plus `hostedVerifyUrl` when the user must verify
+
+## Response Structure
+
+### Already Verified
+
+```json
+{
+  "action": "already_verified",
+  "walletAddress": "0xabc123...",
+  "verifierIds": ["proof-of-human", "wallet-risk"],
+  "matchedCount": 2
+}
+```
+
+### Verification Required
+
+```json
+{
+  "action": "verification_required",
+  "hostedVerifyUrl": "https://neus.network/verify?verifiers=proof-of-human,wallet-risk",
+  "missing": ["proof-of-human"]
+}
+```

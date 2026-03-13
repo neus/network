@@ -34,10 +34,10 @@ await client.verify({
     scope: 'payments:x402',
     permissions: ['execute', 'read'],
     maxSpend: '1000000000000000000',   // 1 ETH in wei
-    allowedPaymentTypes: ['x402'],     // auto-set if scope=payments:x402
-    receiptDisclosure: 'summary',      // auto-set if scope=payments:x402
+    allowedPaymentTypes: ['x402'],
+    receiptDisclosure: 'summary',
     expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,  // 7 days
-    instructions: 'Policy instructions for the delegated agent (max 4000 chars)',
+    instructions: 'Policy instructions for the delegated agent',
     skills: ['market-data']
   },
   walletAddress: controllerWallet,
@@ -48,16 +48,19 @@ await client.verify({
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `controllerWallet` | Yes | Must match signer |
-| `agentWallet` | Yes | Agent's wallet |
+| `controllerWallet` | One of wallet or accountId | Controller wallet address. Must match signer. |
+| `controllerAccountId` | One of wallet or accountId | CAIP-10 account ID for controller |
+| `agentWallet` | One of wallet or accountId | Agent wallet address |
+| `agentAccountId` | One of wallet or accountId | CAIP-10 account ID for agent |
+| `agentId` | No | Reference to a registered agent identity |
 | `scope` | No | Permission scope (e.g., `payments:x402`) |
-| `permissions` | No | `execute`, `read`, etc. |
-| `maxSpend` | No | Maximum spend in wei |
-| `allowedPaymentTypes` | No | Payment types allowed |
-| `receiptDisclosure` | No | `summary`, `full`, `none` |
-| `expiresAt` | No | Expiration timestamp |
+| `permissions` | No | Allowed actions (`execute`, `read`, etc.) |
+| `maxSpend` | No | Maximum spend in wei (decimal string) |
+| `allowedPaymentTypes` | No | Payment types allowed (e.g., `["x402"]`) |
+| `receiptDisclosure` | No | `summary`, `full`, or `none` |
+| `expiresAt` | No | Expiration timestamp (Unix ms) |
 | `instructions` | No | Policy instructions (max 4000 chars) |
-| `skills` | No | Allowed skills |
+| `skills` | No | Skill identifiers granted to the agent |
 
 ## What You Get Back
 

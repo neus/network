@@ -6,6 +6,8 @@ icon: robot
 
 Use `neus_agent_link` when an MCP client needs to confirm that an agent wallet is fully linked and delegated.
 
+When link requirements are missing, the tool returns guided next steps and a hosted verify URL instead of private proof data.
+
 ## Best For
 
 - agent onboarding
@@ -25,3 +27,28 @@ Use `neus_agent_link` when an MCP client needs to confirm that an agent wallet i
 
 - `linked: true` when the required proofs exist
 - `status: "link_required"` plus hosted guidance when the user must complete the link flow
+
+## Response Structure
+
+### Linked
+
+```json
+{
+  "linked": true,
+  "agentWallet": "0xagent...",
+  "principal": "0xcontroller...",
+  "identityProofId": "qhash...",
+  "delegationProofId": "qhash..."
+}
+```
+
+### Link Required
+
+```json
+{
+  "linked": false,
+  "status": "link_required",
+  "hostedVerifyUrl": "https://neus.network/verify?preset=agent-pack&agent=0xagent...",
+  "missing": ["agent-identity", "agent-delegation"]
+}
+```

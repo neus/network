@@ -22,8 +22,11 @@ Instant. The controller signs the delegation request.
 
 | Field | Required | Notes |
 |------|----------|-------|
-| `controllerWallet` | Yes | Must match the signer |
-| `agentWallet` | Yes | Target agent wallet |
+| `controllerWallet` or `controllerAccountId` | Yes | Controller identity; must match signer |
+| `agentWallet` or `agentAccountId` | Yes | Agent identity |
+| `agentId` | No | Reference to registered agent |
+| `agentChainRef` | No | CAIP-2 chain reference when using `agentWallet` |
+| `controllerChainRef` | No | CAIP-2 chain reference when using `controllerWallet` |
 | `scope` | No | Example: `payments:x402` |
 | `permissions` | No | Allowed actions |
 | `expiresAt` | No | Unix ms expiry |

@@ -27,3 +27,17 @@ Use `neus_proofs_check` when your agent only needs to know whether a wallet or D
 - `eligible`
 - `matchedCount`
 - `success`
+
+## Response Structure
+
+```json
+{
+  "eligible": true,
+  "matchedCount": 2,
+  "success": true,
+  "results": [
+    { "verifierId": "ownership-basic", "matched": true },
+    { "verifierId": "proof-of-human", "matched": true }
+  ]
+}
+```
