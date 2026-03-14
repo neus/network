@@ -40,7 +40,19 @@
   "seo": {
     "metatags": {
       "theme-color": "#101113",
-      "color-scheme": "dark"
+      "color-scheme": "dark",
+      "description": "NEUS Documentation - Portable proof receipts for login, trust, access, and agent workflows",
+      "og:title": "NEUS Documentation",
+      "og:description": "Portable proof receipts for login, trust, access, and agent workflows",
+      "og:image": "https://docs.neus.network/images/og-default.svg",
+      "og:image:width": "1200",
+      "og:image:height": "630",
+      "og:type": "website",
+      "og:site_name": "NEUS Docs",
+      "twitter:card": "summary_large_image",
+      "twitter:title": "NEUS Documentation",
+      "twitter:description": "Portable proof receipts for login, trust, access, and agent workflows",
+      "twitter:image": "https://docs.neus.network/images/og-default.svg"
     }
   },
   "navbar": {
@@ -89,17 +101,12 @@
           {
             "group": "Hosted Flows",
             "icon": "route",
-            "pages": [
-              "cookbook/auth-hosted-verify",
-              "cookbook/hub-integrator"
-            ]
+            "pages": ["cookbook/auth-hosted-verify", "cookbook/hub-integrator"]
           },
           {
             "group": "Standards",
             "icon": "graduation-cap",
-            "pages": [
-              "learn/standards/caip-380"
-            ]
+            "pages": ["learn/standards/caip-380"]
           }
         ]
       },
@@ -152,19 +159,12 @@
           {
             "group": "Widget UI",
             "icon": "sparkles",
-            "pages": [
-              "widgets/overview",
-              "widgets/verifygate"
-            ]
+            "pages": ["widgets/overview", "widgets/verifygate"]
           },
           {
             "group": "API",
             "icon": "terminal",
-            "pages": [
-              "api/overview",
-              "api/authentication",
-              "api/errors"
-            ]
+            "pages": ["api/overview", "api/authentication", "api/errors"]
           },
           {
             "group": "Operations",

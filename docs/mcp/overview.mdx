@@ -6,6 +6,28 @@ icon: plug
 
 The hosted MCP server exposes verifier lookup, gate checks, proof context, and hosted verify handoff while reusing the same NEUS auth/session contracts as the browser.
 
+## First-Time User? Start Here
+
+**2-minute quick start:**
+
+1. **Add to your MCP client** (Cursor, Claude Desktop, VS Code) — see [Setup](./setup)
+2. **Call the first tool** to discover available verifiers:
+
+   ```typescript
+   neus_verifiers_catalog()
+   ```
+
+3. **Check eligibility** for a wallet:
+
+   ```typescript
+   neus_verify_or_guide({
+     "walletAddress": "0x...",
+     "verifierIds": ["proof-of-human"]
+   })
+   ```
+
+**That's it!** The server returns either `already_verified` or `verification_required` with a `hostedVerifyUrl` to guide users.
+
 ## What MCP Gives You
 
 - verifier catalog discovery
@@ -13,13 +35,24 @@ The hosted MCP server exposes verifier lookup, gate checks, proof context, and h
 - hosted verify guidance when human action is required
 - public proof and profile context for wallets or DIDs
 
+## Tool Selection Guide
+
+| You want to... | Use this tool |
+|----------------|---------------|
+| **Discover available verifiers** | `neus_verifiers_catalog` (call first!) |
+| **Gate access + guide users** | `neus_verify_or_guide` (recommended) |
+| **Check eligibility only** | `neus_proofs_check` |
+| **Load user profile/proofs** | `neus_proofs_get` |
+| **Get session context** | `neus_me` (requires `NEUS_AUTH_TOKEN`) |
+| **Check agent delegation** | `neus_agent_link` |
+| **Create proofs directly** | `neus_verify` (low-level) |
+
 ## Standard Agent Loops
 
 ### Zero-setup
 
 1. `neus_verifiers_catalog`
-2. `neus_proofs_check`
-3. `neus_verify_or_guide`
+2. `neus_verify_or_guide`
 
 ### Personalized
 
