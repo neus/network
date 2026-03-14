@@ -44,7 +44,7 @@
       "description": "NEUS Documentation - Portable proof receipts for login, trust, access, and agent workflows",
       "og:title": "NEUS Documentation",
       "og:description": "Portable proof receipts for login, trust, access, and agent workflows",
-      "og:image": "https://docs.neus.network/images/og-default.svg",
+      "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
       "og:type": "website",
@@ -52,7 +52,7 @@
       "twitter:card": "summary_large_image",
       "twitter:title": "NEUS Documentation",
       "twitter:description": "Portable proof receipts for login, trust, access, and agent workflows",
-      "twitter:image": "https://docs.neus.network/images/og-default.svg"
+      "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
   "navbar": {
