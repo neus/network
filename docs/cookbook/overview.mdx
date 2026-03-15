@@ -1,19 +1,19 @@
 ---
-title: Cookbook Overview
-description: Guides for hosted verify, onboarding, portability, gating, and agent workflows.
+title: Cookbook
+description: Implementation guides for common flows.
 icon: book-open
 ---
 
-Short implementation guides for common NEUS flows.
+Step-by-step guides for common NEUS integrations.
 
 ## Core Guides
 
 <CardGroup cols={2}>
-  <Card title="Auth + Hosted Verify" icon="key" href="./auth-hosted-verify">
-    Hosted popup and return flow for interactive verification.
+  <Card title="Hosted Verify" icon="key" href="./auth-hosted-verify">
+    Guided verification flow. No frontend work.
   </Card>
   <Card title="Partner Setup" icon="building" href="./hub-integrator">
-    Domain linking, app attribution, sponsorship, and production onboarding.
+    Domain linking and production onboarding.
   </Card>
 </CardGroup>
 
@@ -21,21 +21,26 @@ Short implementation guides for common NEUS flows.
 
 <CardGroup cols={2}>
   <Card title="Domain Verification" icon="globe" href="./domain-verification">
-    Prove control of a site, app, or community domain.
+    Prove control of a domain.
   </Card>
   <Card title="NFT Gating" icon="image" href="./nft-gating">
-    Unlock premium access for verified holders.
+    Unlock content for holders.
   </Card>
   <Card title="Sybil Resistance" icon="shield-halved" href="./sybil-resistance">
-    Add a stronger human-verification layer before higher-risk actions.
+    Human verification for sensitive actions.
   </Card>
   <Card title="Verifiable Agents" icon="robot" href="./verifiable-agents">
-    Register agents and grant scoped permissions for AI systems.
+    Register and delegate to AI agents.
   </Card>
 </CardGroup>
 
-<CardGroup cols={1}>
+## Related
+
+<CardGroup cols={2}>
   <Card title="MCP" icon="plug" href="../mcp/overview">
-    Connect agent tools to verifier lookup and hosted handoff.
+    Connect agent tools.
+  </Card>
+  <Card title="Verifier Catalog" icon="list-tree" href="../verification/verifiers">
+    All capabilities.
   </Card>
 </CardGroup>

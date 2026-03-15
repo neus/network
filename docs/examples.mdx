@@ -1,32 +1,97 @@
 ---
 title: Examples
-description: Ready-to-run examples for Node.js, React, and curl integrations.
+description: Working code for React, Node.js, and HTTP.
 icon: code
 ---
 
-These examples provide working code for one integration path at a time.
+Copy-paste examples for common integrations.
 
 ## Available Examples
 
 | Example | Stack | What It Covers |
 |---------|-------|----------------|
-| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Node.js | Server-side verification and proof status checks |
-| [react-component](https://github.com/neus/network/tree/main/examples/react-component) | React | `VerifyGate` integration for gated UI |
-| [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | curl | Raw HTTP flow: standardize, sign, submit, check status |
+| [react-component](https://github.com/neus/network/tree/main/examples/react-component) | React | `VerifyGate` for gated UI |
+| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Node.js | Server-side verification |
+| [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | HTTP | Raw API flow |
 
-## Recommended Order
+---
 
-1. Read the [Quickstart](./quickstart) to understand the main product loop.
-2. Choose a surface in [Choose an Integration Path](./choose-an-integration-path).
-3. Open the matching example in the repo.
+## React: Gate Content
 
-## Related
+```jsx
+import { VerifyGate } from '@neus/sdk/widgets';
+
+export default function ProtectedPage() {
+  return (
+    <VerifyGate
+      requiredVerifiers={['nft-ownership']}
+      verifierData={{
+        'nft-ownership': {
+          contractAddress: '0x...',
+          tokenId: '1',
+          chainId: 1,
+        },
+      }}
+    >
+      <ProtectedContent />
+    </VerifyGate>
+  );
+}
+```
+
+---
+
+## Node.js: Create Proof
+
+```javascript
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient();
+
+const proof = await client.verify({
+  verifier: 'ownership-basic',
+  content: 'Server-verified content',
+});
+
+console.log(proof.proofId);
+```
+
+---
+
+## HTTP: Create Proof
+
+```bash
+# 1. Get signing string
+curl -X POST https://api.neus.network/api/v1/verification/standardize \
+  -H "Content-Type: application/json" \
+  -d '{
+    "walletAddress": "0x...",
+    "verifierIds": ["ownership-basic"],
+    "data": { "content": "Hello NEUS" }
+  }'
+
+# 2. Sign the returned signerString with your wallet
+
+# 3. Submit verification
+curl -X POST https://api.neus.network/api/v1/verification \
+  -H "Content-Type: application/json" \
+  -d '{
+    "walletAddress": "0x...",
+    "signature": "0x...",
+    "verifierIds": ["ownership-basic"],
+    "data": { "content": "Hello NEUS" }
+  }'
+```
+
+---
+
+## Next Steps
 
 <CardGroup cols={2}>
   <Card title="Quickstart" icon="rocket" href="./quickstart">
-    Build one complete proof flow first.
+    Build your first proof flow.
   </Card>
-  <Card title="Choose Your Path" icon="route" href="./choose-an-integration-path">
-    Pick SDK, widgets, API, hosted verify, or MCP.
+  <Card title="API Reference" icon="terminal" href="./api/overview">
+    Explore all endpoints.
   </Card>
 </CardGroup>

@@ -67,3 +67,18 @@ You get a proof receipt ID that can be reused for proof pages, product trust, ac
 - Use `contentHash` when the source is large, sensitive, or stored elsewhere.
 - Use `reference` when the real artifact lives at a URL, IPFS CID, contract, transaction, or another stable pointer.
 - Use provenance fields when downstream readers should understand whether the output is human-authored, AI-generated, or mixed.
+
+## Content Retrieval
+
+**Core Principle:** NEUS does not "unhash." Content retrieval requires either:
+
+1. **Stored original content**: Set `options.storeOriginalContent=true` to store content in `publicContent.content`
+2. **Stable reference**: Provide `reference.type` + `reference.id` for external resolution
+
+For private proofs with stored content, use the existing proof read endpoint with `resolveContent=true`:
+
+```
+GET /api/v1/proofs/by-wallet/{address}?resolveContent=true&qHash=0x...
+```
+
+Returns `contentResolutionStatus`: `resolved` or `hash_only_not_recoverable`.

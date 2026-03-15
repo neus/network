@@ -5,11 +5,7 @@
 
 **Verify once. Prove everywhere.**
 
-NEUS is a **portable proof infrastructure** for creating and managing reusable proofs.
-
-> Turn verified claims into portable proofs you can reuse anywhere—apps, APIs, smart contracts, or AI systems—without rebuilding trust logic each time.
-
----
+NEUS replaces fragmented verification with one reusable proof receipt.
 
 ## Quick Start
 
@@ -17,63 +13,47 @@ NEUS is a **portable proof infrastructure** for creating and managing reusable p
 npm install @neus/sdk
 ```
 
-```js
+```javascript
 import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient();
 
-// Create a proof
 const proof = await client.verify({
   verifier: 'ownership-basic',
-  content: 'My original content',
+  content: 'My content',
   wallet: window.ethereum,
 });
 
-// Save the proof receipt ID for status checks, gating, and reuse.
+// Save this ID — reuse it everywhere
 const proofId = proof.proofId;
-const status = await client.getStatus(proofId);
 ```
 
----
+## What NEUS Does
 
-## Server-Side Gating
+| Problem | Solution |
+|---------|----------|
+| Verification built per feature | One proof, many uses |
+| No reusable identity | Portable proof receipts |
+| Custom verification infrastructure | Hosted UI + API |
 
-For server-side eligibility checks, use the minimal gate endpoint:
+## Integration Paths
 
-- **HTTP:** `GET /api/v1/proofs/check`
-- **SDK:** `client.gateCheck({ address, verifierIds, since, sinceDays, ... })`
-
----
-
-## React Widgets
-
-```jsx
-import { VerifyGate, ProofBadge } from '@neus/sdk/widgets';
-
-export function Gated() {
-  return (
-    <VerifyGate verifierData={{ 'nft-ownership': { contractAddress: '0x...', tokenId: '1', chainId: 1 } }}>
-      <ProtectedComponent />
-    </VerifyGate>
-  );
-}
-```
-
-For Next.js App Router, render widgets inside a **Client Component**.
-
----
+| Path | Best For |
+|------|----------|
+| [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) | Login, social linking |
+| [Widgets](https://docs.neus.network/widgets/overview) | React gating |
+| [SDK](https://docs.neus.network/sdks/overview) | Custom flows |
+| [API](https://docs.neus.network/api/overview) | Server checks |
+| [MCP](https://docs.neus.network/mcp/overview) | AI agents |
 
 ## Documentation
 
 | Resource | Description |
 |----------|-------------|
-| [Docs](https://docs.neus.network) | Full documentation |
-| [Quickstart](https://docs.neus.network/quickstart) | First proof, gating, hosted verify |
-| [API Reference](https://docs.neus.network/api-reference) | OpenAPI reference |
-| [Verifier Catalog](https://docs.neus.network/verification/verifiers) | Outcome-first verifier guide |
-| [Examples](./examples/) | Node.js, React, curl |
-
----
+| [Quickstart](https://docs.neus.network/quickstart) | First proof in 5 minutes |
+| [Verifier Catalog](https://docs.neus.network/verification/verifiers) | All capabilities |
+| [API Reference](https://docs.neus.network/api/overview) | HTTP endpoints |
+| [Examples](./examples/) | React, Node.js, curl |
 
 ## Support
 
@@ -81,9 +61,7 @@ For Next.js App Router, render widgets inside a **Client Component**.
 |---------|---------|
 | [GitHub Discussions](https://github.com/neus/network/discussions) | Questions |
 | [GitHub Issues](https://github.com/neus/network/issues) | Bug reports |
-| [dev@neus.network](mailto:dev@neus.network) | Security issues |
-
----
+| [dev@neus.network](mailto:dev@neus.network) | Security |
 
 ## License
 

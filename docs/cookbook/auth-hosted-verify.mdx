@@ -1,92 +1,132 @@
 ---
-title: Auth + Hosted Verify
-description: Hosted verify and session management for NEUS integrations.
+title: Hosted Verify
+description: Use the NEUS-hosted UI for login and interactive verification.
 icon: key
 ---
 
-Use hosted verify when users need to sign, link OAuth, or complete interactive verifiers. NEUS provides a hosted UI for these flows.
+Ready-made verification flow. No frontend work required.
 
-NEUS supports a signature-based proof model and an optional session layer for smoother browser UX.
+## When to Use Hosted Verify
 
-## Two Layers
+| Use Case | Why Hosted |
+|----------|------------|
+| Login/signup | Guided wallet or passkey flow |
+| Social linking | OAuth for Twitter, GitHub, Discord |
+| Human verification | Interactive proof-of-human |
+| Team verification | Org/workspace membership checks |
 
-| Layer | Purpose |
-|-------|---------|
-| **Protocol signing (proofs)** | What verifiers require; described in [Signing](../api/authentication) |
-| **Session (`/api/v1/auth/*`)** | Optional convenience layer to reduce repeated prompts |
+---
 
-## Hosted Verify UX (Passkey or Wallet)
+## How It Works
 
-When a flow requires human interaction (signature, OAuth linking, proof creation), NEUS provides a hosted UI.
+```
+Your App                    NEUS Hosted                 User
+   │                            │                         │
+   │  1. Redirect to /verify    │                         │
+   │───────────────────────────▶│                         │
+   │                            │  2. User completes flow │
+   │                            │◀────────────────────────│
+   │  3. Return with proof ID   │                         │
+   │◀───────────────────────────│                         │
+   │                            │                         │
+```
 
-- Users can **sign in with a passkey** (no wallet extension required) **or connect a wallet**
-- After completion, the hosted UI returns the user to your app
+---
 
-After successful verification, users can be redirected to the [Hub](https://neus.network/hub) or [Profile](https://neus.network/profile) to manage identity, link apps, or view proofs.
-
-### Hosted URL
+## Hosted URL
 
 **Base:** `https://neus.network/verify`
 
-| Param | Use |
-|-------|-----|
+| Parameter | Purpose |
+|-----------|---------|
 | `intent=login` | Session-first login flow |
-| `verifiers=<ids>` | Comma-separated verifier IDs (e.g. `verifiers=wallet-risk`) |
-| `preset=<id>` | Preset bundle (e.g. `preset=agent-pack`). See [Presets](../platform/presets) for full catalog. |
-| `gateId=<id>` | Gate requirements (verifiers derived from gate) |
-| `returnUrl=<url>` | Redirect target after completion |
-| `mode=popup&origin=<url>` | Popup flow; `postMessage` to opener |
+| `verifiers=<ids>` | Comma-separated verifier IDs |
+| `preset=<id>` | Pre-configured verifier bundle |
+| `gateId=<id>` | Gate requirements |
+| `returnUrl=<url>` | Where to redirect after completion |
+| `mode=popup` | Popup flow with postMessage |
 
-<Warning>
-Do not invent a second hosted login route. `intent=login` on `/verify` is the correct implementation.
-</Warning>
+---
 
-## Session Check: `GET /api/v1/auth/me`
+## Quick Start
 
-If you use the session layer, treat this endpoint as the main check for:
+### Redirect Flow
 
-- Whether the user is authenticated
-- The user's identity pack (subjectId/did/address)
-- Onboarding readiness (if available for your integration)
+```javascript
+const verifyUrl = new URL('https://neus.network/verify');
+verifyUrl.searchParams.set('verifiers', 'ownership-basic');
+verifyUrl.searchParams.set('returnUrl', 'https://myapp.com/callback');
 
-### Routing Contract
-
-| State | Action |
-|-------|--------|
-| `authenticated: false` | Keep hosted login choices visible |
-| `authenticated: true` + `needsOnboarding: true` | Your app decides: prompt profile setup or proceed |
-| `authenticated: true` + `needsOnboarding: false` | Route to `returnUrl` or your app's authenticated landing |
-
-## Hosted Checkout URL Configuration
-
-If you run the NEUS API at a custom `apiUrl`, also set the hosted verify URL explicitly:
-
-```jsx
-<VerifyGate
-  apiUrl="https://api.neus.network"
-  hostedCheckoutUrl="https://neus.network/verify"
-  requiredVerifiers={["ownership-basic"]}
->
-  <Protected />
-</VerifyGate>
+window.location.href = verifyUrl.toString();
 ```
 
-## Popup Completion Signaling
+### Popup Flow
 
-For popup flows, the hosted window posts a completion message to the opener.
+```javascript
+const verifyUrl = new URL('https://neus.network/verify');
+verifyUrl.searchParams.set('mode', 'popup');
+verifyUrl.searchParams.set('origin', window.location.origin);
 
-| Message type | When |
-|--------------|------|
-| `neus_login_complete` | After session/login is confirmed |
-| `neus_checkout_done` | After verification completes (includes the proof receipt ID, `proofId`, `verifierIds`, and optional `gateId`) |
+window.open(verifyUrl.toString(), 'neus-verify', 'width=500,height=700');
 
-**Delivery:** `window.opener.postMessage(...)`. Origin is restricted to the supplied `origin` when it is an absolute HTTP(S) URL.
+// Listen for completion
+window.addEventListener('message', (event) => {
+  if (event.data.type === 'neus_checkout_done') {
+    console.log('Proof ID:', event.data.proofId);
+  }
+});
+```
 
-## Outage Contract
+---
 
-The hosted verify layer normalizes upstream outages:
+## Session Check
 
-- Interactive auth routes return `503` for upstream `5xx` or transport timeouts
-- They include `Retry-After: 10`
-- They include `X-Neus-Upstream-Status` for diagnostics
-- They set `Cache-Control: no-store`
+Use `/api/v1/auth/me` to check if a user is authenticated:
+
+```bash
+curl https://api.neus.network/api/v1/auth/me
+```
+
+| Response | Action |
+|----------|--------|
+| `authenticated: false` | Show login options |
+| `authenticated: true` | User is verified |
+
+---
+
+## Completion Messages
+
+For popup flows, the hosted window posts messages to the opener:
+
+| Message | When |
+|---------|------|
+| `neus_login_complete` | Session confirmed |
+| `neus_checkout_done` | Verification complete (includes `proofId`) |
+
+---
+
+## SDK Helper
+
+```javascript
+import { getHostedCheckoutUrl } from '@neus/sdk';
+
+const url = getHostedCheckoutUrl({
+  gateId: 'my-gate',
+  returnUrl: 'https://myapp.com/callback',
+  verifiers: ['ownership-basic'],
+  intent: 'login',
+});
+```
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="./quickstart">
+    Create your first proof.
+  </Card>
+  <Card title="Verifier Catalog" icon="list-tree" href="./verification/verifiers">
+    Choose verification capabilities.
+  </Card>
+</CardGroup>

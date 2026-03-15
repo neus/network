@@ -1,74 +1,100 @@
 ---
 title: Choose an Integration Path
-description: Pick the best option for your product, then reuse proof everywhere else.
+description: Pick the fastest path for your product.
 icon: route
 ---
 
-Choose the fastest NEUS surface for your product, team, or agent workflow.
+One integration. Reusable everywhere.
 
-## Choose by Build Style
+## Quick Decision
 
-| Use case | Surface | Result |
-|---|---|---|
-| Most browser products | Hosted verify | Fastest path for guided login and interactive verification |
-| React apps gating pages or routes | Widgets | Lowest-code path for proof-aware UI |
-| Custom browser or server integration | SDK | Direct control over request creation and proof reuse |
-| Server-only policy checks | API | Backend-owned trust decisions and policy checks |
-| AI or agent tools | MCP | Verifier lookup, proof checks, and hosted handoff |
-| Partner onboarding and domain setup | Partner Setup | Domain, team, app, and rollout setup |
+| Your Need | Use This | Why |
+|-----------|----------|-----|
+| Guided user verification | [Hosted Verify](./cookbook/auth-hosted-verify) | Zero frontend work |
+| React gating or badges | [Widgets](./widgets/overview) | Drop-in components |
+| Custom browser/server flow | [SDK](./sdks/overview) | Full control |
+| Server-only checks | [API](./api/overview) | Backend ownership |
+| AI agents and tools | [MCP](./mcp/overview) | Native agent support |
 
-## Decision Rules
+## Decision Tree
 
-1. Use hosted verify when people need to sign in, link accounts, or complete an interactive step.
-2. Use widgets when the job is mostly gating or proof display inside a React app.
-3. Use the SDK when you need a custom app experience but still want the standard NEUS contract.
-4. Use the API when your server is making the trust decision.
-5. Use MCP when an agent or editor tool needs the same trust layer.
+```
+Need verification?
+        │
+        ▼
+┌───────────────────┐
+│ Interactive flow? │──Yes──▶ Hosted Verify
+└───────────────────┘
+        │ No
+        ▼
+┌───────────────────┐
+│ React app?        │──Yes──▶ Widgets
+└───────────────────┘
+        │ No
+        ▼
+┌───────────────────┐
+│ Server-only?      │──Yes──▶ API
+└───────────────────┘
+        │ No
+        ▼
+┌───────────────────┐
+│ AI/Agent tool?    │──Yes──▶ MCP
+└───────────────────┘
+        │ No
+        ▼
+       SDK
+```
 
-## Pick a Starting Surface
+## Integration Options
 
 <CardGroup cols={2}>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Use the standard guided flow for login, social accounts, team verification, and human checks.
+    **Best for:** Login, social linking, human verification
+    **Time:** Minutes
+    **What you get:** Ready-made UI at `/verify`
   </Card>
   <Card title="Widgets" icon="puzzle-piece" href="./widgets/overview">
-    Add React gating or proof badges with the least code.
+    **Best for:** React apps needing gating or badges
+    **Time:** Minutes
+    **What you get:** `<VerifyGate>`, `<ProofBadge>`
   </Card>
   <Card title="SDK" icon="package" href="./sdks/overview">
-    Build custom browser or server flows around proof creation and reuse.
+    **Best for:** Custom browser or server flows
+    **Time:** Minutes
+    **What you get:** Full client control
   </Card>
   <Card title="API" icon="terminal" href="./api/overview">
-    Use raw HTTP when your backend needs to own the integration.
+    **Best for:** Server-only policy checks
+    **Time:** Minutes
+    **What you get:** Direct HTTP endpoints
   </Card>
   <Card title="MCP" icon="plug" href="./mcp/overview">
-    Give AI tools and agents access to verifier lookup and proof checks.
+    **Best for:** AI agents, Cursor, Claude Desktop
+    **Time:** Minutes
+    **What you get:** Native tool integration
   </Card>
   <Card title="Partner Setup" icon="building" href="./cookbook/hub-integrator">
-    Onboard a site, app, or team with domain and trust setup.
+    **Best for:** Domain linking, team onboarding
+    **Time:** Hours
+    **What you get:** Full production setup
   </Card>
 </CardGroup>
 
-## Recommended Paths
+## Common Paths
 
-| Use case | Start with | Then add |
-|---|---|---|
-| Fastest production launch | [Hosted Verify](./cookbook/auth-hosted-verify) | [Widgets](./widgets/overview) or [SDK](./sdks/overview) |
-| Custom browser UX | [SDK](./sdks/overview) | [API](./api/overview) for server checks |
-| Server-only eligibility checks | [API](./api/overview) | [Verifier Catalog](./verification/verifiers) |
-| Community or premium gating | [Widgets](./widgets/overview) | [Hosted Verify](./cookbook/auth-hosted-verify) for guided checks |
-| Org, app, or partner onboarding | [Partner Setup](./cookbook/hub-integrator) | [Hosted Verify](./cookbook/auth-hosted-verify) |
-| AI assistant or agent workflows | [MCP](./mcp/overview) | [Agents](./agents/overview) for proof-backed agent models |
+| Starting Point | Then Add |
+|----------------|----------|
+| Hosted Verify | Widgets for React gating |
+| SDK | API for server checks |
+| MCP | Agents for proof-backed automation |
 
-## Keep Reading
+## Next Step
 
-<CardGroup cols={3}>
+<CardGroup cols={2}>
   <Card title="Quickstart" icon="rocket" href="./quickstart">
-    Build one complete flow first.
-  </Card>
-  <Card title="Integration Guide" icon="compass" href="./integration">
-    Turn a starting path into a production setup.
+    Build your first proof now.
   </Card>
   <Card title="Verifier Catalog" icon="list-tree" href="./verification/verifiers">
-    Choose the exact capabilities you need.
+    Choose what to verify.
   </Card>
 </CardGroup>

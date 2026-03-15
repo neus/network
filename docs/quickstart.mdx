@@ -1,12 +1,23 @@
 ---
 title: Quickstart
-description: Create your first proof-backed action, save the proof receipt ID, and reuse it in a real app flow.
+description: Create your first proof in under 5 minutes.
 icon: rocket
 ---
 
-Create a proof, save the proof receipt ID, and reuse it in a product flow.
+Build a complete proof flow: verify, save the receipt, and reuse it.
 
-## 1. Install the SDK
+## What You'll Build
+
+By the end of this guide, you'll have:
+- Created a verified proof using the SDK
+- Saved a proof receipt ID
+- Gated content behind verification
+
+**Time:** Under 5 minutes
+
+---
+
+## 1. Install
 
 ```bash
 npm install @neus/sdk
@@ -17,88 +28,67 @@ npm install @neus/sdk
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient({ appId: 'acme-web' });
+const client = new NeusClient({ appId: 'my-app' });
 ```
 
 ## 3. Create a Proof
 
-Use the ownership and provenance verifier for the first build. It is the simplest way to bind a wallet to content or a claim and get back a reusable proof receipt.
+The simplest proof binds a wallet to content:
 
 ```javascript
 const proof = await client.verify({
   verifier: 'ownership-basic',
-  content: 'Hello NEUS',
+  content: 'My content or claim',
   wallet: window.ethereum,
 });
 
+// Save this ID — it's your reusable proof receipt
 const proofId = proof.proofId;
 ```
 
-<Note>
-Public docs call this value the proof receipt ID. The SDK field name is `proofId`.
-</Note>
+## 4. Check Status
 
-## 4. Save the Proof Receipt ID
-
-Persist it with the product record that will need trust later, such as a submission, profile, claim, or access decision.
-
-## 5. Check Status Only When Needed
-
-Some flows complete immediately. Others return `202` and finish asynchronously.
+Most proofs complete instantly. Async verifiers return `202`:
 
 ```javascript
-const final = await client.pollProofStatus(proofId, {
+const status = await client.pollProofStatus(proofId, {
   interval: 3000,
   timeout: 60000,
 });
 
-console.log(final.status);
+console.log(status.status); // 'verified'
 ```
 
-## 6. Reuse It
+## 5. Gate Content
 
-Use the saved proof receipt ID to show a proof page, run a server check, or gate UI. For React gating, `VerifyGate` is the fastest path:
+Use the proof receipt to gate React UI:
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
-export default function ProtectedPage() {
-  return (
-    <VerifyGate
-      requiredVerifiers={['nft-ownership']}
-      verifierData={{
-        'nft-ownership': {
-          contractAddress: '0x...',
-          tokenId: '1',
-          chainId: 1,
-        },
-      }}
-    >
-      <div>Access granted.</div>
-    </VerifyGate>
-  );
-}
+<VerifyGate
+  requiredVerifiers={['ownership-basic']}
+>
+  <ProtectedContent />
+</VerifyGate>
 ```
 
-## When To Use Hosted Verify
+---
 
-- Prefer hosted verify when the flow is interactive or user-guided.
-- Save the proof receipt ID after completion.
-- Reuse existing proofs before asking the user to verify again.
+## What's Next?
 
-## Related Pages
+| I want to... | Go to |
+|--------------|-------|
+| Use the hosted UI | [Hosted Verify](./cookbook/auth-hosted-verify) |
+| Pick the right integration | [Choose Your Path](./choose-an-integration-path) |
+| See all verification types | [Verifier Catalog](./verification/verifiers) |
+| Build for production | [Integration Guide](./integration) |
 
 <CardGroup cols={2}>
-  <Card title="Choose a Path" icon="route" href="./choose-an-integration-path">
-    Pick SDK, widgets, API, hosted verify, or MCP.
+  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
+    Use our hosted UI for login and interactive flows.
   </Card>
   <Card title="Verifier Catalog" icon="list-tree" href="./verification/verifiers">
-    Choose the right capability next.
-  </Card>
-  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Use the standard interactive flow.
-  </Card>
-  <Card title="Integration Guide" icon="compass" href="./integration">
-    Move from a demo flow to a production setup.
+    Explore all verification capabilities.
   </Card>
 </CardGroup>

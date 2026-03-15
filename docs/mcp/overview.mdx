@@ -1,79 +1,109 @@
 ---
 title: MCP Overview
-description: Use the hosted NEUS MCP server for verifier lookup, gate checks, proof context, and hosted verify handoff.
+description: Use NEUS in AI agents, Cursor, and Claude Desktop.
 icon: plug
 ---
 
-The hosted MCP server exposes verifier lookup, gate checks, proof context, and hosted verify handoff while reusing the same NEUS auth/session contracts as the browser.
+Native MCP support for agent integrations.
 
-## First-Time User? Start Here
+**Endpoint:** `https://mcp.neus.network/mcp`
 
-**2-minute quick start:**
+---
 
-1. **Add to your MCP client** (Cursor, Claude Desktop, VS Code) — see [Setup](./setup)
-2. **Call the first tool** to discover available verifiers:
+## Quick Start
 
-   ```typescript
-   neus_verifiers_catalog()
-   ```
+### 1. Add to Your MCP Client
 
-3. **Check eligibility** for a wallet:
+**Cursor:**
 
-   ```typescript
-   neus_verify_or_guide({
-     "walletAddress": "0x...",
-     "verifierIds": ["proof-of-human"]
-   })
-   ```
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
+}
+```
 
-**That's it!** The server returns either `already_verified` or `verification_required` with a `hostedVerifyUrl` to guide users.
+**Claude Desktop:**
 
-## What MCP Gives You
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "command": "npx",
+      "args": ["mcp-remote", "https://mcp.neus.network/mcp"]
+    }
+  }
+}
+```
 
-- verifier catalog discovery
-- eligibility-safe proof checks
-- hosted verify guidance when human action is required
-- public proof and profile context for wallets or DIDs
+### 2. Call the First Tool
 
-## Tool Selection Guide
+```typescript
+neus_verifiers_catalog()
+```
 
-| You want to... | Use this tool |
+### 3. Check Eligibility
+
+```typescript
+neus_verify_or_guide({
+  "walletAddress": "0x...",
+  "verifierIds": ["proof-of-human"]
+})
+```
+
+---
+
+## Available Tools
+
+| Tool | Purpose |
+|------|---------|
+| `neus_verifiers_catalog` | List available verifiers |
+| `neus_verify_or_guide` | Check + guide to hosted verify |
+| `neus_proofs_check` | Eligibility check only |
+| `neus_proofs_get` | Get user's proofs |
+| `neus_me` | Session context |
+| `neus_agent_link` | Check agent delegation |
+
+---
+
+## Decision Guide
+
+| You Want To... | Use This Tool |
 |----------------|---------------|
-| **Discover available verifiers** | `neus_verifiers_catalog` (call first!) |
-| **Gate access + guide users** | `neus_verify_or_guide` (recommended) |
-| **Check eligibility only** | `neus_proofs_check` |
-| **Load user profile/proofs** | `neus_proofs_get` |
-| **Get session context** | `neus_me` (requires `NEUS_AUTH_TOKEN`) |
-| **Check agent delegation** | `neus_agent_link` |
-| **Create proofs directly** | `neus_verify` (low-level) |
+| Discover verifiers | `neus_verifiers_catalog` |
+| Gate access + guide users | `neus_verify_or_guide` |
+| Check eligibility only | `neus_proofs_check` |
+| Get user context | `neus_me` |
 
-## Standard Agent Loops
+---
 
-### Zero-setup
+## Standard Agent Loop
 
-1. `neus_verifiers_catalog`
-2. `neus_verify_or_guide`
+```
+1. neus_verifiers_catalog()     — Discover capabilities
+2. neus_verify_or_guide()       — Check or get hosted URL
+3. User completes hosted flow   — Interactive verification
+4. neus_proofs_check()          — Verify eligibility
+```
 
-### Personalized
+---
 
-1. `neus_me`
-2. `neus_agent_link`
-3. `neus_proofs_get`
-4. `neus_verifiers_catalog`
-
-## Core Docs
+## MCP Pages
 
 <CardGroup cols={2}>
-  <Card title="Discovery and Endpoints" icon="globe" href="./endpoints">
-    Public MCP URLs, discovery files, and transport.
-  </Card>
   <Card title="Setup" icon="code" href="./setup">
-    Cursor, VS Code, Claude Desktop, and local stdio setup.
+    Cursor, VS Code, Claude Desktop setup.
   </Card>
-  <Card title="Auth and Security" icon="lock" href="./auth">
-    Public access rules and privacy boundaries.
+  <Card title="Tools" icon="wrench" href="./tools">
+    Full tool reference.
   </Card>
-  <Card title="Tools Overview" icon="wrench" href="./tools">
-    Choose the right tool before you drill into task-specific pages.
+  <Card title="Endpoints" icon="globe" href="./endpoints">
+    Public MCP URLs.
+  </Card>
+  <Card title="Auth" icon="lock" href="./auth">
+    Authentication and security.
   </Card>
 </CardGroup>

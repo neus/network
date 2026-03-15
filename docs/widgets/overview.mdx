@@ -1,45 +1,83 @@
 ---
 title: Widgets Overview
-description: NEUS widgets give you the fastest path to proof badges and gated UI.
+description: React components for gating and proof display.
 icon: puzzle-piece
 ---
 
-Use widgets when you want proof-aware React UI with the least code.
+Drop-in React components. Zero backend work.
 
-## What You Can Add Quickly
-
-<CardGroup cols={2}>
-  <Card title="VerifyGate" icon="shield" href="./verifygate">
-    Gate React UI behind verification requirements.
-  </Card>
-  <Card title="ProofBadge" icon="badge-check" href="#proofbadge">
-    Display a proof receipt on any page.
-  </Card>
-</CardGroup>
-
-## Script Tag Badge
-
-```html
-<script src="https://verify.neus.network/widget.js"></script>
-<div data-neus-proof="0xYOUR_PROOF_RECEIPT_ID"></div>
-```
-
-The widget renders a badge for the provided proof receipt ID and links back to the standard proof page.
-
-<Note>
-In raw HTTP routes the same proof receipt ID may appear as `qHash`.
-</Note>
-
-## React Install
+## Install
 
 ```bash
 npm install @neus/sdk react react-dom
 ```
 
+---
+
+## Available Widgets
+
+| Widget | Purpose |
+|--------|---------|
+| `VerifyGate` | Gate UI behind verification |
+| `ProofBadge` | Display a proof receipt |
+
+---
+
+## VerifyGate
+
+Gate content behind verification requirements:
+
+```jsx
+import { VerifyGate } from '@neus/sdk/widgets';
+
+export default function ProtectedPage() {
+  return (
+    <VerifyGate
+      requiredVerifiers={['nft-ownership']}
+      verifierData={{
+        'nft-ownership': {
+          contractAddress: '0x...',
+          tokenId: '1',
+          chainId: 1,
+        },
+      }}
+    >
+      <ProtectedContent />
+    </VerifyGate>
+  );
+}
+```
+
+---
+
 ## ProofBadge
+
+Display a proof receipt on any page:
 
 ```jsx
 import { ProofBadge } from '@neus/sdk/widgets';
 
 <ProofBadge proofId="0x..." showChains />
 ```
+
+---
+
+## Script Tag (No React)
+
+```html
+<script src="https://verify.neus.network/widget.js"></script>
+<div data-neus-proof="0xYOUR_PROOF_ID"></div>
+```
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="VerifyGate" icon="shield" href="./verifygate">
+    Full VerifyGate reference.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="../quickstart">
+    Build your first proof.
+  </Card>
+</CardGroup>

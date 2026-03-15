@@ -1,57 +1,83 @@
 ---
 title: Platform Overview
-description: What ships with the NEUS product surface across verify, proof pages, profiles, and discovery.
+description: What's included with NEUS — hosted flows, proof pages, and profiles.
 icon: globe
 ---
 
-NEUS includes a hosted verification flow, proof pages, profile surfaces, and public discovery pages. Use these surfaces when you want the standard NEUS experience instead of building every screen yourself.
+NEUS includes everything you need for verification. No infrastructure required.
 
-## What Ships With NEUS
+## What You Get
+
+| Component | What It Does |
+|-----------|--------------|
+| **Hosted Verify** | Ready-made verification UI at `/verify` |
+| **Proof Pages** | Public page for each proof receipt |
+| **Hub** | Profiles, discovery, and account management |
+| **API** | Full programmatic access |
+| **MCP** | Agent and AI tool integration |
+
+---
+
+## The Platform
 
 <CardGroup cols={2}>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    `/verify` is the standard path for login and interactive verification.
+    Guided verification flow. No frontend work needed.
   </Card>
-  <Card title="Hub and profiles" icon="user-circle" href="./hub">
-    Browse profiles, proofs, apps, credits, and agents.
+  <Card title="Proof Pages" icon="receipt" href="./receipts-and-results">
+    Every proof gets a shareable page.
   </Card>
-  <Card title="Proof receipt pages" icon="receipt" href="./receipts-and-results">
-    Every saved proof can resolve to a standard public page.
+  <Card title="Hub" icon="user-circle" href="./hub">
+    Public profiles, proofs, apps, and agents.
   </Card>
-  <Card title="Hosted presets" icon="layer-group" href="./presets">
-    Launch common verification bundles with a short hosted URL.
+  <Card title="Presets" icon="layer-group" href="./presets">
+    Pre-configured verifier bundles.
   </Card>
 </CardGroup>
 
-## Standard Product Loop
+---
 
-1. Send a user through hosted verify or create a proof through the SDK or API.
-2. Save the proof receipt ID that comes back.
-3. Show the proof page or proof badge when needed.
-4. Reuse the same proof receipt for access and policy.
+## How It Fits Together
 
-## When To Use Platform Pages
+```
+┌─────────────────────────────────────────────────────────────┐
+│                        NEUS Platform                         │
+│                                                              │
+│  ┌─────────────┐   ┌─────────────┐   ┌─────────────────┐   │
+│  │   /verify   │   │  Proof API  │   │   /proof/[id]   │   │
+│  │  (hosted)   │──▶│  (create)   │──▶│   (display)     │   │
+│  └─────────────┘   └─────────────┘   └─────────────────┘   │
+│         │                                      │            │
+│         ▼                                      ▼            │
+│  ┌─────────────┐                      ┌─────────────────┐   │
+│  │   Hub       │                      │  Your App       │   │
+│  │  (profiles) │                      │  (reuse proofs) │   │
+│  └─────────────┘                      └─────────────────┘   │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
 
-| Need | Open this page |
-|------|----------------|
-| What the hosted product includes | [Platform Overview](./overview) |
-| What to save and show | [Receipts and Results](./receipts-and-results) |
-| How profiles and discovery work | [Hub](./hub) |
-| How hosted preset URLs work | [Presets](./presets) |
+---
 
-## Next Pages
+## Public URLs
+
+| Surface | URL |
+|---------|-----|
+| Hosted Verify | `https://neus.network/verify` |
+| Proof Page | `https://neus.network/proof/[proof-id]` |
+| Hub | `https://neus.network/hub` |
+| API | `https://api.neus.network` |
+| MCP | `https://mcp.neus.network/mcp` |
+
+---
+
+## Next Steps
 
 <CardGroup cols={2}>
-  <Card title="Hub" icon="layout-sidebar" href="./hub">
-    Explore the NEUS profile, app, and discovery surfaces.
+  <Card title="Quickstart" icon="rocket" href="../quickstart">
+    Create your first proof.
   </Card>
-  <Card title="Receipts and Results" icon="badge-check" href="./receipts-and-results">
-    Understand what to save and how to reuse it.
-  </Card>
-  <Card title="Presets" icon="sparkles" href="./presets">
-    Launch common hosted flows with short preset URLs.
-  </Card>
-  <Card title="Verification Overview" icon="file-signature" href="../verification/overview">
-    Learn the verification model behind the platform.
+  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+    Use the guided flow.
   </Card>
 </CardGroup>

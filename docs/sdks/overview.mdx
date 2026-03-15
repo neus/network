@@ -1,33 +1,18 @@
 ---
 title: SDK Overview
-description: JavaScript SDK for proof creation, hosted handoff, polling, and private proof access.
-icon: rocket
+description: JavaScript SDK for proof creation, polling, and reuse.
+icon: package
 ---
 
-Use the JavaScript SDK to create proofs, hand off hosted flows, and reuse results.
-
-## Build With the SDK
-
-<CardGroup cols={2}>
-  <Card title="Create & Poll Proofs" icon="terminal" href="./javascript">
-    Submit verification requests, standardize signing, and poll async proof status.
-  </Card>
-  <Card title="Authentication Helpers" icon="fingerprint" href="./authentication">
-    Use hosted login and auth code exchange for simpler browser flows.
-  </Card>
-  <Card title="Verification Patterns" icon="rotate" href="./verifications">
-    Choose reuse, fresh proof, or gate-check strategies based on policy and UX needs.
-  </Card>
-  <Card title="Error Handling" icon="triangle-exclamation" href="./error-handling">
-    Handle retries, hosted flow failures, and private proof auth.
-  </Card>
-</CardGroup>
+One SDK. Browser and server.
 
 ## Install
 
 ```bash
 npm install @neus/sdk
 ```
+
+---
 
 ## Quick Start
 
@@ -36,37 +21,90 @@ import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient({
   apiUrl: 'https://api.neus.network',
-  appId: 'acme-web'
+  appId: 'my-app',
+});
+
+// Create proof
+const proof = await client.verify({
+  verifier: 'ownership-basic',
+  content: 'Hello NEUS',
+  wallet: window.ethereum,
+});
+
+// Save the proof receipt ID
+const proofId = proof.proofId;
+```
+
+---
+
+## What the SDK Provides
+
+| Feature | Method |
+|---------|--------|
+| Create proofs | `client.verify()` |
+| Poll status | `client.pollProofStatus()` |
+| Gate checks | `client.gateCheck()` |
+| Hosted URL | `getHostedCheckoutUrl()` |
+
+---
+
+## Key Methods
+
+### Create Proof
+
+```javascript
+const proof = await client.verify({
+  verifier: 'ownership-basic',
+  content: 'My content',
+  wallet: window.ethereum,
 });
 ```
 
-## Go Deeper
+### Check Status
 
-<CardGroup cols={3}>
-  <Card title="JavaScript SDK" icon="bracket-curly" href="./javascript">
-    Client methods, request shapes, and examples.
-  </Card>
-  <Card title="Verification Patterns" icon="rotate" href="./verifications">
-    Reuse, fresh proof, and gate-check strategies.
-  </Card>
-  <Card title="Security" icon="lock" href="./security">
-    Signing, replay protection, and private proof handling.
-  </Card>
-</CardGroup>
+```javascript
+const status = await client.pollProofStatus(proofId, {
+  interval: 3000,
+  timeout: 60000,
+});
+```
+
+### Gate Check
+
+```javascript
+const result = await client.gateCheck({
+  address: '0x...',
+  verifierIds: ['ownership-basic'],
+});
+```
+
+---
+
+## Configuration
+
+```javascript
+const client = new NeusClient({
+  apiUrl: 'https://api.neus.network',
+  appId: 'my-app',
+  timeout: 30000,
+});
+```
+
+---
+
+## SDK Pages
 
 <CardGroup cols={2}>
+  <Card title="JavaScript SDK" icon="bracket-curly" href="./javascript">
+    Full method reference.
+  </Card>
+  <Card title="Verification Patterns" icon="rotate" href="./verifications">
+    Reuse vs fresh proof strategies.
+  </Card>
   <Card title="Authentication" icon="key" href="./authentication">
-    Hosted login, session management, and token flows.
+    Session and token flows.
   </Card>
   <Card title="Error Handling" icon="bug" href="./error-handling">
-    Error codes, retry strategies, and edge cases.
+    Error codes and retries.
   </Card>
 </CardGroup>
-
-## Related Surfaces
-
-| Surface | Link |
-|---------|------|
-| Widgets | [React components for gating and badges](../widgets/overview) |
-| API Docs | [HTTP endpoint reference](../api/overview) |
-| MCP Server | [Agent-facing tool integration](../mcp/overview) |

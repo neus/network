@@ -1,50 +1,100 @@
 ---
-title: Receipts and Results
-description: What a proof receipt ID is, what to persist, and how to reuse it across products.
+title: Proof Receipts
+description: What to save and how to reuse proof receipts.
 icon: receipt
 ---
 
-Proof receipts are the reusable output of NEUS verification. Save the proof receipt ID once, then reuse it for display, gating, status checks, and policy.
+One ID. Reusable everywhere.
 
-## Identifier Model
+## The Proof Receipt ID
 
-- SDKs use `proofId` as the standard client field name.
-- HTTP paths and some wire payloads still use `{qHash}` for the same proof receipt ID.
-- In product and user-facing copy, treat it as a **proof receipt ID** unless you are documenting raw API compatibility.
+When verification completes, you get back a **proof receipt ID**:
 
-## What to Persist
+| Field | Where You See It |
+|-------|------------------|
+| `proofId` | SDK responses |
+| `qHash` | HTTP paths and API |
+| Proof receipt ID | User-facing docs |
 
-- Proof receipt ID
-- Final status when your workflow depends on completion
-- Verifier set and business context tied to that proof
+**All refer to the same identifier.** Save it once. Reuse it everywhere.
 
-### Avoid Persisting
+---
 
-- Raw signature material
-- Private proof payloads unless you have a clear owner-authorized need
+## What to Save
 
-## Common Outcomes
+| Save | Don't Save |
+|------|------------|
+| ✅ Proof receipt ID | ❌ Raw signatures |
+| ✅ Verification status | ❌ Private proof payloads |
+| ✅ Verifier IDs used | ❌ User credentials |
 
-| Result | Meaning | Next step |
-|--------|---------|-----------|
-| Verified immediately | Verifier completed inline | Save the receipt and continue |
-| Accepted / processing | Verifier is still running | Poll status until terminal |
-| Hosted verify handoff | Human action is required | Send the user to `/verify` |
-| Gate eligibility | Minimal yes/no check | Enforce policy without loading full proof payloads |
+---
+
+## What to Do With It
+
+| Purpose | How |
+|---------|-----|
+| **Display** | Link to `/proof/[proof-id]` |
+| **Gate** | Use `VerifyGate` widget |
+| **Check** | Call `/api/v1/proofs/check` |
+| **Verify** | Server-side eligibility check |
+
+---
 
 ## Proof Page
 
-Each proof can render at `https://neus.network/proof/[proof-receipt-id]`.
+Every proof has a public page:
 
-| Element | Purpose |
-|---------|---------|
-| Share button | Send the proof page anywhere |
-| Visibility badge | Show whether the proof is public, private, or unlisted |
-| Content hash | Integrity signal |
-| Proof receipt ID | Stable identifier for reuse |
+```
+https://neus.network/proof/[proof-id]
+```
 
-## Display Guidance
+Shows:
+- Proof receipt ID
+- Verification type
+- Timestamp
+- Visibility (public/private/unlisted)
 
-- Link public proofs to the standard proof page on `neus.network`.
-- Use `ProofBadge` for lightweight display.
-- For server-side access checks, prefer `GET /api/v1/proofs/check` over loading a full proof payload.
+---
+
+## Using the SDK
+
+```javascript
+// Create proof
+const proof = await client.verify({ ... });
+const proofId = proof.proofId;
+
+// Check status
+const status = await client.getStatus(proofId);
+
+// Gate check
+const eligible = await client.gateCheck({
+  address: '0x...',
+  verifierIds: ['ownership-basic'],
+});
+```
+
+---
+
+## Using the API
+
+```bash
+# Check status
+GET /api/v1/verification/status/{qHash}
+
+# Gate check
+GET /api/v1/proofs/check?address=0x...&verifierIds=ownership-basic
+```
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+    Create proofs with the guided flow.
+  </Card>
+  <Card title="API Overview" icon="terminal" href="../api/overview">
+    Explore HTTP endpoints.
+  </Card>
+</CardGroup>

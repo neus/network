@@ -1,38 +1,103 @@
 ---
 title: Agents Overview
-description: Use NEUS to register agents, grant scoped permissions, and connect agent workflows to hosted verify and MCP.
+description: Register and delegate authority to AI agents.
 icon: robot
 ---
 
-Agent workflows issue proof receipts that can be reused across tools and automation.
+Verifiable agents with scoped permissions.
 
-## Why Teams Use Agent Flows
+## Why Agent Verification
 
-| Question | NEUS answer |
+| Question | NEUS Answer |
 |----------|-------------|
-| Which agent is acting? | Agent registration binds an agent to a wallet or account |
-| What is it allowed to do? | Agent permissions define scope, permissions, and limits |
-| How does it join real workflows? | Hosted verify, proof receipts, and MCP make the proofs usable |
+| Which agent is acting? | Agent registration binds agent to wallet |
+| What can it do? | Delegation scopes permissions |
+| How does it integrate? | MCP + proof receipts for audit trails |
 
-## Core Pages
+---
+
+## Agent Capabilities
 
 <CardGroup cols={2}>
   <Card title="Agent Registration" icon="badge-check" href="./agent-identity">
-    Register a verifiable AI agent, bot, or automation.
+    Register an AI agent, bot, or automation.
   </Card>
-  <Card title="Agent Permissions" icon="key" href="./agent-delegation">
-    Delegate limited authority to an agent wallet.
+  <Card title="Agent Delegation" icon="key" href="./agent-delegation">
+    Scope what an agent can do.
   </Card>
-  <Card title="Agent Verification Flow" icon="route" href="./agent-verification-flow">
-    See how registration, permissions, hosted verify, and MCP fit together.
+  <Card title="Verification Flow" icon="route" href="./agent-verification-flow">
+    How agent verification works.
   </Card>
-  <Card title="Verifiable Agents Guide" icon="book-open" href="../cookbook/verifiable-agents">
-    End-to-end implementation pattern for production teams.
+  <Card title="Verifiable Agents" icon="book-open" href="../cookbook/verifiable-agents">
+    End-to-end implementation guide.
   </Card>
 </CardGroup>
 
-<CardGroup cols={1}>
+---
+
+## Quick Start
+
+### Register an Agent
+
+```javascript
+const agent = await client.verify({
+  verifier: 'agent-identity',
+  data: {
+    agentId: 'my-agent',
+    agentLabel: 'My AI Agent',
+    agentType: 'ai',
+  },
+  wallet: agentWallet,
+});
+```
+
+### Delegate Permissions
+
+```javascript
+const delegation = await client.verify({
+  verifier: 'agent-delegation',
+  data: {
+    agentId: 'my-agent',
+    controller: '0x...',
+    permissions: ['read', 'write'],
+  },
+  wallet: controllerWallet,
+});
+```
+
+---
+
+## Agent Flow
+
+```
+┌─────────────────┐
+│ Agent registers │
+│ (agent-identity)│
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Controller      │
+│ delegates scope │
+│ (agent-delegate)│
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│ Agent acts with │
+│ proof receipt   │
+└─────────────────┘
+```
+
+---
+
+## Related
+
+<CardGroup cols={2}>
   <Card title="MCP Integration" icon="plug" href="../mcp/overview">
-    Use NEUS proofs inside Cursor, Claude, and custom agent runtimes.
+    Connect agents to AI tools.
+  </Card>
+  <Card title="Verifier Catalog" icon="list-tree" href="../verification/verifiers">
+    All verification capabilities.
   </Card>
 </CardGroup>

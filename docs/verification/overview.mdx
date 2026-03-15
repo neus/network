@@ -1,58 +1,80 @@
 ---
 title: Verification Overview
-description: Understand the NEUS flow from hosted verify or SDK request through proof receipt reuse.
+description: How verification works — from request to reusable proof receipt.
 icon: file-signature
 ---
 
-Each verification returns a portable proof receipt ID that can be reused across products.
+Verify once. Reuse everywhere.
 
-## Default Path
+## The Verification Loop
 
-1. **Choose the required proof or policy outcome**
-2. **Run Hosted Verify, SDK, or API verification**
-3. **Store the returned proof receipt ID**
-4. **Reuse the receipt for access, display, onboarding, or policy**
+```
+Check ──▶ Verify (if needed) ──▶ Save ──▶ Reuse
+```
+
+1. **Check** — Is the user already verified?
+2. **Verify** — Only if no valid proof exists
+3. **Save** — Store the proof receipt ID
+4. **Reuse** — Same proof for all downstream needs
+
+---
 
 ## What NEUS Verification Powers
 
-| Outcome | Typical use today |
-|---|---|
-| Identity and association | Linked accounts, domains, usernames, team verification, proof-backed profiles |
-| Ownership and provenance | Content authorship, file receipts, submissions, project operator checks, source context |
-| Access and monetization | Premium access, protected communities, gated routes, high-trust unlock flows |
-| Abuse reduction | Human verification and wallet safety screening before sensitive actions |
-| Agent operations | Agent registration, delegated permissions, hosted handoff, and MCP workflows |
+| Outcome | Use Cases |
+|---------|-----------|
+| Identity | Login, social linking, team verification |
+| Ownership | Content provenance, file receipts, authorship |
+| Access | NFT gating, token thresholds, premium content |
+| Abuse Prevention | Human verification, wallet safety |
+| Agents | Agent registration, scoped delegation |
+
+---
+
+## Verification Types
+
+| Type | How It Works | Examples |
+|------|--------------|----------|
+| **Instant** | Wallet signs, proof created | ownership-basic, agent-identity |
+| **Interactive** | User completes hosted flow | social linking, human verification |
+| **Lookup** | Check against live state | NFT ownership, token balance |
+
+---
 
 ## Key Terms
 
 | Term | Meaning |
 |------|---------|
-| Hosted verify | The standard `/verify` flow for guided and interactive verification |
-| Request | The capability set plus the normalized proof payload |
-| Signing string | The deterministic wallet message returned by `POST /api/v1/verification/standardize` |
-| Proof receipt ID | The stable identifier returned for a proof |
-| API path alias (`qHash`) | Raw HTTP path name for the same proof receipt ID |
+| **Proof receipt ID** | Stable identifier for a proof (also called `proofId` or `qHash`) |
+| **Verifier** | The capability being verified |
+| **Signing string** | The message the wallet signs |
+| **Hosted verify** | NEUS-hosted UI at `/verify` |
 
-## Reuse Rules
+---
 
-- Save the proof receipt ID once.
-- Reuse it for proof pages, profile trust, eligibility checks, and policy decisions.
-- Send users back through hosted verify only when you need an interactive flow or a fresh point-in-time result.
-- Prefer checking saved receipts and eligibility over rebuilding trust logic in each product.
+## What You Get Back
 
-## Keep Building
+Every verification returns:
+
+- `proofId` — The reusable proof receipt ID
+- `status` — `verified`, `processing`, or `failed`
+- Proof page URL — `https://neus.network/proof/[proof-id]`
+
+---
+
+## Next Steps
 
 <CardGroup cols={2}>
-  <Card title="Capability Catalog" icon="list-tree" href="./verifiers">
-    Match a requirement to the right capability.
+  <Card title="Verifier Catalog" icon="list-tree" href="./verifiers">
+    Choose the right capability.
   </Card>
-  <Card title="Proof Receipts" icon="receipt" href="../platform/receipts-and-results">
-    Store, display, and reuse proof receipts.
+  <Card title="How It Works" icon="shield-check" href="./how-it-works">
+    Deep dive into the flow.
   </Card>
-  <Card title="How Verification Works" icon="shield-check" href="./how-it-works">
-    Review request flow, signing, and hosted interaction.
+  <Card title="Signing Format" icon="file-signature" href="./signing-format">
+    How signing works.
   </Card>
   <Card title="Lifecycle" icon="rotate" href="./lifecycle">
-    Review async processing, reuse, and revocation.
+    Status, polling, and revocation.
   </Card>
 </CardGroup>

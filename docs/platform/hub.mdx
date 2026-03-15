@@ -1,51 +1,59 @@
 ---
 title: Hub
-description: The NEUS surface for discovery, profiles, proof pages, apps, credits, and agents.
-icon: user-check
+description: Public profiles, proof discovery, and account management.
+icon: user-circle
 ---
 
-The Hub at `https://neus.network/hub` is the public NEUS product surface for profiles, proofs, apps, credits, and agents.
+The Hub is the public NEUS surface for profiles, proofs, and account management.
+
+**URL:** `https://neus.network/hub`
+
+---
 
 ## What Users See
 
-| Surface | Why it matters |
-|---------|----------------|
-| Public proof feed | Browse public proof activity and trust signals |
-| Profile dashboard | Manage identity, apps, credits, and agents |
-| Proof pages | Share one standard page per proof receipt |
-| App linking | Connect a live site or app to NEUS attribution |
-
-## Connected Account Tabs
-
 | Tab | Purpose |
 |-----|---------|
-| Dashboard | Quick actions, proof summaries, and account health |
-| Identity | Domains, org verification, social proofs, and privacy |
-| Agents | Agent identity and delegation management |
-| Apps | Domain linking, app attribution, and credit setup |
-| Credits | Balance, top-ups, and subscription state |
-| Activity | History and usage |
-| Settings | Preferences and account controls |
+| **Dashboard** | Quick actions and proof summary |
+| **Identity** | Domains, social proofs, and privacy settings |
+| **Agents** | Agent registration and delegation |
+| **Apps** | Domain linking and app attribution |
+| **Credits** | Balance and top-ups |
+| **Activity** | History and usage |
+
+---
 
 ## Proof Pages
 
-Every proof can resolve to a standard page at `https://neus.network/proof/[proof-receipt-id]`.
+Every proof resolves to a public page:
 
-That page is where teams can share a result, show visibility state, and display the proof receipt ID and integrity details.
+```
+https://neus.network/proof/[proof-id]
+```
+
+Shows:
+- Proof receipt ID
+- Verification type and timestamp
+- Visibility state
+- Share functionality
+
+---
+
+## Profile Discovery
+
+- Browse public proof activity
+- View verified identities
+- Discover linked apps and agents
+
+---
 
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="Receipts and Results" icon="receipt" href="./receipts-and-results">
-    What to save and how to reuse a proof receipt.
+  <Card title="Proof Receipts" icon="receipt" href="./receipts-and-results">
+    What to save and reuse.
   </Card>
   <Card title="Partner Setup" icon="building" href="../cookbook/hub-integrator">
-    Link your domain, app, and hosted flow setup.
-  </Card>
-  <Card title="Billing" icon="credit-card" href="./billing">
-    Credits and payment options.
-  </Card>
-  <Card title="Agents" icon="robot" href="../agents/overview">
-    Agent identity and delegation pages.
+    Link your domain and app.
   </Card>
 </CardGroup>

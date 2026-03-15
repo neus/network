@@ -1329,17 +1329,25 @@ export class NeusClient {
 
   /**
    * GET PROOFS BY WALLET - Fetch proofs for a wallet address
-   * 
+   *
    * @param {string} walletAddress - Wallet identity (EVM/Solana/DID)
    * @param {Object} [options] - Filter options
    * @param {number} [options.limit] - Max results (default: 50; higher limits require owner access)
    * @param {number} [options.offset] - Pagination offset (default: 0)
-   * @returns {Promise<Object>} Proofs result
-   * 
+   * @param {boolean} [options.resolveContent] - Owner-only: resolve private content for ownership-basic proofs
+   * @param {string} [options.qHash] - Filter to single proof by qHash
+   * @returns {Promise<Object>} Proofs result (proofs may include resolvedContent when resolveContent=true)
+   *
    * @example
    * const result = await client.getProofsByWallet('0x...', {
    *   limit: 50,
    *   offset: 0
+   * });
+   *
+   * // With content resolution (requires owner auth via getPrivateProofsByWallet)
+   * const result = await client.getPrivateProofsByWallet('0x...', {
+   *   resolveContent: true,
+   *   qHash: '0x...'
    * });
    */
   async getProofsByWallet(walletAddress, options = {}) {
@@ -1353,6 +1361,8 @@ export class NeusClient {
     const qs = [];
     if (options.limit) qs.push(`limit=${encodeURIComponent(String(options.limit))}`);
     if (options.offset) qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
+    if (options.resolveContent) qs.push('resolveContent=true');
+    if (options.qHash) qs.push(`qHash=${encodeURIComponent(options.qHash.toLowerCase())}`);
 
     const query = qs.length ? `?${qs.join('&')}` : '';
     const response = await this._makeRequest(
@@ -1384,6 +1394,8 @@ export class NeusClient {
    * @param {Object} [options]
    * @param {number} [options.limit] - Max results (server enforces caps)
    * @param {number} [options.offset] - Pagination offset
+   * @param {boolean} [options.resolveContent] - Resolve private content for ownership-basic proofs
+   * @param {string} [options.qHash] - Filter to single proof by qHash
    * @param {Object} [wallet] - Optional injected wallet/provider (MetaMask/ethers Wallet)
    */
   async getPrivateProofsByWallet(walletAddress, options = {}, wallet = null) {
@@ -1449,6 +1461,8 @@ export class NeusClient {
     const qs = [];
     if (options.limit) qs.push(`limit=${encodeURIComponent(String(options.limit))}`);
     if (options.offset) qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
+    if (options.resolveContent) qs.push('resolveContent=true');
+    if (options.qHash) qs.push(`qHash=${encodeURIComponent(options.qHash.toLowerCase())}`);
     const query = qs.length ? `?${qs.join('&')}` : '';
 
     const response = await this._makeRequest('GET', `/api/v1/proofs/by-wallet/${encodeURIComponent(pathId)}${query}`, null, {

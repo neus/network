@@ -1,83 +1,99 @@
 ---
 title: Verifier Catalog
-description: Capability index for selecting the right NEUS verification flow.
+description: Choose the right verification for your use case.
 icon: list-tree
 ---
 
-Choose the verification capability that matches the trust decision you need to make.
+Pick the verification that matches what you need to prove.
 
 ## Choose by Outcome
 
-| Required outcome | Verifier family |
-|-------------------|------------------|
-| Establish identity, association, or profile trust | Identity and Association |
-| Prove ownership, provenance, or operator control | Ownership and Provenance |
-| Gate access or monetize with trust checks | Access and Monetization |
-| Reduce abuse or screen higher-risk actions | Abuse Reduction and Risk |
-| Operate agents and delegated actions | Agent Operations |
+| You Need | Verifier | Type |
+|----------|----------|------|
+| Prove content ownership | [ownership-basic](./ownership-basic) | Instant |
+| Link social accounts | [ownership-social](./ownership-social) | Interactive |
+| Verify domain control | [ownership-dns-txt](./ownership-dns-txt) | Lookup |
+| Verify team/org membership | [ownership-org-oauth](./ownership-org-oauth) | Interactive |
+| Gate by NFT ownership | [nft-ownership](./nft-ownership) | Lookup |
+| Gate by token balance | [token-holding](./token-holding) | Lookup |
+| Human verification | [proof-of-human](./proof-of-human) | Interactive |
+| Wallet safety check | [wallet-risk](./wallet-risk) | Lookup |
+| Register AI agent | [agent-identity](./agent-identity) | Instant |
+| Delegate agent permissions | [agent-delegation](./agent-delegation) | Instant |
 
-## Verifier Modes
+---
 
-| Type | Completion | Use case |
-|------|---------------|-----------|
-| Instant | Signed and completed in one request | Fast wallet-based proof creation |
-| Interactive | Completed in a hosted NEUS flow | Linked accounts, team verification, or human checks |
-| Lookup | Checked against external or on-chain state | Live yes/no eligibility or ownership state |
+## Verifier Types
 
-## Capability Library
+| Type | How It Works | Examples |
+|------|--------------|----------|
+| **Instant** | Wallet signs, proof created immediately | ownership-basic, agent-identity |
+| **Interactive** | User completes hosted flow | ownership-social, proof-of-human |
+| **Lookup** | Check against live state | nft-ownership, token-holding, wallet-risk |
 
-<AccordionGroup>
-  <Accordion title="Identity and Association">
-    Identity, account association, and public trust surface proofs.
+---
 
-    | Capability | Type | Best for |
-    |----------|------|----------|
-    | [Linked social accounts](./ownership-social) | Interactive | Connect a social account to a portable profile |
-    | [Domain verification](./ownership-dns-txt) | Lookup | Prove control of a site, domain, or community namespace |
-    | [Team and organization verification](./ownership-org-oauth) | Interactive | Verify company or workspace association |
-    | [Username and namespace claims](./ownership-pseudonym) | Instant | Bind a portable handle to a wallet |
-    | [Linked wallets](./wallet-link) | Instant | Treat multiple wallets as one trust surface |
-  </Accordion>
-  <Accordion title="Ownership and Provenance">
-    Ownership, provenance, authorship, and operator control proofs.
+## By Category
 
-    | Capability | Type | Best for |
-    |----------|------|----------|
-    | [Ownership and provenance](./ownership-basic) | Instant | Content, files, references, submissions, and proof-backed identity actions |
-    | [Project operator verification](./contract-ownership) | Lookup | Prove who controls a deployed contract or project surface |
-  </Accordion>
-  <Accordion title="Access and Monetization">
-    Access rules based on holdings, control, or saved proofs.
+### Identity & Association
 
-    | Capability | Type | Best for |
-    |----------|------|----------|
-    | [NFT holder access](./nft-ownership) | Lookup | NFT-gated products, drops, and communities |
-    | [Token holder access](./token-holding) | Lookup | Balance thresholds, premium tiers, and access control |
-  </Accordion>
-  <Accordion title="Abuse Reduction and Risk">
-    Human verification, risk screening, and content review.
+| Verifier | What It Proves |
+|----------|----------------|
+| [ownership-social](./ownership-social) | Linked social account |
+| [ownership-dns-txt](./ownership-dns-txt) | Domain control |
+| [ownership-org-oauth](./ownership-org-oauth) | Team/org membership |
+| [ownership-pseudonym](./ownership-pseudonym) | Username claim |
+| [wallet-link](./wallet-link) | Multiple wallets, one identity |
 
-    | Capability | Type | Best for |
-    |----------|------|----------|
-    | [Human verification](./proof-of-human) | Interactive | Anti-bot and sybil resistance |
-    | [Wallet safety screening](./wallet-risk) | Lookup | Risk checks before payouts, unlocks, or sensitive access |
-    | [Content safety screening](./ai-content-moderation) | Lookup | AI or UGC moderation workflows |
-  </Accordion>
-  <Accordion title="Agent Operations">
-    Agent identity, scoped authority, and reusable proof trails.
+### Ownership & Provenance
 
-    | Capability | Type | Best for |
-    |----------|------|----------|
-    | [Agent registration](./agent-identity) | Instant | Register a verifiable AI agent, bot, or automation |
-    | [Agent permissions](./agent-delegation) | Instant | Scope what an agent may do on behalf of a controller |
-  </Accordion>
-</AccordionGroup>
+| Verifier | What It Proves |
+|----------|----------------|
+| [ownership-basic](./ownership-basic) | Content or claim ownership |
+| [contract-ownership](./contract-ownership) | Contract operator control |
 
-## Popular Bundles
+### Access & Monetization
 
-| Bundle | Components | Use case |
+| Verifier | What It Proves |
+|----------|----------------|
+| [nft-ownership](./nft-ownership) | NFT holder status |
+| [token-holding](./token-holding) | Token balance threshold |
+
+### Abuse Reduction
+
+| Verifier | What It Proves |
+|----------|----------------|
+| [proof-of-human](./proof-of-human) | Human verification |
+| [wallet-risk](./wallet-risk) | Wallet safety score |
+| [ai-content-moderation](./ai-content-moderation) | Content safety |
+
+### Agent Operations
+
+| Verifier | What It Proves |
+|----------|----------------|
+| [agent-identity](./agent-identity) | Agent registration |
+| [agent-delegation](./agent-delegation) | Agent permissions |
+
+---
+
+## Common Bundles
+
+| Bundle | Verifiers | Use Case |
 |--------|-----------|----------|
-| AI trust receipt | Ownership and provenance + content safety + human verification | AI content with stronger trust context |
-| Verifiable agents | Agent registration + agent permissions + wallet safety screening | Agents with scoped authority |
-| Community gating | NFT or token holder access + human verification | Protected communities and premium access |
-| Org onboarding | Team verification + domain verification + project operator verification | Team, site, and project trust alignment |
+| AI Trust | ownership-basic + proof-of-human | AI content with human verification |
+| Agent Pack | agent-identity + agent-delegation | Verified agents with scoped permissions |
+| Community Gate | nft-ownership + proof-of-human | Protected communities |
+| Org Onboard | ownership-org-oauth + ownership-dns-txt | Team and domain verification |
+
+---
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="./quickstart">
+    Create your first proof.
+  </Card>
+  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
+    Use the guided verification flow.
+  </Card>
+</CardGroup>

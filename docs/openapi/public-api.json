@@ -31,23 +31,15 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "required": [
-          "success",
-          "error"
-        ],
+        "required": ["success", "error"],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "enum": [false]
           },
           "error": {
             "type": "object",
-            "required": [
-              "code",
-              "message"
-            ],
+            "required": ["code", "message"],
             "properties": {
               "code": {
                 "type": "string"
@@ -73,12 +65,7 @@
       },
       "StandardizeRequest": {
         "type": "object",
-        "required": [
-          "walletAddress",
-          "verifierIds",
-          "data",
-          "signedTimestamp"
-        ],
+        "required": ["walletAddress", "verifierIds", "data", "signedTimestamp"],
         "properties": {
           "walletAddress": {
             "type": "string"
@@ -121,11 +108,11 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Optional. For EVM (0x address), verification requests use the protocol chain. For non-EVM, include chain (CAIP-2) instead."
+            "description": "Optional. For EVM (0x address), verification requests are normalized to the protocol hub chain. For non-EVM, include chain (CAIP-2) instead."
           },
           "chain": {
             "type": "string",
-            "description": "Optional. For EVM (0x address), verification requests use the protocol chain context. For non-EVM, include chain (e.g. solana:mainnet)."
+            "description": "Optional. For EVM (0x address), verification requests are normalized to protocol hub chain context. For non-EVM, include chain (e.g. solana:mainnet)."
           },
           "signatureMethod": {
             "type": "string"
@@ -135,23 +122,15 @@
       },
       "StandardizeResponse": {
         "type": "object",
-        "required": [
-          "success",
-          "data"
-        ],
+        "required": ["success", "data"],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           },
           "data": {
             "type": "object",
-            "required": [
-              "signerString",
-              "bodyPreview"
-            ],
+            "required": ["signerString", "bodyPreview"],
             "properties": {
               "signerString": {
                 "type": "string"
@@ -168,11 +147,7 @@
       },
       "VerificationRequest": {
         "type": "object",
-        "required": [
-          "verifierIds",
-          "data",
-          "walletAddress"
-        ],
+        "required": ["verifierIds", "data", "walletAddress"],
         "properties": {
           "verifierIds": {
             "type": "array",
@@ -228,11 +203,11 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Optional. For EVM (0x address), verification requests use the protocol chain. For non-EVM, include chain (CAIP-2) instead."
+            "description": "Optional. For EVM (0x address), verification requests are normalized to the protocol hub chain. For non-EVM, include chain (CAIP-2) instead."
           },
           "chain": {
             "type": "string",
-            "description": "Optional. For EVM (0x address), verification requests use the protocol chain context. For non-EVM, include chain (e.g. solana:mainnet)."
+            "description": "Optional. For EVM (0x address), verification requests are normalized to protocol hub chain context. For non-EVM, include chain (e.g. solana:mainnet)."
           },
           "signatureMethod": {
             "type": "string"
@@ -250,18 +225,11 @@
       },
       "VerificationAcceptedResponse": {
         "type": "object",
-        "required": [
-          "success",
-          "status",
-          "message",
-          "data"
-        ],
+        "required": ["success", "status", "message", "data"],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           },
           "status": {
             "type": "string"
@@ -273,7 +241,6 @@
             "type": "object",
             "properties": {
               "qHash": {
-                "description": "Proof receipt ID. `qHash` is the raw protocol and HTTP field name for this identifier.",
                 "type": "string",
                 "pattern": "^0x[a-fA-F0-9]{64}$"
               },
@@ -291,18 +258,11 @@
       },
       "VerificationCompleteResponse": {
         "type": "object",
-        "required": [
-          "success",
-          "status",
-          "message",
-          "data"
-        ],
+        "required": ["success", "status", "message", "data"],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           },
           "status": {
             "type": "string"
@@ -335,7 +295,6 @@
             "type": "string"
           },
           "qHash": {
-            "description": "Proof receipt ID. `qHash` is the raw protocol and HTTP field name for this identifier.",
             "type": "string"
           },
           "cached": {
@@ -362,7 +321,6 @@
               "type": "object",
               "properties": {
                 "qHash": {
-                  "description": "Proof receipt ID. `qHash` is the raw protocol and HTTP field name for this identifier.",
                   "type": "string"
                 },
                 "status": {
@@ -405,16 +363,11 @@
       },
       "ProofsByWalletResponse": {
         "type": "object",
-        "required": [
-          "success",
-          "data"
-        ],
+        "required": ["success", "data"],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           },
           "data": {
             "type": "object",
@@ -462,16 +415,11 @@
       },
       "GateCheckResponse": {
         "type": "object",
-        "required": [
-          "success",
-          "data"
-        ],
+        "required": ["success", "data"],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           },
           "data": {
             "type": "object",
@@ -485,11 +433,7 @@
       },
       "RevokeSelfRequest": {
         "type": "object",
-        "required": [
-          "walletAddress",
-          "signature",
-          "signedTimestamp"
-        ],
+        "required": ["walletAddress", "signature", "signedTimestamp"],
         "properties": {
           "walletAddress": {
             "type": "string"
@@ -505,17 +449,11 @@
       },
       "RevokeSelfResponse": {
         "type": "object",
-        "required": [
-          "success",
-          "alreadyRevoked",
-          "timestamp"
-        ],
+        "required": ["success", "alreadyRevoked", "timestamp"],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           },
           "alreadyRevoked": {
             "type": "boolean"
@@ -528,9 +466,7 @@
       },
       "VerifierData_ownership_basic": {
         "type": "object",
-        "required": [
-          "owner"
-        ],
+        "required": ["owner"],
         "properties": {
           "content": {
             "type": "string",
@@ -540,7 +476,7 @@
           "contentHash": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{64}$",
-            "description": "Pre-computed verifier content hash (32-byte hex). Treated as the standard verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match."
+            "description": "Pre-computed verifier content hash (32-byte hex). Treated as the standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match."
           },
           "contentType": {
             "type": "string",
@@ -555,9 +491,7 @@
           },
           "reference": {
             "type": "object",
-            "required": [
-              "type"
-            ],
+            "required": ["type"],
             "properties": {
               "type": {
                 "type": "string",
@@ -611,23 +545,14 @@
             "properties": {
               "declaredKind": {
                 "type": "string",
-                "enum": [
-                  "human",
-                  "ai",
-                  "mixed",
-                  "unknown"
-                ]
+                "enum": ["human", "ai", "mixed", "unknown"]
               },
               "aiContext": {
                 "type": "object",
                 "properties": {
                   "generatorType": {
                     "type": "string",
-                    "enum": [
-                      "local",
-                      "saas",
-                      "agent"
-                    ]
+                    "enum": ["local", "saas", "agent"]
                   },
                   "provider": {
                     "type": "string",
@@ -649,10 +574,7 @@
       },
       "VerifierData_ownership_social": {
         "type": "object",
-        "required": [
-          "provider",
-          "internalSocialToken"
-        ],
+        "required": ["provider", "internalSocialToken"],
         "properties": {
           "provider": {
             "type": "string",
@@ -668,8 +590,7 @@
             ]
           },
           "internalSocialToken": {
-            "type": "string",
-            "description": "Set by the hosted NEUS flow. Do not generate or ask users to supply this value manually."
+            "type": "string"
           },
           "walletAddress": {
             "type": "string",
@@ -679,9 +600,7 @@
       },
       "VerifierData_ownership_pseudonym": {
         "type": "object",
-        "required": [
-          "pseudonymId"
-        ],
+        "required": ["pseudonymId"],
         "properties": {
           "pseudonymId": {
             "type": "string",
@@ -707,9 +626,7 @@
       },
       "VerifierData_ownership_dns_txt": {
         "type": "object",
-        "required": [
-          "domain"
-        ],
+        "required": ["domain"],
         "properties": {
           "domain": {
             "type": "string",
@@ -724,21 +641,14 @@
       },
       "VerifierData_ownership_org_oauth": {
         "type": "object",
-        "required": [
-          "provider",
-          "internalSocialToken"
-        ],
+        "required": ["provider", "internalSocialToken"],
         "properties": {
           "provider": {
             "type": "string",
-            "enum": [
-              "google",
-              "microsoft"
-            ]
+            "enum": ["google", "microsoft"]
           },
           "internalSocialToken": {
-            "type": "string",
-            "description": "Set by the hosted NEUS flow. Do not generate or ask users to supply this value manually."
+            "type": "string"
           },
           "walletAddress": {
             "type": "string",
@@ -752,10 +662,7 @@
       },
       "VerifierData_contract_ownership": {
         "type": "object",
-        "required": [
-          "contractAddress",
-          "chainId"
-        ],
+        "required": ["contractAddress", "chainId"],
         "properties": {
           "contractAddress": {
             "type": "string",
@@ -771,26 +678,17 @@
           },
           "method": {
             "type": "string",
-            "enum": [
-              "owner",
-              "admin",
-              "accessControl"
-            ]
+            "enum": ["owner", "admin", "accessControl"]
           }
         }
       },
       "VerifierData_proof_of_human": {
         "type": "object",
-        "required": [
-          "proofs",
-          "queryResult"
-        ],
+        "required": ["proofs", "queryResult"],
         "properties": {
           "provider": {
             "type": "string",
-            "enum": [
-              "zkpassport"
-            ]
+            "enum": ["zkpassport"]
           },
           "proofs": {
             "type": "array",
@@ -808,14 +706,23 @@
       },
       "VerifierData_nft_ownership": {
         "type": "object",
+        "required": ["contractAddress", "tokenId"],
+        "oneOf": [
+          {
+            "required": ["chainId"]
+          },
+          {
+            "required": ["chain"]
+          }
+        ],
         "properties": {
           "ownerAddress": {
             "type": "string",
-            "description": "EVM (0x...) or Solana (base58). Optional; defaults to signer."
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "contractAddress": {
             "type": "string",
-            "description": "EVM contract or Solana mint address (base58)"
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "tokenId": {
             "type": "string",
@@ -823,53 +730,42 @@
           },
           "tokenType": {
             "type": "string",
-            "enum": [
-              "erc721",
-              "erc1155"
-            ],
+            "enum": ["erc721", "erc1155"],
             "default": "erc721"
           },
           "chainId": {
             "type": "integer",
-            "minimum": 1,
-            "description": "EVM chain ID. Use chain for Solana."
+            "minimum": 1
           },
           "chain": {
             "type": "string",
-            "description": "CAIP-2 chain for Solana (e.g. solana:mainnet)"
+            "description": "CAIP-2 for Solana (e.g. solana:mainnet)"
           },
           "blockNumber": {
             "type": "integer",
             "minimum": 0
           }
-        },
-        "required": [
-          "contractAddress",
-          "tokenId"
-        ],
-        "oneOf": [
-          { "required": ["chainId"] },
-          { "required": ["chain"] }
-        ]
+        }
       },
       "VerifierData_token_holding": {
         "type": "object",
-        "required": [
-          "contractAddress",
-          "minBalance"
-        ],
+        "required": ["contractAddress", "minBalance"],
         "oneOf": [
-          { "required": ["chainId"] },
-          { "required": ["chain"] }
+          {
+            "required": ["chainId"]
+          },
+          {
+            "required": ["chain"]
+          }
         ],
         "properties": {
           "ownerAddress": {
             "type": "string",
-            "description": "EVM (0x...) or Solana (base58). Optional; defaults to signer."
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "contractAddress": {
             "type": "string",
-            "description": "EVM token contract or Solana SPL mint (base58)"
+            "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "minBalance": {
             "type": "string",
@@ -877,12 +773,11 @@
           },
           "chainId": {
             "type": "integer",
-            "minimum": 1,
-            "description": "EVM chain ID. Use chain for Solana."
+            "minimum": 1
           },
           "chain": {
             "type": "string",
-            "description": "CAIP-2 chain for Solana (e.g. solana:mainnet)"
+            "description": "CAIP-2 for Solana (e.g. solana:mainnet)"
           },
           "blockNumber": {
             "type": "integer",
@@ -892,15 +787,11 @@
       },
       "VerifierData_wallet_risk": {
         "type": "object",
-        "required": [
-          "walletAddress"
-        ],
+        "required": ["walletAddress"],
         "properties": {
           "provider": {
             "type": "string",
-            "enum": [
-              "webacy"
-            ],
+            "enum": ["webacy"],
             "default": "webacy"
           },
           "walletAddress": {
@@ -940,17 +831,10 @@
       },
       "VerifierData_wallet_link": {
         "type": "object",
-        "required": [
-          "signature",
-          "signatureMethod",
-          "signedTimestamp"
-        ],
+        "required": ["signature", "signatureMethod", "signedTimestamp"],
         "anyOf": [
           {
-            "required": [
-              "primaryAccountId",
-              "secondaryAccountId"
-            ]
+            "required": ["primaryAccountId", "secondaryAccountId"]
           },
           {
             "required": [
@@ -1020,10 +904,7 @@
       },
       "VerifierData_ai_content_moderation": {
         "type": "object",
-        "required": [
-          "content",
-          "contentType"
-        ],
+        "required": ["content", "contentType"],
         "properties": {
           "content": {
             "type": "string",
@@ -1045,28 +926,19 @@
           },
           "provider": {
             "type": "string",
-            "enum": [
-              "google-vision",
-              "google-perspective"
-            ]
+            "enum": ["google-vision", "google-perspective"]
           }
         }
       },
       "VerifierData_agent_identity": {
         "type": "object",
-        "required": [
-          "agentId"
-        ],
+        "required": ["agentId"],
         "anyOf": [
           {
-            "required": [
-              "agentAccountId"
-            ]
+            "required": ["agentAccountId"]
           },
           {
-            "required": [
-              "agentWallet"
-            ]
+            "required": ["agentWallet"]
           }
         ],
         "properties": {
@@ -1093,13 +965,7 @@
           },
           "agentType": {
             "type": "string",
-            "enum": [
-              "ai",
-              "bot",
-              "service",
-              "automation",
-              "agent"
-            ]
+            "enum": ["ai", "bot", "service", "automation", "agent"]
           },
           "description": {
             "type": "string",
@@ -1130,10 +996,7 @@
             "maxItems": 16,
             "items": {
               "type": "object",
-              "required": [
-                "name",
-                "endpoint"
-              ],
+              "required": ["name", "endpoint"],
               "properties": {
                 "name": {
                   "type": "string",
@@ -1157,16 +1020,10 @@
         "type": "object",
         "anyOf": [
           {
-            "required": [
-              "controllerAccountId",
-              "agentAccountId"
-            ]
+            "required": ["controllerAccountId", "agentAccountId"]
           },
           {
-            "required": [
-              "controllerWallet",
-              "agentWallet"
-            ]
+            "required": ["controllerWallet", "agentWallet"]
           }
         ],
         "properties": {
@@ -1225,11 +1082,7 @@
           },
           "receiptDisclosure": {
             "type": "string",
-            "enum": [
-              "none",
-              "summary",
-              "full"
-            ]
+            "enum": ["none", "summary", "full"]
           },
           "expiresAt": {
             "type": "integer",
@@ -1351,9 +1204,7 @@
       "get": {
         "operationId": "healthCheck",
         "summary": "Health check",
-        "tags": [
-          "Health"
-        ],
+        "tags": ["Health"],
         "parameters": [],
         "responses": {
           "200": {
@@ -1372,10 +1223,8 @@
       "get": {
         "operationId": "getVerifierCatalog",
         "summary": "Get supported verifiers and configuration",
-        "description": "Returns a list of all supported verifier IDs, full verifier metadata (schemas + flow/access semantics), and chain configuration.",
-        "tags": [
-          "Verification"
-        ],
+        "description": "Returns a list of all supported verifier IDs, full verifier metadata (schemas + flow/access semantics), and the backend chain configuration (hub chain, asset allowlists).",
+        "tags": ["Verification"],
         "parameters": [],
         "responses": {
           "200": {
@@ -1398,9 +1247,7 @@
       "post": {
         "operationId": "buildSigningString",
         "summary": "Build the Standard Signing String",
-        "tags": [
-          "Verification"
-        ],
+        "tags": ["Verification"],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1434,7 +1281,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1450,9 +1297,7 @@
       "post": {
         "operationId": "submitVerification",
         "summary": "Submit a verification request",
-        "tags": [
-          "Verification"
-        ],
+        "tags": ["Verification"],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1526,7 +1371,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1552,15 +1397,12 @@
       "get": {
         "operationId": "getVerificationStatus",
         "summary": "Get verification status",
-        "tags": [
-          "Verification"
-        ],
+        "tags": ["Verification"],
         "parameters": [
           {
             "name": "qHash",
             "in": "path",
             "required": true,
-            "description": "Proof receipt ID. `qHash` is the raw path parameter name used by this HTTP contract.",
             "schema": {
               "type": "string",
               "pattern": "^0x[a-fA-F0-9]{64}$"
@@ -1572,11 +1414,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "1",
-                "true",
-                "yes"
-              ]
+              "enum": ["1", "true", "yes"]
             }
           },
           {
@@ -1585,10 +1423,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "1",
-                "true"
-              ]
+              "enum": ["1", "true"]
             }
           },
           {
@@ -1629,10 +1464,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "1",
-                "true"
-              ]
+              "enum": ["1", "true"]
             }
           },
           {
@@ -1684,7 +1516,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1700,9 +1532,7 @@
       "post": {
         "operationId": "getVerificationStatusBatch",
         "summary": "Batch get verification status (minimal)",
-        "tags": [
-          "Verification"
-        ],
+        "tags": ["Verification"],
         "parameters": [],
         "responses": {
           "200": {
@@ -1742,9 +1572,7 @@
       "get": {
         "operationId": "getProofsByWallet",
         "summary": "Get proofs by wallet or DID",
-        "tags": [
-          "Proofs"
-        ],
+        "tags": ["Proofs"],
         "parameters": [
           {
             "name": "address",
@@ -1796,9 +1624,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "public"
-              ]
+              "enum": ["public"]
             }
           },
           {
@@ -1807,11 +1633,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "1",
-                "true",
-                "yes"
-              ]
+              "enum": ["1", "true", "yes"]
             }
           },
           {
@@ -1820,11 +1642,27 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "1",
-                "true",
-                "yes"
-              ]
+              "enum": ["1", "true", "yes"]
+            }
+          },
+          {
+            "name": "resolveContent",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["1", "true", "yes"],
+              "description": "Owner-only: resolve private content for ownership-basic proofs"
+            }
+          },
+          {
+            "name": "qHash",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^0x[a-fA-F0-9]{64}$",
+              "description": "Filter to single proof by qHash"
             }
           },
           {
@@ -1895,7 +1733,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1921,9 +1759,7 @@
       "get": {
         "operationId": "proofCheck",
         "summary": "Check proofs against public criteria",
-        "tags": [
-          "Proofs"
-        ],
+        "tags": ["Proofs"],
         "parameters": [
           {
             "name": "address",
@@ -1937,7 +1773,6 @@
             "name": "qHash",
             "in": "query",
             "required": false,
-            "description": "Proof receipt ID filter. `qHash` is the raw query parameter name used by this HTTP contract.",
             "schema": {
               "type": "string",
               "pattern": "^0x[a-fA-F0-9]{64}$"
@@ -2272,9 +2107,7 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": [
-                "me"
-              ]
+              "enum": ["me"]
             }
           },
           {
@@ -2360,7 +2193,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2386,15 +2219,12 @@
       "post": {
         "operationId": "revokeSelf",
         "summary": "Revoke a proof you control",
-        "tags": [
-          "Proofs"
-        ],
+        "tags": ["Proofs"],
         "parameters": [
           {
             "name": "qHash",
             "in": "path",
             "required": true,
-            "description": "Proof receipt ID. `qHash` is the raw path parameter name used by this HTTP contract.",
             "schema": {
               "type": "string"
             }
@@ -2462,7 +2292,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2478,9 +2308,7 @@
       "get": {
         "operationId": "getPaymentPricing",
         "summary": "Get pricing information for all payment types",
-        "tags": [
-          "Payments"
-        ],
+        "tags": ["Payments"],
         "parameters": [],
         "responses": {
           "200": {
@@ -2496,9 +2324,7 @@
       "get": {
         "operationId": "getPaymentMethods",
         "summary": "Get available payment methods",
-        "tags": [
-          "Payments"
-        ],
+        "tags": ["Payments"],
         "parameters": [],
         "responses": {
           "200": {
