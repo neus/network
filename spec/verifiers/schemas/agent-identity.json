@@ -1,7 +1,84 @@
 {
   "$id": "https://neus.network/schemas/agent-identity.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Portable agent identity, ERC-8004 compatible",
+  "description": "Portable agent identity, A2A, ERC-8004 compatible",
+  "definitions": {
+    "AgentSkillRef": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Canonical skill ID from catalog"
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Display label snapshot"
+        },
+        "version": {
+          "type": "string",
+          "maxLength": 32,
+          "description": "Installed version"
+        },
+        "provider": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Provider snapshot"
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["native", "integration", "plugin", "mcp", "toolkit"],
+          "description": "Skill kind"
+        },
+        "configId": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Linked config/connection ID"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether skill is active",
+          "default": true
+        }
+      },
+      "required": ["id"]
+    },
+    "AgentCapabilities": {
+      "type": "object",
+      "properties": {
+        "wallet": {
+          "type": "boolean",
+          "description": "Can use wallet for signing/spending"
+        },
+        "signing": { "type": "boolean", "description": "Can sign messages" },
+        "spending": { "type": "boolean", "description": "Can spend funds" },
+        "publishing": {
+          "type": "boolean",
+          "description": "Can publish content"
+        },
+        "search": { "type": "boolean", "description": "Can use web search" },
+        "browser": {
+          "type": "boolean",
+          "description": "Can use browser automation"
+        },
+        "mcp": { "type": "boolean", "description": "Can call MCP tools" },
+        "webhooks": {
+          "type": "boolean",
+          "description": "Can receive webhooks"
+        },
+        "receipts": { "type": "boolean", "description": "Can post receipts" },
+        "proofs": {
+          "type": "boolean",
+          "description": "Can create/verify proofs"
+        },
+        "delegation": {
+          "type": "boolean",
+          "description": "Can be delegated to"
+        }
+      }
+    }
+  },
   "properties": {
     "agentId": {
       "maxLength": 128,
@@ -23,13 +100,7 @@
       "type": "string"
     },
     "agentType": {
-      "enum": [
-        "ai",
-        "bot",
-        "service",
-        "automation",
-        "agent"
-      ],
+      "enum": ["ai", "bot", "service", "automation", "agent"],
       "type": "string"
     },
     "agentWallet": {
@@ -38,12 +109,8 @@
       "description": "EVM (0x + 40 hex chars) or Solana (Base58, 32-44 chars) address"
     },
     "capabilities": {
-      "items": {
-        "maxLength": 128,
-        "type": "string"
-      },
-      "maxItems": 32,
-      "type": "array"
+      "$ref": "#/definitions/AgentCapabilities",
+      "description": "Native platform capabilities as structured boolean flags"
     },
     "description": {
       "maxLength": 500,
@@ -55,37 +122,24 @@
       "description": "System prompt or behavioral instructions for the agent (max 4000 chars)"
     },
     "skills": {
-      "items": {
-        "maxLength": 64,
-        "type": "string"
-      },
-      "maxItems": 48,
       "type": "array",
-      "description": "Declared skill identifiers (each max 64 chars, max 48 entries)"
+      "items": { "$ref": "#/definitions/AgentSkillRef" },
+      "maxItems": 48,
+      "description": "Structured skill references from the NEUS Skills Catalog"
     },
     "services": {
       "items": {
         "type": "object",
         "required": ["name", "endpoint"],
         "properties": {
-          "name": {
-            "maxLength": 64,
-            "type": "string"
-          },
-          "endpoint": {
-            "maxLength": 256,
-            "type": "string",
-            "format": "uri"
-          },
-          "version": {
-            "maxLength": 32,
-            "type": "string"
-          }
+          "name": { "maxLength": 64, "type": "string" },
+          "endpoint": { "maxLength": 256, "type": "string", "format": "uri" },
+          "version": { "maxLength": 32, "type": "string" }
         }
       },
       "maxItems": 16,
       "type": "array",
-      "description": "Service endpoints exposed by this agent (each requires name and a valid URL endpoint)"
+      "description": "Service endpoints exposed by this agent"
     }
   },
   "anyOf": [

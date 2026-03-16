@@ -2,6 +2,21 @@
   "$id": "https://neus.network/schemas/agent-delegation.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "description": "Delegates authority to an agent, ERC-8004 compatible",
+  "definitions": {
+    "AgentSkillRef": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 64, "description": "Canonical skill ID from catalog" },
+        "label": { "type": "string", "maxLength": 64, "description": "Display label snapshot" },
+        "version": { "type": "string", "maxLength": 32, "description": "Installed version" },
+        "provider": { "type": "string", "maxLength": 64, "description": "Provider snapshot" },
+        "kind": { "type": "string", "enum": ["native", "integration", "plugin", "mcp", "toolkit"], "description": "Skill kind" },
+        "configId": { "type": "string", "maxLength": 128, "description": "Linked config/connection ID" },
+        "enabled": { "type": "boolean", "description": "Whether skill is active", "default": true }
+      },
+      "required": ["id"]
+    }
+  },
   "properties": {
     "agentAccountId": {
       "format": "caip10-account",
@@ -24,18 +39,15 @@
       "description": "EVM (0x + 40 hex chars) or Solana (Base58, 32-44 chars) address"
     },
     "allowedPaymentTypes": {
-      "items": {
-        "maxLength": 32,
-        "type": "string"
-      },
+      "items": { "maxLength": 32, "type": "string" },
       "maxItems": 8,
       "type": "array",
-      "description": "Declared payment protocols (e.g. [\"x402\"]). Defaults to [\"x402\"] when scope is payments:x402."
+      "description": "Payment protocols (e.g. [\"x402\"]). Defaults to [\"x402\"] when scope is payments:x402."
     },
     "controllerAccountId": {
       "format": "caip10-account",
       "type": "string",
-      "description": "CAIP-10 account ID for the controller. Alternative to controllerWallet + controllerChainRef. Must match signer."
+      "description": "CAIP-10 account ID for the controller. Must match signer."
     },
     "controllerChainRef": {
       "format": "caip2-chain",
@@ -45,12 +57,12 @@
     "controllerWallet": {
       "format": "universal-address",
       "type": "string",
-      "description": "EVM (0x + 40 hex chars) or Solana (Base58, 32-44 chars) address. Must match the request signer."
+      "description": "EVM (0x + 40 hex chars) or Solana (Base58, 32-44 chars) address. Must match signer."
     },
     "expiresAt": {
       "minimum": 0,
       "type": "integer",
-      "description": "Expiration timestamp in Unix milliseconds. Server rejects delegations expired more than 30s ago."
+      "description": "Expiration timestamp in Unix milliseconds."
     },
     "instructions": {
       "maxLength": 4000,
@@ -60,24 +72,17 @@
     "maxSpend": {
       "type": "string",
       "pattern": "^[0-9]{1,78}$",
-      "description": "Maximum spend in wei (decimal string, e.g. \"1000000000000000000\" for 1 ETH)"
+      "description": "Maximum spend in wei (decimal string)"
     },
     "permissions": {
-      "items": {
-        "maxLength": 64,
-        "type": "string"
-      },
+      "items": { "maxLength": 64, "type": "string" },
       "maxItems": 32,
       "type": "array"
     },
     "receiptDisclosure": {
-      "enum": [
-        "none",
-        "summary",
-        "full"
-      ],
+      "enum": ["none", "summary", "full"],
       "type": "string",
-      "description": "How much of receipt/action payload may be disclosed. Defaults to \"summary\" when scope is payments:x402."
+      "description": "How much of receipt payload may be disclosed. Defaults to \"summary\" for x402."
     },
     "scope": {
       "maxLength": 128,
@@ -85,13 +90,10 @@
       "description": "Scope of delegation (e.g. \"payments:x402\", \"posting\", \"global\")"
     },
     "skills": {
-      "items": {
-        "maxLength": 64,
-        "type": "string"
-      },
-      "maxItems": 48,
       "type": "array",
-      "description": "Declared skill identifiers granted to the agent (each max 64 chars, max 48 entries)"
+      "items": { "$ref": "#/definitions/AgentSkillRef" },
+      "maxItems": 48,
+      "description": "Structured skill references granted to the agent"
     }
   },
   "anyOf": [
