@@ -52,16 +52,23 @@ Use the same JSON structure in your MCP client config or extension settings.
 }
 ```
 
-## Recommended Go-Live Pattern
+## Integration Quick Start
 
-For production integrations, keep the integration model simple:
+1. **Add the MCP server** to your client config (examples above).
+2. **Call `neus_context`** to get the verifier catalog, billing model, and constraints in one call.
+3. **Use eligibility checks** (`neus_proofs_check`) to gate access without loading full proof data.
+4. **For personalized context**, authenticate via `https://neus.network/verify?intent=login` and set `NEUS_AUTH_TOKEN` in your environment.
+5. **Reference proofs by qHash** — the proof receipt ID works across all chains and protocols.
 
-1. Use the hosted MCP endpoint for fastest production adoption.
-2. Let users try it immediately without transport auth.
-3. When personalized context is needed, send users to `https://neus.network/verify?intent=login`.
-4. Reuse the same NEUS session outside the browser by setting `NEUS_AUTH_TOKEN`.
-5. Start personalized bootstrap with `neus_me`, then `neus_agent_link`, then `neus_proofs_get`, then `neus_verifiers_catalog`.
-6. Keep private proof handling inside NEUS; consume eligibility and receipt IDs, not raw claims.
+## What You Get
+
+| Capability | Tool | Use Case |
+|------------|------|----------|
+| Verifier catalog | `neus_verifiers_catalog` | Discover available verification types |
+| Eligibility checks | `neus_proofs_check` | Gate access without user interaction |
+| Proof lookup | `neus_proofs_get` | Get proof history for a wallet/DID |
+| Agent verification | `neus_agent_link` | Check agent identity and delegation |
+| Guided onboarding | `neus_verify_or_guide` | Get hosted verify URL when proofs missing |
 
 ## Related
 
