@@ -12,7 +12,7 @@
  * - wallet-link: Multi-wallet identity linking
  * - contract-ownership: Smart contract ownership
  * - wallet-risk: Wallet risk assessment
- * - agent-identity: AI/bot identity (ERC-8004)
+ * - agent-identity: Portable agent identity (wallet-anchored)
  * - agent-delegation: Agent authorization
  * - ai-content-moderation: Content safety verification
  * 

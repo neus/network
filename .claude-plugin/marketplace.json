@@ -1,0 +1,26 @@
+{
+  "$schema": "https://code.claude.com/schemas/marketplace.json",
+  "name": "neus-marketplace",
+  "displayName": "NEUS Verification Network",
+  "description": "Official NEUS plugins for verification, proofs, and agent management",
+  "plugins": [
+    {
+      "name": "neus-core",
+      "displayName": "NEUS Core",
+      "description": "Flagship plugin with Zeus agent for verification, agent creation, and proof management",
+      "path": "plugins/neus-core",
+      "version": "1.0.0",
+      "featured": true
+    }
+  ],
+  "author": {
+    "name": "NEUS Network",
+    "email": "info@neus.network",
+    "url": "https://neus.network"
+  },
+  "links": {
+    "website": "https://neus.network",
+    "documentation": "https://docs.neus.network",
+    "support": "https://github.com/neus/network/issues"
+  }
+}

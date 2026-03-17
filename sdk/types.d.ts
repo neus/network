@@ -360,7 +360,7 @@ declare module '@neus/sdk' {
     | 'contract-ownership'
     | 'wallet-risk'            // Wallet risk assessment
     | 'proof-of-human'         // Hosted ZK personhood verification
-    // AI & Agent verifiers (ERC-8004 aligned)
+    // AI & Agent verifiers (portable, protocol-agnostic)
     | 'agent-identity'
     | 'agent-delegation'
     | 'ai-content-moderation'

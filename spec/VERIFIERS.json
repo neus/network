@@ -215,7 +215,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Portable agent identity, ERC-8004 compatible",
+      "description": "Portable agent identity — wallet-anchored, chain-agnostic, protocol-agnostic",
       "expiry": "permanent",
       "flow": "instant",
       "id": "agent-identity",
@@ -232,7 +232,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Delegates authority to an agent, ERC-8004 compatible",
+      "description": "Controller-to-agent delegation — portable authorization across chains and protocols",
       "expiry": "expiring",
       "flow": "instant",
       "id": "agent-delegation",

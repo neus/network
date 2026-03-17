@@ -1,7 +1,7 @@
 {
   "$id": "https://neus.network/schemas/agent-identity.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Portable agent identity, A2A, ERC-8004 compatible",
+  "description": "Portable agent identity — wallet-anchored, chain-agnostic, protocol-agnostic",
   "definitions": {
     "AgentSkillRef": {
       "type": "object",

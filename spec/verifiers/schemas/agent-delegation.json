@@ -1,7 +1,7 @@
 {
   "$id": "https://neus.network/schemas/agent-delegation.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Delegates authority to an agent, ERC-8004 compatible",
+  "description": "Controller-to-agent delegation — portable authorization across chains and protocols",
   "definitions": {
     "AgentSkillRef": {
       "type": "object",
