@@ -42,5 +42,10 @@ docs/.mintlify-home*/
 
 # Local packages / tarballs
 *.tgz
-.CLAUDE
+
+# Internal / IDE configs (never commit)
+.CLAUDE/
+.claude/
+.cursor/
+.cursorrules
 docs-private/
