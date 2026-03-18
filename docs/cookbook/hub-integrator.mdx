@@ -4,7 +4,7 @@ description: Production onboarding for websites, communities, apps, teams, and p
 icon: building
 ---
 
-Use this guide when you are connecting a website, community, app, team, or partner flow to NEUS. The public integration story is simple:
+Use this guide when you are connecting a website, community, app, team, or partner flow to NEUS. Integration follows three steps:
 
 1. Use hosted verify as the standard guided flow.
 2. Save the proof receipt ID.
@@ -60,7 +60,7 @@ GET /api/v1/proofs/check?verifierIds=ownership-dns-txt&address=0x...
 
 When a site, partner, or company needs to verify that someone belongs to a workspace, send them to hosted verify and let NEUS handle the guided Google or Microsoft flow.
 
-### What You Actually Need To Do
+### Setup Steps
 
 1. Launch `https://neus.network/verify`
 2. Use `preset=org-pack` when organization membership is the only requirement
@@ -212,7 +212,7 @@ The `/api/v1/proofs/check` response includes `matchCount` for telemetry.
 
 ## Portability Model
 
-NEUS is most useful when you keep one clean mental model:
+NEUS is most useful when you follow this model:
 
 - a person has a reusable trust surface
 - that surface can collect wallets, linked accounts, domains, team association, and proof-backed badges over time
