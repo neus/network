@@ -3,7 +3,7 @@
 **Version:** 1.0.0
 **Default Agent:** Zeus
 
-NEUS Core is the flagship plugin for the NEUS Verification Network. It bundles the Zeus governance agent with NEUS MCP tools for verification, proof creation, and agent management.
+NEUS Core is the main plugin for the NEUS Verification Network. It includes the Zeus agent, NEUS skills, and a hosted MCP connection for proof checks, verification flows, and agent setup.
 
 ---
 
@@ -27,7 +27,7 @@ NEUS Core is the flagship plugin for the NEUS Verification Network. It bundles t
 
 ### Zeus Agent
 
-The default governance agent that orchestrates all NEUS operations:
+The default NEUS agent for the most common verification and proof workflows:
 - Verification flows
 - Agent creation
 - Gate checks
@@ -43,7 +43,7 @@ The default governance agent that orchestrates all NEUS operations:
 
 ### MCP Tools
 
-All 9 NEUS MCP tools are bundled:
+The plugin exposes all 9 hosted NEUS MCP tools:
 - `neus_context` - Get all context in one call
 - `neus_proofs_check` - Gate checks
 - `neus_verify_or_guide` - Check + guide flow
@@ -72,7 +72,7 @@ No configuration required. The plugin connects to the public NEUS MCP endpoint:
 https://mcp.neus.network/mcp
 ```
 
-For authenticated requests, set `NEUS_AUTH_TOKEN` in your environment.
+Set `NEUS_AUTH_TOKEN` only when you want the same NEUS session context in local or non-browser runtimes.
 
 ---
 

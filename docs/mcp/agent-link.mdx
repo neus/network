@@ -34,11 +34,8 @@ When link requirements are missing, the tool returns guided next steps and a hos
 
 ```json
 {
-  "linked": true,
-  "agentWallet": "0xagent...",
-  "principal": "0xcontroller...",
-  "identityProofId": "qhash...",
-  "delegationProofId": "qhash..."
+  "status": "ok",
+  "linked": true
 }
 ```
 
@@ -46,9 +43,13 @@ When link requirements are missing, the tool returns guided next steps and a hos
 
 ```json
 {
-  "linked": false,
   "status": "link_required",
+  "linked": false,
   "hostedVerifyUrl": "https://neus.network/verify?preset=agent-pack&agent=0xagent...",
-  "missing": ["agent-identity", "agent-delegation"]
+  "next_action": "link_agent",
+  "nextSteps": {
+    "tool": "neus_verify",
+    "requiredVerifiers": ["agent-identity", "agent-delegation"]
+  }
 }
 ```

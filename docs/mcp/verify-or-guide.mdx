@@ -1,6 +1,6 @@
 ---
 title: Verify or Guide (`neus_verify_or_guide`)
-description: Run gate-first logic and return hosted verify guidance when verification is missing.
+description: Check whether verification is already satisfied and return hosted guidance when it is not.
 icon: route
 ---
 
@@ -33,10 +33,11 @@ Use `neus_verify_or_guide` when you want one MCP tool to decide whether the user
 
 ```json
 {
+  "success": true,
   "action": "already_verified",
-  "walletAddress": "0xabc123...",
-  "verifierIds": ["proof-of-human", "wallet-risk"],
-  "matchedCount": 2
+  "eligible": true,
+  "matchedCount": 2,
+  "message": "Proof requirements already satisfied"
 }
 ```
 
@@ -44,8 +45,14 @@ Use `neus_verify_or_guide` when you want one MCP tool to decide whether the user
 
 ```json
 {
+  "success": false,
+  "status": "verification_required",
   "action": "verification_required",
   "hostedVerifyUrl": "https://neus.network/verify?verifiers=proof-of-human,wallet-risk",
-  "missing": ["proof-of-human"]
+  "matchedCount": 0,
+  "nextSteps": {
+    "tool": "neus_verify",
+    "requiredVerifiers": ["proof-of-human", "wallet-risk"]
+  }
 }
 ```

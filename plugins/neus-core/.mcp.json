@@ -3,7 +3,7 @@
     "neus": {
       "type": "streamableHttp",
       "url": "https://mcp.neus.network/mcp",
-      "description": "NEUS MCP - verification, proofs, and agent management"
+      "description": "NEUS MCP - proof checks, verification flows, and agent setup"
     }
   }
 }

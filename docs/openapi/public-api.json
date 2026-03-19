@@ -3,7 +3,7 @@
   "info": {
     "title": "NEUS Network — Public Integrator API",
     "version": "1.0.0",
-    "description": "Public integrator surface for NEUS.\n\nThis spec is generated from the running Express routes and explicit public operation metadata.\n\nNote: Some verifiers require pro access. Admin-only capabilities are excluded from this spec.",
+    "description": "Public integrator surface for NEUS.\n\nThis spec is generated from the running Express routes and explicit public operation metadata.\n\nNote: Tier differences affect quotas, credits, and billing behavior. Admin-only capabilities are excluded from this spec.",
     "license": {
       "name": "Business Source License 1.1",
       "url": "https://mariadb.com/bsl11/"

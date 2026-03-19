@@ -1,14 +1,25 @@
 ---
 title: MCP Tools Overview
-description: Choose the right NEUS MCP tool for catalog discovery, gate checks, verification, proof context, and agent linking.
+description: Choose the right NEUS MCP tool for context loading, gate checks, verification, proof context, and agent flows.
 icon: wrench
 ---
 
-Each MCP tool does one job. Start with this page, then move into the task-specific page that matches your flow.
+Each MCP tool does one job. Start here, then move into the task-specific page that matches your flow.
+
+## Recommended Order
+
+1. `neus_context`
+2. `neus_verifiers_catalog` when you need detailed live verifier metadata
+3. `neus_proofs_check` or `neus_verify_or_guide`
+4. `neus_verify` only when you are intentionally creating a proof
+5. `neus_agent_create` only when you are intentionally creating a new agent
 
 ## Tool Map
 
 <CardGroup cols={2}>
+  <Card title="Context" icon="compass" href="./overview">
+    Start every MCP session with `neus_context`.
+  </Card>
   <Card title="Verifier Catalog" icon="list-tree" href="./verifiers-catalog">
     Read the live verifier catalog before building policy or UI.
   </Card>
@@ -28,3 +39,17 @@ Each MCP tool does one job. Start with this page, then move into the task-specif
     Check whether an agent wallet is correctly linked and delegated.
   </Card>
 </CardGroup>
+
+## Full Tool Contract
+
+| Tool | Contract |
+|------|----------|
+| `neus_context` | Call first. Returns verifiers, billing, protocol rules, and agent constraints in one response. |
+| `neus_verifiers_catalog` | Read the live verifier catalog. |
+| `neus_proofs_check` | Eligibility-safe proof check only. |
+| `neus_verify_or_guide` | Gate-first orchestration with hosted verify handoff. |
+| `neus_verify` | Low-level proof creation or signing elicitation. |
+| `neus_proofs_get` | Public proof context, profile summary, and agent context pack. |
+| `neus_me` | Session-backed principal context when `NEUS_AUTH_TOKEN` is present. |
+| `neus_agent_link` | Check whether agent identity + delegation are both present. |
+| `neus_agent_create` | Prepare the two-step signature flow to create a new agent. |

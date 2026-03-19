@@ -34,15 +34,26 @@ With `NEUS_AUTH_TOKEN` set, the tool resolves the same NEUS session used by host
 
 ```json
 {
-  "authenticated": true,
-  "subjectId": "did:neus:...",
-  "address": "0x...",
-  "chainId": 8453,
-  "agentLinks": [
-    {
-      "agentWallet": "0x...",
-      "linked": true
-    }
-  ]
+  "status": "ok",
+  "principal": {
+    "did": "did:pkh:eip155:84532:0x...",
+    "handle": "user.eth",
+    "primaryAccount": "0x..."
+  },
+  "agents": [],
+  "next_action": null,
+  "ui_url": null
+}
+```
+
+### Auth Required
+
+```json
+{
+  "status": "auth_required",
+  "principal": null,
+  "agents": [],
+  "next_action": "auth_required",
+  "ui_url": "https://neus.network/verify?intent=login"
 }
 ```

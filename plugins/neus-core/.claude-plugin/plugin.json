@@ -2,7 +2,7 @@
   "$schema": "https://code.claude.com/schemas/plugin.json",
   "name": "neus-core",
   "version": "1.0.0",
-  "description": "NEUS Core - Verification Network integration with Zeus agent. Create proofs, verify identities, delegate agent authority.",
+  "description": "NEUS Core plugin for proof checks, verification flows, and agent setup with the Zeus assistant.",
   "author": {
     "name": "NEUS Network",
     "email": "info@neus.network",
@@ -48,7 +48,7 @@
     "neus": {
       "type": "streamableHttp",
       "url": "https://mcp.neus.network/mcp",
-      "description": "NEUS MCP - verification, proofs, and agent management"
+      "description": "NEUS MCP - proof checks, verification flows, and agent setup"
     }
   },
   "compatibility": {

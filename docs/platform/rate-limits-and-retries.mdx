@@ -1,25 +1,64 @@
 ---
 title: Rate Limits and Retries
-description: Production retry guidance for gate checks, polling, hosted flows, and outage handling.
+description: Public API limits, plan-tier differences, verifier cost weights, and safe retry policy.
 icon: clock
 ---
 
-Read requests can be retried. Verification creation should only be retried when you can show the original request did not succeed. Polling should back off on `429` and temporary transport failures.
+Use this page when you need the operational policy for NEUS integrations: which limits apply, what changes by tier, and how to retry safely without creating duplicate verification work.
 
-## General Guidance
+## What Changes by Tier
 
-- Read endpoints can be retried.
-- Verification creation should only be retried when you can prove the original request did not succeed.
-- Polling loops should back off instead of hammering status endpoints.
+- All currently published verifiers in the public catalog are available on the public integrator surface.
+- Tiers change quotas, monthly credit allowance, and x402 pay-per-use ceilings.
+- Rate limiting is endpoint-based. There is no separate per-verifier requests-per-minute bucket on the current public API.
+- Pro and enterprise access are wallet-profile entitlements, not API keys.
 
-## Recommended Patterns
+## Tier Criteria
+
+| Tier | How it is resolved | What changes |
+|---|---|---|
+| Public | Default wallet/profile state | All published verifiers, `1,000` monthly credits, standard read quota, x402 up to `500` credits per quote |
+| Pro | Wallet profile has `pro` subscription or entitlement | Same verifier catalog, `50,000` monthly credits, 4x standard read quota, x402 up to `2,000` credits per quote |
+| Enterprise | Wallet profile has enterprise entitlement | Same public API surface, `500,000` monthly credits, 10x standard read quota, enterprise billing/support path |
+
+<Note>
+Custom plans also exist, but they are negotiated arrangements rather than part of the public self-serve tiers.
+</Note>
+
+## API Rate Limits
+
+| Surface | Endpoints | Current limit | Notes |
+|---|---|---|---|
+| Standard reads | `/api/v1/proofs/*`, `/api/v1/profile/*`, and similar read surfaces | Public: `60/min` burst, Pro: `240/min` burst, Enterprise: `600/min` burst | Progressive slowdown starts at half the burst budget: `30/min`, `120/min`, and `300/min` |
+| Verification writes | `POST /api/v1/verification` | `50` requests per `15` minutes | Fixed verification-write budget; does not scale by plan |
+| Verification status | `GET /api/v1/verification/status/{qHash}` and `POST /api/v1/verification/status-batch` | `100/min` | Successful `2xx` status reads are not counted against the limiter |
+| Auth routes | `/api/v1/auth/*` | `10` requests per `15` minutes | Protects login, challenge, and session flows |
+| Monitoring | `/health` and health probes | `300/min` | Infrastructure-facing, not a product integration quota |
+
+## Verifier Cost Weights
+
+Verifier differences show up in billing and x402 quotes, not in separate RPM buckets.
+
+| Credit units | Verifiers |
+|---|---|
+| `1` | `ownership-basic`, `ownership-pseudonym`, `wallet-link` |
+| `4` | `ownership-social`, `ownership-org-oauth` |
+| `6` | `ownership-dns-txt` |
+| `10` | `contract-ownership`, `nft-ownership`, `token-holding`, `agent-identity` |
+| `12` | `proof-of-human` |
+| `14` | `agent-delegation` |
+| `28` | `wallet-risk` |
+| `30` | `ai-content-moderation` |
+
+## Retry Policy
 
 | Situation | Recommendation |
 |---|---|
-| Async verification polling | Poll every few seconds and back off on `429` or transport issues |
-| Browser auth/session routes | Respect `Retry-After` when present |
-| Gate checks | Cache only when your policy allows stale reads |
-| Hosted flows | Preserve return URLs and let users resume instead of forcing repeated starts |
+| Standard reads and gate checks | Retry on `429` and temporary `5xx` responses with exponential backoff. Respect `Retry-After` when present. |
+| Async verification polling | Poll every few seconds, then back off on `429`, `503`, or transport errors. |
+| Verification creation | Do not blindly retry `POST /api/v1/verification`. Retry only when you can prove the original request did not succeed. |
+| Hosted verify or OAuth flows | Preserve `returnUrl` and resume state instead of restarting the flow for every transient failure. |
+| Browser auth/session routes | Treat `Retry-After` as authoritative and avoid parallel retries from multiple tabs. |
 
 ## SDK Behavior
 
@@ -37,3 +76,9 @@ Interactive auth routes normalize upstream issues into `503` responses and may i
 - `Cache-Control: no-store`
 
 Your app should surface a retry path instead of turning temporary upstream issues into permanent user failure states.
+
+## Related Pages
+
+- [Billing and Credits](./billing)
+- [Verifier Catalog](../verification/verifiers)
+- [API Overview](../api/overview)

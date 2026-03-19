@@ -1,6 +1,6 @@
 ---
 title: MCP Overview
-description: Use NEUS in AI agents, Cursor, and Claude Desktop.
+description: Use NEUS in AI agents, Cursor, Claude Desktop, and other MCP clients.
 icon: plug
 ---
 
@@ -8,97 +8,92 @@ Native MCP support for agent integrations.
 
 **Endpoint:** `https://mcp.neus.network/mcp`
 
----
-
 ## Quick Start
 
 ### 1. Add to Your MCP Client
 
-**Cursor:**
+#### Cursor / Claude Desktop / VS Code
 
 ```json
 {
   "mcpServers": {
     "neus": {
+      "type": "streamableHttp",
       "url": "https://mcp.neus.network/mcp"
     }
   }
 }
 ```
 
-**Claude Desktop:**
-
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "command": "npx",
-      "args": ["mcp-remote", "https://mcp.neus.network/mcp"]
-    }
-  }
-}
-```
-
-### 2. Call the First Tool
+### 2. Load Context First
 
 ```typescript
-neus_verifiers_catalog()
+neus_context()
 ```
 
-### 3. Check Eligibility
+### 3. Run a Gate Check
 
 ```typescript
-neus_verify_or_guide({
-  "walletAddress": "0x...",
-  "verifierIds": ["proof-of-human"]
+neus_proofs_check({
+  "wallet": "0x...",
+  "verifiers": ["proof-of-human"]
 })
 ```
-
----
 
 ## Available Tools
 
 | Tool | Purpose |
 |------|---------|
+| `neus_context` | Load verifiers, billing, protocol, and agent constraints in one call |
 | `neus_verifiers_catalog` | List available verifiers |
+| `neus_verify` | Create a proof directly or return a signing elicitation |
 | `neus_verify_or_guide` | Check + guide to hosted verify |
 | `neus_proofs_check` | Eligibility check only |
-| `neus_proofs_get` | Get user's proofs |
-| `neus_me` | Session context |
-| `neus_agent_link` | Check agent delegation |
-
----
+| `neus_proofs_get` | Get public proof context and profile summary |
+| `neus_me` | Session-backed principal context |
+| `neus_agent_link` | Check agent delegation readiness |
+| `neus_agent_create` | Prepare the two-signature agent creation flow |
 
 ## Decision Guide
 
-| You Want To... | Use This Tool |
+| You want to... | Use this tool |
 |----------------|---------------|
+| Bootstrap a session | `neus_context` |
 | Discover verifiers | `neus_verifiers_catalog` |
-| Gate access + guide users | `neus_verify_or_guide` |
 | Check eligibility only | `neus_proofs_check` |
-| Get user context | `neus_me` |
-
----
+| Gate access and guide users | `neus_verify_or_guide` |
+| Create a proof directly | `neus_verify` |
+| Load public user context | `neus_proofs_get` |
+| Load session-backed user context | `neus_me` |
+| Check agent readiness | `neus_agent_link` |
+| Create a new agent | `neus_agent_create` |
 
 ## Standard Agent Loop
 
-```
-1. neus_verifiers_catalog()     — Discover capabilities
-2. neus_verify_or_guide()       — Check or get hosted URL
-3. User completes hosted flow   — Interactive verification
-4. neus_proofs_check()          — Verify eligibility
+```text
+1. neus_context()               -> Load the MCP contract and NEUS context
+2. neus_verify_or_guide()       -> Check eligibility or get hosted URL
+3. User completes hosted flow   -> Interactive verification
+4. neus_proofs_check()          -> Verify eligibility
 ```
 
----
+## Go-Live Paths
+
+| Need | Recommended path |
+|------|------------------|
+| Fastest editor/client install | Hosted MCP at `https://mcp.neus.network/mcp` |
+| Personalized context | Hosted MCP + `NEUS_AUTH_TOKEN` |
+| Agent creation flows | `neus_agent_create` first, then `neus_verify` only for the returned signing steps |
+| Marketplace/plugin install | `github:neus/network/plugins/neus-core` |
 
 ## MCP Pages
 
 <CardGroup cols={2}>
   <Card title="Setup" icon="code" href="./setup">
-    Cursor, VS Code, Claude Desktop setup.
+    Cursor, VS Code, Claude Desktop, and plugin install paths.
   </Card>
   <Card title="Tools" icon="wrench" href="./tools">
-    Full tool reference.
+    Full MCP tool contract.
   </Card>
   <Card title="Endpoints" icon="globe" href="./endpoints">
     Public MCP URLs.

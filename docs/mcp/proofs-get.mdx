@@ -6,7 +6,7 @@ icon: receipt
 
 Use `neus_proofs_get` when you need public proof history and profile context for an agent workflow.
 
-This tool is public-safe: it returns portable public context only and does not expose private proof payloads.
+This tool returns portable public context only and does not expose private proof payloads.
 
 ## Best For
 
@@ -30,30 +30,46 @@ This tool is public-safe: it returns portable public context only and does not e
 - public proof list
 - profile summary when available
 - pagination metadata
+- agent context pack when agent proofs are present
 
 ## Response Structure
 
 ```json
 {
-  "identifier": "0xabc123...",
-  "resolvedAs": "address",
-  "proofs": [
-    {
-      "proofId": "qhash...",
-      "verifierId": "ownership-basic",
-      "status": "verified",
-      "createdAt": 1700000000000
+  "success": true,
+  "data": {
+    "proofs": [],
+    "profileSummary": {
+      "profile": {
+        "displayName": "user.eth"
+      },
+      "credits": null,
+      "proofsSummary": null,
+      "linkedAccounts": {}
+    },
+    "resolved": {
+      "identifier": "0xabc123...",
+      "walletAddress": "0xabc123...",
+      "did": "did:pkh:eip155:84532:0xabc123...",
+      "idType": "wallet"
+    },
+    "pagination": {
+      "limit": 25,
+      "offset": 0,
+      "totalCount": 42,
+      "hasMore": true,
+      "nextOffset": 25
+    },
+    "agentContext": {
+      "identities": [],
+      "delegations": [],
+      "services": []
+    },
+    "contextPack": {
+      "identityCount": 0,
+      "delegationCount": 0,
+      "activeDelegations": 0
     }
-  ],
-  "profile": {
-    "displayName": "user.eth",
-    "avatar": "https://..."
-  },
-  "pagination": {
-    "total": 42,
-    "limit": 25,
-    "offset": 0,
-    "hasMore": true
   }
 }
 ```
