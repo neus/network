@@ -1,0 +1,57 @@
+{
+  "$id": "https://neus.network/schemas/nft-ownership.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "NFT ownership verification (EVM or Solana)",
+  "oneOf": [
+    {
+      "required": [
+        "chainId"
+      ]
+    },
+    {
+      "required": [
+        "chain"
+      ]
+    }
+  ],
+  "properties": {
+    "blockNumber": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "chain": {
+      "description": "CAIP-2 for Solana (e.g. solana:mainnet)",
+      "type": "string"
+    },
+    "chainId": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "contractAddress": {
+      "format": "universal-address",
+      "type": "string"
+    },
+    "ownerAddress": {
+      "format": "universal-address",
+      "type": "string"
+    },
+    "tokenId": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "tokenType": {
+      "default": "erc721",
+      "enum": [
+        "erc721",
+        "erc1155"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "contractAddress",
+    "tokenId"
+  ],
+  "title": "nft-ownership",
+  "type": "object"
+}

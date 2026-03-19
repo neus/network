@@ -1,0 +1,52 @@
+{
+  "$id": "https://neus.network/schemas/wallet-risk.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Wallet risk assessment",
+  "properties": {
+    "chain": {
+      "enum": [
+        "eth",
+        "base",
+        "bsc",
+        "pol",
+        "opt",
+        "arb",
+        "sol",
+        "ton",
+        "sei",
+        "sui",
+        "btc",
+        "stellar"
+      ],
+      "type": "string"
+    },
+    "chainId": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "provider": {
+      "default": "webacy",
+      "enum": [
+        "webacy"
+      ],
+      "type": "string"
+    },
+    "walletAddress": {
+      "anyOf": [
+        {
+          "format": "evm-address",
+          "type": "string"
+        },
+        {
+          "format": "solana-address",
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "required": [
+    "walletAddress"
+  ],
+  "title": "wallet-risk",
+  "type": "object"
+}

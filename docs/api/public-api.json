@@ -3,7 +3,7 @@
   "info": {
     "title": "NEUS Network — Public Integrator API",
     "version": "1.0.0",
-    "description": "Public integrator surface for NEUS.\n\nThis spec is generated from the running Express routes and explicit public operation metadata.\n\nNote: Tier differences affect quotas, credits, and billing behavior. Admin-only capabilities are excluded from this spec.",
+    "description": "Public integrator surface for NEUS.\n\nThis spec is generated from the running Express routes and explicit public operation metadata.\n\nNote: Some verifiers require pro access. Admin-only capabilities are excluded from this spec.",
     "license": {
       "name": "Business Source License 1.1",
       "url": "https://mariadb.com/bsl11/"
@@ -1074,7 +1074,8 @@
           },
           {
             "required": [
-              "agentWallet"
+              "agentWallet",
+              "agentChainRef"
             ]
           }
         ],
@@ -1086,10 +1087,12 @@
           },
           "agentAccountId": {
             "type": "string",
-            "format": "caip10-account"
+            "format": "caip10-account",
+            "description": "Preferred canonical subject identity (CAIP-10)."
           },
           "agentChainRef": {
             "type": "string",
+            "description": "Required when using legacy agentWallet without agentAccountId.",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "agentWallet": {
@@ -1115,12 +1118,44 @@
             "maxLength": 500
           },
           "capabilities": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "maxLength": 128
+            "type": "object",
+            "description": "Agent capabilities as boolean flags",
+            "properties": {
+              "wallet": {
+                "type": "boolean"
+              },
+              "signing": {
+                "type": "boolean"
+              },
+              "spending": {
+                "type": "boolean"
+              },
+              "publishing": {
+                "type": "boolean"
+              },
+              "search": {
+                "type": "boolean"
+              },
+              "browser": {
+                "type": "boolean"
+              },
+              "mcp": {
+                "type": "boolean"
+              },
+              "webhooks": {
+                "type": "boolean"
+              },
+              "receipts": {
+                "type": "boolean"
+              },
+              "proofs": {
+                "type": "boolean"
+              },
+              "delegation": {
+                "type": "boolean"
+              }
             },
-            "maxItems": 32
+            "additionalProperties": false
           },
           "instructions": {
             "type": "string",
@@ -1128,11 +1163,49 @@
           },
           "skills": {
             "type": "array",
+            "description": "Agent skills as structured objects",
+            "maxItems": 48,
             "items": {
-              "type": "string",
-              "maxLength": 64
-            },
-            "maxItems": 48
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "version": {
+                  "type": "string",
+                  "maxLength": 32
+                },
+                "provider": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "native",
+                    "integration",
+                    "plugin",
+                    "mcp",
+                    "toolkit"
+                  ]
+                },
+                "configId": {
+                  "type": "string",
+                  "maxLength": 128
+                },
+                "enabled": {
+                  "type": "boolean"
+                }
+              }
+            }
           },
           "services": {
             "type": "array",
@@ -1174,17 +1247,21 @@
           {
             "required": [
               "controllerWallet",
-              "agentWallet"
+              "controllerChainRef",
+              "agentWallet",
+              "agentChainRef"
             ]
           }
         ],
         "properties": {
           "controllerAccountId": {
             "type": "string",
-            "format": "caip10-account"
+            "format": "caip10-account",
+            "description": "Preferred canonical controller identity (CAIP-10)."
           },
           "controllerChainRef": {
             "type": "string",
+            "description": "Required when using legacy controllerWallet without controllerAccountId.",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "controllerWallet": {
@@ -1193,10 +1270,12 @@
           },
           "agentAccountId": {
             "type": "string",
-            "format": "caip10-account"
+            "format": "caip10-account",
+            "description": "Preferred canonical agent identity (CAIP-10)."
           },
           "agentChainRef": {
             "type": "string",
+            "description": "Required when using legacy agentWallet without agentAccountId.",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "agentWallet": {
@@ -1250,11 +1329,49 @@
           },
           "skills": {
             "type": "array",
+            "description": "Agent skills as structured objects",
+            "maxItems": 48,
             "items": {
-              "type": "string",
-              "maxLength": 64
-            },
-            "maxItems": 48
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "version": {
+                  "type": "string",
+                  "maxLength": 32
+                },
+                "provider": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "native",
+                    "integration",
+                    "plugin",
+                    "mcp",
+                    "toolkit"
+                  ]
+                },
+                "configId": {
+                  "type": "string",
+                  "maxLength": 128
+                },
+                "enabled": {
+                  "type": "boolean"
+                }
+              }
+            }
           }
         }
       },

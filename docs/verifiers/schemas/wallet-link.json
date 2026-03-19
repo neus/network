@@ -1,0 +1,84 @@
+{
+  "$id": "https://neus.network/schemas/wallet-link.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "anyOf": [
+    {
+      "required": [
+        "primaryAccountId",
+        "secondaryAccountId"
+      ]
+    },
+    {
+      "required": [
+        "primaryWalletAddress",
+        "secondaryWalletAddress",
+        "chain"
+      ]
+    }
+  ],
+  "description": "Link secondary wallet via signature",
+  "properties": {
+    "chain": {
+      "format": "caip2-chain",
+      "type": "string"
+    },
+    "label": {
+      "maxLength": 64,
+      "type": "string"
+    },
+    "primaryAccountId": {
+      "format": "caip10-account",
+      "type": "string"
+    },
+    "primaryChainRef": {
+      "format": "caip2-chain",
+      "type": "string"
+    },
+    "primaryWalletAddress": {
+      "format": "universal-address",
+      "type": "string"
+    },
+    "relationshipType": {
+      "enum": [
+        "primary",
+        "personal",
+        "org",
+        "affiliate",
+        "agent",
+        "linked"
+      ],
+      "type": "string"
+    },
+    "secondaryAccountId": {
+      "format": "caip10-account",
+      "type": "string"
+    },
+    "secondaryChainRef": {
+      "format": "caip2-chain",
+      "type": "string"
+    },
+    "secondaryWalletAddress": {
+      "format": "universal-address",
+      "type": "string"
+    },
+    "signature": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "signatureMethod": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "signedTimestamp": {
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "required": [
+    "signature",
+    "signatureMethod",
+    "signedTimestamp"
+  ],
+  "title": "wallet-link",
+  "type": "object"
+}

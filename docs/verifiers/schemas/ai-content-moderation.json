@@ -1,0 +1,38 @@
+{
+  "$id": "https://neus.network/schemas/ai-content-moderation.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Verifies content safety via AI",
+  "properties": {
+    "content": {
+      "maxLength": 13653334,
+      "type": "string"
+    },
+    "contentType": {
+      "enum": [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/gif",
+        "text/plain",
+        "text/markdown",
+        "text/x-markdown",
+        "application/json",
+        "application/xml"
+      ],
+      "type": "string"
+    },
+    "provider": {
+      "enum": [
+        "google-vision",
+        "google-perspective"
+      ],
+      "type": "string"
+    }
+  },
+  "required": [
+    "content",
+    "contentType"
+  ],
+  "title": "ai-content-moderation",
+  "type": "object"
+}

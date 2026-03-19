@@ -1,0 +1,125 @@
+{
+  "$id": "https://neus.network/schemas/ownership-basic.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "description": "Content ownership verification with origin lock and optional provenance",
+  "properties": {
+    "content": {
+      "description": "Content being claimed (max 50KB inline)",
+      "maxLength": 50000,
+      "type": "string"
+    },
+    "contentHash": {
+      "description": "Pre-computed verifier content hash (32-byte hex). Treated as the standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match.",
+      "pattern": "^0x[a-fA-F0-9]{64}$",
+      "type": "string"
+    },
+    "contentType": {
+      "description": "MIME type hint",
+      "maxLength": 100,
+      "type": "string"
+    },
+    "owner": {
+      "description": "Owner identifier (must match request walletAddress). Supports EVM (0x..), Solana (base58), NEAR (account IDs), and other universal address formats depending on chain context.",
+      "format": "universal-address",
+      "minLength": 1,
+      "type": "string"
+    },
+    "provenance": {
+      "properties": {
+        "aiContext": {
+          "properties": {
+            "generatorType": {
+              "enum": [
+                "local",
+                "saas",
+                "agent"
+              ],
+              "type": "string"
+            },
+            "model": {
+              "maxLength": 128,
+              "type": "string"
+            },
+            "provider": {
+              "maxLength": 64,
+              "type": "string"
+            },
+            "runId": {
+              "maxLength": 128,
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "declaredKind": {
+          "enum": [
+            "human",
+            "ai",
+            "mixed",
+            "unknown"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "reference": {
+      "properties": {
+        "description": {
+          "maxLength": 500,
+          "type": "string"
+        },
+        "id": {
+          "description": "Reference identifier",
+          "maxLength": 2048,
+          "type": "string"
+        },
+        "mime": {
+          "maxLength": 100,
+          "type": "string"
+        },
+        "name": {
+          "maxLength": 255,
+          "type": "string"
+        },
+        "size": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "title": {
+          "maxLength": 200,
+          "type": "string"
+        },
+        "type": {
+          "description": "Reference type",
+          "enum": [
+            "ipfs",
+            "ipfs-hash",
+            "url",
+            "license-nft",
+            "contract",
+            "qhash",
+            "ethereum-tx",
+            "on-chain-tx",
+            "tx",
+            "file",
+            "doc",
+            "media",
+            "username-claim",
+            "other"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "owner"
+  ],
+  "title": "ownership-basic",
+  "type": "object"
+}

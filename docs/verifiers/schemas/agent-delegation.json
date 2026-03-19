@@ -1,0 +1,144 @@
+{
+  "$id": "https://neus.network/schemas/agent-delegation.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "anyOf": [
+    {
+      "required": [
+        "controllerAccountId",
+        "agentAccountId"
+      ]
+    },
+    {
+      "required": [
+        "controllerWallet",
+        "controllerChainRef",
+        "agentWallet",
+        "agentChainRef"
+      ]
+    }
+  ],
+  "description": "Delegates authority to an agent, ERC-8004 compatible",
+  "properties": {
+    "agentAccountId": {
+      "description": "Preferred canonical agent identity (CAIP-10).",
+      "format": "caip10-account",
+      "type": "string"
+    },
+    "agentChainRef": {
+      "description": "Required when using legacy agentWallet without agentAccountId.",
+      "format": "caip2-chain",
+      "type": "string"
+    },
+    "agentId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "type": "string"
+    },
+    "agentWallet": {
+      "format": "universal-address",
+      "type": "string"
+    },
+    "allowedPaymentTypes": {
+      "items": {
+        "maxLength": 32,
+        "type": "string"
+      },
+      "maxItems": 8,
+      "type": "array"
+    },
+    "controllerAccountId": {
+      "description": "Preferred canonical controller identity (CAIP-10).",
+      "format": "caip10-account",
+      "type": "string"
+    },
+    "controllerChainRef": {
+      "description": "Required when using legacy controllerWallet without controllerAccountId.",
+      "format": "caip2-chain",
+      "type": "string"
+    },
+    "controllerWallet": {
+      "format": "universal-address",
+      "type": "string"
+    },
+    "expiresAt": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "instructions": {
+      "maxLength": 4000,
+      "type": "string"
+    },
+    "maxSpend": {
+      "pattern": "^[0-9]{1,78}$",
+      "type": "string"
+    },
+    "permissions": {
+      "items": {
+        "maxLength": 64,
+        "type": "string"
+      },
+      "maxItems": 32,
+      "type": "array"
+    },
+    "receiptDisclosure": {
+      "enum": [
+        "none",
+        "summary",
+        "full"
+      ],
+      "type": "string"
+    },
+    "scope": {
+      "maxLength": 128,
+      "type": "string"
+    },
+    "skills": {
+      "description": "Agent skills as structured objects",
+      "items": {
+        "properties": {
+          "configId": {
+            "maxLength": 128,
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "id": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "native",
+              "integration",
+              "plugin",
+              "mcp",
+              "toolkit"
+            ],
+            "type": "string"
+          },
+          "label": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "provider": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "version": {
+            "maxLength": 32,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "maxItems": 48,
+      "type": "array"
+    }
+  },
+  "title": "agent-delegation",
+  "type": "object"
+}

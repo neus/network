@@ -1,0 +1,178 @@
+{
+  "$id": "https://neus.network/schemas/agent-identity.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "anyOf": [
+    {
+      "required": [
+        "agentAccountId"
+      ]
+    },
+    {
+      "required": [
+        "agentWallet",
+        "agentChainRef"
+      ]
+    }
+  ],
+  "description": "Portable agent identity, ERC-8004 compatible",
+  "properties": {
+    "agentAccountId": {
+      "description": "Preferred canonical subject identity (CAIP-10).",
+      "format": "caip10-account",
+      "type": "string"
+    },
+    "agentChainRef": {
+      "description": "Required when using legacy agentWallet without agentAccountId.",
+      "format": "caip2-chain",
+      "type": "string"
+    },
+    "agentId": {
+      "maxLength": 128,
+      "minLength": 1,
+      "type": "string"
+    },
+    "agentLabel": {
+      "maxLength": 128,
+      "type": "string"
+    },
+    "agentType": {
+      "enum": [
+        "ai",
+        "bot",
+        "service",
+        "automation",
+        "agent"
+      ],
+      "type": "string"
+    },
+    "agentWallet": {
+      "format": "universal-address",
+      "type": "string"
+    },
+    "capabilities": {
+      "additionalProperties": false,
+      "description": "Agent capabilities as boolean flags",
+      "properties": {
+        "browser": {
+          "type": "boolean"
+        },
+        "delegation": {
+          "type": "boolean"
+        },
+        "mcp": {
+          "type": "boolean"
+        },
+        "proofs": {
+          "type": "boolean"
+        },
+        "publishing": {
+          "type": "boolean"
+        },
+        "receipts": {
+          "type": "boolean"
+        },
+        "search": {
+          "type": "boolean"
+        },
+        "signing": {
+          "type": "boolean"
+        },
+        "spending": {
+          "type": "boolean"
+        },
+        "wallet": {
+          "type": "boolean"
+        },
+        "webhooks": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "description": {
+      "maxLength": 500,
+      "type": "string"
+    },
+    "instructions": {
+      "maxLength": 4000,
+      "type": "string"
+    },
+    "services": {
+      "items": {
+        "properties": {
+          "endpoint": {
+            "format": "uri",
+            "maxLength": 256,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "version": {
+            "maxLength": 32,
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "endpoint"
+        ],
+        "type": "object"
+      },
+      "maxItems": 16,
+      "type": "array"
+    },
+    "skills": {
+      "description": "Agent skills as structured objects",
+      "items": {
+        "properties": {
+          "configId": {
+            "maxLength": 128,
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "id": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "native",
+              "integration",
+              "plugin",
+              "mcp",
+              "toolkit"
+            ],
+            "type": "string"
+          },
+          "label": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "provider": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "version": {
+            "maxLength": 32,
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "type": "object"
+      },
+      "maxItems": 48,
+      "type": "array"
+    }
+  },
+  "required": [
+    "agentId"
+  ],
+  "title": "agent-identity",
+  "type": "object"
+}
