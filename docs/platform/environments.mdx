@@ -1,17 +1,17 @@
 ---
 title: Environments
-description: Standard NEUS public surfaces, base URLs, and deployment expectations.
+description: Production base URLs for the NEUS app, API, docs, IPFS, and MCP.
 icon: server
 ---
 
-Use these URLs for production integrations. If you test against a separate environment, make sure your API and hosted verify URLs stay aligned.
+Use these URLs for production integrations. If you test against a separate environment, use the same environment for both the API and hosted verify.
 
-## Standard Public Surfaces
+## Standard URLs
 
-| Surface | URL | Purpose |
+| Service | URL | Purpose |
 |---|---|---|
-| App | `https://neus.network` | Hosted verify, proof pages, and user-facing product flows |
-| API | `https://api.neus.network` | Public API surface |
+| App | `https://neus.network` | Hosted verify, proof pages, and user-facing flows |
+| API | `https://api.neus.network` | Public HTTP API |
 | Docs | `https://docs.neus.network` | Public documentation |
 | IPFS | `https://ipfs.neus.network` | Content-addressed asset access |
 | MCP | `https://mcp.neus.network` | Hosted MCP for agents (discovery: `/.well-known/mcp.json`) |
@@ -20,9 +20,9 @@ Use these URLs for production integrations. If you test against a separate envir
 
 - Use `https://api.neus.network` for production API traffic.
 - Use `https://neus.network/verify` as the standard hosted verification path.
-- If you override `apiUrl` in the SDK, also set `hostedCheckoutUrl` so hosted flows stay aligned with the environment you intend to use.
+- If you override `apiUrl` in the SDK, also set `hostedCheckoutUrl` so hosted verify uses the same environment.
 
-## Integrator Notes
+## Notes
 
 - `appId` is public attribution metadata, not a secret.
-- Keep your hosted verify URL aligned with your API environment.
+- Point hosted verify at the same environment as your API.

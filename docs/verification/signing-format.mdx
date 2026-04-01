@@ -1,79 +1,64 @@
 ---
 title: Signing Format
-description: Why verification requests require a wallet signature and how to sign the deterministic message.
+description: Why verification uses a wallet signature and how to sign safely.
 icon: file-code
 ---
 
-## Default Recommendation
+## Default
 
-Use hosted `/verify` or the SDK unless you explicitly need advanced HTTP signing control.
+Use **hosted `/verify`** or the **SDK** unless you must drive **`POST /api/v1/verification`** yourself.
 
-## Why This Exists
+## Why sign
 
-The signature proves the wallet actually approves the verification request. That is what lets NEUS issue a reusable proof receipt instead of trusting a client-side claim.
+The signature shows the wallet agreed to that verification request. NEUS then issues the proof receipt.
 
-## Recommended Paths
+## HTTP outline
 
-| Path | Use when |
-|---|---|
-| Hosted verify | You want the standard user flow |
-| SDK signing helpers | You want direct app control without hand-building the request |
-| Raw HTTP signing | You need advanced server-side or low-level API control |
+1. **`POST /api/v1/verification/standardize`** — get **`signerString`**.
+2. Sign that string with the user’s wallet.
+3. **`POST /api/v1/verification`** — submit the **same request fields** as in step 1, plus **`signature`**.
 
-## Advanced HTTP Path
+Do not edit or invent the message text — only sign what **`standardize`** returns (or use **`standardizeVerificationRequest`** in the SDK).
 
-<Steps>
-  <Step title="Get the exact signing string from NEUS">
-    Call `POST /api/v1/verification/standardize`
-  </Step>
-  <Step title="Sign that exact string with the user's wallet">
-    Sign the returned `signerString`
-  </Step>
-  <Step title="Submit the verification request">
-    Submit the same normalized request body to `POST /api/v1/verification`
-  </Step>
-</Steps>
-
-## Verification Message Format
-
-The server returns a deterministic six-line string from `POST /api/v1/verification/standardize`. Sign that exact string:
+## Message shape
 
 ```text
 NEUS Verification Request
 Wallet: <address>
 Chain: <chainId or CAIP-2 chain>
 Verifiers: <comma-separated-ids>
-Data: <standardized-json>
+Data: <json payload>
 Timestamp: <unix-ms>
 ```
 
-Do not hand-author or edit this message. Always sign the exact server-returned string.
+## SDK
 
-## SDK Path
+```javascript
+import { standardizeVerificationRequest, signMessage } from '@neus/sdk';
+// See JavaScript SDK docs for a full example.
+```
 
-Use `standardizeVerificationRequest(...)` from `@neus/sdk` when you need the low-level flow without managing normalization yourself.
+## Wallets
 
-## Supported Wallets
-
-| Type | Standard | Description |
-|------|----------|-------------|
-| EOA | EIP-191 | Standard `personal_sign` (MetaMask, Coinbase, Rainbow) |
-| Smart Contract | EIP-1271 | Contract wallets (Safe, Argent, Sequence) |
-| Counterfactual | EIP-6492 | Pre-deployed smart accounts not yet on-chain |
+| Type | Standard |
+|------|----------|
+| EOA | EIP-191 |
+| Smart contract | EIP-1271 |
+| Counterfactual | EIP-6492 |
 
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="How Verification Works" icon="shield-check" href="./how-it-works">
-    Verification model and flows.
+  <Card title="How verification works" icon="shield-check" href="./how-it-works">
+    Flow overview.
   </Card>
-  <Card title="API Authentication" icon="key" href="../api/authentication">
-    API-specific auth patterns and low-level rules.
+  <Card title="API authentication" icon="key" href="../api/authentication">
+    HTTP signing entry.
   </Card>
-  <Card title="CAIP-380 Portable Proof" icon="file-signature" href="../learn/standards/caip-380">
-    Protocol spec and envelope format.
+  <Card title="Verifier catalog" icon="list-tree" href="./verifiers">
+    Verifier IDs.
   </Card>
-  <Card title="Verifier Catalog" icon="list-tree" href="./verifiers">
-    Verifier IDs and input schemas.
+  <Card title="CAIP-380" icon="file-signature" href="../learn/standards/caip-380">
+    Portable proof envelope.
   </Card>
 </CardGroup>

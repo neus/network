@@ -4,11 +4,13 @@ description: Pay per use when credits run out. Verification API, gate checks, ho
 icon: coins
 ---
 
+**Default path:** Platform credits + **sponsor grants** — **[Get started](../get-started)**. **x402** is for when you are **out of credits** and need to **pay per request**, then retry with a receipt.
+
 x402 lets a request pay at the time it runs. If credits are not available, the API returns a quote, the client pays, and the request is retried with the receipt.
 
 ## Where x402 Applies
 
-| Surface | When 402 Happens |
+| API or flow | When 402 happens |
 |---------|------------------|
 | **Verification API** | `POST /api/v1/verification` when the caller has no credits |
 | **Gate check API** | `GET /api/v1/proofs/check` when the caller has no credits |
@@ -27,7 +29,7 @@ x402 lets a request pay at the time it runs. If credits are not available, the A
 - **Verifiers** — Direct API verification can fall back to x402 when credits are missing.
 - **Gates** — Gate checks can do the same.
 - **Hosted flows** — x402 matters when the calling app or server is the billable party.
-- **Agents** — Delegation can allow pay-per-use on behalf of a controller.
+- **Agents** — Delegation can allow pay-per-use on behalf of the approving account.
 
 ## Header
 
@@ -38,6 +40,9 @@ PAYMENT-SIGNATURE: <receipt>
 ## Related
 
 <CardGroup cols={2}>
+  <Card title="Get started" icon="rocket" href="../get-started">
+    Platform credits before x402.
+  </Card>
   <Card title="Billing and Credits" icon="credit-card" href="./billing">
     Credit pricing and payment methods.
   </Card>

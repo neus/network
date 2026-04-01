@@ -33,7 +33,8 @@ export {
   delay,
   NEUS_CONSTANTS,
   DEFAULT_HOSTED_VERIFY_URL,
-  getHostedCheckoutUrl
+  getHostedCheckoutUrl,
+  toAgentDelegationMaxSpend
 } from './utils.js';
 
 // Gate recipes (examples, NOT defaults - pick what fits your use case)

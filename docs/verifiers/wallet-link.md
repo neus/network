@@ -28,7 +28,7 @@ Link secondary wallet via signature
 
 - **Compatible with:** `contract-ownership`, `ownership-basic`, `wallet-risk`, `agent-identity`
 
-## Example (schema-validated)
+## Example
 
 ```javascript
 await client.verify({

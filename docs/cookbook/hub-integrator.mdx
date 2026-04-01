@@ -4,19 +4,19 @@ description: Production onboarding for websites, communities, apps, teams, and p
 icon: building
 ---
 
-Use this guide when you are connecting a website, community, app, team, or partner flow to NEUS. Integration follows three steps:
+<Note>
+  **First time?** Complete **[Get started](../get-started)** (platform profile, **Apps** → Link app, credits, `appId`, sponsor). The sections below cover domain, org, VerifyGate, and sponsor grants in detail.
+</Note>
 
-1. Use hosted verify as the standard guided flow.
-2. Save the proof receipt ID.
-3. Reuse that proof receipt for profile trust, onboarding, access checks, proof pages, and app attribution.
+Use this guide when you are connecting a website, community, app, team, or partner flow to NEUS. After **[Get started](../get-started)**, you will use hosted verify, save proof receipt IDs, and reuse them across profile trust, gating, and attribution.
 
-## What NEUS Gives You
+## What NEUS gives you
 
-| Surface | What it solves |
+| Capability | What it solves |
 |---|---|
 | Portable profile trust | A person can link wallets, socials, domains, team association, and proof-backed badges over time |
 | Domain and namespace trust | Sites, communities, and orgs can prove control of a domain and use that trust in onboarding and identity flows |
-| Linked apps | Apps and platforms can attribute usage and connect a real integration surface to the same proof layer |
+| Linked apps | Apps and platforms can attribute usage and connect the app to the same proof layer |
 | Proof receipts | Every completed flow returns a reusable proof receipt ID instead of a one-time verification dead end |
 | Hosted verify | Interactive checks stay on the hosted `/verify` flow instead of forcing partners to build custom UX |
 
@@ -27,7 +27,7 @@ Use this guide when you are connecting a website, community, app, team, or partn
 
 ## 1. Domain Verification
 
-Link your domain to your wallet by setting a DNS TXT record. This is the foundation for site trust, partner onboarding, app linking, and namespaced identity surfaces.
+Link your domain to your wallet by setting a DNS TXT record. This is the foundation for site trust, partner onboarding, app linking, and namespaced identity claims.
 
 **Step 1:** Add a DNS TXT record at `_neus.<yourdomain.com>`:
 
@@ -99,22 +99,22 @@ If access should only succeed for members of one company or team domain, pass `e
 ```
 
 <Note>
-Most integrators do not need to create their own Google or Microsoft OAuth app just to use the hosted NEUS flow.
+You typically do not need your own Google or Microsoft OAuth app to use the hosted NEUS flow.
 </Note>
 
-## 3. Link the App or Site in Hub
+## 3. Link the app or site on the platform
 
-Link your integration domain in the Hub to receive attribution, usage tracking, and credit controls:
+Link your integration domain on the **NEUS platform** to receive attribution, usage tracking, and credit controls:
 
 | Step | Action |
 |------|--------|
-| 1 | Go to [Hub](https://neus.network/hub) -> Profile -> Apps |
+| 1 | Go to the [NEUS platform](https://neus.network/hub) → Profile → Apps |
 | 2 | Enter app domain, for example `app.example.com` or `https://app.example.com` |
 | 3 | Set daily credit cap |
 | 4 | Use `*` for any origin only in development |
 | 5 | Send `X-Neus-App` and `Origin` headers from your approved domain |
 
-<Card title="Hub" icon="globe" href="../platform/hub">
+<Card title="Platform" icon="globe" href="../platform/hub">
   Explorer, profile tabs, and identity management.
 </Card>
 
@@ -134,9 +134,9 @@ const client = new NeusClient({ appId: 'your-app-id' });
   Credits and payment options.
 </Card>
 
-## 5. Build the Portable Trust Surface
+## 5. Combine trust signals
 
-These live capabilities can already be combined into a portable identity and trust surface:
+You can combine these capabilities into one portable verified profile:
 
 - linked apps
 - domain verification
@@ -144,16 +144,16 @@ These live capabilities can already be combined into a portable identity and tru
 - username and namespace claims
 - linked wallets
 - public, private, and unlisted proof visibility
-- proof pages and profile surfaces
+- proof pages and your platform profile
 
-In Hub, the most common flows are:
+On the platform, the most common flows are:
 
 | Flow | Where | Notes |
 |------|-------|------|
 | Domain | Profile -> Identity -> Domains | Add DNS TXT at `_neus.<domain>` first |
 | Organization | Profile -> Identity -> Organizations | Hosted NEUS verify for Google Workspace or Microsoft 365 |
-| Username | Profile / Claim flows | Use portable handle and namespace claim surfaces |
-| Linked wallets | Profile identity flows | Treat multiple wallets as one reusable trust surface |
+| Username | Profile / Claim flows | Portable handle and namespace claims |
+| Linked wallets | Profile identity flows | Multiple wallets as one linked identity |
 | Privacy | Per proof | Public, private, or unlisted proof visibility |
 
 Link the app first in Profile -> Apps, then connect whichever trust signals your product actually needs.
@@ -214,14 +214,14 @@ The `/api/v1/proofs/check` response includes `matchCount` for telemetry.
 
 NEUS is most useful when you follow this model:
 
-- a person has a reusable trust surface
-- that surface can collect wallets, linked accounts, domains, team association, and proof-backed badges over time
+- a person has a reusable verified profile
+- that profile can accumulate wallets, linked accounts, domains, team association, and proof-backed badges over time
 - apps can attribute usage and gate access using the same proof layer
 - domains and namespaces can anchor site, community, and organization identity
 - proof receipts are the portable artifact shared across all of it
 
-## Operational Rules
+## Integration guidelines
 
 - Keep `/verify` as the single hosted path for interactive verification
-- Route all OAuth and interactive verifier handoff through NEUS-hosted surfaces
+- Route OAuth and interactive verifier handoffs through NEUS hosted verification
 - Do not create parallel auth routes when NEUS already provides a standard path

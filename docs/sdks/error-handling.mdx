@@ -14,7 +14,7 @@ Recovery guide for polling, hosted flows, private proof reads, and verifier fail
 | Hosted interactive handoff | Interactive verifier in a custom flow | Redirect to hosted verify or use `VerifyGate` |
 | Async processing | Proof not finished yet | Poll status with backoff |
 | Private proof auth required | Owner-only reads | Re-authenticate the owner and retry |
-| Upstream outage | Auth/session routes | Respect `Retry-After` and surface a retry path |
+| Temporary errors | Login / session | Respect `Retry-After` and let the user retry |
 
 ## Polling Example
 
@@ -35,4 +35,4 @@ const privateData = await client.getPrivateStatus(proofId, window.ethereum);
 
 - Do not spam verification creation on ambiguous failures.
 - Keep proof receipt IDs so you can resume polling or display the proof later.
-- Surface interactive verifier requirements clearly; don't hide hosted handoffs behind generic error copy.
+- Show interactive verifier requirements clearly; do not hide hosted handoffs behind generic error copy.

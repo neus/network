@@ -1,75 +1,29 @@
 ---
-title: Public Proof Context (`neus_proofs_get`)
-description: Load public proof context and profile summary for a wallet or DID.
+title: Proof Context (`neus_proofs_get`)
+description: Proofs + profile summary for a wallet or DID.
 icon: receipt
 ---
 
-Use `neus_proofs_get` when you need public proof history and profile context for an agent workflow.
+Use when you **already have** an **`identifier`** (from NEUS, or user pasted it). If they still need to verify, **`neus_verify_or_guide`** + open the hosted link first.
 
-This tool returns portable public context only and does not expose private proof payloads.
-
-## Best For
-
-- public proof context
-- profile summarization
-- agent-facing proof views
+**Visibility:** Without sign-in, you see what public browsing would show. With **Bearer** for that user, **private** proofs can appear ([Auth](./auth)).
 
 ## Input
 
 ```json
 {
-  "identifier": "0xabc123...",
+  "identifier": "0x…",
   "limit": 25,
   "offset": 0
 }
 ```
 
-## Stable Output
+`identifier`: EVM, Solana base58, or `did:pkh:…`.
 
-- resolved identifier
-- public proof list
-- profile summary when available
-- pagination metadata
-- agent context pack when agent proofs are present
+## You get
 
-## Response Structure
+Resolved wallet/DID, paginated **proofs**, **profileSummary**, optional **agentContext** / **contextPack**. Use the **`pagination`** object in the response as returned (including optional totals).
 
-```json
-{
-  "success": true,
-  "data": {
-    "proofs": [],
-    "profileSummary": {
-      "profile": {
-        "displayName": "user.eth"
-      },
-      "credits": null,
-      "proofsSummary": null,
-      "linkedAccounts": {}
-    },
-    "resolved": {
-      "identifier": "0xabc123...",
-      "walletAddress": "0xabc123...",
-      "did": "did:pkh:eip155:84532:0xabc123...",
-      "idType": "wallet"
-    },
-    "pagination": {
-      "limit": 25,
-      "offset": 0,
-      "totalCount": 42,
-      "hasMore": true,
-      "nextOffset": 25
-    },
-    "agentContext": {
-      "identities": [],
-      "delegations": [],
-      "services": []
-    },
-    "contextPack": {
-      "identityCount": 0,
-      "delegationCount": 0,
-      "activeDelegations": 0
-    }
-  }
-}
-```
+## Related
+
+[Proof check](./proofs-check) · [Overview](./overview)

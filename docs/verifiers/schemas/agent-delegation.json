@@ -69,6 +69,7 @@
       "type": "string"
     },
     "maxSpend": {
+      "description": "Whole-number string in token base units (no decimal point). Typical USDC (x402): six decimal places.",
       "pattern": "^[0-9]{1,78}$",
       "type": "string"
     },

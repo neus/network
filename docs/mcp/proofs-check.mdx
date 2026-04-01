@@ -1,44 +1,25 @@
 ---
 title: Proof Check (`neus_proofs_check`)
-description: Run eligibility-safe proof checks without loading private proof payloads.
+description: Yes/no eligibility without proof details or hosted links.
 icon: shield-check
 ---
 
-Use `neus_proofs_check` when your agent only needs to know whether a wallet or DID satisfies a policy.
+**Yes/no only** — no proof IDs, no verify URL. For **“open this link to verify”**, use **`neus_verify_or_guide`**.
 
-## Best For
-
-- access checks
-- gate enforcement
-- avoiding private proof payload reads
+Private proofs count only when that **same user** is signed in (**Bearer**).
 
 ## Input
 
-```json
-{
-  "wallet": "0xabc123...",
-  "verifiers": ["ownership-basic", "proof-of-human"],
-  "requireAll": true,
-  "minCount": 2
-}
-```
-
-## Returns
-
-- `eligible`
-- `matchedCount`
-- `success`
-
-## Response Structure
+Uses **`wallet`** (not `walletAddress`):
 
 ```json
 {
-  "eligible": true,
-  "matchedCount": 2,
-  "success": true
+  "wallet": "0x…",
+  "verifiers": ["ownership-basic"],
+  "requireAll": true
 }
 ```
 
-<Note>
-`neus_proofs_check` is deliberately eligibility-safe. It does not return qHash lists, proof payloads, or verifier-by-verifier proof enumeration.
-</Note>
+## Output
+
+`eligible`, `matchedCount`, `success`.

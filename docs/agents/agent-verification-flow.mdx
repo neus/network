@@ -6,6 +6,8 @@ icon: route
 
 Use this flow when you need to identify an agent, define what it can do, and let an app or AI runtime consume that result.
 
+For definitions of **approving account**, **agent wallet**, and **session**, see [Agent concepts](./concepts).
+
 ## What this flow includes
 
 1. Agent registration
@@ -18,7 +20,7 @@ Use this flow when you need to identify an agent, define what it can do, and let
   <Step title="Register the agent">
     Create an agent registration proof that binds the agent wallet and its public metadata to one reusable proof receipt.
   </Step>
-  <Step title="Add agent permissions when a controller is involved">
+  <Step title="Add agent permissions when an approving account is involved">
     If a person, team, or service is granting authority to the agent, create an agent permissions proof with scope, permissions, and any limits.
   </Step>
   <Step title="Use MCP or the API in the runtime">
@@ -26,11 +28,13 @@ Use this flow when you need to identify an agent, define what it can do, and let
   </Step>
 </Steps>
 
+`agent-identity` registers the agent. `agent-delegation` grants authority. Keep those two concepts separate in your app and docs.
+
 ## What you configure
 
 - The agent wallet
 - The agent label, type, and public description
-- Optional permissions, scope, expiry, and limits when a controller is delegating authority
+- Optional permissions, scope, expiry, and limits when an approving account is granting authority
 
 ## What your app gets back
 
@@ -40,18 +44,20 @@ Use this flow when you need to identify an agent, define what it can do, and let
 
 ## Hosted handoff
 
-When `neus_agent_link` (MCP) returns `status: "link_required"`, the user is sent to hosted verify to complete agent identity and delegation. The URL can include:
+When `neus_agent_link` (MCP) returns `status: "link_required"`, the default path is simple:
 
-| Param | Use |
-|-------|-----|
-| `preset=agent-pack` | Preload agent-identity, agent-delegation, wallet-risk |
-| `agent=<wallet>` | Pre-fill agent wallet when linking |
+1. Open the `hostedVerifyUrl` from the tool response.
+2. Finish the guided browser flow.
+3. Call `neus_agent_link` again to confirm identity and access approval are both on file.
 
-Example: `https://neus.network/verify?preset=agent-pack&agent=0x...`
+You do not need to build or manage the hosted URL yourself for the normal MCP path. The tool name is legacy; it checks **readiness**, not wallet linking.
 
 ## Related pages
 
 <CardGroup cols={3}>
+  <Card title="Concepts" icon="book-open" href="./concepts">
+    Approving account, agent wallet, and API field names.
+  </Card>
   <Card title="Agent Registration" icon="robot" href="./agent-identity">
     Register a verifiable agent.
   </Card>

@@ -36,7 +36,9 @@ const proofId = proof.proofId;
 | No reusable identity | Portable proof receipts |
 | Custom verification infrastructure | Hosted UI + API |
 
-## Integration Paths
+## Integration paths
+
+**Builders:** [Get started](https://docs.neus.network/get-started) (platform, app link, credits), then [choose an integration path](https://docs.neus.network/choose-an-integration-path).
 
 | Path | Best For |
 |------|----------|
@@ -45,6 +47,10 @@ const proofId = proof.proofId;
 | [SDK](https://docs.neus.network/sdks/overview) | Custom flows |
 | [API](https://docs.neus.network/api/overview) | Server checks |
 | [MCP](https://docs.neus.network/mcp/overview) | AI agents |
+
+## AI assistants (MCP)
+
+**`https://mcp.neus.network/mcp`** — [setup](https://docs.neus.network/mcp/setup) is one JSON block; users verify via **hosted links** tools return.
 
 ## Documentation
 

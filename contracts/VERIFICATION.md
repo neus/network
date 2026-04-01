@@ -12,9 +12,9 @@ Verified smart contract deployments with explorer links.
 
 No mainnet token. NEUSToken listed here is testnet-only (MIT) on Base Sepolia.
 
-**Operational notes:**
+**Contract behavior:**
 - **Registry** is the entry point for `verifyData`. All anchoring activity appears on the registry.
-- **Hub** is only called when cross-chain propagation is requested (`targetChainIds.length > 0`). Hub-only verifications produce no hub activity.
+- **NEUSVoucherHub** is only used when cross-chain propagation is requested (`targetChainIds.length > 0`). Without cross-chain targets, the voucher hub contract is not invoked.
 - **Token** is used for fees when `verificationFee > 0`. Zero-fee mode = no token transfers.
 
 ## Cross-Chain Storage Spokes

@@ -1,0 +1,59 @@
+---
+title: Agent concepts
+description: Roles, wallets, and how NEUS agent API field names map to those concepts.
+icon: book-open
+---
+
+This page defines NEUS agent roles and wallets, and maps them to JSON and API field names.
+
+## Core invariant
+
+**Registering an agent** and **approving what it can do** are **separate steps**. Different people can perform them. **No wallet linking** between publisher and approver is required for the open permission layer to work.
+
+## Roles
+
+| Role | Description | Signs |
+|------|----------------|--------|
+| **Publisher** | Publishes the agent (metadata bound to an agent wallet) | The **agent wallet** registers the agent |
+| **Approver** | Grants scoped access to that agent | The **approving account** signs access approval |
+
+The publisher and approver can be the same person (common solo setup) or different people (marketplace or delegated trust).
+
+## Wallets
+
+- **Agent wallet** — The wallet that represents the agent on chain; used when **registering / publishing** the agent.
+- **Approving account** — The wallet that **signs access approval** for what the agent is allowed to do (scopes, limits, expiry). This is **not** “ownership” of the agent wallet and does not require linking profiles.
+
+## Hosted flow
+
+The normal path is **[hosted verify](../cookbook/auth-hosted-verify)**: complete steps in the browser (or MCP-assisted links) instead of hand-rolling signatures.
+
+## Field names in the API
+
+JSON and query parameters keep stable names for compatibility. In prose, map them like this:
+
+| API / query name | Meaning |
+|------------------|-------------------------|
+| `agentWallet` | Agent wallet address |
+| `controllerWallet` | **Approving account** (grantor) in delegation payloads and checks — not “controller” in a product-linking sense |
+| `linked` (MCP) | **Readiness** compatibility flag: identity + access approval on file — not wallet-link |
+| `principal` (`neus_me`) | **Signed-in NEUS account** summary (DID / wallet context) — not the delegation approver unless that session is the one approving |
+
+**Private proofs** are visible when that same user is signed in with NEUS — separate from **approving account** in agent delegation.
+
+## Where to go next
+
+<CardGroup cols={2}>
+  <Card title="Agents overview" icon="robot" href="./overview">
+    Capabilities and quick start
+  </Card>
+  <Card title="Verification flow" icon="route" href="./agent-verification-flow">
+    End-to-end sequence
+  </Card>
+  <Card title="MCP agent create" icon="plug" href="../mcp/agent-create">
+    Start setup from tools
+  </Card>
+  <Card title="Verifiable agents cookbook" icon="book-open" href="../cookbook/verifiable-agents">
+    Integrator playbook
+  </Card>
+</CardGroup>

@@ -11,7 +11,7 @@ Organizational OAuth verification
 ## Required fields
 
 - `provider` (`string enum: google, microsoft`)
-- `internalSocialToken` (`string`)
+- `internalSocialToken` (`string`) — token from the NEUS-hosted OAuth step (request field name as shown)
 
 ## Optional fields
 
@@ -20,7 +20,7 @@ Organizational OAuth verification
 
 - **Compatible with:** `agent-delegation`
 
-## Example (schema-validated)
+## Example
 
 ```javascript
 await client.verify({

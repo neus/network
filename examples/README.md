@@ -14,6 +14,9 @@ Integration examples for NEUS.
 
 | Resource | Description |
 |----------|-------------|
+| [Choose Your Path](https://docs.neus.network/choose-an-integration-path) | Pick Hosted Verify, Widgets, SDK, API, or MCP |
+| [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) | Guided login and verification flow |
+| [MCP](https://docs.neus.network/mcp/overview) | Tool-based integration for agents |
 | [Quickstart](https://docs.neus.network/quickstart) | Create your first proof |
 | [API Reference](https://docs.neus.network/api/overview) | HTTP endpoints |
-| [Verifier Catalog](https://docs.neus.network/verification/verifiers) | Outcome-first verifier guide |
+| [Verifier Catalog](https://docs.neus.network/verification/verifiers) | Verifier capabilities and requirements |

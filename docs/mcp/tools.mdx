@@ -1,55 +1,33 @@
 ---
 title: MCP Tools Overview
-description: Choose the right NEUS MCP tool for context loading, gate checks, verification, proof context, and agent flows.
+description: Which NEUS tool to call for checks, verification, and agents.
 icon: wrench
 ---
 
-Each MCP tool does one job. Start here, then move into the task-specific page that matches your flow.
+**Platform + billing:** **[Get started](../get-started)**. **`neus_proofs_check`** accepts **`sponsorGrant`** for higher-limit / sponsored scans when your setup uses grants.
 
-## Recommended Order
+The **assistant** chooses tools; you mainly **open links** they return. For **“verify it’s me”**, prefer anything that hands you a **`neus.network/verify`** URL.
 
-1. `neus_context`
-2. `neus_verifiers_catalog` when you need detailed live verifier metadata
-3. `neus_proofs_check` or `neus_verify_or_guide`
-4. `neus_verify` only when you are intentionally creating a proof
-5. `neus_agent_create` only when you are intentionally creating a new agent
+## Parameter names
 
-## Tool Map
+Your client also loads schemas from the server. This table only prevents the common mistake of using the wrong field name:
 
-<CardGroup cols={2}>
-  <Card title="Context" icon="compass" href="./overview">
-    Start every MCP session with `neus_context`.
-  </Card>
-  <Card title="Verifier Catalog" icon="list-tree" href="./verifiers-catalog">
-    Read the live verifier catalog before building policy or UI.
-  </Card>
-  <Card title="Proofs Check" icon="shield-check" href="./proofs-check">
-    Run eligibility-safe checks without enumerating private proof payloads.
-  </Card>
-  <Card title="Verify or Guide" icon="route" href="./verify-or-guide">
-    Orchestrate gate-first logic and hosted verify handoff.
-  </Card>
-  <Card title="Proofs Get" icon="receipt" href="./proofs-get">
-    Load public proof context and profile summary for a wallet or DID.
-  </Card>
-  <Card title="Current Principal" icon="user-circle" href="./me">
-    Resolve the current principal and session-backed context.
-  </Card>
-  <Card title="Agent Link" icon="robot" href="./agent-link">
-    Check whether an agent wallet is correctly linked and delegated.
-  </Card>
-</CardGroup>
+| Tool | Who / address field | Verifier field |
+|------|---------------------|----------------|
+| `neus_proofs_check` | `wallet` | `verifiers` |
+| `neus_verify_or_guide`, `neus_verify` | `walletAddress` | `verifierIds` |
+| `neus_proofs_get` | `identifier` | — |
 
-## Full Tool Contract
+EVM **`0x…`**, **Solana base58**, or **`did:pkh:…`** where applicable.
 
-| Tool | Contract |
-|------|----------|
-| `neus_context` | Call first. Returns verifiers, billing, protocol rules, and agent constraints in one response. |
-| `neus_verifiers_catalog` | Read the live verifier catalog. |
-| `neus_proofs_check` | Eligibility-safe proof check only. |
-| `neus_verify_or_guide` | Gate-first orchestration with hosted verify handoff. |
-| `neus_verify` | Low-level proof creation or signing elicitation. |
-| `neus_proofs_get` | Public proof context, profile summary, and agent context pack. |
-| `neus_me` | Session-backed principal context when `NEUS_AUTH_TOKEN` is present. |
-| `neus_agent_link` | Check whether agent identity + delegation are both present. |
-| `neus_agent_create` | Prepare the two-step signature flow to create a new agent. |
+## Suggested tool order
+
+1. **`neus_verify_or_guide`** / **`neus_proofs_check`**
+2. **`neus_verifiers_catalog`** (when you need ids)
+3. **`neus_proofs_get`** (when you have an id)
+4. **`neus_me`** (with Bearer only—[Auth](./auth))
+5. **Agent tools** when needed
+
+## Tool pages
+
+- [Verifier catalog](./verifiers-catalog) · [Proofs check](./proofs-check) · [Verify or guide](./verify-or-guide) · [Proofs get](./proofs-get) · [Current user](./me) · [Agent create](./agent-create) · [Agent link](./agent-link)

@@ -90,11 +90,9 @@ git commit -s -m "Your commit message"
 
 ---
 
-## Docs Maintenance
+## Documentation changes
 
-- **Source:** `docs/` (prose, OpenAPI at `docs/openapi/public-api.json`), `spec/verifiers/`
-- **Commands:** `npm run docs:dev`, `npm run docs:validate`
-- **Release manifest:** `node scripts/generate-docs-manifest.mjs --out docs-v1-manifest.json`
+If you change APIs or verifier behavior, update the matching pages under `docs/` and run `npm run docs:validate` before opening a PR.
 
 ---
 

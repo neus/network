@@ -22,7 +22,9 @@ import {
   withRetry,
   delay,
   computeContentHash,
-  NEUS_CONSTANTS
+  NEUS_CONSTANTS,
+  getHostedCheckoutUrl,
+  toAgentDelegationMaxSpend
 } from '../utils.js';
 
 describe('Utils', () => {
@@ -300,6 +302,32 @@ describe('Utils', () => {
     });
   });
 
+  describe('getHostedCheckoutUrl()', () => {
+    it('should include popup origin when provided', () => {
+      const url = getHostedCheckoutUrl({
+        verifiers: ['ownership-basic'],
+        mode: 'popup',
+        origin: 'https://app.example',
+        returnUrl: 'https://app.example/callback',
+        intent: 'login'
+      });
+
+      expect(url).toBe(
+        'https://neus.network/verify?returnUrl=https%3A%2F%2Fapp.example%2Fcallback&verifiers=ownership-basic&mode=popup&intent=login&origin=https%3A%2F%2Fapp.example'
+      );
+    });
+
+    it('should omit origin when not provided', () => {
+      const url = getHostedCheckoutUrl({
+        gateId: 'gate-123',
+        preset: 'human'
+      });
+
+      expect(url).toBe('https://neus.network/verify?gateId=gate-123&preset=human');
+      expect(url.includes('origin=')).toBe(false);
+    });
+  });
+
   describe('isSupportedChain()', () => {
     it('should return true for default chain ID', () => {
       expect(isSupportedChain(NEUS_CONSTANTS.HUB_CHAIN_ID)).toBe(true);
@@ -381,6 +409,25 @@ describe('Utils', () => {
 
       expect(signature).toBe('0xsignature');
       expect(calls.some((call) => call.method === 'personal_sign' && String(call.params[0]).startsWith('0x'))).toBe(true);
+    });
+  });
+
+  describe('toAgentDelegationMaxSpend()', () => {
+    it('converts USDC-style human amounts to base units', () => {
+      expect(toAgentDelegationMaxSpend('25', 6)).toBe('25000000');
+      expect(toAgentDelegationMaxSpend('100.50', 6)).toBe('100500000');
+      expect(toAgentDelegationMaxSpend('.5', 6)).toBe('500000');
+    });
+
+    it('handles ETH-scale decimals', () => {
+      expect(toAgentDelegationMaxSpend('1', 18)).toBe('1000000000000000000');
+    });
+
+    it('rejects invalid input', () => {
+      expect(() => toAgentDelegationMaxSpend('', 6)).toThrow();
+      expect(() => toAgentDelegationMaxSpend('1.2.3', 6)).toThrow();
+      expect(() => toAgentDelegationMaxSpend('1', 79)).toThrow();
+      expect(() => toAgentDelegationMaxSpend('-1', 6)).toThrow();
     });
   });
 

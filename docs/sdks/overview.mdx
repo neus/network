@@ -4,107 +4,79 @@ description: JavaScript SDK for proof creation, polling, and reuse.
 icon: package
 ---
 
-One SDK. Browser and server.
-
-## Install
-
 ```bash
 npm install @neus/sdk
 ```
 
----
+**New app integration?** **[Get started](../get-started)** — then use the patterns below.
 
-## Quick Start
+## One flow
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
+import { getHostedCheckoutUrl } from '@neus/sdk';
 
 const client = new NeusClient({
   apiUrl: 'https://api.neus.network',
   appId: 'my-app',
 });
 
-// Create proof
+// In-browser verify
 const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'Hello NEUS',
   wallet: window.ethereum,
 });
-
-// Save the proof receipt ID
 const proofId = proof.proofId;
-```
 
----
+await client.pollProofStatus(proofId, { interval: 3000, timeout: 60000 });
 
-## What the SDK Provides
-
-| Feature | Method |
-|---------|--------|
-| Create proofs | `client.verify()` |
-| Poll status | `client.pollProofStatus()` |
-| Gate checks | `client.gateCheck()` |
-| Hosted URL | `getHostedCheckoutUrl()` |
-
----
-
-## Key Methods
-
-### Create Proof
-
-```javascript
-const proof = await client.verify({
-  verifier: 'ownership-basic',
-  content: 'My content',
-  wallet: window.ethereum,
-});
-```
-
-### Check Status
-
-```javascript
-const status = await client.pollProofStatus(proofId, {
-  interval: 3000,
-  timeout: 60000,
-});
-```
-
-### Gate Check
-
-```javascript
-const result = await client.gateCheck({
-  address: '0x...',
+await client.gateCheck({
+  address: '0x…',
   verifierIds: ['ownership-basic'],
 });
-```
 
----
-
-## Configuration
-
-```javascript
-const client = new NeusClient({
-  apiUrl: 'https://api.neus.network',
-  appId: 'my-app',
-  timeout: 30000,
+// Hosted URL (see Hosted Verify cookbook)
+const url = getHostedCheckoutUrl({
+  verifiers: ['ownership-basic'],
+  returnUrl: 'https://myapp.com/callback',
 });
 ```
 
----
+## HTTP API
 
-## SDK Pages
+| Need | Use |
+|------|-----|
+| Create proof | `client.verify()` |
+| Wait for async | `client.pollProofStatus()` |
+| Eligibility | `client.gateCheck()` |
+| Hosted redirect/popup | `getHostedCheckoutUrl()` |
+
+Optional: `timeout` on `NeusClient` constructor.
+
+## Who pays for credits?
+
+**`appId`** → **`X-Neus-App`** (attribution). **Credits** follow the **signer** unless you add **`sponsorGrant`** or **x402** — see **[Get started](../get-started)** and **[Billing](../platform/billing)**.
+
+## Pages
 
 <CardGroup cols={2}>
-  <Card title="JavaScript SDK" icon="bracket-curly" href="./javascript">
-    Full method reference.
+  <Card title="Get started" icon="rocket" href="../get-started">
+    Platform checklist first.
   </Card>
-  <Card title="Verification Patterns" icon="rotate" href="./verifications">
-    Reuse vs fresh proof strategies.
+  <Card title="JavaScript" icon="bracket-curly" href="./javascript">
+    Methods and types.
+  </Card>
+  <Card title="Verifications" icon="rotate" href="./verifications">
+    Reuse vs fresh.
   </Card>
   <Card title="Authentication" icon="key" href="./authentication">
-    Session and token flows.
+    Hosted login + Bearer.
   </Card>
-  <Card title="Error Handling" icon="bug" href="./error-handling">
-    Error codes and retries.
+  <Card title="Errors" icon="bug" href="./error-handling">
+    Retries and codes.
+  </Card>
+  <Card title="Billing" icon="credit-card" href="../platform/billing">
+    Sponsor vs user pays.
   </Card>
 </CardGroup>

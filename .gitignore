@@ -43,7 +43,7 @@ docs/.mintlify-home*/
 # Local packages / tarballs
 *.tgz
 
-# Internal / IDE configs (never commit)
+# Local editor and assistant folders (do not commit)
 .CLAUDE/
 .claude/
 .cursor/

@@ -4,7 +4,7 @@ description: JavaScript client for the NEUS Network verification API.
 icon: code
 ---
 
-Use the SDK when your app wants direct control over proof creation, hosted handoff, and status polling without managing raw HTTP requests by hand.
+Use the SDK when your app needs direct control over proof creation, hosted handoff, and status polling without raw HTTP request assembly.
 
 ## Install
 
@@ -56,9 +56,9 @@ const client = new NeusClient({
 
 See [Verification Patterns](./verifications) for privacy levels and widget options.
 
-## Create a Proof (Server / Manual Signing)
+## Create a Proof (manual signing)
 
-If you need manual or server-side signing, ask the API for the exact string first:
+If the wallet signs in your app, get the signing string from the API first:
 
 ```javascript
 import { standardizeVerificationRequest, signMessage } from '@neus/sdk';
@@ -75,7 +75,6 @@ const body = {
   },
   walletAddress,
   signedTimestamp,
-  chainId: 84532,
 };
 
 const standardized = await standardizeVerificationRequest(body, {
@@ -94,6 +93,8 @@ const res = await client.verify({
   options: { privacyLevel: 'private' }
 });
 ```
+
+This is the advanced path. With MCP, manual signing is typically unnecessary.
 
 ## What Verifiers Are Available?
 
@@ -118,6 +119,8 @@ const client = new NeusClient({
 
 Use `getHostedCheckoutUrl` for a single typed entry point:
 
+Supported query keys: `gateId`, `returnUrl`, `verifiers`, `preset`, `mode`, `intent`, and `origin`.
+
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
@@ -125,14 +128,16 @@ const url = getHostedCheckoutUrl({
   gateId: 'my-gate',
   returnUrl: 'https://myapp.com/callback',
   verifiers: ['ownership-social'],
+  mode: 'popup',
+  origin: window.location.origin,
   intent: 'login',
 });
-// => https://neus.network/verify?gateId=my-gate&returnUrl=...&verifiers=...
+// => https://neus.network/verify?gateId=my-gate&returnUrl=...&verifiers=...&mode=popup&origin=...
 ```
 
-## Gate Checks (Recommended for Server-Side Gating)
+## Gate checks from your servers
 
-For production server-side gating, prefer the minimal public endpoint:
+Use **`gateCheck`** for allow/deny without loading full proof payloads:
 
 ```javascript
 const res = await client.gateCheck({
@@ -140,8 +145,7 @@ const res = await client.gateCheck({
   verifierIds: ['token-holding'],
   contractAddress: '0x...',
   minBalance: '100',
-  chainId: 8453,
-  // Optional: require a recent proof for point-in-time verifiers
+  chainId: 8453, // Required for asset verifiers (NFT, token, contract) — specifies the chain the asset lives on
   since: Date.now() - 60 * 60 * 1000
 });
 
@@ -151,15 +155,12 @@ if (!res.data?.eligible) {
 ```
 
 <Warning>
-`gateCheck` evaluates **existing public/discoverable proofs**. For strict real-time decisions, create a new proof and use the final status.
+**`gateCheck`** uses **public** and **unlisted** proofs by default. **Private** proofs count only when that user is **signed in**. For the strictest live checks, create a fresh proof and wait for **verified** status.
 </Warning>
 
-## Resilience & Polling
+## Polling
 
-The SDK is designed for production stability:
-
-- **Automatic Backoff**: `pollProofStatus()` automatically detects rate limiting (`429`) and applies jittered exponential backoff
-- **Wallet Identification**: Automatically attaches headers for higher reliability behind shared IPs
+**`pollProofStatus()`** backs off automatically on rate limits (**`429`**) and transient errors.
 
 ## Advanced: Private Proof Operations
 

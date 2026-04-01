@@ -70,15 +70,11 @@ You get a proof receipt ID that can be reused for proof pages, product trust, ac
 
 ## Content Retrieval
 
-**Core Principle:** NEUS does not "unhash." Content retrieval requires either:
+**Core Principle:** Content retrieval requires either:
 
-1. **Stored original content**: Set `options.storeOriginalContent=true` to store content in `publicContent.content`
-2. **Stable reference**: Provide `reference.type` + `reference.id` for external resolution
+1. **Stored original content**: The proof was created with content storage enabled in `publicContent.content`
+2. **Stable reference**: The proof references external content via `reference.type` + `reference.id`
 
-For private proofs with stored content, use the existing proof read endpoint with `resolveContent=true`:
-
-```
-GET /api/v1/proofs/by-wallet/{address}?resolveContent=true&qHash=0x...
-```
+When the **same user is signed in**, private content can resolve without extra query parameters.
 
 Returns `contentResolutionStatus`: `resolved` or `hash_only_not_recoverable`.

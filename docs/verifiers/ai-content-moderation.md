@@ -19,7 +19,7 @@ Verifies content safety via AI
 
 - **Compatible with:** `ownership-basic`, `agent-identity`, `proof-of-human`
 
-## Example (schema-validated)
+## Example
 
 ```javascript
 await client.verify({

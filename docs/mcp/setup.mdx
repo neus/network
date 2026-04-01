@@ -1,22 +1,14 @@
 ---
 title: Setup
-description: Config snippets for the hosted NEUS MCP endpoint, plus plugin and local install paths.
+description: Copy-paste setup for the hosted NEUS MCP endpoint.
 icon: code
 ---
 
-Use the hosted MCP endpoint unless you have a separate reason to run your own transport.
+**Building on NEUS?** Do **[Get started](../get-started)** first so platform setup, **`appId`**, and credits match how you use MCP in production.
 
-## Recommended Go-Live Setup
+## Connect
 
-| Surface | Use this when | Setup |
-|---------|---------------|-------|
-| Hosted MCP | You want the public NEUS MCP immediately | `https://mcp.neus.network/mcp` |
-| Plugin install | You want packaged Zeus + NEUS skills + hosted MCP wiring | `github:neus/network/plugins/neus-core` |
-| Local stdio | You are testing or self-hosting the MCP package | `npx @neus/mcp-server` or `node mcp/server.js` |
-
-## Client Setup
-
-### Cursor
+Paste this into your MCP settings (Cursor, Claude Desktop, VS Code, or any client that supports HTTP MCP). Use the URL **exactly** as shown, including `/mcp`.
 
 ```json
 {
@@ -24,92 +16,38 @@ Use the hosted MCP endpoint unless you have a separate reason to run your own tr
     "neus": {
       "type": "streamableHttp",
       "url": "https://mcp.neus.network/mcp",
-      "description": "NEUS MCP (live)"
+      "description": "NEUS MCP"
     }
   }
 }
 ```
 
-### Claude Desktop
+Reload the client if it asks. **No API key.**
 
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "type": "streamableHttp",
-      "url": "https://mcp.neus.network/mcp",
-      "description": "NEUS MCP (live)"
-    }
-  }
-}
-```
+**Self-hosted only:** `npx @neus/mcp-server` — most people use the hosted URL above.
 
-### VS Code
+## First run
 
-Use the same JSON structure in your MCP client config or extension settings.
+1. Ask the assistant to run **`neus_verify_or_guide`** (or **`neus_proofs_check`**).
+2. **Open** any **`https://neus.network/verify`** link in the browser.
+3. Optional: **`neus_proofs_get`** when you have an id—see [Tools](./tools).
+4. Sessions / private data: [Auth](./auth).
 
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "type": "streamableHttp",
-      "url": "https://mcp.neus.network/mcp",
-      "description": "NEUS MCP (live)"
-    }
-  }
-}
-```
-
-## Plugin Install
-
-### Claude Code / Cursor plugin
-
-```bash
-/plugin install github:neus/network/plugins/neus-core
-```
-
-The `neus-core` plugin points to the hosted MCP endpoint and includes the Zeus agent plus the bundled NEUS skills.
-
-## Integration Quick Start
-
-1. Add the MCP server to your client config.
-2. Call `neus_context` to load verifiers, billing model, and constraints.
-3. Use `neus_proofs_check` or `neus_verify_or_guide` before trying to create new proofs.
-4. For personalized context, authenticate via `https://neus.network/verify?intent=login` and set `NEUS_AUTH_TOKEN`.
-5. Reference proofs by qHash. The proof receipt ID works across all chains and protocols.
-
-## What You Get
-
-| Capability | Tool | Use case |
-|------------|------|----------|
-| Full session bootstrap | `neus_context` | Load the live contract before any gating or agent flow |
-| Verifier catalog | `neus_verifiers_catalog` | Discover available verification types |
-| Direct proof creation | `neus_verify` | Return elicitation or create the proof immediately |
-| Eligibility checks | `neus_proofs_check` | Gate access without user interaction |
-| Proof lookup | `neus_proofs_get` | Get proof history for a wallet/DID |
-| Agent verification | `neus_agent_link` | Check agent identity and delegation |
-| Agent creation | `neus_agent_create` | Prepare the two-signature identity + delegation flow |
-| Guided onboarding | `neus_verify_or_guide` | Get hosted verify URL when proofs are missing |
-
-## Auth Notes
-
-- No API key is required to connect to the hosted MCP endpoint.
-- `NEUS_AUTH_TOKEN` is only needed when you want the same NEUS session in non-browser contexts.
-- Private proof payloads do not become public just because you are using MCP.
+Then follow the [Overview](./overview) default path.
 
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="MCP Overview" icon="plug" href="./overview">
-    What the server is for.
-  </Card>
-  <Card title="Endpoints & Discovery" icon="globe" href="./endpoints">
-    Public URLs and transport.
+  <Card title="Overview" icon="plug" href="./overview">
+    What to do after connecting.
   </Card>
   <Card title="Tools" icon="wrench" href="./tools">
-    Tool reference.
+    Tool parameters.
   </Card>
-  <Card title="Auth & Security" icon="lock" href="./auth">
-    Authentication boundaries and eligibility-safe behavior.
+  <Card title="Auth" icon="lock" href="./auth">
+    Bearer and privacy.
+  </Card>
+  <Card title="Endpoints" icon="globe" href="./endpoints">
+    Discovery and well-known URLs.
   </Card>
 </CardGroup>

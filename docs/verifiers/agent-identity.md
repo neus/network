@@ -27,7 +27,7 @@ Portable agent identity, ERC-8004 compatible
 
 - **Compatible with:** `agent-delegation`, `ai-content-moderation`, `ownership-dns-txt`, `contract-ownership`, `wallet-link`
 
-## Example (schema-validated)
+## Example
 
 ```javascript
 await client.verify({

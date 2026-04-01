@@ -4,7 +4,17 @@ description: Create and delegate agent identities for AI and automation.
 icon: robot
 ---
 
-Use this guide when you want a public agent flow: register an agent, grant scoped permissions, and reuse those proofs in product or MCP workflows.
+Use this guide when you want a public agent flow: register an agent, grant scoped permissions, and reuse those proofs in your application or MCP workflows.
+
+Registering an agent and approving access are **separate steps** — one person can do both, or a **publisher** can register and a different **approver** can sign access approval. No wallet “linking” is required between those roles. See [Agent concepts](../agents/concepts).
+
+If you are using **MCP**, the easier default is usually:
+
+1. `neus_agent_create`
+2. Open the hosted URL it returns
+3. `neus_agent_link`
+
+Use the lower-level SDK flow below only when you are intentionally building a custom integration.
 
 ## 1. Register the Agent
 
@@ -25,7 +35,7 @@ await client.verify({
       { name: 'metrics', endpoint: 'https://metrics.example.com/v1', version: '1.0' }
     ]
   },
-  walletAddress: controllerWallet,
+  walletAddress: agentWallet,
 });
 ```
 
@@ -51,11 +61,12 @@ Use `agent-delegation` to grant permissions to an agent:
 await client.verify({
   verifier: 'agent-delegation',
   data: {
-    controllerWallet: '0x...',  // Must match signer
+    controllerWallet: '0x...',  // API field: approving account; must match signer
     agentWallet: '0x...',
     scope: 'payments:x402',
     permissions: ['execute', 'read'],
-    maxSpend: '1000000000000000000',  // 1 ETH in wei
+    // Token base units (no decimal point). 25 USDC → SDK toAgentDelegationMaxSpend('25', 6)
+    maxSpend: '25000000',
     allowedPaymentTypes: ['x402'],
     receiptDisclosure: 'summary',
     expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
@@ -66,16 +77,21 @@ await client.verify({
 });
 ```
 
+The signing split is simple:
+
+- `agent-identity` is signed by the **agent wallet**.
+- `agent-delegation` is signed by the **approving account** (the wallet that matches `controllerWallet` in the payload).
+
 ### Main Fields
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `controllerWallet` or `controllerAccountId` | Yes | Controller identity; must match signer |
+| `controllerWallet` or `controllerAccountId` | Yes | Approving account; must match signer |
 | `agentWallet` or `agentAccountId` | Yes | Agent identity |
 | `agentId` | No | Reference to registered agent |
 | `scope` | No | Permission scope (e.g., `payments:x402`) |
 | `permissions` | No | Allowed actions |
-| `maxSpend` | No | Maximum spend in wei |
+| `maxSpend` | No | Whole-number string in token base units (e.g. USDC: six decimal places). Use `toAgentDelegationMaxSpend` from `@neus/sdk`. |
 | `allowedPaymentTypes` | No | Payment types allowed |
 | `receiptDisclosure` | No | `summary`, `full`, or `none` |
 | `expiresAt` | No | Expiration timestamp |

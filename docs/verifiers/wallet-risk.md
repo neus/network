@@ -20,7 +20,7 @@ Wallet risk assessment
 
 - **Compatible with:** `ownership-basic`, `proof-of-human`, `agent-identity`
 
-## Example (schema-validated)
+## Example
 
 ```javascript
 await client.verify({

@@ -1,84 +1,27 @@
 ---
 title: Rate Limits and Retries
-description: Public API limits, plan-tier differences, verifier cost weights, and safe retry policy.
+description: What to do when requests are throttled or fail temporarily.
 icon: clock
 ---
 
-Use this page when you need the operational policy for NEUS integrations: which limits apply, what changes by tier, and how to retry safely without creating duplicate verification work.
+NEUS APIs may return **`429`** or short-lived errors.
 
-## What Changes by Tier
+- Use **exponential backoff** and respect **`Retry-After`** when the response includes it.
+- When **creating** proofs, avoid blind retries — confirm whether the first request succeeded before posting again.
+- For **polling**, space requests a few seconds apart and back off on errors.
 
-- All currently published verifiers in the public catalog are available on the public integrator surface.
-- Tiers change quotas, monthly credit allowance, and x402 pay-per-use ceilings.
-- Rate limiting is endpoint-based. There is no separate per-verifier requests-per-minute bucket on the current public API.
-- Pro and enterprise access are wallet-profile entitlements, not API keys.
+Credits, tiers, and pay-per-use: [Billing](./billing).
 
-## Tier Criteria
+## Related
 
-| Tier | How it is resolved | What changes |
-|---|---|---|
-| Public | Default wallet/profile state | All published verifiers, `1,000` monthly credits, standard read quota, x402 up to `500` credits per quote |
-| Pro | Wallet profile has `pro` subscription or entitlement | Same verifier catalog, `50,000` monthly credits, 4x standard read quota, x402 up to `2,000` credits per quote |
-| Enterprise | Wallet profile has enterprise entitlement | Same public API surface, `500,000` monthly credits, 10x standard read quota, enterprise billing/support path |
-
-<Note>
-Custom plans also exist, but they are negotiated arrangements rather than part of the public self-serve tiers.
-</Note>
-
-## API Rate Limits
-
-| Surface | Endpoints | Current limit | Notes |
-|---|---|---|---|
-| Standard reads | `/api/v1/proofs/*`, `/api/v1/profile/*`, and similar read surfaces | Public: `60/min` burst, Pro: `240/min` burst, Enterprise: `600/min` burst | Progressive slowdown starts at half the burst budget: `30/min`, `120/min`, and `300/min` |
-| Verification writes | `POST /api/v1/verification` | `50` requests per `15` minutes | Fixed verification-write budget; does not scale by plan |
-| Verification status | `GET /api/v1/verification/status/{qHash}` and `POST /api/v1/verification/status-batch` | `100/min` | Successful `2xx` status reads are not counted against the limiter |
-| Auth routes | `/api/v1/auth/*` | `10` requests per `15` minutes | Protects login, challenge, and session flows |
-| Monitoring | `/health` and health probes | `300/min` | Infrastructure-facing, not a product integration quota |
-
-## Verifier Cost Weights
-
-Verifier differences show up in billing and x402 quotes, not in separate RPM buckets.
-
-| Credit units | Verifiers |
-|---|---|
-| `1` | `ownership-basic`, `ownership-pseudonym`, `wallet-link` |
-| `4` | `ownership-social`, `ownership-org-oauth` |
-| `6` | `ownership-dns-txt` |
-| `10` | `contract-ownership`, `nft-ownership`, `token-holding`, `agent-identity` |
-| `12` | `proof-of-human` |
-| `14` | `agent-delegation` |
-| `28` | `wallet-risk` |
-| `30` | `ai-content-moderation` |
-
-## Retry Policy
-
-| Situation | Recommendation |
-|---|---|
-| Standard reads and gate checks | Retry on `429` and temporary `5xx` responses with exponential backoff. Respect `Retry-After` when present. |
-| Async verification polling | Poll every few seconds, then back off on `429`, `503`, or transport errors. |
-| Verification creation | Do not blindly retry `POST /api/v1/verification`. Retry only when you can prove the original request did not succeed. |
-| Hosted verify or OAuth flows | Preserve `returnUrl` and resume state instead of restarting the flow for every transient failure. |
-| Browser auth/session routes | Treat `Retry-After` as authoritative and avoid parallel retries from multiple tabs. |
-
-## SDK Behavior
-
-The JavaScript SDK already applies production-friendly behavior in common flows:
-
-- `pollProofStatus()` backs off when it encounters rate limiting
-- wallet-identifying headers are attached where supported for better reliability
-
-## Outage Behavior
-
-Interactive auth routes normalize upstream issues into `503` responses and may include:
-
-- `Retry-After`
-- `X-Neus-Upstream-Status`
-- `Cache-Control: no-store`
-
-Your app should surface a retry path instead of turning temporary upstream issues into permanent user failure states.
-
-## Related Pages
-
-- [Billing and Credits](./billing)
-- [Verifier Catalog](../verification/verifiers)
-- [API Overview](../api/overview)
+<CardGroup cols={2}>
+  <Card title="Billing" icon="credit-card" href="./billing">
+    Credits and usage.
+  </Card>
+  <Card title="SDK error handling" icon="triangle-exclamation" href="../sdks/error-handling">
+    Retries in code.
+  </Card>
+  <Card title="API overview" icon="terminal" href="../api/overview">
+    Endpoints.
+  </Card>
+</CardGroup>

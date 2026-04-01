@@ -1,78 +1,29 @@
 ---
 title: Authentication
-description: Signature-based authentication for NEUS API operations.
+description: How API requests are authenticated for NEUS integrations.
 icon: fingerprint
 ---
 
-Use Hosted Verify or the SDK unless the integration requires direct HTTP signing.
+**Default:** [Hosted Verify](../cookbook/auth-hosted-verify) or the **SDK** — users never need raw HTTP signing details.
 
-## Supported Wallets
+Use the paths below only when you intentionally call the HTTP API without the SDK.
 
-| Type | Standard | Description |
-|------|----------|-------------|
-| EOA | EIP-191 | Standard `personal_sign` (MetaMask, Coinbase, Rainbow) |
-| Smart Contract | EIP-1271 | Contract wallets (Safe, Argent, Sequence) |
-| Counterfactual | EIP-6492 | Pre-deployed smart accounts not yet on-chain |
+## Wallet signing standards
 
-## Default Path
+| Type | Standard | Typical wallets |
+|------|----------|-----------------|
+| EOA | EIP-191 | MetaMask, Coinbase, Rainbow |
+| Smart contract | EIP-1271 | Safe, Argent, Sequence |
+| Counterfactual | EIP-6492 | Undeployed smart accounts |
 
-Most products should use Hosted Verify or SDK helpers. Use this flow for advanced or server-side signing clients.
+## Programmatic proof creation (HTTP)
 
-<Steps>
-  <Step title="Ask NEUS for the exact signing string">
-    Call `POST /api/v1/verification/standardize`
-  </Step>
-  
-  <Step title="Sign the exact returned string">
-    Sign the returned `signerString`
-  </Step>
-  
-  <Step title="Submit the verification request">
-    Submit the same normalized request body to `POST /api/v1/verification`
-  </Step>
-</Steps>
+1. **`POST /api/v1/verification/standardize`** — request body for your verifiers; response includes **`signerString`**.
+2. Sign **`signerString`** with the user’s wallet (same request fields you will submit).
+3. **`POST /api/v1/verification`** — same fields as step 1, plus **`signature`**.
 
-<Tip>
-This is the supported low-level path because it avoids drift in chain normalization and deterministic JSON handling.
-</Tip>
+Request and response shapes: **OpenAPI** (`docs/openapi/public-api.json`). Narrative: [Signing format](../verification/signing-format).
 
-## Signing Format
+## Embedded / picky wallets
 
-The server returns a deterministic six-line string from `POST /api/v1/verification/standardize`. Sign that exact string. See [Signing Format](../platform/signing-format) for the protocol overview. Format:
-
-```text
-NEUS Verification Request
-Wallet: <address>
-Chain: <chainId or CAIP-2 chain>
-Verifiers: <comma-separated-ids>
-Data: <standardized-json>
-Timestamp: <unix-ms>
-```
-
-Do not hand-author or edit this message.
-
-## Advanced Client Rules
-
-1. **Wallet normalization:** format depends on chain type.
-   - EVM (`eip155`): lowercase `0x...`
-   - Solana: preserve base58 address as-is (do not lowercase)
-   - NEAR: account IDs are treated as lowercase
-
-2. **Chain context:** the signing contract binds chain context into the request.
-   - EVM: the server **forces HUB chain context** for verification signing
-   - Call `POST /api/v1/verification/standardize` and sign the returned `signerString`
-   - Non-EVM: send `chain` as a CAIP-2 string (example: `solana:mainnet`)
-
-3. **Verifier set:** send explicit verifier IDs and verifier data; do not guess or reorder fields after standardization.
-
-4. **Timestamp:** `signedTimestamp` must stay within the server freshness window.
-
-5. **Message format:** do not hand-author the signing string unless you fully control the server contract. The supported path is to standardize and sign the returned `signerString`.
-
-## Embedded Wallet Notes
-
-Embedded and social wallets can reject plain UTF-8 payloads in `personal_sign` with encoding errors.
-
-- **Default path:** sign the plain UTF-8 message string first (`personal_sign`)
-- **Retry path:** if provider errors mention byte/encoding, retry with UTF-8 hex payload (`0x...`)
-- **SDK support:** use `signMessage(...)` from `@neus/sdk`; it automatically applies this retry strategy
+Use **`signMessage`** from **`@neus/sdk`** instead of calling the wallet with a hand-built payload.

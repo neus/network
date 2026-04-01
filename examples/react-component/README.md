@@ -117,5 +117,5 @@ This is optional. The default API URL works directly in most environments.
 ## Next Steps
 
 - [Quickstart](https://docs.neus.network/quickstart) — Create your first proof
-- [Verifier Catalog](https://docs.neus.network/verification/verifiers) — Outcome-first verifier guide
+- [Verifier Catalog](https://docs.neus.network/verification/verifiers) — Verifier capabilities and requirements
 - [API Reference](https://docs.neus.network/api/overview) — HTTP endpoints

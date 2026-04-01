@@ -68,7 +68,7 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Open Hub",
+      "label": "Open platform",
       "href": "https://neus.network/hub"
     }
   },
@@ -81,6 +81,7 @@
             "group": "Essentials",
             "icon": "compass",
             "pages": [
+              "get-started",
               "index",
               "quickstart",
               "choose-an-integration-path",
@@ -89,7 +90,7 @@
             ]
           },
           {
-            "group": "Platform Surfaces",
+            "group": "Platform",
             "icon": "blocks",
             "pages": [
               "platform/overview",
@@ -138,8 +139,9 @@
                   "verification/proof-of-human",
                   "verification/wallet-risk",
                   "verification/ai-content-moderation",
-                  "verification/agent-identity",
-                  "verification/agent-delegation"
+                  "agents/concepts",
+                  "agents/agent-identity",
+                  "agents/agent-delegation"
                 ]
               }
             ]
@@ -205,6 +207,7 @@
             "icon": "badge-check",
             "pages": [
               "agents/overview",
+              "agents/concepts",
               "agents/agent-identity",
               "agents/agent-delegation",
               "agents/agent-verification-flow"
@@ -235,7 +238,8 @@
               "mcp/verify-or-guide",
               "mcp/proofs-get",
               "mcp/me",
-              "mcp/agent-link"
+              "mcp/agent-link",
+              "mcp/agent-create"
             ]
           }
         ]
@@ -264,6 +268,10 @@
   },
   "redirects": [
     {
+      "source": "/onboarding",
+      "destination": "/get-started"
+    },
+    {
       "source": "/privacy",
       "destination": "/learn/legal/privacy-policy"
     },
@@ -281,6 +289,10 @@
     },
     {
       "source": "/mcp",
+      "destination": "/mcp/overview"
+    },
+    {
+      "source": "/mcp/default-instructions",
       "destination": "/mcp/overview"
     },
     {
@@ -426,6 +438,10 @@
     {
       "source": "/content/agents/overview",
       "destination": "/agents/overview"
+    },
+    {
+      "source": "/content/agents/concepts",
+      "destination": "/agents/concepts"
     },
     {
       "source": "/content/agents/agent-identity",

@@ -65,7 +65,7 @@ curl -X POST https://api.neus.network/api/v1/verification \
 ### 4. Check status
 
 ```bash
-# Proof receipt ID (standard public term). The HTTP path placeholder is still named qHash in the API spec.
+# Proof receipt ID returned by NEUS. Some API paths use the parameter name `qHash`.
 curl https://api.neus.network/api/v1/verification/status/0x{qHash}
 ```
 

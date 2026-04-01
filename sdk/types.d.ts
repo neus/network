@@ -90,7 +90,7 @@ declare module '@neus/sdk' {
     getPrivateProofsByWallet(walletAddress: string, options?: GetProofsOptions, wallet?: WalletLike): Promise<ProofsResult>;
 
     /**
-     * Minimal eligibility check against public + discoverable proofs only (API-backed).
+     * Minimal eligibility check against public + unlisted proofs by default (API-backed).
      * Prefer this for server-side integrations that do not need full proof payloads.
      */
     gateCheck(params: GateCheckApiParams): Promise<GateCheckApiResponse>;
@@ -194,7 +194,7 @@ declare module '@neus/sdk' {
     signature?: string;
     /** Advanced/manual path: signed timestamp */
     signedTimestamp?: number;
-    /** Advanced/manual path: chain ID for verification context; optional, managed by protocol */
+    /** Advanced/optional. EVM signing-context hint; auto-resolved to protocol hub chain when omitted. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data instead. */
     chainId?: number;
     /** CAIP-2 chain reference for universal mode (e.g. eip155:1, solana:mainnet) */
     chain?: string;
@@ -438,8 +438,8 @@ declare module '@neus/sdk' {
 
   /**
    * Resolve DID from wallet identity via profile resolver endpoint.
-   * Use `chainId` for EVM wallets and `chain` (CAIP-2) for non-EVM wallets
-   * such as Solana (`solana:mainnet`).
+   * EVM wallets auto-resolve to the protocol hub chain; chainId is optional.
+   * Use `chain` (CAIP-2) for non-EVM wallets (e.g. `solana:mainnet`).
    */
   export function resolveDID(
     params: {
@@ -586,6 +586,15 @@ declare module '@neus/sdk' {
   // ============================================================================
   // CONSTANTS & REGISTRY
   // ============================================================================
+
+  /**
+   * Build `agent-delegation` maxSpend from a display decimal (e.g. USDC `"100.50"` with six decimal places).
+   * Returns a whole-number string in token base units (no decimal point) for the verifier API.
+   */
+  export function toAgentDelegationMaxSpend(
+    humanAmount: string | number,
+    decimals: number
+  ): string;
   
   /**
    * NEUS Network constants
@@ -599,6 +608,7 @@ declare module '@neus/sdk' {
     preset?: string;
     mode?: string;
     intent?: string;
+    origin?: string;
     baseUrl?: string;
   }): string;
 
@@ -762,7 +772,7 @@ declare module '@neus/sdk' {
     since?: number;
     /** Max rows to scan (server may clamp) */
     limit?: number;
-    /** Include private proofs for owner-authenticated checks */
+    /** Include private proofs for owner/controller-authorized checks */
     includePrivate?: boolean;
     /** Include matched qHashes in response (minimal identifiers only) */
     includeQHashes?: boolean;
@@ -784,9 +794,10 @@ declare module '@neus/sdk' {
     content?: string;
     contentHash?: string;
 
-    // Asset/ownership filters
+    // Asset/ownership filters — chainId here is the chain where the asset lives (e.g. 8453 for Base, 1 for Ethereum)
     contractAddress?: string;
     tokenId?: string;
+    /** EVM chain ID of the asset (e.g. 1, 8453). Required for nft-ownership, token-holding, contract-ownership. */
     chainId?: number;
     domain?: string;
     minBalance?: string;
@@ -1032,6 +1043,7 @@ declare module '@neus/sdk' {
     agentId?: string;
     scope?: string;
     permissions?: any[];
+    /** Whole-number string, token base units (1–78 digits, no decimal point). Build via `toAgentDelegationMaxSpend`. */
     maxSpend?: string;
     allowedPaymentTypes?: string[];
     receiptDisclosure?: 'none' | 'summary' | 'full';

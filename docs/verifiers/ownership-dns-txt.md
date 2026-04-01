@@ -18,7 +18,7 @@ Domain ownership verification via DNS TXT records
 
 - **Compatible with:** `ownership-basic`, `agent-identity`
 
-## Example (schema-validated)
+## Example
 
 ```javascript
 await client.verify({

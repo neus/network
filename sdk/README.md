@@ -51,10 +51,16 @@ import { getHostedCheckoutUrl } from '@neus/sdk';
 
 const url = getHostedCheckoutUrl({
   verifiers: ['ownership-basic'],
+  mode: 'popup',
+  origin: window.location.origin,
   returnUrl: 'https://myapp.com/callback',
   intent: 'login',
 });
 ```
+
+- [Get started](https://docs.neus.network/get-started) (platform, app, credits)
+- [Choose your path](https://docs.neus.network/choose-an-integration-path)
+- [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify)
 
 ## Gate Check
 
@@ -67,6 +73,7 @@ const result = await client.gateCheck({
 
 ## Documentation
 
+- [Get started](https://docs.neus.network/get-started)
 - [SDK Overview](https://docs.neus.network/sdks/overview)
 - [JavaScript SDK](https://docs.neus.network/sdks/javascript)
 - [Widgets](https://docs.neus.network/widgets/overview)

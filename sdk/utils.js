@@ -110,7 +110,7 @@ export function constructVerificationMessage({ walletAddress, signedTimestamp, d
   }
 
   // Chain context: prefer explicit `chain` when provided (e.g. "solana:mainnet"),
-  // otherwise use numeric `chainId` (EVM-first public surface).
+  // Otherwise use numeric chainId (EVM).
   const chainContext = (typeof chain === 'string' && chain.length > 0) ? chain : chainId;
   if (!chainContext) {
     throw new SDKError('chainId is required (or provide chain for universal mode)', 'INVALID_CHAIN_CONTEXT');
@@ -1185,6 +1185,61 @@ export function validateSignatureComponents({ walletAddress, signature, signedTi
   return result;
 }
 
+/**
+ * Convert a non-negative decimal display amount to agent-delegation `maxSpend`
+ * (whole-number string in token base units, 1–78 digits).
+ * @param {string|number} humanAmount - e.g. "100.50" or 100.5
+ * @param {number} decimals - Number of decimal places for the token (e.g. 6 for USDC, 18 for ETH)
+ * @returns {string}
+ */
+export function toAgentDelegationMaxSpend(humanAmount, decimals) {
+  if (humanAmount === undefined || humanAmount === null) {
+    throw new ValidationError('humanAmount is required', 'humanAmount', humanAmount);
+  }
+  const s0 = String(humanAmount).trim();
+  if (!s0) {
+    throw new ValidationError('humanAmount must be non-empty', 'humanAmount', humanAmount);
+  }
+  if (s0.startsWith('-') || s0.startsWith('+')) {
+    throw new ValidationError('humanAmount must be non-negative', 'humanAmount', humanAmount);
+  }
+  const d = Number(decimals);
+  if (!Number.isInteger(d) || d < 0 || d > 78) {
+    throw new ValidationError('decimalPlaces must be an integer from 0 to 78', 'decimals', decimals);
+  }
+  if (!/^(?:\d+\.?\d*|\.\d+)$/.test(s0)) {
+    throw new ValidationError(
+      'humanAmount must be a decimal string (e.g. "100" or "100.50")',
+      'humanAmount',
+      humanAmount,
+    );
+  }
+  const dot = s0.indexOf('.');
+  const intPart = dot === -1 ? s0 : s0.slice(0, dot);
+  const fracRaw = dot === -1 ? '' : s0.slice(dot + 1);
+  const intNormalized =
+    intPart === ''
+      ? '0'
+      : (() => {
+          const s = intPart.replace(/^0+/, '');
+          return s === '' ? '0' : s;
+        })();
+  if (!/^\d+$/.test(intNormalized)) {
+    throw new ValidationError('humanAmount has an invalid integer part', 'humanAmount', humanAmount);
+  }
+  if (fracRaw && !/^\d*$/.test(fracRaw)) {
+    throw new ValidationError('humanAmount has an invalid fractional part', 'humanAmount', humanAmount);
+  }
+  const fracPadded = `${fracRaw}${'0'.repeat(d)}`.slice(0, d);
+  const base = BigInt(10) ** BigInt(d);
+  const value = BigInt(intNormalized) * base + BigInt(fracPadded || '0');
+  const out = value.toString();
+  if (out.length > 78) {
+    throw new ValidationError('maxSpend exceeds 78-digit limit after conversion', 'humanAmount', humanAmount);
+  }
+  return out;
+}
+
 /** Default hosted verify base URL */
 export const DEFAULT_HOSTED_VERIFY_URL = 'https://neus.network/verify';
 
@@ -1198,7 +1253,8 @@ export const DEFAULT_HOSTED_VERIFY_URL = 'https://neus.network/verify';
  * @param {string} [opts.preset] - Preset name (e.g. 'human')
  * @param {string} [opts.mode] - 'popup' or null
  * @param {string} [opts.intent] - 'login' for auth-code flow
- * @param {string} [opts.baseUrl] - Override base (default: https://neus.network/verify)
+ * @param {string} [opts.origin] - Allowed parent origin for popup completion
+ * @param {string} [opts.baseUrl] - Hosted verify URL override
  * @returns {string} Full URL
  */
 export function getHostedCheckoutUrl(opts = {}) {
@@ -1214,6 +1270,7 @@ export function getHostedCheckoutUrl(opts = {}) {
   if (opts.preset) params.set('preset', String(opts.preset));
   if (opts.mode) params.set('mode', String(opts.mode));
   if (opts.intent) params.set('intent', String(opts.intent));
+  if (opts.origin) params.set('origin', String(opts.origin));
   const qs = params.toString();
   return qs ? `${base}?${qs}` : base;
 }

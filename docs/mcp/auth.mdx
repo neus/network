@@ -1,57 +1,27 @@
 ---
 title: MCP Auth & Security
-description: Hosted auth-required behavior and eligibility-safe public MCP usage.
+description: When you need sign-in and what stays public.
 icon: lock
 ---
 
-Public MCP tools expose only the data required for the task. This page defines what stays public and what requires authentication.
+**No API key** for the hosted MCP. **Hosted links** and **public lookups** cover the usual case. **`neus_me`** and **private** proof reads need the user **signed in**.
 
-## Auth-Required Behavior
+**URL-only MCP:** tools may return **`https://neus.network/verify`** — the user opens it. That does **not** sign the IDE into NEUS by itself.
 
-When a hosted MCP tool needs authentication:
+**Your app already has a NEUS session:** if the client supports headers, send the same **`Authorization: Bearer <token>`** you use for the API ([SDK Authentication](../sdks/authentication)) on MCP requests. Call **`neus_me`** to confirm.
 
-- **`neus_me`** resolves the current principal through `GET /api/v1/auth/me` when auth is present.
-- **`NEUS_AUTH_TOKEN`** is only the same NEUS session token in Bearer form for non-cookie contexts such as MCP or server runtimes.
-- **Private proof access** stays behind NEUS auth boundaries; public MCP tools remain eligibility-safe.
-
-<Warning>
-Do not expect public MCP tools to expose private proof payloads or credentials.
-</Warning>
-
-## Eligibility-Safe Behavior
-
-- Gate checks are **eligibility-safe**. They do not enumerate receipts.
-- Private proof payloads are **not exposed** through the public MCP tools.
-- Sponsor grants can be forwarded through `neus_proofs_check`.
-- x402 payment-required responses are passed through in a structured way instead of being swallowed.
-
-## Auth-Required Responses
-
-When a tool needs authentication and none is present, the server can return:
-
-- `status: "auth_required"` with a hosted login URL for the user to complete sign-in.
-- Use the returned URL to hand off to `https://neus.network/verify?intent=login`.
-
-## Related Docs
-
-- [Authentication](../api/authentication) - API auth patterns and signing.
-- [VerifyGate](../widgets/verifygate) - Widget gating and hosted checkout.
-- [Verifiable Agents](../cookbook/verifiable-agents) - Agent identity and delegation.
-- [Partner Setup](../cookbook/hub-integrator) - Domain verification and sponsor grants.
+**Privacy:** **`neus_proofs_check`** is yes/no only. Private proofs follow the same rules as the API when the user is signed in ([Proof context](./proofs-get)).
 
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="MCP Overview" icon="plug" href="./overview">
-    What the server is for.
-  </Card>
-  <Card title="Tools" icon="wrench" href="./tools">
-    Tool reference and eligibility semantics.
+  <Card title="Overview" icon="plug" href="./overview">
+    Default flow.
   </Card>
   <Card title="Setup" icon="code" href="./setup">
-    Hosted client config.
+    Connect.
   </Card>
-  <Card title="API Authentication" icon="key" href="../api/authentication">
-    HTTP auth and signing.
+  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+    User UX.
   </Card>
 </CardGroup>

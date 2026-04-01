@@ -4,123 +4,62 @@ description: HTTP endpoints for verification, status, and gate checks.
 icon: terminal
 ---
 
-Use the API when your backend needs full control.
+**Base:** `https://api.neus.network`
 
-**Base URL:** `https://api.neus.network`
+**Server integration?** Same payer rules as the SDK — complete **[Get started](../get-started)** (platform **`appId`**, **`X-Neus-App`**, **`X-Sponsor-Grant`**, credits).
 
----
+Prefer the **SDK** when you can; use **HTTP** for direct server calls.
 
-## Quick Reference
+## Endpoints
 
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
+| Path | Method | Purpose |
+|------|--------|---------|
 | `/api/v1/verification` | POST | Create proof |
-| `/api/v1/verification/standardize` | POST | Get signing string |
-| `/api/v1/verification/status/{qHash}` | GET | Check status |
-| `/api/v1/proofs/check` | GET | Gate check (eligibility only) |
-| `/api/v1/proofs/by-wallet/{address}` | GET | Get proofs for wallet |
+| `/api/v1/verification/standardize` | POST | Signing string |
+| `/api/v1/verification/status/{qHash}` | GET | Status |
+| `/api/v1/proofs/check` | GET | Eligibility only |
+| `/api/v1/proofs/by-wallet/{address}` | GET | Proofs for wallet |
 | `/api/v1/verification/verifiers` | GET | Verifier catalog |
 
----
+## Examples
 
-## Proof Retrieval
-
-### Get Proofs by Wallet
+**Proofs by wallet**
 
 ```bash
-curl "https://api.neus.network/api/v1/proofs/by-wallet/0x...?limit=50"
+curl "https://api.neus.network/api/v1/proofs/by-wallet/0x…?limit=50"
 ```
 
-**Owner-only params** (requires session or signature auth):
-- `resolveContent=true` — Resolve private content for ownership-basic proofs
-- `qHash=0x...` — Filter to single proof
+Public and unlisted proofs are visible anonymously; **private** proofs need the user signed in.
 
-Returns proofs with optional `resolvedContent` field when `resolveContent=true` and owner-authenticated.
-
----
-
-## Recommended Order
-
-1. **Start with SDK** for browser/server integrations
-2. **Use API** when you need direct HTTP control
-
----
-
-## Create Proof
-
-### 1. Get Signing String
+**Gate check**
 
 ```bash
-curl -X POST https://api.neus.network/api/v1/verification/standardize \
-  -H "Content-Type: application/json" \
-  -d '{
-    "walletAddress": "0x...",
-    "verifierIds": ["ownership-basic"],
-    "data": { "content": "Hello NEUS" }
-  }'
+curl "https://api.neus.network/api/v1/proofs/check?address=0x…&verifierIds=ownership-basic"
 ```
 
-Returns `signerString` — sign this with your wallet.
+**Create proof (outline)** — standardize → sign → POST `/verification`. Full request bodies: OpenAPI / SDK.
 
-### 2. Submit Verification
-
-```bash
-curl -X POST https://api.neus.network/api/v1/verification \
-  -H "Content-Type: application/json" \
-  -d '{
-    "walletAddress": "0x...",
-    "signature": "0x...",
-    "verifierIds": ["ownership-basic"],
-    "data": { "content": "Hello NEUS" }
-  }'
-```
-
-Returns `proofId` and `status`.
-
----
-
-## Check Status
-
-```bash
-curl https://api.neus.network/api/v1/verification/status/{qHash}
-```
-
----
-
-## Gate Check
-
-```bash
-curl "https://api.neus.network/api/v1/proofs/check?address=0x...&verifierIds=ownership-basic"
-```
-
-Returns boolean eligibility for policy decisions.
-
----
-
-## Verifier Catalog
+**Verifier catalog**
 
 ```bash
 curl https://api.neus.network/api/v1/verification/verifiers
 ```
 
-Returns live verifier metadata.
+## Auth
 
----
+- **Reads:** public/unlisted without login; private when the user is signed in.
+- **Writes:** wallet signature (see [Authentication](./authentication)).
 
-## Authentication
-
-- Read endpoints: Public
-- Write endpoints: Require wallet signature
-
----
-
-## Next Steps
+## Next
 
 <CardGroup cols={2}>
+  <Card title="Get started" icon="rocket" href="../get-started">
+    Platform + billing.
+  </Card>
   <Card title="Authentication" icon="key" href="./authentication">
-    How authentication works.
+    Sessions and signing.
   </Card>
   <Card title="Errors" icon="triangle-exclamation" href="./errors">
-    Error handling guide.
+    Status codes.
   </Card>
 </CardGroup>

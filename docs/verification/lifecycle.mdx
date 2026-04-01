@@ -6,7 +6,7 @@ icon: rotate
 
 ## Lifecycle Stages
 
-| Stage | Meaning | Primary surface |
+| Stage | Meaning | Where |
 |---|---|---|
 | Flow starts | Verification is launched | Hosted verify, SDK, or API |
 | Request accepted | NEUS accepts the verification | SDK or `POST /api/v1/verification` |
@@ -19,7 +19,7 @@ icon: rotate
 
 | Strategy | What it does | Use when |
 |---|---|---|
-| `reuse-or-create` | Reuse an existing eligible proof, otherwise create one | Default product UX |
+| `reuse-or-create` | Reuse an existing eligible proof, otherwise create one | Default in most hosted and SDK flows |
 | `reuse` | Only check existing proofs | Read-only access checks |
 | `fresh` | Always force new verification | High-stakes actions |
 

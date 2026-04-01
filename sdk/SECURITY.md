@@ -2,7 +2,7 @@
 
 Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose them to clients, or store them in analytics.
 
-## Authentication model (public surface)
+## Authentication model
 
 - **Verification submission** (`POST /api/v1/verification`) is authenticated by a signature over the **NEUS Standard Signing String**.
 - **Status by proof receipt ID** (`GET /api/v1/verification/status/{qHash}`) is safe to call publicly. `qHash` is the raw HTTP path name for the same receipt.
@@ -22,9 +22,9 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 
 ## Recommended privacy defaults
 
-- `privacyLevel: 'private'`
+- `privacyLevel: 'public'`
 - `publicDisplay: false`
-- `storeOriginalContent: false`
+- `storeOriginalContent: true`
 
 These are separate controls:
 
@@ -32,6 +32,6 @@ These are separate controls:
 - `publicDisplay` controls public discovery
 - `storeOriginalContent` controls whether original content is stored
 
-Private proofs can still store original content when `storeOriginalContent=true`.
+Use this as the default for reusable proofs: unlisted, not discoverable. Use `privacyLevel: 'private'` when proof access should stay owner/controller-authorized only.
 
 “Discoverable” proofs are **public** (`privacyLevel='public'`) and explicitly opted into discovery (`publicDisplay=true`).

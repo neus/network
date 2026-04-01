@@ -1,48 +1,32 @@
 ---
 title: SDK Authentication
-description: Hosted login, session-first patterns, and deterministic signing guidance for SDK integrations.
+description: Hosted login and optional signature-based verification.
 icon: key
 ---
 
-The SDK supports two main auth patterns. Start with hosted login when you want the smoothest user experience.
+## Hosted login
 
-## 1. Session-First Hosted Login
+1. Send users to NEUS hosted verify with your **`returnUrl`** — use **`getHostedCheckoutUrl`** ([Hosted Verify](../cookbook/auth-hosted-verify)).
+2. They complete passkey or wallet on **neus.network**.
+3. When they return to your app, **finish login with `@neus/sdk`** and keep the session token for API calls (**`Authorization: Bearer`**).
 
-Use this when you want the smoothest browser UX.
+Same **Bearer** on MCP enables **`neus_me`** — [MCP Auth](../mcp/auth).
 
-1. Send users to `https://neus.network/verify?intent=login&returnUrl=<your-url>`.
-2. Let NEUS complete sign-in and any hosted interaction.
-3. When auth code exchange is available for your integration, redeem the returned `code` at `POST /api/v1/auth/code/exchange`.
+## Signature-based login
 
-This avoids rebuilding signing steps for every action when your integration uses the hosted session model.
-
-`NEUS_AUTH_TOKEN` is not a second auth system. It is the same NEUS session token represented as Bearer when you need to operate outside browser-cookie context.
-
-## 2. Signature-Based Verification
-
-Use this when your integration needs the generic portable verification contract.
+For flows that stay in your app without a hosted session:
 
 ```javascript
 import { standardizeVerificationRequest, signMessage } from '@neus/sdk';
 
 const standardized = await standardizeVerificationRequest(body, {
-  apiUrl: 'https://api.neus.network'
+  apiUrl: 'https://api.neus.network',
 });
-
 const signature = await signMessage({
   provider: window.ethereum,
   walletAddress: body.walletAddress,
-  message: standardized.signerString
+  message: standardized.signerString,
 });
 ```
 
-<Tip>
-Prefer `standardizeVerificationRequest(...)` over manually building a signing string. That keeps your client aligned with server normalization.
-</Tip>
-
-## When to Use Which
-
-| Pattern | Use when |
-|---|---|
-| Hosted login | You want the simplest browser UX and session/code exchange is available for your integration |
-| Direct signing | You need a direct SDK or API verification flow without hosted session state |
+Use the SDK helpers instead of assembling signing strings yourself. Details: [Signing format](../verification/signing-format), [API authentication](../api/authentication).

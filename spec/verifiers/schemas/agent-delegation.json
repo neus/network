@@ -72,7 +72,7 @@
     "maxSpend": {
       "type": "string",
       "pattern": "^[0-9]{1,78}$",
-      "description": "Maximum spend in wei (decimal string)"
+      "description": "Whole-number string in token base units (no decimal point). Typical USDC (x402): six decimal places."
     },
     "permissions": {
       "items": { "maxLength": 64, "type": "string" },

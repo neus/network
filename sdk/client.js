@@ -523,7 +523,7 @@ export class NeusClient {
    * @param {string} [params.walletAddress] - Wallet address that signed the request (manual path)
    * @param {string} [params.signature] - EIP-191 signature (manual path)
    * @param {number} [params.signedTimestamp] - Unix timestamp when signature was created (manual path)
-   * @param {number} [params.chainId] - Chain ID for verification context (optional, managed by protocol)
+   * @param {number} [params.chainId] - Advanced/optional. EVM signing-context hint; auto-resolved to protocol hub chain when omitted. For asset verifiers, set chainId inside data instead.
    * @param {Object} [params.options] - Additional options
    * @param {string} [params.verifier] - Verifier ID (auto path)
    * @param {string} [params.content] - Content/description (auto path)
@@ -981,7 +981,7 @@ export class NeusClient {
       }
     }
 
-    // Build options payload (public surface)
+    // Build options payload.
     const optionsPayload = {
       ...(options && typeof options === 'object' ? options : {}),
       targetChains: Array.isArray(options?.targetChains) ? options.targetChains : [],
@@ -1334,20 +1334,13 @@ export class NeusClient {
    * @param {Object} [options] - Filter options
    * @param {number} [options.limit] - Max results (default: 50; higher limits require owner access)
    * @param {number} [options.offset] - Pagination offset (default: 0)
-   * @param {boolean} [options.resolveContent] - Owner-only: resolve private content for ownership-basic proofs
    * @param {string} [options.qHash] - Filter to single proof by qHash
-   * @returns {Promise<Object>} Proofs result (proofs may include resolvedContent when resolveContent=true)
+   * @returns {Promise<Object>} Proofs result
    *
    * @example
    * const result = await client.getProofsByWallet('0x...', {
    *   limit: 50,
    *   offset: 0
-   * });
-   *
-   * // With content resolution (requires owner auth via getPrivateProofsByWallet)
-   * const result = await client.getPrivateProofsByWallet('0x...', {
-   *   resolveContent: true,
-   *   qHash: '0x...'
    * });
    */
   async getProofsByWallet(walletAddress, options = {}) {
@@ -1361,7 +1354,6 @@ export class NeusClient {
     const qs = [];
     if (options.limit) qs.push(`limit=${encodeURIComponent(String(options.limit))}`);
     if (options.offset) qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
-    if (options.resolveContent) qs.push('resolveContent=true');
     if (options.qHash) qs.push(`qHash=${encodeURIComponent(options.qHash.toLowerCase())}`);
 
     const query = qs.length ? `?${qs.join('&')}` : '';
@@ -1394,7 +1386,6 @@ export class NeusClient {
    * @param {Object} [options]
    * @param {number} [options.limit] - Max results (server enforces caps)
    * @param {number} [options.offset] - Pagination offset
-   * @param {boolean} [options.resolveContent] - Resolve private content for ownership-basic proofs
    * @param {string} [options.qHash] - Filter to single proof by qHash
    * @param {Object} [wallet] - Optional injected wallet/provider (MetaMask/ethers Wallet)
    */
@@ -1461,7 +1452,6 @@ export class NeusClient {
     const qs = [];
     if (options.limit) qs.push(`limit=${encodeURIComponent(String(options.limit))}`);
     if (options.offset) qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
-    if (options.resolveContent) qs.push('resolveContent=true');
     if (options.qHash) qs.push(`qHash=${encodeURIComponent(options.qHash.toLowerCase())}`);
     const query = qs.length ? `?${qs.join('&')}` : '';
 
@@ -1487,16 +1477,16 @@ export class NeusClient {
   }
 
   /**
-   * GATE CHECK (API) - Minimal eligibility check
+   * Gate check (HTTP API) — minimal eligibility response.
    *
    * Calls the gate endpoint and returns a **minimal** yes/no response.
-   * By default this checks **public + discoverable** proofs only.
+   * By default this checks **public + unlisted** proofs.
    *
    * When `includePrivate=true`, this can perform owner-signed private checks
    * (no full proof payloads returned) by providing a wallet/provider.
    *
-   * Prefer this over `checkGate()` for integrations that want the
-   * smallest, most stable surface area (and do NOT need full proof payloads).
+   * Prefer this over `checkGate()` when you need the smallest, most stable
+   * response shape and do not need full proof payloads.
    *
    * @param {Object} params - Gate check query params
    * @param {string} params.address - Wallet identity to check (EVM/Solana/DID)
@@ -1595,7 +1585,7 @@ export class NeusClient {
         }
       }
       if (!auth) {
-        // No signer context available - proceed as public/discoverable gate check.
+        // Without a signer: public and unlisted proofs only.
       } else {
         const normalizedAuthWallet = this._normalizeIdentity(auth.walletAddress);
         const normalizedAddress = this._normalizeIdentity(address);

@@ -4,19 +4,19 @@ description: Use NEUS documentation in LLMs, Cursor, Zed, and AI-powered editors
 icon: sparkles
 ---
 
-NEUS publishes doc indexes for AI tools and editors that need documentation context. Use them when a model should read the docs directly instead of relying on a short prompt summary.
+NEUS publishes documentation indexes for AI tools and editors. Fetch them when you want the site text available to a tool instead of a short summary.
 
-## Smaller Context (Routes)
+## Route index (`llms.txt`)
 
-`llms.txt` returns a markdown index with page routes and descriptions. Use when token budget is limited:
+`llms.txt` is a markdown index of page routes and descriptions:
 
 ```bash
 curl https://docs.neus.network/llms.txt
 ```
 
-## Larger Context (Full Docs)
+## Full documentation (`llms-full.txt`)
 
-`llms-full.txt` returns the full documentation in one file. Use when you need complete context:
+`llms-full.txt` is the full documentation in one file:
 
 ```bash
 curl https://docs.neus.network/llms-full.txt

@@ -4,7 +4,7 @@ description: Preconfigured hosted verify bundles for the most common NEUS onboar
 icon: layer-group
 ---
 
-Presets are short hosted verify bundles for common flows. Use `preset=<id>` when you want a simple hosted URL instead of building a longer verifier list by hand.
+Presets are short hosted verify bundles for common flows. Use `preset=<id>` for a simple hosted URL instead of assembling a longer verifier list yourself.
 
 ## URL Format
 
@@ -26,7 +26,7 @@ Optional params: `returnUrl`, `gateId`, `mode=popup`, `origin`.
 |-----------|-----------|----------|
 | `basic-pack` | Ownership and provenance | Publish a proof-backed claim, file, or artifact |
 | `human-pack` | Human verification | Add stronger anti-bot or uniqueness checks |
-| `project-pack` | Project operator trust | Verify a project surface through operator and domain trust |
+| `project-pack` | Project operator trust | Verify project legitimacy through operator and domain trust |
 | `creator-pack` | Content trust | Pair ownership and provenance with content safety review |
 | `agent-pack` | Agent setup | Register an agent, set permissions, and add a safety screen |
 | `holder-pack` | Holder access | Gate access by holdings with an added safety screen |
@@ -34,7 +34,7 @@ Optional params: `returnUrl`, `gateId`, `mode=popup`, `origin`.
 | `domain-pack` | Domain verification | Prove control of a site, app, or community domain |
 | `org-pack` | Team and organization verification | Verify workspace or company association |
 | `nft-pack` | NFT holder access | Gate by NFT ownership |
-| `wallet-link-pack` | Linked wallets | Connect multiple wallets into one trust surface |
+| `wallet-link-pack` | Linked wallets | Connect multiple wallets into one linked identity |
 | `pseudonym-pack` | Username and namespace claims | Claim a portable handle or namespaced identity |
 
 ## Examples
@@ -65,6 +65,6 @@ const url = getHostedCheckoutUrl({
     Hosted URL params and popup flow.
   </Card>
   <Card title="Capability Catalog" icon="list-tree" href="../verification/verifiers">
-    Outcome-first guide to the live capabilities behind each preset.
+    Verifier catalog for the capabilities behind each preset.
   </Card>
 </CardGroup>

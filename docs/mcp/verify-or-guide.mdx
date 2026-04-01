@@ -1,58 +1,26 @@
 ---
 title: Verify or Guide (`neus_verify_or_guide`)
-description: Check whether verification is already satisfied and return hosted guidance when it is not.
+description: Already verified, or open a hosted NEUS verify link.
 icon: route
 ---
 
-Use `neus_verify_or_guide` when you want one MCP tool to decide whether the user is already eligible or should be sent into hosted verify.
-
-## Best For
-
-- agent assistants
-- guided onboarding
-- hosted verify handoff
+**Default “prove it” tool:** returns **`already_verified`** or a **`hostedVerifyUrl`** — user finishes in the browser; no extra steps in chat.
 
 ## Input
 
+`walletAddress` (EVM / Solana / DID-shaped), `verifierIds`, optional `requireAll`, `chain`, `data`.
+
 ```json
 {
-  "walletAddress": "0xabc123...",
-  "verifierIds": ["proof-of-human", "wallet-risk"],
+  "walletAddress": "0x…",
+  "verifierIds": ["proof-of-human"],
   "requireAll": true
 }
 ```
 
-## Returns
+## Output
 
-- `action: "already_verified"` when the policy is already satisfied
-- `action: "verification_required"` plus `hostedVerifyUrl` when the user must verify
+- **`already_verified`** — policy satisfied.
+- **`verification_required`** — open **`hostedVerifyUrl`** (and use **`requiredVerifiers`** as needed).
 
-## Response Structure
-
-### Already Verified
-
-```json
-{
-  "success": true,
-  "action": "already_verified",
-  "eligible": true,
-  "matchedCount": 2,
-  "message": "Proof requirements already satisfied"
-}
-```
-
-### Verification Required
-
-```json
-{
-  "success": false,
-  "status": "verification_required",
-  "action": "verification_required",
-  "hostedVerifyUrl": "https://neus.network/verify?verifiers=proof-of-human,wallet-risk",
-  "matchedCount": 0,
-  "nextSteps": {
-    "tool": "neus_verify",
-    "requiredVerifiers": ["proof-of-human", "wallet-risk"]
-  }
-}
-```
+Schemas are loaded from the server; no need to memorize every field.

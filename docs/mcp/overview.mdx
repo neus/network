@@ -1,104 +1,42 @@
 ---
 title: MCP Overview
-description: Use NEUS in AI agents, Cursor, Claude Desktop, and other MCP clients.
+description: Connect NEUS to Cursor, Claude, VS Code, and other AI assistants in a few steps.
 icon: plug
 ---
 
-Native MCP support for agent integrations.
+**New integration?** Start with **[Get started](../get-started)** (platform, app link, credits). Heavy tool use may hit **credits** / **402** — see **[Billing](../platform/billing)** and tool hints for **`sponsorGrant`**.
 
-**Endpoint:** `https://mcp.neus.network/mcp`
+**Connection URL:** `https://mcp.neus.network/mcp`
 
-## Quick Start
+Add it **once** in your MCP client—see **[Setup](./setup)** for the exact JSON. Nothing else is required to connect.
 
-### 1. Add to Your MCP Client
+## Recommended workflow
 
-#### Cursor / Claude Desktop / VS Code
+1. **User verifies in the browser** — Have the assistant use **`neus_verify_or_guide`** (or **`neus_proofs_check`**). When a tool returns **`https://neus.network/verify`**, the user **opens that link**. Passkey or wallet happens inside NEUS—they should not need to paste crypto details into chat.
+2. **Your product already logs users into NEUS** — Use the same **`Authorization: Bearer`** session on the MCP connection as in [SDK Authentication](../sdks/authentication). Then **`neus_me`** and private reads work—**[Auth](./auth)**.
+3. **Look up public proof history** — Only when you **already have** an address or id from NEUS (or the user pasted it), use **`neus_proofs_get`**. Field names differ by tool—see **[Tools](./tools)**.
 
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "type": "streamableHttp",
-      "url": "https://mcp.neus.network/mcp"
-    }
-  }
-}
-```
+The URL-only install does **not** sign the chat into NEUS by itself.
 
-### 2. Load Context First
+| Goal | Tool |
+|------|------|
+| Send someone to browser verification | `neus_verify_or_guide` |
+| Yes/no eligibility only | `neus_proofs_check` |
+| Proof list + profile (you have an id) | `neus_proofs_get` |
+| Signed-in “who am I” | `neus_me` (needs Bearer—[Auth](./auth)) |
+| Pick verifier IDs safely | `neus_verifiers_catalog` |
+| Agents | `neus_agent_create`, `neus_agent_link` |
 
-```typescript
-neus_context()
-```
+Always **open** hosted URLs tools return—do not invent extra steps.
 
-### 3. Run a Gate Check
+## Agents
 
-```typescript
-neus_proofs_check({
-  "wallet": "0x...",
-  "verifiers": ["proof-of-human"]
-})
-```
+1. **`neus_agent_create`** → open any hosted URL returned → **`neus_agent_link`** to confirm.
 
-## Available Tools
+## Next
 
-| Tool | Purpose |
-|------|---------|
-| `neus_context` | Load verifiers, billing, protocol, and agent constraints in one call |
-| `neus_verifiers_catalog` | List available verifiers |
-| `neus_verify` | Create a proof directly or return a signing elicitation |
-| `neus_verify_or_guide` | Check + guide to hosted verify |
-| `neus_proofs_check` | Eligibility check only |
-| `neus_proofs_get` | Get public proof context and profile summary |
-| `neus_me` | Session-backed principal context |
-| `neus_agent_link` | Check agent delegation readiness |
-| `neus_agent_create` | Prepare the two-signature agent creation flow |
-
-## Decision Guide
-
-| You want to... | Use this tool |
-|----------------|---------------|
-| Bootstrap a session | `neus_context` |
-| Discover verifiers | `neus_verifiers_catalog` |
-| Check eligibility only | `neus_proofs_check` |
-| Gate access and guide users | `neus_verify_or_guide` |
-| Create a proof directly | `neus_verify` |
-| Load public user context | `neus_proofs_get` |
-| Load session-backed user context | `neus_me` |
-| Check agent readiness | `neus_agent_link` |
-| Create a new agent | `neus_agent_create` |
-
-## Standard Agent Loop
-
-```text
-1. neus_context()               -> Load the MCP contract and NEUS context
-2. neus_verify_or_guide()       -> Check eligibility or get hosted URL
-3. User completes hosted flow   -> Interactive verification
-4. neus_proofs_check()          -> Verify eligibility
-```
-
-## Go-Live Paths
-
-| Need | Recommended path |
-|------|------------------|
-| Fastest editor/client install | Hosted MCP at `https://mcp.neus.network/mcp` |
-| Personalized context | Hosted MCP + `NEUS_AUTH_TOKEN` |
-| Agent creation flows | `neus_agent_create` first, then `neus_verify` only for the returned signing steps |
-| Marketplace/plugin install | `github:neus/network/plugins/neus-core` |
-
-## MCP Pages
-
-<CardGroup cols={2}>
-  <Card title="Setup" icon="code" href="./setup">
-    Cursor, VS Code, Claude Desktop, and plugin install paths.
-  </Card>
-  <Card title="Tools" icon="wrench" href="./tools">
-    Full MCP tool contract.
-  </Card>
-  <Card title="Endpoints" icon="globe" href="./endpoints">
-    Public MCP URLs.
-  </Card>
-  <Card title="Auth" icon="lock" href="./auth">
-    Authentication and security.
-  </Card>
-</CardGroup>
+- **[Get started](../get-started)** — platform + billing before scale  
+- **[Setup](./setup)** — one copy-paste config  
+- **[Tools](./tools)** — parameter names  
+- **[Auth](./auth)** — sessions and privacy  
+- **[Hosted Verify](../cookbook/auth-hosted-verify)** — browser verification flow  

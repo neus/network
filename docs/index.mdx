@@ -4,105 +4,60 @@ description: Verify once. Prove everywhere. Portable proof receipts for login, t
 icon: house
 ---
 
-One proof receipt. Reusable across every app, API, and agent.
+**One proof receipt** — reusable across apps, APIs, and agents.
 
-## What NEUS Does
+## Start here
 
-Every product needs to verify users for login, access control, and trust. But each verification is typically:
+**Building a product?** **[Get started](./get-started)** — platform profile, link app, credits, `appId`, sponsor grants, then **[choose an integration path](./choose-an-integration-path)**.
 
-- **Fragmented** — Built separately for each feature
-- **Non-portable** — Can't reuse proofs across apps
-- **Expensive** — Custom infrastructure per use case
+**Choosing an integration path?** **[Choose an integration path](./choose-an-integration-path)** — Hosted Verify, Widgets, SDK, API, or MCP.
 
-**NEUS replaces fragmented verification with one reusable proof receipt.**
+## How it works
 
-Verify once. Use that proof everywhere — login, gating, policy, and agent workflows.
-
-## How It Works
-
-```
-┌─────────────┐     ┌─────────────┐     ┌─────────────────┐
-│   Verify    │────▶│  Proof ID   │────▶│  Reuse Anywhere │
-│   (once)    │     │  (receipt)  │     │  (apps, agents) │
-└─────────────┘     └─────────────┘     └─────────────────┘
-```
-
-1. **Verify** — User completes verification (wallet, social, human check)
-2. **Receive** — Get back a portable proof receipt ID
-3. **Reuse** — Same proof works across all your products
-
-## Start Building
+1. **Verify** — User completes verification (hosted UI, wallet, or social).
+2. **Save** — You store the proof receipt ID.
+3. **Reuse** — Same proof for login, gating, policy, and agents.
 
 <CardGroup cols={2}>
-  <Card title="Quickstart" icon="rocket" href="./quickstart">
-    Create your first proof in under 5 minutes.
+  <Card title="Get started" icon="rocket" href="./get-started">
+    Builders: platform, app link, billing, first integration.
   </Card>
-  <Card title="Choose Your Path" icon="route" href="./choose-an-integration-path">
-    Pick Hosted Verify, SDK, Widgets, API, or MCP.
+  <Card title="Choose your path" icon="route" href="./choose-an-integration-path">
+    Pick Hosted Verify, Widgets, SDK, API, or MCP.
+  </Card>
+  <Card title="Quickstart" icon="code" href="./quickstart">
+    First proof with the SDK (code).
   </Card>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Use our hosted UI for login and interactive verification.
+    No custom verification UI — redirect or popup.
   </Card>
-  <Card title="Verifier Catalog" icon="list-tree" href="./verification/verifiers">
-    Choose the right verification capability.
+  <Card title="Verifier catalog" icon="list-tree" href="./verification/verifiers">
+    What you can verify.
   </Card>
-</CardGroup>
-
-## What You Can Build
-
-| Use Case | How NEUS Helps |
-|----------|----------------|
-| **NFT Gating** | Verify holder status, gate premium content |
-| **Sybil Resistance** | Human verification, prevent bot attacks |
-| **Content Provenance** | Prove authorship, AI content attribution |
-| **Agent Verification** | Register AI agents, scope permissions |
-| **Community Access** | Gate Discord, Telegram, on-chain access |
-| **Domain Verification** | Link domains to verified profiles |
-
-## Core Capabilities
-
-<CardGroup cols={2}>
-  <Card title="Hosted Verify UI" icon="browser">
-    Ready-made verification flow at `/verify`. No frontend work required.
-  </Card>
-  <Card title="Proof Receipts" icon="receipt">
-    One ID that works everywhere — display, gating, policy, and agents.
-  </Card>
-  <Card title="Access Gates" icon="shield-check">
-    Server-side eligibility checks with one API call.
-  </Card>
-  <Card title="Agent MCP" icon="robot">
-    Native MCP support for AI tools and autonomous agents.
+  <Card title="Billing" icon="credit-card" href="./platform/billing">
+    Who pays — deep reference.
   </Card>
 </CardGroup>
 
-## Integration Paths
+## Integration paths
 
-| Path | Best For | Time to Start |
-|------|----------|---------------|
-| [Hosted Verify](./cookbook/auth-hosted-verify) | Interactive flows, login, social linking | Minutes |
-| [Widgets](./widgets/overview) | React apps needing gating or badges | Minutes |
-| [SDK](./sdks/overview) | Custom browser or server integrations | Minutes |
-| [API](./api/overview) | Server-only policy and eligibility checks | Minutes |
-| [MCP](./mcp/overview) | AI agents, Cursor, Claude Desktop | Minutes |
+| Path | Best for |
+|------|----------|
+| [Hosted Verify](./cookbook/auth-hosted-verify) | Login, guided verification, least UI work |
+| [Widgets](./widgets/overview) | React gating and badges |
+| [SDK](./sdks/overview) | Custom browser or server flows |
+| [API](./api/overview) | HTTP from your servers |
+| [MCP](./mcp/overview) | Cursor, Claude, agents — browser links first |
 
-## Public Surfaces
+## URLs you’ll use
 
-| Surface | URL |
-|---------|-----|
-| Hosted Verify | `https://neus.network/verify` |
-| Proof Pages | `https://neus.network/proof/[proof-id]` |
-| Hub & Profiles | `https://neus.network/hub` |
+| What | URL |
+|------|-----|
+| Hosted verification | `https://neus.network/verify` |
+| Platform (`/hub`) | `https://neus.network/hub` |
 | API | `https://api.neus.network` |
-| MCP Endpoint | `https://mcp.neus.network/mcp` |
+| MCP | `https://mcp.neus.network/mcp` |
 
-## Next Steps
+## Examples
 
-<CardGroup cols={2}>
-  <Card title="Quickstart" icon="rocket" href="./quickstart">
-    Build your first proof flow end-to-end.
-  </Card>
-  <Card title="Examples" icon="code" href="./examples">
-    See React, Node.js, and HTTP examples.
-  </Card>
-</CardGroup>
+[Examples](./examples) — React, Node, curl.

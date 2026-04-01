@@ -4,39 +4,56 @@ description: Delegate permissions to agents for scoped operations.
 icon: handshake
 ---
 
-Use `agent-delegation` to grant scoped permissions to an agent.
+Use `agent-delegation` so an account can **approve what an agent is allowed to do**. Registration (`agent-identity`) alone does not grant those permissions.
+
+In API payloads, the field name stays **`controllerWallet`** — that value is the **approving account** wallet (who signs this step). See [Agent concepts](./concepts).
 
 **Verifier ID:** `agent-delegation`
 
-## Basic Delegation
+**Typical path:** complete delegation in the [hosted verify flow](../cookbook/auth-hosted-verify) or with **`neus_agent_create`** in MCP.
+
+## Basic delegation
 
 ```javascript
 const proof = await client.verify({
   verifier: 'agent-delegation',
   data: {
-    controllerWallet: '0x...',  // Must match signer
+    controllerWallet: '0x...',  // Must match signer (approving account)
     agentWallet: '0x...',
-    scope: 'payments:x402',
-    permissions: ['execute', 'read'],
+    scope: 'global',
+    permissions: ['read-proofs'],
   },
   walletAddress: controllerWallet,
 });
 ```
 
-## Full Example with Spending Limits
+## Advanced delegation
+
+Use this section for payment-scoped delegation, spend caps, or extra policy fields.
+
+### `maxSpend` (optional)
+
+`maxSpend` is a **whole-number string** in **token base units** (no decimal separator, 1–78 digits). This matches common on-chain amount encoding and avoids floating-point rounding issues.
+
+- **USDC (typical `payments:x402`):** six decimal places — e.g. 25 USDC → `"25000000"`. Use `toAgentDelegationMaxSpend('25', 6)` from `@neus/sdk`.
+- **Native ETH-style assets:** eighteen decimal places — e.g. 1 ETH → `"1000000000000000000"`.
+
+Token metadata is not stored on the proof; resolve the cap using your scope and product defaults.
 
 ```javascript
+import { toAgentDelegationMaxSpend } from '@neus/sdk';
+
 await client.verify({
   verifier: 'agent-delegation',
   data: {
-    controllerWallet: '0x...',  // Must match signer
+    controllerWallet: '0x...',
     agentWallet: '0x...',
     scope: 'payments:x402',
     permissions: ['execute', 'read'],
-    maxSpend: '1000000000000000000',   // 1 ETH in wei
+    maxSpend: toAgentDelegationMaxSpend('100.50', 6),
     allowedPaymentTypes: ['x402'],
     receiptDisclosure: 'summary',
-    expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,  // 7 days
+    expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
     instructions: 'Policy instructions for the delegated agent',
     skills: ['market-data']
   },
@@ -48,15 +65,15 @@ await client.verify({
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `controllerWallet` | One of wallet or accountId | Controller wallet address. Must match signer. |
-| `controllerAccountId` | One of wallet or accountId | CAIP-10 account ID for controller |
+| `controllerWallet` | One of wallet or accountId | Approving account wallet. Must match signer. |
+| `controllerAccountId` | One of wallet or accountId | CAIP-10 account ID for the approving account |
 | `agentWallet` | One of wallet or accountId | Agent wallet address |
 | `agentAccountId` | One of wallet or accountId | CAIP-10 account ID for agent |
 | `agentId` | No | Reference to a registered agent identity |
-| `scope` | No | Permission scope (e.g., `payments:x402`) |
+| `scope` | No | Permission scope (default is often `global`; payment agents may use a narrower scope) |
 | `permissions` | No | Allowed actions (`execute`, `read`, etc.) |
-| `maxSpend` | No | Maximum spend in wei (decimal string) |
-| `allowedPaymentTypes` | No | Payment types allowed (e.g., `["x402"]`) |
+| `maxSpend` | No | Whole-number string: spend cap in token base units. See above. |
+| `allowedPaymentTypes` | No | Allowed payment rails for delegated spend |
 | `receiptDisclosure` | No | `summary`, `full`, or `none` |
 | `expiresAt` | No | Expiration timestamp (Unix ms) |
 | `instructions` | No | Policy instructions (max 4000 chars) |
@@ -66,11 +83,9 @@ await client.verify({
 
 You receive a proof receipt ID that can be reused for agent policy checks and delegated actions.
 
-## Verification
+## Checking access
 
-```bash
-GET /api/v1/proofs/check?verifierIds=agent-delegation&address=0x...
-```
+Use proof checks or MCP **`neus_agent_link`** (readiness check) from your app — you typically do not need raw REST from the default integration path.
 
 ## Security Best Practices
 

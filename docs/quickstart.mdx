@@ -4,18 +4,11 @@ description: Create your first proof in under 5 minutes.
 icon: rocket
 ---
 
-Build a complete proof flow: verify, save the receipt, and reuse it.
+**~5 min:** install SDK → verify → save receipt ID → optional gate.
 
-## What You'll Build
-
-By the end of this guide, you'll have:
-- Created a verified proof using the SDK
-- Saved a proof receipt ID
-- Gated content behind verification
-
-**Time:** Under 5 minutes
-
----
+<Tip>
+  **Shipping an app?** Do **[Get started](./get-started)** first (platform → Apps → credits → `appId` / sponsor). Then come back here for code.
+</Tip>
 
 ## 1. Install
 
@@ -23,72 +16,51 @@ By the end of this guide, you'll have:
 npm install @neus/sdk
 ```
 
-## 2. Create a Client
+## 2. Client + proof
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient({ appId: 'my-app' });
-```
 
-## 3. Create a Proof
-
-The simplest proof binds a wallet to content:
-
-```javascript
 const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'My content or claim',
   wallet: window.ethereum,
 });
 
-// Save this ID — it's your reusable proof receipt
-const proofId = proof.proofId;
+const proofId = proof.proofId; // save this
 ```
 
-## 4. Check Status
+<Tip>
+  **No in-app wallet?** Use [Hosted Verify](./cookbook/auth-hosted-verify) + session instead of `window.ethereum`.
+</Tip>
 
-Most proofs complete instantly. Async verifiers return `202`:
+## 3. Wait for completion
 
 ```javascript
 const status = await client.pollProofStatus(proofId, {
   interval: 3000,
   timeout: 60000,
 });
-
-console.log(status.status); // 'verified'
 ```
 
-## 5. Gate Content
-
-Use the proof receipt to gate React UI:
+## 4. Optional: Gate in React
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
-<VerifyGate
-  requiredVerifiers={['ownership-basic']}
->
+<VerifyGate requiredVerifiers={['ownership-basic']}>
   <ProtectedContent />
 </VerifyGate>
 ```
 
----
+## Next
 
-## What's Next?
-
-| I want to... | Go to |
-|--------------|-------|
-| Use the hosted UI | [Hosted Verify](./cookbook/auth-hosted-verify) |
-| Pick the right integration | [Choose Your Path](./choose-an-integration-path) |
-| See all verification types | [Verifier Catalog](./verification/verifiers) |
-| Build for production | [Integration Guide](./integration) |
-
-<CardGroup cols={2}>
-  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Use our hosted UI for login and interactive flows.
-  </Card>
-  <Card title="Verifier Catalog" icon="list-tree" href="./verification/verifiers">
-    Explore all verification capabilities.
-  </Card>
-</CardGroup>
+| I want… | Go to |
+|---------|--------|
+| Platform + billing setup | [Get started](./get-started) |
+| Hosted UI | [Hosted Verify](./cookbook/auth-hosted-verify) |
+| Pick integration | [Choose your path](./choose-an-integration-path) |
+| Verifier list | [Verifier catalog](./verification/verifiers) |
+| Production | [Integration](./integration) |

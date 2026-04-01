@@ -4,97 +4,34 @@ description: Pick the fastest path for your product.
 icon: route
 ---
 
-One integration. Reusable everywhere.
+**New integration?** Complete **[Get started](./get-started)** (platform profile, app link, credits) before you choose an integration path.
 
-## Quick Decision
+## Options
 
-| Your Need | Use This | Why |
-|-----------|----------|-----|
-| Guided user verification | [Hosted Verify](./cookbook/auth-hosted-verify) | Zero frontend work |
-| React gating or badges | [Widgets](./widgets/overview) | Drop-in components |
-| Custom browser/server flow | [SDK](./sdks/overview) | Full control |
-| Server-only checks | [API](./api/overview) | Backend ownership |
-| AI agents and tools | [MCP](./mcp/overview) | Native agent support |
+| You need | Use | Why |
+|----------|-----|-----|
+| Guided verification / login | [Hosted Verify](./cookbook/auth-hosted-verify) | Users finish in NEUS; you use `returnUrl` + session |
+| React gating or badges | [Widgets](./widgets/overview) | `VerifyGate`, `ProofBadge` |
+| Custom flow in code | [SDK](./sdks/overview) | Full control |
+| Server-only | [API](./api/overview) | HTTP from your servers |
+| AI / IDE tools | [MCP](./mcp/overview) | Add one URL; **open hosted links** tools return; optional Bearer like the SDK |
 
-## Decision Tree
+**MCP:** URL alone does not sign the IDE in — for “who am I” after login, same **`Authorization: Bearer`** as [SDK Authentication](./sdks/authentication).
 
-```
-Need verification?
-        │
-        ▼
-┌───────────────────┐
-│ Interactive flow? │──Yes──▶ Hosted Verify
-└───────────────────┘
-        │ No
-        ▼
-┌───────────────────┐
-│ React app?        │──Yes──▶ Widgets
-└───────────────────┘
-        │ No
-        ▼
-┌───────────────────┐
-│ Server-only?      │──Yes──▶ API
-└───────────────────┘
-        │ No
-        ▼
-┌───────────────────┐
-│ AI/Agent tool?    │──Yes──▶ MCP
-└───────────────────┘
-        │ No
-        ▼
-       SDK
-```
+**Partner / domain setup:** [Partner setup](./cookbook/hub-integrator).
 
-## Integration Options
+**Who pays:** [Get started](./get-started) checklist + [Billing](./platform/billing) reference.
+
+## Deep links
 
 <CardGroup cols={2}>
-  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    **Best for:** Login, social linking, human verification
-    **Time:** Minutes
-    **What you get:** Ready-made UI at `/verify`
+  <Card title="Get started" icon="rocket" href="./get-started">
+    Platform, app, credits, billing.
   </Card>
-  <Card title="Widgets" icon="puzzle-piece" href="./widgets/overview">
-    **Best for:** React apps needing gating or badges
-    **Time:** Minutes
-    **What you get:** `<VerifyGate>`, `<ProofBadge>`
+  <Card title="Quickstart" icon="code" href="./quickstart">
+    First proof in code.
   </Card>
-  <Card title="SDK" icon="package" href="./sdks/overview">
-    **Best for:** Custom browser or server flows
-    **Time:** Minutes
-    **What you get:** Full client control
-  </Card>
-  <Card title="API" icon="terminal" href="./api/overview">
-    **Best for:** Server-only policy checks
-    **Time:** Minutes
-    **What you get:** Direct HTTP endpoints
-  </Card>
-  <Card title="MCP" icon="plug" href="./mcp/overview">
-    **Best for:** AI agents, Cursor, Claude Desktop
-    **Time:** Minutes
-    **What you get:** Native tool integration
-  </Card>
-  <Card title="Partner Setup" icon="building" href="./cookbook/hub-integrator">
-    **Best for:** Domain linking, team onboarding
-    **Time:** Hours
-    **What you get:** Full production setup
-  </Card>
-</CardGroup>
-
-## Common Paths
-
-| Starting Point | Then Add |
-|----------------|----------|
-| Hosted Verify | Widgets for React gating |
-| SDK | API for server checks |
-| MCP | Agents for proof-backed automation |
-
-## Next Step
-
-<CardGroup cols={2}>
-  <Card title="Quickstart" icon="rocket" href="./quickstart">
-    Build your first proof now.
-  </Card>
-  <Card title="Verifier Catalog" icon="list-tree" href="./verification/verifiers">
-    Choose what to verify.
+  <Card title="Verifier catalog" icon="list-tree" href="./verification/verifiers">
+    Pick verifiers.
   </Card>
 </CardGroup>

@@ -1,6 +1,6 @@
 ---
 title: SDK Verification Patterns
-description: Reuse-first, fresh-proof, hosted interactive, and server-side gating patterns with the NEUS SDK.
+description: Reuse-first, fresh-proof, hosted interactive, and gate-check patterns with the NEUS SDK.
 icon: rotate
 ---
 
@@ -10,12 +10,12 @@ Use these patterns to choose how your app creates or reuses proofs. In most prod
 
 | Option | When to Use |
 |--------|-------------|
-| `privacyLevel: 'private'` | Owner-only proofs; not discoverable. Default for most flows. |
-| `privacyLevel: 'public'` | Discoverable in Hub; use when you want proof sharing. |
-| `publicDisplay: false` | Hide proof from public profile even when stored. |
+| `privacyLevel: 'private'` | Vaulted proofs for signed-in owner or authorized-session access only. |
+| `privacyLevel: 'public'` | Reusable proofs. Pair with `publicDisplay` to choose public vs unlisted. |
+| `publicDisplay: false` | Unlisted: usable in checks and direct lookups, hidden from discovery. |
 | `publicDisplay: true` | Show proof on public profile (requires `public` privacy). |
 
-Default to `{ privacyLevel: 'private', publicDisplay: false }` unless you explicitly need public discovery.
+Default to `{ privacyLevel: 'public', publicDisplay: false }` for most verify and gate flows. Use `private` for vaulted content and authorized reads only.
 
 ## Reuse-First Flow
 
@@ -45,7 +45,7 @@ Use this when the action is high stakes and you need a newly created assertion.
 
 ## Hosted Interactive Flow
 
-Interactive verifiers hand off to the hosted verify surface.
+Interactive verifiers hand off to NEUS hosted verification (`/verify`).
 
 ```jsx
 <VerifyGate
@@ -54,9 +54,9 @@ Interactive verifiers hand off to the hosted verify surface.
 />
 ```
 
-## Server-Side Policy Check
+## Policy checks from your app
 
-For server-side access, use the SDK gate-check helper instead of reading full proof payloads.
+Use the SDK **`gateCheck`** helper instead of downloading full proof payloads for every decision.
 
 ```javascript
 const result = await client.gateCheck({
@@ -64,7 +64,7 @@ const result = await client.gateCheck({
   verifierIds: ['token-holding'],
   contractAddress: '0x...',
   minBalance: '100',
-  chainId: 8453,
+  chainId: 8453, // Asset chain where the token lives — required for asset verifiers only
   since: Date.now() - 60 * 60 * 1000
 });
 ```

@@ -1,20 +1,10 @@
 ---
 title: Verifier Catalog (`neus_verifiers_catalog`)
-description: Read the live NEUS verifier catalog from MCP before building policy or UI.
+description: Live verifier IDs and metadata from NEUS.
 icon: list-tree
 ---
 
-Use `neus_verifiers_catalog` at the start of an MCP workflow when the client needs the live verifier catalog.
-
-## Best For
-
-- tool-driven discovery
-- verifier selection
-- avoiding hardcoded verifier metadata
-
-## Upstream API
-
-`GET /api/v1/verification/verifiers`
+Call before hardcoding **`verifierIds`** / policy — list is always current.
 
 ## Input
 
@@ -22,28 +12,6 @@ Use `neus_verifiers_catalog` at the start of an MCP workflow when the client nee
 {}
 ```
 
-## Stable Output
+## Output
 
-- verifier list
-- verifier labels and types
-- field metadata needed for policy or UI
-
-## Response Structure
-
-```json
-{
-  "data": [
-    {
-      "id": "ownership-basic",
-      "description": "Content ownership verification",
-      "flow": "instant",
-      "interaction": "signature",
-      "tier": "public"
-    }
-  ],
-  "meta": {
-    "count": 14,
-    "schemaVersion": "1.0.0"
-  }
-}
-```
+Array of verifiers (id, labels, flow hints, etc.) plus **`meta.count`**. Full shape comes from the tool schema on the wire.

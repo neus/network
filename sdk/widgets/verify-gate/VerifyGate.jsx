@@ -395,10 +395,11 @@ export function VerifyGate({
     }
 
     const origin = window.location.origin;
+    const returnUrl = window.location.href;
     const checkoutUrl = new URL(resolvedHostedCheckoutUrl);
     checkoutUrl.searchParams.set('verifiers', verifierList.join(','));
     checkoutUrl.searchParams.set('mode', 'popup');
-    checkoutUrl.searchParams.set('returnUrl', origin);
+    checkoutUrl.searchParams.set('returnUrl', returnUrl);
     checkoutUrl.searchParams.set('origin', origin);
 
     let expectedOrigin = '*';

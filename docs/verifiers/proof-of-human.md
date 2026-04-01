@@ -20,7 +20,7 @@ Unique human verification for sybil resistance
 
 - **Compatible with:** `ownership-basic`, `ownership-social`, `ai-content-moderation`
 
-## Example (schema-validated)
+## Example
 
 ```javascript
 await client.verify({

@@ -23,7 +23,7 @@ NFT ownership verification (EVM or Solana)
 
 - **Compatible with:** `token-holding`, `ownership-basic`
 
-## Example (schema-validated)
+## Example
 
 ```javascript
 await client.verify({

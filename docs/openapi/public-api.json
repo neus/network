@@ -3,7 +3,7 @@
   "info": {
     "title": "NEUS Network — Public Integrator API",
     "version": "1.0.0",
-    "description": "Public integrator surface for NEUS.\n\nThis spec is generated from the running Express routes and explicit public operation metadata.\n\nNote: Tier differences affect quotas, credits, and billing behavior. Admin-only capabilities are excluded from this spec.",
+    "description": "Public HTTP API for NEUS integrators.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).\n\nSome verifiers require pro access. Administrative endpoints are not included in this specification.",
     "license": {
       "name": "Business Source License 1.1",
       "url": "https://mariadb.com/bsl11/"
@@ -31,15 +31,23 @@
       },
       "ErrorResponse": {
         "type": "object",
-        "required": ["success", "error"],
+        "required": [
+          "success",
+          "error"
+        ],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [false]
+            "enum": [
+              false
+            ]
           },
           "error": {
             "type": "object",
-            "required": ["code", "message"],
+            "required": [
+              "code",
+              "message"
+            ],
             "properties": {
               "code": {
                 "type": "string"
@@ -65,7 +73,12 @@
       },
       "StandardizeRequest": {
         "type": "object",
-        "required": ["walletAddress", "verifierIds", "data", "signedTimestamp"],
+        "required": [
+          "walletAddress",
+          "verifierIds",
+          "data",
+          "signedTimestamp"
+        ],
         "properties": {
           "walletAddress": {
             "type": "string"
@@ -108,11 +121,11 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Optional. For EVM (0x address), verification requests are normalized to the protocol hub chain. For non-EVM, include chain (CAIP-2) instead."
+            "description": "Advanced/optional. EVM signing-context hint; auto-resolved to the protocol hub chain when omitted. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
           },
           "chain": {
             "type": "string",
-            "description": "Optional. For EVM (0x address), verification requests are normalized to protocol hub chain context. For non-EVM, include chain (e.g. solana:mainnet)."
+            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; the protocol resolves hub context automatically."
           },
           "signatureMethod": {
             "type": "string"
@@ -122,15 +135,23 @@
       },
       "StandardizeResponse": {
         "type": "object",
-        "required": ["success", "data"],
+        "required": [
+          "success",
+          "data"
+        ],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [true]
+            "enum": [
+              true
+            ]
           },
           "data": {
             "type": "object",
-            "required": ["signerString", "bodyPreview"],
+            "required": [
+              "signerString",
+              "bodyPreview"
+            ],
             "properties": {
               "signerString": {
                 "type": "string"
@@ -147,7 +168,11 @@
       },
       "VerificationRequest": {
         "type": "object",
-        "required": ["verifierIds", "data", "walletAddress"],
+        "required": [
+          "verifierIds",
+          "data",
+          "walletAddress"
+        ],
         "properties": {
           "verifierIds": {
             "type": "array",
@@ -203,11 +228,11 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Optional. For EVM (0x address), verification requests are normalized to the protocol hub chain. For non-EVM, include chain (CAIP-2) instead."
+            "description": "Advanced/optional. EVM signing-context hint; auto-resolved to the protocol hub chain when omitted. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
           },
           "chain": {
             "type": "string",
-            "description": "Optional. For EVM (0x address), verification requests are normalized to protocol hub chain context. For non-EVM, include chain (e.g. solana:mainnet)."
+            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; the protocol resolves hub context automatically."
           },
           "signatureMethod": {
             "type": "string"
@@ -225,11 +250,18 @@
       },
       "VerificationAcceptedResponse": {
         "type": "object",
-        "required": ["success", "status", "message", "data"],
+        "required": [
+          "success",
+          "status",
+          "message",
+          "data"
+        ],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [true]
+            "enum": [
+              true
+            ]
           },
           "status": {
             "type": "string"
@@ -258,11 +290,18 @@
       },
       "VerificationCompleteResponse": {
         "type": "object",
-        "required": ["success", "status", "message", "data"],
+        "required": [
+          "success",
+          "status",
+          "message",
+          "data"
+        ],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [true]
+            "enum": [
+              true
+            ]
           },
           "status": {
             "type": "string"
@@ -330,16 +369,7 @@
                   "nullable": true,
                   "type": "string"
                 },
-                "lastUpdated": {
-                  "oneOf": [
-                    {
-                      "type": "string"
-                    },
-                    {
-                      "type": "number"
-                    }
-                  ]
-                },
+                "lastUpdated": {},
                 "completedAt": {
                   "nullable": true,
                   "type": "string"
@@ -363,11 +393,16 @@
       },
       "ProofsByWalletResponse": {
         "type": "object",
-        "required": ["success", "data"],
+        "required": [
+          "success",
+          "data"
+        ],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [true]
+            "enum": [
+              true
+            ]
           },
           "data": {
             "type": "object",
@@ -387,7 +422,8 @@
                 }
               },
               "totalCount": {
-                "type": "number"
+                "type": "number",
+                "nullable": true
               },
               "hasMore": {
                 "type": "boolean"
@@ -415,11 +451,16 @@
       },
       "GateCheckResponse": {
         "type": "object",
-        "required": ["success", "data"],
+        "required": [
+          "success",
+          "data"
+        ],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [true]
+            "enum": [
+              true
+            ]
           },
           "data": {
             "type": "object",
@@ -433,7 +474,11 @@
       },
       "RevokeSelfRequest": {
         "type": "object",
-        "required": ["walletAddress", "signature", "signedTimestamp"],
+        "required": [
+          "walletAddress",
+          "signature",
+          "signedTimestamp"
+        ],
         "properties": {
           "walletAddress": {
             "type": "string"
@@ -449,11 +494,17 @@
       },
       "RevokeSelfResponse": {
         "type": "object",
-        "required": ["success", "alreadyRevoked", "timestamp"],
+        "required": [
+          "success",
+          "alreadyRevoked",
+          "timestamp"
+        ],
         "properties": {
           "success": {
             "type": "boolean",
-            "enum": [true]
+            "enum": [
+              true
+            ]
           },
           "alreadyRevoked": {
             "type": "boolean"
@@ -466,7 +517,9 @@
       },
       "VerifierData_ownership_basic": {
         "type": "object",
-        "required": ["owner"],
+        "required": [
+          "owner"
+        ],
         "properties": {
           "content": {
             "type": "string",
@@ -491,7 +544,9 @@
           },
           "reference": {
             "type": "object",
-            "required": ["type"],
+            "required": [
+              "type"
+            ],
             "properties": {
               "type": {
                 "type": "string",
@@ -545,14 +600,23 @@
             "properties": {
               "declaredKind": {
                 "type": "string",
-                "enum": ["human", "ai", "mixed", "unknown"]
+                "enum": [
+                  "human",
+                  "ai",
+                  "mixed",
+                  "unknown"
+                ]
               },
               "aiContext": {
                 "type": "object",
                 "properties": {
                   "generatorType": {
                     "type": "string",
-                    "enum": ["local", "saas", "agent"]
+                    "enum": [
+                      "local",
+                      "saas",
+                      "agent"
+                    ]
                   },
                   "provider": {
                     "type": "string",
@@ -574,7 +638,10 @@
       },
       "VerifierData_ownership_social": {
         "type": "object",
-        "required": ["provider", "internalSocialToken"],
+        "required": [
+          "provider",
+          "internalSocialToken"
+        ],
         "properties": {
           "provider": {
             "type": "string",
@@ -600,7 +667,9 @@
       },
       "VerifierData_ownership_pseudonym": {
         "type": "object",
-        "required": ["pseudonymId"],
+        "required": [
+          "pseudonymId"
+        ],
         "properties": {
           "pseudonymId": {
             "type": "string",
@@ -626,7 +695,9 @@
       },
       "VerifierData_ownership_dns_txt": {
         "type": "object",
-        "required": ["domain"],
+        "required": [
+          "domain"
+        ],
         "properties": {
           "domain": {
             "type": "string",
@@ -641,11 +712,17 @@
       },
       "VerifierData_ownership_org_oauth": {
         "type": "object",
-        "required": ["provider", "internalSocialToken"],
+        "required": [
+          "provider",
+          "internalSocialToken"
+        ],
         "properties": {
           "provider": {
             "type": "string",
-            "enum": ["google", "microsoft"]
+            "enum": [
+              "google",
+              "microsoft"
+            ]
           },
           "internalSocialToken": {
             "type": "string"
@@ -662,7 +739,10 @@
       },
       "VerifierData_contract_ownership": {
         "type": "object",
-        "required": ["contractAddress", "chainId"],
+        "required": [
+          "contractAddress",
+          "chainId"
+        ],
         "properties": {
           "contractAddress": {
             "type": "string",
@@ -678,17 +758,26 @@
           },
           "method": {
             "type": "string",
-            "enum": ["owner", "admin", "accessControl"]
+            "enum": [
+              "owner",
+              "admin",
+              "accessControl"
+            ]
           }
         }
       },
       "VerifierData_proof_of_human": {
         "type": "object",
-        "required": ["proofs", "queryResult"],
+        "required": [
+          "proofs",
+          "queryResult"
+        ],
         "properties": {
           "provider": {
             "type": "string",
-            "enum": ["zkpassport"]
+            "enum": [
+              "zkpassport"
+            ]
           },
           "proofs": {
             "type": "array",
@@ -706,13 +795,20 @@
       },
       "VerifierData_nft_ownership": {
         "type": "object",
-        "required": ["contractAddress", "tokenId"],
+        "required": [
+          "contractAddress",
+          "tokenId"
+        ],
         "oneOf": [
           {
-            "required": ["chainId"]
+            "required": [
+              "chainId"
+            ]
           },
           {
-            "required": ["chain"]
+            "required": [
+              "chain"
+            ]
           }
         ],
         "properties": {
@@ -730,7 +826,10 @@
           },
           "tokenType": {
             "type": "string",
-            "enum": ["erc721", "erc1155"],
+            "enum": [
+              "erc721",
+              "erc1155"
+            ],
             "default": "erc721"
           },
           "chainId": {
@@ -749,13 +848,20 @@
       },
       "VerifierData_token_holding": {
         "type": "object",
-        "required": ["contractAddress", "minBalance"],
+        "required": [
+          "contractAddress",
+          "minBalance"
+        ],
         "oneOf": [
           {
-            "required": ["chainId"]
+            "required": [
+              "chainId"
+            ]
           },
           {
-            "required": ["chain"]
+            "required": [
+              "chain"
+            ]
           }
         ],
         "properties": {
@@ -787,11 +893,15 @@
       },
       "VerifierData_wallet_risk": {
         "type": "object",
-        "required": ["walletAddress"],
+        "required": [
+          "walletAddress"
+        ],
         "properties": {
           "provider": {
             "type": "string",
-            "enum": ["webacy"],
+            "enum": [
+              "webacy"
+            ],
             "default": "webacy"
           },
           "walletAddress": {
@@ -831,10 +941,17 @@
       },
       "VerifierData_wallet_link": {
         "type": "object",
-        "required": ["signature", "signatureMethod", "signedTimestamp"],
+        "required": [
+          "signature",
+          "signatureMethod",
+          "signedTimestamp"
+        ],
         "anyOf": [
           {
-            "required": ["primaryAccountId", "secondaryAccountId"]
+            "required": [
+              "primaryAccountId",
+              "secondaryAccountId"
+            ]
           },
           {
             "required": [
@@ -904,7 +1021,10 @@
       },
       "VerifierData_ai_content_moderation": {
         "type": "object",
-        "required": ["content", "contentType"],
+        "required": [
+          "content",
+          "contentType"
+        ],
         "properties": {
           "content": {
             "type": "string",
@@ -926,19 +1046,30 @@
           },
           "provider": {
             "type": "string",
-            "enum": ["google-vision", "google-perspective"]
+            "enum": [
+              "google-vision",
+              "google-perspective"
+            ]
           }
         }
       },
       "VerifierData_agent_identity": {
         "type": "object",
-        "required": ["agentId"],
+        "description": "Register an agent identity. The agent wallet signs this proof itself. This verifier does not grant permissions; use agent-delegation for authority.",
+        "required": [
+          "agentId"
+        ],
         "anyOf": [
           {
-            "required": ["agentAccountId"]
+            "required": [
+              "agentAccountId"
+            ]
           },
           {
-            "required": ["agentWallet"]
+            "required": [
+              "agentWallet",
+              "agentChainRef"
+            ]
           }
         ],
         "properties": {
@@ -949,10 +1080,12 @@
           },
           "agentAccountId": {
             "type": "string",
-            "format": "caip10-account"
+            "format": "caip10-account",
+            "description": "Preferred canonical subject identity (CAIP-10)."
           },
           "agentChainRef": {
             "type": "string",
+            "description": "Required when using legacy agentWallet without agentAccountId.",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "agentWallet": {
@@ -965,19 +1098,57 @@
           },
           "agentType": {
             "type": "string",
-            "enum": ["ai", "bot", "service", "automation", "agent"]
+            "enum": [
+              "ai",
+              "bot",
+              "service",
+              "automation",
+              "agent"
+            ]
           },
           "description": {
             "type": "string",
             "maxLength": 500
           },
           "capabilities": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "maxLength": 128
+            "type": "object",
+            "description": "Agent capabilities as boolean flags",
+            "properties": {
+              "wallet": {
+                "type": "boolean"
+              },
+              "signing": {
+                "type": "boolean"
+              },
+              "spending": {
+                "type": "boolean"
+              },
+              "publishing": {
+                "type": "boolean"
+              },
+              "search": {
+                "type": "boolean"
+              },
+              "browser": {
+                "type": "boolean"
+              },
+              "mcp": {
+                "type": "boolean"
+              },
+              "webhooks": {
+                "type": "boolean"
+              },
+              "receipts": {
+                "type": "boolean"
+              },
+              "proofs": {
+                "type": "boolean"
+              },
+              "delegation": {
+                "type": "boolean"
+              }
             },
-            "maxItems": 32
+            "additionalProperties": false
           },
           "instructions": {
             "type": "string",
@@ -985,18 +1156,59 @@
           },
           "skills": {
             "type": "array",
+            "description": "Agent skills as structured objects",
+            "maxItems": 48,
             "items": {
-              "type": "string",
-              "maxLength": 64
-            },
-            "maxItems": 48
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "version": {
+                  "type": "string",
+                  "maxLength": 32
+                },
+                "provider": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "native",
+                    "integration",
+                    "plugin",
+                    "mcp",
+                    "toolkit"
+                  ]
+                },
+                "configId": {
+                  "type": "string",
+                  "maxLength": 128
+                },
+                "enabled": {
+                  "type": "boolean"
+                }
+              }
+            }
           },
           "services": {
             "type": "array",
             "maxItems": 16,
             "items": {
               "type": "object",
-              "required": ["name", "endpoint"],
+              "required": [
+                "name",
+                "endpoint"
+              ],
               "properties": {
                 "name": {
                   "type": "string",
@@ -1020,19 +1232,29 @@
         "type": "object",
         "anyOf": [
           {
-            "required": ["controllerAccountId", "agentAccountId"]
+            "required": [
+              "controllerAccountId",
+              "agentAccountId"
+            ]
           },
           {
-            "required": ["controllerWallet", "agentWallet"]
+            "required": [
+              "controllerWallet",
+              "controllerChainRef",
+              "agentWallet",
+              "agentChainRef"
+            ]
           }
         ],
         "properties": {
           "controllerAccountId": {
             "type": "string",
-            "format": "caip10-account"
+            "format": "caip10-account",
+            "description": "Preferred canonical controller identity (CAIP-10)."
           },
           "controllerChainRef": {
             "type": "string",
+            "description": "Required when using legacy controllerWallet without controllerAccountId.",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "controllerWallet": {
@@ -1041,10 +1263,12 @@
           },
           "agentAccountId": {
             "type": "string",
-            "format": "caip10-account"
+            "format": "caip10-account",
+            "description": "Preferred canonical agent identity (CAIP-10)."
           },
           "agentChainRef": {
             "type": "string",
+            "description": "Required when using legacy agentWallet without agentAccountId.",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "agentWallet": {
@@ -1070,7 +1294,8 @@
           },
           "maxSpend": {
             "type": "string",
-            "pattern": "^[0-9]{1,78}$"
+            "pattern": "^[0-9]{1,78}$",
+            "description": "Spend cap as a whole-number string in token base units (no decimal point). USDC (common x402): six decimal places; native ETH-style assets: eighteen."
           },
           "allowedPaymentTypes": {
             "type": "array",
@@ -1082,7 +1307,11 @@
           },
           "receiptDisclosure": {
             "type": "string",
-            "enum": ["none", "summary", "full"]
+            "enum": [
+              "none",
+              "summary",
+              "full"
+            ]
           },
           "expiresAt": {
             "type": "integer",
@@ -1094,11 +1323,49 @@
           },
           "skills": {
             "type": "array",
+            "description": "Agent skills as structured objects",
+            "maxItems": 48,
             "items": {
-              "type": "string",
-              "maxLength": 64
-            },
-            "maxItems": 48
+              "type": "object",
+              "required": [
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "version": {
+                  "type": "string",
+                  "maxLength": 32
+                },
+                "provider": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "native",
+                    "integration",
+                    "plugin",
+                    "mcp",
+                    "toolkit"
+                  ]
+                },
+                "configId": {
+                  "type": "string",
+                  "maxLength": 128
+                },
+                "enabled": {
+                  "type": "boolean"
+                }
+              }
+            }
           }
         }
       },
@@ -1204,7 +1471,9 @@
       "get": {
         "operationId": "healthCheck",
         "summary": "Health check",
-        "tags": ["Health"],
+        "tags": [
+          "Health"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -1224,7 +1493,9 @@
         "operationId": "getVerifierCatalog",
         "summary": "Get supported verifiers and configuration",
         "description": "Returns a list of all supported verifier IDs, full verifier metadata (schemas + flow/access semantics), and the backend chain configuration (hub chain, asset allowlists).",
-        "tags": ["Verification"],
+        "tags": [
+          "Verification"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -1247,7 +1518,9 @@
       "post": {
         "operationId": "buildSigningString",
         "summary": "Build the Standard Signing String",
-        "tags": ["Verification"],
+        "tags": [
+          "Verification"
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1297,7 +1570,9 @@
       "post": {
         "operationId": "submitVerification",
         "summary": "Submit a verification request",
-        "tags": ["Verification"],
+        "tags": [
+          "Verification"
+        ],
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -1397,7 +1672,9 @@
       "get": {
         "operationId": "getVerificationStatus",
         "summary": "Get verification status",
-        "tags": ["Verification"],
+        "tags": [
+          "Verification"
+        ],
         "parameters": [
           {
             "name": "qHash",
@@ -1414,7 +1691,11 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["1", "true", "yes"]
+              "enum": [
+                "1",
+                "true",
+                "yes"
+              ]
             }
           },
           {
@@ -1423,7 +1704,10 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["1", "true"]
+              "enum": [
+                "1",
+                "true"
+              ]
             }
           },
           {
@@ -1464,7 +1748,10 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["1", "true"]
+              "enum": [
+                "1",
+                "true"
+              ]
             }
           },
           {
@@ -1532,7 +1819,9 @@
       "post": {
         "operationId": "getVerificationStatusBatch",
         "summary": "Batch get verification status (minimal)",
-        "tags": ["Verification"],
+        "tags": [
+          "Verification"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -1572,7 +1861,9 @@
       "get": {
         "operationId": "getProofsByWallet",
         "summary": "Get proofs by wallet or DID",
-        "tags": ["Proofs"],
+        "tags": [
+          "Proofs"
+        ],
         "parameters": [
           {
             "name": "address",
@@ -1610,21 +1901,14 @@
             }
           },
           {
-            "name": "chainId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "description": "Filter proofs by chain ID (e.g., 84532 for Base Sepolia)"
-            }
-          },
-          {
             "name": "visibility",
             "in": "query",
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["public"]
+              "enum": [
+                "public"
+              ]
             }
           },
           {
@@ -1633,7 +1917,11 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["1", "true", "yes"]
+              "enum": [
+                "1",
+                "true",
+                "yes"
+              ]
             }
           },
           {
@@ -1642,17 +1930,11 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["1", "true", "yes"]
-            }
-          },
-          {
-            "name": "resolveContent",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": ["1", "true", "yes"],
-              "description": "Owner-only: resolve private content for ownership-basic proofs"
+              "enum": [
+                "1",
+                "true",
+                "yes"
+              ]
             }
           },
           {
@@ -1759,7 +2041,9 @@
       "get": {
         "operationId": "proofCheck",
         "summary": "Check proofs against public criteria",
-        "tags": ["Proofs"],
+        "tags": [
+          "Proofs"
+        ],
         "parameters": [
           {
             "name": "address",
@@ -1919,7 +2203,8 @@
             "required": false,
             "schema": {
               "type": "integer",
-              "minimum": 1
+              "minimum": 1,
+              "description": "EVM chain ID of the asset being checked (e.g. 1 for Ethereum Mainnet, 8453 for Base). Required for asset verifiers (nft-ownership, token-holding, contract-ownership). Not a hub or proof-storage filter."
             }
           },
           {
@@ -2031,6 +2316,7 @@
             "name": "controllerWallet",
             "in": "query",
             "required": false,
+            "description": "Approving account (delegation grantor) for agent-delegation checks; optional filter. Not the agent wallet.",
             "schema": {
               "type": "string"
             }
@@ -2107,7 +2393,9 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["me"]
+              "enum": [
+                "me"
+              ]
             }
           },
           {
@@ -2219,7 +2507,9 @@
       "post": {
         "operationId": "revokeSelf",
         "summary": "Revoke a proof you control",
-        "tags": ["Proofs"],
+        "tags": [
+          "Proofs"
+        ],
         "parameters": [
           {
             "name": "qHash",
@@ -2308,7 +2598,9 @@
       "get": {
         "operationId": "getPaymentPricing",
         "summary": "Get pricing information for all payment types",
-        "tags": ["Payments"],
+        "tags": [
+          "Payments"
+        ],
         "parameters": [],
         "responses": {
           "200": {
@@ -2324,7 +2616,9 @@
       "get": {
         "operationId": "getPaymentMethods",
         "summary": "Get available payment methods",
-        "tags": ["Payments"],
+        "tags": [
+          "Payments"
+        ],
         "parameters": [],
         "responses": {
           "200": {

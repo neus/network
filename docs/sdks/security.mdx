@@ -14,16 +14,13 @@ Use the SDK with the same rule as the rest of NEUS: expose the minimum possible 
 | Status by proof receipt ID (`GET /api/v1/verification/status/{qHash}`) | Public (no auth required) |
 | Owner-only reads of private proofs | Additional owner signature |
 
-The SDK uses these headers for owner-only operations:
-- `x-wallet-address`
-- `x-signature`
-- `x-signed-timestamp`
+Owner-only reads use extra signed headers — call the **SDK methods** for private proofs instead of assembling headers yourself.
 
 ## Do Not
 
 <Warning>
 - Do not treat proof signatures as bearer tokens (they are request-bound)
-- Do not embed API keys in browser apps — keep API keys server-side only
+- Do not embed **secrets** in browser bundles — keep them on your servers
 - Do not log or persist:
   - proof signatures
   - API keys
@@ -34,9 +31,9 @@ The SDK uses these headers for owner-only operations:
 
 ```javascript
 {
-  privacyLevel: 'private',
+  privacyLevel: 'public',
   publicDisplay: false,
-  storeOriginalContent: false
+  storeOriginalContent: true
 }
 ```
 
@@ -49,5 +46,5 @@ These are separate controls:
 | `storeOriginalContent` | Controls whether original content is stored |
 
 <Note>
-Private proofs can still store original content when you need owner-only access.
+Default keeps proofs **unlisted** (not discoverable). Use **`private`** when only the **signed-in user** should resolve the proof.
 </Note>

@@ -1,55 +1,22 @@
 ---
-title: Agent Link Check (`neus_agent_link`)
-description: Check whether an agent wallet satisfies both identity and delegation requirements.
+title: Agent readiness (`neus_agent_link`)
+description: Check agent wallet has identity + approved access (legacy tool name).
 icon: robot
 ---
 
-Use `neus_agent_link` when an MCP client needs to confirm that an agent wallet is fully linked and delegated.
+**Readiness check** for **`agentWallet`**: identity and delegation on file?
 
-When link requirements are missing, the tool returns guided next steps and a hosted verify URL instead of private proof data.
+- **`linked: true`** (compat) → treat as **ready**.
+- **`link_required`** → open **`hostedVerifyUrl`** / follow **`nextSteps`**.
 
-## Best For
-
-- agent onboarding
-- delegation checks
-- agent health and readiness flows
+Optional **`principal`** (without session) hints the **approving** account — not the agent wallet. Details: [Agent concepts](../agents/concepts).
 
 ## Input
 
 ```json
-{
-  "agentWallet": "0xagent...",
-  "principal": "0xcontroller..."
-}
+{ "agentWallet": "0x…" }
 ```
 
-## Stable Output
+## Related
 
-- `linked: true` when the required proofs exist
-- `status: "link_required"` plus hosted guidance when the user must complete the link flow
-
-## Response Structure
-
-### Linked
-
-```json
-{
-  "status": "ok",
-  "linked": true
-}
-```
-
-### Link Required
-
-```json
-{
-  "status": "link_required",
-  "linked": false,
-  "hostedVerifyUrl": "https://neus.network/verify?preset=agent-pack&agent=0xagent...",
-  "next_action": "link_agent",
-  "nextSteps": {
-    "tool": "neus_verify",
-    "requiredVerifiers": ["agent-identity", "agent-delegation"]
-  }
-}
-```
+[Agent create](./agent-create)

@@ -23,7 +23,7 @@ Delegates authority to an agent, ERC-8004 compatible
 - `agentId` (`string max 128 min 1`)
 - `scope` (`string max 128`)
 - `permissions` (`array`)
-- `maxSpend` (`string pattern ^[0-9]{1,78}$`)
+- `maxSpend` (`string pattern ^[0-9]{1,78}$`): whole-number string in token base units (no decimal point); USDC typically uses six decimal places for x402
 - `allowedPaymentTypes` (`array`)
 - `receiptDisclosure` (`string enum: none, summary, full`)
 - `expiresAt` (`integer`)
@@ -32,7 +32,7 @@ Delegates authority to an agent, ERC-8004 compatible
 
 - **Compatible with:** `agent-identity`, `ownership-org-oauth`, `wallet-risk`, `wallet-link`
 
-## Example (schema-validated)
+## Example
 
 ```javascript
 await client.verify({

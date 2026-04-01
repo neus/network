@@ -22,7 +22,7 @@ Content ownership verification with origin lock and optional provenance
 
 - **Compatible with:** `ownership-basic`, `agent-identity`, `proof-of-human`, `ai-content-moderation`
 
-## Example (schema-validated)
+## Example
 
 ```javascript
 await client.verify({
