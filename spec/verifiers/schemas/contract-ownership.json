@@ -1,33 +1,33 @@
 {
   "$id": "https://neus.network/schemas/contract-ownership.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "contract-ownership",
   "description": "Verifies smart contract ownership (EVM chains)",
-  "properties": {
-    "chainId": {
-      "minimum": 1,
-      "type": "integer"
-    },
-    "contractAddress": {
-      "format": "evm-address",
-      "type": "string"
-    },
-    "method": {
-      "enum": [
-        "owner",
-        "admin",
-        "accessControl"
-      ],
-      "type": "string"
-    },
-    "walletAddress": {
-      "format": "evm-address",
-      "type": "string"
-    }
-  },
+  "type": "object",
   "required": [
     "contractAddress",
     "chainId"
   ],
-  "title": "contract-ownership",
-  "type": "object"
+  "properties": {
+    "contractAddress": {
+      "type": "string",
+      "format": "evm-address"
+    },
+    "chainId": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "walletAddress": {
+      "type": "string",
+      "format": "evm-address"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "owner",
+        "admin",
+        "accessControl"
+      ]
+    }
+  }
 }

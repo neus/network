@@ -1,97 +1,42 @@
 {
   "$id": "https://neus.network/schemas/ownership-basic.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ownership-basic",
   "description": "Content ownership verification with origin lock and optional provenance",
+  "type": "object",
+  "required": [
+    "owner"
+  ],
   "properties": {
     "content": {
-      "description": "Content being claimed (max 50KB inline)",
+      "type": "string",
       "maxLength": 50000,
-      "type": "string"
+      "description": "Content being claimed (max 50KB inline)"
     },
     "contentHash": {
-      "description": "Pre-computed verifier content hash (32-byte hex). Treated as the Standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match.",
+      "type": "string",
       "pattern": "^0x[a-fA-F0-9]{64}$",
-      "type": "string"
+      "description": "Pre-computed verifier content hash (32-byte hex). Treated as the standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match."
     },
     "contentType": {
-      "description": "MIME type hint",
+      "type": "string",
       "maxLength": 100,
-      "type": "string"
+      "description": "MIME type hint"
     },
     "owner": {
+      "type": "string",
       "description": "Owner identifier (must match request walletAddress). Supports EVM (0x..), Solana (base58), NEAR (account IDs), and other universal address formats depending on chain context.",
       "format": "universal-address",
-      "minLength": 1,
-      "type": "string"
-    },
-    "provenance": {
-      "properties": {
-        "aiContext": {
-          "properties": {
-            "generatorType": {
-              "enum": [
-                "local",
-                "saas",
-                "agent"
-              ],
-              "type": "string"
-            },
-            "model": {
-              "maxLength": 128,
-              "type": "string"
-            },
-            "provider": {
-              "maxLength": 64,
-              "type": "string"
-            },
-            "runId": {
-              "maxLength": 128,
-              "type": "string"
-            }
-          },
-          "type": "object"
-        },
-        "declaredKind": {
-          "enum": [
-            "human",
-            "ai",
-            "mixed",
-            "unknown"
-          ],
-          "type": "string"
-        }
-      },
-      "type": "object"
+      "minLength": 1
     },
     "reference": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
       "properties": {
-        "description": {
-          "maxLength": 500,
-          "type": "string"
-        },
-        "id": {
-          "description": "Reference identifier",
-          "maxLength": 2048,
-          "type": "string"
-        },
-        "mime": {
-          "maxLength": 100,
-          "type": "string"
-        },
-        "name": {
-          "maxLength": 255,
-          "type": "string"
-        },
-        "size": {
-          "minimum": 0,
-          "type": "integer"
-        },
-        "title": {
-          "maxLength": 200,
-          "type": "string"
-        },
         "type": {
-          "description": "Reference type",
+          "type": "string",
           "enum": [
             "ipfs",
             "ipfs-hash",
@@ -108,18 +53,73 @@
             "username-claim",
             "other"
           ],
-          "type": "string"
+          "description": "Reference type"
+        },
+        "id": {
+          "type": "string",
+          "maxLength": 2048,
+          "description": "Reference identifier"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "mime": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "name": {
+          "type": "string",
+          "maxLength": 255
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 0
         }
-      },
-      "required": [
-        "type"
-      ],
-      "type": "object"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "declaredKind": {
+          "type": "string",
+          "enum": [
+            "human",
+            "ai",
+            "mixed",
+            "unknown"
+          ]
+        },
+        "aiContext": {
+          "type": "object",
+          "properties": {
+            "generatorType": {
+              "type": "string",
+              "enum": [
+                "local",
+                "saas",
+                "agent"
+              ]
+            },
+            "provider": {
+              "type": "string",
+              "maxLength": 64
+            },
+            "model": {
+              "type": "string",
+              "maxLength": 128
+            },
+            "runId": {
+              "type": "string",
+              "maxLength": 128
+            }
+          }
+        }
+      }
     }
-  },
-  "required": [
-    "owner"
-  ],
-  "title": "ownership-basic",
-  "type": "object"
+  }
 }

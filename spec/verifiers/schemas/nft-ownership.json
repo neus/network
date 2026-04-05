@@ -1,44 +1,57 @@
 {
   "$id": "https://neus.network/schemas/nft-ownership.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "nft-ownership",
   "description": "NFT ownership verification (EVM or Solana)",
   "type": "object",
-  "required": ["contractAddress", "tokenId"],
+  "required": [
+    "contractAddress",
+    "tokenId"
+  ],
   "oneOf": [
-    { "required": ["chainId"] },
-    { "required": ["chain"] }
+    {
+      "required": [
+        "chainId"
+      ]
+    },
+    {
+      "required": [
+        "chain"
+      ]
+    }
   ],
   "properties": {
-    "contractAddress": {
-      "type": "string",
-      "description": "EVM contract or Solana mint (base58)"
-    },
     "ownerAddress": {
       "type": "string",
-      "description": "EVM (0x...) or Solana (base58). Optional; defaults to signer."
+      "format": "universal-address"
+    },
+    "contractAddress": {
+      "type": "string",
+      "format": "universal-address"
     },
     "tokenId": {
-      "minLength": 1,
-      "type": "string"
+      "type": "string",
+      "minLength": 1
     },
     "tokenType": {
-      "default": "erc721",
-      "enum": ["erc721", "erc1155"],
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "erc721",
+        "erc1155"
+      ],
+      "default": "erc721"
     },
     "chainId": {
-      "minimum": 1,
       "type": "integer",
-      "description": "EVM chain ID"
+      "minimum": 1
     },
     "chain": {
       "type": "string",
       "description": "CAIP-2 for Solana (e.g. solana:mainnet)"
     },
     "blockNumber": {
-      "minimum": 0,
-      "type": "integer"
+      "type": "integer",
+      "minimum": 0
     }
-  },
-  "title": "nft-ownership"
+  }
 }

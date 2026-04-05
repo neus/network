@@ -1,21 +1,21 @@
 {
   "$id": "https://neus.network/schemas/ownership-dns-txt.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ownership-dns-txt",
   "description": "Domain ownership verification via DNS TXT records",
-  "properties": {
-    "domain": {
-      "format": "hostname",
-      "minLength": 1,
-      "type": "string"
-    },
-    "walletAddress": {
-      "format": "universal-address",
-      "type": "string"
-    }
-  },
+  "type": "object",
   "required": [
     "domain"
   ],
-  "title": "ownership-dns-txt",
-  "type": "object"
+  "properties": {
+    "domain": {
+      "type": "string",
+      "format": "hostname",
+      "minLength": 1
+    },
+    "walletAddress": {
+      "type": "string",
+      "format": "universal-address"
+    }
+  }
 }

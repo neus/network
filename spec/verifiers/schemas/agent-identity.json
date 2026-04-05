@@ -1,151 +1,178 @@
 {
   "$id": "https://neus.network/schemas/agent-identity.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Portable agent identity — wallet-anchored, chain-agnostic, protocol-agnostic",
-  "definitions": {
-    "AgentSkillRef": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "maxLength": 64,
-          "description": "Canonical skill ID from catalog"
-        },
-        "label": {
-          "type": "string",
-          "maxLength": 64,
-          "description": "Display label snapshot"
-        },
-        "version": {
-          "type": "string",
-          "maxLength": 32,
-          "description": "Installed version"
-        },
-        "provider": {
-          "type": "string",
-          "maxLength": 64,
-          "description": "Provider snapshot"
-        },
-        "kind": {
-          "type": "string",
-          "enum": ["native", "integration", "plugin", "mcp", "toolkit"],
-          "description": "Skill kind"
-        },
-        "configId": {
-          "type": "string",
-          "maxLength": 128,
-          "description": "Linked config/connection ID"
-        },
-        "enabled": {
-          "type": "boolean",
-          "description": "Whether skill is active",
-          "default": true
-        }
-      },
-      "required": ["id"]
+  "title": "agent-identity",
+  "description": "Register an agent identity. The agent wallet signs this proof itself. This verifier does not grant permissions; use agent-delegation for authority.",
+  "type": "object",
+  "required": [
+    "agentId"
+  ],
+  "anyOf": [
+    {
+      "required": [
+        "agentAccountId"
+      ]
     },
-    "AgentCapabilities": {
-      "type": "object",
-      "properties": {
-        "wallet": {
-          "type": "boolean",
-          "description": "Can use wallet for signing/spending"
-        },
-        "signing": { "type": "boolean", "description": "Can sign messages" },
-        "spending": { "type": "boolean", "description": "Can spend funds" },
-        "publishing": {
-          "type": "boolean",
-          "description": "Can publish content"
-        },
-        "search": { "type": "boolean", "description": "Can use web search" },
-        "browser": {
-          "type": "boolean",
-          "description": "Can use browser automation"
-        },
-        "mcp": { "type": "boolean", "description": "Can call MCP tools" },
-        "webhooks": {
-          "type": "boolean",
-          "description": "Can receive webhooks"
-        },
-        "receipts": { "type": "boolean", "description": "Can post receipts" },
-        "proofs": {
-          "type": "boolean",
-          "description": "Can create/verify proofs"
-        },
-        "delegation": {
-          "type": "boolean",
-          "description": "Can be delegated to"
-        }
-      }
+    {
+      "required": [
+        "agentWallet",
+        "agentChainRef"
+      ]
     }
-  },
+  ],
   "properties": {
     "agentId": {
-      "maxLength": 128,
+      "type": "string",
       "minLength": 1,
-      "type": "string"
+      "maxLength": 128
     },
     "agentAccountId": {
-      "format": "caip10-account",
       "type": "string",
-      "description": "CAIP-10 account ID (e.g. eip155:8453:0x...). Alternative to agentWallet + agentChainRef."
+      "format": "caip10-account",
+      "description": "Preferred canonical subject identity (CAIP-10)."
     },
     "agentChainRef": {
-      "format": "caip2-chain",
       "type": "string",
-      "description": "CAIP-2 chain reference when using agentWallet (e.g. eip155:8453)"
-    },
-    "agentLabel": {
-      "maxLength": 128,
-      "type": "string"
-    },
-    "agentType": {
-      "enum": ["ai", "bot", "service", "automation", "agent"],
-      "type": "string"
+      "format": "caip2-chain",
+      "description": "Required when using legacy agentWallet without agentAccountId."
     },
     "agentWallet": {
-      "format": "universal-address",
       "type": "string",
-      "description": "EVM (0x + 40 hex chars) or Solana (Base58, 32-44 chars) address"
+      "format": "universal-address"
     },
-    "capabilities": {
-      "$ref": "#/definitions/AgentCapabilities",
-      "description": "Native platform capabilities as structured boolean flags"
+    "agentLabel": {
+      "type": "string",
+      "maxLength": 128
+    },
+    "agentType": {
+      "type": "string",
+      "enum": [
+        "ai",
+        "bot",
+        "service",
+        "automation",
+        "agent"
+      ]
     },
     "description": {
-      "maxLength": 500,
-      "type": "string"
+      "type": "string",
+      "maxLength": 500
+    },
+    "capabilities": {
+      "type": "object",
+      "description": "Agent capabilities as boolean flags",
+      "properties": {
+        "wallet": {
+          "type": "boolean"
+        },
+        "signing": {
+          "type": "boolean"
+        },
+        "spending": {
+          "type": "boolean"
+        },
+        "publishing": {
+          "type": "boolean"
+        },
+        "search": {
+          "type": "boolean"
+        },
+        "browser": {
+          "type": "boolean"
+        },
+        "mcp": {
+          "type": "boolean"
+        },
+        "webhooks": {
+          "type": "boolean"
+        },
+        "receipts": {
+          "type": "boolean"
+        },
+        "proofs": {
+          "type": "boolean"
+        },
+        "delegation": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
     },
     "instructions": {
-      "maxLength": 4000,
       "type": "string",
-      "description": "System prompt or behavioral instructions for the agent (max 4000 chars)"
+      "maxLength": 4000
     },
     "skills": {
       "type": "array",
-      "items": { "$ref": "#/definitions/AgentSkillRef" },
+      "description": "Agent skills as structured objects",
       "maxItems": 48,
-      "description": "Structured skill references from the NEUS Skills Catalog"
-    },
-    "services": {
       "items": {
         "type": "object",
-        "required": ["name", "endpoint"],
+        "required": [
+          "id"
+        ],
         "properties": {
-          "name": { "maxLength": 64, "type": "string" },
-          "endpoint": { "maxLength": 256, "type": "string", "format": "uri" },
-          "version": { "maxLength": 32, "type": "string" }
+          "id": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "provider": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "native",
+              "integration",
+              "plugin",
+              "mcp",
+              "toolkit"
+            ]
+          },
+          "configId": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "enabled": {
+            "type": "boolean"
+          }
         }
-      },
-      "maxItems": 16,
+      }
+    },
+    "services": {
       "type": "array",
-      "description": "Service endpoints exposed by this agent"
+      "maxItems": 16,
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "endpoint"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "endpoint": {
+            "type": "string",
+            "format": "uri",
+            "maxLength": 256
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 32
+          }
+        }
+      }
     }
-  },
-  "anyOf": [
-    { "required": ["agentId", "agentAccountId"] },
-    { "required": ["agentId", "agentWallet"] }
-  ],
-  "title": "agent-identity",
-  "type": "object"
+  }
 }

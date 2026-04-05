@@ -1,13 +1,16 @@
 {
   "$id": "https://neus.network/schemas/ownership-social.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ownership-social",
   "description": "Social media account ownership via OAuth",
+  "type": "object",
+  "required": [
+    "provider",
+    "internalSocialToken"
+  ],
   "properties": {
-    "internalSocialToken": {
-      "type": "string",
-      "description": "Short-lived OAuth session token (TTL ≤60s). Obtain from the hosted OAuth flow at /verify; not a raw provider token."
-    },
     "provider": {
+      "type": "string",
       "enum": [
         "discord",
         "github",
@@ -17,18 +20,14 @@
         "linkedin",
         "telegram",
         "coinbase"
-      ],
+      ]
+    },
+    "internalSocialToken": {
       "type": "string"
     },
     "walletAddress": {
-      "format": "universal-address",
-      "type": "string"
+      "type": "string",
+      "format": "universal-address"
     }
-  },
-  "required": [
-    "provider",
-    "internalSocialToken"
-  ],
-  "title": "ownership-social",
-  "type": "object"
+  }
 }

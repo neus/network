@@ -1,32 +1,32 @@
 {
   "$id": "https://neus.network/schemas/ownership-pseudonym.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ownership-pseudonym",
   "description": "Pseudonymous identity - wallet ↔ handle binding",
-  "properties": {
-    "displayName": {
-      "maxLength": 64,
-      "type": "string"
-    },
-    "metadata": {
-      "type": "object"
-    },
-    "namespace": {
-      "default": "neus",
-      "maxLength": 64,
-      "minLength": 1,
-      "pattern": "^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$",
-      "type": "string"
-    },
-    "pseudonymId": {
-      "maxLength": 32,
-      "minLength": 3,
-      "pattern": "^[a-z0-9][a-z0-9._-]{1,30}[a-z0-9]$",
-      "type": "string"
-    }
-  },
+  "type": "object",
   "required": [
     "pseudonymId"
   ],
-  "title": "ownership-pseudonym",
-  "type": "object"
+  "properties": {
+    "pseudonymId": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{1,30}[a-z0-9]$",
+      "minLength": 3,
+      "maxLength": 32
+    },
+    "namespace": {
+      "type": "string",
+      "pattern": "^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$",
+      "minLength": 1,
+      "maxLength": 64,
+      "default": "neus"
+    },
+    "displayName": {
+      "type": "string",
+      "maxLength": 64
+    },
+    "metadata": {
+      "type": "object"
+    }
+  }
 }

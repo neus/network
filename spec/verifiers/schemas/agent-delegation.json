@@ -1,105 +1,145 @@
 {
   "$id": "https://neus.network/schemas/agent-delegation.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Controller-to-agent delegation — portable authorization across chains and protocols",
-  "definitions": {
-    "AgentSkillRef": {
-      "type": "object",
-      "properties": {
-        "id": { "type": "string", "maxLength": 64, "description": "Canonical skill ID from catalog" },
-        "label": { "type": "string", "maxLength": 64, "description": "Display label snapshot" },
-        "version": { "type": "string", "maxLength": 32, "description": "Installed version" },
-        "provider": { "type": "string", "maxLength": 64, "description": "Provider snapshot" },
-        "kind": { "type": "string", "enum": ["native", "integration", "plugin", "mcp", "toolkit"], "description": "Skill kind" },
-        "configId": { "type": "string", "maxLength": 128, "description": "Linked config/connection ID" },
-        "enabled": { "type": "boolean", "description": "Whether skill is active", "default": true }
-      },
-      "required": ["id"]
+  "title": "agent-delegation",
+  "description": "Delegates scoped authority from a delegating account to an agent, ERC-8004 compatible",
+  "type": "object",
+  "anyOf": [
+    {
+      "required": [
+        "controllerAccountId",
+        "agentAccountId"
+      ]
+    },
+    {
+      "required": [
+        "controllerWallet",
+        "controllerChainRef",
+        "agentWallet",
+        "agentChainRef"
+      ]
     }
-  },
+  ],
   "properties": {
-    "agentAccountId": {
-      "format": "caip10-account",
-      "type": "string",
-      "description": "CAIP-10 account ID for the agent. Alternative to agentWallet + agentChainRef."
-    },
-    "agentChainRef": {
-      "format": "caip2-chain",
-      "type": "string",
-      "description": "CAIP-2 chain reference when using agentWallet"
-    },
-    "agentId": {
-      "maxLength": 128,
-      "minLength": 1,
-      "type": "string"
-    },
-    "agentWallet": {
-      "format": "universal-address",
-      "type": "string",
-      "description": "EVM (0x + 40 hex chars) or Solana (Base58, 32-44 chars) address"
-    },
-    "allowedPaymentTypes": {
-      "items": { "maxLength": 32, "type": "string" },
-      "maxItems": 8,
-      "type": "array",
-      "description": "Payment protocols (e.g. [\"x402\"]). Defaults to [\"x402\"] when scope is payments:x402."
-    },
     "controllerAccountId": {
-      "format": "caip10-account",
       "type": "string",
-      "description": "CAIP-10 account ID for the controller. Must match signer."
+      "format": "caip10-account",
+      "description": "Preferred canonical controller identity (CAIP-10)."
     },
     "controllerChainRef": {
-      "format": "caip2-chain",
       "type": "string",
-      "description": "CAIP-2 chain reference when using controllerWallet"
+      "format": "caip2-chain",
+      "description": "Required when using legacy controllerWallet without controllerAccountId."
     },
     "controllerWallet": {
-      "format": "universal-address",
       "type": "string",
-      "description": "EVM (0x + 40 hex chars) or Solana (Base58, 32-44 chars) address. Must match signer."
+      "format": "universal-address"
     },
-    "expiresAt": {
-      "minimum": 0,
-      "type": "integer",
-      "description": "Expiration timestamp in Unix milliseconds."
-    },
-    "instructions": {
-      "maxLength": 4000,
+    "agentAccountId": {
       "type": "string",
-      "description": "Instructions for the delegated agent (max 4000 chars)"
+      "format": "caip10-account",
+      "description": "Preferred canonical agent identity (CAIP-10)."
+    },
+    "agentChainRef": {
+      "type": "string",
+      "format": "caip2-chain",
+      "description": "Required when using legacy agentWallet without agentAccountId."
+    },
+    "agentWallet": {
+      "type": "string",
+      "format": "universal-address"
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "scope": {
+      "type": "string",
+      "maxLength": 128
+    },
+    "permissions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 64
+      },
+      "maxItems": 32
     },
     "maxSpend": {
       "type": "string",
       "pattern": "^[0-9]{1,78}$",
-      "description": "Whole-number string in token base units (no decimal point). Typical USDC (x402): six decimal places."
+      "description": "Spend cap as a whole-number string in token base units (no decimal point). USDC (common x402): six decimal places; native ETH-style assets: eighteen."
     },
-    "permissions": {
-      "items": { "maxLength": 64, "type": "string" },
-      "maxItems": 32,
-      "type": "array"
+    "allowedPaymentTypes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "maxLength": 32
+      },
+      "maxItems": 8
     },
     "receiptDisclosure": {
-      "enum": ["none", "summary", "full"],
       "type": "string",
-      "description": "How much of receipt payload may be disclosed. Defaults to \"summary\" for x402."
+      "enum": [
+        "none",
+        "summary",
+        "full"
+      ]
     },
-    "scope": {
-      "maxLength": 128,
+    "expiresAt": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "instructions": {
       "type": "string",
-      "description": "Scope of delegation (e.g. \"payments:x402\", \"posting\", \"global\")"
+      "maxLength": 4000
     },
     "skills": {
       "type": "array",
-      "items": { "$ref": "#/definitions/AgentSkillRef" },
+      "description": "Agent skills as structured objects",
       "maxItems": 48,
-      "description": "Structured skill references granted to the agent"
+      "items": {
+        "type": "object",
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "version": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "provider": {
+            "type": "string",
+            "maxLength": 64
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "native",
+              "integration",
+              "plugin",
+              "mcp",
+              "toolkit"
+            ]
+          },
+          "configId": {
+            "type": "string",
+            "maxLength": 128
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      }
     }
-  },
-  "anyOf": [
-    { "required": ["controllerAccountId", "agentAccountId"] },
-    { "required": ["controllerWallet", "agentWallet"] }
-  ],
-  "title": "agent-delegation",
-  "type": "object"
+  }
 }
