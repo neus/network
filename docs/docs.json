@@ -81,9 +81,9 @@
             "group": "Essentials",
             "icon": "compass",
             "pages": [
-              "get-started",
               "index",
               "quickstart",
+              "get-started",
               "choose-an-integration-path",
               "integration",
               "examples"
