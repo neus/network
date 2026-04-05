@@ -4,34 +4,32 @@ description: Pick the fastest path for your product.
 icon: route
 ---
 
-**New integration?** Complete **[Get started](./get-started)** (platform profile, app link, credits) before you choose an integration path.
+Not sure where to start? Pick the path that matches what you need.
 
-## Options
+<Tip>
+  **New here?** Complete **[Get started](./get-started)** first (platform profile, app link, credits).
+</Tip>
 
-| You need | Use | Why |
-|----------|-----|-----|
-| Guided verification / login | [Hosted Verify](./cookbook/auth-hosted-verify) | Users finish in NEUS; you use `returnUrl` + session |
-| React gating or badges | [Widgets](./widgets/overview) | `VerifyGate`, `ProofBadge` |
-| Custom flow in code | [SDK](./sdks/overview) | Full control |
-| Server-only | [API](./api/overview) | HTTP from your servers |
-| AI / IDE tools | [MCP](./mcp/overview) | Add one URL; **open hosted links** tools return; optional Bearer like the SDK |
+## Pick your path
 
-**MCP:** URL alone does not sign the IDE in — for “who am I” after login, same **`Authorization: Bearer`** as [SDK Authentication](./sdks/authentication).
+| You need | Use | Effort |
+|----------|-----|--------|
+| Guided verification / login | [Hosted Verify](./cookbook/auth-hosted-verify) | Redirect or popup — no UI to build |
+| React gating or badges | [Widgets](./widgets/overview) | One component — `<VerifyGate>` |
+| Custom flow in code | [SDK](./sdks/overview) | Full programmatic control |
+| Server-side checks | [API](./api/overview) | HTTP from any language |
+| AI agents (Cursor, Claude) | [MCP](./mcp/overview) | One URL — `https://mcp.neus.network/mcp` |
 
-**Partner / domain setup:** [Partner setup](./cookbook/hub-integrator).
+## Quick links
 
-**Who pays:** [Get started](./get-started) checklist + [Billing](./platform/billing) reference.
-
-## Deep links
-
-<CardGroup cols={2}>
+<CardGroup cols={3}>
+  <Card title="Quickstart" icon="code" href="./quickstart">
+    First proof in 5 minutes.
+  </Card>
   <Card title="Get started" icon="rocket" href="./get-started">
     Platform, app, credits, billing.
   </Card>
-  <Card title="Quickstart" icon="code" href="./quickstart">
-    First proof in code.
-  </Card>
   <Card title="Verifier catalog" icon="list-tree" href="./verification/verifiers">
-    Pick verifiers.
+    All verification types.
   </Card>
 </CardGroup>
