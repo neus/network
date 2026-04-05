@@ -5,7 +5,13 @@
  */
 
 import { ApiError, ValidationError, NetworkError, ConfigurationError } from './errors.js';
-import { constructVerificationMessage, validateWalletAddress, validateUniversalAddress, signMessage, NEUS_CONSTANTS } from './utils.js';
+import {
+  constructVerificationMessage,
+  validateWalletAddress,
+  validateUniversalAddress,
+  signMessage,
+  NEUS_CONSTANTS
+} from './utils.js';
 
 const FALLBACK_PUBLIC_VERIFIERS = [
   'ownership-basic',
@@ -38,271 +44,274 @@ const validateVerifierData = (verifierId, data) => {
   }
 
   switch (verifierId) {
-    case 'ownership-basic':
-      if (!data.owner || !validateUniversalAddress(data.owner, typeof data.chain === 'string' ? data.chain : undefined)) {
-        return { valid: false, error: 'owner (universal wallet address) is required' };
+  case 'ownership-basic':
+    if (!data.owner || !validateUniversalAddress(data.owner, typeof data.chain === 'string' ? data.chain : undefined)) {
+      return { valid: false, error: 'owner (universal wallet address) is required' };
+    }
+    if (data.content !== undefined && data.content !== null) {
+      if (typeof data.content !== 'string') {
+        return { valid: false, error: 'content must be a string when provided' };
       }
-      if (data.content !== undefined && data.content !== null) {
-        if (typeof data.content !== 'string') {
-          return { valid: false, error: 'content must be a string when provided' };
-        }
-        if (data.content.length > 50000) {
-          return { valid: false, error: 'content exceeds 50KB inline limit' };
+      if (data.content.length > 50000) {
+        return { valid: false, error: 'content exceeds 50KB inline limit' };
+      }
+    }
+    if (data.contentHash !== undefined && data.contentHash !== null) {
+      if (typeof data.contentHash !== 'string' || !/^0x[a-fA-F0-9]{64}$/.test(data.contentHash)) {
+        return { valid: false, error: 'contentHash must be a 32-byte hex string (0x + 64 hex chars) when provided' };
+      }
+    }
+    if (data.contentType !== undefined && data.contentType !== null) {
+      if (typeof data.contentType !== 'string' || data.contentType.length > 100) {
+        return { valid: false, error: 'contentType must be a string (max 100 chars) when provided' };
+      }
+      const base = String(data.contentType).split(';')[0].trim().toLowerCase();
+      // Minimal MIME sanity check (server validates more precisely).
+      if (!base || base.includes(' ') || !base.includes('/')) {
+        return { valid: false, error: 'contentType must be a valid MIME type when provided' };
+      }
+    }
+    if (data.provenance !== undefined && data.provenance !== null) {
+      if (!data.provenance || typeof data.provenance !== 'object' || Array.isArray(data.provenance)) {
+        return { valid: false, error: 'provenance must be an object when provided' };
+      }
+      const dk = data.provenance.declaredKind;
+      if (dk !== undefined && dk !== null) {
+        const allowed = ['human', 'ai', 'mixed', 'unknown'];
+        if (typeof dk !== 'string' || !allowed.includes(dk)) {
+          return { valid: false, error: `provenance.declaredKind must be one of: ${allowed.join(', ')}` };
         }
       }
-      if (data.contentHash !== undefined && data.contentHash !== null) {
-        if (typeof data.contentHash !== 'string' || !/^0x[a-fA-F0-9]{64}$/.test(data.contentHash)) {
-          return { valid: false, error: 'contentHash must be a 32-byte hex string (0x + 64 hex chars) when provided' };
+      const ai = data.provenance.aiContext;
+      if (ai !== undefined && ai !== null) {
+        if (typeof ai !== 'object' || Array.isArray(ai)) {
+          return { valid: false, error: 'provenance.aiContext must be an object when provided' };
         }
-      }
-      if (data.contentType !== undefined && data.contentType !== null) {
-        if (typeof data.contentType !== 'string' || data.contentType.length > 100) {
-          return { valid: false, error: 'contentType must be a string (max 100 chars) when provided' };
-        }
-        const base = String(data.contentType).split(';')[0].trim().toLowerCase();
-        // Minimal MIME sanity check (server validates more precisely).
-        if (!base || base.includes(' ') || !base.includes('/')) {
-          return { valid: false, error: 'contentType must be a valid MIME type when provided' };
-        }
-      }
-      if (data.provenance !== undefined && data.provenance !== null) {
-        if (!data.provenance || typeof data.provenance !== 'object' || Array.isArray(data.provenance)) {
-          return { valid: false, error: 'provenance must be an object when provided' };
-        }
-        const dk = data.provenance.declaredKind;
-        if (dk !== undefined && dk !== null) {
-          const allowed = ['human', 'ai', 'mixed', 'unknown'];
-          if (typeof dk !== 'string' || !allowed.includes(dk)) {
-            return { valid: false, error: `provenance.declaredKind must be one of: ${allowed.join(', ')}` };
+        if (ai.generatorType !== undefined && ai.generatorType !== null) {
+          const allowed = ['local', 'saas', 'agent'];
+          if (typeof ai.generatorType !== 'string' || !allowed.includes(ai.generatorType)) {
+            return { valid: false, error: `provenance.aiContext.generatorType must be one of: ${allowed.join(', ')}` };
           }
         }
-        const ai = data.provenance.aiContext;
-        if (ai !== undefined && ai !== null) {
-          if (typeof ai !== 'object' || Array.isArray(ai)) {
-            return { valid: false, error: 'provenance.aiContext must be an object when provided' };
+        if (ai.provider !== undefined && ai.provider !== null) {
+          if (typeof ai.provider !== 'string' || ai.provider.length > 64) {
+            return { valid: false, error: 'provenance.aiContext.provider must be a string (max 64 chars) when provided' };
           }
-          if (ai.generatorType !== undefined && ai.generatorType !== null) {
-            const allowed = ['local', 'saas', 'agent'];
-            if (typeof ai.generatorType !== 'string' || !allowed.includes(ai.generatorType)) {
-              return { valid: false, error: `provenance.aiContext.generatorType must be one of: ${allowed.join(', ')}` };
-            }
+        }
+        if (ai.model !== undefined && ai.model !== null) {
+          if (typeof ai.model !== 'string' || ai.model.length > 128) {
+            return { valid: false, error: 'provenance.aiContext.model must be a string (max 128 chars) when provided' };
           }
-          if (ai.provider !== undefined && ai.provider !== null) {
-            if (typeof ai.provider !== 'string' || ai.provider.length > 64) {
-              return { valid: false, error: 'provenance.aiContext.provider must be a string (max 64 chars) when provided' };
-            }
-          }
-          if (ai.model !== undefined && ai.model !== null) {
-            if (typeof ai.model !== 'string' || ai.model.length > 128) {
-              return { valid: false, error: 'provenance.aiContext.model must be a string (max 128 chars) when provided' };
-            }
-          }
-          if (ai.runId !== undefined && ai.runId !== null) {
-            if (typeof ai.runId !== 'string' || ai.runId.length > 128) {
-              return { valid: false, error: 'provenance.aiContext.runId must be a string (max 128 chars) when provided' };
-            }
+        }
+        if (ai.runId !== undefined && ai.runId !== null) {
+          if (typeof ai.runId !== 'string' || ai.runId.length > 128) {
+            return { valid: false, error: 'provenance.aiContext.runId must be a string (max 128 chars) when provided' };
           }
         }
       }
-      if (data.reference !== undefined) {
-        if (!data.reference || typeof data.reference !== 'object') {
-          return { valid: false, error: 'reference must be an object when provided' };
-        }
-        if (!data.reference.type || typeof data.reference.type !== 'string') {
-          // Only required when reference object is present (or when doing reference-only proofs).
-          // Server requires reference.type when reference is used for traceability.
-          return { valid: false, error: 'reference.type is required when reference is provided' };
-        }
+    }
+    if (data.reference !== undefined) {
+      if (!data.reference || typeof data.reference !== 'object') {
+        return { valid: false, error: 'reference must be an object when provided' };
       }
-      if (!data.content && !data.contentHash) {
-        if (!data.reference || typeof data.reference !== 'object') {
-          return { valid: false, error: 'reference is required when neither content nor contentHash is provided' };
-        }
-        if (!data.reference.id || typeof data.reference.id !== 'string') {
-          return { valid: false, error: 'reference.id is required when neither content nor contentHash is provided' };
-        }
-        if (!data.reference.type || typeof data.reference.type !== 'string') {
-          return { valid: false, error: 'reference.type is required when neither content nor contentHash is provided' };
-        }
+      if (!data.reference.type || typeof data.reference.type !== 'string') {
+        // Only required when reference object is present (or when doing reference-only proofs).
+        // Server requires reference.type when reference is used for traceability.
+        return { valid: false, error: 'reference.type is required when reference is provided' };
       }
-      break;
-    case 'nft-ownership':
-      // ownerAddress is optional; server injects from request walletAddress when omitted.
-      if (
-        !data.contractAddress ||
+    }
+    if (!data.content && !data.contentHash) {
+      if (!data.reference || typeof data.reference !== 'object') {
+        return { valid: false, error: 'reference is required when neither content nor contentHash is provided' };
+      }
+      if (!data.reference.id || typeof data.reference.id !== 'string') {
+        return { valid: false, error: 'reference.id is required when neither content nor contentHash is provided' };
+      }
+      if (!data.reference.type || typeof data.reference.type !== 'string') {
+        return { valid: false, error: 'reference.type is required when neither content nor contentHash is provided' };
+      }
+    }
+    break;
+  case 'nft-ownership':
+    // ownerAddress is optional; server injects from request walletAddress when omitted.
+    if (
+      !data.contractAddress ||
         data.tokenId === null ||
         data.tokenId === undefined ||
         typeof data.chainId !== 'number'
-      ) {
-        return { valid: false, error: 'contractAddress, tokenId, and chainId are required' };
+    ) {
+      return { valid: false, error: 'contractAddress, tokenId, and chainId are required' };
+    }
+    if (data.tokenType !== undefined && data.tokenType !== null) {
+      const tt = String(data.tokenType).toLowerCase();
+      if (tt !== 'erc721' && tt !== 'erc1155') {
+        return { valid: false, error: 'tokenType must be one of: erc721, erc1155' };
       }
-      if (data.tokenType !== undefined && data.tokenType !== null) {
-        const tt = String(data.tokenType).toLowerCase();
-        if (tt !== 'erc721' && tt !== 'erc1155') {
-          return { valid: false, error: 'tokenType must be one of: erc721, erc1155' };
-        }
-      }
-      if (data.blockNumber !== undefined && data.blockNumber !== null && !Number.isInteger(data.blockNumber)) {
-        return { valid: false, error: 'blockNumber must be an integer when provided' };
-      }
-      if (data.ownerAddress && !validateWalletAddress(data.ownerAddress)) {
-        return { valid: false, error: 'Invalid ownerAddress' };
-      }
-      if (!validateWalletAddress(data.contractAddress)) {
-        return { valid: false, error: 'Invalid contractAddress' };
-      }
-      break;
-    case 'token-holding':
-      // ownerAddress is optional; server injects from request walletAddress when omitted.
-      if (
-        !data.contractAddress ||
+    }
+    if (data.blockNumber !== undefined && data.blockNumber !== null && !Number.isInteger(data.blockNumber)) {
+      return { valid: false, error: 'blockNumber must be an integer when provided' };
+    }
+    if (data.ownerAddress && !validateWalletAddress(data.ownerAddress)) {
+      return { valid: false, error: 'Invalid ownerAddress' };
+    }
+    if (!validateWalletAddress(data.contractAddress)) {
+      return { valid: false, error: 'Invalid contractAddress' };
+    }
+    break;
+  case 'token-holding':
+    // ownerAddress is optional; server injects from request walletAddress when omitted.
+    if (
+      !data.contractAddress ||
         data.minBalance === null ||
         data.minBalance === undefined ||
         typeof data.chainId !== 'number'
-      ) {
-        return { valid: false, error: 'contractAddress, minBalance, and chainId are required' };
+    ) {
+      return { valid: false, error: 'contractAddress, minBalance, and chainId are required' };
+    }
+    if (data.blockNumber !== undefined && data.blockNumber !== null && !Number.isInteger(data.blockNumber)) {
+      return { valid: false, error: 'blockNumber must be an integer when provided' };
+    }
+    if (data.ownerAddress && !validateWalletAddress(data.ownerAddress)) {
+      return { valid: false, error: 'Invalid ownerAddress' };
+    }
+    if (!validateWalletAddress(data.contractAddress)) {
+      return { valid: false, error: 'Invalid contractAddress' };
+    }
+    break;
+  case 'ownership-dns-txt':
+    if (!data.domain || typeof data.domain !== 'string') {
+      return { valid: false, error: 'domain is required' };
+    }
+    if (data.walletAddress && !validateWalletAddress(data.walletAddress)) {
+      return { valid: false, error: 'Invalid walletAddress' };
+    }
+    break;
+  case 'wallet-link':
+    if (!data.primaryWalletAddress || !validateUniversalAddress(data.primaryWalletAddress, data.chain)) {
+      return { valid: false, error: 'primaryWalletAddress is required' };
+    }
+    if (!data.secondaryWalletAddress || !validateUniversalAddress(data.secondaryWalletAddress, data.chain)) {
+      return { valid: false, error: 'secondaryWalletAddress is required' };
+    }
+    if (!data.signature || typeof data.signature !== 'string') {
+      return { valid: false, error: 'signature is required (signed by secondary wallet)' };
+    }
+    if (typeof data.chain !== 'string' || !/^[a-z0-9]+:[^\s]+$/.test(data.chain)) {
+      return { valid: false, error: 'chain is required (namespace:reference)' };
+    }
+    if (typeof data.signatureMethod !== 'string' || !data.signatureMethod.trim()) {
+      return { valid: false, error: 'signatureMethod is required' };
+    }
+    if (typeof data.signedTimestamp !== 'number') {
+      return { valid: false, error: 'signedTimestamp is required' };
+    }
+    break;
+  case 'contract-ownership':
+    if (!data.contractAddress || !validateWalletAddress(data.contractAddress)) {
+      return { valid: false, error: 'contractAddress is required' };
+    }
+    if (data.walletAddress && !validateWalletAddress(data.walletAddress)) {
+      return { valid: false, error: 'Invalid walletAddress' };
+    }
+    if (typeof data.chainId !== 'number') {
+      return { valid: false, error: 'chainId is required' };
+    }
+    break;
+  case 'agent-identity':
+    if (!data.agentId || typeof data.agentId !== 'string' || data.agentId.length < 1 || data.agentId.length > 128) {
+      return { valid: false, error: 'agentId is required (1-128 chars)' };
+    }
+    if (!data.agentWallet || !validateWalletAddress(data.agentWallet)) {
+      return { valid: false, error: 'agentWallet is required' };
+    }
+    if (data.agentType && !['ai', 'bot', 'service', 'automation', 'agent'].includes(data.agentType)) {
+      return { valid: false, error: 'agentType must be one of: ai, bot, service, automation, agent' };
+    }
+    break;
+  case 'agent-delegation':
+    if (!data.controllerWallet || !validateWalletAddress(data.controllerWallet)) {
+      return { valid: false, error: 'controllerWallet is required' };
+    }
+    if (!data.agentWallet || !validateWalletAddress(data.agentWallet)) {
+      return { valid: false, error: 'agentWallet is required' };
+    }
+    if (data.scope && (typeof data.scope !== 'string' || data.scope.length > 128)) {
+      return { valid: false, error: 'scope must be a string (max 128 chars)' };
+    }
+    if (data.expiresAt && (typeof data.expiresAt !== 'number' || data.expiresAt < Date.now())) {
+      return { valid: false, error: 'expiresAt must be a future timestamp' };
+    }
+    break;
+  case 'ai-content-moderation':
+    if (!data.content || typeof data.content !== 'string') {
+      return { valid: false, error: 'content is required' };
+    }
+    if (!data.contentType || typeof data.contentType !== 'string') {
+      return { valid: false, error: 'contentType (MIME type) is required' };
+    }
+    {
+      // Only allow content types that are actually moderated (no "verified but skipped" bypass).
+      const contentType = String(data.contentType).split(';')[0].trim().toLowerCase();
+      const validTypes = [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'image/gif',
+        'text/plain',
+        'text/markdown',
+        'text/x-markdown',
+        'application/json',
+        'application/xml'
+      ];
+      if (!validTypes.includes(contentType)) {
+        return { valid: false, error: `contentType must be one of: ${validTypes.join(', ')}` };
       }
-      if (data.blockNumber !== undefined && data.blockNumber !== null && !Number.isInteger(data.blockNumber)) {
-        return { valid: false, error: 'blockNumber must be an integer when provided' };
-      }
-      if (data.ownerAddress && !validateWalletAddress(data.ownerAddress)) {
-        return { valid: false, error: 'Invalid ownerAddress' };
-      }
-      if (!validateWalletAddress(data.contractAddress)) {
-        return { valid: false, error: 'Invalid contractAddress' };
-      }
-      break;
-    case 'ownership-dns-txt':
-      if (!data.domain || typeof data.domain !== 'string') {
-        return { valid: false, error: 'domain is required' };
-      }
-      if (data.walletAddress && !validateWalletAddress(data.walletAddress)) {
-        return { valid: false, error: 'Invalid walletAddress' };
-      }
-      break;
-    case 'wallet-link':
-      if (!data.primaryWalletAddress || !validateUniversalAddress(data.primaryWalletAddress, data.chain)) {
-        return { valid: false, error: 'primaryWalletAddress is required' };
-      }
-      if (!data.secondaryWalletAddress || !validateUniversalAddress(data.secondaryWalletAddress, data.chain)) {
-        return { valid: false, error: 'secondaryWalletAddress is required' };
-      }
-      if (!data.signature || typeof data.signature !== 'string') {
-        return { valid: false, error: 'signature is required (signed by secondary wallet)' };
-      }
-      if (typeof data.chain !== 'string' || !/^[a-z0-9]+:[^\s]+$/.test(data.chain)) {
-        return { valid: false, error: 'chain is required (namespace:reference)' };
-      }
-      if (typeof data.signatureMethod !== 'string' || !data.signatureMethod.trim()) {
-        return { valid: false, error: 'signatureMethod is required' };
-      }
-      if (typeof data.signedTimestamp !== 'number') {
-        return { valid: false, error: 'signedTimestamp is required' };
-      }
-      break;
-    case 'contract-ownership':
-      if (!data.contractAddress || !validateWalletAddress(data.contractAddress)) {
-        return { valid: false, error: 'contractAddress is required' };
-      }
-      if (data.walletAddress && !validateWalletAddress(data.walletAddress)) {
-        return { valid: false, error: 'Invalid walletAddress' };
-      }
-      if (typeof data.chainId !== 'number') {
-        return { valid: false, error: 'chainId is required' };
-      }
-      break;
-    case 'agent-identity':
-      if (!data.agentId || typeof data.agentId !== 'string' || data.agentId.length < 1 || data.agentId.length > 128) {
-        return { valid: false, error: 'agentId is required (1-128 chars)' };
-      }
-      if (!data.agentWallet || !validateWalletAddress(data.agentWallet)) {
-        return { valid: false, error: 'agentWallet is required' };
-      }
-      if (data.agentType && !['ai', 'bot', 'service', 'automation', 'agent'].includes(data.agentType)) {
-        return { valid: false, error: 'agentType must be one of: ai, bot, service, automation, agent' };
-      }
-      break;
-    case 'agent-delegation':
-      if (!data.controllerWallet || !validateWalletAddress(data.controllerWallet)) {
-        return { valid: false, error: 'controllerWallet is required' };
-      }
-      if (!data.agentWallet || !validateWalletAddress(data.agentWallet)) {
-        return { valid: false, error: 'agentWallet is required' };
-      }
-      if (data.scope && (typeof data.scope !== 'string' || data.scope.length > 128)) {
-        return { valid: false, error: 'scope must be a string (max 128 chars)' };
-      }
-      if (data.expiresAt && (typeof data.expiresAt !== 'number' || data.expiresAt < Date.now())) {
-        return { valid: false, error: 'expiresAt must be a future timestamp' };
-      }
-      break;
-    case 'ai-content-moderation':
-      if (!data.content || typeof data.content !== 'string') {
-        return { valid: false, error: 'content is required' };
-      }
-      if (!data.contentType || typeof data.contentType !== 'string') {
-        return { valid: false, error: 'contentType (MIME type) is required' };
-      }
-      {
-        // Only allow content types that are actually moderated (no "verified but skipped" bypass).
-        const contentType = String(data.contentType).split(';')[0].trim().toLowerCase();
-        const validTypes = [
-          'image/jpeg',
-          'image/png',
-          'image/webp',
-          'image/gif',
-          'text/plain',
-          'text/markdown',
-          'text/x-markdown',
-          'application/json',
-          'application/xml'
-        ];
-        if (!validTypes.includes(contentType)) {
-          return { valid: false, error: `contentType must be one of: ${validTypes.join(', ')}` };
-        }
-        const isTextual = contentType.startsWith('text/') || contentType.includes('markdown');
-        if (isTextual) {
-          // Backend enforces 50KB UTF-8 limit for textual moderation payloads.
-          try {
-            const maxBytes = 50 * 1024;
-            const bytes = (typeof TextEncoder !== 'undefined')
-              ? new TextEncoder().encode(data.content).length
-              : String(data.content).length;
-            if (bytes > maxBytes) {
-              return { valid: false, error: `content exceeds ${maxBytes} bytes limit for ai-content-moderation verifier (text)` };
-            }
-          } catch {
-            // If encoding fails, defer to server.
+      const isTextual = contentType.startsWith('text/') || contentType.includes('markdown');
+      if (isTextual) {
+        // Backend enforces 50KB UTF-8 limit for textual moderation payloads.
+        try {
+          const maxBytes = 50 * 1024;
+          const bytes = (typeof TextEncoder !== 'undefined')
+            ? new TextEncoder().encode(data.content).length
+            : String(data.content).length;
+          if (bytes > maxBytes) {
+            return {
+              valid: false,
+              error: `content exceeds ${maxBytes} bytes limit for ai-content-moderation verifier (text)`
+            };
           }
+        } catch {
+          // If encoding fails, defer to server.
         }
       }
-      if (data.content.length > 13653334) {
-        return { valid: false, error: 'content exceeds 10MB limit' };
+    }
+    if (data.content.length > 13653334) {
+      return { valid: false, error: 'content exceeds 10MB limit' };
+    }
+    break;
+  case 'ownership-pseudonym':
+    if (!data.pseudonymId || typeof data.pseudonymId !== 'string') {
+      return { valid: false, error: 'pseudonymId is required' };
+    }
+    // Validate handle format (3-64 chars, lowercase alphanumeric with ._-)
+    if (!/^[a-z0-9._-]{3,64}$/.test(data.pseudonymId.trim().toLowerCase())) {
+      return { valid: false, error: 'pseudonymId must be 3-64 characters, lowercase alphanumeric with dots, underscores, or hyphens' };
+    }
+    // Validate namespace if provided (1-64 chars)
+    if (data.namespace && typeof data.namespace === 'string') {
+      if (!/^[a-z0-9._-]{1,64}$/.test(data.namespace.trim().toLowerCase())) {
+        return { valid: false, error: 'namespace must be 1-64 characters, lowercase alphanumeric with dots, underscores, or hyphens' };
       }
-      break;
-    case 'ownership-pseudonym':
-      if (!data.pseudonymId || typeof data.pseudonymId !== 'string') {
-        return { valid: false, error: 'pseudonymId is required' };
-      }
-      // Validate handle format (3-64 chars, lowercase alphanumeric with ._-)
-      if (!/^[a-z0-9._-]{3,64}$/.test(data.pseudonymId.trim().toLowerCase())) {
-        return { valid: false, error: 'pseudonymId must be 3-64 characters, lowercase alphanumeric with dots, underscores, or hyphens' };
-      }
-      // Validate namespace if provided (1-64 chars)
-      if (data.namespace && typeof data.namespace === 'string') {
-        if (!/^[a-z0-9._-]{1,64}$/.test(data.namespace.trim().toLowerCase())) {
-          return { valid: false, error: 'namespace must be 1-64 characters, lowercase alphanumeric with dots, underscores, or hyphens' };
-        }
-      }
-      // Note: signature is not required - envelope signature provides authentication
-      break;
-    case 'wallet-risk':
-      if (data.walletAddress && !validateUniversalAddress(data.walletAddress, data.chain)) {
-        return { valid: false, error: 'Invalid walletAddress' };
-      }
-      break;
+    }
+    // Note: signature is not required - envelope signature provides authentication
+    break;
+  case 'wallet-risk':
+    if (data.walletAddress && !validateUniversalAddress(data.walletAddress, data.chain)) {
+      return { valid: false, error: 'Invalid walletAddress' };
+    }
+    break;
   }
-  
+
   return { valid: true };
 };
 
@@ -569,11 +578,11 @@ export class NeusClient {
           `${verifier} requires hosted interactive checkout. Use VerifyGate or redirect to ${hostedCheckoutUrl}.`
         );
       }
-      
+
       // These verifiers require explicit data parameter (no auto-path)
       const requiresDataParam = [
-        'ownership-dns-txt', 
-        'wallet-link', 
+        'ownership-dns-txt',
+        'wallet-link',
         'contract-ownership',
         'ownership-pseudonym',
         'wallet-risk',
@@ -806,7 +815,7 @@ export class NeusClient {
             return hex;
           }
         };
-        
+
         // Detect Farcaster wallet - requires hex-encoded messages FIRST
         const isFarcasterWallet = (() => {
           if (typeof window === 'undefined') return false;
@@ -823,7 +832,7 @@ export class NeusClient {
           }
           return false;
         })();
-        
+
         if (isFarcasterWallet) {
           try {
             const hexMsg = toHexUtf8(message);
@@ -832,7 +841,7 @@ export class NeusClient {
             // Fall through
           }
         }
-        
+
         if (!signature) {
           try {
             signature = await provider.request({ method: 'personal_sign', params: [message, walletAddress] });
@@ -840,15 +849,17 @@ export class NeusClient {
             const msg = String(e && (e.message || e.reason) || e || '').toLowerCase();
             const errCode = (e && (e.code || (e.error && e.error.code))) || null;
             const needsHex = /byte|bytes|invalid byte sequence|encoding|non-hex/i.test(msg);
-            
+
+            const unsupportedRe =
+              /method.*not.*supported|unsupported|not implemented|method not found|unknown method|does not support/i;
             const methodUnsupported = (
-              /method.*not.*supported|unsupported|not implemented|method not found|unknown method|does not support/i.test(msg) ||
+              unsupportedRe.test(msg) ||
               errCode === -32601 ||
               errCode === 4200 ||
               (msg.includes('personal_sign') && msg.includes('not')) ||
               (msg.includes('request method') && msg.includes('not supported'))
             );
-            
+
             if (methodUnsupported) {
               this._log('personal_sign not supported; attempting eth_sign fallback');
               try {
@@ -1136,17 +1147,17 @@ export class NeusClient {
 
   /**
    * POLL PROOF STATUS - Wait for verification completion
-   * 
+   *
    * Polls the verification status until it reaches a terminal state (completed or failed).
    * Useful for providing real-time feedback to users during verification.
-   * 
+   *
    * @param {string} proofId - Proof ID to poll (standard). `qHash` is a deprecated alias (same value).
    * @param {Object} [options] - Polling options
    * @param {number} [options.interval=5000] - Polling interval in ms
    * @param {number} [options.timeout=120000] - Total timeout in ms
    * @param {Function} [options.onProgress] - Progress callback function
    * @returns {Promise<Object>} Final verification status
-   * 
+   *
    * @example
    * const finalStatus = await client.pollProofStatus(proofId, {
    *   interval: 3000,
@@ -1172,34 +1183,34 @@ export class NeusClient {
 
     const startTime = Date.now();
     let consecutiveRateLimits = 0;
-    
+
     while (Date.now() - startTime < timeout) {
       try {
         const status = await this.getStatus(proofId);
         consecutiveRateLimits = 0;
-        
+
         // Call progress callback if provided
         if (onProgress && typeof onProgress === 'function') {
           onProgress(status.data || status);
         }
-        
+
         // Check for terminal states
         const currentStatus = status.data?.status || status.status;
         if (this._isTerminalStatus(currentStatus)) {
           this._log('Verification completed', { status: currentStatus, duration: Date.now() - startTime });
           return status;
         }
-        
+
         // Wait before next poll
         await new Promise(resolve => setTimeout(resolve, interval));
-        
+
       } catch (error) {
         this._log('Status poll error', error.message);
         // Continue polling unless it's a validation error
         if (error instanceof ValidationError) {
           throw error;
         }
-        
+
         let nextDelay = interval;
         if (error instanceof ApiError && Number(error.statusCode) === 429) {
           consecutiveRateLimits += 1;
@@ -1210,17 +1221,17 @@ export class NeusClient {
           const jitter = Math.floor(backoff * (0.5 + Math.random() * 0.5)); // 50-100%
           nextDelay = jitter;
         }
-        
+
         await new Promise(resolve => setTimeout(resolve, nextDelay));
       }
     }
-    
+
     throw new NetworkError(`Polling timeout after ${timeout}ms`, 'POLLING_TIMEOUT');
   }
 
   /**
    * DETECT CHAIN ID - Get current wallet chain
-   * 
+   *
    * @returns {Promise<number>} Current chain ID
    */
   async detectChainId() {
@@ -1583,10 +1594,10 @@ export class NeusClient {
 
   /**
    * CHECK GATE - Evaluate requirements against existing proofs
-   * 
+   *
    * Gate-first verification: checks if wallet has valid proofs satisfying requirements.
    * Returns which requirements are missing/expired.
-   * 
+   *
    * @param {Object} params - Gate check parameters
    * @param {string} params.walletAddress - Target wallet
    * @param {Array<Object>} params.requirements - Array of gate requirements
@@ -1604,7 +1615,7 @@ export class NeusClient {
    *   Note: contentHash matching uses approximation in SDK; for exact SHA-256 matching, use backend API
    * @param {Array} [params.proofs] - Pre-fetched proofs (skip API call)
    * @returns {Promise<Object>} Gate result with satisfied, missing, existing
-   * 
+   *
    * @example
    * // Basic gate check
    * const result = await client.checkGate({
@@ -1664,25 +1675,25 @@ export class NeusClient {
           // Gate format: match as array [{path, op, value}]. Convert to {path: value} for iteration.
           const matchObj = Array.isArray(match)
             ? Object.fromEntries(
-                match
-                  .filter((m) => m && m.path && String(m.value ?? '').trim() !== '')
-                  .map((m) => [String(m.path).trim(), m.value])
-              )
+              match
+                .filter((m) => m && m.path && String(m.value ?? '').trim() !== '')
+                .map((m) => [String(m.path).trim(), m.value])
+            )
             : match;
 
           for (const [key, expected] of Object.entries(matchObj)) {
             let actualValue = null;
-            
+
             // Handle nested field access
             if (key.includes('.')) {
               const parts = key.split('.');
               let current = data;
-              
+
               if (parts[0] === 'input' && input) {
                 current = input;
                 parts.shift();
               }
-              
+
               for (const part of parts) {
                 if (current && typeof current === 'object' && part in current) {
                   current = current[part];
@@ -1695,11 +1706,11 @@ export class NeusClient {
             } else {
               actualValue = input[key] || data[key];
             }
-            
+
             if (key === 'content' && actualValue === undefined) {
               actualValue = data.reference?.id || data.content;
             }
-            
+
             // Special handling for verifier-specific fields (claim-based, aligns with proofs/check)
             if (actualValue === undefined) {
               const claims = data.claims || {};
@@ -1735,7 +1746,7 @@ export class NeusClient {
                 actualValue = data.poisoned;
               }
             }
-            
+
             // Content hash check (approximation)
             if (key === 'contentHash' && actualValue === undefined && data.content) {
               try {
@@ -1747,12 +1758,12 @@ export class NeusClient {
                   hash = ((hash << 5) - hash) + char;
                   hash = hash & hash;
                 }
-                actualValue = '0x' + Math.abs(hash).toString(16).padStart(64, '0').substring(0, 66);
+                actualValue = `0x${  Math.abs(hash).toString(16).padStart(64, '0').substring(0, 66)}`;
               } catch {
                 actualValue = String(data.content);
               }
             }
-            
+
             let normalizedActual = actualValue;
             let normalizedExpected = expected;
 
@@ -1781,7 +1792,7 @@ export class NeusClient {
               normalizedActual = actualValue;
               normalizedExpected = expected;
             }
-            
+
             if (normalizedActual !== normalizedExpected) {
               return false;
             }
@@ -1834,10 +1845,10 @@ export class NeusClient {
    */
   async _makeRequest(method, endpoint, data = null, headersOverride = null) {
     const url = `${this.baseUrl}${endpoint}`;
-    
+
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.config.timeout);
-    
+
     const options = {
       method,
       headers: { ...this.defaultHeaders, ...(headersOverride || {}) },
@@ -1853,7 +1864,7 @@ export class NeusClient {
     try {
       const response = await fetch(url, options);
       clearTimeout(timeoutId);
-      
+
       let responseData;
       try {
         responseData = await response.json();
@@ -1869,15 +1880,15 @@ export class NeusClient {
 
     } catch (error) {
       clearTimeout(timeoutId);
-      
+
       if (error.name === 'AbortError') {
         throw new NetworkError(`Request timeout after ${this.config.timeout}ms`);
       }
-      
+
       if (error instanceof ApiError) {
         throw error;
       }
-      
+
       throw new NetworkError(`Network error: ${error.message}`);
     }
   }
@@ -1901,9 +1912,9 @@ export class NeusClient {
                   response?.data?.id;
     const finalProofId = proofId || qHash || null;
     const finalQHash = qHash || proofId || finalProofId;
-                  
-    const status = response?.data?.status || 
-                   response?.status || 
+
+    const status = response?.data?.status ||
+                   response?.status ||
                    response?.data?.resource?.status ||
                    (response?.success ? 'completed' : 'unknown');
 

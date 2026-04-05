@@ -37,17 +37,17 @@ describe('NEUS SDK Integration', () => {
       if (!LIVE) return;
 
       const verifiers = await client.getVerifiers();
-      
+
       expect(Array.isArray(verifiers)).toBe(true);
       expect(verifiers.length).toBeGreaterThan(0);
-      
+
       // Verify Day 1 verifiers are present
       const expectedVerifiers = [
         'ownership-basic',
-        'nft-ownership', 
+        'nft-ownership',
         'token-holding'
       ];
-      
+
       expectedVerifiers.forEach(verifier => {
         expect(verifiers).toContain(verifier);
       });
@@ -59,7 +59,7 @@ describe('NEUS SDK Integration', () => {
       if (!LIVE) return;
 
       const fakeQHash = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef';
-      
+
       // Should throw ApiError for 404, not crash
       try {
         await client.getStatus(fakeQHash);
@@ -95,7 +95,7 @@ describe('NEUS SDK Integration', () => {
       const clients = [
         new NeusClient({ apiUrl: 'https://api.neus.network/' }),
         new NeusClient({ apiUrl: 'https://api.neus.network' }),
-        new NeusClient({ apiUrl: 'http://localhost:3000' }),
+        new NeusClient({ apiUrl: 'http://localhost:3000' })
       ];
 
       expect(clients[0].baseUrl).toBe('https://api.neus.network');
@@ -113,18 +113,18 @@ describe('NEUS SDK Integration', () => {
     it('should demonstrate typical usage pattern', async () => {
       // This test demonstrates the typical SDK usage without actually
       // creating proofs (since that requires wallet interaction)
-      
+
       // 1. Check API health
       const healthy = await client.isHealthy().catch(() => false);
       expect(typeof healthy).toBe('boolean');
-      
+
       // 2. Get available verifiers
       if (healthy && LIVE) {
         const verifiers = await client.getVerifiers();
         expect(Array.isArray(verifiers)).toBe(true);
         expect(verifiers.length).toBeGreaterThan(0);
       }
-      
+
       // 3. Input validation works (detectChainId requires browser environment)
       expect(() => client.isHealthy()).not.toThrow();
     });

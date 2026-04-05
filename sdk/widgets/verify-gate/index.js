@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
 /**
  * NEUS Widgets (VerifyGate + ProofBadge)
  */
 
 export { VerifyGate } from './dist/VerifyGate.js';
-export { 
-  ProofBadge, 
-  SimpleProofBadge, 
+export {
+  ProofBadge,
+  SimpleProofBadge,
   NeusPillLink,
-  VerifiedIcon 
+  VerifiedIcon
 } from './dist/ProofBadge.js';

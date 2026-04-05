@@ -12,7 +12,7 @@ export class SDKError extends Error {
     this.code = code;
     this.details = details;
     this.timestamp = Date.now();
-    
+
     // Ensure proper prototype chain
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, SDKError);
@@ -39,7 +39,7 @@ export class ApiError extends SDKError {
     this.name = 'ApiError';
     this.statusCode = statusCode;
     this.response = response;
-    
+
     // Additional classification
     this.isClientError = statusCode >= 400 && statusCode < 500;
     this.isServerError = statusCode >= 500;
@@ -48,11 +48,11 @@ export class ApiError extends SDKError {
 
   static fromResponse(response, responseData) {
     const statusCode = response.status;
-    const message = responseData?.error?.message || 
-                   responseData?.message || 
+    const message = responseData?.error?.message ||
+                   responseData?.message ||
                    `API request failed with status ${statusCode}`;
     const code = responseData?.error?.code || 'API_ERROR';
-    
+
     return new ApiError(message, statusCode, code, responseData);
   }
 

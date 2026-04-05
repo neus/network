@@ -1,9 +1,9 @@
 /**
  * NEUS SDK Gate Recipes
- * 
+ *
  * These are EXAMPLES, not defaults.
  * Pick or copy-paste what fits your use case.
- * 
+ *
  * @license Apache-2.0
  */
 
@@ -23,7 +23,7 @@ export const YEAR = 365 * DAY;
  * Integrator should add match: { contractAddress: '0x...' } when using
  */
 export const GATE_NFT_HOLDER = [
-  { verifierId: 'nft-ownership' },
+  { verifierId: 'nft-ownership' }
 ];
 
 /**
@@ -31,7 +31,7 @@ export const GATE_NFT_HOLDER = [
  * Integrator should add match: { contractAddress: '0x...', minBalance: '...' }
  */
 export const GATE_TOKEN_HOLDER = [
-  { verifierId: 'token-holding' },
+  { verifierId: 'token-holding' }
 ];
 
 /**
@@ -39,7 +39,7 @@ export const GATE_TOKEN_HOLDER = [
  * Short TTL (1h) because ownership can transfer (point-in-time proof)
  */
 export const GATE_CONTRACT_ADMIN = [
-  { verifierId: 'contract-ownership', maxAgeMs: HOUR },
+  { verifierId: 'contract-ownership', maxAgeMs: HOUR }
 ];
 
 /**
@@ -47,7 +47,7 @@ export const GATE_CONTRACT_ADMIN = [
  * For verified organization badges, creator platforms
  */
 export const GATE_DOMAIN_OWNER = [
-  { verifierId: 'ownership-dns-txt' },
+  { verifierId: 'ownership-dns-txt' }
 ];
 
 /**
@@ -55,7 +55,7 @@ export const GATE_DOMAIN_OWNER = [
  * For multi-wallet identity features
  */
 export const GATE_LINKED_WALLETS = [
-  { verifierId: 'wallet-link' },
+  { verifierId: 'wallet-link' }
 ];
 
 /**
@@ -63,7 +63,7 @@ export const GATE_LINKED_WALLETS = [
  * For agent/bot verification features
  */
 export const GATE_AGENT_IDENTITY = [
-  { verifierId: 'agent-identity' },
+  { verifierId: 'agent-identity' }
 ];
 
 /**
@@ -71,7 +71,7 @@ export const GATE_AGENT_IDENTITY = [
  * With recommended 7-day TTL for security
  */
 export const GATE_AGENT_DELEGATION = [
-  { verifierId: 'agent-delegation', maxAgeMs: 7 * DAY },
+  { verifierId: 'agent-delegation', maxAgeMs: 7 * DAY }
 ];
 
 /**
@@ -79,7 +79,7 @@ export const GATE_AGENT_DELEGATION = [
  * Proof is permanent (policy snapshot); re-run only if your policy/provider requirements change.
  */
 export const GATE_CONTENT_MODERATION = [
-  { verifierId: 'ai-content-moderation' },
+  { verifierId: 'ai-content-moderation' }
 ];
 
 /**
@@ -87,7 +87,7 @@ export const GATE_CONTENT_MODERATION = [
  * Provider-backed risk signal
  */
 export const GATE_WALLET_RISK = [
-  { verifierId: 'wallet-risk' },
+  { verifierId: 'wallet-risk' }
 ];
 
 /**
@@ -95,7 +95,7 @@ export const GATE_WALLET_RISK = [
  * For anonymous reputation systems
  */
 export const GATE_PSEUDONYM = [
-  { verifierId: 'ownership-pseudonym' },
+  { verifierId: 'ownership-pseudonym' }
 ];
 
 // ============================================================================
@@ -106,11 +106,11 @@ export const GATE_PSEUDONYM = [
  * Create a custom gate from verifier IDs
  * @param {Array<string|Object>} requirements - Array of verifier IDs or requirement objects
  * @returns {Array} Gate requirements array
- * 
+ *
  * @example
  * // Simple: just verifier IDs
  * const gate = createGate(['nft-ownership', 'token-holding']);
- * 
+ *
  * // With options
  * const gate = createGate([
  *   { verifierId: 'nft-ownership', match: { contractAddress: '0x...' } },
@@ -130,14 +130,14 @@ export function createGate(requirements) {
  * Combine multiple gates (union of requirements)
  * @param  {...Array} gates - Gate arrays to combine
  * @returns {Array} Combined gate requirements
- * 
+ *
  * @example
  * const strictGate = combineGates(GATE_NFT_HOLDER, GATE_TOKEN_HOLDER);
  */
 export function combineGates(...gates) {
   const combined = [];
   const seen = new Set();
-  
+
   for (const gate of gates) {
     for (const req of gate) {
       const key = req.verifierId + JSON.stringify(req.match || {});
@@ -147,7 +147,7 @@ export function combineGates(...gates) {
       }
     }
   }
-  
+
   return combined;
 }
 
@@ -171,5 +171,5 @@ export default {
   GATE_PSEUDONYM,
   // Helpers
   createGate,
-  combineGates,
+  combineGates
 };
