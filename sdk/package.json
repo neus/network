@@ -79,7 +79,7 @@
   },
   "homepage": "https://neus.network",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
   "peerDependencies": {
     "ethers": "^6.0.0",
