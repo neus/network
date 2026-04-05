@@ -1,55 +1,53 @@
 ---
 title: NEUS Documentation
-description: Verify once. Reuse everywhere. Portable proof receipts for apps, APIs, and agents.
+description: Verify once. Prove everywhere. Portable proof receipts for apps, APIs, and agents.
 icon: house
 ---
 
-**Verify once. Reuse everywhere.**
+**Every app makes you re-verify. NEUS fixes it.**
 
-NEUS gives your app a reusable proof receipt for identity, ownership, risk, and access. Run a check once, get a receipt, and use it to gate, share, or automate anywhere.
-
-## Start here
+Verify once, get a portable proof receipt, reuse it everywhere — gate access, attach proof to content, register agents, share results without exposing raw data. Private by default.
 
 <CardGroup cols={3}>
   <Card title="Quickstart" icon="code" href="./quickstart">
     First proof in 5 minutes.
   </Card>
-  <Card title="Get started" icon="rocket" href="./get-started">
-    Platform setup, billing, app linking.
-  </Card>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
     No-code verification UI.
   </Card>
+  <Card title="Get started" icon="rocket" href="./get-started">
+    Platform, billing, app setup.
+  </Card>
 </CardGroup>
+
+## How it works
+
+1. **Verify** — User completes a check (wallet, social, identity, or risk).
+2. **Get a receipt** — You receive a portable proof ID. Private by default.
+3. **Reuse it** — Gate content, check eligibility, share badges, delegate to agents.
 
 ## What you can build
 
 | Use case | Verifier |
 |----------|----------|
 | Human-only signup or access | `proof-of-human` |
-| Token / NFT gated products | `nft-ownership`, `token-holding` |
-| Verified creator or org badges | `ownership-basic`, `ownership-org-oauth` |
+| Token / NFT gated products | `nft-ownership` · `token-holding` |
+| Verified creator or org badges | `ownership-basic` · `ownership-org-oauth` |
 | Proof-backed content and posts | `ownership-basic` |
-| Agent identity and delegation | `agent-identity`, `agent-delegation` |
+| Agent identity and delegation | `agent-identity` · `agent-delegation` |
 | Domain-verified organizations | `ownership-dns-txt` |
 
 [Full verifier catalog →](./verification/verifiers)
 
-## How it works
+## Choose your path
 
-1. **Verify** — User completes a check (wallet, social, identity, or risk).
-2. **Get a receipt** — You receive a portable proof ID.
-3. **Reuse it** — Gate content, check eligibility, share badges, or automate with it.
-
-## Choose your integration
-
-| Path | Best for |
-|------|----------|
-| [Hosted Verify](./cookbook/auth-hosted-verify) | Login, social linking — no custom UI |
-| [Widgets](./widgets/overview) | React gating and badges |
-| [SDK](./sdks/overview) | Custom browser or server flows |
-| [API](./api/overview) | Server-side checks |
-| [MCP](./mcp/overview) | AI agents (Cursor, Claude, etc.) |
+| Path | Best for | Effort |
+|------|----------|--------|
+| [Hosted Verify](./cookbook/auth-hosted-verify) | Login, guided verification | Redirect / popup |
+| [Widgets](./widgets/overview) | React gating + badges | One component |
+| [SDK](./sdks/overview) | Custom flows | Full control |
+| [API](./api/overview) | Server-side checks | HTTP |
+| [MCP](./mcp/overview) | AI agents (Cursor, Claude) | One URL |
 
 Not sure? [Choose an integration path →](./choose-an-integration-path)
 

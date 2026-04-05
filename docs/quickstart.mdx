@@ -4,13 +4,13 @@ description: Create your first proof in under 5 minutes.
 icon: rocket
 ---
 
-Install the SDK, create a proof, and reuse it.
+Install the SDK, create a proof, and reuse it — 5 minutes.
 
 <Tip>
-  **Shipping an app?** Do **[Get started](./get-started)** first (platform → app link → credits → `appId`). Then come back here for code.
+  **Shipping a product?** Do **[Get started](./get-started)** first (platform → app link → credits). Then come back here for code.
 </Tip>
 
-## 1. Install the SDK
+## 1. Install
 
 ```bash
 npm install @neus/sdk
@@ -29,11 +29,11 @@ const proof = await client.verify({
   wallet: window.ethereum,
 });
 
-const proofId = proof.proofId; // save this
+const proofId = proof.proofId; // save this — reuse it everywhere
 ```
 
 <Tip>
-  **No in-app wallet?** Use [Hosted Verify](./cookbook/auth-hosted-verify) — redirect or popup, no wallet code needed.
+  **No wallet in your app?** Use [Hosted Verify](./cookbook/auth-hosted-verify) — redirect or popup, zero wallet code.
 </Tip>
 
 ## 3. Wait for completion
@@ -45,7 +45,7 @@ const status = await client.pollProofStatus(proofId, {
 });
 ```
 
-## 4. Reuse: gate content in React
+## 4. Gate content in React
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -55,7 +55,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>
 ```
 
-## 5. Reuse: check eligibility from your server
+## 5. Check eligibility from your server
 
 ```javascript
 const result = await client.gateCheck({
