@@ -11,7 +11,7 @@ global.fetch = vi.fn();
 
 describe('NeusClient', () => {
   let client;
-  
+
   beforeEach(() => {
     client = new NeusClient({ enableLogging: false });
     vi.clearAllMocks();
@@ -90,14 +90,14 @@ describe('NeusClient', () => {
       });
 
       const result = await client.getStatus('0xtest123');
-      
+
       expect(fetch).toHaveBeenCalledWith(
         'https://api.neus.network/api/v1/verification/status/0xtest123',
         expect.objectContaining({
           method: 'GET'
         })
       );
-      
+
       expect(result.success).toBe(true);
       expect(result.proofId).toBe('0xtest123');
       expect(result.qHash).toBe('0xtest123');
@@ -145,7 +145,7 @@ describe('NeusClient', () => {
       });
 
       const verifiers = await client.getVerifiers();
-      
+
       expect(Array.isArray(verifiers)).toBe(true);
       expect(verifiers).toContain('ownership-basic');
       expect(verifiers).toContain('nft-ownership');

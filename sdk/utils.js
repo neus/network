@@ -65,22 +65,22 @@ function deterministicStringify(obj) {
   if (obj === null || obj === undefined) {
     return JSON.stringify(obj);
   }
-  
+
   if (typeof obj !== 'object') {
     return JSON.stringify(obj);
   }
-  
+
   if (Array.isArray(obj)) {
-    return '[' + obj.map(item => deterministicStringify(item)).join(',') + ']';
+    return `[${  obj.map(item => deterministicStringify(item)).join(',')  }]`;
   }
-  
+
   // Sort object keys for deterministic output
   const sortedKeys = Object.keys(obj).sort();
-  const pairs = sortedKeys.map(key => 
-    JSON.stringify(key) + ':' + deterministicStringify(obj[key])
+  const pairs = sortedKeys.map(key =>
+    `${JSON.stringify(key)  }:${  deterministicStringify(obj[key])}`
   );
-  
-  return '{' + pairs.join(',') + '}';
+
+  return `{${  pairs.join(',')  }}`;
 }
 
 /**
@@ -125,12 +125,9 @@ export function constructVerificationMessage({ walletAddress, signedTimestamp, d
   // Address normalization: EVM (`eip155`) is lowercased; non-EVM namespaces preserve the original string.
   const namespace = (typeof chain === 'string' && chain.includes(':')) ? chain.split(':')[0] : 'eip155';
   const normalizedWalletAddress = namespace === 'eip155' ? walletAddress.toLowerCase() : walletAddress;
-  
-  // IMPORTANT: Deterministic JSON serialization is required for signature verification.
-  // The message must match what the API verifies.
+
   const dataString = deterministicStringify(data);
-  
-  // Create standard message format - EXACT format expected by the API
+
   const messageComponents = [
     'NEUS Verification Request',
     `Wallet: ${normalizedWalletAddress}`,
@@ -139,14 +136,13 @@ export function constructVerificationMessage({ walletAddress, signedTimestamp, d
     `Data: ${dataString}`,
     `Timestamp: ${signedTimestamp}`
   ];
-  
-  // Join with newlines - this is the message that gets signed
+
   return messageComponents.join('\n');
 }
 
 /**
  * Validate Ethereum wallet address format
- * 
+ *
  * @param {string} address - Address to validate
  * @returns {boolean} True if valid Ethereum address
  */
@@ -154,7 +150,7 @@ export function validateWalletAddress(address) {
   if (!address || typeof address !== 'string') {
     return false;
   }
-  
+
   // Basic Ethereum address validation
   return /^0x[a-fA-F0-9]{40}$/.test(address);
 }
@@ -183,7 +179,8 @@ export function validateUniversalAddress(address, chain) {
   }
 
   if (namespace === 'bip122') {
-    return /^(bc1|tb1|bcrt1)[a-z0-9]{11,87}$/.test(value.toLowerCase()) || /^[13mn2][a-km-zA-HJ-NP-Z1-9]{25,62}$/.test(value);
+    return /^(bc1|tb1|bcrt1)[a-z0-9]{11,87}$/.test(value.toLowerCase()) ||
+      /^[13mn2][a-km-zA-HJ-NP-Z1-9]{25,62}$/.test(value);
   }
 
   if (namespace === 'near') {
@@ -196,7 +193,7 @@ export function validateUniversalAddress(address, chain) {
 
 /**
  * Validate timestamp freshness
- * 
+ *
  * @param {number} timestamp - Timestamp to validate
  * @param {number} maxAgeMs - Maximum age in milliseconds (default: 5 minutes)
  * @returns {boolean} True if timestamp is valid and recent
@@ -205,17 +202,17 @@ export function validateTimestamp(timestamp, maxAgeMs = 5 * 60 * 1000) {
   if (!timestamp || typeof timestamp !== 'number') {
     return false;
   }
-  
+
   const now = Date.now();
   const age = now - timestamp;
-  
+
   // Check if timestamp is in the past and within allowed age
   return age >= 0 && age <= maxAgeMs;
 }
 
 /**
  * Create formatted verification data object
- * 
+ *
  * @param {string} content - Content to verify
  * @param {string} owner - Owner wallet address
  * @param {Object} reference - Reference object
@@ -254,10 +251,10 @@ export function deriveDid(address, chainIdOrChain) {
   if (!address || typeof address !== 'string') {
     throw new SDKError('deriveDid: address is required', 'INVALID_ARGUMENT');
   }
-  
+
   const chainContext = chainIdOrChain || NEUS_CONSTANTS.HUB_CHAIN_ID;
   const isCAIP = typeof chainContext === 'string' && chainContext.includes(':');
-  
+
   if (isCAIP) {
     const [namespace, segment] = chainContext.split(':');
     const normalized = (namespace === 'eip155') ? address.toLowerCase() : address;
@@ -505,7 +502,7 @@ export async function signMessage({ provider, message, walletAddress, chain } = 
       return null;
     }
     if (typeof resolvedProvider.address === 'string' && resolvedProvider.address) return resolvedProvider.address;
-    if (typeof resolvedProvider.getAddress === 'function') return await resolvedProvider.getAddress();
+    if (typeof resolvedProvider.getAddress === 'function') return resolvedProvider.getAddress();
     if (typeof resolvedProvider.request === 'function') {
       let accounts = await resolvedProvider.request({ method: 'eth_accounts' }).catch(() => []);
       if (!Array.isArray(accounts) || accounts.length === 0) {
@@ -594,7 +591,7 @@ export async function signMessage({ provider, message, walletAddress, chain } = 
  */
 export function isTerminalStatus(status) {
   if (!status || typeof status !== 'string') return false;
-  
+
   // Success states
   const successStates = [
     'verified',
@@ -603,7 +600,7 @@ export function isTerminalStatus(status) {
     'partially_verified',
     'verified_propagation_failed'
   ];
-  
+
   // Failure states
   const failureStates = [
     'rejected',
@@ -615,7 +612,7 @@ export function isTerminalStatus(status) {
     'error_storage_query',
     'not_found'
   ];
-  
+
   return successStates.includes(status) || failureStates.includes(status);
 }
 
@@ -626,7 +623,7 @@ export function isTerminalStatus(status) {
  */
 export function isSuccessStatus(status) {
   if (!status || typeof status !== 'string') return false;
-  
+
   const successStates = [
     'verified',
     'verified_no_verifiers',
@@ -634,7 +631,7 @@ export function isSuccessStatus(status) {
     'partially_verified',
     'verified_propagation_failed'
   ];
-  
+
   return successStates.includes(status);
 }
 
@@ -645,7 +642,7 @@ export function isSuccessStatus(status) {
  */
 export function isFailureStatus(status) {
   if (!status || typeof status !== 'string') return false;
-  
+
   const failureStates = [
     'rejected',
     'rejected_verifier_failure',
@@ -656,7 +653,7 @@ export function isFailureStatus(status) {
     'error_storage_query',
     'not_found'
   ];
-  
+
   return failureStates.includes(status);
 }
 
@@ -821,9 +818,9 @@ export class StatusPoller {
       const pollAttempt = async () => {
         try {
           this.attempt++;
-          
+
           const response = await this.client.getStatus(this.qHash);
-          
+
           // Check if verification is complete using the terminal status utility
           if (isTerminalStatus(response.status)) {
             resolve(response);
@@ -887,7 +884,7 @@ export class StatusPoller {
 export const NEUS_CONSTANTS = {
   // Hub chain (where all verifications occur)
   HUB_CHAIN_ID: 84532,
-  
+
   // Supported target chains for cross-chain propagation
   TESTNET_CHAINS: [
     11155111, // Ethereum Sepolia
@@ -895,15 +892,15 @@ export const NEUS_CONSTANTS = {
     421614,   // Arbitrum Sepolia
     80002     // Polygon Amoy
   ],
-  
+
   // API endpoints
   API_BASE_URL: 'https://api.neus.network',
   API_VERSION: 'v1',
-  
+
   // Timeouts and limits
   SIGNATURE_MAX_AGE_MS: 5 * 60 * 1000, // 5 minutes
   REQUEST_TIMEOUT_MS: 30 * 1000,       // 30 seconds
-  
+
   // Default verifier set for quick starts
   DEFAULT_VERIFIERS: [
     'ownership-basic',
@@ -1079,24 +1076,24 @@ export async function withRetry(fn, options = {}) {
   } = options;
 
   let lastError;
-  
+
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       return await fn();
     } catch (error) {
       lastError = error;
-      
+
       if (attempt === maxAttempts) break;
-      
+
       const delayMs = Math.min(
         baseDelay * Math.pow(backoffFactor, attempt - 1),
         maxDelay
       );
-      
+
       await delay(delayMs);
     }
   }
-  
+
   throw lastError;
 }
 
@@ -1211,7 +1208,7 @@ export function toAgentDelegationMaxSpend(humanAmount, decimals) {
     throw new ValidationError(
       'humanAmount must be a decimal string (e.g. "100" or "100.50")',
       'humanAmount',
-      humanAmount,
+      humanAmount
     );
   }
   const dot = s0.indexOf('.');
@@ -1221,9 +1218,9 @@ export function toAgentDelegationMaxSpend(humanAmount, decimals) {
     intPart === ''
       ? '0'
       : (() => {
-          const s = intPart.replace(/^0+/, '');
-          return s === '' ? '0' : s;
-        })();
+        const s = intPart.replace(/^0+/, '');
+        return s === '' ? '0' : s;
+      })();
   if (!/^\d+$/.test(intNormalized)) {
     throw new ValidationError('humanAmount has an invalid integer part', 'humanAmount', humanAmount);
   }

@@ -5,7 +5,7 @@
  *
  * Embed:
  *   <script src="https://verify.neus.network/widget.js"></script>
- *   <div data-neus-proof="qHash123"></div>
+ *   <div data-neus-proof="PROOF_ID"></div>
  *
  * Optional data attributes (per element):
  *   data-neus-proof       qHash / proofId (required)
@@ -62,7 +62,6 @@
 
   // -------------------------------------------------------------------------
   // Badge DOM — matches NeusProofBadgePill (bg-accent-blue/10, border-accent-blue/20, text-accent-blue-light).
-  // Design tokens: --neus-rgb-accent-primary 152 192 239
   // -------------------------------------------------------------------------
   var ACCENT_BG   = 'rgba(152,192,239,0.1)';
   var ACCENT_BORD = 'rgba(152,192,239,0.2)';
@@ -71,7 +70,7 @@
     verified: { text: ACCENT_TEXT, label: 'Verified' },
     pending:  { text: 'rgb(234,179,8)', label: 'Verifying…' },
     failed:   { text: 'rgb(239,68,68)', label: 'Unverified' },
-    unknown:  { text: 'rgba(255,255,255,0.68)', label: 'Unknown' },
+    unknown:  { text: 'rgba(255,255,255,0.68)', label: 'Unknown' }
   };
 
   function buildBadge(opts) {
@@ -103,7 +102,7 @@
       'white-space:nowrap',
       'cursor:pointer',
       'transition:opacity 0.15s ease',
-      'box-sizing:border-box',
+      'box-sizing:border-box'
     ].join(';');
 
     var img = document.createElement('img');
@@ -150,8 +149,8 @@
           var json = JSON.parse(xhr.responseText);
           var st   = (json && json.data && json.data.status) ? String(json.data.status).toLowerCase() : '';
           var status = st.indexOf('verified') !== -1 ? 'verified'
-                     : (st.indexOf('processing') !== -1 || st.indexOf('pending') !== -1) ? 'pending'
-                     : 'failed';
+            : (st.indexOf('processing') !== -1 || st.indexOf('pending') !== -1) ? 'pending'
+              : 'failed';
           var cc    = json && json.data && json.data.crosschain;
           var chains = cc ? (cc.totalChains || 0) : 0;
           callback(status, chains);
@@ -184,8 +183,8 @@
     var uiBase     = (opts.uiBase   || el.getAttribute(ATTR_UI_BASE)  || DEFAULT_UI).replace(/\/$/, '');
     var size       = opts.size      || el.getAttribute(ATTR_SIZE)     || 'sm';
     var showChains = typeof opts.showChains === 'boolean'
-                   ? opts.showChains
-                   : el.getAttribute(ATTR_CHAINS) === 'true';
+      ? opts.showChains
+      : el.getAttribute(ATTR_CHAINS) === 'true';
 
     if (!proofId) return;
     markMounted(el);

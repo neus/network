@@ -58,7 +58,7 @@ export {
   GATE_PSEUDONYM,
   // Helpers
   createGate,
-  combineGates,
+  combineGates
 } from './gates.js';
 
 // Error classes
