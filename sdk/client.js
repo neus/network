@@ -32,18 +32,13 @@ const INTERACTIVE_VERIFIERS = new Set([
 
 const EVM_ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
 
-// Validation for supported verifiers
 const validateVerifierData = (verifierId, data) => {
   if (!data || typeof data !== 'object') {
     return { valid: false, error: 'Data object is required' };
   }
-  
-  // Format validation for supported verifiers
+
   switch (verifierId) {
     case 'ownership-basic':
-      // Required: owner (must match request walletAddress).
-      // Reference is optional when content/contentHash is provided.
-      // If neither content nor contentHash is provided, reference.id is required (reference-only proof).
       if (!data.owner || !validateUniversalAddress(data.owner, typeof data.chain === 'string' ? data.chain : undefined)) {
         return { valid: false, error: 'owner (universal wallet address) is required' };
       }
@@ -319,7 +314,6 @@ export class NeusClient {
       ...config
     };
 
-    // NEUS Network API
     this.baseUrl = this.config.apiUrl || 'https://api.neus.network';
     // Enforce HTTPS for neus.network domains to satisfy CSP and normalize URLs
     try {
@@ -332,32 +326,28 @@ export class NeusClient {
     } catch {
       // If invalid URL string, leave as-is
     }
-    // Normalize apiUrl on config
     this.config.apiUrl = this.baseUrl;
-    // Default headers for API requests
+
+    // Default headers
+
     this.defaultHeaders = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
       'X-Neus-Sdk': 'js'
     };
 
-    // Optional API key (server-side only; do not embed in browser apps)
     if (typeof this.config.apiKey === 'string' && this.config.apiKey.trim().length > 0) {
       this.defaultHeaders['Authorization'] = `Bearer ${this.config.apiKey.trim()}`;
     }
-    // Public app attribution header (non-secret)
     if (typeof this.config.appId === 'string' && this.config.appId.trim().length > 0) {
       this.defaultHeaders['X-Neus-App'] = this.config.appId.trim();
     }
-    // Ephemeral sponsor capability token
     if (typeof this.config.sponsorGrant === 'string' && this.config.sponsorGrant.trim().length > 0) {
       this.defaultHeaders['X-Sponsor-Grant'] = this.config.sponsorGrant.trim();
     }
-    // x402 retry receipt header
     if (typeof this.config.paymentSignature === 'string' && this.config.paymentSignature.trim().length > 0) {
       this.defaultHeaders['PAYMENT-SIGNATURE'] = this.config.paymentSignature.trim();
     }
-    // Optional caller-supplied passthrough headers.
     if (this.config.extraHeaders && typeof this.config.extraHeaders === 'object') {
       for (const [k, v] of Object.entries(this.config.extraHeaders)) {
         if (!k || v === undefined || v === null) continue;
@@ -368,7 +358,6 @@ export class NeusClient {
       }
     }
     try {
-      // Attach origin in browser environments
       if (typeof window !== 'undefined' && window.location && window.location.origin) {
         this.defaultHeaders['X-Client-Origin'] = window.location.origin;
       }
@@ -511,56 +500,44 @@ export class NeusClient {
   // ============================================================================
 
   /**
-   * VERIFY - Standard verification (auto or manual)
-   * 
-   * Create proofs with complete control over the verification process.
-   * If signature and walletAddress are omitted but verifier/content are provided,
-   * this method performs the wallet flow inline (no aliases, no secondary methods).
-   * 
+   * Create a verification proof.
+   *
+   * Supports two paths:
+   *   - **Auto:** Supply `verifier`, `content`, and/or `data` with an optional
+   *     `wallet` provider. The SDK handles signing internally.
+   *   - **Manual:** Supply pre-signed `verifierIds`, `data`, `walletAddress`,
+   *     `signature`, and `signedTimestamp`.
+   *
    * @param {Object} params - Verification parameters
+   * @param {string} [params.verifier] - Verifier ID (auto path, e.g. 'ownership-basic')
+   * @param {string} [params.content] - Content to verify (auto path)
+   * @param {Object} [params.data] - Structured verification data
+   * @param {Object} [params.wallet] - Wallet provider (auto path)
+   * @param {Object} [params.options] - Additional options
    * @param {Array<string>} [params.verifierIds] - Array of verifier IDs (manual path)
-   * @param {Object} [params.data] - Verification data object (manual path)
    * @param {string} [params.walletAddress] - Wallet address that signed the request (manual path)
    * @param {string} [params.signature] - EIP-191 signature (manual path)
    * @param {number} [params.signedTimestamp] - Unix timestamp when signature was created (manual path)
-   * @param {number} [params.chainId] - Advanced/optional. EVM signing-context hint; auto-resolved to protocol hub chain when omitted. For asset verifiers, set chainId inside data instead.
-   * @param {Object} [params.options] - Additional options
-   * @param {string} [params.verifier] - Verifier ID (auto path)
-   * @param {string} [params.content] - Content/description (auto path)
-   * @param {Object} [params.wallet] - Optional injected wallet/provider (auto path)
-   * @returns {Promise<Object>} Verification result with proofId (qHash is a deprecated alias)
-   * 
-   * @example
-   * const proof = await client.verify({
-   *   verifierIds: ['ownership-basic'],
-   *   data: {
-   *     content: "My content",
-   *     owner: walletAddress, // or ownerAddress for nft-ownership/token-holding
-   *     reference: { type: 'other', id: 'my-unique-identifier' }
-   *   },
-   *   walletAddress: '0x...',
-   *   signature: '0x...',
-   *   signedTimestamp: Date.now(),
-   *   options: { targetChains: [421614, 11155111] }
-   * });
-   */
-  /**
-   * Create a verification proof
-   *
-   * @param {Object} params - Verification parameters
-   * @param {string} [params.verifier] - Verifier ID (e.g., 'ownership-basic')
-   * @param {string} [params.content] - Content to verify
-   * @param {Object} [params.data] - Structured verification data
-   * @param {Object} [params.wallet] - Wallet provider
-   * @param {Object} [params.options] - Additional options
-   * @returns {Promise<Object>} Verification result with proofId (qHash is a deprecated alias)
+   * @param {number} [params.chainId] - EVM signing-context hint; auto-resolved to protocol hub chain when omitted
+   * @returns {Promise<Object>} Verification result with proofId
    *
    * @example
-   * // Simple ownership proof
+   * // Auto path
    * const proof = await client.verify({
    *   verifier: 'ownership-basic',
    *   content: 'Hello World',
    *   wallet: window.ethereum
+   * });
+   *
+   * @example
+   * // Manual path
+   * const proof = await client.verify({
+   *   verifierIds: ['ownership-basic'],
+   *   data: { content: "My content", owner: walletAddress },
+   *   walletAddress: '0x...',
+   *   signature: '0x...',
+   *   signedTimestamp: Date.now(),
+   *   options: { targetChains: [421614, 11155111] }
    * });
    */
   async verify(params) {
@@ -794,7 +771,6 @@ export class NeusClient {
           ...(data?.includeDetails !== undefined && { includeDetails: data.includeDetails })
         };
       } else {
-        // Default structure for unknown verifiers (should not reach here with validVerifiers check)
         verificationData = data ? {
           content,
           owner: walletAddress,
@@ -817,7 +793,6 @@ export class NeusClient {
 
       let signature;
       try {
-        // UNIFIED SIGNING: Matches utils/core.ts personalSignUniversal exactly
         const toHexUtf8 = (s) => {
           try {
             const enc = new TextEncoder();
@@ -1004,8 +979,6 @@ export class NeusClient {
       options: optionsPayload
     };
 
-    // SECURITY: Do not send proof signatures in Authorization headers.
-    // Signatures belong in the request body only (they are not bearer tokens).
     const response = await this._makeRequest('POST', '/api/v1/verification', requestData);
 
     if (!response.success) {
@@ -1094,8 +1067,6 @@ export class NeusClient {
 
     const signedTimestamp = Date.now();
 
-    // IMPORTANT: This must match the server's Standard Signing String owner-access check.
-    // Keep wire payload key `qHash` for backwards compatibility.
     const message = constructVerificationMessage({
       walletAddress,
       signedTimestamp,
@@ -1119,7 +1090,6 @@ export class NeusClient {
       throw new ValidationError(`Failed to sign message: ${error.message}`);
     }
 
-    // Make request with signature headers (server reads x-wallet-address/x-signature/x-signed-timestamp)
     const response = await this._makeRequest('GET', `/api/v1/verification/status/${proofId}`, null, {
       'x-wallet-address': walletAddress,
       'x-signature': signature,
@@ -1284,7 +1254,6 @@ export class NeusClient {
     const message = constructVerificationMessage({
       walletAddress: address,
       signedTimestamp,
-      // Keep wire payload key `qHash` for backwards compatibility.
       data: { action: 'revoke_proof', qHash: proofId },
       verifierIds: ['ownership-basic'],
       ...(signerIsEvm ? { chainId: this._getHubChainId() } : { chain })
@@ -1307,7 +1276,6 @@ export class NeusClient {
 
     const res = await fetch(`${this.config.apiUrl}/api/v1/proofs/revoke-self/${proofId}`, {
       method: 'POST',
-      // SECURITY: Do not put proof signatures into Authorization headers.
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         walletAddress: address,

@@ -5,7 +5,7 @@
  *
  * Embed:
  *   <script src="https://verify.neus.network/widget.js"></script>
- *   <div data-neus-proof="qHash123"></div>
+ *   <div data-neus-proof="PROOF_ID"></div>
  *
  * Optional data attributes (per element):
  *   data-neus-proof       qHash / proofId (required)
@@ -62,7 +62,6 @@
 
   // -------------------------------------------------------------------------
   // Badge DOM — matches NeusProofBadgePill (bg-accent-blue/10, border-accent-blue/20, text-accent-blue-light).
-  // Design tokens: --neus-rgb-accent-primary 152 192 239
   // -------------------------------------------------------------------------
   var ACCENT_BG   = 'rgba(152,192,239,0.1)';
   var ACCENT_BORD = 'rgba(152,192,239,0.2)';

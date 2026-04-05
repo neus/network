@@ -126,11 +126,8 @@ export function constructVerificationMessage({ walletAddress, signedTimestamp, d
   const namespace = (typeof chain === 'string' && chain.includes(':')) ? chain.split(':')[0] : 'eip155';
   const normalizedWalletAddress = namespace === 'eip155' ? walletAddress.toLowerCase() : walletAddress;
   
-  // IMPORTANT: Deterministic JSON serialization is required for signature verification.
-  // The message must match what the API verifies.
   const dataString = deterministicStringify(data);
-  
-  // Create standard message format - EXACT format expected by the API
+
   const messageComponents = [
     'NEUS Verification Request',
     `Wallet: ${normalizedWalletAddress}`,
@@ -139,8 +136,7 @@ export function constructVerificationMessage({ walletAddress, signedTimestamp, d
     `Data: ${dataString}`,
     `Timestamp: ${signedTimestamp}`
   ];
-  
-  // Join with newlines - this is the message that gets signed
+
   return messageComponents.join('\n');
 }
 

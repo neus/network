@@ -38,13 +38,5 @@ export default defineConfig({
     mockReset: true,
     clearMocks: true,
     restoreMocks: true
-  },
-  
-  // Resolve configuration
-  resolve: {
-    alias: {
-      '@': './src',
-      '@test': './test'
-    }
   }
 });
