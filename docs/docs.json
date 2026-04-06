@@ -79,7 +79,6 @@
         "groups": [
           {
             "group": "Essentials",
-            "icon": "compass",
             "pages": [
               "index",
               "quickstart",
@@ -91,7 +90,6 @@
           },
           {
             "group": "Platform",
-            "icon": "blocks",
             "pages": [
               "platform/overview",
               "platform/hub",
@@ -101,12 +99,10 @@
           },
           {
             "group": "Hosted Flows",
-            "icon": "route",
             "pages": ["cookbook/auth-hosted-verify", "cookbook/hub-integrator"]
           },
           {
             "group": "Standards",
-            "icon": "graduation-cap",
             "pages": ["learn/standards/caip-380"]
           }
         ]
@@ -116,7 +112,6 @@
         "groups": [
           {
             "group": "Verification",
-            "icon": "shield-check",
             "pages": [
               "verification/overview",
               "verification/how-it-works",
@@ -125,7 +120,6 @@
               "verification/verifiers",
               {
                 "group": "Capability Reference",
-                "icon": "list-tree",
                 "pages": [
                   "verification/ownership-basic",
                   "verification/ownership-social",
@@ -148,7 +142,6 @@
           },
           {
             "group": "SDK",
-            "icon": "bracket-curly",
             "pages": [
               "sdks/overview",
               "sdks/javascript",
@@ -160,17 +153,14 @@
           },
           {
             "group": "Widget UI",
-            "icon": "sparkles",
             "pages": ["widgets/overview", "widgets/verifygate"]
           },
           {
             "group": "API",
-            "icon": "terminal",
             "pages": ["api/overview", "api/authentication", "api/errors"]
           },
           {
             "group": "Operations",
-            "icon": "gear",
             "pages": [
               "platform/billing",
               "platform/environments",
@@ -188,7 +178,6 @@
         "groups": [
           {
             "group": "Playbooks",
-            "icon": "book-open",
             "pages": [
               "cookbook/overview",
               "cookbook/domain-verification",
@@ -204,7 +193,6 @@
         "groups": [
           {
             "group": "Agent Trust",
-            "icon": "badge-check",
             "pages": [
               "agents/overview",
               "agents/concepts",
@@ -220,7 +208,6 @@
         "groups": [
           {
             "group": "MCP Basics",
-            "icon": "globe",
             "pages": [
               "mcp/overview",
               "mcp/endpoints",
@@ -231,7 +218,6 @@
           },
           {
             "group": "Tool Pages",
-            "icon": "wrench",
             "pages": [
               "mcp/verifiers-catalog",
               "mcp/proofs-check",
@@ -249,7 +235,6 @@
         "groups": [
           {
             "group": "Policies",
-            "icon": "scale-balanced",
             "pages": [
               "learn/legal/index",
               "learn/legal/privacy-policy",
