@@ -16,7 +16,7 @@ Add it **once** in your MCP client—see **[Setup](./setup)** for the configurat
 2. **Your product already logs users into NEUS** — Use the same **`Authorization: Bearer`** session on the MCP connection as in [SDK Authentication](../sdks/authentication). Then **`neus_me`** and private reads work—**[Auth](./auth)**.
 3. **Look up public proof history** — Only when you **already have** an address or id from NEUS (or the user pasted it), use **`neus_proofs_get`**. Field names differ by tool—see **[Tools](./tools)**.
 
-A URL-only connection does **not** sign the chat session into NEUS by itself.
+Connecting with only the MCP endpoint URL does **not** sign the chat session into NEUS by itself.
 
 | Goal | Tool |
 |------|------|

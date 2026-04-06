@@ -640,7 +640,7 @@
         "type": "object",
         "required": [
           "provider",
-          "socialToken"
+          "internalSocialToken"
         ],
         "properties": {
           "provider": {
@@ -656,7 +656,7 @@
               "coinbase"
             ]
           },
-          "socialToken": {
+          "internalSocialToken": {
             "type": "string"
           },
           "walletAddress": {
@@ -714,7 +714,7 @@
         "type": "object",
         "required": [
           "provider",
-          "socialToken"
+          "internalSocialToken"
         ],
         "properties": {
           "provider": {
@@ -724,7 +724,7 @@
               "microsoft"
             ]
           },
-          "socialToken": {
+          "internalSocialToken": {
             "type": "string"
           },
           "walletAddress": {
@@ -1085,7 +1085,7 @@
           },
           "agentChainRef": {
             "type": "string",
-            "description": "Required when using legacy agentWallet without agentAccountId.",
+            "description": "Required when using agentWallet with no agentAccountId.",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "agentWallet": {
@@ -1254,7 +1254,7 @@
           },
           "controllerChainRef": {
             "type": "string",
-            "description": "Required when using legacy controllerWallet without controllerAccountId.",
+            "description": "Required when using controllerWallet with no controllerAccountId.",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "controllerWallet": {
@@ -1268,7 +1268,7 @@
           },
           "agentChainRef": {
             "type": "string",
-            "description": "Required when using legacy agentWallet without agentAccountId.",
+            "description": "Required when using agentWallet with no agentAccountId.",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "agentWallet": {
