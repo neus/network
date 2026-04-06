@@ -4,7 +4,7 @@ description: Live verifier IDs and metadata from NEUS.
 icon: table
 ---
 
-Call before hardcoding **`verifierIds`** / policy — list is always current.
+Call this before hardcoding **`verifierIds`** or policy rules so your integration stays aligned with the current catalog.
 
 ## Input
 
@@ -14,4 +14,4 @@ Call before hardcoding **`verifierIds`** / policy — list is always current.
 
 ## Output
 
-Array of verifiers (id, labels, flow hints, etc.) plus **`meta.count`**. Full shape comes from the tool schema on the wire.
+An array of verifiers (id, labels, flow hints, and more) plus **`meta.count`**. The full response shape is defined by the tool schema.

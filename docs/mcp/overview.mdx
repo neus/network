@@ -8,7 +8,7 @@ icon: plug
 
 **Connection URL:** `https://mcp.neus.network/mcp`
 
-Add it **once** in your MCP client—see **[Setup](./setup)** for the exact JSON. Nothing else is required to connect.
+Add it **once** in your MCP client—see **[Setup](./setup)** for the configuration block. Nothing else is required to connect.
 
 ## Recommended workflow
 
@@ -16,7 +16,7 @@ Add it **once** in your MCP client—see **[Setup](./setup)** for the exact JSON
 2. **Your product already logs users into NEUS** — Use the same **`Authorization: Bearer`** session on the MCP connection as in [SDK Authentication](../sdks/authentication). Then **`neus_me`** and private reads work—**[Auth](./auth)**.
 3. **Look up public proof history** — Only when you **already have** an address or id from NEUS (or the user pasted it), use **`neus_proofs_get`**. Field names differ by tool—see **[Tools](./tools)**.
 
-The URL-only install does **not** sign the chat into NEUS by itself.
+Connecting with only the MCP endpoint URL does **not** sign the chat session into NEUS by itself.
 
 | Goal | Tool |
 |------|------|
@@ -36,7 +36,7 @@ Always **open** hosted URLs tools return—do not invent extra steps.
 ## Next
 
 - **[Get started](../get-started)** — platform + billing before scale  
-- **[Setup](./setup)** — one copy-paste config  
+- **[Setup](./setup)** — quick configuration block  
 - **[Tools](./tools)** — parameter names  
 - **[Auth](./auth)** — sessions and privacy  
 - **[Hosted Verify](../cookbook/auth-hosted-verify)** — browser verification flow  

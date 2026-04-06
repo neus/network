@@ -26,7 +26,8 @@ const res = await client.verify({
   content: 'Hello NEUS'
 });
 
-// Proof ID (standard SDK field). HTTP paths may carry the same receipt as {qHash}.
+// proofId is the primary SDK field for this receipt.
+// In HTTP endpoints, the same identifier may appear as {qHash}.
 const proofId = res.proofId;
 const status = await client.getStatus(proofId);
 ```

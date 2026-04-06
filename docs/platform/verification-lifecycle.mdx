@@ -1,20 +1,28 @@
 ---
 title: Verification Lifecycle
-description: Creation, async processing, status polling, reuse policy, and revocation for NEUS proofs.
+description: How proof receipts move from request to reusable verification state.
 icon: clock-rotate
 ---
 
-Quick reference for proof creation, processing, reuse, and revocation.
+Use this page when you need a quick production checklist for proof status, retries, reuse, and revocation.
 
-## In Short
+## Lifecycle at a glance
 
-- A request is created.
-- Some verifiers finish immediately and others move through async status updates.
-- Your app can poll status when a flow is still processing.
-- Completed proofs can be checked, reused, or revoked later.
+1. **Submit a verification request** from hosted verify, SDK, or API.
+2. **Track status** until the proof is complete for async verifiers.
+3. **Store the proof receipt ID** (`proofId`) for future checks.
+4. **Reuse the receipt** for access control and policy checks.
+5. **Revoke only when needed** for policy or account changes.
 
-## Read the Full Guide
+## Status handling guidance
 
-<Card title="Verification Lifecycle" icon="rotate" href="../verification/lifecycle">
-  Full lifecycle guide for statuses, polling, reuse, and revocation.
+- Expect both immediate and asynchronous completions depending on verifier type.
+- Poll status only while a flow is in progress.
+- Use idempotent retry patterns for transient failures.
+- Treat completed proof receipts as stable application records.
+
+## Full lifecycle reference
+
+<Card title="Verification lifecycle guide" icon="rotate" href="../verification/lifecycle">
+  Detailed status model, polling behavior, reuse policy, and revocation semantics.
 </Card>

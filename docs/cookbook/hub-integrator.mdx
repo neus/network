@@ -5,7 +5,7 @@ icon: building
 ---
 
 <Note>
-  **First time?** Complete **[Get started](../get-started)** (platform profile, **Apps** → Link app, credits, `appId`, sponsor). The sections below cover domain, org, VerifyGate, and sponsor grants in detail.
+  **First time?** Complete **[Get started](../get-started)** first. This guide then covers domain trust, organization checks, app attribution, VerifyGate, and sponsor grants in production.
 </Note>
 
 Use this guide when you are connecting a website, community, app, team, or partner flow to NEUS. After **[Get started](../get-started)**, you will use hosted verify, save proof receipt IDs, and reuse them across profile trust, gating, and attribution.
@@ -104,18 +104,18 @@ You typically do not need your own Google or Microsoft OAuth app to use the host
 
 ## 3. Link the app or site on the platform
 
-Link your integration domain on the **NEUS platform** to receive attribution, usage tracking, and credit controls:
+Link your integration domain on the **NEUS platform** so usage, attribution, and billing controls stay attached to the correct product:
 
 | Step | Action |
 |------|--------|
-| 1 | Go to the [NEUS platform](https://neus.network/hub) → Profile → Apps |
+| 1 | Open the [NEUS platform](https://neus.network/hub) and start app linking |
 | 2 | Enter app domain, for example `app.example.com` or `https://app.example.com` |
 | 3 | Set daily credit cap |
 | 4 | Use `*` for any origin only in development |
 | 5 | Send `X-Neus-App` and `Origin` headers from your approved domain |
 
 <Card title="Platform" icon="globe" href="../platform/hub">
-  Explorer, profile tabs, and identity management.
+  Profile, app attribution, credits, and proof visibility.
 </Card>
 
 ## 4. App Attribution (API)
@@ -146,17 +146,17 @@ You can combine these capabilities into one portable verified profile:
 - public, private, and unlisted proof visibility
 - proof pages and your platform profile
 
-On the platform, the most common flows are:
+Typical platform tasks include:
 
 | Flow | Where | Notes |
 |------|-------|------|
-| Domain | Profile -> Identity -> Domains | Add DNS TXT at `_neus.<domain>` first |
-| Organization | Profile -> Identity -> Organizations | Hosted NEUS verify for Google Workspace or Microsoft 365 |
-| Username | Profile / Claim flows | Portable handle and namespace claims |
-| Linked wallets | Profile identity flows | Multiple wallets as one linked identity |
+| Domain | Identity settings | Add DNS TXT at `_neus.<domain>` first |
+| Organization | Identity settings | Hosted NEUS verify for Google Workspace or Microsoft 365 |
+| Username | Claim flows | Portable handle and namespace claims |
+| Linked wallets | Identity settings | Multiple wallets as one linked identity |
 | Privacy | Per proof | Public, private, or unlisted proof visibility |
 
-Link the app first in Profile -> Apps, then connect whichever trust signals your product actually needs.
+Link the app first, then connect only the trust signals your product needs.
 
 ## 6. Hosted Verify for Interactive Flows
 

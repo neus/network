@@ -15,7 +15,7 @@ Portable agent identity, ERC-8004 compatible
 ## Optional fields
 
 - `agentAccountId` (`string format caip10-account`): Preferred canonical subject identity (CAIP-10).
-- `agentChainRef` (`string format caip2-chain`): Required when using legacy agentWallet without agentAccountId.
+- `agentChainRef` (`string format caip2-chain`): Required when using `agentWallet` without `agentAccountId`.
 - `agentWallet` (`string format universal-address`)
 - `agentLabel` (`string max 128`)
 - `agentType` (`string enum: ai, bot, service, automation, agent`)

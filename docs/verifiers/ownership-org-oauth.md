@@ -11,7 +11,7 @@ Organizational OAuth verification
 ## Required fields
 
 - `provider` (`string enum: google, microsoft`)
-- `internalSocialToken` (`string`) — token from the NEUS-hosted OAuth step (request field name as shown)
+- `internalSocialToken` (`string`) — OAuth session token returned by the hosted NEUS flow. This is the current public request field name.
 
 ## Optional fields
 
@@ -27,7 +27,7 @@ await client.verify({
   verifier: 'ownership-org-oauth',
   data: {
     "provider": "google",
-    "internalSocialToken": "org-token-example",
+    "internalSocialToken": "oauth-session-token-example",
     "walletAddress": "0x4444444444444444444444444444444444444444",
     "expectedOrgDomain": "example.com"
   }
@@ -40,7 +40,7 @@ await client.verify({
   ],
   "data": {
     "provider": "google",
-    "internalSocialToken": "org-token-example",
+    "internalSocialToken": "oauth-session-token-example",
     "walletAddress": "0x4444444444444444444444444444444444444444",
     "expectedOrgDomain": "example.com"
   },
