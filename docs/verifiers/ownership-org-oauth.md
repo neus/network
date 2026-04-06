@@ -8,10 +8,14 @@ Organizational OAuth verification
 - **Expiry:** `permanent`
 - **Schema:** [./schemas/ownership-org-oauth.json](./schemas/ownership-org-oauth.json)
 
+## OAuth session token
+
+After the user finishes the NEUS-hosted org OAuth step, pass the returned session value in the request body. **Reader-friendly name:** OAuth/session token from the hosted step. **Wire field name (unchanged):** `internalSocialToken` — use this key in JSON exactly as in the examples below.
+
 ## Required fields
 
 - `provider` (`string enum: google, microsoft`)
-- `internalSocialToken` (`string`) — token from the NEUS-hosted OAuth step (request field name as shown)
+- `internalSocialToken` (`string`) — OAuth/session token from the hosted step (required wire name)
 
 ## Optional fields
 

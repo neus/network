@@ -1,94 +1,77 @@
 ---
 title: Proof Receipts
-description: What to save and how to reuse proof receipts.
+description: What to save after verification and how to reuse it everywhere.
 icon: receipt
 ---
 
 One ID. Reusable everywhere.
 
-## The Proof Receipt ID
+## The proof receipt ID
 
-When verification completes, you get back a **proof receipt ID**:
+When verification completes, you get back a proof receipt ID:
 
-| Field | Where You See It |
+| Field | Where you see it |
 |-------|------------------|
 | `proofId` | SDK responses |
 | `qHash` | HTTP paths and API |
 | Proof receipt ID | User-facing docs |
 
-**All refer to the same identifier.** Save it once. Reuse it everywhere.
+All refer to the same identifier. Save it once. Reuse it everywhere.
 
----
+## What to save
 
-## What to Save
-
-| Save | Don't Save |
+| Save | Don't save |
 |------|------------|
-| ✅ Proof receipt ID | ❌ Raw signatures |
-| ✅ Verification status | ❌ Private proof payloads |
-| ✅ Verifier IDs used | ❌ User credentials |
+| Proof receipt ID | Raw signatures |
+| Verification status | Private proof payloads |
+| Verifier IDs used | User credentials |
 
----
-
-## What to Do With It
+## What to do with it
 
 | Purpose | How |
 |---------|-----|
-| **Display** | Link to `/proof/[proof-id]` |
-| **Gate** | Use `VerifyGate` widget |
-| **Check** | Call `/api/v1/proofs/check` |
-| **Verify** | Server-side eligibility check |
+| Display | Link to `/proof/[proof-id]` |
+| Gate | Use `VerifyGate` widget |
+| Check | Call `/api/v1/proofs/check` |
+| Audit | Store the proof receipt ID in your records |
 
----
-
-## Proof Page
+## Proof page
 
 Every proof has a public page:
 
-```
+```text
 https://neus.network/proof/[proof-id]
 ```
 
-Shows:
+It shows:
+
 - Proof receipt ID
 - Verification type
 - Timestamp
-- Visibility (public/private/unlisted)
-
----
+- Visibility state
 
 ## Using the SDK
 
 ```javascript
-// Create proof
 const proof = await client.verify({ ... });
 const proofId = proof.proofId;
 
-// Check status
 const status = await client.getStatus(proofId);
 
-// Gate check
 const eligible = await client.gateCheck({
   address: '0x...',
   verifierIds: ['ownership-basic'],
 });
 ```
 
----
-
 ## Using the API
 
 ```bash
-# Check status
 GET /api/v1/verification/status/{qHash}
-
-# Gate check
 GET /api/v1/proofs/check?address=0x...&verifierIds=ownership-basic
 ```
 
----
-
-## Next Steps
+## Next steps
 
 <CardGroup cols={2}>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">

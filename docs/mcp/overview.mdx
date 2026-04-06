@@ -1,42 +1,40 @@
 ---
 title: MCP Overview
-description: Connect NEUS to Cursor, Claude, VS Code, and other AI assistants in a few steps.
+description: Connect NEUS hosted verify, proof lookup, and agent tools to MCP clients.
 icon: plug
 ---
 
-**New integration?** Start with **[Get started](../get-started)** (platform, app link, credits). Heavy tool use may hit **credits** / **402** — see **[Billing](../platform/billing)** and tool hints for **`sponsorGrant`**.
+MCP is the agent surface. Hosted Verify is the handoff when a user needs to complete a proof.
 
 **Connection URL:** `https://mcp.neus.network/mcp`
 
-Add it **once** in your MCP client—see **[Setup](./setup)** for the exact JSON. Nothing else is required to connect.
+Add it once in your MCP client. See [Setup](./setup) for the exact JSON.
 
 ## Recommended workflow
 
-1. **User verifies in the browser** — Have the assistant use **`neus_verify_or_guide`** (or **`neus_proofs_check`**). When a tool returns **`https://neus.network/verify`**, the user **opens that link**. Passkey or wallet happens inside NEUS—they should not need to paste crypto details into chat.
-2. **Your product already logs users into NEUS** — Use the same **`Authorization: Bearer`** session on the MCP connection as in [SDK Authentication](../sdks/authentication). Then **`neus_me`** and private reads work—**[Auth](./auth)**.
-3. **Look up public proof history** — Only when you **already have** an address or id from NEUS (or the user pasted it), use **`neus_proofs_get`**. Field names differ by tool—see **[Tools](./tools)**.
+1. **Guide the user into verification** - Use `neus_verify_or_guide`. When a tool returns `https://neus.network/verify`, open that link.
+2. **Check eligibility** - Use `neus_proofs_check` when you only need a yes or no.
+3. **Look up proof history** - Use `neus_proofs_get` when you already have an address or id from NEUS.
+4. **Use signed-in identity** - Use `neus_me` after the user is signed in.
+5. **Register or link agents** - Use `neus_agent_create` and `neus_agent_link`.
 
-The URL-only install does **not** sign the chat into NEUS by itself.
+The URL-only install does not sign the chat into NEUS by itself.
 
 | Goal | Tool |
 |------|------|
 | Send someone to browser verification | `neus_verify_or_guide` |
 | Yes/no eligibility only | `neus_proofs_check` |
-| Proof list + profile (you have an id) | `neus_proofs_get` |
-| Signed-in “who am I” | `neus_me` (needs Bearer—[Auth](./auth)) |
+| Proof list + profile | `neus_proofs_get` |
+| Signed-in who am I | `neus_me` |
 | Pick verifier IDs safely | `neus_verifiers_catalog` |
 | Agents | `neus_agent_create`, `neus_agent_link` |
 
-Always **open** hosted URLs tools return—do not invent extra steps.
-
-## Agents
-
-1. **`neus_agent_create`** → open any hosted URL returned → **`neus_agent_link`** to confirm.
+Always open hosted URLs that tools return. Do not invent extra steps.
 
 ## Next
 
-- **[Get started](../get-started)** — platform + billing before scale  
-- **[Setup](./setup)** — one copy-paste config  
-- **[Tools](./tools)** — parameter names  
-- **[Auth](./auth)** — sessions and privacy  
-- **[Hosted Verify](../cookbook/auth-hosted-verify)** — browser verification flow  
+- [Get started](../get-started) - platform and billing before scale
+- [Setup](./setup) - one copy-paste config
+- [Tools](./tools) - parameter names
+- [Auth](./auth) - sessions and privacy
+- [Hosted Verify](../cookbook/auth-hosted-verify) - browser verification flow

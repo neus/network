@@ -657,7 +657,8 @@
             ]
           },
           "internalSocialToken": {
-            "type": "string"
+            "type": "string",
+            "description": "OAuth/session token from the NEUS-hosted OAuth step (wire field name)."
           },
           "walletAddress": {
             "type": "string",
@@ -725,7 +726,8 @@
             ]
           },
           "internalSocialToken": {
-            "type": "string"
+            "type": "string",
+            "description": "OAuth/session token from the NEUS-hosted org OAuth step (wire field name)."
           },
           "walletAddress": {
             "type": "string",
@@ -1554,7 +1556,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1646,7 +1648,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1803,7 +1805,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2015,7 +2017,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2481,7 +2483,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2582,7 +2584,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {

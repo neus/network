@@ -1,22 +1,20 @@
 ---
 title: Platform Overview
-description: What's included with NEUS — hosted flows, proof pages, and profiles.
+description: Hosted Verify, proof pages, hub, API, and MCP in one platform.
 icon: globe
 ---
 
-NEUS includes everything you need for verification. No infrastructure required.
+NEUS ships the full workflow: the hosted verify entry point, the proof receipt page, the hub, the API, and the MCP surface.
 
 ## What You Get
 
 | Component | What It Does |
 |-----------|--------------|
-| **Hosted Verify** | Ready-made verification UI at `/verify` |
-| **Proof Pages** | Public page for each proof receipt |
-| **Platform home (`/hub`)** | Profiles, apps, credits, and account management |
-| **API** | Full programmatic access |
-| **MCP** | Agent and AI tool integration |
-
----
+| Hosted Verify | Ready-made verification UI at `/verify` |
+| Proof Pages | Public page for each proof receipt |
+| Platform home (`/hub`) | Profiles, apps, credits, and account management |
+| API | Full programmatic access |
+| MCP | Agent and AI tool integration |
 
 ## The Platform
 
@@ -35,29 +33,15 @@ NEUS includes everything you need for verification. No infrastructure required.
   </Card>
 </CardGroup>
 
----
-
 ## How It Fits Together
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        NEUS Platform                         │
-│                                                              │
-│  ┌─────────────┐   ┌─────────────┐   ┌─────────────────┐   │
-│  │   /verify   │   │  Proof API  │   │   /proof/[id]   │   │
-│  │  (hosted)   │──▶│  (create)   │──▶│   (display)     │   │
-│  └─────────────┘   └─────────────┘   └─────────────────┘   │
-│         │                                      │            │
-│         ▼                                      ▼            │
-│  ┌─────────────┐                      ┌─────────────────┐   │
-│  │  Platform   │                      │  Your App       │   │
-│  │   `/hub`     │                      │  (reuse proofs) │   │
-│  └─────────────┘                      └─────────────────┘   │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
+NEUS Platform
+  /verify -> Proof API -> /proof/[qHash]
+       |                     |
+       v                     v
+    /hub                Your app reuses proofs
 ```
-
----
 
 ## Public URLs
 
@@ -68,8 +52,6 @@ NEUS includes everything you need for verification. No infrastructure required.
 | Platform (`/hub`) | `https://neus.network/hub` |
 | API | `https://api.neus.network` |
 | MCP | `https://mcp.neus.network/mcp` |
-
----
 
 ## Next Steps
 

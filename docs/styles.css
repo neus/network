@@ -1,6 +1,15 @@
 /* NEUS Mintlify Skin */
 /* Mintlify-native selectors. Structural elements transparent so gradient shows through. */
 
+/*
+ * Mintlify platform (Track B): AI preamble + footer
+ * - A "Documentation Index" / llms.txt preamble on fetched markdown is injected by Mintlify, not MDX.
+ * - Prefer the Mintlify project dashboard: Assistant / AI / theme settings to adjust or hide reader-facing
+ *   preamble and the "Built with Mintlify" footer when those toggles exist.
+ * - CSS fallback: only add a hide rule here after inspecting the live DOM in preview/production and
+ *   scoping to the exact block (avoid hiding search, TOC, or assistant widgets).
+ */
+
 :root {
   --neus-bg-base: rgb(16 17 19 / 0.96);
   --neus-bg-rail: rgb(18 20 24 / 0.42);

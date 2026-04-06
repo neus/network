@@ -1,58 +1,51 @@
 ---
-title: Platform
-description: NEUS web platform—profiles, apps, credits, and account management.
+title: Platform Hub
+description: Profiles, apps, credits, and proof pages in the NEUS control plane.
 icon: user-circle
 ---
 
-The **NEUS platform** (sign in at `https://neus.network/hub`) is where you manage your profile, proofs, apps, and credits.
+The NEUS platform at `https://neus.network/hub` is where you manage your profile, proofs, apps, and credits.
 
 ## Apps and organizations
 
-1. Open **Profile** → **Apps** (`https://neus.network/profile?tab=apps`).
-2. Use **Link app** to register your domain, set a **daily credit cap**, and complete signing in the modal.
-3. Top up **Credits** on the wallet that should pay for your integration.
-4. Continue with the full checklist: **[Get started](../get-started)**.
+1. Open Profile -> Apps (`https://neus.network/profile?tab=apps`).
+2. Use Link app to register your domain, set a daily credit cap, and complete signing in the modal.
+3. Top up Credits on the wallet that should pay for your integration.
+4. Continue with [Get started](../get-started).
 
-**Apps** is where **`appId`** / **`X-Neus-App`** alignment and sponsor setup begin; see **[Billing](./billing)** for who pays.
-
----
+Apps is where `appId` and `X-Neus-App` alignment begin. See [Billing](./billing) for who pays.
 
 ## Tabs and flows
 
 | Tab | Purpose |
 |-----|---------|
-| **Dashboard** | Quick actions and proof summary |
-| **Identity** | Domains, social proofs, and privacy settings |
-| **Agents** | Agent registration and delegation |
-| **Apps** | Domain linking and app attribution |
-| **Credits** | Balance and top-ups |
-| **Activity** | History and usage |
-
----
+| Dashboard | Quick actions and proof summary |
+| Identity | Domains, social proofs, and privacy settings |
+| Agents | Agent registration and delegation |
+| Apps | Domain linking and app attribution |
+| Credits | Balance and top-ups |
+| Activity | History and usage |
 
 ## Proof pages
 
 Every proof resolves to a public page:
 
-```
+```text
 https://neus.network/proof/[proof-id]
 ```
 
-Shows:
+It shows:
+
 - Proof receipt ID
 - Verification type and timestamp
 - Visibility state
 - Share functionality
 
----
-
-## Profile Discovery
+## Profile discovery
 
 - Browse public proof activity
 - View verified identities
 - Discover linked apps and agents
-
----
 
 ## Related
 
@@ -63,7 +56,7 @@ Shows:
   <Card title="Proof Receipts" icon="receipt" href="./receipts-and-results">
     What to save and reuse.
   </Card>
-  <Card title="Partner Setup" icon="building" href="../cookbook/hub-integrator">
+  <Card title="App integration guide" icon="building" href="../cookbook/hub-integrator">
     Domains, org verify, sponsor detail.
   </Card>
 </CardGroup>

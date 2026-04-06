@@ -1,65 +1,74 @@
 ---
-title: Overview
-description: Verify once. Prove everywhere. Portable proof receipts for apps, APIs, and agents.
+title: NEUS Documentation
+description: Trust, authorization, and proof receipts for apps, APIs, and agents.
 icon: house
 ---
 
-**Every app makes you re-verify. NEUS fixes it.**
+**NEUS turns one verification into a portable receipt you can reuse for access, audit trails, and gated actions.**
 
-Verify once, get a portable proof receipt, reuse it everywhere — gate access, attach proof to content, register agents, share results without exposing raw data. Private by default.
+NEUS is the programmable trust, authorization, and billing layer for the agentic web. Start with the fastest path for your use case, then reuse the same receipt everywhere.
 
 <CardGroup cols={3}>
   <Card title="Quickstart" icon="code" href="./quickstart">
     First proof in 5 minutes.
   </Card>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    No-code verification UI.
+    Guided login and verification.
   </Card>
   <Card title="Get started" icon="book" href="./get-started">
-    Platform, billing, app setup.
+    App linking, credits, and billing.
   </Card>
 </CardGroup>
 
-## How it works
+## What NEUS solves
 
-1. **Verify** — User completes a check (wallet, social, identity, or risk).
-2. **Get a receipt** — You receive a portable proof ID. Private by default.
-3. **Reuse it** — Gate content, check eligibility, share badges, delegate to agents.
+1. **Identity and access** - Prove who or what is acting.
+2. **Authorization and delegation** - Prove what it can do.
+3. **Billing and receipts** - Prove what was paid for and what came back.
 
 ## What you can build
 
 | Use case | Verifier |
 |----------|----------|
-| Human-only signup or access | `proof-of-human` |
-| Token / NFT gated products | `nft-ownership` · `token-holding` |
-| Verified creator or org badges | `ownership-basic` · `ownership-org-oauth` |
-| Proof-backed content and posts | `ownership-basic` |
-| Agent identity and delegation | `agent-identity` · `agent-delegation` |
-| Domain-verified organizations | `ownership-dns-txt` |
+| Agent permissions and delegation | `agent-identity` · `agent-delegation` |
+| Paid APIs and paid tools | `billing` · `x402` |
+| Verified creators and publishers | `ownership-basic` |
+| Token-gated products | `nft-ownership` · `token-holding` |
+| Human-only access | `proof-of-human` |
+| Domain-verified organizations | `ownership-dns-txt` · `ownership-org-oauth` |
 
-[Full verifier catalog →](./verification/verifiers)
+[Full verifier catalog ->](./verification/verifiers)
 
 ## Choose your path
 
 | Path | Best for | Effort |
 |------|----------|--------|
-| [Hosted Verify](./cookbook/auth-hosted-verify) | Login, guided verification | Redirect / popup |
-| [Widgets](./widgets/overview) | React gating + badges | One component |
+| [Hosted Verify](./cookbook/auth-hosted-verify) | Login and guided verification | Redirect or popup |
+| [Widgets](./widgets/overview) | React gating and badges | One component |
 | [SDK](./sdks/overview) | Custom flows | Full control |
 | [API](./api/overview) | Server-side checks | HTTP |
-| [MCP](./mcp/overview) | AI agents (Cursor, Claude) | One URL |
+| [MCP](./mcp/overview) | AI agents | One URL |
+| [Billing](./platform/billing) | Credits, sponsor grants, x402 | Who pays and when |
 
-Not sure? [Choose an integration path →](./choose-an-integration-path)
+Not sure? [Choose an integration path ->](./choose-an-integration-path)
 
 ## URLs
 
 | What | URL |
 |------|-----|
 | Hosted verification | `https://neus.network/verify` |
-| Platform | `https://neus.network/hub` |
+| Proof receipt page | `https://neus.network/proof/[qHash]` |
+| Platform hub | `https://neus.network/hub` |
 | API | `https://api.neus.network` |
 | MCP | `https://mcp.neus.network/mcp` |
 
-## Examples
+## Next steps
 
-[React, Node.js, curl →](./examples)
+<CardGroup cols={2}>
+  <Card title="Integration path" icon="route" href="./choose-an-integration-path">
+    Pick the fastest route.
+  </Card>
+  <Card title="Examples" icon="code" href="./examples">
+    React, Node.js, and curl.
+  </Card>
+</CardGroup>

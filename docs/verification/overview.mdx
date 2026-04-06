@@ -1,68 +1,58 @@
 ---
-title: Verification Overview
-description: How verification works — from request to reusable proof receipt.
+title: Proof Receipts and Verification
+description: Create, save, and reuse proof receipts across apps and agents.
 icon: file-signature
 ---
 
-Verify once. Reuse everywhere.
+One proof receipt. Reusable everywhere.
 
-## The Verification Loop
+## The verification loop
 
+```text
+Check -> Verify (if needed) -> Save -> Reuse
 ```
-Check ──▶ Verify (if needed) ──▶ Save ──▶ Reuse
-```
 
-1. **Check** — Is the user already verified?
-2. **Verify** — Only if no valid proof exists
-3. **Save** — Store the proof receipt ID
-4. **Reuse** — Same proof for all downstream needs
+1. Check whether the user is already verified.
+2. Verify only if no valid proof exists.
+3. Save the proof receipt ID.
+4. Reuse the same proof for downstream needs.
 
----
+## What NEUS verification powers
 
-## What NEUS Verification Powers
-
-| Outcome | Use Cases |
+| Outcome | Use cases |
 |---------|-----------|
 | Identity | Login, social linking, team verification |
 | Ownership | Content provenance, file receipts, authorship |
 | Access | NFT gating, token thresholds, premium content |
-| Abuse Prevention | Human verification, wallet safety |
+| Abuse prevention | Human verification, wallet safety |
 | Agents | Agent registration, scoped delegation |
 
----
+## Verification types
 
-## Verification Types
-
-| Type | How It Works | Examples |
+| Type | How it works | Examples |
 |------|--------------|----------|
-| **Instant** | Wallet signs, proof created | ownership-basic, agent-identity |
-| **Interactive** | User completes hosted flow | social linking, human verification |
-| **Lookup** | Check against live state | NFT ownership, token balance |
+| Instant | Wallet signs, proof created | ownership-basic, agent-identity |
+| Interactive | User completes hosted flow | social linking, human verification |
+| Lookup | Check against live state | NFT ownership, token balance |
 
----
-
-## Key Terms
+## Key terms
 
 | Term | Meaning |
 |------|---------|
-| **Proof receipt ID** | Stable identifier for a proof (also called `proofId` or `qHash`) |
-| **Verifier** | The capability being verified |
-| **Signing string** | The message the wallet signs |
-| **Hosted verify** | NEUS-hosted UI at `/verify` |
+| Proof receipt ID | Stable identifier for a proof, also called `proofId` or `qHash` |
+| Verifier | The capability being verified |
+| Signing string | The message the wallet signs |
+| Hosted verify | NEUS-hosted UI at `/verify` |
 
----
-
-## What You Get Back
+## What you get back
 
 Every verification returns:
 
-- `proofId` — The reusable proof receipt ID
-- `status` — `verified`, `processing`, or `failed`
-- Proof page URL — `https://neus.network/proof/[proof-id]`
+- `proofId` - the reusable proof receipt ID
+- `status` - `verified`, `processing`, or `failed`
+- Proof page URL - `https://neus.network/proof/[proof-id]`
 
----
-
-## Next Steps
+## Next steps
 
 <CardGroup cols={2}>
   <Card title="Verifier Catalog" icon="list-tree" href="./verifiers">

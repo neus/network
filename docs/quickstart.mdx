@@ -1,13 +1,13 @@
 ---
 title: Quickstart
-description: Create your first proof in under 5 minutes.
+description: Create your first proof receipt in under 5 minutes.
 icon: rocket
 ---
 
-Install the SDK, create a proof, and reuse it — 5 minutes.
+This is the fastest way to see NEUS produce a reusable proof receipt.
 
 <Tip>
-  **Shipping a product?** Do **[Get started](./get-started)** first (platform → app link → credits). Then come back here for code.
+  **Shipping a product?** Do **[Get started](./get-started)** first for platform setup, then come back here for code.
 </Tip>
 
 ## 1. Install the SDK
@@ -29,11 +29,11 @@ const proof = await client.verify({
   wallet: window.ethereum,
 });
 
-const proofId = proof.proofId; // save this — reuse it everywhere
+const proofId = proof.proofId; // save this and reuse it everywhere
 ```
 
 <Tip>
-  **No wallet in your app?** Use [Hosted Verify](./cookbook/auth-hosted-verify) — redirect or popup, zero wallet code.
+  **No wallet in your app?** Use [Hosted Verify](./cookbook/auth-hosted-verify) for redirect or popup flows with no custom wallet UI.
 </Tip>
 
 ## 3. Wait for completion
@@ -70,10 +70,10 @@ if (result.data?.eligible) {
 
 ## Next steps
 
-| I want to… | Go to |
+| I want to... | Go to |
 |-------------|-------|
 | Set up platform and billing | [Get started](./get-started) |
-| Use hosted UI (no wallet code) | [Hosted Verify](./cookbook/auth-hosted-verify) |
+| Use hosted UI | [Hosted Verify](./cookbook/auth-hosted-verify) |
 | Pick an integration path | [Choose your path](./choose-an-integration-path) |
 | See all verification types | [Verifier catalog](./verification/verifiers) |
 | Go to production | [Integration checklist](./integration) |

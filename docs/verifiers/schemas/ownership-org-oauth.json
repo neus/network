@@ -8,7 +8,8 @@
       "type": "string"
     },
     "internalSocialToken": {
-      "type": "string"
+      "type": "string",
+      "description": "OAuth/session token from the NEUS-hosted org OAuth step (wire field name)."
     },
     "provider": {
       "enum": [

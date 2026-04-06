@@ -1,37 +1,37 @@
 ---
 title: Production Integration
-description: From first proof to production-ready verification.
+description: Production checklist for verify, save, reuse, and payment-aware flows.
 icon: compass
 ---
 
-Check before you ask users to verify. Save receipt IDs. Reuse everywhere.
+Build the canonical loop: verify once, save the receipt, and reuse it across gates, actions, and agents.
 
-**Before you integrate:** **[Get started](./get-started)** (platform, app link, credits, sponsor). **Paths:** **[Choose an integration path](./choose-an-integration-path)**. **Billing:** **[Billing](./platform/billing)**.
+**Before you integrate:** start with [Get started](./get-started) for app linking, credits, and sponsor setup. Then choose [Hosted Verify](./cookbook/auth-hosted-verify), [Widgets](./widgets/overview), [SDK](./sdks/overview), [API](./api/overview), or [MCP](./mcp/overview).
 
 ## Loop
 
-1. **Check** — Already verified?
-2. **Verify** — Only if needed (usually [Hosted Verify](./cookbook/auth-hosted-verify)).
-3. **Save** — Proof receipt ID with the user record.
-4. **Reuse** — Display, gates, policy, agents.
+1. **Check** - Is the user already verified?
+2. **Verify** - Only if needed, usually with [Hosted Verify](./cookbook/auth-hosted-verify).
+3. **Save** - Store the proof receipt ID with the user record.
+4. **Reuse** - Display it, gate it, attach it, or audit it.
 
 ## Checklist
 
 <Checklist>
-  <Item>Pick Hosted, Widgets, SDK, API, or MCP (one primary path)</Item>
+  <Item>Pick one primary path: Hosted Verify, Widgets, SDK, API, or MCP</Item>
   <Item>Gate before prompting for verification</Item>
   <Item>Persist proof IDs, not raw signatures</Item>
-  <Item>Test: verify → save → check → reuse</Item>
-  <Item>Complete [Get started](./get-started) for platform setup and payer model; use [Billing](./platform/billing) for edge cases</Item>
+  <Item>Test verify -> save -> check -> reuse</Item>
+  <Item>Complete [Get started](./get-started) before production volume</Item>
 </Checklist>
 
-## Verification strategies (SDK / API)
+## Verification strategies
 
 | Strategy | When |
 |----------|------|
-| `reuse-or-create` | Default UX |
+| `reuse-or-create` | Default user experience |
 | `fresh` | High-stakes actions |
-| `reuse` | Read-only, never create |
+| `reuse` | Read-only checks |
 
 ## URLs
 
@@ -39,6 +39,7 @@ Check before you ask users to verify. Save receipt IDs. Reuse everywhere.
 |---------|-----|
 | Hosted Verify | `https://neus.network/verify` |
 | API | `https://api.neus.network` |
+| Proof receipt page | `https://neus.network/proof/[qHash]` |
 | MCP | `https://mcp.neus.network/mcp` |
 
 ## Related
@@ -50,7 +51,7 @@ Check before you ask users to verify. Save receipt IDs. Reuse everywhere.
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
     Interactive flows.
   </Card>
-  <Card title="Receipts" icon="receipt" href="./platform/receipts-and-results">
+  <Card title="Proof receipts" icon="receipt" href="./platform/receipts-and-results">
     What to persist.
   </Card>
   <Card title="API" icon="terminal" href="./api/overview">

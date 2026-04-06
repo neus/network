@@ -8,10 +8,14 @@ Social media account ownership via OAuth
 - **Expiry:** `permanent`
 - **Schema:** [./schemas/ownership-social.json](./schemas/ownership-social.json)
 
+## OAuth session token
+
+After the user finishes the NEUS-hosted OAuth step, pass the returned session value in the request body. **Reader-friendly name:** OAuth/session token from the hosted step. **Wire field name (unchanged):** `internalSocialToken` — use this key in JSON exactly as in the examples below.
+
 ## Required fields
 
 - `provider` (`string enum: discord, github, facebook, x, farcaster, linkedin, telegram, coinbase`)
-- `internalSocialToken` (`string`) — token from the NEUS-hosted OAuth step (request field name as shown)
+- `internalSocialToken` (`string`) — OAuth/session token from the hosted step (required wire name)
 
 ## Optional fields
 

@@ -1,43 +1,47 @@
 ---
 title: API Overview
-description: HTTP endpoints for verification, status, and gate checks.
+description: HTTP endpoints for proof creation, status, eligibility, and verifier lookup.
 icon: terminal
 ---
 
+Use the SDK when you can; use HTTP when your backend or automation needs direct control.
+
 **Base:** `https://api.neus.network`
 
-**Server integration?** Same payer rules as the SDK — complete **[Get started](../get-started)** (platform **`appId`**, **`X-Neus-App`**, **`X-Sponsor-Grant`**, credits).
-
-Prefer the **SDK** when you can; use **HTTP** for direct server calls.
+**Server integration?** Complete [Get started](../get-started) first for app attribution, sponsor grants, and billing setup.
 
 ## Endpoints
 
 | Path | Method | Purpose |
 |------|--------|---------|
-| `/api/v1/verification` | POST | Create proof |
-| `/api/v1/verification/standardize` | POST | Signing string |
-| `/api/v1/verification/status/{qHash}` | GET | Status |
-| `/api/v1/proofs/check` | GET | Eligibility only |
-| `/api/v1/proofs/by-wallet/{address}` | GET | Proofs for wallet |
-| `/api/v1/verification/verifiers` | GET | Verifier catalog |
+| `/api/v1/verification` | POST | Create proof receipt |
+| `/api/v1/verification/standardize` | POST | Build the signing string |
+| `/api/v1/verification/status/{qHash}` | GET | Fetch proof status |
+| `/api/v1/proofs/check` | GET | Check eligibility |
+| `/api/v1/proofs/by-wallet/{address}` | GET | List proofs for a wallet |
+| `/api/v1/verification/verifiers` | GET | List verifiers |
 
 ## Examples
 
 **Proofs by wallet**
 
 ```bash
-curl "https://api.neus.network/api/v1/proofs/by-wallet/0x…?limit=50"
+curl "https://api.neus.network/api/v1/proofs/by-wallet/0x...?limit=50"
 ```
 
-Public and unlisted proofs are visible anonymously; **private** proofs need the user signed in.
+Public and unlisted proofs are visible anonymously; private proofs need the user signed in.
 
 **Gate check**
 
 ```bash
-curl "https://api.neus.network/api/v1/proofs/check?address=0x…&verifierIds=ownership-basic"
+curl "https://api.neus.network/api/v1/proofs/check?address=0x...&verifierIds=ownership-basic"
 ```
 
-**Create proof (outline)** — standardize → sign → POST `/verification`. Full request bodies: OpenAPI / SDK.
+**Create proof**
+
+```text
+standardize -> sign -> POST /verification
+```
 
 **Verifier catalog**
 
@@ -47,14 +51,14 @@ curl https://api.neus.network/api/v1/verification/verifiers
 
 ## Auth
 
-- **Reads:** public/unlisted without login; private when the user is signed in.
-- **Writes:** wallet signature (see [Authentication](./authentication)).
+- Reads: public and unlisted without login; private when the user is signed in.
+- Writes: wallet signature or session auth. See [Authentication](./authentication).
 
 ## Next
 
 <CardGroup cols={2}>
   <Card title="Get started" icon="book" href="../get-started">
-    Platform + billing.
+    Platform and billing.
   </Card>
   <Card title="Authentication" icon="key" href="./authentication">
     Sessions and signing.

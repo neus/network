@@ -7,8 +7,8 @@
 <h1 align="center">NEUS</h1>
 
 <p align="center">
-  <strong>Verify once. Prove everywhere.</strong><br/>
-  Portable proof receipts for apps, APIs, and agents.
+  <strong>Verify once. Reuse proof receipts anywhere.</strong><br/>
+  NEUS is the programmable trust, authorization, and billing layer for apps, APIs, and agents.
 </p>
 
 <p align="center">
@@ -18,103 +18,72 @@
 </p>
 
 <p align="center">
-  <a href="https://docs.neus.network/quickstart"><strong>Quickstart</strong></a> · 
-  <a href="https://docs.neus.network"><strong>Docs</strong></a> · 
-  <a href="https://docs.neus.network/api/overview"><strong>API Reference</strong></a> · 
-  <a href="https://docs.neus.network/mcp/overview"><strong>MCP</strong></a> · 
+  <a href="https://docs.neus.network/quickstart"><strong>Quickstart</strong></a> ·
+  <a href="https://docs.neus.network"><strong>Docs</strong></a> ·
+  <a href="https://docs.neus.network/api/overview"><strong>API Reference</strong></a> ·
+  <a href="https://docs.neus.network/mcp/overview"><strong>MCP</strong></a> ·
   <a href="./examples"><strong>Examples</strong></a>
 </p>
 
 ---
 
-Every app makes you re-verify. That's why bots win and users lose.
+Every app, tool, and agent eventually needs the same three things:
 
-NEUS fixes it: **verify once, get a portable proof receipt, reuse it everywhere.** Gate access, attach proof to content, register agents with scoped permissions — private by default, public when you choose.
+- prove who or what is acting
+- prove what it can access
+- prove what was paid for and what receipt was issued
 
-> Auth got standardized (OAuth). Payments got standardized (Stripe). **Verification is still bespoke.** NEUS standardizes it into one receipt.
+NEUS standardizes that into one portable proof receipt.
 
-## Why NEUS
+## What NEUS is today
 
-- **Stop re-verifying.** One check produces a receipt your whole stack can trust
-- **Gate access with proof, not auth spaghetti.** One line of code replaces custom verification logic
-- **Proof travels, data stays private.** Share the result without exposing underlying data
-- **Ship trust in minutes.** Drop-in SDK, widgets, and API — not months of infra
-- **Works for people and agents.** Same receipt format for human users and AI agents
+- Hosted Verify at `/verify` for login and guided verification
+- Proof receipts at `/proof/[qHash]` for shareable, reusable proof pages
+- Agent identity and delegation for scoped permissions and audit trails
+- Billing-aware verification with credits, sponsor grants, and x402-ready pay-per-use paths
 
-## How it works
+## Why teams adopt it
 
-```
- ┌──────────┐     ┌──────────────┐     ┌──────────────────┐
- │  Verify  │ ──▶ │ Get receipt  │ ──▶ │  Reuse anywhere  │
- │          │     │   (proofId)  │     │                  │
- │ wallet,  │     │  portable,   │     │ gate, share,     │
- │ social,  │     │  private by  │     │ post, automate,  │
- │ identity │     │  default     │     │ delegate         │
- └──────────┘     └──────────────┘     └──────────────────┘
-```
-
-## Quick start
-
-```bash
-npm install @neus/sdk
-```
-
-```javascript
-import { NeusClient } from '@neus/sdk';
-
-const client = new NeusClient();
-
-// 1. Verify
-const proof = await client.verify({
-  verifier: 'ownership-basic',
-  content: 'My content',
-  wallet: window.ethereum,
-});
-
-// 2. Save the receipt
-const proofId = proof.proofId;
-
-// 3. Reuse — check eligibility from anywhere
-const check = await client.gateCheck({
-  address: '0x...',
-  verifierIds: ['ownership-basic'],
-});
-// check.data.eligible → true/false
-```
-
-> **No wallet in your app?** Use [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) — redirect or popup, zero wallet code.
+- Stop re-verifying. One check produces a receipt your stack can reuse.
+- Gate access with proof, not auth spaghetti. Replace one-off verification logic with a standard flow.
+- Keep sensitive data private. Share the proof receipt without exposing the underlying payload.
+- Ship faster. Start with Hosted Verify, Widgets, SDK, API, or MCP.
+- Works for people and agents. The same receipt model supports both.
+- Supports payment-aware flows. Credits, sponsor grants, and pay-per-use are part of the system.
 
 ## What you can build
 
 | Use case | How | Verifier |
 |----------|-----|----------|
-| 🛡️ Human-only access | Block bots at signup | `proof-of-human` |
-| 🎨 NFT / token gated products | Gate by on-chain holdings | `nft-ownership` · `token-holding` |
-| ✅ Verified creator badges | Prove authorship, bind to wallet | `ownership-basic` |
-| 🏢 Org-verified teams | Prove domain or org membership | `ownership-dns-txt` · `ownership-org-oauth` |
-| 🤖 Agent identity + delegation | Register agents, scope permissions | `agent-identity` · `agent-delegation` |
-| 📝 Proof-backed content | Attach proof to posts and listings | `ownership-basic` + `proofId` |
+| Human-only access | Block bots at signup | `proof-of-human` |
+| Token or NFT gated products | Gate by on-chain holdings | `nft-ownership` · `token-holding` |
+| Verified creators | Prove authorship and bind it to a wallet | `ownership-basic` |
+| Org-verified teams | Prove domain or organization membership | `ownership-dns-txt` · `ownership-org-oauth` |
+| Agent identity and delegation | Register agents and scope permissions | `agent-identity` · `agent-delegation` |
+| Proof-backed content | Attach a receipt to posts and listings | `ownership-basic` + `proofId` |
+| Paid APIs and tools | Combine access checks with billing-aware flows | `billing` + `x402` + receipts |
 
 ## Start here
 
-| I want to… | Go to |
+| I want to... | Go to |
 |-------------|-------|
-| **Try it in 5 minutes** | [Quickstart](https://docs.neus.network/quickstart) |
-| **Add verification with no code** | [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) |
-| **Gate content in React** | [Widgets](https://docs.neus.network/widgets/overview) |
-| **Check proofs from my server** | [API Reference](https://docs.neus.network/api/overview) |
-| **Add trust to AI agents** | [MCP](https://docs.neus.network/mcp/overview) |
-| **Set up platform + billing** | [Get Started](https://docs.neus.network/get-started) |
+| Try it in 5 minutes | [Quickstart](https://docs.neus.network/quickstart) |
+| Add verification with no code | [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) |
+| Gate content in React | [Widgets](https://docs.neus.network/widgets/overview) |
+| Check proofs from my server | [API Reference](https://docs.neus.network/api/overview) |
+| Add trust to AI agents | [MCP](https://docs.neus.network/mcp/overview) |
+| Set up platform and billing | [Get Started](https://docs.neus.network/get-started) |
 
 ## Integration paths
 
 | Path | Best for | Effort |
 |------|----------|--------|
-| [**Hosted Verify**](https://docs.neus.network/cookbook/auth-hosted-verify) | Login, guided verification | Redirect / popup — no UI to build |
-| [**Widgets**](https://docs.neus.network/widgets/overview) | React gating + badges | `<VerifyGate>` — one component |
-| [**SDK**](https://docs.neus.network/sdks/overview) | Custom flows | Full programmatic control |
-| [**API**](https://docs.neus.network/api/overview) | Server-side checks | HTTP from any language |
-| [**MCP**](https://docs.neus.network/mcp/overview) | AI agents (Cursor, Claude) | One URL — `https://mcp.neus.network/mcp` |
+| [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) | Login, guided verification | Redirect or popup - no UI to build |
+| [Widgets](https://docs.neus.network/widgets/overview) | React gating and badges | `<VerifyGate>` - one component |
+| [SDK](https://docs.neus.network/sdks/overview) | Custom flows | Full programmatic control |
+| [API](https://docs.neus.network/api/overview) | Server-side checks | HTTP from any language |
+| [MCP](https://docs.neus.network/mcp/overview) | AI agents (Cursor, Claude) | One URL - `https://mcp.neus.network/mcp` |
+| [Billing](https://docs.neus.network/platform/billing) | Credits, sponsor grants, x402 | Who pays and when |
 
 ## Gate content in React
 
@@ -139,17 +108,18 @@ Add NEUS to any MCP-compatible agent with one URL:
 }
 ```
 
-Agents verify users via hosted links that tools return. [Setup guide →](https://docs.neus.network/mcp/setup)
+Agents verify users via hosted links that tools return. [Setup guide ->](https://docs.neus.network/mcp/setup)
 
 ## Documentation
 
 | Resource | Description |
 |----------|-------------|
-| [**Quickstart**](https://docs.neus.network/quickstart) | First proof in 5 minutes |
-| [**Verifier catalog**](https://docs.neus.network/verification/verifiers) | All verification types |
-| [**API reference**](https://docs.neus.network/api/overview) | HTTP endpoints |
-| [**SDK reference**](https://docs.neus.network/sdks/javascript) | JavaScript SDK |
-| [**Examples**](./examples/) | React, Node.js, curl |
+| [Quickstart](https://docs.neus.network/quickstart) | First proof in 5 minutes |
+| [Verifier catalog](https://docs.neus.network/verification/verifiers) | All verification types |
+| [API reference](https://docs.neus.network/api/overview) | HTTP endpoints |
+| [SDK reference](https://docs.neus.network/sdks/javascript) | JavaScript SDK |
+| [Proof receipts](https://docs.neus.network/platform/receipts-and-results) | What to store and reuse |
+| [Examples](./examples/) | React, Node.js, curl |
 
 ## Community
 
@@ -161,5 +131,5 @@ Agents verify users via hosted links that tools return. [Setup guide →](https:
 
 ## License
 
-- **SDK & tools:** Apache-2.0
-- **Smart contracts:** BUSL-1.1 → Apache-2.0 (Aug 2028)
+- SDK and tools: Apache-2.0
+- Smart contracts: BUSL-1.1 -> Apache-2.0 (Aug 2028)

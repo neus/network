@@ -1,35 +1,35 @@
 ---
 title: x402 Pay-Per-Use
-description: Pay per use when credits run out. Verification API, gate checks, hosted checkout, and agents.
+description: Machine-native pay-per-use when credits run out.
 icon: coins
 ---
 
-**Default path:** Platform credits + **sponsor grants** — **[Get started](../get-started)**. **x402** is for when you are **out of credits** and need to **pay per request**, then retry with a receipt.
+Default path: platform credits plus sponsor grants. Use x402 when you are out of credits and need to pay per request, then retry with a receipt.
 
 x402 lets a request pay at the time it runs. If credits are not available, the API returns a quote, the client pays, and the request is retried with the receipt.
 
-## Where x402 Applies
+## Where x402 applies
 
 | API or flow | When 402 happens |
 |---------|------------------|
-| **Verification API** | `POST /api/v1/verification` when the caller has no credits |
-| **Gate check API** | `GET /api/v1/proofs/check` when the caller has no credits |
-| **MCP tools** | Tool call returns payment-needed when no credits |
-| **Hosted flows** | When the calling app or server makes billable requests without credits |
+| Verification API | `POST /api/v1/verification` when the caller has no credits |
+| Gate check API | `GET /api/v1/proofs/check` when the caller has no credits |
+| MCP tools | Tool call returns payment needed when no credits |
+| Hosted flows | When the calling app or server makes billable requests without credits |
 
 ## Flow
 
-1. **Request** — Call verification or gate check.
-2. **402** — API returns `402 Payment Required` with quote.
-3. **Pay** — Pay the quoted amount.
-4. **Retry** — Resend request with `PAYMENT-SIGNATURE: <receipt>`.
+1. Request verification or gate check.
+2. API returns `402 Payment Required` with a quote.
+3. Pay the quoted amount.
+4. Retry the request with `PAYMENT-SIGNATURE: <receipt>`.
 
-## Using x402 Through Verifiers and Checkout
+## Using x402 through verifiers and checkout
 
-- **Verifiers** — Direct API verification can fall back to x402 when credits are missing.
-- **Gates** — Gate checks can do the same.
-- **Hosted flows** — x402 matters when the calling app or server is the billable party.
-- **Agents** — Delegation can allow pay-per-use on behalf of the approving account.
+- Direct API verification can fall back to x402 when credits are missing.
+- Gate checks can do the same.
+- Hosted flows use x402 when the calling app or server is the billable party.
+- Delegation can allow pay-per-use on behalf of the approving account.
 
 ## Header
 
@@ -49,7 +49,7 @@ PAYMENT-SIGNATURE: <receipt>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
     Checkout URL and verifier params.
   </Card>
-  <Card title="MCP Server" icon="plug" href="../mcp/overview">
+  <Card title="MCP Overview" icon="plug" href="../mcp/overview">
     x402 in MCP flows.
   </Card>
   <Card title="Agent Delegation" icon="robot" href="../agents/agent-delegation">

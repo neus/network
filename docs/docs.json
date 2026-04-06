@@ -41,9 +41,9 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "NEUS Documentation - Portable proof receipts for login, trust, access, and agent workflows",
+      "description": "NEUS Documentation - trust, authorization, and proof receipts for apps, APIs, and agents",
       "og:title": "NEUS Documentation",
-      "og:description": "Portable proof receipts for login, trust, access, and agent workflows",
+      "og:description": "Trust, authorization, and proof receipts for apps, APIs, and agents",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
@@ -51,7 +51,7 @@
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
       "twitter:title": "NEUS Documentation",
-      "twitter:description": "Portable proof receipts for login, trust, access, and agent workflows",
+      "twitter:description": "Trust, authorization, and proof receipts for apps, APIs, and agents",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },

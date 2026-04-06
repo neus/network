@@ -1,14 +1,16 @@
 ---
 title: SDK Overview
-description: JavaScript SDK for proof creation, polling, and reuse.
+description: JavaScript SDK for proof creation, polling, gating, hosted verify, and billing-aware flows.
 icon: package
 ---
+
+Install once, then use the SDK for browser verify, server checks, hosted verify URLs, and receipt reuse.
 
 ```bash
 npm install @neus/sdk
 ```
 
-**New app integration?** **[Get started](../get-started)** — then use the patterns below.
+**New app integration?** Start with [Get started](../get-started) before wiring the SDK.
 
 ## One flow
 
@@ -21,7 +23,6 @@ const client = new NeusClient({
   appId: 'my-app',
 });
 
-// In-browser verify
 const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'Hello NEUS',
@@ -32,31 +33,30 @@ const proofId = proof.proofId;
 await client.pollProofStatus(proofId, { interval: 3000, timeout: 60000 });
 
 await client.gateCheck({
-  address: '0x…',
+  address: '0x...',
   verifierIds: ['ownership-basic'],
 });
 
-// Hosted URL (see Hosted Verify cookbook)
 const url = getHostedCheckoutUrl({
   verifiers: ['ownership-basic'],
   returnUrl: 'https://myapp.com/callback',
 });
 ```
 
-## HTTP API
+## Core methods
 
 | Need | Use |
 |------|-----|
 | Create proof | `client.verify()` |
-| Wait for async | `client.pollProofStatus()` |
+| Wait for async completion | `client.pollProofStatus()` |
 | Eligibility | `client.gateCheck()` |
-| Hosted redirect/popup | `getHostedCheckoutUrl()` |
+| Hosted redirect or popup | `getHostedCheckoutUrl()` |
 
-Optional: `timeout` on `NeusClient` constructor.
+Optional: `timeout` on the `NeusClient` constructor.
 
 ## Who pays for credits?
 
-**`appId`** → **`X-Neus-App`** (attribution). **Credits** follow the **signer** unless you add **`sponsorGrant`** or **x402** — see **[Get started](../get-started)** and **[Billing](../platform/billing)**.
+`appId` sets `X-Neus-App` for attribution. Credits follow the signer unless you add `sponsorGrant` or x402. See [Get started](../get-started) and [Billing](../platform/billing).
 
 ## Pages
 
@@ -71,7 +71,7 @@ Optional: `timeout` on `NeusClient` constructor.
     Reuse vs fresh.
   </Card>
   <Card title="Authentication" icon="key" href="./authentication">
-    Hosted login + Bearer.
+    Hosted login and Bearer.
   </Card>
   <Card title="Errors" icon="bug" href="./error-handling">
     Retries and codes.

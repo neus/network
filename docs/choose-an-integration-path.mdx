@@ -1,24 +1,33 @@
 ---
-title: Choose an Integration Path
-description: Pick the fastest path for your product.
+title: Choose the Fastest Integration Path
+description: Hosted Verify, Widgets, SDK, API, or MCP.
 icon: route
 ---
 
-Not sure where to start? Pick the path that matches what you need.
+Not sure where to start? Pick the path that matches your product, then move to production with the same receipt model.
 
 <Tip>
-  **New here?** Complete **[Get started](./get-started)** first (platform profile, app link, credits).
+  **Shipping a product?** Start with **[Get started](./get-started)** first for app linking, credits, and billing.
 </Tip>
 
 ## Pick your path
 
-| You need | Use | Effort |
-|----------|-----|--------|
-| Guided verification / login | [Hosted Verify](./cookbook/auth-hosted-verify) | Redirect or popup — no UI to build |
-| React gating or badges | [Widgets](./widgets/overview) | One component — `<VerifyGate>` |
-| Custom flow in code | [SDK](./sdks/overview) | Full programmatic control |
-| Server-side checks | [API](./api/overview) | HTTP from any language |
-| AI agents (Cursor, Claude) | [MCP](./mcp/overview) | One URL — `https://mcp.neus.network/mcp` |
+| You need | Use | Best for |
+|----------|-----|----------|
+| Guided verification and login | [Hosted Verify](./cookbook/auth-hosted-verify) | Fastest time-to-value |
+| React gating or proof badges | [Widgets](./widgets/overview) | One component in your app |
+| Custom app or server flow | [SDK](./sdks/overview) | Full control in code |
+| Direct server-side checks | [API](./api/overview) | Backend and automation |
+| Agent tools and hosted handoff | [MCP](./mcp/overview) | Cursor, Claude, and other clients |
+| Credits, sponsor grants, and x402 | [Billing](./platform/billing) | Who pays and how requests settle |
+
+## Decision rule
+
+1. If you want the shortest path to a live flow, choose Hosted Verify.
+2. If you are building a React app, choose Widgets.
+3. If you need backend control, choose SDK or API.
+4. If an agent will call NEUS tools, choose MCP.
+5. If you are shipping a product, set up billing before volume.
 
 ## Quick links
 
@@ -27,10 +36,9 @@ Not sure where to start? Pick the path that matches what you need.
     First proof in 5 minutes.
   </Card>
   <Card title="Get started" icon="book" href="./get-started">
-    Platform, app, credits, billing.
+    Production setup first.
   </Card>
   <Card title="Verifier catalog" icon="list-tree" href="./verification/verifiers">
-    All verification types.
     All verification types.
   </Card>
 </CardGroup>

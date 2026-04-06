@@ -1,51 +1,52 @@
 ---
-title: Get started
-description: NEUS platform profile, app linking, credits, sponsor grants, and your first integration.
+title: Get Started
+description: Production setup for app linking, credits, sponsor grants, and billing.
 icon: book
 ---
 
-Follow this checklist when **shipping a product** that uses NEUS for verification, gating, or login. If you are **experimenting solo** with your own wallet, start with **[Quickstart](./quickstart)** and add platform setup when you publish an app.
+If you are shipping a product, do this first. It sets up attribution, payer logic, and the credit model before you send traffic through NEUS.
+
+If you are experimenting with your own wallet, start with [Quickstart](./quickstart) and come back here when you publish an app.
 
 ## 1. Create your NEUS profile
 
-1. Open the **[NEUS platform](https://neus.network/hub)** and sign in (passkey or wallet).
-2. You will use **Profile** for app linking, **Credits** for balance, and **Identity** when you need domains or org proofs later.
+1. Open the [NEUS platform](https://neus.network/hub) and sign in with passkey or wallet.
+2. Use **Profile** for app linking, **Credits** for balance, and **Identity** when you need domains or org proofs later.
 
-## 2. Link your app (Apps tab)
+## 2. Link your app
 
-This follows the **Link app** flow: domain, daily cap, and wallet signature.
+This follows the Link app flow: domain, daily cap, and wallet signature.
 
-1. Go to **`https://neus.network/profile?tab=apps`** (Profile → **Apps**).
-2. Open **Link app** / **Manage app**.
-3. Enter your **app domain** (e.g. `acme.com` or `https://app.acme.com`).
-4. Set a **daily credit cap** (protects you from runaway usage).
-5. Complete the steps in the modal (wallet sign-in as needed).
+1. Go to `https://neus.network/profile?tab=apps` and open **Link app** or **Manage app**.
+2. Enter your app domain, such as `acme.com` or `https://app.acme.com`.
+3. Set a daily credit cap to keep usage predictable.
+4. Complete the modal flow and save the resulting `appId`.
 
-When linking succeeds, you get an **`appId`** to send as **`X-Neus-App`** on API traffic from that integration. The SDK maps this automatically:
+When linking succeeds, you get an `appId` to send as `X-Neus-App` on API traffic from that integration. The SDK maps this automatically:
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient({
-  appId: 'your-app-id', // same value as X-Neus-App
+  appId: 'your-app-id',
 });
 ```
 
 <Tip>
-  **`appId`** is for **attribution** (which product called NEUS). It does **not** by itself move every bill to your org. To **pay for users** from your balance, add a **sponsor grant** (step 4).
+  `appId` is for attribution. It does not, by itself, move billing to your org balance. To pay for users from your balance, add a sponsor grant in the next step.
 </Tip>
 
-## 3. Add credits (Credits tab)
+## 3. Add credits
 
-1. On the platform, open **Credits** and keep a balance on the **wallet that should pay** for your integration.
-2. If you only use **user self-pay** (each end user’s wallet pays), you still need credits on **their** side when they sign requests—see **[Billing](./platform/billing)**.
+1. On the platform, open **Credits** and keep a balance on the wallet that should pay for your integration.
+2. If you use user self-pay, each end user's wallet needs credits when they sign requests.
 
 ## 4. Sponsor users
 
-For products where end users should **not** manage NEUS credits:
+For products where end users should not manage NEUS credits:
 
-1. Keep your org wallet funded (step 3).
-2. Issue **short-lived sponsor grants** and pass them to the SDK as **`sponsorGrant`** (sends **`X-Sponsor-Grant`**).
+1. Keep your org wallet funded.
+2. Issue short-lived sponsor grants and pass them to the SDK as `sponsorGrant`.
 
 ```javascript
 const client = new NeusClient({
@@ -54,31 +55,31 @@ const client = new NeusClient({
 });
 ```
 
-Grant issuance and caps: **[Partner setup](./cookbook/hub-integrator)** (sponsor section) and **[Billing](./platform/billing)**.
+Grant issuance and caps: [App integration guide](./cookbook/hub-integrator) and [Billing](./platform/billing).
 
 ## 5. Choose an integration
 
 | Option | When | Next step |
 |---------|------|-----------|
-| **Hosted Verify** | You want NEUS-hosted UI for login / verification | **[Hosted Verify](./cookbook/auth-hosted-verify)** |
-| **Widgets** | React app, gates and badges | **[Widgets](./widgets/overview)** |
-| **SDK** | Custom browser or Node flow | **[SDK overview](./sdks/overview)** → **[JavaScript](./sdks/javascript)** |
-| **HTTP API** | Server-only | **[API overview](./api/overview)** |
-| **MCP** | Cursor, Claude, agents | **[MCP overview](./mcp/overview)** |
+| Hosted Verify | You want NEUS-hosted UI for login and verification | [Hosted Verify](./cookbook/auth-hosted-verify) |
+| Widgets | React app, gates, and badges | [Widgets](./widgets/overview) |
+| SDK | Custom browser or Node flow | [SDK overview](./sdks/overview) -> [JavaScript](./sdks/javascript) |
+| HTTP API | Server-only | [API overview](./api/overview) |
+| MCP | Cursor, Claude, and agents | [MCP overview](./mcp/overview) |
 
-Not sure? **[Choose an integration path](./choose-an-integration-path)**.
+Not sure? [Choose an integration path](./choose-an-integration-path).
 
 ## 6. Production checklist
 
-- [ ] App linked on the platform with a realistic **daily cap**
-- [ ] **Credits** on the wallet that should pay (you or users, per your model)
-- [ ] **`appId`** on the client; **`sponsorGrant`** if **you** pay for metered calls
-- [ ] **[Billing](./platform/billing)** understood (visibility vs who pays)
-- [ ] If you see **402**, see **[x402](./platform/x402)** for pay-per-use retries
+- [ ] App linked on the platform with a realistic daily cap
+- [ ] Credits on the wallet that should pay
+- [ ] `appId` on the client; `sponsorGrant` if you pay for metered calls
+- [ ] [Billing](./platform/billing) understood
+- [ ] If you see `402`, review [x402](./platform/x402) for pay-per-use retries
 
 ## Without a linked app
 
-Use **[Quickstart](./quickstart)** and **[Hosted Verify](./cookbook/auth-hosted-verify)**. Add **Apps** and **sponsor grants** on the platform when you publish an app that should pay for others.
+Use [Quickstart](./quickstart) and [Hosted Verify](./cookbook/auth-hosted-verify). Add Apps and sponsor grants on the platform when you publish an app that should pay for others.
 
 ## Related
 
@@ -86,11 +87,11 @@ Use **[Quickstart](./quickstart)** and **[Hosted Verify](./cookbook/auth-hosted-
   <Card title="Billing" icon="credit-card" href="./platform/billing">
     Who pays, x402, sponsor model.
   </Card>
-  <Card title="Partner setup" icon="building" href="./cookbook/hub-integrator">
+  <Card title="App integration guide" icon="building" href="./cookbook/hub-integrator">
     Domains, org verify, sponsor detail.
   </Card>
   <Card title="Integration" icon="compass" href="./integration">
-    Verify → save → reuse loop.
+    Verify, save, and reuse.
   </Card>
   <Card title="Overview" icon="house" href="./index">
     Product summary.
