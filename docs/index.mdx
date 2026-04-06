@@ -4,6 +4,12 @@ description: Portable proof receipts for login, trust, access, and agent workflo
 icon: house
 ---
 
+**Every app makes you re-verify. NEUS fixes it.**
+
+Verify once, get a portable proof receipt, reuse it everywhere — gate access, attach proof to content, register agents, share results without exposing raw data. Private by default.
+
+<CardGroup cols={3}>
+
 ## How it works
 
 1. **Verify** — User completes verification (hosted UI, wallet, or social).
@@ -18,38 +24,57 @@ icon: house
     Pick Hosted Verify, Widgets, SDK, API, or MCP.
   </Card>
   <Card title="Quickstart" icon="code" href="./quickstart">
+    First proof in 5 minutes.
     First proof with code.
   </Card>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    No custom verification UI — redirect or popup.
+    No-code verification UI.
   </Card>
-  <Card title="Verifier catalog" icon="list-tree" href="./verification/verifiers">
-    What you can verify.
-  </Card>
-  <Card title="Billing" icon="credit-card" href="./platform/billing">
-    Who pays — deep reference.
+  <Card title="Get started" icon="book" href="./get-started">
+    Platform, billing, app setup.
   </Card>
 </CardGroup>
 
-## Integration paths
+## How it works
 
-| Path | Best for |
-|------|----------|
-| [Hosted Verify](./cookbook/auth-hosted-verify) | Login, guided verification, least UI work |
-| [Widgets](./widgets/overview) | React gating and badges |
-| [SDK](./sdks/overview) | Custom browser or server flows |
-| [API](./api/overview) | HTTP from your servers |
-| [MCP](./mcp/overview) | Cursor, Claude, agents — browser links first |
+1. **Verify** — User completes a check (wallet, social, identity, or risk).
+2. **Get a receipt** — You receive a portable proof ID. Private by default.
+3. **Reuse it** — Gate content, check eligibility, share badges, delegate to agents.
 
-## URLs you’ll use
+## What you can build
+
+| Use case | Verifier |
+|----------|----------|
+| Human-only signup or access | `proof-of-human` |
+| Token / NFT gated products | `nft-ownership` · `token-holding` |
+| Verified creator or org badges | `ownership-basic` · `ownership-org-oauth` |
+| Proof-backed content and posts | `ownership-basic` |
+| Agent identity and delegation | `agent-identity` · `agent-delegation` |
+| Domain-verified organizations | `ownership-dns-txt` |
+
+[Full verifier catalog →](./verification/verifiers)
+
+## Choose your path
+
+| Path | Best for | Effort |
+|------|----------|--------|
+| [Hosted Verify](./cookbook/auth-hosted-verify) | Login, guided verification | Redirect / popup |
+| [Widgets](./widgets/overview) | React gating + badges | One component |
+| [SDK](./sdks/overview) | Custom flows | Full control |
+| [API](./api/overview) | Server-side checks | HTTP |
+| [MCP](./mcp/overview) | AI agents (Cursor, Claude) | One URL |
+
+Not sure? [Choose an integration path →](./choose-an-integration-path)
+
+## URLs
 
 | What | URL |
 |------|-----|
 | Hosted verification | `https://neus.network/verify` |
-| Platform (`/hub`) | `https://neus.network/hub` |
+| Platform | `https://neus.network/hub` |
 | API | `https://api.neus.network` |
 | MCP | `https://mcp.neus.network/mcp` |
 
 ## Examples
 
-[Examples](./examples) — React, Node, curl.
+[React, Node.js, curl →](./examples)

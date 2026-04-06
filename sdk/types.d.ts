@@ -577,12 +577,6 @@ declare module '@neus/sdk' {
     backoffFactor?: number;
   }): Promise<T>;
   
-  /**
-   * Proof status
-   */
-  // Use NeusClient.getStatus(proofId) for status checks (`qHash` remains as deprecated alias).
-  
-  
   // ============================================================================
   // CONSTANTS & REGISTRY
   // ============================================================================
@@ -675,12 +669,6 @@ declare module '@neus/sdk' {
    * Authentication error class
    */
   export class AuthenticationError extends SDKError {}
-  
-  // ============================================================================
-  // SCHEMA ACCESS
-  // ============================================================================
-  
-  
   
   // ============================================================================
   // PROOFS & GATING TYPES

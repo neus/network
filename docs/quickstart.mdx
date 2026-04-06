@@ -4,24 +4,24 @@ description: Create your first proof in under 5 minutes.
 icon: rocket
 ---
 
-**~5 min:** install SDK → verify → save receipt ID → optional gate.
+Install the SDK, create a proof, and reuse it — 5 minutes.
 
 <Tip>
-  **Shipping an app?** Do **[Get started](./get-started)** first (platform → Apps → credits → `appId` / sponsor). Then come back here for code.
+  **Shipping a product?** Do **[Get started](./get-started)** first (platform → app link → credits). Then come back here for code.
 </Tip>
 
-## 1. Install
+## 1. Install the SDK
 
 ```bash
 npm install @neus/sdk
 ```
 
-## 2. Client + proof
+## 2. Create a proof
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient({ appId: 'my-app' });
+const client = new NeusClient();
 
 const proof = await client.verify({
   verifier: 'ownership-basic',
@@ -29,11 +29,11 @@ const proof = await client.verify({
   wallet: window.ethereum,
 });
 
-const proofId = proof.proofId; // save this
+const proofId = proof.proofId; // save this — reuse it everywhere
 ```
 
 <Tip>
-  **No in-app wallet?** Use [Hosted Verify](./cookbook/auth-hosted-verify) + session instead of `window.ethereum`.
+  **No wallet in your app?** Use [Hosted Verify](./cookbook/auth-hosted-verify) — redirect or popup, zero wallet code.
 </Tip>
 
 ## 3. Wait for completion
@@ -45,7 +45,7 @@ const status = await client.pollProofStatus(proofId, {
 });
 ```
 
-## 4. Optional: Gate in React
+## 4. Gate content in React
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -55,12 +55,25 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>
 ```
 
-## Next
+## 5. Check eligibility from your server
 
-| I want… | Go to |
-|---------|--------|
-| Platform + billing setup | [Get started](./get-started) |
-| Hosted UI | [Hosted Verify](./cookbook/auth-hosted-verify) |
-| Pick integration | [Choose your path](./choose-an-integration-path) |
-| Verifier list | [Verifier catalog](./verification/verifiers) |
-| Production | [Integration](./integration) |
+```javascript
+const result = await client.gateCheck({
+  address: '0x...',
+  verifierIds: ['ownership-basic'],
+});
+
+if (result.data?.eligible) {
+  // allow access
+}
+```
+
+## Next steps
+
+| I want to… | Go to |
+|-------------|-------|
+| Set up platform and billing | [Get started](./get-started) |
+| Use hosted UI (no wallet code) | [Hosted Verify](./cookbook/auth-hosted-verify) |
+| Pick an integration path | [Choose your path](./choose-an-integration-path) |
+| See all verification types | [Verifier catalog](./verification/verifiers) |
+| Go to production | [Integration checklist](./integration) |

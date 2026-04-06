@@ -104,6 +104,20 @@ body {
   background: transparent;
 }
 
+/* Keep the page header clean: navigation/cards own iconography, not the title row. */
+#page-title svg,
+#page-title img,
+#page-title [class*="icon"],
+#page-title [class*="Icon"] {
+  display: none !important;
+}
+
+#page-title,
+#page-title > div,
+#page-title > span {
+  gap: 0 !important;
+}
+
 #page-context-menu-button {
   background: transparent;
   border: 1px solid var(--neus-border-faint);

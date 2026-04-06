@@ -31,7 +31,7 @@
     "object-curly-spacing": ["warn", "always"],
     "array-bracket-spacing": ["warn", "never"],
     "comma-dangle": ["warn", "never"],
-    "max-len": ["warn", { "code": 120, "ignoreComments": true }],
+    "max-len": ["warn", { "code": 120, "ignoreComments": true, "ignoreUrls": true, "ignoreStrings": true }],
     "eqeqeq": ["error", "always"],
     "no-trailing-spaces": "warn",
     "no-multiple-empty-lines": ["warn", { "max": 1 }],
@@ -40,9 +40,23 @@
     "require-await": "off",
     "no-return-await": "warn"
   },
+  "overrides": [
+    {
+      "files": ["widgets/verify-gate/standalone.js"],
+      "parserOptions": {
+        "sourceType": "script"
+      },
+      "rules": {
+        "no-var": "off",
+        "prefer-const": "off",
+        "prefer-template": "off"
+      }
+    }
+  ],
   "ignorePatterns": [
     "node_modules/",
     "dist/",
+    "cjs/",
     "build/",
     "*.min.js"
   ]
