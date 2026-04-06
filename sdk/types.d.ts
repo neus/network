@@ -816,7 +816,7 @@ declare module '@neus/sdk' {
       eligible: boolean;
       matchedCount?: number;
       matchedQHashes?: string[];
-      /** @deprecated matchedProofIds is a legacy alias of matchedQHashes (same values when provided). */
+      /** @deprecated Prefer matchedQHashes; matchedProofIds returns the same values when present. */
       matchedProofIds?: string[];
       matchedTags?: string[];
       projections?: Array<Record<string, any>> | null;
@@ -1222,7 +1222,7 @@ declare module '@neus/sdk/widgets' {
     proofId?: string;
     /** @deprecated qHash is a deprecated alias of proofId (same value). */
     qHash?: string;
-    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    /** URL path pattern for proof links. Supports :proofId and :qHash path tokens. */
     proofUrlPattern?: string;
     /** Badge size */
     size?: 'sm' | 'md';
@@ -1250,7 +1250,7 @@ declare module '@neus/sdk/widgets' {
     proofId?: string;
     /** @deprecated qHash is a deprecated alias of proofId (same value). */
     qHash?: string;
-    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    /** URL path pattern for proof links. Supports :proofId and :qHash path tokens. */
     proofUrlPattern?: string;
     uiLinkBase?: string;
     apiUrl?: string;
@@ -1270,7 +1270,7 @@ declare module '@neus/sdk/widgets' {
     proofId?: string;
     /** @deprecated qHash is a deprecated alias of proofId (same value). */
     qHash?: string;
-    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    /** URL path pattern for proof links. Supports :proofId and :qHash path tokens. */
     proofUrlPattern?: string;
     uiLinkBase?: string;
     label?: string;
@@ -1288,7 +1288,7 @@ declare module '@neus/sdk/widgets' {
     proofId?: string;
     /** @deprecated qHash is a deprecated alias of proofId (same value). */
     qHash?: string;
-    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    /** URL path pattern for proof links. Supports :proofId and :qHash path tokens. */
     proofUrlPattern?: string;
     /** UI platform base URL */
     uiLinkBase?: string;

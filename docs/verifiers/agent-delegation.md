@@ -15,10 +15,10 @@ Delegates authority to an agent, ERC-8004 compatible
 ## Optional fields
 
 - `controllerAccountId` (`string format caip10-account`): Preferred canonical controller identity (CAIP-10).
-- `controllerChainRef` (`string format caip2-chain`): Required when using legacy controllerWallet without controllerAccountId.
+- `controllerChainRef` (`string format caip2-chain`): Required when `controllerWallet` is set without `controllerAccountId` (prefer `controllerAccountId` when available).
 - `controllerWallet` (`string format universal-address`)
 - `agentAccountId` (`string format caip10-account`): Preferred canonical agent identity (CAIP-10).
-- `agentChainRef` (`string format caip2-chain`): Required when using legacy agentWallet without agentAccountId.
+- `agentChainRef` (`string format caip2-chain`): Required when `agentWallet` is set without `agentAccountId` (prefer `agentAccountId` when available).
 - `agentWallet` (`string format universal-address`)
 - `agentId` (`string max 128 min 1`)
 - `scope` (`string max 128`)

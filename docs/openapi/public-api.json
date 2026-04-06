@@ -1087,7 +1087,7 @@
           },
           "agentChainRef": {
             "type": "string",
-            "description": "Required when using legacy agentWallet without agentAccountId.",
+            "description": "Required when agentWallet is set without agentAccountId (prefer agentAccountId when available).",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "agentWallet": {
@@ -1256,7 +1256,7 @@
           },
           "controllerChainRef": {
             "type": "string",
-            "description": "Required when using legacy controllerWallet without controllerAccountId.",
+            "description": "Required when controllerWallet is set without controllerAccountId (prefer controllerAccountId when available).",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "controllerWallet": {
@@ -1270,7 +1270,7 @@
           },
           "agentChainRef": {
             "type": "string",
-            "description": "Required when using legacy agentWallet without agentAccountId.",
+            "description": "Required when agentWallet is set without agentAccountId (prefer agentAccountId when available).",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "agentWallet": {

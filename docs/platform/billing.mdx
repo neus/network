@@ -1,69 +1,77 @@
 ---
 title: Billing and Credits
-description: Who pays, how credits move, and when sponsor grants or x402 apply.
+description: How verification and gate checks are paid—credits, sponsor grants, and x402.
 icon: credit-card
 ---
 
-Start with [Get started](../get-started) for the setup checklist. This page covers billing details, edge cases, and x402.
+Complete [Get started](../get-started) first (link your app, credits, `appId`). This page explains **who is charged** for verification and related API usage.
 
-## Why this can feel confusing
+## What costs credits
 
-`appId` on `NeusClient` sends `X-Neus-App` so NEUS can attribute usage to your product. It does not, by itself, move the bill to your NEUS account balance.
+Metered actions such as verification submissions and gate checks consume credits on a **payer wallet** NEUS resolves from the request (see [How the payer is chosen](#how-the-payer-is-chosen)). Credits are separate from proof visibility (public, unlisted, or private).
 
-Credits are charged to a payer wallet resolved from how the request is authenticated: the signing wallet, a sponsor grant, an x402 receipt, or certain gate setups. Until you add one of those, `appId` alone does not move billing.
+## `appId` and billing
 
-## Apps vs individuals
+Set `appId` on `NeusClient` to send `X-Neus-App`. That **attributes** traffic to your app for analytics and support—it does **not** choose who pays. Billing follows the signing wallet, sponsor grants, configured gate payer rules, or x402—not the app label alone.
 
-| You are... | Priority | Billing |
-|----------|------------------------|------------------------|
-| Building an app | Predictable cost and no random out-of-credits walls | You pay for metered verification and checks via sponsor grants and credits on your org wallet |
-| Using NEUS for yourself | Your own proofs and profile | You pay with your NEUS credits, or x402 when you run out |
+## Who pays: apps vs individuals
 
-Same SDK and API - different payer context.
+| You are building… | Typical payer | What to configure |
+|-------------------|---------------|-------------------|
+| **A product or team** | Your org wallet (credits you fund) | [Get started](../get-started): link app, keep credits on the org wallet, use **sponsor grants** so billable calls debit your balance instead of the end user’s |
+| **Personal use** | Your own wallet | Hosted Verify or SDK with your wallet; your NEUS credits apply, or use **x402** when you see `402 Payment Required` |
 
-## Recommended path for app integrators
+Same SDK and API—the difference is **which wallet** NEUS treats as the payer for that request.
 
-1. Create and configure your app.
-2. Keep credits on the organization wallet that should pay.
-3. Issue short-lived `X-Sponsor-Grant` tokens so billable calls debit your org balance, not the end user's.
-4. Use `new NeusClient({ appId: '...', sponsorGrant: token })` so every request is labeled and paid under your grant.
+## How the payer is chosen
+
+NEUS evaluates payer context in this order:
+
+1. **Paid receipt** — x402 or other settled payment attached to the request, when applicable  
+2. **Sponsor grant** — valid `X-Sponsor-Grant`: charges the org that issued the grant  
+3. **Gate owner** — when a gate is configured so the gate owner pays  
+4. **Signing wallet** — the wallet that signed the verification or check  
+5. **x402 path** — payment required flow (`402` → pay → retry with `PAYMENT-SIGNATURE`)  
+6. **Otherwise** — limits, `402`, or other guards may apply  
+
+You cannot move billing by putting `appId` in a JSON body alone. Payer resolution uses signatures, grants, and session mechanics—not the app label by itself.
+
+## Recommended setup for app builders
+
+1. Create and configure your app in the platform.  
+2. Keep credits on the **organization wallet** that should pay.  
+3. Issue short-lived **sponsor grant** tokens and pass them on the client: `new NeusClient({ appId: '…', sponsorGrant: token })`.  
+4. Every billable call is **labeled** with `appId` and **debited** under the grant when it is valid.  
 
 <Warning>
-Do not rely on anonymous traffic for heavy gate checks or verification volume. Without a payer context, behavior and limits are not the same as production sponsored traffic.
+Anonymous or unattributed traffic is not a substitute for production billing. Heavy verification or gate volume without a clear payer context may hit different limits than sponsored traffic.
 </Warning>
 
-## Recommended path for individuals
+## Individuals
 
-1. Use Hosted Verify or SDK with your own wallet.
-2. Credits come from your NEUS balance on that wallet.
-3. If you hit `402`, use x402 and retry with `PAYMENT-SIGNATURE`.
+1. Use [Hosted Verify](../cookbook/auth-hosted-verify) or the SDK with your wallet.  
+2. Credits come from your NEUS balance on that wallet.  
+3. If you receive `402`, complete x402 payment and retry with `PAYMENT-SIGNATURE` (see [x402](./x402)).  
 
-## How NEUS selects the payer
+## SDK fields that affect billing
 
-Precedence: paid receipt -> sponsor grant -> gate owner pays if configured -> wallet that signed the request -> x402 paywall path -> otherwise you may hit limits or payment required.
-
-You do not send "bill this appId" in the body and expect the wallet to switch. Payer is derived from crypto and session mechanics, not from `appId` alone.
-
-## SDK configuration
-
-| Config | Effect |
-|--------|--------|
-| `appId` | Sets `X-Neus-App` for analytics and attribution |
+| Field | Role |
+|--------|------|
+| `appId` | Sets `X-Neus-App` for **attribution** (not payer selection by itself) |
 | `sponsorGrant` | Sets `X-Sponsor-Grant` so your org pays when the grant is valid |
-| `paymentSignature` | Sets `PAYMENT-SIGNATURE` for x402 retries |
+| `paymentSignature` | Carries `PAYMENT-SIGNATURE` for x402 retries after payment |
 
-The SDK does not auto-complete x402 payments. Your app handles 402 -> pay -> retry, or you avoid 402 by keeping org credits healthy.
+The SDK does not auto-pay x402 invoices. Your app implements `402` → pay → retry, or you keep org credits sufficient to avoid `402`.
 
 ## Visibility vs billing
 
-- Public and unlisted proofs can be checked without the user signing in.
-- Private visibility rules still apply; billing is separate.
+Public or unlisted proofs can be **read** without sign-in where the API allows. **Private** visibility is an access rule; it does not replace payer rules above.
 
 ## Related
 
 <CardGroup cols={2}>
   <Card title="x402" icon="coins" href="./x402">
-    Pay per use when credits run out.
+    Pay-per-use when credits run out.
   </Card>
   <Card title="App integration guide" icon="building" href="../cookbook/hub-integrator">
     Apps, domains, sponsor grants.

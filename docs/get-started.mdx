@@ -15,12 +15,9 @@ If you are experimenting with your own wallet, start with [Quickstart](./quickst
 
 ## 2. Link your app
 
-This follows the Link app flow: domain, daily cap, and wallet signature.
-
 1. Go to `https://neus.network/profile?tab=apps` and open **Link app** or **Manage app**.
 2. Enter your app domain, such as `acme.com` or `https://app.acme.com`.
-3. Set a daily credit cap to keep usage predictable.
-4. Complete the modal flow and save the resulting `appId`.
+3. Sign with your wallet and save the resulting `appId`.
 
 When linking succeeds, you get an `appId` to send as `X-Neus-App` on API traffic from that integration. The SDK maps this automatically:
 
@@ -71,7 +68,7 @@ Not sure? [Choose an integration path](./choose-an-integration-path).
 
 ## 6. Production checklist
 
-- [ ] App linked on the platform with a realistic daily cap
+- [ ] App linked on the platform (domain confirmed)
 - [ ] Credits on the wallet that should pay
 - [ ] `appId` on the client; `sponsorGrant` if you pay for metered calls
 - [ ] [Billing](./platform/billing) understood

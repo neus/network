@@ -1,15 +1,15 @@
 ---
 title: Agent readiness (`neus_agent_link`)
-description: Check agent wallet has identity + approved access (legacy tool name).
+description: Check whether an agent wallet has registered identity and approved access.
 icon: robot
 ---
 
-**Readiness check** for **`agentWallet`**: identity and delegation on file?
+Check **`agentWallet`** for identity + access approval on file.
 
-- **`linked: true`** (compat) → treat as **ready**.
-- **`link_required`** → open **`hostedVerifyUrl`** / follow **`nextSteps`**.
+- **`linked: true`** → ready.
+- **`link_required`** → open **`hostedVerifyUrl`** and follow **`nextSteps`**.
 
-Optional **`principal`** (without session) hints the **approving** account — not the agent wallet. Details: [Agent concepts](../agents/concepts).
+Optional **`principal`** (without session) points at the approving account. See [Agent concepts](../agents/concepts).
 
 ## Input
 

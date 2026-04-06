@@ -1,45 +1,37 @@
 ---
 title: Agent concepts
-description: Roles, wallets, and how NEUS agent API field names map to those concepts.
+description: Roles, wallets, and API field names for agents.
 icon: users
 ---
 
-This page defines NEUS agent roles and wallets, and maps them to JSON and API field names.
-
-## Core invariant
-
-**Registering an agent** and **approving what it can do** are **separate steps**. Different people can perform them. **No wallet linking** between publisher and approver is required for the open permission layer to work.
+Registering the agent and approving what it may do are **two steps**. The publisher and approver can be the same person or not.
 
 ## Roles
 
-| Role | Description | Signs |
-|------|----------------|--------|
-| **Publisher** | Publishes the agent (metadata bound to an agent wallet) | The **agent wallet** registers the agent |
-| **Approver** | Grants scoped access to that agent | The **approving account** signs access approval |
-
-The publisher and approver can be the same person (common solo setup) or different people (marketplace or delegated trust).
+| Role | What they do | Who signs |
+|------|----------------|-----------|
+| **Publisher** | Publishes the agent (metadata on the agent wallet) | **Agent wallet** |
+| **Approver** | Grants scoped access | **Approving account** |
 
 ## Wallets
 
-- **Agent wallet** — The wallet that represents the agent on chain; used when **registering / publishing** the agent.
-- **Approving account** — The wallet that **signs access approval** for what the agent is allowed to do (scopes, limits, expiry). This is **not** “ownership” of the agent wallet and does not require linking profiles.
+- **Agent wallet** — The agent’s on-chain identity; used when registering the agent.
+- **Approving account** — Signs delegation (scopes, limits, expiry). A different role from the agent wallet.
 
 ## Hosted flow
 
-The normal path is **[hosted verify](../cookbook/auth-hosted-verify)**: complete steps in the browser (or MCP-assisted links) instead of hand-rolling signatures.
+Use **[hosted verify](../cookbook/auth-hosted-verify)** for browser or MCP-guided steps.
 
-## Field names in the API
+## API fields
 
-JSON and query parameters keep stable names for compatibility. In prose, map them like this:
-
-| API / query name | Meaning |
-|------------------|-------------------------|
+| Field | Meaning |
+|-------|---------|
 | `agentWallet` | Agent wallet address |
-| `controllerWallet` | **Approving account** (grantor) in delegation payloads and checks — not “controller” in a product-linking sense |
-| `linked` (MCP) | **Readiness** compatibility flag: identity + access approval on file — not wallet-link |
-| `principal` (`neus_me`) | **Signed-in NEUS account** summary (DID / wallet context) — not the delegation approver unless that session is the one approving |
+| `controllerWallet` | Approving account in delegation payloads |
+| `linked` (MCP) | Ready: identity and access approval on file |
+| `principal` (`neus_me`) | Signed-in NEUS account (DID / wallet) |
 
-**Private proofs** are visible when that same user is signed in with NEUS — separate from **approving account** in agent delegation.
+Private proofs are visible only to the signed-in user they belong to.
 
 ## Where to go next
 

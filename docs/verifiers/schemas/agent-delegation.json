@@ -25,7 +25,7 @@
       "type": "string"
     },
     "agentChainRef": {
-      "description": "Required when using legacy agentWallet without agentAccountId.",
+      "description": "Required when agentWallet is set without agentAccountId (prefer agentAccountId when available).",
       "format": "caip2-chain",
       "type": "string"
     },
@@ -52,7 +52,7 @@
       "type": "string"
     },
     "controllerChainRef": {
-      "description": "Required when using legacy controllerWallet without controllerAccountId.",
+      "description": "Required when controllerWallet is set without controllerAccountId (prefer controllerAccountId when available).",
       "format": "caip2-chain",
       "type": "string"
     },
