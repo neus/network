@@ -1,19 +1,19 @@
 ---
-title: Signing Format
-description: Why verification requests require a wallet signature and how to sign the deterministic message.
+title: Signing requests
+description: Signing requests for verification and where to find the complete technical reference.
 icon: file-code
 ---
 
-Quick reference for NEUS signing.
+Use this page to understand when signing is required and where to find implementation details.
 
-## In Short
+## Summary
 
-- NEUS generates the exact message that must be signed.
-- The wallet signs that exact message.
-- Your app sends the signed request back to NEUS to create the proof receipt.
+- NEUS generates a deterministic message for verification requests.
+- The user signs that message with their wallet.
+- Your app submits the signed request and receives a proof receipt ID.
 
-## Read the Full Guide
+## Full reference
 
-<Card title="Verification: Signing Format" icon="file-code" href="../verification/signing-format">
-  Full guide for hosted, SDK, and advanced HTTP signing flows.
+<Card title="Verification signing format" icon="file-code" href="../verification/signing-format">
+  Complete signing reference for hosted, SDK, and advanced API integrations.
 </Card>

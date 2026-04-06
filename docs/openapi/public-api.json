@@ -3,7 +3,7 @@
   "info": {
     "title": "NEUS Network — Public Integrator API",
     "version": "1.0.0",
-    "description": "Public HTTP API for NEUS integrators.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).\n\nSome verifiers require pro access. Administrative endpoints are not included in this specification.",
+    "description": "Public HTTP API for NEUS integrators.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).\n\nSome verifiers require Pro access.",
     "license": {
       "name": "Business Source License 1.1",
       "url": "https://mariadb.com/bsl11/"
@@ -529,7 +529,7 @@
           "contentHash": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{64}$",
-            "description": "Pre-computed verifier content hash (32-byte hex). Treated as the standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match."
+            "description": "Pre-computed content hash (32-byte hex). If content is also provided, NEUS verifies that both values match."
           },
           "contentType": {
             "type": "string",
@@ -640,7 +640,7 @@
         "type": "object",
         "required": [
           "provider",
-          "internalSocialToken"
+          "socialToken"
         ],
         "properties": {
           "provider": {
@@ -656,7 +656,7 @@
               "coinbase"
             ]
           },
-          "internalSocialToken": {
+          "socialToken": {
             "type": "string"
           },
           "walletAddress": {
@@ -714,7 +714,7 @@
         "type": "object",
         "required": [
           "provider",
-          "internalSocialToken"
+          "socialToken"
         ],
         "properties": {
           "provider": {
@@ -724,7 +724,7 @@
               "microsoft"
             ]
           },
-          "internalSocialToken": {
+          "socialToken": {
             "type": "string"
           },
           "walletAddress": {
