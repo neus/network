@@ -1,6 +1,6 @@
 ---
 title: Setup
-description: Copy-paste setup for the hosted NEUS MCP endpoint.
+description: Quick setup for the hosted NEUS MCP endpoint.
 icon: code
 ---
 
@@ -8,7 +8,7 @@ icon: code
 
 ## Connect
 
-Paste into your **HTTP MCP** client. Use the URL **exactly** as shown, including `/mcp`.
+Add this configuration to your MCP settings (Cursor, Claude Desktop, VS Code, or any client that supports HTTP MCP). Use the URL exactly as shown, including `/mcp`.
 
 ```json
 {
@@ -22,7 +22,7 @@ Paste into your **HTTP MCP** client. Use the URL **exactly** as shown, including
 }
 ```
 
-Reload the client if it asks. **No API key.**
+Reload the client if prompted. **No API key is required.**
 
 **Pre-production:** if your app calls **`https://dev.api.neus.network`**, use MCP **`https://dev.mcp.neus.network/mcp`**. [Endpoints](./endpoints)
 

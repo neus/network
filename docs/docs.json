@@ -160,7 +160,7 @@
             "pages": ["api/overview", "api/authentication", "api/errors"]
           },
           {
-            "group": "Operations",
+            "group": "Production",
             "pages": [
               "platform/billing",
               "platform/environments",

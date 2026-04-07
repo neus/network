@@ -1,19 +1,35 @@
 ---
 title: Verifiers
-description: How to choose the right NEUS capability for your product flow.
+description: Choose the right verification capability and understand how to apply it in product flows.
 icon: tags
 ---
 
-Quick reference for verifier selection.
+Use this page when you need a practical decision guide before opening the full reference.
 
-## In Short
+## Start from the user outcome
 
-- Identify the proof or policy outcome required.
-- Match that outcome to the correct verifier.
-- Save the proof receipt ID after completion so the result can be reused.
+1. Define what must be true for access, trust, or compliance.
+2. Select the verifier that proves that outcome.
+3. Save the returned proof receipt ID and reuse it in checks, UI, and policy decisions.
 
-## Open the Verifier Catalog
+## Common goals
+
+| Goal | Typical verifier(s) |
+|------|----------------------|
+| Confirm a real person | `proof-of-human` |
+| Check token or NFT access | `token-holding`, `nft-ownership` |
+| Verify ownership of content or identity | `ownership-basic`, `ownership-social`, `ownership-org-oauth` |
+| Confirm domain ownership | `ownership-dns-txt` |
+| Register and delegate agents | `agent-identity`, `agent-delegation` |
+
+## Selection tips
+
+- Prefer the smallest verifier set that satisfies your policy.
+- Use hosted verification for interactive steps such as social or organization checks.
+- Use fresh proofs only for high-stakes operations; reuse existing receipts for routine checks.
+
+## Open the full catalog
 
 <Card title="Verifier Catalog" icon="list-tree" href="../verification/verifiers">
-  Browse the full verifier list with use cases, inputs, and expected results.
+  Browse all verifiers with inputs, flow type, and integration guidance.
 </Card>

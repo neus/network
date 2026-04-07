@@ -6,27 +6,27 @@ icon: user-circle
 
 The **NEUS platform** (sign in at `https://neus.network/hub`) is where you manage your profile, proofs, apps, and credits.
 
-## Apps and organizations
+## What to complete before launch
 
-1. Open **Profile** → **Apps** (`https://neus.network/profile?tab=apps`).
-2. Use **Link app** to register your domain, set a **daily credit cap**, and complete signing in the modal.
-3. Top up **Credits** on the wallet that should pay for your integration.
-4. Continue with the full checklist: **[Get started](../get-started)**.
+1. Register each production domain used by your integration.
+2. Set a daily credit cap that matches expected traffic.
+3. Fund the wallet that should pay for verification requests.
+4. Continue with the full onboarding checklist: **[Get started](../get-started)**.
 
-**Apps:** **`appId`** / **`X-Neus-App`**, sponsors. **[Billing](./billing)** for who pays.
+Use your issued **`appId`** as **`X-Neus-App`** in API traffic. If you sponsor users, pair it with **`sponsorGrant`**. See **[Billing](./billing)** for payment models.
 
 ---
 
-## Tabs and flows
+## What you can manage
 
-| Tab | Purpose |
+| Area | Purpose |
 |-----|---------|
-| **Dashboard** | Quick actions and proof summary |
-| **Identity** | Domains, social proofs, and privacy settings |
-| **Agents** | Agent registration and delegation |
-| **Apps** | Domain linking and app attribution |
-| **Credits** | Balance and top-ups |
-| **Activity** | History and usage |
+| **Dashboard** | Account snapshot and recent activity |
+| **Identity** | Domain and account proofs with privacy controls |
+| **Agents** | Agent registration and delegation management |
+| **Apps** | Domain-linked app attribution and limits |
+| **Credits** | Balance management and top-ups |
+| **Activity** | Request and verification history |
 
 ---
 
@@ -58,7 +58,7 @@ Shows:
 
 <CardGroup cols={2}>
   <Card title="Get started" icon="book" href="../get-started">
-    Builder checklist on the platform.
+    Production onboarding checklist.
   </Card>
   <Card title="Proof Receipts" icon="receipt" href="./receipts-and-results">
     What to save and reuse.

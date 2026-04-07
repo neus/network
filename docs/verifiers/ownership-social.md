@@ -11,7 +11,7 @@ Social media account ownership via OAuth
 ## Required fields
 
 - `provider` (`string enum: discord, github, facebook, x, farcaster, linkedin, telegram, coinbase`)
-- `internalSocialToken` (`string`)
+- `internalSocialToken` (`string`) — social verification token returned by the NEUS-hosted OAuth step
 
 ## Optional fields
 
@@ -26,7 +26,7 @@ await client.verify({
   verifier: 'ownership-social',
   data: {
     "provider": "discord",
-    "internalSocialToken": "social-token-example",
+    "internalSocialToken": "<oauth-verification-token>",
     "walletAddress": "0x2222222222222222222222222222222222222222"
   }
 });
@@ -38,7 +38,7 @@ await client.verify({
   ],
   "data": {
     "provider": "discord",
-    "internalSocialToken": "social-token-example",
+    "internalSocialToken": "<oauth-verification-token>",
     "walletAddress": "0x2222222222222222222222222222222222222222"
   },
   "walletAddress": "0x1234567890abcdef1234567890abcdef12345678",

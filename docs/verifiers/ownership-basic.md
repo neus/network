@@ -15,7 +15,7 @@ Content ownership verification with origin lock and optional provenance
 ## Optional fields
 
 - `content` (`string max 50000`): Content being claimed (max 50KB inline)
-- `contentHash` (`string pattern ^0x[a-fA-F0-9]{64}$`): Pre-computed verifier content hash (32-byte hex). Treated as the standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match.
+- `contentHash` (`string pattern ^0x[a-fA-F0-9]{64}$`): Pre-computed 32-byte content hash. If `content` is also provided, NEUS verifies both values match.
 - `contentType` (`string max 100`): MIME type hint
 - `reference` (`object`)
 - `provenance` (`object`)

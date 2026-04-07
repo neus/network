@@ -4,7 +4,7 @@ description: Signed-in NEUS user when MCP sends a session.
 icon: user-circle
 ---
 
-Needs **`Authorization: Bearer`** on the MCP connection ([Auth](./auth)). **URL-only** MCP → **`auth_required`** (expected).
+Needs **`Authorization: Bearer`** on the MCP connection ([Auth](./auth)). If your MCP connection only includes the URL, the tool returns **`auth_required`** (expected).
 
 For “verify me” without a session: **`neus_verify_or_guide`** + hosted link; lookups: **`neus_proofs_get`** when you have an id.
 
