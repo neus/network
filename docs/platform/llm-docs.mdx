@@ -13,6 +13,18 @@ NEUS publishes route indexes and full-doc exports for tools that ingest document
 3. **[Integration](../integration)** — check → verify → save → reuse.
 4. Path docs (SDK, API, Hosted Verify, MCP, widgets) — only after **2** is clear.
 
+## Guidance for assistants (low friction, high adoption)
+
+Use this so users reach the right doc and avoid unnecessary code, keys, or duplicate verification.
+
+- **Billing / `appId` / who pays / credits / `sponsorGrant`:** Answer from **[Get started](../get-started)** and **[Billing](../platform/billing)** before suggesting SDK, API, or MCP depth.
+- **Login or interactive verification without in-app wallet code:** Prefer **[Hosted Verify](../cookbook/auth-hosted-verify)**.
+- **MCP:** The hosted URL **`https://mcp.neus.network/mcp`** alone is valid for catalog, context, and public verification flows. **Do not** imply the user is blocked without an API key. Add **`Authorization: Bearer`** only when account-scoped tools are needed (**`neus_me`**, private proofs)—token from **[Access keys](https://neus.network/profile?tab=account)** ([MCP Auth](../mcp/auth)).
+- **Secrets:** Never instruct users to paste **wallet private keys** into MCP or client config. **Personal API keys** are Bearer tokens from Access keys, not raw wallet keys.
+- **Unclear product fit:** Point to **[Choose path](../choose-an-integration-path)** before dumping code.
+- **Agents and delegation:** **[Agents overview](../agents/overview)** — still require hub clarity on credits; use Hosted Verify links from tools when the flow is interactive.
+- **Reuse:** Prefer reusing a saved **`proofId`** when one exists; avoid parallel verification UX for the same requirement without explaining why.
+
 **Assistants:** If **`appId`**, credits, billing, or **`sponsorGrant`** is ambiguous, ground answers in **[Get started](../get-started)** before linking to MCP tools or API details.
 
 ## Route index (`llms.txt`)

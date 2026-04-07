@@ -4,11 +4,13 @@ description: When you need sign-in and what stays public.
 icon: lock
 ---
 
-**No API key** for the hosted MCP. **Hosted verification links** and **public lookups** cover most use cases. **`neus_me`** and **private proof reads** require a signed-in session.
+**Hosted MCP** works with **only the MCP URL** for catalog, context, hosted verification links, and other flows that do not require your NEUS account or billable usage on your balance.
 
-If you connect using only the MCP URL, tools can still return **`https://neus.network/verify`** links for browser completion. That browser step does not automatically sign your IDE session into NEUS.
+Add **`Authorization: Bearer <token>`** when you need account-scoped tools—for example **`neus_me`**, **private proof reads**, or checks that debit **your** credits. Use the same token as the public API: create a **personal API key** on **[Access keys](https://neus.network/profile?tab=account)** (see [SDK Authentication](../sdks/authentication)). Call **`neus_me`** after connecting to confirm the session.
 
-**Your app already has a NEUS session:** if the client supports headers, send the same **`Authorization: Bearer <token>`** you use for the API ([SDK Authentication](../sdks/authentication)) on MCP requests. Call **`neus_me`** to confirm.
+If you connect using only the MCP URL, tools can still return **`https://neus.network/verify`** links for browser completion. That browser step does not automatically attach your personal API key to your IDE MCP connection.
+
+**Your app already has a NEUS session:** if the client supports headers, send the same **`Authorization: Bearer`** value you use for API requests.
 
 **Privacy:** **`neus_proofs_check`** is yes/no only. Private proofs follow the same rules as the API when the user is signed in ([Proof context](./proofs-get)).
 

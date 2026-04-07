@@ -22,7 +22,11 @@ Add this configuration to your MCP settings (Cursor, Claude Desktop, VS Code, or
 }
 ```
 
-Reload the client if prompted. **No API key is required.**
+Reload the client if prompted. **You only need the URL** to use public discovery and verification flows. Add **`Authorization: Bearer`** with your **personal API key** when you need a signed-in session or private data ([Auth](./auth)); create the key on **[Access keys](https://neus.network/profile?tab=account)**.
+
+<Tip>
+  **Integrators:** connect with the URL first. If a tool returns **`auth_required`** and the user needs account context, add Bearer from Access keys—do not require a key up front for public tools.
+</Tip>
 
 **Pre-production:** if your app calls **`https://dev.api.neus.network`**, use MCP **`https://dev.mcp.neus.network/mcp`**. [Endpoints](./endpoints)
 

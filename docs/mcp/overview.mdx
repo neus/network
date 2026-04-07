@@ -16,7 +16,7 @@ Add the MCP endpoint **once** in your client—see **[Setup](./setup)** for the 
 2. **Signed-in product:** same **`Authorization: Bearer`** as [SDK Authentication](../sdks/authentication). Then **`neus_me`**. **[Auth](./auth)**
 3. **Proof history:** only if you already have an address or id. **`neus_proofs_get`**. [Tools](./tools)
 
-Connecting with only the MCP endpoint URL does **not** sign the chat session into NEUS by itself.
+Connecting with only the MCP endpoint URL does **not** attach your NEUS account by itself, but **you can still use** catalog, context, and public verification flows **without** a key. Optional **`Authorization: Bearer`** (personal API key from **[Access keys](https://neus.network/profile?tab=account)**) unlocks account-scoped tools such as **`neus_me`** and private proof reads ([Auth](./auth)).
 
 | Goal | Tool |
 |------|------|

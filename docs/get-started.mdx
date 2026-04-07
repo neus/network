@@ -11,6 +11,7 @@ Use this when you are **shipping** (real users, credits, attribution). Exploring
 1. Sign in to the **[hub](https://neus.network/hub)** with passkey or wallet.
 2. **Apps** — register products your integration will call from. **Credits** — balance for the wallet that pays. **Identity** — domain or org proofs when your flow needs them.
 3. Use the wallet that should own billing and app registration for this product.
+4. **Access keys** — when you need a **personal API key** (same **`Authorization: Bearer`** token for **`api.neus.network`** and for MCP when you want account-scoped tools), open **[Access keys](https://neus.network/profile?tab=account)** and generate one. You can skip this until you run scripts, server calls, or MCP flows that return **`auth_required`**.
 
 ## 2. Register your integration and capture `appId`
 
