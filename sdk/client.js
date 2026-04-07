@@ -1004,40 +1004,39 @@ export class NeusClient {
   // ============================================================================
 
   /**
-   * Get verification status
+   * Get proof record by receipt id (qHash)
    *
-   * @param {string} proofId - Proof ID (standard). `qHash` is a deprecated alias (same value).
-   * @returns {Promise<Object>} Verification status and data
+   * @param {string} proofId - Proof receipt id (`qHash`, 0x + 64 hex).
+   * @returns {Promise<Object>} Proof record and verification state
    *
    * @example
-   * const result = await client.getStatus('0x...');
+   * const result = await client.getProof('0x...');
    * console.log('Status:', result.status);
    */
-  async getStatus(proofId) {
+  async getProof(proofId) {
     if (!proofId || typeof proofId !== 'string') {
       throw new ValidationError('proofId is required');
     }
-    const response = await this._makeRequest('GET', `/api/v1/verification/status/${proofId}`);
+    const response = await this._makeRequest('GET', `/api/v1/proofs/${proofId}`);
 
     if (!response.success) {
-      throw new ApiError(`Failed to get status: ${response.error?.message || 'Unknown error'}`, response.error);
+      throw new ApiError(`Failed to get proof: ${response.error?.message || 'Unknown error'}`, response.error);
     }
 
     return this._formatResponse(response);
   }
 
   /**
-   * Get private proof status with wallet signature
+   * Get private proof record with wallet signature
    *
-   * @param {string} proofId - Proof ID (standard). `qHash` is a deprecated alias (same value).
+   * @param {string} proofId - Proof receipt id (`qHash`).
    * @param {Object} wallet - Wallet provider (window.ethereum or ethers Wallet)
-   * @returns {Promise<Object>} Private verification status and data
+   * @returns {Promise<Object>} Private proof record and verification state
    *
    * @example
-   * // Access private proof
-   * const privateData = await client.getPrivateStatus(proofId, window.ethereum);
+   * const privateData = await client.getPrivateProof(proofId, window.ethereum);
    */
-  async getPrivateStatus(proofId, wallet = null) {
+  async getPrivateProof(proofId, wallet = null) {
     if (!proofId || typeof proofId !== 'string') {
       throw new ValidationError('proofId is required');
     }
@@ -1057,7 +1056,7 @@ export class NeusClient {
         ...(typeof auth.chain === 'string' && auth.chain.trim() ? { 'x-chain': auth.chain.trim() } : {}),
         ...(typeof auth.signatureMethod === 'string' && auth.signatureMethod.trim() ? { 'x-signature-method': auth.signatureMethod.trim() } : {})
       };
-      const response = await this._makeRequest('GET', `/api/v1/verification/status/${proofId}`, null, headers);
+      const response = await this._makeRequest('GET', `/api/v1/proofs/${proofId}`, null, headers);
       if (!response.success) {
         throw new ApiError(
           `Failed to access private proof: ${response.error?.message || 'Unauthorized'}`,
@@ -1101,7 +1100,7 @@ export class NeusClient {
       throw new ValidationError(`Failed to sign message: ${error.message}`);
     }
 
-    const response = await this._makeRequest('GET', `/api/v1/verification/status/${proofId}`, null, {
+    const response = await this._makeRequest('GET', `/api/v1/proofs/${proofId}`, null, {
       'x-wallet-address': walletAddress,
       'x-signature': signature,
       'x-signed-timestamp': signedTimestamp.toString(),
@@ -1186,7 +1185,7 @@ export class NeusClient {
 
     while (Date.now() - startTime < timeout) {
       try {
-        const status = await this.getStatus(proofId);
+        const status = await this.getProof(proofId);
         consecutiveRateLimits = 0;
 
         // Call progress callback if provided
@@ -1593,7 +1592,13 @@ export class NeusClient {
   }
 
   /**
-   * CHECK GATE - Evaluate requirements against existing proofs
+   * CHECK GATE — Local preview against proofs you already have in memory or from `getProofsByWallet`.
+   *
+   * **Not authoritative for access control.** For production allow/deny, use {@link NeusClient#gateCheck}
+   * (`GET /api/v1/proofs/check`), which applies the same rules as the NEUS API. This method is useful for
+   * UI previews, offline-ish flows, or when you already fetched proofs and want a quick match without
+   * another round trip — but it can disagree with the server (e.g. `contentHash` matching uses a local
+   * approximation when proof data only has inline `content`; the API uses canonical hashing).
    *
    * Gate-first verification: checks if wallet has valid proofs satisfying requirements.
    * Returns which requirements are missing/expired.
@@ -1926,7 +1931,7 @@ export class NeusClient {
       data: response.data,
       message: response.message,
       timestamp: Date.now(),
-      statusUrl: finalProofId ? `${this.baseUrl}/api/v1/verification/status/${finalProofId}` : null
+      proofUrl: finalProofId ? `${this.baseUrl}/api/v1/proofs/${finalProofId}` : null
     };
   }
 

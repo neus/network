@@ -10,7 +10,7 @@ Start with **[Get started](../get-started)** for the setup checklist. This page 
 
 **`appId` on `NeusClient`** sends **`X-Neus-App`** so NEUS can **attribute** usage to your product. It does **not**, by itself, move the bill to your NEUS account balance.
 
-**Credits are charged to a *payer wallet*** resolved from how the request is authenticated: the **signing wallet**, a **sponsor grant** (your org), an **x402 receipt**, or certain **gate** setups. Until you add one of those, **`appId` alone does not move billing** — end users can still need their own credits or another payer context.
+**Billed wallet** comes from authentication: **signing wallet**, **sponsor grant**, **x402 receipt**, or some **gate** setups. Until one applies, **`appId` alone does not move billing**. End users may still need credits or another payer.
 
 ---
 
@@ -21,20 +21,20 @@ Start with **[Get started](../get-started)** for the setup checklist. This page 
 | **Building an app** | Users should not hit random “out of credits” walls; **you** want predictable cost | **You pay** for metered verification and checks via **sponsor grants** (and **credits on your org wallet** in the platform). Users only see hosted verify / your UI. |
 | **Using NEUS for yourself** | Your own proofs and profile | **You pay** with **your** NEUS credits (or x402 when you run out). **`appId`** is optional (attribution only). |
 
-Same SDK and API — different **who funds credits**.
+Same SDK and API. Different **who funds credits**.
 
 ---
 
 ## Recommended path for **app integrators**
 
-1. **Platform** — Create/configure your **app**, keep **credits** on the **organization wallet** you use for that app (the app owner).
-2. **Sponsor users** — Issue short-lived **`X-Sponsor-Grant`** tokens so billable calls debit **your** org balance (capped by the grant), not the end user’s.
-3. **SDK** — `new NeusClient({ appId: '…', sponsorGrant: token })` so every request is **labeled** and **paid** under your grant.
+1. **Platform:** **app** + **credits** on the **org wallet** for that app.
+2. **Sponsor users:** short-lived **`X-Sponsor-Grant`** so calls debit **your** org balance, not the end user’s.
+3. **SDK:** `new NeusClient({ appId: '…', sponsorGrant: token })` **labels** and **pays** under the grant.
 
 Details and grant flow: **[Partner setup](../cookbook/hub-integrator)**.
 
 <Warning>
-Do not rely on anonymous traffic for heavy **gate checks** or verification volume — without a payer context, behavior and limits are not the same as production **sponsored** traffic. Requests with **no sponsor, no signature, and no receipt** are appropriate for **development or very low volume** only.
+Anonymous heavy **gate checks** / verification without a payer context ≠ production **sponsored** limits. **No sponsor, no signature, no receipt:** dev or very low volume only.
 </Warning>
 
 ---
@@ -43,15 +43,15 @@ Do not rely on anonymous traffic for heavy **gate checks** or verification volum
 
 1. Use **hosted verify** or **SDK** with your own wallet.
 2. **Credits** come from **your** NEUS balance on that wallet.
-3. If you hit **402**, use **x402** (pay and retry with **`PAYMENT-SIGNATURE`**) — see **[x402](./x402)**.
+3. **402:** **x402** + **`PAYMENT-SIGNATURE`** retry. **[x402](./x402)**
 
 ---
 
 ## How NEUS selects the payer
 
-Precedence: **paid receipt** → **sponsor grant** → **gate owner pays** (if configured) → **wallet that signed the request** → **x402 paywall path** → otherwise you may hit **limits** or **payment required**.
+Precedence: **paid receipt** → **sponsor grant** → **gate owner pays** (if set) → **signing wallet** → **x402** → else **limits** / **payment required**.
 
-You do not send “bill this `appId`” in the body and expect the wallet to switch — **payer is always derived from crypto/session mechanics**, not from `appId` alone.
+**Payer** comes from crypto/session mechanics, not a “bill this `appId`” body field.
 
 ---
 
@@ -59,9 +59,9 @@ You do not send “bill this `appId`” in the body and expect the wallet to swi
 
 | Config | Effect |
 |--------|--------|
-| `appId` | Sets **`X-Neus-App`** — **analytics / attribution** |
-| `sponsorGrant` | Sets **`X-Sponsor-Grant`** — **your org pays** (when grant is valid) |
-| `paymentSignature` | Sets **`PAYMENT-SIGNATURE`** — **retry after x402** |
+| `appId` | **`X-Neus-App`** · attribution |
+| `sponsorGrant` | **`X-Sponsor-Grant`** · org pays when valid |
+| `paymentSignature` | **`PAYMENT-SIGNATURE`** · after **402** |
 
 The SDK does **not** auto-complete x402 payments; your app handles **402 → pay → retry** (or you avoid 402 by keeping org credits healthy).
 
@@ -69,8 +69,8 @@ The SDK does **not** auto-complete x402 payments; your app handles **402 → pay
 
 ## Visibility vs billing
 
-- **Public / unlisted proofs** — eligibility checks can work without the user signing in.
-- **Private** — visibility rules still apply; **billing** is separate.
+- **Public / unlisted:** eligibility without sign-in.
+- **Private:** visibility rules apply; **billing** is separate.
 
 ---
 
@@ -93,4 +93,4 @@ The SDK does **not** auto-complete x402 payments; your app handles **402 → pay
 
 ### When the app owner pays
 
-**“App owner pays everything”** is achieved with **sponsor grants and org credits**, not with `appId` alone. A future protocol change could add a single switch so a linked app’s owner wallet becomes the default payer for server-side keys.
+**“App owner pays everything”** uses **sponsor grants** and **org credits**, not `appId` alone.

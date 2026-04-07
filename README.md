@@ -27,19 +27,15 @@
 
 ---
 
-Every app makes you re-verify. That's why bots win and users lose.
-
-NEUS fixes it: **verify once, get a portable proof receipt, reuse it everywhere.** Gate access, attach proof to content, register agents with scoped permissions — private by default, public when you choose.
-
-> Auth got standardized (OAuth). Payments got standardized (Stripe). **Verification is still bespoke.** NEUS standardizes it into one receipt.
+One **`proofId`** for gates, APIs, agents. Private by default.
 
 ## Why NEUS
 
-- **Stop re-verifying.** One check produces a receipt your whole stack can trust
-- **Gate access with proof, not auth spaghetti.** One line of code replaces custom verification logic
-- **Proof travels, data stays private.** Share the result without exposing underlying data
-- **Ship trust in minutes.** Drop-in SDK, widgets, and API — not months of infra
-- **Works for people and agents.** Same receipt format for human users and AI agents
+- One receipt, many checks
+- Less bespoke verification code
+- Default-private outputs
+- SDK · widgets · HTTP · MCP
+- Same format for humans and agents
 
 ## How it works
 
@@ -74,7 +70,7 @@ const proof = await client.verify({
 // 2. Save the receipt
 const proofId = proof.proofId;
 
-// 3. Reuse — check eligibility from anywhere
+// 3. Reuse: gateCheck from anywhere
 const check = await client.gateCheck({
   address: '0x...',
   verifierIds: ['ownership-basic'],
@@ -82,39 +78,39 @@ const check = await client.gateCheck({
 // check.data.eligible → true/false
 ```
 
-> **No wallet in your app?** Use [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) — redirect or popup, zero wallet code.
+> **No wallet?** [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify)
 
 ## What you can build
 
-| Use case | How | Verifier |
-|----------|-----|----------|
-| 🛡️ Human-only access | Block bots at signup | `proof-of-human` |
-| 🎨 NFT / token gated products | Gate by on-chain holdings | `nft-ownership` · `token-holding` |
-| ✅ Verified creator badges | Prove authorship, bind to wallet | `ownership-basic` |
-| 🏢 Org-verified teams | Prove domain or org membership | `ownership-dns-txt` · `ownership-org-oauth` |
-| 🤖 Agent identity + delegation | Register agents, scope permissions | `agent-identity` · `agent-delegation` |
-| 📝 Proof-backed content | Attach proof to posts and listings | `ownership-basic` + `proofId` |
+| Use case | Verifier |
+|----------|----------|
+| Human-only access | `proof-of-human` |
+| NFT / token gates | `nft-ownership` · `token-holding` |
+| Creator / authorship | `ownership-basic` |
+| Org / domain | `ownership-dns-txt` · `ownership-org-oauth` |
+| Agents | `agent-identity` · `agent-delegation` |
+| Proof-backed content | `ownership-basic` + `proofId` |
 
 ## Start here
 
-| I want to… | Go to |
-|-------------|-------|
-| **Try it in 5 minutes** | [Quickstart](https://docs.neus.network/quickstart) |
-| **Add verification with no code** | [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) |
-| **Gate content in React** | [Widgets](https://docs.neus.network/widgets/overview) |
-| **Check proofs from my server** | [API Reference](https://docs.neus.network/api/overview) |
-| **Add trust to AI agents** | [MCP](https://docs.neus.network/mcp/overview) |
-| **Set up platform + billing** | [Get Started](https://docs.neus.network/get-started) |
+|  |  |
+|--|--|
+| ~5 min | [Quickstart](https://docs.neus.network/quickstart) |
+| No code | [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) |
+| React | [Widgets](https://docs.neus.network/widgets/overview) |
+| Server | [API](https://docs.neus.network/api/overview) |
+| Agents | [MCP](https://docs.neus.network/mcp/overview) |
+| Hub + billing | [Get started](https://docs.neus.network/get-started) |
 
-## Integration paths
+## Paths
 
-| Path | Best for | Effort |
-|------|----------|--------|
-| [**Hosted Verify**](https://docs.neus.network/cookbook/auth-hosted-verify) | Login, guided verification | Redirect / popup — no UI to build |
-| [**Widgets**](https://docs.neus.network/widgets/overview) | React gating + badges | `<VerifyGate>` — one component |
-| [**SDK**](https://docs.neus.network/sdks/overview) | Custom flows | Full programmatic control |
-| [**API**](https://docs.neus.network/api/overview) | Server-side checks | HTTP from any language |
-| [**MCP**](https://docs.neus.network/mcp/overview) | AI agents (Cursor, Claude) | One URL — `https://mcp.neus.network/mcp` |
+| Path | Fit | Effort |
+|------|-----|--------|
+| [**Hosted Verify**](https://docs.neus.network/cookbook/auth-hosted-verify) | Guided login | Redirect or popup |
+| [**Widgets**](https://docs.neus.network/widgets/overview) | React gates | `<VerifyGate>` |
+| [**SDK**](https://docs.neus.network/sdks/overview) | Custom | Full control |
+| [**API**](https://docs.neus.network/api/overview) | Server-only | HTTP |
+| [**MCP**](https://docs.neus.network/mcp/overview) | Assistants | `https://mcp.neus.network/mcp` |
 
 ## Gate content in React
 
@@ -127,9 +123,9 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>
 ```
 
-## AI agents (MCP)
+## MCP
 
-Add NEUS to any MCP-compatible agent with one URL:
+Add NEUS with one URL:
 
 ```json
 {
@@ -139,25 +135,26 @@ Add NEUS to any MCP-compatible agent with one URL:
 }
 ```
 
-Agents verify users via hosted links that tools return. [Setup guide →](https://docs.neus.network/mcp/setup)
+Hosted links from tools (passkeys stay on NEUS). [Setup](https://docs.neus.network/mcp/setup)
 
-## Documentation
+## Docs
 
-| Resource | Description |
-|----------|-------------|
-| [**Quickstart**](https://docs.neus.network/quickstart) | First proof in 5 minutes |
-| [**Verifier catalog**](https://docs.neus.network/verification/verifiers) | All verification types |
-| [**API reference**](https://docs.neus.network/api/overview) | HTTP endpoints |
-| [**SDK reference**](https://docs.neus.network/sdks/javascript) | JavaScript SDK |
-| [**Examples**](./examples/) | React, Node.js, curl |
+|  |  |
+|--|--|
+| [**Quickstart**](https://docs.neus.network/quickstart) | First proof |
+| [**Verifiers**](https://docs.neus.network/verification/verifiers) | Types |
+| [**API**](https://docs.neus.network/api/overview) | HTTP |
+| [**SDK**](https://docs.neus.network/sdks/javascript) | JS |
+| [**Examples**](./examples/) | React, Node, curl |
 
-## Community
+## Support
 
-| Channel | |
-|---------|---|
-| [GitHub Discussions](https://github.com/neus/network/discussions) | Questions and ideas |
-| [GitHub Issues](https://github.com/neus/network/issues) | Bug reports |
-| [dev@neus.network](mailto:dev@neus.network) | Security disclosures |
+|  |  |
+|--|--|
+| [Docs](https://docs.neus.network) | Guides |
+| [Discussions](https://github.com/neus/network/discussions) | Q&A |
+| [Issues](https://github.com/neus/network/issues) | Bugs |
+| [dev@neus.network](mailto:dev@neus.network) | Security (private) |
 
 ## License
 

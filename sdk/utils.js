@@ -819,7 +819,7 @@ export class StatusPoller {
         try {
           this.attempt++;
 
-          const response = await this.client.getStatus(this.qHash);
+          const response = await this.client.getProof(this.qHash);
 
           // Check if verification is complete using the terminal status utility
           if (isTerminalStatus(response.status)) {
@@ -1251,6 +1251,7 @@ export const DEFAULT_HOSTED_VERIFY_URL = 'https://neus.network/verify';
  * @param {string} [opts.mode] - 'popup' or null
  * @param {string} [opts.intent] - 'login' for auth-code flow
  * @param {string} [opts.origin] - Allowed parent origin for popup completion
+ * @param {string} [opts.oauthProvider] - Optional OAuth provider id to pre-select for social/org verifiers (hosted flow)
  * @param {string} [opts.baseUrl] - Hosted verify URL override
  * @returns {string} Full URL
  */
@@ -1268,6 +1269,7 @@ export function getHostedCheckoutUrl(opts = {}) {
   if (opts.mode) params.set('mode', String(opts.mode));
   if (opts.intent) params.set('intent', String(opts.intent));
   if (opts.origin) params.set('origin', String(opts.origin));
+  if (opts.oauthProvider) params.set('oauthProvider', String(opts.oauthProvider));
   const qs = params.toString();
   return qs ? `${base}?${qs}` : base;
 }

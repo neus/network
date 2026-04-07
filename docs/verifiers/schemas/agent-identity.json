@@ -14,7 +14,7 @@
       ]
     }
   ],
-  "description": "Portable agent identity, ERC-8004 compatible",
+  "description": "Register an agent identity. The agent wallet signs this proof itself. This verifier does not grant permissions; use agent-delegation for authority.",
   "properties": {
     "agentAccountId": {
       "description": "Preferred canonical subject identity (CAIP-10).",

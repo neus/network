@@ -317,6 +317,20 @@ describe('Utils', () => {
       );
     });
 
+    it('should include oauthProvider when provided', () => {
+      const url = getHostedCheckoutUrl({
+        verifiers: ['ownership-social'],
+        mode: 'popup',
+        origin: 'https://app.example',
+        returnUrl: 'https://app.example/callback',
+        oauthProvider: 'github'
+      });
+
+      expect(url).toBe(
+        'https://neus.network/verify?returnUrl=https%3A%2F%2Fapp.example%2Fcallback&verifiers=ownership-social&mode=popup&origin=https%3A%2F%2Fapp.example&oauthProvider=github'
+      );
+    });
+
     it('should omit origin when not provided', () => {
       const url = getHostedCheckoutUrl({
         gateId: 'gate-123',

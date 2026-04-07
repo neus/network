@@ -137,7 +137,7 @@
   // Proof status fetch
   // -------------------------------------------------------------------------
   function fetchStatus(proofId, apiUrl, callback) {
-    var url = apiUrl + '/api/v1/verification/status/' + encodeURIComponent(proofId);
+    var url = apiUrl + '/api/v1/proofs/' + encodeURIComponent(proofId);
     try {
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, true);

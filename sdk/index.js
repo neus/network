@@ -37,7 +37,7 @@ export {
   toAgentDelegationMaxSpend
 } from './utils.js';
 
-// Gate recipes (examples, NOT defaults - pick what fits your use case)
+// Example gate presets (choose per product; not defaults)
 export {
   // Time constants
   HOUR,

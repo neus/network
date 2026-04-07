@@ -4,13 +4,13 @@ description: Use the NEUS-hosted UI for login and interactive verification.
 icon: key
 ---
 
-**Shipping an app?** **[Get started](../get-started)** for platform **`appId`**, credits, and sponsor setup; then use hosted verify in your flow.
+**Shipping an app?** **[Get started](../get-started)** for **`appId`**, credits, sponsors.
 
-Users complete verification on **neus.network** (passkey or wallet). Your app supplies **`returnUrl`** and builds the link with the SDK — you do not need custom wallet UI.
+Users verify on **neus.network**. Your app sets **`returnUrl`** and builds the link with the SDK.
 
-After they finish, **complete the session in your app with `@neus/sdk`** and use **`Authorization: Bearer`** on API calls — [SDK Authentication](../sdks/authentication).
+After completion: finish session with **`@neus/sdk`**, **`Authorization: Bearer`** on API calls. [SDK Authentication](../sdks/authentication)
 
-**MCP:** Prefer tools that return **`neus.network/verify`** links; optional **Bearer** after your user is signed in — [MCP Auth](../mcp/auth).
+**MCP:** tools return **`neus.network/verify`** links; **Bearer** when signed in. [MCP Auth](../mcp/auth)
 
 ## When to use
 
@@ -40,11 +40,12 @@ How hosted login behaves by environment (passkeys use **WebAuthn** in a **secure
 
 | Surface | Passkeys | Wallet (AppKit / WalletConnect) |
 |--------|----------|----------------------------------|
-| Desktop browser or IDE embedded browser | May complete locally or via phone / cross-device handoff when the browser offers it | Use **Connect Wallet** from the page; QR and mobile scan rely on a normal user gesture so the wallet modal and popups are not suppressed |
-| Mobile browser or installed PWA | Uses the platform password manager or authenticator when available | Prefer the wallet app or deep link the browser offers |
-| Local development | Use **`http://localhost:2800`** (hostname `localhost`) so **rpID** and origin match; avoid raw LAN IPs for WebAuthn | Same as desktop; keep the app origin aligned with your NEUS passkey profile |
+| Desktop browser | Local passkey, phone handoff, or cross-device when the browser supports it | **Connect Wallet** from the page; QR and mobile flows need a normal user gesture |
+| Mobile browser or installed PWA | Platform password manager or authenticator when available | Prefer the wallet app or the deep link the browser offers |
 
-**PWA:** The installable shell uses a minimal service worker that **does not intercept** `/api/` routes, so session and auth traffic stay on the network stack. Do not add auth-specific caching in the service worker for hosted flows.
+**WebAuthn:** use **`https`**, or **`http://localhost`** with an origin that matches your NEUS profile. Avoid raw LAN IPs.
+
+**PWA:** service worker does not intercept `/api/`; do not cache auth traffic for hosted flows.
 
 ## Code
 
@@ -57,10 +58,9 @@ const verifyUrl = getHostedCheckoutUrl({
 });
 
 window.location.href = verifyUrl;
-// Popup: add mode: 'popup', origin: window.location.origin, then window.open(...)
 ```
 
-**Popup:** listen for **`neus_checkout_done`** (includes `proofId`) or **`neus_login_complete`**. **Redirect:** handle your **`returnUrl`** route and finish login with the SDK.
+**Popup:** `mode: 'popup'`, `origin: window.location.origin`, then `window.open`. Listen for **`neus_checkout_done`** or **`neus_login_complete`**. **Redirect:** handle **`returnUrl`** and finish with the SDK.
 
 ## Next
 

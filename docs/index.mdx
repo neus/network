@@ -4,42 +4,28 @@ description: Portable proof receipts for login, trust, access, and agent workflo
 icon: house
 ---
 
-**Every app makes you re-verify. NEUS fixes it.**
-
-Verify once, get a portable proof receipt, reuse it everywhere — gate access, attach proof to content, register agents, share results without exposing raw data. Private by default.
-
-<CardGroup cols={3}>
+**Re-verify everywhere.** NEUS: one portable proof ID. Gates, content, agents. Private by default.
 
 ## How it works
 
-1. **Verify** — User completes verification (hosted UI, wallet, or social).
-2. **Save** — You store the proof receipt ID.
-3. **Reuse** — Same proof for login, gating, policy, and agents.
+1. **Verify:** hosted UI, wallet, social, or passkey.
+2. **Save:** proof ID.
+3. **Reuse:** gates, eligibility, badges, agents.
 
 <CardGroup cols={2}>
   <Card title="Get started" icon="rocket" href="./get-started">
-    Builders: platform, app link, billing, first integration.
+    Platform, billing, first integration.
   </Card>
   <Card title="Choose your path" icon="route" href="./choose-an-integration-path">
-    Pick Hosted Verify, Widgets, SDK, API, or MCP.
+    Hosted Verify, Widgets, SDK, API, or MCP.
   </Card>
   <Card title="Quickstart" icon="code" href="./quickstart">
-    First proof in 5 minutes.
-    First proof with code.
+    ~5 min to first proof.
   </Card>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    No-code verification UI.
-  </Card>
-  <Card title="Get started" icon="book" href="./get-started">
-    Platform, billing, app setup.
+    Hosted verification UI.
   </Card>
 </CardGroup>
-
-## How it works
-
-1. **Verify** — User completes a check (wallet, social, identity, or risk).
-2. **Get a receipt** — You receive a portable proof ID. Private by default.
-3. **Reuse it** — Gate content, check eligibility, share badges, delegate to agents.
 
 ## What you can build
 
@@ -58,13 +44,11 @@ Verify once, get a portable proof receipt, reuse it everywhere — gate access, 
 
 | Path | Best for | Effort |
 |------|----------|--------|
-| [Hosted Verify](./cookbook/auth-hosted-verify) | Login, guided verification | Redirect / popup |
-| [Widgets](./widgets/overview) | React gating + badges | One component |
-| [SDK](./sdks/overview) | Custom flows | Full control |
+| [Hosted Verify](./cookbook/auth-hosted-verify) | Guided login | Redirect or popup |
+| [Widgets](./widgets/overview) | React gates | `<VerifyGate>` |
+| [SDK](./sdks/overview) | Custom | Full control |
 | [API](./api/overview) | Server-side checks | HTTP |
-| [MCP](./mcp/overview) | AI agents (Cursor, Claude) | One URL |
-
-Not sure? [Choose an integration path →](./choose-an-integration-path)
+| [MCP](./mcp/overview) | AI agents | `https://mcp.neus.network/mcp` |
 
 ## URLs
 

@@ -4,51 +4,43 @@ description: Register and delegate authority to AI agents.
 icon: robot
 ---
 
-Verifiable agents with scoped permissions.
+## Flow
 
-## How agents work
+1. **Register agent** (`agent-identity`)  
+2. **Delegate** (`agent-delegation`)  
+3. **Hosted verify** for interactive steps; MCP uses the same URLs
 
-1. **Add the agent** (identity for the agent wallet)  
-2. **Approve what it can do** (access from your account)  
-3. **Use hosted verify** for the normal interactive path; MCP wraps the same flow
+Steps 1–2 can be different people. **[Concepts](./concepts)** (roles, wallets, fields).
 
-**Different people can do steps 1 and 2.** See **[Agent concepts](./concepts)** for roles, wallets, and API field names.
+## Why
 
-## Why Agent Verification
-
-| Question | NEUS Answer |
-|----------|-------------|
+| Question | Answer |
+|----------|--------|
 | Which agent is acting? | Agent registration binds agent to wallet |
 | What can it do? | Delegation scopes permissions |
-| How does it integrate? | MCP + proof receipts for audit trails |
-
----
-
-## Agent Capabilities
+| How it plugs in | MCP + receipts |
 
 <CardGroup cols={2}>
   <Card title="Concepts" icon="book-open" href="./concepts">
-    Roles, wallets, and API field names.
+    Roles, wallets, fields.
   </Card>
-  <Card title="Agent Registration" icon="badge-check" href="./agent-identity">
-    Register an AI agent, bot, or automation.
+  <Card title="Registration" icon="badge-check" href="./agent-identity">
+    `agent-identity`
   </Card>
-  <Card title="Agent Delegation" icon="key" href="./agent-delegation">
-    Scope what an agent can do.
+  <Card title="Delegation" icon="key" href="./agent-delegation">
+    `agent-delegation`
   </Card>
-  <Card title="Verification Flow" icon="route" href="./agent-verification-flow">
-    How agent verification works.
+  <Card title="Verification flow" icon="route" href="./agent-verification-flow">
+    Sequence.
   </Card>
-  <Card title="Verifiable Agents" icon="book-open" href="../cookbook/verifiable-agents">
-    End-to-end implementation guide.
+  <Card title="Cookbook" icon="book-open" href="../cookbook/verifiable-agents">
+    End-to-end.
   </Card>
 </CardGroup>
 
----
+## Start
 
-## Quick Start
-
-### Register an Agent
+### Register
 
 ```javascript
 const agent = await client.verify({
@@ -63,7 +55,7 @@ const agent = await client.verify({
 });
 ```
 
-### Delegate Permissions
+### Delegate
 
 ```javascript
 const delegation = await client.verify({
@@ -78,9 +70,7 @@ const delegation = await client.verify({
 });
 ```
 
----
-
-## Agent Flow
+## Diagram
 
 ```
 ┌─────────────────┐
@@ -102,15 +92,13 @@ const delegation = await client.verify({
 └─────────────────┘
 ```
 
----
-
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="MCP Integration" icon="plug" href="../mcp/overview">
-    Connect agents to AI tools.
+  <Card title="MCP" icon="plug" href="../mcp/overview">
+    Tools + URLs.
   </Card>
-  <Card title="Verifier Catalog" icon="list-tree" href="../verification/verifiers">
-    All verification capabilities.
+  <Card title="Verifiers" icon="list-tree" href="../verification/verifiers">
+    Full list.
   </Card>
 </CardGroup>

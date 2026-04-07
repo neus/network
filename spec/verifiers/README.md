@@ -1,10 +1,10 @@
-# Verifier Specs
+# Verifier specs
 
-Machine-readable verifier assets live here.
+Machine-readable assets.
 
-- [`VERIFIERS.json`](../VERIFIERS.json) is the standardized verifier index used by tooling.
-- [`schemas/`](./schemas/) is the canonical machine-readable schema tree for each verifier.
-- The public human-readable catalog is published at `https://docs.neus.network/verification/verifiers`.
+- [`VERIFIERS.json`](../VERIFIERS.json) · verifier index
+- [`schemas/`](./schemas/) · JSON Schema per verifier
 
-Public docs prose belongs in `docs/`; machine-readable verifier assets belong under `spec/`.
-If `docs/` contains schema mirrors for site rendering, treat them as derived copies, not the source of truth.
+Human-readable catalog: [docs.neus.network/verification/verifiers](https://docs.neus.network/verification/verifiers)
+
+If `docs/` mirrors schemas for the site, treat those as generated from this tree.

@@ -1,43 +1,35 @@
 ---
 title: Platform Overview
-description: What's included with NEUS — hosted flows, proof pages, and profiles.
+description: Hosted verify, proof pages, hub, API, MCP.
 icon: globe
 ---
 
-NEUS includes everything you need for verification. No infrastructure required.
+## Components
 
-## What You Get
-
-| Component | What It Does |
-|-----------|--------------|
-| **Hosted Verify** | Ready-made verification UI at `/verify` |
-| **Proof Pages** | Public page for each proof receipt |
-| **Platform home (`/hub`)** | Profiles, apps, credits, and account management |
-| **API** | Full programmatic access |
-| **MCP** | Agent and AI tool integration |
-
----
-
-## The Platform
+| Piece | Role |
+|-------|------|
+| **Hosted Verify** | UI at `/verify` |
+| **Proof pages** | `/proof/[id]` |
+| **Hub** | Profiles, apps, credits |
+| **API** | Programmatic |
+| **MCP** | Assistants |
 
 <CardGroup cols={2}>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    Guided verification flow. No frontend work needed.
+    `/verify` flow.
   </Card>
-  <Card title="Proof Pages" icon="receipt" href="./receipts-and-results">
-    Every proof gets a shareable page.
+  <Card title="Proof pages" icon="receipt" href="./receipts-and-results">
+    Shareable receipt pages.
   </Card>
-  <Card title="Platform" icon="user-circle" href="./hub">
-    Public profiles, proofs, apps, and agents.
+  <Card title="Hub" icon="user-circle" href="./hub">
+    Profiles, apps, agents.
   </Card>
   <Card title="Presets" icon="layer-group" href="./presets">
-    Pre-configured verifier bundles.
+    Verifier bundles.
   </Card>
 </CardGroup>
 
----
-
-## How It Fits Together
+## Flow
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -57,9 +49,7 @@ NEUS includes everything you need for verification. No infrastructure required.
 └─────────────────────────────────────────────────────────────┘
 ```
 
----
-
-## Public URLs
+## URLs
 
 | Service | URL |
 |---------|-----|
@@ -69,15 +59,13 @@ NEUS includes everything you need for verification. No infrastructure required.
 | API | `https://api.neus.network` |
 | MCP | `https://mcp.neus.network/mcp` |
 
----
-
-## Next Steps
+## Next
 
 <CardGroup cols={2}>
   <Card title="Quickstart" icon="rocket" href="../quickstart">
-    Create your first proof.
+    First proof.
   </Card>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    Use the guided flow.
+    Guided flow.
   </Card>
 </CardGroup>

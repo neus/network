@@ -1,6 +1,6 @@
 # agent-delegation
 
-Delegates authority to an agent, ERC-8004 compatible
+Delegates scoped authority from a delegating account to an agent, ERC-8004 compatible
 
 - **Access:** `public`
 - **Category:** `agent`
@@ -14,16 +14,16 @@ Delegates authority to an agent, ERC-8004 compatible
 
 ## Optional fields
 
-- `controllerAccountId` (`string format caip10-account`): Preferred canonical controller identity (CAIP-10).
+- `controllerAccountId` (`string format caip10-account`): Preferred primary controller account (CAIP-10).
 - `controllerChainRef` (`string format caip2-chain`): Required when using legacy controllerWallet without controllerAccountId.
 - `controllerWallet` (`string format universal-address`)
-- `agentAccountId` (`string format caip10-account`): Preferred canonical agent identity (CAIP-10).
+- `agentAccountId` (`string format caip10-account`): Preferred primary agent account (CAIP-10).
 - `agentChainRef` (`string format caip2-chain`): Required when using legacy agentWallet without agentAccountId.
 - `agentWallet` (`string format universal-address`)
 - `agentId` (`string max 128 min 1`)
 - `scope` (`string max 128`)
 - `permissions` (`array`)
-- `maxSpend` (`string pattern ^[0-9]{1,78}$`): whole-number string in token base units (no decimal point); USDC typically uses six decimal places for x402
+- `maxSpend` (`string pattern ^[0-9]{1,78}$`): Spend cap as a whole-number string in token base units (no decimal point). USDC (common x402): six decimal places; native ETH-style assets: eighteen.
 - `allowedPaymentTypes` (`array`)
 - `receiptDisclosure` (`string enum: none, summary, full`)
 - `expiresAt` (`integer`)
@@ -32,7 +32,7 @@ Delegates authority to an agent, ERC-8004 compatible
 
 - **Compatible with:** `agent-identity`, `ownership-org-oauth`, `wallet-risk`, `wallet-link`
 
-## Example
+## Example (schema-validated)
 
 ```javascript
 await client.verify({

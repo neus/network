@@ -20,7 +20,7 @@ Verifies smart contract ownership (EVM chains)
 
 - **Compatible with:** `wallet-link`, `wallet-risk`, `agent-identity`
 
-## Example
+## Example (schema-validated)
 
 ```javascript
 await client.verify({

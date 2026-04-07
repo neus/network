@@ -1,35 +1,32 @@
 ---
 title: x402 Pay-Per-Use
-description: Pay per use when credits run out. Verification API, gate checks, hosted checkout, and agents.
+description: Pay per request when credits run out. Retry with a payment receipt.
 icon: coins
 ---
 
-**Default path:** Platform credits + **sponsor grants** — **[Get started](../get-started)**. **x402** is for when you are **out of credits** and need to **pay per request**, then retry with a receipt.
+Prefer **credits** and **sponsor grants**. **[Get started](../get-started)**
 
-x402 lets a request pay at the time it runs. If credits are not available, the API returns a quote, the client pays, and the request is retried with the receipt.
+**x402:** API returns **402** with a quote → pay → retry with **`PAYMENT-SIGNATURE`**.
 
-## Where x402 Applies
+## Where 402 appears
 
-| API or flow | When 402 happens |
-|---------|------------------|
-| **Verification API** | `POST /api/v1/verification` when the caller has no credits |
-| **Gate check API** | `GET /api/v1/proofs/check` when the caller has no credits |
-| **MCP tools** | Tool call returns payment-needed when no credits |
-| **Hosted flows** | When the calling app or server makes billable requests without credits |
+| Flow | When |
+|------|------|
+| `POST /api/v1/verification` | No credits |
+| `GET /api/v1/proofs/check` | No credits |
+| MCP tools | No credits |
+| Hosted-adjacent billable calls | No credits on the paying party |
 
-## Flow
+## Steps
 
-1. **Request** — Call verification or gate check.
-2. **402** — API returns `402 Payment Required` with quote.
-3. **Pay** — Pay the quoted amount.
-4. **Retry** — Resend request with `PAYMENT-SIGNATURE: <receipt>`.
+1. Call API.
+2. Receive **402** + quote.
+3. Pay.
+4. Retry with **`PAYMENT-SIGNATURE: <receipt>`**.
 
-## Using x402 Through Verifiers and Checkout
+## Surfaces
 
-- **Verifiers** — Direct API verification can fall back to x402 when credits are missing.
-- **Gates** — Gate checks can do the same.
-- **Hosted flows** — x402 matters when the calling app or server is the billable party.
-- **Agents** — Delegation can allow pay-per-use on behalf of the approving account.
+Verification, gate checks, hosted billable calls, and agent delegation with **`payments:x402`** can use the same pattern.
 
 ## Header
 
@@ -41,18 +38,18 @@ PAYMENT-SIGNATURE: <receipt>
 
 <CardGroup cols={2}>
   <Card title="Get started" icon="book" href="../get-started">
-    Platform credits before x402.
+    Credits first.
   </Card>
-  <Card title="Billing and Credits" icon="credit-card" href="./billing">
-    Credit pricing and payment methods.
+  <Card title="Billing" icon="credit-card" href="./billing">
+    Who pays.
   </Card>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    Checkout URL and verifier params.
+    Hosted flows.
   </Card>
-  <Card title="MCP Server" icon="plug" href="../mcp/overview">
-    x402 in MCP flows.
+  <Card title="MCP" icon="plug" href="../mcp/overview">
+    MCP + x402.
   </Card>
-  <Card title="Agent Delegation" icon="robot" href="../agents/agent-delegation">
-    `payments:x402` scope.
+  <Card title="Agent delegation" icon="robot" href="../agents/agent-delegation">
+    `payments:x402`.
   </Card>
 </CardGroup>

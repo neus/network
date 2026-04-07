@@ -4,56 +4,54 @@ description: Roles, wallets, and how NEUS agent API field names map to those con
 icon: users
 ---
 
-This page defines NEUS agent roles and wallets, and maps them to JSON and API field names.
+## Invariant
 
-## Core invariant
-
-**Registering an agent** and **approving what it can do** are **separate steps**. Different people can perform them. **No wallet linking** between publisher and approver is required for the open permission layer to work.
+**Register** and **approve scopes** are separate. Different people can do each. Publisher and approver wallets need not be linked.
 
 ## Roles
 
-| Role | Description | Signs |
-|------|----------------|--------|
-| **Publisher** | Publishes the agent (metadata bound to an agent wallet) | The **agent wallet** registers the agent |
-| **Approver** | Grants scoped access to that agent | The **approving account** signs access approval |
+| Role | Does | Signs |
+|------|------|-------|
+| **Publisher** | Publishes agent (metadata → agent wallet) | **Agent wallet** |
+| **Approver** | Grants scopes | **Approving account** |
 
-The publisher and approver can be the same person (common solo setup) or different people (marketplace or delegated trust).
+Same person or two (marketplace / delegation).
 
 ## Wallets
 
-- **Agent wallet** — The wallet that represents the agent on chain; used when **registering / publishing** the agent.
-- **Approving account** — The wallet that **signs access approval** for what the agent is allowed to do (scopes, limits, expiry). This is **not** “ownership” of the agent wallet and does not require linking profiles.
+- **Agent wallet:** register / publish.
+- **Approving account:** delegation signature (scopes, limits, expiry). Not “owner” of the agent wallet; no profile link required.
 
-## Hosted flow
+## Hosted
 
-The normal path is **[hosted verify](../cookbook/auth-hosted-verify)**: complete steps in the browser (or MCP-assisted links) instead of hand-rolling signatures.
+**[Hosted verify](../cookbook/auth-hosted-verify)** or MCP links.
 
-## Field names in the API
+## API names
 
-JSON and query parameters keep stable names for compatibility. In prose, map them like this:
+Stable JSON / query names:
 
 | API / query name | Meaning |
 |------------------|-------------------------|
 | `agentWallet` | Agent wallet address |
-| `controllerWallet` | **Approving account** (grantor) in delegation payloads and checks — not “controller” in a product-linking sense |
-| `linked` (MCP) | **Readiness** compatibility flag: identity + access approval on file — not wallet-link |
-| `principal` (`neus_me`) | **Signed-in NEUS account** summary (DID / wallet context) — not the delegation approver unless that session is the one approving |
+| `controllerWallet` | **Approving account** in delegation (not “product controller”) |
+| `linked` (MCP) | Readiness: identity + access approval present |
+| `principal` (`neus_me`) | Signed-in account summary; not the approver unless same session |
 
-**Private proofs** are visible when that same user is signed in with NEUS — separate from **approving account** in agent delegation.
+**Private proofs:** only when that user is signed in. Delegation **approving account** is separate.
 
-## Where to go next
+## Next
 
 <CardGroup cols={2}>
-  <Card title="Agents overview" icon="robot" href="./overview">
-    Capabilities and quick start
+  <Card title="Agents" icon="robot" href="./overview">
+    Overview + start.
   </Card>
-  <Card title="Verification flow" icon="route" href="./agent-verification-flow">
-    End-to-end sequence
+  <Card title="Flow" icon="route" href="./agent-verification-flow">
+    Sequence.
   </Card>
-  <Card title="MCP agent create" icon="plug" href="../mcp/agent-create">
-    Start setup from tools
+  <Card title="MCP create" icon="plug" href="../mcp/agent-create">
+    From tools.
   </Card>
-  <Card title="Verifiable agents cookbook" icon="book-open" href="../cookbook/verifiable-agents">
-    Integrator playbook
+  <Card title="Cookbook" icon="book-open" href="../cookbook/verifiable-agents">
+    Playbook.
   </Card>
 </CardGroup>

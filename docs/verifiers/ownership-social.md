@@ -11,7 +11,7 @@ Social media account ownership via OAuth
 ## Required fields
 
 - `provider` (`string enum: discord, github, facebook, x, farcaster, linkedin, telegram, coinbase`)
-- `internalSocialToken` (`string`) — token from the NEUS-hosted OAuth step (request field name as shown)
+- `internalSocialToken` (`string`)
 
 ## Optional fields
 
@@ -19,7 +19,7 @@ Social media account ownership via OAuth
 
 - **Compatible with:** `ownership-basic`
 
-## Example
+## Example (schema-validated)
 
 ```javascript
 await client.verify({

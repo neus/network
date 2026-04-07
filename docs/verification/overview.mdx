@@ -1,27 +1,23 @@
 ---
 title: Verification Overview
-description: How verification works — from request to reusable proof receipt.
+description: From request to reusable proof receipt.
 icon: file-signature
 ---
 
-Verify once. Reuse everywhere.
-
-## The Verification Loop
+## Loop
 
 ```
 Check ──▶ Verify (if needed) ──▶ Save ──▶ Reuse
 ```
 
-1. **Check** — Is the user already verified?
-2. **Verify** — Only if no valid proof exists
-3. **Save** — Store the proof receipt ID
-4. **Reuse** — Same proof for all downstream needs
+1. **Check:** already verified?
+2. **Verify:** if no valid proof
+3. **Save:** proof receipt ID
+4. **Reuse:** downstream
 
----
+## Outcomes
 
-## What NEUS Verification Powers
-
-| Outcome | Use Cases |
+| Outcome | Examples |
 |---------|-----------|
 | Identity | Login, social linking, team verification |
 | Ownership | Content provenance, file receipts, authorship |
@@ -29,19 +25,15 @@ Check ──▶ Verify (if needed) ──▶ Save ──▶ Reuse
 | Abuse Prevention | Human verification, wallet safety |
 | Agents | Agent registration, scoped delegation |
 
----
+## Types
 
-## Verification Types
-
-| Type | How It Works | Examples |
+| Type | Behavior | Examples |
 |------|--------------|----------|
 | **Instant** | Wallet signs, proof created | ownership-basic, agent-identity |
 | **Interactive** | User completes hosted flow | social linking, human verification |
 | **Lookup** | Check against live state | NFT ownership, token balance |
 
----
-
-## Key Terms
+## Terms
 
 | Term | Meaning |
 |------|---------|
@@ -50,31 +42,25 @@ Check ──▶ Verify (if needed) ──▶ Save ──▶ Reuse
 | **Signing string** | The message the wallet signs |
 | **Hosted verify** | NEUS-hosted UI at `/verify` |
 
----
+## Response
 
-## What You Get Back
+- `proofId`
+- `status` · `verified` · `processing` · `failed`
+- Page · `https://neus.network/proof/[proof-id]`
 
-Every verification returns:
-
-- `proofId` — The reusable proof receipt ID
-- `status` — `verified`, `processing`, or `failed`
-- Proof page URL — `https://neus.network/proof/[proof-id]`
-
----
-
-## Next Steps
+## Next
 
 <CardGroup cols={2}>
-  <Card title="Verifier Catalog" icon="list-tree" href="./verifiers">
-    Choose the right capability.
+  <Card title="Verifiers" icon="list-tree" href="./verifiers">
+    Pick capability.
   </Card>
-  <Card title="How It Works" icon="shield-check" href="./how-it-works">
-    Deep dive into the flow.
+  <Card title="How it works" icon="shield-check" href="./how-it-works">
+    Flow detail.
   </Card>
-  <Card title="Signing Format" icon="file-signature" href="./signing-format">
-    How signing works.
+  <Card title="Signing" icon="file-signature" href="./signing-format">
+    Messages.
   </Card>
   <Card title="Lifecycle" icon="rotate" href="./lifecycle">
-    Status, polling, and revocation.
+    Poll + revoke.
   </Card>
 </CardGroup>

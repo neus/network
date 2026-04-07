@@ -5,7 +5,7 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 ## Authentication model
 
 - **Verification submission** (`POST /api/v1/verification`) is authenticated by a signature over the **NEUS Standard Signing String**.
-- **Status by proof receipt ID** (`GET /api/v1/verification/status/{qHash}`) is safe to call publicly. `qHash` is the raw HTTP path name for the same receipt.
+- **Proof record by receipt id** (`GET /api/v1/proofs/{qHash}`) is safe to call publicly for public proofs; private proofs return a minimal payload unless the caller is the owner (session or signed headers).
 - **Owner-only reads** of private proof payloads require an additional owner signature. The SDK uses:
   - `x-wallet-address`
   - `x-signature`

@@ -4,23 +4,23 @@ description: Security best practices for NEUS SDK integrations.
 icon: lock
 ---
 
-Use the SDK with the same rule as the rest of NEUS: expose the minimum possible data, use hosted verify for interactive work, and keep owner-only proof access behind explicit authorization.
+Minimize exposed data. Interactive flows → hosted verify. Private proofs → owner auth only.
 
 ## Authentication Model
 
 | Operation | Authentication |
 |-----------|----------------|
 | Verification submission (`POST /api/v1/verification`) | Signature over NEUS Standard Signing String |
-| Status by proof receipt ID (`GET /api/v1/verification/status/{qHash}`) | Public (no auth required) |
+| Proof record by receipt id (`GET /api/v1/proofs/{qHash}`) | Public for public proofs; minimal payload for private unless owner-authenticated |
 | Owner-only reads of private proofs | Additional owner signature |
 
-Owner-only reads use extra signed headers — call the **SDK methods** for private proofs instead of assembling headers yourself.
+Owner-only reads need extra signed headers. Use **SDK methods** for private proofs.
 
 ## Do Not
 
 <Warning>
 - Do not treat proof signatures as bearer tokens (they are request-bound)
-- Do not embed **secrets** in browser bundles — keep them on your servers
+- Do not embed **secrets** in browser bundles
 - Do not log or persist:
   - proof signatures
   - API keys

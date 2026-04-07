@@ -8,7 +8,7 @@ icon: code
 
 ## Connect
 
-Paste this into your MCP settings (Cursor, Claude Desktop, VS Code, or any client that supports HTTP MCP). Use the URL **exactly** as shown, including `/mcp`.
+Paste into your **HTTP MCP** client. Use the URL **exactly** as shown, including `/mcp`.
 
 ```json
 {
@@ -24,13 +24,13 @@ Paste this into your MCP settings (Cursor, Claude Desktop, VS Code, or any clien
 
 Reload the client if it asks. **No API key.**
 
-**Self-hosted only:** `npx @neus/mcp-server` — most people use the hosted URL above.
+**Pre-production:** if your app calls **`https://dev.api.neus.network`**, use MCP **`https://dev.mcp.neus.network/mcp`**. [Endpoints](./endpoints)
 
 ## First run
 
 1. Ask the assistant to run **`neus_verify_or_guide`** (or **`neus_proofs_check`**).
 2. **Open** any **`https://neus.network/verify`** link in the browser.
-3. Optional: **`neus_proofs_get`** when you have an id—see [Tools](./tools).
+3. Optional **`neus_proofs_get`** when you have an id. [Tools](./tools)
 4. Sessions / private data: [Auth](./auth).
 
 Then follow the [Overview](./overview) default path.

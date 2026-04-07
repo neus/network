@@ -6,11 +6,11 @@ icon: key
 
 ## Hosted login
 
-1. Send users to NEUS hosted verify with your **`returnUrl`** — use **`getHostedCheckoutUrl`** ([Hosted Verify](../cookbook/auth-hosted-verify)).
-2. They complete passkey or wallet on **neus.network**.
-3. When they return to your app, **finish login with `@neus/sdk`** and keep the session token for API calls (**`Authorization: Bearer`**).
+1. Hosted verify with **`returnUrl`** via **`getHostedCheckoutUrl`**. [Hosted Verify](../cookbook/auth-hosted-verify)
+2. User completes passkey or wallet on **neus.network**.
+3. **Finish login with `@neus/sdk`**. Keep **`Authorization: Bearer`** for API calls.
 
-Same **Bearer** on MCP enables **`neus_me`** — [MCP Auth](../mcp/auth).
+**Bearer** on MCP → **`neus_me`**. [MCP Auth](../mcp/auth)
 
 ## Signature-based login
 

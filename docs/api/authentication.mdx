@@ -4,7 +4,7 @@ description: How API requests are authenticated for NEUS integrations.
 icon: fingerprint
 ---
 
-**Default:** [Hosted Verify](../cookbook/auth-hosted-verify) or the **SDK** — users never need raw HTTP signing details.
+**Default:** [Hosted Verify](../cookbook/auth-hosted-verify) or **SDK**. No raw HTTP signing for normal flows.
 
 Use the paths below only when you intentionally call the HTTP API without the SDK.
 
@@ -18,9 +18,9 @@ Use the paths below only when you intentionally call the HTTP API without the SD
 
 ## Programmatic proof creation (HTTP)
 
-1. **`POST /api/v1/verification/standardize`** — request body for your verifiers; response includes **`signerString`**.
-2. Sign **`signerString`** with the user’s wallet (same request fields you will submit).
-3. **`POST /api/v1/verification`** — same fields as step 1, plus **`signature`**.
+1. **`POST /api/v1/verification/standardize`:** body for your verifiers → **`signerString`**.
+2. Sign **`signerString`** with the user’s wallet.
+3. **`POST /api/v1/verification`:** same fields + **`signature`**.
 
 Request and response shapes: **OpenAPI** (`docs/openapi/public-api.json`). Narrative: [Signing format](../verification/signing-format).
 

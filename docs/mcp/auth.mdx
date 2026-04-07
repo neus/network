@@ -6,7 +6,7 @@ icon: lock
 
 **No API key** for the hosted MCP. **Hosted links** and **public lookups** cover the usual case. **`neus_me`** and **private** proof reads need the user **signed in**.
 
-**URL-only MCP:** tools may return **`https://neus.network/verify`** — the user opens it. That does **not** sign the IDE into NEUS by itself.
+**URL-only MCP:** tools may return **`https://neus.network/verify`**. The user opens it. That does **not** sign the assistant session into NEUS by itself.
 
 **Your app already has a NEUS session:** if the client supports headers, send the same **`Authorization: Bearer <token>`** you use for the API ([SDK Authentication](../sdks/authentication)) on MCP requests. Call **`neus_me`** to confirm.
 

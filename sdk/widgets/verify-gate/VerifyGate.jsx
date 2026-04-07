@@ -1,26 +1,7 @@
 "use client";
 /**
- * NEUS VerifyGate Widget
- * React component for gated content verification
- * 
- * Supported verifiers:
- * - ownership-basic: Content/authorship claims
- * - ownership-pseudonym: Pseudonymous identity
- * - nft-ownership: NFT ownership (ERC-721/1155)
- * - token-holding: Token balance (ERC-20)
- * - ownership-dns-txt: Domain ownership via DNS
- * - wallet-link: Multi-wallet identity linking
- * - contract-ownership: Smart contract ownership
- * - wallet-risk: Wallet risk assessment
- * - agent-identity: Portable agent identity (wallet-anchored)
- * - agent-delegation: Agent authorization
- * - ai-content-moderation: Content safety verification
- * 
- * Proof strategies:
- * - 'reuse': Use existing valid proof (static facts)
- * - 'fresh': Always create new proof (dynamic facts)
- * - 'reuse-or-create': Use existing if valid, else create (default)
- * 
+ * VerifyGate — gate UI behind NEUS verification (hosted or wallet flows).
+ * Verifier IDs and behavior: see docs.neus.network.
  * @license Apache-2.0
  */
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
@@ -151,6 +132,7 @@ export function VerifyGate({
   paymentSignature = undefined,
   extraHeaders = undefined,
   hostedCheckoutUrl = undefined,
+  oauthProvider = undefined,
   style = undefined,
   children = undefined,
   // Verifier configuration
@@ -259,8 +241,8 @@ export function VerifyGate({
         verifiedVerifiers: existingProof.verifiedVerifiers || [],
         existing: true,
         proofsByVerifierId: gateResult.existing || {},
-        statusUrl: proofId
-          ? `${apiUrl || 'https://api.neus.network'}/api/v1/verification/status/${proofId}`
+        proofUrl: proofId
+          ? `${apiUrl || 'https://api.neus.network'}/api/v1/proofs/${proofId}`
           : null
       });
     }
@@ -401,6 +383,9 @@ export function VerifyGate({
     checkoutUrl.searchParams.set('mode', 'popup');
     checkoutUrl.searchParams.set('returnUrl', returnUrl);
     checkoutUrl.searchParams.set('origin', origin);
+    if (typeof oauthProvider === 'string' && oauthProvider.trim()) {
+      checkoutUrl.searchParams.set('oauthProvider', oauthProvider.trim());
+    }
 
     let expectedOrigin = '*';
     try {
@@ -464,7 +449,7 @@ export function VerifyGate({
 
       window.addEventListener('message', onMessage);
     });
-  }, [resolvedHostedCheckoutUrl, verifierList]);
+  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider]);
 
   // Notify parent of state changes
   useEffect(() => {
@@ -561,7 +546,7 @@ export function VerifyGate({
         setState('verifying');
         
         // Use SDK's private access method with wallet signature
-        const privateData = await client.getPrivateStatus(
+        const privateData = await client.getPrivateProof(
           resolvedProofId,
           wallet || (typeof window !== 'undefined' ? window.ethereum : null)
         );
@@ -573,7 +558,7 @@ export function VerifyGate({
           qHash: resolvedProofId,
           data: privateData.data,
           mode: 'access',
-          statusUrl: privateData.statusUrl
+          proofUrl: privateData.proofUrl
         });
         
       } else if (strategy === 'reuse') {
@@ -611,9 +596,9 @@ export function VerifyGate({
             existing: false,
             mode: 'create',
             eligible: checkoutResult?.eligible !== false,
-            statusUrl: checkoutResult?.statusUrl || (
+            proofUrl: checkoutResult?.proofUrl || (
               checkoutProofId
-                ? `${apiUrl || 'https://api.neus.network'}/api/v1/verification/status/${checkoutProofId}`
+                ? `${apiUrl || 'https://api.neus.network'}/api/v1/proofs/${checkoutProofId}`
                 : null
             )
           });
@@ -711,7 +696,7 @@ export function VerifyGate({
             address: final?.data?.walletAddress,
             txHash,
             verifiedVerifiers,
-            statusUrl: final?.statusUrl
+            proofUrl: final?.proofUrl
           };
         };
 
@@ -733,7 +718,7 @@ export function VerifyGate({
           txHash: last?.txHash,
           verifierIds: verifierList,
           verifiedVerifiers: last?.verifiedVerifiers,
-          statusUrl: last?.statusUrl,
+          proofUrl: last?.proofUrl,
           results
         });
       }

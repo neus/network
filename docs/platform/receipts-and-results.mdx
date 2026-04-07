@@ -65,7 +65,7 @@ const proof = await client.verify({ ... });
 const proofId = proof.proofId;
 
 // Check status
-const status = await client.getStatus(proofId);
+const record = await client.getProof(proofId);
 
 // Gate check
 const eligible = await client.gateCheck({
@@ -79,8 +79,8 @@ const eligible = await client.gateCheck({
 ## Using the API
 
 ```bash
-# Check status
-GET /api/v1/verification/status/{qHash}
+# Proof record by receipt id
+GET /api/v1/proofs/{qHash}
 
 # Gate check
 GET /api/v1/proofs/check?address=0x...&verifierIds=ownership-basic

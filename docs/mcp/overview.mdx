@@ -1,33 +1,31 @@
 ---
 title: MCP Overview
-description: Connect NEUS to Cursor, Claude, VS Code, and other AI assistants in a few steps.
+description: Connect NEUS to MCP-compatible AI assistants.
 icon: plug
 ---
 
-**New integration?** Start with **[Get started](../get-started)** (platform, app link, credits). Heavy tool use may hit **credits** / **402** — see **[Billing](../platform/billing)** and tool hints for **`sponsorGrant`**.
+**[Get started](../get-started)** · tools cost **credits** / **402** · **[Billing](../platform/billing)** · **`sponsorGrant`**
 
-**Connection URL:** `https://mcp.neus.network/mcp`
+`https://mcp.neus.network/mcp` · **[Setup](./setup)**
 
-Add it **once** in your MCP client—see **[Setup](./setup)** for the exact JSON. Nothing else is required to connect.
+## Workflow
 
-## Recommended workflow
+1. **Browser verify:** assistant runs **`neus_verify_or_guide`** or **`neus_proofs_check`**. User opens **`https://neus.network/verify`** from the tool. Passkey or wallet stays in NEUS.
+2. **Signed-in product:** same **`Authorization: Bearer`** as [SDK Authentication](../sdks/authentication). Then **`neus_me`**. **[Auth](./auth)**
+3. **Proof history:** only if you already have an address or id. **`neus_proofs_get`**. [Tools](./tools)
 
-1. **User verifies in the browser** — Have the assistant use **`neus_verify_or_guide`** (or **`neus_proofs_check`**). When a tool returns **`https://neus.network/verify`**, the user **opens that link**. Passkey or wallet happens inside NEUS—they should not need to paste crypto details into chat.
-2. **Your product already logs users into NEUS** — Use the same **`Authorization: Bearer`** session on the MCP connection as in [SDK Authentication](../sdks/authentication). Then **`neus_me`** and private reads work—**[Auth](./auth)**.
-3. **Look up public proof history** — Only when you **already have** an address or id from NEUS (or the user pasted it), use **`neus_proofs_get`**. Field names differ by tool—see **[Tools](./tools)**.
-
-The URL-only install does **not** sign the chat into NEUS by itself.
+URL-only MCP does **not** sign the assistant into NEUS.
 
 | Goal | Tool |
 |------|------|
 | Send someone to browser verification | `neus_verify_or_guide` |
 | Yes/no eligibility only | `neus_proofs_check` |
 | Proof list + profile (you have an id) | `neus_proofs_get` |
-| Signed-in “who am I” | `neus_me` (needs Bearer—[Auth](./auth)) |
+| Signed-in “who am I” | `neus_me` · Bearer · [Auth](./auth) |
 | Pick verifier IDs safely | `neus_verifiers_catalog` |
 | Agents | `neus_agent_create`, `neus_agent_link` |
 
-Always **open** hosted URLs tools return—do not invent extra steps.
+Open hosted URLs from tools.
 
 ## Agents
 
@@ -35,8 +33,8 @@ Always **open** hosted URLs tools return—do not invent extra steps.
 
 ## Next
 
-- **[Get started](../get-started)** — platform + billing before scale  
-- **[Setup](./setup)** — one copy-paste config  
-- **[Tools](./tools)** — parameter names  
-- **[Auth](./auth)** — sessions and privacy  
-- **[Hosted Verify](../cookbook/auth-hosted-verify)** — browser verification flow  
+- **[Get started](../get-started)** · platform + billing  
+- **[Setup](./setup)** · JSON  
+- **[Tools](./tools)** · parameters  
+- **[Auth](./auth)** · sessions  
+- **[Hosted Verify](../cookbook/auth-hosted-verify)** · browser flow  

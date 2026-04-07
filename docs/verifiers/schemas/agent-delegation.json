@@ -17,7 +17,7 @@
       ]
     }
   ],
-  "description": "Delegates authority to an agent, ERC-8004 compatible",
+  "description": "Delegates scoped authority from a delegating account to an agent, ERC-8004 compatible",
   "properties": {
     "agentAccountId": {
       "description": "Preferred canonical agent identity (CAIP-10).",
@@ -69,7 +69,7 @@
       "type": "string"
     },
     "maxSpend": {
-      "description": "Whole-number string in token base units (no decimal point). Typical USDC (x402): six decimal places.",
+      "description": "Spend cap as a whole-number string in token base units (no decimal point). USDC (common x402): six decimal places; native ETH-style assets: eighteen.",
       "pattern": "^[0-9]{1,78}$",
       "type": "string"
     },

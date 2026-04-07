@@ -31,18 +31,17 @@ declare module '@neus/sdk' {
     verify(params: VerifyParams): Promise<VerificationResult>;
     
     /**
-     * Get verification status by proof ID
-     * @param proofId - Proof ID (standard). `qHash` is a deprecated alias (same value).
-     * @returns Promise resolving to current status
+     * Get proof record by receipt id (qHash)
+     * @param proofId - Proof receipt id (`qHash`, 0x + 64 hex).
      */
-    getStatus(proofId: string): Promise<StatusResult>;
+    getProof(proofId: string): Promise<StatusResult>;
     
     /**
-     * Get private proof status (owner-signed)
-     * @param proofId - Proof ID (standard). `qHash` is a deprecated alias (same value).
+     * Get private proof record (owner-signed)
+     * @param proofId - Proof receipt id (`qHash`).
      * @param wallet - Optional injected wallet/provider (MetaMask/ethers Wallet)
      */
-    getPrivateStatus(proofId: string, wallet?: WalletLike | GatePrivateAuth): Promise<StatusResult>;
+    getPrivateProof(proofId: string, wallet?: WalletLike | GatePrivateAuth): Promise<StatusResult>;
     
     /**
      * Check API health
@@ -216,8 +215,8 @@ declare module '@neus/sdk' {
     status: string;
     /** Wallet address that created proof */
     walletAddress?: string;
-    /** Status check URL */
-    statusUrl?: string;
+    /** Canonical URL for GET proof record */
+    proofUrl?: string;
     /** Cross-chain enabled */
     crossChain?: boolean;
   }
@@ -246,6 +245,8 @@ declare module '@neus/sdk' {
     proofId?: string;
     /** @deprecated qHash is a deprecated alias of proofId (same value). */
     qHash?: string;
+    /** Canonical URL for GET proof record */
+    proofUrl?: string | null;
     /** Whether verification succeeded */
     success: boolean;
     /** Current status */
@@ -603,6 +604,7 @@ declare module '@neus/sdk' {
     mode?: string;
     intent?: string;
     origin?: string;
+    oauthProvider?: string;
     baseUrl?: string;
   }): string;
 
@@ -1144,7 +1146,7 @@ declare module '@neus/sdk/widgets' {
       txHash?: string | null;
       verifierIds: string[];
       verifiedVerifiers?: any[];
-      statusUrl?: string | null;
+      proofUrl?: string | null;
       existing?: boolean;
       eligible?: boolean;
       mode?: 'create' | 'access';
@@ -1157,7 +1159,7 @@ declare module '@neus/sdk/widgets' {
         address?: string;
         txHash?: string | null;
         verifiedVerifiers?: any[];
-        statusUrl?: string | null;
+        proofUrl?: string | null;
       }>;
       proofsByVerifierId?: Record<string, any>;
     }) => void;
@@ -1173,6 +1175,8 @@ declare module '@neus/sdk/widgets' {
     extraHeaders?: Record<string, string>;
     /** Hosted checkout URL for interactive verifiers (default: https://neus.network/verify) */
     hostedCheckoutUrl?: string;
+    /** Optional OAuth provider id to pre-select for social/org verifiers (hosted flow) */
+    oauthProvider?: string;
     /** Custom inline styles */
     style?: Record<string, any>;
     /** Child content to show when verified */

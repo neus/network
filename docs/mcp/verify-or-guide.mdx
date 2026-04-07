@@ -4,7 +4,7 @@ description: Already verified, or open a hosted NEUS verify link.
 icon: signs-post
 ---
 
-**Default “prove it” tool:** returns **`already_verified`** or a **`hostedVerifyUrl`** — user finishes in the browser; no extra steps in chat.
+Returns **`already_verified`** or **`hostedVerifyUrl`**. User completes in the browser.
 
 ## Input
 
@@ -20,7 +20,7 @@ icon: signs-post
 
 ## Output
 
-- **`already_verified`** — policy satisfied.
-- **`verification_required`** — open **`hostedVerifyUrl`** (and use **`requiredVerifiers`** as needed).
+- **`already_verified`:** policy satisfied.
+- **`verification_required`:** open **`hostedVerifyUrl`**; honor **`requiredVerifiers`**.
 
-Schemas are loaded from the server; no need to memorize every field.
+Schemas load from the server.

@@ -45,6 +45,7 @@ export function Page() {
 | `appId` | Sends public app attribution |
 | `sponsorGrant` | Enables sponsored proof creation |
 | `hostedCheckoutUrl` | Overrides the hosted verify URL when needed |
+| `oauthProvider` | Pre-selects the OAuth provider when the user already chose one in your app |
 
 <Note>
 In raw HTTP contracts the same proof receipt ID may appear as `{qHash}`.
@@ -56,3 +57,28 @@ In raw HTTP contracts the same proof receipt ID may appear as `{qHash}`.
 - checking NFT or token access
 - launching hosted social or org verification
 - requiring fresh proof creation for high-stakes actions
+
+## Hosted OAuth
+
+Set `oauthProvider` when the user already picked a provider in your app. Hosted verification opens that sign-in instead of asking again.
+
+```jsx
+import { VerifyGate } from '@neus/sdk/widgets';
+
+export function ConnectGithub() {
+  return (
+    <VerifyGate
+      requiredVerifiers={['ownership-social']}
+      oauthProvider="github"
+      appId="neus-network"
+    />
+  );
+}
+```
+
+Allowed values:
+
+- **Social:** `x`, `twitter`, `github`, `discord`, `facebook`, `linkedin`, `telegram`, `farcaster`
+- **Org:** `google`, `microsoft`
+
+**Popup:** still **`neus_checkout_done`**. `oauthProvider` only picks which sign-in opens first; proof payload and your handling stay the same.

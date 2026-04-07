@@ -279,8 +279,9 @@
               "proofId": {
                 "type": "string"
               },
-              "statusUrl": {
-                "type": "string"
+              "proofUrl": {
+                "type": "string",
+                "description": "Canonical URL to fetch the proof record (GET /api/v1/proofs/{qHash})"
               }
             },
             "additionalProperties": true
@@ -322,6 +323,32 @@
       },
       "VerificationStatusResponse": {
         "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "qHash": {
+            "type": "string"
+          },
+          "cached": {
+            "type": "boolean"
+          },
+          "cachedAt": {
+            "type": "number"
+          }
+        },
+        "additionalProperties": true
+      },
+      "ProofRecordResponse": {
+        "type": "object",
+        "description": "Proof record and verification state. The `data` object is shaped for the caller (public, owner-authenticated, or minimal private).",
         "properties": {
           "success": {
             "type": "boolean"
@@ -1668,153 +1695,6 @@
         }
       }
     },
-    "/api/v1/verification/status/{qHash}": {
-      "get": {
-        "operationId": "getVerificationStatus",
-        "summary": "Get verification status",
-        "tags": [
-          "Verification"
-        ],
-        "parameters": [
-          {
-            "name": "qHash",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "pattern": "^0x[a-fA-F0-9]{64}$"
-            }
-          },
-          {
-            "name": "latestScope",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "1",
-                "true",
-                "yes"
-              ]
-            }
-          },
-          {
-            "name": "trackView",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "1",
-                "true"
-              ]
-            }
-          },
-          {
-            "name": "walletAddress",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "verifierId",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "scopeKey",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "x-wallet-address",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "x-track-view",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "1",
-                "true"
-              ]
-            }
-          },
-          {
-            "name": "x-signature",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "x-signed-timestamp",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/VerificationStatusResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/v1/verification/status-batch": {
       "post": {
         "operationId": "getVerificationStatusBatch",
@@ -1934,6 +1814,38 @@
                 "1",
                 "true",
                 "yes"
+              ]
+            }
+          },
+          {
+            "name": "tag",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeSecrets",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1",
+                "true",
+                "yes",
+                "0",
+                "false",
+                "no"
               ]
             }
           },
@@ -2563,6 +2475,154 @@
           },
           "403": {
             "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/proofs/{qHash}": {
+      "get": {
+        "operationId": "getProofRecord",
+        "summary": "Get proof record by receipt id (qHash)",
+        "description": "Returns the proof record and verification state. Payload is shaped for the caller (public vs owner vs private).",
+        "tags": [
+          "Proofs"
+        ],
+        "parameters": [
+          {
+            "name": "qHash",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^0x[a-fA-F0-9]{64}$"
+            }
+          },
+          {
+            "name": "latestScope",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1",
+                "true",
+                "yes"
+              ]
+            }
+          },
+          {
+            "name": "trackView",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1",
+                "true"
+              ]
+            }
+          },
+          {
+            "name": "walletAddress",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "verifierId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "scopeKey",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-wallet-address",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-track-view",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1",
+                "true"
+              ]
+            }
+          },
+          {
+            "name": "x-signature",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x-signed-timestamp",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProofRecordResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
             "content": {
               "application/json": {
                 "schema": {

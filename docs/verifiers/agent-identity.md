@@ -1,6 +1,6 @@
 # agent-identity
 
-Portable agent identity, ERC-8004 compatible
+Portable agent identity, signed by the agent wallet itself. Use agent-delegation to grant authority from a delegating account.
 
 - **Access:** `public`
 - **Category:** `agent`
@@ -14,7 +14,7 @@ Portable agent identity, ERC-8004 compatible
 
 ## Optional fields
 
-- `agentAccountId` (`string format caip10-account`): Preferred canonical subject identity (CAIP-10).
+- `agentAccountId` (`string format caip10-account`): Preferred primary subject account (CAIP-10).
 - `agentChainRef` (`string format caip2-chain`): Required when using legacy agentWallet without agentAccountId.
 - `agentWallet` (`string format universal-address`)
 - `agentLabel` (`string max 128`)
@@ -27,7 +27,7 @@ Portable agent identity, ERC-8004 compatible
 
 - **Compatible with:** `agent-delegation`, `ai-content-moderation`, `ownership-dns-txt`, `contract-ownership`, `wallet-link`
 
-## Example
+## Example (schema-validated)
 
 ```javascript
 await client.verify({

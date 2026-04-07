@@ -1,14 +1,12 @@
 ---
 title: LLM Docs
-description: Use NEUS documentation in LLMs, Cursor, Zed, and AI-powered editors.
+description: Machine-readable documentation exports for AI assistants.
 icon: sparkles
 ---
 
-NEUS publishes documentation indexes for AI tools and editors. Fetch them when you want the site text available to a tool instead of a short summary.
+NEUS publishes route indexes and full-doc exports for tools that ingest documentation text.
 
 ## Route index (`llms.txt`)
-
-`llms.txt` is a markdown index of page routes and descriptions:
 
 ```bash
 curl https://docs.neus.network/llms.txt
@@ -16,15 +14,13 @@ curl https://docs.neus.network/llms.txt
 
 ## Full documentation (`llms-full.txt`)
 
-`llms-full.txt` is the full documentation in one file:
-
 ```bash
 curl https://docs.neus.network/llms-full.txt
 ```
 
-## Cursor and MCP
+## MCP
 
-For Cursor or other MCP-compatible editors, add the NEUS MCP server for live verification tools:
+Add the hosted MCP server for live verification tools:
 
 ```json
 {
@@ -37,13 +33,13 @@ For Cursor or other MCP-compatible editors, add the NEUS MCP server for live ver
 }
 ```
 
-See [MCP Server](../mcp/overview) for tool reference and setup.
+[MCP overview](../mcp/overview) · [Setup](../mcp/setup)
 
 ## Related
 
 <CardGroup cols={2}>
   <Card title="MCP Server" icon="plug" href="../mcp/overview">
-    Verifier catalog, gate checks, hosted verify handoff.
+    Tools and flows.
   </Card>
   <Card title="API Overview" icon="terminal" href="../api/overview">
     HTTP endpoints and OpenAPI.

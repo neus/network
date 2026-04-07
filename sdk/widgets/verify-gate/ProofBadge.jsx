@@ -80,7 +80,7 @@ export function ProofBadge({
     
     async function checkStatus() {
       try {
-        const res = await fetch(`${apiUrl}/api/v1/verification/status/${resolvedProofId}`, {
+        const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedProofId}`, {
           headers: { Accept: 'application/json' }
         });
         
@@ -218,7 +218,7 @@ export function SimpleProofBadge({
     
     async function checkStatus() {
       try {
-        const res = await fetch(`${apiUrl}/api/v1/verification/status/${resolvedProofId}`, {
+        const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedProofId}`, {
           headers: { Accept: 'application/json' }
         });
         

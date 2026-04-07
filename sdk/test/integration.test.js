@@ -62,7 +62,7 @@ describe('NEUS SDK Integration', () => {
 
       // Should throw ApiError for 404, not crash
       try {
-        await client.getStatus(fakeQHash);
+        await client.getProof(fakeQHash);
       } catch (error) {
         expect(error.name).toBe('ApiError');
         expect(error.statusCode).toBe(404);
@@ -83,8 +83,8 @@ describe('NEUS SDK Integration', () => {
 
     it('should validate inputs before API calls', async () => {
       // These should fail validation before making API calls
-      await expect(client.getStatus('')).rejects.toThrow('proofId is required');
-      await expect(client.getStatus(123)).rejects.toThrow('proofId is required');
+      await expect(client.getProof('')).rejects.toThrow('proofId is required');
+      await expect(client.getProof(123)).rejects.toThrow('proofId is required');
       await expect(client.verify({ content: 123 })).rejects.toThrow('content is required and must be a string');
     });
   });

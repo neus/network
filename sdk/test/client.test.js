@@ -70,11 +70,11 @@ describe('NeusClient', () => {
     });
   });
 
-  describe('getStatus()', () => {
+  describe('getProof()', () => {
     it('should validate proofId parameter', async () => {
-      await expect(client.getStatus()).rejects.toThrow(ValidationError);
-      await expect(client.getStatus('')).rejects.toThrow(ValidationError);
-      await expect(client.getStatus(123)).rejects.toThrow(ValidationError);
+      await expect(client.getProof()).rejects.toThrow(ValidationError);
+      await expect(client.getProof('')).rejects.toThrow(ValidationError);
+      await expect(client.getProof(123)).rejects.toThrow(ValidationError);
     });
 
     it('should make correct API call', async () => {
@@ -89,10 +89,10 @@ describe('NeusClient', () => {
         json: () => Promise.resolve(mockResponse)
       });
 
-      const result = await client.getStatus('0xtest123');
+      const result = await client.getProof('0xtest123');
 
       expect(fetch).toHaveBeenCalledWith(
-        'https://api.neus.network/api/v1/verification/status/0xtest123',
+        'https://api.neus.network/api/v1/proofs/0xtest123',
         expect.objectContaining({
           method: 'GET'
         })
@@ -113,7 +113,7 @@ describe('NeusClient', () => {
         })
       });
 
-      const result = await client.getStatus('0xonlyqhash');
+      const result = await client.getProof('0xonlyqhash');
       expect(result.proofId).toBe('0xonlyqhash');
       expect(result.qHash).toBe('0xonlyqhash');
     });
@@ -128,7 +128,7 @@ describe('NeusClient', () => {
         })
       });
 
-      await expect(client.getStatus('0xinvalid')).rejects.toThrow(ApiError);
+      await expect(client.getProof('0xinvalid')).rejects.toThrow(ApiError);
     });
   });
 
@@ -230,7 +230,7 @@ describe('NeusClient', () => {
     it('should handle network timeouts', async () => {
       fetch.mockRejectedValueOnce(new Error('Network timeout'));
 
-      await expect(client.getStatus('0xtest')).rejects.toThrow(NetworkError);
+      await expect(client.getProof('0xtest')).rejects.toThrow(NetworkError);
     });
 
     it('should handle connection refused', async () => {

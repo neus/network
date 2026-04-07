@@ -6,9 +6,9 @@ icon: terminal
 
 **Base:** `https://api.neus.network`
 
-**Server integration?** Same payer rules as the SDK — complete **[Get started](../get-started)** (platform **`appId`**, **`X-Neus-App`**, **`X-Sponsor-Grant`**, credits).
+**Server:** same payer rules as the SDK. **[Get started](../get-started)** · **`appId`** · **`X-Neus-App`** · **`X-Sponsor-Grant`** · credits
 
-Prefer the **SDK** when you can; use **HTTP** for direct server calls.
+**SDK** when possible; **HTTP** for server-only.
 
 ## Endpoints
 
@@ -16,7 +16,7 @@ Prefer the **SDK** when you can; use **HTTP** for direct server calls.
 |------|--------|---------|
 | `/api/v1/verification` | POST | Create proof |
 | `/api/v1/verification/standardize` | POST | Signing string |
-| `/api/v1/verification/status/{qHash}` | GET | Status |
+| `/api/v1/proofs/{qHash}` | GET | Proof record |
 | `/api/v1/proofs/check` | GET | Eligibility only |
 | `/api/v1/proofs/by-wallet/{address}` | GET | Proofs for wallet |
 | `/api/v1/verification/verifiers` | GET | Verifier catalog |
@@ -37,7 +37,7 @@ Public and unlisted proofs are visible anonymously; **private** proofs need the 
 curl "https://api.neus.network/api/v1/proofs/check?address=0x…&verifierIds=ownership-basic"
 ```
 
-**Create proof (outline)** — standardize → sign → POST `/verification`. Full request bodies: OpenAPI / SDK.
+**Create proof:** standardize → sign → POST `/verification`. Bodies: OpenAPI / SDK.
 
 **Verifier catalog**
 

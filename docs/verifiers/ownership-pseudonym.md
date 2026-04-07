@@ -20,7 +20,7 @@ Pseudonymous identity - wallet ↔ handle binding
 
 - **Compatible with:** `ownership-basic`
 
-## Example
+## Example (schema-validated)
 
 ```javascript
 await client.verify({

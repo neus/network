@@ -6,14 +6,14 @@ icon: compass
 
 Check before you ask users to verify. Save receipt IDs. Reuse everywhere.
 
-**Before you integrate:** **[Get started](./get-started)** (platform, app link, credits, sponsor). **Paths:** **[Choose an integration path](./choose-an-integration-path)**. **Billing:** **[Billing](./platform/billing)**.
+**Before prod:** **[Get started](./get-started)** · **[Path](./choose-an-integration-path)** · **[Billing](./platform/billing)**
 
 ## Loop
 
-1. **Check** — Already verified?
-2. **Verify** — Only if needed (usually [Hosted Verify](./cookbook/auth-hosted-verify)).
-3. **Save** — Proof receipt ID with the user record.
-4. **Reuse** — Display, gates, policy, agents.
+1. **Check:** already verified?
+2. **Verify:** if needed ([Hosted Verify](./cookbook/auth-hosted-verify))
+3. **Save:** proof ID on the user
+4. **Reuse:** UI, gates, policy, agents
 
 ## Checklist
 
@@ -22,7 +22,7 @@ Check before you ask users to verify. Save receipt IDs. Reuse everywhere.
   <Item>Gate before prompting for verification</Item>
   <Item>Persist proof IDs, not raw signatures</Item>
   <Item>Test: verify → save → check → reuse</Item>
-  <Item>Complete [Get started](./get-started) for platform setup and payer model; use [Billing](./platform/billing) for edge cases</Item>
+  <Item>[Get started](./get-started) · [Billing](./platform/billing)</Item>
 </Checklist>
 
 ## Verification strategies (SDK / API)
@@ -45,21 +45,21 @@ Check before you ask users to verify. Save receipt IDs. Reuse everywhere.
 
 <CardGroup cols={2}>
   <Card title="Get started" icon="book" href="./get-started">
-    Platform and billing checklist.
+    Platform + billing.
   </Card>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Interactive flows.
+    Hosted flows.
   </Card>
   <Card title="Receipts" icon="receipt" href="./platform/receipts-and-results">
-    What to persist.
+    Persist IDs.
   </Card>
   <Card title="API" icon="terminal" href="./api/overview">
-    HTTP reference.
+    HTTP.
   </Card>
-  <Card title="Verifier catalog" icon="list-tree" href="./verification/verifiers">
-    Capabilities list.
+  <Card title="Verifiers" icon="list-tree" href="./verification/verifiers">
+    Full list.
   </Card>
   <Card title="Billing" icon="credit-card" href="./platform/billing">
-    Who pays, sponsor grants, x402.
+    Payers, sponsors, x402.
   </Card>
 </CardGroup>

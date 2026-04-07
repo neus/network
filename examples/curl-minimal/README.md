@@ -66,7 +66,7 @@ curl -X POST https://api.neus.network/api/v1/verification \
 
 ```bash
 # Proof receipt ID returned by NEUS. Some API paths use the parameter name `qHash`.
-curl https://api.neus.network/api/v1/verification/status/0x{qHash}
+curl https://api.neus.network/api/v1/proofs/0x{qHash}
 ```
 
 ## Troubleshooting

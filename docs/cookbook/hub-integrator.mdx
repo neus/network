@@ -1,33 +1,31 @@
 ---
 title: Partner Setup
-description: Production onboarding for websites, communities, apps, teams, and partners using hosted verify, linked identity, and proof receipt reuse.
+description: Domain trust, org verification, app linking, and proof reuse for production integrations.
 icon: building
 ---
 
-<Note>
-  **First time?** Complete **[Get started](../get-started)** (platform profile, **Apps** → Link app, credits, `appId`, sponsor). The sections below cover domain, org, VerifyGate, and sponsor grants in detail.
-</Note>
+**First:** **[Get started](../get-started)** (profile, Apps, credits, `appId`, sponsor).
 
-Use this guide when you are connecting a website, community, app, team, or partner flow to NEUS. After **[Get started](../get-started)**, you will use hosted verify, save proof receipt IDs, and reuse them across profile trust, gating, and attribution.
+Hosted verify, save **proof IDs**, reuse for trust, gating, attribution.
 
-## What NEUS gives you
+## Capabilities
 
-| Capability | What it solves |
+| Capability | Use |
 |---|---|
-| Portable profile trust | A person can link wallets, socials, domains, team association, and proof-backed badges over time |
-| Domain and namespace trust | Sites, communities, and orgs can prove control of a domain and use that trust in onboarding and identity flows |
-| Linked apps | Apps and platforms can attribute usage and connect the app to the same proof layer |
-| Proof receipts | Every completed flow returns a reusable proof receipt ID instead of a one-time verification dead end |
-| Hosted verify | Interactive checks stay on the hosted `/verify` flow instead of forcing partners to build custom UX |
+| Profile trust | Wallets, socials, domains, badges over time |
+| Domain trust | DNS proof; use in onboarding |
+| Linked apps | `appId`, usage attribution |
+| Proof receipts | Reusable IDs, not one-off checks |
+| Hosted verify | `/verify` for interactive flows |
 
 ## Prerequisites
 
-- A NEUS account with a verified wallet
-- Your public app or site domain
+- NEUS account + verified wallet
+- Public app or site domain
 
 ## 1. Domain Verification
 
-Link your domain to your wallet by setting a DNS TXT record. This is the foundation for site trust, partner onboarding, app linking, and namespaced identity claims.
+DNS TXT at `_neus.<domain>` proves domain control for trust and linking.
 
 **Step 1:** Add a DNS TXT record at `_neus.<yourdomain.com>`:
 
@@ -98,9 +96,7 @@ If access should only succeed for members of one company or team domain, pass `e
 </VerifyGate>
 ```
 
-<Note>
-You typically do not need your own Google or Microsoft OAuth app to use the hosted NEUS flow.
-</Note>
+Hosted org flows use NEUS OAuth; you usually **do not** need your own Google/Microsoft OAuth app.
 
 ## 3. Link the app or site on the platform
 
@@ -111,7 +107,7 @@ Link your integration domain on the **NEUS platform** to receive attribution, us
 | 1 | Go to the [NEUS platform](https://neus.network/hub) → Profile → Apps |
 | 2 | Enter app domain, for example `app.example.com` or `https://app.example.com` |
 | 3 | Set daily credit cap |
-| 4 | Use `*` for any origin only in development |
+| 4 | Restrict **Origin** to real app origins in production |
 | 5 | Send `X-Neus-App` and `Origin` headers from your approved domain |
 
 <Card title="Platform" icon="globe" href="../platform/hub">

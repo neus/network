@@ -4,7 +4,7 @@ description: JavaScript client for the NEUS Network verification API.
 icon: code
 ---
 
-Use the SDK when your app needs direct control over proof creation, hosted handoff, and status polling without raw HTTP request assembly.
+SDK for proof creation, hosted handoff, polling. Prefer over raw HTTP when you can.
 
 ## Install
 
@@ -28,7 +28,7 @@ const res = await client.verify({
 
 // Proof ID (standard SDK field). HTTP paths may carry the same receipt as {qHash}.
 const proofId = res.proofId;
-const status = await client.getStatus(proofId);
+const record = await client.getProof(proofId);
 ```
 
 ## Client Configuration
@@ -98,11 +98,20 @@ This is the advanced path. With MCP, manual signing is typically unnecessary.
 
 ## What Verifiers Are Available?
 
-Use the API directly:
+**Verifier catalog:** API is authoritative for IDs, schema, metadata.
 
 ```
 GET /api/v1/verification/verifiers
 ```
+
+The SDK may ship fallbacks or examples; always treat the API response as authoritative for production.
+
+## Gate checks: `gateCheck` vs `checkGate`
+
+| Method | Use when |
+|--------|----------|
+| **`gateCheck()`** | **Production allow/deny.** Calls `GET /api/v1/proofs/check`; server-enforced eligibility. |
+| **`checkGate()`** | Preview against proofs you already loaded. Not for security-sensitive allow/deny vs **`gateCheck()`**. |
 
 ## App Attribution (`appId`)
 
@@ -145,7 +154,7 @@ const res = await client.gateCheck({
   verifierIds: ['token-holding'],
   contractAddress: '0x...',
   minBalance: '100',
-  chainId: 8453, // Required for asset verifiers (NFT, token, contract) — specifies the chain the asset lives on
+  chainId: 8453, // asset verifiers need chainId
   since: Date.now() - 60 * 60 * 1000
 });
 
@@ -166,7 +175,7 @@ if (!res.data?.eligible) {
 
 ```javascript
 // Private proof by proof receipt ID
-const privateData = await client.getPrivateStatus(proofId, window.ethereum);
+const privateData = await client.getPrivateProof(proofId, window.ethereum);
 
 // Private proofs by wallet/DID (requires owner signature)
 const privateProofs = await client.getPrivateProofsByWallet(
