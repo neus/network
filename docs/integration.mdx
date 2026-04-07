@@ -1,19 +1,19 @@
 ---
 title: Production Integration
-description: From first proof to production-ready verification.
+description: From first proof to shipped verification.
 icon: compass
 ---
 
-Check before you ask users to verify. Save receipt IDs. Reuse everywhere.
+Call **`GET /api/v1/proofs/check`** (or your own store of `proofId`) before prompting verification. Persist the receipt ID you get back; reuse it for gates and policy—do not treat signatures as durable records.
 
-**Before prod:** **[Get started](./get-started)** · **[Path](./choose-an-integration-path)** · **[Billing](./platform/billing)**
+**Before production:** **[Get started](./get-started)** · **[Path](./choose-an-integration-path)** · **[Billing](./platform/billing)**
 
 ## Loop
 
-1. **Check:** already verified?
-2. **Verify:** if needed ([Hosted Verify](./cookbook/auth-hosted-verify))
-3. **Save:** proof ID on the user
-4. **Reuse:** UI, gates, policy, agents
+1. **Check:** eligibility with a saved `proofId` or **`GET /api/v1/proofs/check`** before showing a verify flow
+2. **Verify:** only when needed ([Hosted Verify](./cookbook/auth-hosted-verify) or SDK/API)
+3. **Save:** `proofId` on the user or session
+4. **Reuse:** UI, `VerifyGate`, server policy, MCP—same ID everywhere
 
 ## Checklist
 
@@ -29,9 +29,9 @@ Check before you ask users to verify. Save receipt IDs. Reuse everywhere.
 
 | Strategy | When |
 |----------|------|
-| `reuse-or-create` | Default UX |
-| `fresh` | High-stakes actions |
-| `reuse` | Read-only, never create |
+| `reuse-or-create` | Default: reuse a valid proof if you have one; otherwise start verification |
+| `fresh` | Force a new verification even when an older proof might still be valid |
+| `reuse` | Never create; require an existing proof or fail (read-only / display paths) |
 
 ## URLs
 

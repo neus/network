@@ -31,7 +31,7 @@ Same SDK and API. Different **who funds credits**.
 2. **Sponsor users:** short-lived **`X-Sponsor-Grant`** so calls debit **your** org balance, not the end user’s.
 3. **SDK:** `new NeusClient({ appId: '…', sponsorGrant: token })` **labels** and **pays** under the grant.
 
-Details and grant flow: **[Partner setup](../cookbook/hub-integrator)**.
+Details and grant flow: **[Workspace setup](../cookbook/hub-integrator)**.
 
 <Warning>
 Anonymous heavy **gate checks** / verification without a payer context ≠ production **sponsored** limits. **No sponsor, no signature, no receipt:** dev or very low volume only.
@@ -80,7 +80,7 @@ The SDK does **not** auto-complete x402 payments; your app handles **402 → pay
   <Card title="x402" icon="coins" href="./x402">
     Pay-per-use when credits run out.
   </Card>
-  <Card title="Partner setup" icon="building" href="../cookbook/hub-integrator">
+  <Card title="Workspace setup" icon="building" href="../cookbook/hub-integrator">
     Apps, domains, sponsor grants.
   </Card>
   <Card title="Security & trust" icon="lock" href="./security-and-trust">

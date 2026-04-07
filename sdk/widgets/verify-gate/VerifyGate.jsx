@@ -65,12 +65,15 @@ const CREATABLE_VERIFIERS = new Set([
   'ai-content-moderation'
 ]);
 
-// Verifiers that require hosted interactive checkout (OAuth / ZK).
+// Verifiers that always require hosted interactive checkout (OAuth / ZK).
 const INTERACTIVE_VERIFIERS = new Set([
   'ownership-social',
   'ownership-org-oauth',
   'proof-of-human'
 ]);
+
+// Verifiers that need hosted checkout when integrator-provided verifierData is incomplete.
+const HOSTED_WHEN_INCOMPLETE = new Set(['wallet-link']);
 
 const DEFAULT_HOSTED_CHECKOUT_URL = 'https://neus.network/verify';
 const HOSTED_CHECKOUT_MESSAGE_TYPE = 'neus_checkout_done';
@@ -157,6 +160,9 @@ export function VerifyGate({
   checkExisting = true, // Check for existing proofs before verification
   maxProofAgeMs = undefined, // Optional max age override (ms) for proof reuse
   allowPrivateReuse = true, // Allow owner-signed lookups for private proofs (interactive)
+  // Campaign / integrator chrome (passed through to hosted checkout URL)
+  campaignTitle = undefined,
+  campaignMessage = undefined,
   // Callbacks
   onStateChange = undefined,
   onError = undefined,
@@ -187,8 +193,15 @@ export function VerifyGate({
   const primaryVerifier = verifierList[0];
   const resolvedProofId = proofId || qHash || null;
   const hasInteractiveVerifier = useMemo(
-    () => verifierList.some(verifierId => INTERACTIVE_VERIFIERS.has(verifierId)),
-    [verifierList]
+    () => verifierList.some(verifierId => {
+      if (INTERACTIVE_VERIFIERS.has(verifierId)) return true;
+      if (HOSTED_WHEN_INCOMPLETE.has(verifierId)) {
+        const data = verifierData && verifierData[verifierId];
+        if (!data || !data.secondaryWalletAddress || !data.signature) return true;
+      }
+      return false;
+    }),
+    [verifierList, verifierData]
   );
   const resolvedHostedCheckoutUrl = useMemo(() => {
     if (typeof hostedCheckoutUrl === 'string' && hostedCheckoutUrl.trim()) {
@@ -385,6 +398,12 @@ export function VerifyGate({
     checkoutUrl.searchParams.set('origin', origin);
     if (typeof oauthProvider === 'string' && oauthProvider.trim()) {
       checkoutUrl.searchParams.set('oauthProvider', oauthProvider.trim());
+    }
+    if (typeof campaignTitle === 'string' && campaignTitle.trim()) {
+      checkoutUrl.searchParams.set('presetLabel', campaignTitle.trim().slice(0, 200));
+    }
+    if (typeof campaignMessage === 'string' && campaignMessage.trim()) {
+      checkoutUrl.searchParams.set('message', campaignMessage.trim().slice(0, 200));
     }
 
     let expectedOrigin = '*';
@@ -583,7 +602,7 @@ export function VerifyGate({
         if (hasInteractiveVerifier) {
           setOperation('verify');
           setIsProcessing(true);
-          setState('zkpassport-launch');
+          setState('interactive-checkout');
 
           const checkoutResult = await launchHostedCheckout();
           const checkoutProofId = checkoutResult?.proofId || checkoutResult?.qHash || null;
@@ -887,7 +906,7 @@ export function VerifyGate({
           disabled={disabled || isProcessing}
           style={getButtonStyle()}
         >
-          {(state === 'signing' || state === 'verifying' || state.startsWith('zkpassport')) && (
+          {(state === 'signing' || state === 'verifying' || state === 'interactive-checkout') && (
             <Spinner size={16} />
           )}
           {showBrand && state === 'idle' && <NeusLogo size={16} />}
@@ -956,7 +975,7 @@ export function VerifyGate({
       style={{ ...getButtonStyle(), ...style }}
       disabled={disabled || isProcessing}
     >
-      {(state === 'signing' || state === 'verifying' || state.startsWith('zkpassport')) && (
+      {(state === 'signing' || state === 'verifying' || state === 'interactive-checkout') && (
         <Spinner size={16} />
       )}
       {showBrand && state === 'idle' && <NeusLogo size={16} />}

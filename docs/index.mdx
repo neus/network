@@ -6,25 +6,30 @@ icon: house
 
 **Every app makes you re-verify. NEUS fixes it.**
 
-Verify once, get a portable proof receipt, reuse it everywhere — gate access, attach proof to content, register agents, share results without exposing raw data. Private by default.
+Each completed verification yields one **proof receipt ID** (`proofId` / `qHash`). Persist it in your product. Use that ID for checks, gates, widgets, and `/proof` links—not raw signatures.
 
 ## How it works
 
-1. **Verify:** hosted UI, wallet, social, or passkey.
-2. **Save:** proof ID.
-3. **Reuse:** gates, eligibility, badges, agents.
+<Frame caption="Verify once → receipt ID → reuse across apps, agents, and APIs">
+  <img
+    src="/images/verification-to-reusable-proof-flow.png"
+    alt="Verification: verify once, then Proof ID as verified proof receipt, then reusable proof across apps, agents, and APIs"
+  />
+</Frame>
 
 <CardGroup cols={3}>
   <Card title="Quickstart" icon="code" href="./quickstart">
-    First proof in 5 minutes.
+    ~5 min, first proof (no app id required).
   </Card>
   <Card title="Get started" icon="rocket" href="./get-started">
-    Platform, billing, first integration.
+    Hub, app id, credits, billing—before production.
   </Card>
   <Card title="Choose your path" icon="route" href="./choose-an-integration-path">
-    Hosted Verify, Widgets, SDK, API, or MCP.
+    Hosted, widgets, SDK, API, or MCP.
   </Card>
 </CardGroup>
+
+**Read in order:** [Quickstart](./quickstart) → [Get started](./get-started) → [Integration](./integration) (check → save → reuse).
 
 ## What you can build
 
@@ -60,4 +65,4 @@ Verify once, get a portable proof receipt, reuse it everywhere — gate access, 
 
 ## Examples
 
-[React, Node.js, curl →](./examples)
+[React, Node.js, curl →](./examples) · [AI assistant doc exports (`llms.txt`) →](./platform/llm-docs)

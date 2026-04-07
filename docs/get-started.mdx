@@ -4,20 +4,19 @@ description: Set up your NEUS account, app attribution, billing model, and first
 icon: book
 ---
 
-Use this checklist when you are shipping a product that relies on NEUS for verification, gating, or login.  
-If you are experimenting with your own wallet, start with **[Quickstart](./quickstart)** and return here before production launch.
+Use this when you are **shipping** (real users, credits, attribution). Exploring first? **[Quickstart](./quickstart)** — then come back here before launch.
 
 ## 1. Create your account
 
-1. Sign in to the **[NEUS platform](https://neus.network/hub)** with passkey or wallet.
-2. **Profile** = apps. **Credits** = balance. **Identity** = domains / org proofs when needed.
-3. Confirm the wallet that should own your integration and billing setup.
+1. Sign in to the **[hub](https://neus.network/hub)** with passkey or wallet.
+2. **Apps** — register products your integration will call from. **Credits** — balance for the wallet that pays. **Identity** — domain or org proofs when your flow needs them.
+3. Use the wallet that should own billing and app registration for this product.
 
 ## 2. Register your integration and capture `appId`
 
-1. Open **`https://neus.network/profile?tab=apps`**
-2. **Link app** or **Manage app**
-3. Enter your **app domain** (e.g. `acme.com`), set a **daily credit cap**, and finish the modal (wallet sign if asked).
+1. Open **[Apps](https://neus.network/profile?tab=apps)** in the hub.
+2. **Link app** or **Manage app**.
+3. Enter your **app domain** (e.g. `acme.com`), set a **daily credit cap**, and finish the modal.
 
 When registration succeeds, NEUS issues an **`appId`** for that integration. Send it as **`X-Neus-App`** on API traffic (the SDK maps this automatically).
 
@@ -52,7 +51,7 @@ const client = new NeusClient({
 });
 ```
 
-Grant issuance and caps: **[Partner setup](./cookbook/hub-integrator)** and **[Billing](./platform/billing)**.
+Grant issuance and caps: **[Workspace setup](./cookbook/hub-integrator)** and **[Billing](./platform/billing)**.
 
 ## 5. Choose your integration path
 
@@ -64,7 +63,7 @@ Grant issuance and caps: **[Partner setup](./cookbook/hub-integrator)** and **[B
 | **API** | **[API](./api/overview)** |
 | **MCP** | **[MCP](./mcp/overview)** |
 
-**Undecided:** **[Choose path](./choose-an-integration-path)**
+**Undecided:** **[Choose path](./choose-an-integration-path)** · **Ship loop:** **[Integration](./integration)** (check → save → reuse).
 
 ## 6. Production readiness checklist
 
@@ -85,7 +84,7 @@ Before launch, register your integration and add sponsor grants if your app will
   <Card title="Billing" icon="credit-card" href="./platform/billing">
     Who pays, x402, sponsor model.
   </Card>
-  <Card title="Partner setup" icon="building" href="./cookbook/hub-integrator">
+  <Card title="Workspace setup" icon="building" href="./cookbook/hub-integrator">
     Domains, org verify, sponsor detail.
   </Card>
   <Card title="Integration" icon="compass" href="./integration">

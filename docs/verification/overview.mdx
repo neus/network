@@ -4,16 +4,18 @@ description: From request to reusable proof receipt.
 icon: file-signature
 ---
 
+Product flow (diagram): **[Overview → How it works](../index#how-it-works)**. This page names **terms**, **verifier types**, and what you get in responses.
+
 ## Loop
 
 ```
 Check ──▶ Verify (if needed) ──▶ Save ──▶ Reuse
 ```
 
-1. **Check:** already verified?
-2. **Verify:** if no valid proof
-3. **Save:** proof receipt ID
-4. **Reuse:** downstream
+1. **Check:** existing `proofId` still satisfies policy?
+2. **Verify:** if not, run a flow (hosted, SDK, or API)
+3. **Save:** proof receipt ID on the user or record
+4. **Reuse:** gates, proof pages, agents, MCP—without re-verifying
 
 ## Outcomes
 

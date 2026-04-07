@@ -4,10 +4,10 @@ description: Create your first proof in under 5 minutes.
 icon: rocket
 ---
 
-Install → prove → reuse. ~5 min.
+`npm install` → one `verify()` → read `proofId` → poll if needed → gate or `gateCheck`. ~5 minutes.
 
 <Tip>
-  **Product:** **[Get started](./get-started)** first.
+  Snippets use **`new NeusClient()`** without **`appId`**—fine for a first proof. For production, register an app and pass **`appId`** — **[Get started](./get-started)**.
 </Tip>
 
 ## 1. Install the SDK
@@ -33,7 +33,7 @@ const proofId = proof.proofId;
 ```
 
 <Tip>
-  **No wallet?** [Hosted Verify](./cookbook/auth-hosted-verify)
+  **No in-app wallet?** Use **[Hosted Verify](./cookbook/auth-hosted-verify)** (redirect or popup) instead of `window.ethereum`.
 </Tip>
 
 ## 3. Wait for completion

@@ -85,7 +85,8 @@
               "get-started",
               "choose-an-integration-path",
               "integration",
-              "examples"
+              "examples",
+              "platform/llm-docs"
             ]
           },
           {
