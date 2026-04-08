@@ -35,7 +35,6 @@ sdk/cjs/
 .mintlify-home*/
 docs/.mintlify-home*/
 .tmp-docs-manifest.json
-scripts/*
 
 # Tooling caches & configs (keep out of repo)
 .eslintcache
