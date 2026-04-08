@@ -315,3 +315,10 @@ html {
     background: transparent !important;
   }
 }
+
+/* Overview / How verification works — diagram fills the frame */
+img.neus-how-it-works-diagram {
+  width: 100%;
+  height: auto;
+  display: block;
+}

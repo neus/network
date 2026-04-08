@@ -39,12 +39,12 @@ One **`proofId`** for gates, APIs, agents. Private by default.
 
 ## How it works
 
-<p align="center">
-  <a href="https://docs.neus.network#how-it-works" title="Open in docs">
+<p>
+  <a href="https://docs.neus.network#how-it-works" title="NEUS docs — Overview">
     <img
-      src="./docs/images/verification-to-reusable-proof-flow.png"
+      src="./docs/images/how-it-works.png"
       alt="Verification: verify once, then Proof ID as verified proof receipt, then reusable proof across apps, agents, and APIs"
-      width="720"
+      width="100%"
     />
   </a>
 </p>
