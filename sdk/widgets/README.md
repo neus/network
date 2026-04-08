@@ -1,6 +1,6 @@
 # NEUS Widgets
 
-React components for proof-aware UI and a standalone script-tag badge for simple pages.
+React components for proof-aware UI.
 
 ## React Install
 
@@ -33,13 +33,6 @@ export function Page() {
 import { ProofBadge } from '@neus/sdk/widgets';
 
 <ProofBadge proofId="0x..." showChains />
-```
-
-## Script Tag Badge
-
-```html
-<script src="https://verify.neus.network/widget.js"></script>
-<div data-neus-proof="0xYOUR_PROOF_ID"></div>
 ```
 
 ## Docs

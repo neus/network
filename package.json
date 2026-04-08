@@ -9,7 +9,8 @@
     "docs:dev": "cd docs && npx --yes cross-env NODE_OPTIONS=--max-old-space-size=8192 npx --yes mint@4.2.108 dev",
     "docs:lint:markdown": "npx --yes markdownlint-cli2@0.18.1 --config .markdownlint-cli2.jsonc",
     "docs:lint:openapi": "npx --yes @redocly/cli@2.14.1 lint docs/openapi/public-api.json",
-    "docs:validate": "npm run docs:lint:markdown && npm run docs:lint:openapi && npm run lint:public-prose",
+    "docs:validate": "npm run docs:lint:markdown && npm run docs:lint:openapi && npm run lint:public-prose && npm run spec:verifiers:check",
+    "spec:verifiers:check": "node scripts/spec-verifiers-check.mjs",
     "lint:public-prose": "node scripts/public-prose-check.mjs"
   }
 }

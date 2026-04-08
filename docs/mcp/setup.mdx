@@ -25,10 +25,10 @@ Add this configuration to your MCP settings (Cursor, Claude Desktop, VS Code, or
 Reload the client if prompted. **You only need the URL** to use public discovery and verification flows. Add **`Authorization: Bearer`** with your **personal API key** when you need a signed-in session or private data ([Auth](./auth)); create the key on **[Access keys](https://neus.network/profile?tab=account)**.
 
 <Tip>
-  **Integrators:** connect with the URL first. If a tool returns **`auth_required`** and the user needs account context, add Bearer from Access keys—do not require a key up front for public tools.
+  **Recommended:** connect with the URL first. If a tool returns **`auth_required`** and account context is required, add **`Authorization: Bearer`** using a personal API key from Access keys. Public catalog and verification flows do not require a key.
 </Tip>
 
-**Pre-production:** if your app calls **`https://dev.api.neus.network`**, use MCP **`https://dev.mcp.neus.network/mcp`**. [Endpoints](./endpoints)
+Hosted verification links work for both web2 and web3 users: open the link, follow the NEUS flow, and only connect/sign when the selected proof actually requires it.
 
 ## First run
 
@@ -38,6 +38,10 @@ Reload the client if prompted. **You only need the URL** to use public discovery
 4. Sessions / private data: [Auth](./auth).
 
 Then follow the [Overview](./overview) default path.
+
+## Development endpoints
+
+If your integration targets **`https://dev.api.neus.network`**, use **`https://dev.mcp.neus.network/mcp`** for MCP. [Endpoints](./endpoints)
 
 ## Related
 

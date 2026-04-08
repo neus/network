@@ -3,7 +3,7 @@
   "info": {
     "title": "NEUS Network — Public Integrator API",
     "version": "1.0.0",
-    "description": "Public HTTP API for NEUS integrators.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).\n\nSome verifiers require Pro access.",
+    "description": "Public HTTP API for NEUS integrators.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).",
     "license": {
       "name": "Business Source License 1.1",
       "url": "https://mariadb.com/bsl11/"
@@ -239,6 +239,7 @@
           },
           "options": {
             "type": "object",
+            "description": "Proof creation options. Defaults when omitted: privacyLevel private, publicDisplay false, storeOriginalContent true. For reusable gates without owner session, use privacyLevel public with publicDisplay false (public unlisted). Set storeOriginalContent false only to retain metadata/hash without original bytes.",
             "additionalProperties": true
           },
           "meta": {
@@ -281,7 +282,7 @@
               },
               "proofUrl": {
                 "type": "string",
-                "description": "Canonical URL to fetch the proof record (GET /api/v1/proofs/{qHash})"
+                "description": "Stable URL for the proof record (GET /api/v1/proofs/{qHash}). The path segment is the proof receipt id; SDK responses use proofId for the same value."
               }
             },
             "additionalProperties": true
@@ -334,8 +335,13 @@
           "status": {
             "type": "string"
           },
+          "proofId": {
+            "type": "string",
+            "description": "Proof receipt id. API payloads may expose this value as qHash."
+          },
           "qHash": {
-            "type": "string"
+            "type": "string",
+            "description": "API compatibility alias for the proof receipt id (same bytes32 as proofId)."
           },
           "cached": {
             "type": "boolean"
@@ -347,30 +353,15 @@
         "additionalProperties": true
       },
       "ProofRecordResponse": {
-        "type": "object",
-        "description": "Proof record and verification state. The `data` object is shaped for the caller (public, owner-authenticated, or minimal private).",
-        "properties": {
-          "success": {
-            "type": "boolean"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/VerificationStatusResponse"
           },
-          "data": {
+          {
             "type": "object",
-            "additionalProperties": true
-          },
-          "status": {
-            "type": "string"
-          },
-          "qHash": {
-            "type": "string"
-          },
-          "cached": {
-            "type": "boolean"
-          },
-          "cachedAt": {
-            "type": "number"
+            "description": "Proof record and verification state. The `data` object is shaped for the caller (public, owner-authenticated, or minimal private)."
           }
-        },
-        "additionalProperties": true
+        ]
       },
       "VerificationStatusBatchResponse": {
         "type": "object",
@@ -684,7 +675,8 @@
             ]
           },
           "internalSocialToken": {
-            "type": "string"
+            "type": "string",
+            "description": "OAuth session token from the hosted NEUS verification flow."
           },
           "walletAddress": {
             "type": "string",
@@ -752,7 +744,8 @@
             ]
           },
           "internalSocialToken": {
-            "type": "string"
+            "type": "string",
+            "description": "OAuth session token from the hosted NEUS verification flow."
           },
           "walletAddress": {
             "type": "string",
@@ -1108,7 +1101,7 @@
           "agentAccountId": {
             "type": "string",
             "format": "caip10-account",
-            "description": "Preferred canonical subject identity (CAIP-10)."
+            "description": "Preferred CAIP-10 account ID for the subject."
           },
           "agentChainRef": {
             "type": "string",
@@ -1277,7 +1270,7 @@
           "controllerAccountId": {
             "type": "string",
             "format": "caip10-account",
-            "description": "Preferred canonical controller identity (CAIP-10)."
+            "description": "Preferred CAIP-10 account ID for the controller."
           },
           "controllerChainRef": {
             "type": "string",
@@ -1291,7 +1284,7 @@
           "agentAccountId": {
             "type": "string",
             "format": "caip10-account",
-            "description": "Preferred canonical agent identity (CAIP-10)."
+            "description": "Preferred CAIP-10 account ID for the agent."
           },
           "agentChainRef": {
             "type": "string",
@@ -1581,7 +1574,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1673,7 +1666,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1927,7 +1920,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2393,7 +2386,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2494,7 +2487,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2642,7 +2635,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {

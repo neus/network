@@ -10,15 +10,16 @@ icon: user-shield
 - Gate checks and status should return **only** what your product needs.
 - **Private** proof reads require the **owner signed in** (or your product’s explicit sharing rules).
 
-## Privacy Defaults
+## Privacy defaults
 
-Use **unlisted** proofs by default for reusable integrations. Use **private** when only the **signed-in user** should see the proof.
+Integrations default to **private stored** receipts (owner-authenticated reads; content tied to the wallet). For **reusable gates** and **`gateCheck`** without a signed-in owner session, create an **unlisted public** receipt: `privacyLevel: 'public'`, `publicDisplay: false`. Original content defaults to stored; set `storeOriginalContent: false` only for hash-only retention.
 
 | Setting | Effect |
 |---|---|
-| `privacyLevel: 'private'` | Visible when that user is signed in with NEUS |
-| `publicDisplay: false` | Keeps a public proof usable without making it discoverable |
-| `storeOriginalContent: true` | Keeps original content when your product needs it |
+| `privacyLevel: 'private'` | Default. Owner or authorized-session visibility. |
+| `privacyLevel: 'public'` | Enables policy checks without owner session when paired with the flags below. |
+| `publicDisplay: false` | Unlisted: usable in checks, not promoted in discovery (still public to anyone with the proof id). |
+| `storeOriginalContent: true` | Default. Retains original content unless you opt into hash-only. |
 
 ## What Should Never Be Exposed Publicly
 
@@ -33,5 +34,5 @@ Use **unlisted** proofs by default for reusable integrations. Use **private** wh
   <Item>Respect time windows for point-in-time verifiers.</Item>
   <Item>Route interactive verification through `/verify`.</Item>
   <Item>Consume verifier metadata from the API catalog.</Item>
-  <Item>Default to unlisted proofs unless public discovery is intentional.</Item>
+  <Item>Use private defaults; opt in to unlisted public receipts explicitly for reusable gates.</Item>
 </Checklist>

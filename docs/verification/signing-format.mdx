@@ -18,7 +18,7 @@ The signature shows the wallet agreed to that verification request. NEUS then is
 2. Sign that string with the user’s wallet.
 3. **`POST /api/v1/verification`** — submit the **same request fields** as in step 1, plus **`signature`**.
 
-Do not edit or invent the message text — only sign what **`standardize`** returns (or use **`standardizeVerificationRequest`** in the SDK).
+Do not modify or invent the message text—sign only the string returned by **`standardize`** (or use **`standardizeVerificationRequest`** in the SDK).
 
 ## Message shape
 

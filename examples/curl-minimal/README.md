@@ -49,6 +49,8 @@ curl -X POST https://api.neus.network/api/v1/verification \
   }'
 ```
 
+Omit `options` to use defaults (**private**, unlisted, **original content stored**). For reusable gates without an owner session, add `options` with `privacyLevel: "public"` and `publicDisplay: false` (public unlisted; still public to anyone with the proof id). Set `storeOriginalContent: false` only for hash-only retention.
+
 **Response:**
 
 ```json
@@ -65,8 +67,8 @@ curl -X POST https://api.neus.network/api/v1/verification \
 ### 4. Check status
 
 ```bash
-# Proof receipt ID returned by NEUS. Some API paths use the parameter name `qHash`.
-curl https://api.neus.network/api/v1/proofs/0x{qHash}
+# Proof receipt ID returned by NEUS.
+curl https://api.neus.network/api/v1/proofs/0x{proofId}
 ```
 
 ## Troubleshooting
@@ -85,6 +87,6 @@ Use the `/standardize` request above and verify that the submitted body matches 
 
 ## Next Steps
 
-- [Node.js Example](../nodejs-basic/) - Programmatic signing
-- [API Reference](https://docs.neus.network/api/overview) - Complete API docs
-- [SDK](../../sdk/README.md) - JavaScript SDK
+- [Node.js example](../nodejs-basic/) — programmatic signing
+- [API reference](https://docs.neus.network/api/overview) — HTTP endpoints and patterns
+- [JavaScript SDK](../../sdk/README.md) — `@neus/sdk`

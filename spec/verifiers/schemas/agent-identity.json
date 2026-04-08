@@ -29,12 +29,12 @@
     "agentAccountId": {
       "type": "string",
       "format": "caip10-account",
-      "description": "Preferred canonical subject identity (CAIP-10)."
+      "description": "Preferred CAIP-10 account ID for the subject."
     },
     "agentChainRef": {
       "type": "string",
       "format": "caip2-chain",
-      "description": "Required when using legacy agentWallet without agentAccountId."
+      "description": "Required when using agentWallet without agentAccountId."
     },
     "agentWallet": {
       "type": "string",

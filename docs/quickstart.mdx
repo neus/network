@@ -8,6 +8,10 @@ icon: rocket
   **Not coding yet?** **[Hosted Verify](./cookbook/auth-hosted-verify)** (browser) or **[MCP](./mcp/overview)** (URL only) are usually faster first steps. Return here when you want a minimal SDK proof in your repo.
 </Tip>
 
+<Tip>
+  **Terminal bootstrap (MCP JSON + doc links, stdout only):** `npx -y -p @neus/sdk neus init` — [LLM docs](./platform/llm-docs).
+</Tip>
+
 `npm install` → one `verify()` → read `proofId` → poll if needed → gate or `gateCheck`. ~5 minutes.
 
 <Tip>
@@ -22,6 +26,8 @@ npm install @neus/sdk
 
 ## 2. Create a proof
 
+Defaults are **private**, **unlisted**, and **original content stored** (owner-authenticated reads). Omit `options` unless you need a different mode.
+
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
@@ -35,6 +41,8 @@ const proof = await client.verify({
 
 const proofId = proof.proofId;
 ```
+
+**Reusable gates** (same receipt for `gateCheck` without the owner signed in) use **public unlisted**: `privacyLevel: 'public'`, `publicDisplay: false`. Unlisted is still public to anyone with the proof id—use for non-sensitive gates. See **[SDK verification patterns](./sdks/verifications)**.
 
 <Tip>
   **No in-app wallet?** Use **[Hosted Verify](./cookbook/auth-hosted-verify)** (redirect or popup) instead of `window.ethereum`.
@@ -51,13 +59,19 @@ const status = await client.pollProofStatus(proofId, {
 
 ## 4. Gate content in React
 
+`VerifyGate` uses the same defaults as the SDK unless you override `proofOptions`.
+
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
-<VerifyGate requiredVerifiers={['ownership-basic']}>
+<VerifyGate
+  requiredVerifiers={['ownership-basic']}
+>
   <ProtectedContent />
 </VerifyGate>
 ```
+
+For a public unlisted gate, set `proofOptions` explicitly (example in **[VerifyGate](./widgets/verifygate)**).
 
 ## 5. Check eligibility from your server
 

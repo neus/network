@@ -1,0 +1,14 @@
+---
+description: Monorepo agent session loop — read parent AGENTS.md when changing SDK or public spec.
+alwaysApply: true
+---
+
+# Agent-driven session (NEUS network)
+
+Before changing **SDK surface**, **public spec**, or **verifier schemas**:
+
+1. Read **`../AGENTS.md`** (monorepo manifest) if the change affects contracts or aligns with backend.
+2. Keep names aligned with **backend SSOT** and **`spec/`**—no invented fields or verifier IDs.
+3. Run **`npm test`** / lint as in **`package.json`** before claiming done.
+
+Repo index: **`AGENTS.md`** in this folder.

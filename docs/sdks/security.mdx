@@ -27,24 +27,25 @@ Owner-only reads need extra signed headers. Use **SDK methods** for private proo
   - third-party auth credentials or provider tokens
 </Warning>
 
-## Recommended Privacy Defaults
+## Privacy defaults
+
+The SDK defaults to **`private`** receipts with **`storeOriginalContent: true`** (private stored). For **reusable gates** and **`gateCheck`** without an owner session, set **unlisted public** explicitly:
 
 ```javascript
 {
   privacyLevel: 'public',
   publicDisplay: false,
-  storeOriginalContent: true
 }
 ```
 
-These are separate controls:
+Set **`storeOriginalContent: false`** only when your product must **not** persist original bytes (hash/metadata only).
 
 | Control | Purpose |
 |---------|---------|
-| `privacyLevel` | Controls access |
-| `publicDisplay` | Controls public discovery |
-| `storeOriginalContent` | Controls whether original content is stored |
+| `privacyLevel` | Vaulted (`private`) vs policy-checkable without session (`public`) |
+| `publicDisplay` | Discovery vs unlisted |
+| `storeOriginalContent` | Retain original content (default true) vs hash-only |
 
 <Note>
-Default keeps proofs **unlisted** (not discoverable). Use **`private`** when only the **signed-in user** should resolve the proof.
+Default is **private stored**. Use the block above when you need the same receipt to power gates and server checks without the owner signed in. Unlisted public proofs are still public to anyone with the proof id.
 </Note>

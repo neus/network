@@ -770,7 +770,7 @@ export function formatVerificationStatus(status) {
  *
  * Note: The NEUS backend uses SHAKE256 (quantum-resistant) for content hashing.
  * For content hashes that match the backend, use the /verification/standardize
- * endpoint to get the canonical hash, or provide the content directly and let
+ * endpoint to get the server-computed hash, or provide the content directly and let
  * the backend compute the hash.
  *
  * @param {string|Uint8Array} input - Raw string (UTF-8) or bytes

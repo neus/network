@@ -4,9 +4,7 @@ description: Portable proof receipts for login, trust, access, and agent workflo
 icon: house
 ---
 
-**Every app makes you re-verify. NEUS fixes it.**
-
-Each completed verification yields one **proof receipt ID** (`proofId` / `qHash`). Persist it in your product. Use that ID for checks, gates, widgets, and `/proof` links—not raw signatures.
+**NEUS issues one portable proof receipt per completed verification.** Save the **proof receipt ID** as `proofId` and use it for checks, gates, widgets, and `/proof` links rather than treating raw signatures as the long-lived record.
 
 ## How it works
 
@@ -19,7 +17,7 @@ Each completed verification yields one **proof receipt ID** (`proofId` / `qHash`
 
 <CardGroup cols={3}>
   <Card title="Quickstart" icon="code" href="./quickstart">
-    ~5 min, first proof (no app id required).
+    ~5 min, first proof.
   </Card>
   <Card title="Get started" icon="rocket" href="./get-started">
     Hub, app id, credits, billing—before production.

@@ -8,14 +8,29 @@ Use these patterns to choose how your app creates or reuses proofs. In most prod
 
 ## Privacy and Visibility
 
+The SDK defaults to **private stored** receipts: `privacyLevel: 'private'`, `publicDisplay: false`, `storeOriginalContent: true`. Owner-authenticated reads return full proof data; public/direct reads return only the safe minimal payload unless the caller is authorized.
+
+For **reusable app gates** and server-side `gateCheck` without a signed-in owner, create an **unlisted public** receipt: `privacyLevel: 'public'` with `publicDisplay: false`. Original content still defaults to stored. **Warning:** unlisted is not discoverable in feeds, but it remains **public to anyone with the proof id**—do not use it for secrets.
+
 | Option | When to Use |
 |--------|-------------|
-| `privacyLevel: 'private'` | Vaulted proofs for signed-in owner or authorized-session access only. |
-| `privacyLevel: 'public'` | Reusable proofs. Pair with `publicDisplay` to choose public vs unlisted. |
-| `publicDisplay: false` | Unlisted: usable in checks and direct lookups, hidden from discovery. |
-| `publicDisplay: true` | Show proof on public profile (requires `public` privacy). |
+| `privacyLevel: 'private'` | Default. Owner or authorized-session access; content vaulted to the wallet. |
+| `privacyLevel: 'public'` | Needed for reusable checks without owner session. Pair with `publicDisplay`. |
+| `publicDisplay: false` | Unlisted: eligible in checks and direct lookups, not surfaced in discovery. |
+| `publicDisplay: true` | Listed on a public profile (requires `privacyLevel: 'public'`). |
 
-Default to `{ privacyLevel: 'public', publicDisplay: false }` for most verify and gate flows. Use `private` for vaulted content and authorized reads only.
+### Hide original content
+
+Set `storeOriginalContent: false` when your product should retain only proof metadata/hash/policy status, not original bytes (hash-only mode).
+
+Example (unlisted public, typical for gates):
+
+```javascript
+options: {
+  privacyLevel: 'public',
+  publicDisplay: false,
+}
+```
 
 ## Reuse-First Flow
 
@@ -25,6 +40,10 @@ Use this as the default UX. It minimizes user prompts while still issuing new pr
 <VerifyGate
   requiredVerifiers={['ownership-basic']}
   strategy="reuse-or-create"
+  proofOptions={{
+    privacyLevel: 'public',
+    publicDisplay: false,
+  }}
 >
   <Protected />
 </VerifyGate>
@@ -63,8 +82,7 @@ const result = await client.gateCheck({
   address: '0x...',
   verifierIds: ['token-holding'],
   contractAddress: '0x...',
-  minBalance: '100',
-  chainId: 8453, // Asset chain where the token lives — required for asset verifiers only
-  since: Date.now() - 60 * 60 * 1000
+  minBalance: '1',
+  chainId: 8453,
 });
 ```

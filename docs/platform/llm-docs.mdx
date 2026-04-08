@@ -4,16 +4,32 @@ description: Machine-readable documentation exports for AI assistants.
 icon: sparkles
 ---
 
-NEUS publishes route indexes and full-doc exports for tools that ingest documentation text.
+NEUS publishes route indexes and full-doc exports for tools that ingest documentation text. Use them as **indexes** to stable URLs—do not treat exported text as a second spec; prefer the linked pages for field names and behavior.
 
 ## Reader order (integrators)
 
-1. **[Overview](../index)** — proof receipt ID model (`proofId` / `qHash`).
+1. **[Overview](../index)** — proof receipt ID as `proofId`.
 2. **[Get started](../get-started)** — hub account, **`appId`**, credits, sponsor vs self-pay.
 3. **[Integration](../integration)** — check → verify → save → reuse.
 4. Path docs (SDK, API, Hosted Verify, MCP, widgets) — only after **2** is clear.
 
-## Guidance for assistants (low friction, high adoption)
+## Default onboarding (agents + existing tools)
+
+Keep your current runtime, agents, and MCP clients. NEUS adds **portable identity**, **scoped delegation**, and **verifiable receipts**—no new inbox or orchestration product required.
+
+1. Add the **hosted MCP** URL (`https://mcp.neus.network/mcp`) — **[MCP setup](../mcp/setup)**.
+2. Run **`neus_agent_create`** then **`neus_agent_link`** when the assistant needs hosted agent setup ([MCP overview](../mcp/overview)).
+3. Use **proof presets** in the hub: **`agent-identity`** registers the service; **`agent-delegation`** grants scoped authority — **[Agent identity](../agents/agent-identity)** · **[Agent delegation](../agents/agent-delegation)**.
+4. Treat the resulting proof and status page as the **first receipt and audit trail** for that agent.
+5. Before production traffic, align **[Get started](../get-started)** (`appId`, credits, sponsor vs self-pay) with **[Billing](../platform/billing)**.
+
+**CLI bootstrap (stdout only):** prints the same MCP JSON block and doc URLs—no file writes, no accounts, no keys.
+
+```bash
+npx -y -p @neus/sdk neus init
+```
+
+## Guidance for assistants
 
 Use this so users reach the right doc and avoid unnecessary code, keys, or duplicate verification.
 
@@ -21,7 +37,8 @@ Use this so users reach the right doc and avoid unnecessary code, keys, or dupli
 - **Login or interactive verification without in-app wallet code:** Prefer **[Hosted Verify](../cookbook/auth-hosted-verify)**.
 - **MCP:** The hosted URL **`https://mcp.neus.network/mcp`** alone is valid for catalog, context, and public verification flows. **Do not** imply the user is blocked without an API key. Add **`Authorization: Bearer`** only when account-scoped tools are needed (**`neus_me`**, private proofs)—token from **[Access keys](https://neus.network/profile?tab=account)** ([MCP Auth](../mcp/auth)).
 - **Secrets:** Never instruct users to paste **wallet private keys** into MCP or client config. **Personal API keys** are Bearer tokens from Access keys, not raw wallet keys.
-- **Unclear product fit:** Point to **[Choose path](../choose-an-integration-path)** before dumping code.
+- **x402:** Prefer credits and sponsor grants for human onboarding. Use x402 only when a client receives **402** and can retry with **`PAYMENT-SIGNATURE`** ([x402](../platform/x402)).
+- **Unclear product fit:** Point to **[Choose path](../choose-an-integration-path)** before suggesting implementation details or large code blocks.
 - **Agents and delegation:** **[Agents overview](../agents/overview)** — still require hub clarity on credits; use Hosted Verify links from tools when the flow is interactive.
 - **Reuse:** Prefer reusing a saved **`proofId`** when one exists; avoid parallel verification UX for the same requirement without explaining why.
 
@@ -29,11 +46,15 @@ Use this so users reach the right doc and avoid unnecessary code, keys, or dupli
 
 ## Route index (`llms.txt`)
 
+The docs site hosts a machine-readable route index (titles, descriptions, links). Fetch it for discovery; deep-link users to specific guides for accuracy.
+
 ```bash
 curl https://docs.neus.network/llms.txt
 ```
 
 ## Full documentation (`llms-full.txt`)
+
+Single-file export for tools that need full-text context. Prefer narrow pages for product behavior.
 
 ```bash
 curl https://docs.neus.network/llms-full.txt

@@ -31,14 +31,14 @@ declare module '@neus/sdk' {
     verify(params: VerifyParams): Promise<VerificationResult>;
     
     /**
-     * Get proof record by receipt id (qHash)
-     * @param proofId - Proof receipt id (`qHash`, 0x + 64 hex).
+     * Get proof record by receipt ID.
+     * @param proofId - Proof receipt ID (0x + 64 hex).
      */
     getProof(proofId: string): Promise<StatusResult>;
     
     /**
      * Get private proof record (owner-signed)
-     * @param proofId - Proof receipt id (`qHash`).
+     * @param proofId - Proof receipt ID.
      * @param wallet - Optional injected wallet/provider (MetaMask/ethers Wallet)
      */
     getPrivateProof(proofId: string, wallet?: WalletLike | GatePrivateAuth): Promise<StatusResult>;
@@ -54,7 +54,7 @@ declare module '@neus/sdk' {
     
   /**
    * Poll verification status until completion
-   * @param proofId - Proof ID (standard). `qHash` is a deprecated alias (same value).
+   * @param proofId - Proof ID to poll.
    * @param options - Polling configuration options
    * @returns Promise resolving to final status
    * @example
@@ -207,15 +207,15 @@ declare module '@neus/sdk' {
    * Result from proof creation
    */
   export interface ProofResult {
-    /** Proof ID (standard) */
+    /** Proof receipt ID */
     proofId: string;
-    /** @deprecated qHash is a deprecated alias of proofId (same value). */
+    /** HTTP wire field for the proof receipt ID. */
     qHash: string;
     /** Current status */
     status: string;
     /** Wallet address that created proof */
     walletAddress?: string;
-    /** Canonical URL for GET proof record */
+    /** Stable URL for GET proof record */
     proofUrl?: string;
     /** Cross-chain enabled */
     crossChain?: boolean;
@@ -225,9 +225,9 @@ declare module '@neus/sdk' {
    * Verification result
    */
   export interface VerificationResult {
-    /** Proof ID (standard) */
+    /** Proof receipt ID */
     proofId: string;
-    /** @deprecated qHash is a deprecated alias of proofId (same value). */
+    /** HTTP wire field for the proof receipt ID. */
     qHash: string;
     /** Current status */
     status: VerificationStatus;
@@ -241,11 +241,11 @@ declare module '@neus/sdk' {
    * Status check result
    */
   export interface StatusResult {
-    /** Proof ID (standard) */
+    /** Proof receipt ID */
     proofId?: string;
-    /** @deprecated qHash is a deprecated alias of proofId (same value). */
+    /** HTTP wire field for the proof receipt ID. */
     qHash?: string;
-    /** Canonical URL for GET proof record */
+    /** Stable URL for GET proof record */
     proofUrl?: string | null;
     /** Whether verification succeeded */
     success: boolean;
@@ -254,7 +254,7 @@ declare module '@neus/sdk' {
     /** Full verification data */
     data?: {
       proofId?: string;
-      /** @deprecated qHash is a deprecated alias of proofId (same value). */
+      /** HTTP wire field for the proof receipt ID. */
       qHash?: string;
       status: string;
       walletAddress: string;
@@ -818,7 +818,7 @@ declare module '@neus/sdk' {
       eligible: boolean;
       matchedCount?: number;
       matchedQHashes?: string[];
-      /** @deprecated matchedProofIds is a legacy alias of matchedQHashes (same values when provided). */
+      /** @deprecated matchedProofIds is a compatibility alias of matchedQHashes (same values when provided). */
       matchedProofIds?: string[];
       matchedTags?: string[];
       projections?: Array<Record<string, any>> | null;
@@ -1137,10 +1137,10 @@ declare module '@neus/sdk/widgets' {
     /** Callback when verification completes successfully */
     onVerified?: (result: {
       proofId: string;
-      /** @deprecated qHash is a deprecated alias of proofId (same value). */
+      /** HTTP wire field for the proof receipt ID. */
       qHash: string;
       proofIds?: string[];
-      /** @deprecated qHashes is a deprecated alias of proofIds (same values). */
+      /** HTTP wire fields for proof receipt IDs. */
       qHashes?: string[];
       address?: string;
       txHash?: string | null;
@@ -1154,7 +1154,7 @@ declare module '@neus/sdk/widgets' {
       results?: Array<{
         verifierId: string;
         proofId: string;
-        /** @deprecated qHash is a deprecated alias of proofId (same value). */
+        /** HTTP wire field for the proof receipt ID. */
         qHash: string;
         address?: string;
         txHash?: string | null;
@@ -1185,7 +1185,7 @@ declare module '@neus/sdk/widgets' {
     verifierOptions?: Record<string, any>;
     /** Pre-built verifier data for each verifier */
     verifierData?: Record<string, any>;
-    /** Proof creation options (privacyLevel, publicDisplay, storeOriginalContent) */
+    /** Proof creation options (defaults: private, publicDisplay false, storeOriginalContent true) */
     proofOptions?: Record<string, any>;
     /** Proof reuse strategy */
     strategy?: 'reuse-or-create' | 'reuse' | 'fresh';
@@ -1205,7 +1205,7 @@ declare module '@neus/sdk/widgets' {
     mode?: 'create' | 'access';
     /** proofId for private proof access (required when mode='access') */
     proofId?: string | null;
-    /** @deprecated qHash is a deprecated alias of proofId (same value). */
+    /** HTTP wire field for callers that receive API-shaped proof records. */
     qHash?: string | null;
     /** Optional injected wallet/provider for signing flows */
     wallet?: WalletLike | any;
@@ -1222,11 +1222,11 @@ declare module '@neus/sdk/widgets' {
   export function VerifyGate(props: VerifyGateProps): any;
 
   export interface ProofBadgeProps {
-    /** Proof ID (standard). Provide either proofId or qHash. */
+    /** Proof receipt ID. */
     proofId?: string;
-    /** @deprecated qHash is a deprecated alias of proofId (same value). */
+    /** HTTP wire field for callers that receive API-shaped proof records. Prefer proofId. */
     qHash?: string;
-    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    /** URL path pattern for proof links. Supports :proofId. */
     proofUrlPattern?: string;
     /** Badge size */
     size?: 'sm' | 'md';
@@ -1252,9 +1252,9 @@ declare module '@neus/sdk/widgets' {
 
   export interface SimpleProofBadgeProps {
     proofId?: string;
-    /** @deprecated qHash is a deprecated alias of proofId (same value). */
+    /** HTTP wire field for callers that receive API-shaped proof records. Prefer proofId. */
     qHash?: string;
-    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    /** URL path pattern for proof links. Supports :proofId. */
     proofUrlPattern?: string;
     uiLinkBase?: string;
     apiUrl?: string;
@@ -1272,9 +1272,9 @@ declare module '@neus/sdk/widgets' {
 
   export interface NeusPillLinkProps {
     proofId?: string;
-    /** @deprecated qHash is a deprecated alias of proofId (same value). */
+    /** HTTP wire field for callers that receive API-shaped proof records. Prefer proofId. */
     qHash?: string;
-    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    /** URL path pattern for proof links. Supports :proofId. */
     proofUrlPattern?: string;
     uiLinkBase?: string;
     label?: string;
@@ -1288,11 +1288,11 @@ declare module '@neus/sdk/widgets' {
   export function NeusPillLink(props: NeusPillLinkProps): any;
 
   export interface VerifiedIconProps {
-    /** Proof ID (standard) for link */
+    /** Proof receipt ID for link */
     proofId?: string;
-    /** @deprecated qHash is a deprecated alias of proofId (same value). */
+    /** HTTP wire field for callers that receive API-shaped proof records. Prefer proofId. */
     qHash?: string;
-    /** URL path pattern for proof links. Supports :proofId and legacy :qHash tokens. */
+    /** URL path pattern for proof links. Supports :proofId. */
     proofUrlPattern?: string;
     /** UI platform base URL */
     uiLinkBase?: string;

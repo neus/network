@@ -14,7 +14,7 @@ Portable agent identity, signed by the agent wallet itself. Use agent-delegation
 
 ## Optional fields
 
-- `agentAccountId` (`string format caip10-account`): Preferred canonical subject identity (CAIP-10).
+- `agentAccountId` (`string format caip10-account`): Preferred CAIP-10 account ID for the subject.
 - `agentChainRef` (`string format caip2-chain`): Required when using `agentWallet` without `agentAccountId`.
 - `agentWallet` (`string format universal-address`)
 - `agentLabel` (`string max 128`)

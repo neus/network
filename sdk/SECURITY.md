@@ -5,7 +5,7 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 ## Authentication model
 
 - **Verification submission** (`POST /api/v1/verification`) is authenticated by a signature over the **NEUS Standard Signing String**.
-- **Proof record by receipt id** (`GET /api/v1/proofs/{qHash}`) is safe to call publicly for public proofs; private proofs return a minimal payload unless the caller is the owner (session or signed headers).
+- **Proof record by receipt ID** is safe to call publicly for public proofs; private proofs return a minimal payload unless the caller is the owner (session or signed headers).
 - **Owner-only reads** of private proof payloads require an additional owner signature. The SDK uses:
   - `x-wallet-address`
   - `x-signature`
@@ -20,18 +20,18 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
   - API keys
   - third-party auth credentials or provider tokens (if your integration uses them)
 
-## Recommended privacy defaults
+## Privacy defaults
 
-- `privacyLevel: 'public'`
-- `publicDisplay: false`
-- `storeOriginalContent: true`
+Defaults are **private** receipts with **original content stored** (owner-authenticated reads). Integrators see only that content is private and tied to the wallet unless they opt into other modes.
 
-These are separate controls:
+For **reusable gates** and **`gateCheck`** without an owner session, set **unlisted public** explicitly (`privacyLevel: 'public'`, `publicDisplay: false`). Original content still defaults to stored; anyone with the proof id can resolve public proofs—do not treat unlisted as secret.
 
-- `privacyLevel` controls access
-- `publicDisplay` controls public discovery
-- `storeOriginalContent` controls whether original content is stored
+**Hide original content** (metadata/hash only): set `storeOriginalContent: false` when your product must not persist original bytes.
 
-Use this as the default for reusable proofs: unlisted, not discoverable. Use `privacyLevel: 'private'` when proof access should stay owner/controller-authorized only.
+Controls:
 
-“Discoverable” proofs are **public** (`privacyLevel='public'`) and explicitly opted into discovery (`publicDisplay=true`).
+- `privacyLevel` — private (vaulted to the wallet) vs public (eligible for policy checks without owner session)
+- `publicDisplay` — discovery vs unlisted
+- `storeOriginalContent` — retain original content vs hash/metadata only
+
+Discoverable listings require **`privacyLevel: 'public'`** and **`publicDisplay: true`**.

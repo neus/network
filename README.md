@@ -60,7 +60,7 @@ import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient();
 
-// 1. Verify
+// 1. Verify (defaults: private, unlisted, original content stored — wallet-only access)
 const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'My content',
@@ -117,8 +117,14 @@ const check = await client.gateCheck({
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
-<VerifyGate requiredVerifiers={['nft-ownership']}
-  verifierData={{ 'nft-ownership': { contractAddress: '0x...', tokenId: '1', chainId: 1 } }}>
+<VerifyGate
+  requiredVerifiers={['nft-ownership']}
+  verifierData={{ 'nft-ownership': { contractAddress: '0x...', tokenId: '1', chainId: 1 } }}
+  proofOptions={{
+    privacyLevel: 'public',
+    publicDisplay: false,
+  }}
+>
   <PremiumContent />
 </VerifyGate>
 ```
@@ -130,12 +136,24 @@ Add NEUS with one URL:
 ```json
 {
   "mcpServers": {
-    "neus": { "url": "https://mcp.neus.network/mcp" }
+    "neus": {
+      "type": "streamableHttp",
+      "url": "https://mcp.neus.network/mcp"
+    }
   }
 }
 ```
 
 Hosted links from tools (passkeys stay on NEUS). [Setup](https://docs.neus.network/mcp/setup)
+
+## AI assistants and CLI bootstrap
+
+- **Machine-readable doc index:** [`llms.txt`](https://docs.neus.network/llms.txt) — use with [LLM docs](https://docs.neus.network/platform/llm-docs) so assistants pick the lowest-friction path (credits, hosted verify, MCP URL-only).
+- **Copy-paste MCP + links (stdout only, no file writes):**
+
+```bash
+npx -y -p @neus/sdk neus init
+```
 
 ## Docs
 
@@ -155,6 +173,8 @@ Hosted links from tools (passkeys stay on NEUS). [Setup](https://docs.neus.netwo
 | [Discussions](https://github.com/neus/network/discussions) | Q&A |
 | [Issues](https://github.com/neus/network/issues) | Bugs |
 | [dev@neus.network](mailto:dev@neus.network) | Security (private) |
+
+Repository conventions and documentation standards: [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 

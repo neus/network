@@ -35,6 +35,7 @@ sdk/cjs/
 .mintlify-home*/
 docs/.mintlify-home*/
 .tmp-docs-manifest.json
+scripts/*
 
 # Tooling caches & configs (keep out of repo)
 .eslintcache
@@ -45,7 +46,10 @@ docs/.mintlify-home*/
 
 # Local editor and assistant folders (do not commit)
 .CLAUDE/
-.claude/
-.cursor/
+.claude/*
+!.claude/rules/
+!.claude/rules/**
+.cursor/*
+!.cursor/rules/
+!.cursor/rules/**
 .cursorrules
-docs-private/

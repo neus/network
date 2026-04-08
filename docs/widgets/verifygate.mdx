@@ -24,6 +24,10 @@ export function Page() {
           chainId: 8453
         }
       }}
+      proofOptions={{
+        privacyLevel: 'public',
+        publicDisplay: false,
+      }}
       appId="neus-network"
     >
       <div>Unlocked</div>
@@ -46,10 +50,6 @@ export function Page() {
 | `sponsorGrant` | Enables sponsored proof creation |
 | `hostedCheckoutUrl` | Overrides the hosted verify URL when needed |
 | `oauthProvider` | Pre-selects the OAuth provider when the user already chose one in your app |
-
-<Note>
-Some HTTP endpoints label the same proof receipt ID as `qHash`.
-</Note>
 
 ## Best Use Cases
 

@@ -6,7 +6,7 @@ icon: terminal
 
 **Base:** `https://api.neus.network`
 
-**Server:** same payer rules as the SDK. **[Get started](../get-started)** · **`appId`** · **`X-Neus-App`** · **`X-Sponsor-Grant`** · credits
+**Billing:** Same payer rules as the SDK and MCP. **[Get started](../get-started)** · **`appId`** · **`X-Neus-App`** · **`X-Sponsor-Grant`** · credits
 
 **SDK** when possible; **HTTP** for server-only.
 
@@ -16,7 +16,7 @@ icon: terminal
 |------|--------|---------|
 | `/api/v1/verification` | POST | Create proof |
 | `/api/v1/verification/standardize` | POST | Signing string |
-| `/api/v1/proofs/{qHash}` | GET | Proof record |
+| `/api/v1/proofs/{qHash}` | GET | Proof record (path value is the SDK `proofId`) |
 | `/api/v1/proofs/check` | GET | Eligibility only |
 | `/api/v1/proofs/by-wallet/{address}` | GET | Proofs for wallet |
 | `/api/v1/verification/verifiers` | GET | Verifier catalog |

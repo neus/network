@@ -20,7 +20,7 @@
   "description": "Delegates scoped authority from a delegating account to an agent, ERC-8004 compatible",
   "properties": {
     "agentAccountId": {
-      "description": "Preferred canonical agent identity (CAIP-10).",
+      "description": "Preferred CAIP-10 account ID for the agent.",
       "format": "caip10-account",
       "type": "string"
     },
@@ -47,7 +47,7 @@
       "type": "array"
     },
     "controllerAccountId": {
-      "description": "Preferred canonical controller identity (CAIP-10).",
+      "description": "Preferred CAIP-10 account ID for the controller.",
       "format": "caip10-account",
       "type": "string"
     },

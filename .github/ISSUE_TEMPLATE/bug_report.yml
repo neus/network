@@ -51,7 +51,7 @@ body:
     id: logs
     attributes:
       label: Logs / screenshots
-      description: "Sanitize anything sensitive. Prefer non-identifying proof IDs (qHash) only if the proof was created as public."
+      description: "Sanitize anything sensitive. Include proof IDs only if the proof was created as public."
       render: text
 
   - type: checkboxes
@@ -65,4 +65,3 @@ body:
           required: true
         - label: I did **not** include PII or sensitive content from a private proof.
           required: true
-

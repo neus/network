@@ -37,7 +37,9 @@ If a user needs to invalidate a proof they own, use the self-revocation flow:
 POST /api/v1/proofs/revoke-self/{qHash}
 ```
 
-In the JavaScript SDK, the equivalent is:
+The path parameter value is the same proof receipt ID returned as `proofId` in SDK responses.
+
+In the JavaScript SDK:
 
 ```javascript
 await client.revokeOwnProof(proofId, wallet);

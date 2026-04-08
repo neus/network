@@ -24,12 +24,12 @@
     "controllerAccountId": {
       "type": "string",
       "format": "caip10-account",
-      "description": "Preferred canonical controller identity (CAIP-10)."
+      "description": "Preferred CAIP-10 account ID for the controller."
     },
     "controllerChainRef": {
       "type": "string",
       "format": "caip2-chain",
-      "description": "Required when using legacy controllerWallet without controllerAccountId."
+      "description": "Required when using controllerWallet without controllerAccountId."
     },
     "controllerWallet": {
       "type": "string",
@@ -38,12 +38,12 @@
     "agentAccountId": {
       "type": "string",
       "format": "caip10-account",
-      "description": "Preferred canonical agent identity (CAIP-10)."
+      "description": "Preferred CAIP-10 account ID for the agent."
     },
     "agentChainRef": {
       "type": "string",
       "format": "caip2-chain",
-      "description": "Required when using legacy agentWallet without agentAccountId."
+      "description": "Required when using agentWallet without agentAccountId."
     },
     "agentWallet": {
       "type": "string",

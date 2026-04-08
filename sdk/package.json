@@ -1,7 +1,10 @@
 {
   "name": "@neus/sdk",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "NEUS SDK - Create and verify cryptographic proofs with simple, clean API",
+  "bin": {
+    "neus": "./cli/neus.mjs"
+  },
   "main": "index.js",
   "type": "module",
   "types": "types.d.ts",
@@ -45,10 +48,9 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . --ignore-pattern widgets/verify-gate/dist/**",
     "format": "prettier --write \"**/*.js\"",
-    "build": "npm run build:widgets && npm run build:widget-standalone && npm run build:cjs",
+    "build": "npm run build:widgets && npm run build:cjs",
     "build:widgets": "npx esbuild widgets/verify-gate/VerifyGate.jsx widgets/verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=widgets/verify-gate/dist --jsx=automatic --legal-comments=none --loader:.svg=dataurl --external:react --external:react-dom --external:react/jsx-runtime --external:@neus/sdk/client",
     "build:cjs": "npx esbuild index.js client.js utils.js errors.js gates.js --bundle --platform=node --format=cjs --outdir=cjs --out-extension:.js=.cjs --legal-comments=none --external:ethers --external:@zkpassport/sdk --external:react --external:react-dom --external:react/jsx-runtime",
-    "build:widget-standalone": "npx esbuild widgets/verify-gate/standalone.js --platform=browser --outfile=widgets/verify-gate/dist/widget.js --legal-comments=none && node -e \"require('fs').copyFileSync('widgets/verify-gate/pages-headers','widgets/verify-gate/dist/_headers')\"",
     "prepack": "npm run build",
     "prepublishOnly": "npm run lint && npm test && npm run build"
   },
@@ -121,6 +123,7 @@
     "ajv": "6.14.0"
   },
   "files": [
+    "cli/neus.mjs",
     "index.js",
     "client.js",
     "utils.js",
@@ -135,7 +138,7 @@
     "neus-logo.svg",
     "widgets/index.js",
     "widgets/verify-gate/index.js",
-    "widgets/verify-gate/dist/**",
-    "widgets/verify-gate/standalone.js"
+    "widgets/verify-gate/dist/VerifyGate.js",
+    "widgets/verify-gate/dist/ProofBadge.js"
   ]
 }

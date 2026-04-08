@@ -4,9 +4,9 @@
 
 **Verify once. Prove everywhere.** JavaScript SDK for portable proof receipts.
 
-## Authority model (single source of truth)
+## Live catalog and enforcement
 
-- **Verifier definitions and enforcement** live in the NEUS API: `GET /api/v1/verification/verifiers` returns the live catalog (IDs, JSON Schema, flow/access metadata). The protocol registry is the source; clients must not treat hardcoded lists in this package as authoritative.
+- **Verifier definitions and enforcement** come from the NEUS API: `GET /api/v1/verification/verifiers` returns the live catalog (IDs, JSON Schema, flow/access metadata). Fetch the current catalog at runtime; do not treat hardcoded lists in this package as guaranteed.
 - **Proof eligibility and validity** are determined by the API (`GET /api/v1/proofs/check` via `client.gateCheck()`, and the verification write path). Client-side checks in the SDK are for UX and faster failure only; **always trust the API response** for access control.
 - **Prefer `gateCheck()`** for allow/deny. `checkGate()` is for local preview against proofs you already fetched; it can disagree with the server on edge cases. See `NeusClient` JSDoc.
 
@@ -16,6 +16,14 @@
 npm install @neus/sdk
 ```
 
+## CLI (`neus init`)
+
+Prints the hosted **MCP** JSON block (streamable HTTP), verification and hub URLs, and deep links to MCP setup, agents, and [LLM docs](https://docs.neus.network/platform/llm-docs). **Does not** write files, create accounts, or generate keys.
+
+```bash
+npx -y -p @neus/sdk neus init
+```
+
 ## 30-second example
 
 ```javascript
@@ -23,14 +31,13 @@ import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient();
 
-// Create a proof
+// Create a proof (defaults: private, unlisted, original content stored)
 const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'Hello NEUS',
   wallet: window.ethereum,
 });
 
-// Save proofId; reuse everywhere
 const proofId = proof.proofId;
 
 // Check eligibility from anywhere
@@ -48,9 +55,9 @@ const check = await client.gateCheck({
 | Method | What it does |
 |--------|-------------|
 | `client.verify()` | Create a proof |
-| `client.getProof()` | Fetch proof record by receipt id (qHash) |
+| `client.getProof()` | Fetch proof record by proof receipt ID |
 | `client.pollProofStatus()` | Wait for async completion |
-| `client.gateCheck()` | **Authoritative** server eligibility (`GET /api/v1/proofs/check`) |
+| `client.gateCheck()` | Server eligibility (`GET /api/v1/proofs/check`) — use for allow/deny |
 | `client.checkGate()` | Local evaluation against fetched proofs (preview UX; not a substitute for `gateCheck` for security) |
 | `getHostedCheckoutUrl()` | Generate a hosted verify URL |
 
@@ -59,7 +66,13 @@ const check = await client.gateCheck({
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
-<VerifyGate requiredVerifiers={['ownership-basic']}>
+<VerifyGate
+  requiredVerifiers={['ownership-basic']}
+  proofOptions={{
+    privacyLevel: 'public',
+    publicDisplay: false,
+  }}
+>
   <ProtectedContent />
 </VerifyGate>
 ```

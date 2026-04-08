@@ -14,10 +14,10 @@ Delegates scoped authority from a delegating account to an agent, ERC-8004 compa
 
 ## Optional fields
 
-- `controllerAccountId` (`string format caip10-account`): Preferred canonical controller identity (CAIP-10).
+- `controllerAccountId` (`string format caip10-account`): Preferred CAIP-10 account ID for the controller.
 - `controllerChainRef` (`string format caip2-chain`): Required when using `controllerWallet` (instead of `controllerAccountId`).
 - `controllerWallet` (`string format universal-address`)
-- `agentAccountId` (`string format caip10-account`): Preferred canonical agent identity (CAIP-10).
+- `agentAccountId` (`string format caip10-account`): Preferred CAIP-10 account ID for the agent.
 - `agentChainRef` (`string format caip2-chain`): Required when using `agentWallet` (instead of `agentAccountId`).
 - `agentWallet` (`string format universal-address`)
 - `agentId` (`string max 128 min 1`)

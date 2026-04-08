@@ -268,7 +268,7 @@ describe('Utils', () => {
   });
 
   describe('validateQHash()', () => {
-    it('should validate correct qHash format (deprecated proofId alias)', () => {
+    it('should validate correct proof receipt ID format', () => {
       expect(validateQHash('0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef')).toBe(true);
     });
 

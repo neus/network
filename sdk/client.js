@@ -513,7 +513,7 @@ export class NeusClient {
    *
    * Supports two paths:
    *   - **Auto:** Supply `verifier`, `content`, and/or `data` with an optional
-   *     `wallet` provider. The SDK handles signing internally.
+   *     `wallet` provider. The SDK performs signing in the client.
    *   - **Manual:** Supply pre-signed `verifierIds`, `data`, `walletAddress`,
    *     `signature`, and `signedTimestamp`.
    *
@@ -974,7 +974,8 @@ export class NeusClient {
       // Privacy and storage options (defaults)
       privacyLevel: options?.privacyLevel || 'private',
       publicDisplay: options?.publicDisplay || false,
-      storeOriginalContent: options?.storeOriginalContent || false
+      storeOriginalContent:
+        typeof options?.storeOriginalContent === 'boolean' ? options.storeOriginalContent : true
     };
     if (typeof options?.enableIpfs === 'boolean') optionsPayload.enableIpfs = options.enableIpfs;
 
@@ -1004,9 +1005,9 @@ export class NeusClient {
   // ============================================================================
 
   /**
-   * Get proof record by receipt id (qHash)
+   * Get proof record by proof receipt id.
    *
-   * @param {string} proofId - Proof receipt id (`qHash`, 0x + 64 hex).
+   * @param {string} proofId - Proof receipt ID (0x + 64 hex).
    * @returns {Promise<Object>} Proof record and verification state
    *
    * @example
@@ -1029,7 +1030,7 @@ export class NeusClient {
   /**
    * Get private proof record with wallet signature
    *
-   * @param {string} proofId - Proof receipt id (`qHash`).
+   * @param {string} proofId - Proof receipt ID.
    * @param {Object} wallet - Wallet provider (window.ethereum or ethers Wallet)
    * @returns {Promise<Object>} Private proof record and verification state
    *
@@ -1150,7 +1151,7 @@ export class NeusClient {
    * Polls the verification status until it reaches a terminal state (completed or failed).
    * Useful for providing real-time feedback to users during verification.
    *
-   * @param {string} proofId - Proof ID to poll (standard). `qHash` is a deprecated alias (same value).
+   * @param {string} proofId - Proof ID to poll.
    * @param {Object} [options] - Polling options
    * @param {number} [options.interval=5000] - Polling interval in ms
    * @param {number} [options.timeout=120000] - Total timeout in ms
@@ -1598,7 +1599,7 @@ export class NeusClient {
    * (`GET /api/v1/proofs/check`), which applies the same rules as the NEUS API. This method is useful for
    * UI previews, offline-ish flows, or when you already fetched proofs and want a quick match without
    * another round trip — but it can disagree with the server (e.g. `contentHash` matching uses a local
-   * approximation when proof data only has inline `content`; the API uses canonical hashing).
+   * approximation when proof data only has inline `content`; the API uses the standard server-side hash).
    *
    * Gate-first verification: checks if wallet has valid proofs satisfying requirements.
    * Returns which requirements are missing/expired.

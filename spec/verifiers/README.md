@@ -1,10 +1,10 @@
 # Verifier specs
 
-Machine-readable assets.
+Machine-readable assets for the verifier catalog.
 
-- [`VERIFIERS.json`](../VERIFIERS.json) · verifier index
-- [`schemas/`](./schemas/) · JSON Schema per verifier
+- [`VERIFIERS.json`](../VERIFIERS.json) — verifier index
+- [`schemas/`](./schemas/) — JSON Schema per verifier
 
-Human-readable catalog: [docs.neus.network/verification/verifiers](https://docs.neus.network/verification/verifiers)
+**Product documentation:** [docs.neus.network/verification/verifiers](https://docs.neus.network/verification/verifiers) — the API returns current verifier IDs, schemas, and metadata.
 
-If `docs/` mirrors schemas for the site, treat those as generated from this tree.
+JSON Schemas in this repository describe request and response shapes for tooling and validation. At runtime, fetch **`GET /api/v1/verification/verifiers`**; do not treat static copies as a substitute for the live response.

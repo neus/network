@@ -226,6 +226,66 @@ describe('NeusClient', () => {
     });
   });
 
+  describe('verify() default options', () => {
+    it('sends private stored defaults when options omitted', async () => {
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: { status: 'verified', qHash: `0x${'ab'.repeat(32)}` }
+          })
+      });
+
+      const wallet = '0x1234567890123456789012345678901234567890';
+      await client.verify({
+        verifierIds: ['ownership-basic'],
+        data: {
+          owner: wallet,
+          content: 'hello'
+        },
+        walletAddress: wallet,
+        signature: `0x${'11'.repeat(65)}`,
+        signedTimestamp: Date.now()
+      });
+
+      expect(fetch).toHaveBeenCalled();
+      const [, init] = fetch.mock.calls[0];
+      const body = JSON.parse(init.body);
+      expect(body.options.privacyLevel).toBe('private');
+      expect(body.options.publicDisplay).toBe(false);
+      expect(body.options.storeOriginalContent).toBe(true);
+    });
+
+    it('honors explicit storeOriginalContent false', async () => {
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: { status: 'verified', qHash: `0x${'cd'.repeat(32)}` }
+          })
+      });
+
+      const wallet = '0x2234567890123456789012345678901234567890';
+      await client.verify({
+        verifierIds: ['ownership-basic'],
+        data: {
+          owner: wallet,
+          content: 'hello'
+        },
+        walletAddress: wallet,
+        signature: `0x${'22'.repeat(65)}`,
+        signedTimestamp: Date.now(),
+        options: { storeOriginalContent: false }
+      });
+
+      const [, init] = fetch.mock.calls[0];
+      const body = JSON.parse(init.body);
+      expect(body.options.storeOriginalContent).toBe(false);
+    });
+  });
+
   describe('Network Error Handling', () => {
     it('should handle network timeouts', async () => {
       fetch.mockRejectedValueOnce(new Error('Network timeout'));

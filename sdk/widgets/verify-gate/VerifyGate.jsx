@@ -149,8 +149,8 @@ export function VerifyGate({
   buttonText = undefined, // Custom button text
   // Private proof access mode
   mode = 'create', // 'create' or 'access'
-  proofId = null, // Standard proof identifier for mode='access'
-  qHash = null, // Deprecated alias (same value)
+  proofId = null,
+  qHash = null,
   // Proof strategy for static vs dynamic verification
   // - 'reuse': Always use existing proof if available (best for static facts)
   // - 'fresh': Always create new proof (best for dynamic facts that change)
@@ -632,7 +632,7 @@ export function VerifyGate({
         const resolvedProofOptions = {
             privacyLevel: 'private',
             publicDisplay: false,
-            storeOriginalContent: false,
+            storeOriginalContent: true,
           ...(proofOptions && typeof proofOptions === 'object' ? proofOptions : {}),
             ...(verifierOptions && { verifierOptions })
         };

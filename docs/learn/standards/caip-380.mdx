@@ -8,11 +8,11 @@ NEUS verification uses the [CAIP-380](https://github.com/ChainAgnostic/CAIPs/pul
 
 ## What CAIP-380 Defines
 
-A standardized, chain-agnostic, wallet-signed envelope that applications validate once off-chain and reference anywhere via a deterministic proof receipt ID. In protocol terms, that receipt ID is carried as `qHash`.
+A standardized, chain-agnostic, wallet-signed envelope that applications validate once off-chain and reference anywhere via a deterministic **proof receipt ID**.
 
 - **Identities:** CAIP-10 (`did:pkh:<chainRef>:<address>`) — community draft method
 - **Chains:** CAIP-2 (e.g. `eip155:1`, `solana:mainnet`)
-- **Anchor:** `qHash` = SHAKE-256 over the Standard Subset. NEUS documentation refers to this value as the proof receipt ID.
+- **Anchor:** proof receipt ID = SHAKE-256 over the Standard Subset, exposed as `proofId` in SDK responses
 
 ## Envelope Structure
 

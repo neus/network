@@ -12,11 +12,11 @@ When verification completes, you get back a **proof receipt ID**:
 
 | Field | Where You See It |
 |-------|------------------|
-| `proofId` | SDK responses |
-| `qHash` | HTTP paths and API |
-| Proof receipt ID | User-facing docs |
+| `proofId` | SDK responses (primary name) |
+| `qHash` | HTTP path and wire field name for the same receipt ID |
+| Proof receipt ID | Documentation and product copy |
 
-**All refer to the same identifier.** Save it once. Reuse it everywhere.
+**Same value.** Save it once. Reuse it everywhere.
 
 ---
 
@@ -79,7 +79,7 @@ const eligible = await client.gateCheck({
 ## Using the API
 
 ```bash
-# Proof record by receipt id
+# Proof record by proofId
 GET /api/v1/proofs/{qHash}
 
 # Gate check

@@ -11,13 +11,12 @@ Organizational OAuth verification
 ## Required fields
 
 - `provider` (`string enum: google, microsoft`)
-- `internalSocialToken` (`string`) — OAuth session token returned by the hosted NEUS flow. This is the current public request field name.
+- `internalSocialToken` (`string`) — OAuth session token from the hosted NEUS flow after you complete OAuth (this JSON property name is fixed for API compatibility).
 
 ## Optional fields
 
 - `walletAddress` (`string format universal-address`)
 - `expectedOrgDomain` (`string format hostname`)
-
 - **Compatible with:** `agent-delegation`
 
 ## Example (schema-validated)
@@ -56,3 +55,4 @@ await client.verify({
 - Use this verifier in `requiredVerifiers` for `VerifyGate` or in `verifierIds` for API gate checks.
 - For interactive verifiers, use hosted checkout (`hostedCheckoutUrl`).
 - Return to the [Verifier Catalog](./README.md).
+
