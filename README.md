@@ -39,15 +39,17 @@ One **`proofId`** for gates, APIs, agents. Private by default.
 
 ## How it works
 
-```
- ┌──────────┐     ┌──────────────┐     ┌──────────────────┐
- │  Verify  │ ──▶ │ Get receipt  │ ──▶ │  Reuse anywhere  │
- │          │     │   (proofId)  │     │                  │
- │ wallet,  │     │  portable,   │     │ gate, share,     │
- │ social,  │     │  private by  │     │ post, automate,  │
- │ identity │     │  default     │     │ delegate         │
- └──────────┘     └──────────────┘     └──────────────────┘
-```
+<p align="center">
+  <a href="https://docs.neus.network#how-it-works" title="Open in docs">
+    <img
+      src="./docs/images/verification-to-reusable-proof-flow.png"
+      alt="Verification: verify once, then Proof ID as verified proof receipt, then reusable proof across apps, agents, and APIs"
+      width="720"
+    />
+  </a>
+</p>
+
+<p align="center"><em>Verify once → receipt ID → reuse across apps, agents, and APIs</em></p>
 
 ## Quick start
 
