@@ -1,22 +1,10 @@
 ---
-title: Quickstart
-description: Create your first proof in under 5 minutes.
+title: Quickstart (SDK)
+description: Install the SDK, create a proof, and reuse the receipt ID.
 icon: rocket
 ---
 
-<Tip>
-  **Not coding yet?** **[Hosted Verify](./cookbook/auth-hosted-verify)** (browser) or **[MCP](./mcp/overview)** (URL only) are usually faster first steps. Return here when you want a minimal SDK proof in your repo.
-</Tip>
-
-<Tip>
-  **Terminal bootstrap (MCP JSON + doc links, stdout only):** `npx -y -p @neus/sdk neus init` — [LLM docs](./platform/llm-docs).
-</Tip>
-
-`npm install` → one `verify()` → read `proofId` → poll if needed → gate or `gateCheck`. ~5 minutes.
-
-<Tip>
-  Snippets use **`new NeusClient()`** without **`appId`**—fine for a first proof. For production, register an app and pass **`appId`** — **[Get started](./get-started)**.
-</Tip>
+For hosted login and verify, use **[Hosted Verify](./cookbook/auth-hosted-verify)** or **[MCP](./mcp/overview)**. Before production traffic, complete **[Get started](./get-started)** (**`appId`**, credits, who pays).
 
 ## 1. Install the SDK
 
@@ -31,7 +19,9 @@ Defaults are **private**, **unlisted**, and **original content stored** (owner-a
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient();
+const client = new NeusClient({
+  appId: 'your-app-id', // optional for local try; required for production — [Get started](./get-started)
+});
 
 const proof = await client.verify({
   verifier: 'ownership-basic',
@@ -42,11 +32,9 @@ const proof = await client.verify({
 const proofId = proof.proofId;
 ```
 
-**Reusable gates** (same receipt for `gateCheck` without the owner signed in) use **public unlisted**: `privacyLevel: 'public'`, `publicDisplay: false`. Unlisted is still public to anyone with the proof id—use for non-sensitive gates. See **[SDK verification patterns](./sdks/verifications)**.
+**Attestation vs gate:** this snippet is for **proving content**. For **access gates** that must **`gateCheck`** without the owner in-session, use **public unlisted** (`privacyLevel: 'public'`, `publicDisplay: false`)—see step 4 and **[SDK verification patterns](./sdks/verifications)**.
 
-<Tip>
-  **No in-app wallet?** Use **[Hosted Verify](./cookbook/auth-hosted-verify)** (redirect or popup) instead of `window.ethereum`.
-</Tip>
+No injected wallet? Use **[Hosted Verify](./cookbook/auth-hosted-verify)** instead of `window.ethereum`.
 
 ## 3. Wait for completion
 
@@ -59,19 +47,24 @@ const status = await client.pollProofStatus(proofId, {
 
 ## 4. Gate content in React
 
-`VerifyGate` uses the same defaults as the SDK unless you override `proofOptions`.
+For **gates**, set **`proofOptions`** so eligibility checks line up (same pattern as **[Widgets](./widgets/overview)**).
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
 <VerifyGate
+  appId="your-app-id"
   requiredVerifiers={['ownership-basic']}
+  proofOptions={{
+    privacyLevel: 'public',
+    publicDisplay: false,
+  }}
 >
   <ProtectedContent />
 </VerifyGate>
 ```
 
-For a public unlisted gate, set `proofOptions` explicitly (example in **[VerifyGate](./widgets/verifygate)**).
+More props: **[VerifyGate](./widgets/verifygate)**.
 
 ## 5. Check eligibility from your server
 
@@ -90,8 +83,6 @@ if (result.data?.eligible) {
 
 |  |  |
 |--|--|
-| Platform + billing | [Get started](./get-started) |
-| Hosted UI (no wallet code) | [Hosted Verify](./cookbook/auth-hosted-verify) |
-| Path | [Choose path](./choose-an-integration-path) |
-| Verifier list | [Verifiers](./verification/verifiers) |
-| Launch | [Integration](./integration) |
+| Production (hub, `appId`, billing) | [Get started](./get-started) |
+| Other ways to integrate | [Paths](./choose-an-integration-path) |
+| Ship loop | [Integration](./integration) |

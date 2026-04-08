@@ -38,7 +38,7 @@ Use this so users reach the right doc and avoid unnecessary code, keys, or dupli
 - **MCP:** The hosted URL **`https://mcp.neus.network/mcp`** alone is valid for catalog, context, and public verification flows. **Do not** imply the user is blocked without an API key. Add **`Authorization: Bearer`** only when account-scoped tools are needed (**`neus_me`**, private proofs)—token from **[Access keys](https://neus.network/profile?tab=account)** ([MCP Auth](../mcp/auth)).
 - **Secrets:** Never instruct users to paste **wallet private keys** into MCP or client config. **Personal API keys** are Bearer tokens from Access keys, not raw wallet keys.
 - **x402:** Prefer credits and sponsor grants for human onboarding. Use x402 only when a client receives **402** and can retry with **`PAYMENT-SIGNATURE`** ([x402](../platform/x402)).
-- **Unclear product fit:** Point to **[Choose path](../choose-an-integration-path)** before suggesting implementation details or large code blocks.
+- **Unclear product fit:** Point to **[Paths](../choose-an-integration-path)** before suggesting implementation details or large code blocks.
 - **Agents and delegation:** **[Agents overview](../agents/overview)** — still require hub clarity on credits; use Hosted Verify links from tools when the flow is interactive.
 - **Reuse:** Prefer reusing a saved **`proofId`** when one exists; avoid parallel verification UX for the same requirement without explaining why.
 

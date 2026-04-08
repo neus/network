@@ -4,7 +4,7 @@ description: Portable proof receipts for login, trust, access, and agent workflo
 icon: house
 ---
 
-**NEUS issues one portable proof receipt per completed verification.** Save the **proof receipt ID** as `proofId` and use it for checks, gates, widgets, and `/proof` links rather than treating raw signatures as the long-lived record.
+**NEUS issues one portable proof receipt per completed verification.** Save the **proof receipt ID** as `proofId` and use it for checks, gates, widgets, and `/proof` links rather than treating raw signatures as the long-lived record. The same receipt ties **hub profile**, **access gates**, and **agent** flows together—fund credits and (when you sponsor users) sponsor grants from **[Get started](./get-started)** so billing matches your product.
 
 ## How it works
 
@@ -16,30 +16,20 @@ icon: house
   />
 </Frame>
 
-<CardGroup cols={3}>
-  <Card title="Quickstart" icon="code" href="./quickstart">
-    ~5 min, first proof.
-  </Card>
-  <Card title="Get started" icon="rocket" href="./get-started">
-    Hub, app id, credits, billing—before production.
-  </Card>
-  <Card title="Choose your path" icon="route" href="./choose-an-integration-path">
-    Hosted, widgets, SDK, API, or MCP.
-  </Card>
-</CardGroup>
+## Start here
 
-## Lowest-friction order
+Pick **one** row—then follow **[Integration](./integration)** (check → verify → save → reuse).
 
-Do this sequence to avoid billing surprises and rework:
+| You are… | Start here |
+|----------|------------|
+| **Shipping a product** (attribution + credits) | **[Get started](./get-started)** — hub, **`appId`**, who pays |
+| **First proof in code** (local try) | **[Quickstart](./quickstart)** — return to Get started before production |
+| **No wallet / guided login in browser** | **[Hosted Verify](./cookbook/auth-hosted-verify)** |
+| **React gate or badge** | **[Widgets](./widgets/overview)** |
+| **Cursor / Claude / VS Code** | **[MCP](./mcp/overview)** |
+| **Unsure** | **[Choose a path](./choose-an-integration-path)** |
 
-1. **[Hub](https://neus.network/hub)** — sign in with passkey or wallet; review **Credits** and **Apps** when you are close to shipping.
-2. **[Get started](./get-started)** — real traffic: **`appId`**, who pays, credits, sponsor vs self-pay.
-3. **[Choose your path](./choose-an-integration-path)** — pick Hosted Verify, widgets, SDK, API, or MCP for your UX.
-4. **[Integration](./integration)** — production loop: check → verify → save → reuse.
-
-**Prefer no code first?** Use **[Hosted Verify](./cookbook/auth-hosted-verify)** for guided login and interactive checks, or add **[MCP](./mcp/overview)** with the hosted URL only (no key) for catalog and public tools. Use **[Quickstart](./quickstart)** when you already want a minimal SDK proof in dev.
-
-**Assistants:** follow **[LLM docs](./platform/llm-docs)** so answers stay on the lowest-friction path.
+**Assistants:** **[LLM docs](./platform/llm-docs)**.
 
 ## What you can build
 
@@ -54,16 +44,6 @@ Do this sequence to avoid billing surprises and rework:
 
 [Full verifier catalog →](./verification/verifiers)
 
-## Choose your path
-
-| Path | Best for | Effort |
-|------|----------|--------|
-| [Hosted Verify](./cookbook/auth-hosted-verify) | Guided login | Redirect or popup |
-| [Widgets](./widgets/overview) | React gates | `<VerifyGate>` |
-| [SDK](./sdks/overview) | Custom | Full control |
-| [API](./api/overview) | Server-side checks | HTTP |
-| [MCP](./mcp/overview) | AI agents | `https://mcp.neus.network/mcp` |
-
 ## URLs
 
 | What | URL |
@@ -75,4 +55,4 @@ Do this sequence to avoid billing surprises and rework:
 
 ## Examples
 
-[React, Node.js, curl →](./examples) · [AI assistant doc exports (`llms.txt`) →](./platform/llm-docs)
+[React, Node.js, curl →](./examples) · [LLM / assistant index →](./platform/llm-docs)

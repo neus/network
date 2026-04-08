@@ -4,7 +4,7 @@ description: Working code for React, Node.js, and HTTP.
 icon: code
 ---
 
-Repository samples may omit **`appId`** where the SDK allows it. Add **`appId`** from **[Get started](./get-started)** for production traffic.
+Add **`appId`** from **[Get started](./get-started)** for production traffic.
 
 | Repo | Stack | Covers |
 |------|-------|--------|
@@ -22,6 +22,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 export default function ProtectedPage() {
   return (
     <VerifyGate
+      appId="your-app-id"
       requiredVerifiers={['nft-ownership']}
       verifierData={{
         'nft-ownership': {
@@ -30,6 +31,7 @@ export default function ProtectedPage() {
           chainId: 1,
         },
       }}
+      proofOptions={{ privacyLevel: 'public', publicDisplay: false }}
     >
       <ProtectedContent />
     </VerifyGate>
@@ -41,22 +43,11 @@ export default function ProtectedPage() {
 
 ## Node.js: Create Proof
 
-```javascript
-import { NeusClient } from '@neus/sdk';
-
-const client = new NeusClient();
-
-const proof = await client.verify({
-  verifier: 'ownership-basic',
-  content: 'Server-verified content',
-});
-
-console.log(proof.proofId);
-```
+Server-side signing is **not** `client.verify()` without a wallet—use **`standardize` → sign → submit** (see **[JavaScript SDK](../sdks/javascript)**) or copy **[nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic)** (`TEST_WALLET_PRIVATE_KEY`).
 
 ---
 
-## HTTP: Create Proof
+## HTTP: Create Proof (advanced)
 
 ```bash
 # 1. Get signing string
@@ -90,5 +81,5 @@ curl -X POST https://api.neus.network/api/v1/verification \
 | [Get started](./get-started) | App id + billing (before production) |
 | [Hosted Verify](./cookbook/auth-hosted-verify) | Guided login |
 | [MCP](./mcp/overview) | Agents |
-| [Quickstart](./quickstart) | First proof |
+| [Quickstart (SDK)](./quickstart) | First proof in code |
 | [API](./api/overview) | Endpoints |

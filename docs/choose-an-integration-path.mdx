@@ -4,39 +4,14 @@ description: Pick the fastest path for your product.
 icon: route
 ---
 
-<Tip>
-  **Shipping or scaling:** **[Get started](./get-started)** — **`appId`**, credits, and who pays must be set before production traffic on any path below.
-</Tip>
+| Need | Start here | Effort |
+|------|------------|--------|
+| Guided login or no embedded wallet | **[Hosted Verify](./cookbook/auth-hosted-verify)** | Redirect or popup |
+| React gates / badges | **[Widgets](./widgets/overview)** | `<VerifyGate>` |
+| Custom app code | **[SDK](./sdks/overview)** | Full control |
+| AI tools (Cursor, Claude, VS Code, …) | **[MCP](./mcp/overview)** — endpoint only works without a key; **[Bearer](https://neus.network/profile?tab=account)** for **`neus_me`** / private reads ([Auth](./mcp/auth)) | Add URL once |
+| Agents | **[Agents](./agents/overview)** (after hub + billing) | Presets + proofs |
+| Raw HTTP (advanced) | **[API](./api/overview)** | Sign + POST |
+| Unsure who pays | **[Get started](./get-started)** first | — |
 
-## Lowest friction first
-
-| Situation | Start here |
-|-----------|------------|
-| Guided login or interactive verification without embedding a wallet in your app | **[Hosted Verify](./cookbook/auth-hosted-verify)** |
-| AI tools (Cursor, Claude, VS Code, …) | **[MCP](./mcp/overview)** — add **`https://mcp.neus.network/mcp`** only; add **[Access keys](https://neus.network/profile?tab=account)** Bearer only if you need **`neus_me`** or private proof reads ([Auth](./mcp/auth)) |
-| Production traffic or you are unsure who pays | **[Get started](./get-started)** before deep integration |
-| Agent registration and delegation | **[Agents](./agents/overview)** after hub account and billing are clear |
-
-## Paths
-
-| Need | Path | Effort |
-|------|------|--------|
-| Guided login | [Hosted Verify](./cookbook/auth-hosted-verify) | Redirect or popup |
-| React gates / badges | [Widgets](./widgets/overview) | `<VerifyGate>` |
-| Custom code | [SDK](./sdks/overview) | Full control |
-| Server checks | [API](./api/overview) | HTTP |
-| AI (MCP) | [MCP](./mcp/overview) | `https://mcp.neus.network/mcp` |
-
-**After you choose:** **[Integration](./integration)** — check → save → reuse for real traffic.
-
-<CardGroup cols={3}>
-  <Card title="Quickstart" icon="code" href="./quickstart">
-    ~5 min to first proof.
-  </Card>
-  <Card title="Get started" icon="book" href="./get-started">
-    App, credits, billing.
-  </Card>
-  <Card title="Verifiers" icon="list-tree" href="./verification/verifiers">
-    All types.
-  </Card>
-</CardGroup>
+**Then:** **[Integration](./integration)** — check → save → reuse.

@@ -25,6 +25,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 export default function ProtectedPage() {
   return (
     <VerifyGate
+      appId="your-app-id"
       requiredVerifiers={['nft-ownership']}
       verifierData={{
         'nft-ownership': {
@@ -33,6 +34,7 @@ export default function ProtectedPage() {
           chainId: 1,
         },
       }}
+      proofOptions={{ privacyLevel: 'public', publicDisplay: false }}
     >
       <ProtectedContent />
     </VerifyGate>
@@ -54,7 +56,7 @@ import { ProofBadge } from '@neus/sdk/widgets';
   <Card title="VerifyGate" icon="object-group" href="./verifygate">
     Props + examples.
   </Card>
-  <Card title="Quickstart" icon="rocket" href="../quickstart">
+  <Card title="Quickstart (SDK)" icon="rocket" href="../quickstart">
     First proof.
   </Card>
 </CardGroup>

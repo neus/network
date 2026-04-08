@@ -4,7 +4,9 @@ description: Connect NEUS to MCP-compatible AI assistants.
 icon: plug
 ---
 
-**[Get started](../get-started)** — configure **`appId`**, credits, and **`sponsorGrant`** when your product pays for user verification. Usage is billed like other API clients. **[Billing](../platform/billing)** · **[Setup](./setup)**
+**Endpoint alone:** public catalog, context, and hosted verification handoffs—**no API key**. **`Authorization: Bearer`** (personal key from **[Access keys](https://neus.network/profile?tab=account)**) adds **`neus_me`** and private proof reads. **[Auth](./auth)**
+
+**[Get started](../get-started)** — **`appId`**, credits, **`sponsorGrant`** when your product pays for users. **[Billing](../platform/billing)** · **[Setup](./setup)**
 
 `https://mcp.neus.network/mcp`
 
@@ -15,8 +17,6 @@ Add the MCP endpoint **once** in your client—see **[Setup](./setup)** for the 
 1. **Browser verify:** assistant runs **`neus_verify_or_guide`** or **`neus_proofs_check`**. User opens **`https://neus.network/verify`** from the tool. Passkey or wallet stays in NEUS.
 2. **Signed-in product:** same **`Authorization: Bearer`** as [SDK Authentication](../sdks/authentication). Then **`neus_me`**. **[Auth](./auth)**
 3. **Proof history:** only if you already have an address or id. **`neus_proofs_get`**. [Tools](./tools)
-
-Connecting with only the MCP endpoint URL does **not** attach your NEUS account by itself, but **you can still use** catalog, context, and public verification flows **without** a key. Optional **`Authorization: Bearer`** (personal API key from **[Access keys](https://neus.network/profile?tab=account)**) unlocks account-scoped tools such as **`neus_me`** and private proof reads ([Auth](./auth)).
 
 | Goal | Tool |
 |------|------|

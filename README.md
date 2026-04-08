@@ -18,16 +18,17 @@
 </p>
 
 <p align="center">
-  <a href="https://docs.neus.network/quickstart"><strong>Quickstart</strong></a> · 
-  <a href="https://docs.neus.network"><strong>Docs</strong></a> · 
-  <a href="https://docs.neus.network/api/overview"><strong>API Reference</strong></a> · 
-  <a href="https://docs.neus.network/mcp/overview"><strong>MCP</strong></a> · 
+  <a href="https://docs.neus.network"><strong>Docs</strong></a> ·
+  <a href="https://docs.neus.network/quickstart"><strong>Quickstart (SDK)</strong></a> ·
+  <a href="https://docs.neus.network/get-started"><strong>Get started</strong></a> ·
+  <a href="https://docs.neus.network/api/overview"><strong>API</strong></a> ·
+  <a href="https://docs.neus.network/mcp/overview"><strong>MCP</strong></a> ·
   <a href="./examples"><strong>Examples</strong></a>
 </p>
 
 ---
 
-One **`proofId`** for gates, APIs, agents. Private by default.
+One **`proofId`** for gates, APIs, and agents. Private by default.
 
 ## Why NEUS
 
@@ -43,7 +44,7 @@ One **`proofId`** for gates, APIs, agents. Private by default.
   <a href="https://docs.neus.network#how-it-works" title="NEUS docs — Overview">
     <img
       src="./docs/images/how-it-works.png"
-      alt="Verification: verify once, then Proof ID as verified proof receipt, then reusable proof across apps, agents, and APIs"
+      alt="Verify once, then Proof ID, then reuse across apps, agents, and APIs"
       width="100%"
     />
   </a>
@@ -51,7 +52,7 @@ One **`proofId`** for gates, APIs, agents. Private by default.
 
 <p align="center"><em>Verify once → receipt ID → reuse across apps, agents, and APIs</em></p>
 
-## Quick start
+## Quick start (SDK)
 
 ```bash
 npm install @neus/sdk
@@ -60,27 +61,25 @@ npm install @neus/sdk
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient();
+const client = new NeusClient({
+  appId: 'your-app-id', // optional for local try; use hub Apps before production
+});
 
-// 1. Verify (defaults: private, unlisted, original content stored — wallet-only access)
 const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'My content',
   wallet: window.ethereum,
 });
 
-// 2. Save the receipt
 const proofId = proof.proofId;
 
-// 3. Reuse: gateCheck from anywhere
 const check = await client.gateCheck({
   address: '0x...',
   verifierIds: ['ownership-basic'],
 });
-// check.data.eligible → true/false
 ```
 
-> **No wallet?** [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify)
+> **No wallet in your app?** [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) · **Shipping:** [Get started](https://docs.neus.network/get-started) (`appId`, credits).
 
 ## What you can build
 
@@ -91,35 +90,27 @@ const check = await client.gateCheck({
 | Creator / authorship | `ownership-basic` |
 | Org / domain | `ownership-dns-txt` · `ownership-org-oauth` |
 | Agents | `agent-identity` · `agent-delegation` |
-| Proof-backed content | `ownership-basic` + `proofId` |
+
+[Verifiers →](https://docs.neus.network/verification/verifiers)
 
 ## Start here
 
-|  |  |
-|--|--|
-| ~5 min | [Quickstart](https://docs.neus.network/quickstart) |
-| No code | [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) |
-| React | [Widgets](https://docs.neus.network/widgets/overview) |
-| Server | [API](https://docs.neus.network/api/overview) |
-| Agents | [MCP](https://docs.neus.network/mcp/overview) |
-| Hub + billing | [Get started](https://docs.neus.network/get-started) |
+| You are… | Link |
+|----------|------|
+| Shipping a product (hub, `appId`, credits) | [Get started](https://docs.neus.network/get-started) |
+| First proof in code | [Quickstart](https://docs.neus.network/quickstart) |
+| No embedded wallet / guided login | [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) |
+| React gates | [Widgets](https://docs.neus.network/widgets/overview) |
+| Cursor / Claude / VS Code | [MCP](https://docs.neus.network/mcp/overview) |
+| Compare all paths | [Paths](https://docs.neus.network/choose-an-integration-path) |
 
-## Paths
-
-| Path | Fit | Effort |
-|------|-----|--------|
-| [**Hosted Verify**](https://docs.neus.network/cookbook/auth-hosted-verify) | Guided login | Redirect or popup |
-| [**Widgets**](https://docs.neus.network/widgets/overview) | React gates | `<VerifyGate>` |
-| [**SDK**](https://docs.neus.network/sdks/overview) | Custom | Full control |
-| [**API**](https://docs.neus.network/api/overview) | Server-only | HTTP |
-| [**MCP**](https://docs.neus.network/mcp/overview) | Assistants | `https://mcp.neus.network/mcp` |
-
-## Gate content in React
+## Gate in React
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
 <VerifyGate
+  appId="your-app-id"
   requiredVerifiers={['nft-ownership']}
   verifierData={{ 'nft-ownership': { contractAddress: '0x...', tokenId: '1', chainId: 1 } }}
   proofOptions={{
@@ -133,8 +124,6 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 ## MCP
 
-Add NEUS with one URL:
-
 ```json
 {
   "mcpServers": {
@@ -146,26 +135,11 @@ Add NEUS with one URL:
 }
 ```
 
-Hosted links from tools (passkeys stay on NEUS). [Setup](https://docs.neus.network/mcp/setup)
+[Setup](https://docs.neus.network/mcp/setup)
 
-## AI assistants and CLI bootstrap
+## AI assistants
 
-- **Machine-readable doc index:** [`llms.txt`](https://docs.neus.network/llms.txt) — use with [LLM docs](https://docs.neus.network/platform/llm-docs) so assistants pick the lowest-friction path (credits, hosted verify, MCP URL-only).
-- **Copy-paste MCP + links (stdout only, no file writes):**
-
-```bash
-npx -y -p @neus/sdk neus init
-```
-
-## Docs
-
-|  |  |
-|--|--|
-| [**Quickstart**](https://docs.neus.network/quickstart) | First proof |
-| [**Verifiers**](https://docs.neus.network/verification/verifiers) | Types |
-| [**API**](https://docs.neus.network/api/overview) | HTTP |
-| [**SDK**](https://docs.neus.network/sdks/javascript) | JS |
-| [**Examples**](./examples/) | React, Node, curl |
+[`llms.txt`](https://docs.neus.network/llms.txt) · [LLM docs](https://docs.neus.network/platform/llm-docs) · CLI: `npx -y -p @neus/sdk neus init`
 
 ## Support
 
@@ -176,7 +150,7 @@ npx -y -p @neus/sdk neus init
 | [Issues](https://github.com/neus/network/issues) | Bugs |
 | [dev@neus.network](mailto:dev@neus.network) | Security (private) |
 
-Repository conventions and documentation standards: [CONTRIBUTING.md](./CONTRIBUTING.md).
+[CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## License
 

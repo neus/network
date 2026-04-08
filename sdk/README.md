@@ -48,7 +48,7 @@ const check = await client.gateCheck({
 // check.data.eligible → true/false
 ```
 
-> **No wallet?** [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify)
+> **No wallet?** [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) · **Shipping:** [Get started](https://docs.neus.network/get-started)
 
 ## Core methods
 
@@ -89,7 +89,7 @@ const client = new NeusClient({
 
 ## Docs
 
-- [**Quickstart**](https://docs.neus.network/quickstart)
+- [**Quickstart (SDK)**](https://docs.neus.network/quickstart)
 - [**SDK guide**](https://docs.neus.network/sdks/javascript)
 - [**Widgets**](https://docs.neus.network/widgets/overview)
 - [**API reference**](https://docs.neus.network/api/overview)

@@ -74,25 +74,13 @@ const delegation = await client.verify({
 
 ## Diagram
 
-```
-┌─────────────────┐
-│ Agent registers │
-│ (agent-identity)│
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Controller      │
-│ delegates scope │
-│(agent-delegation)│
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Agent acts with │
-│ proof receipt   │
-└─────────────────┘
-```
+<Frame caption="Register the agent, delegate from the controller wallet, then operate with proof receipts.">
+  <img
+    className="neus-docs-flow-diagram"
+    src="/images/diagrams/agents-trust-loop.svg"
+    alt="Agent flow: agent-identity registration, agent-delegation from controller, then actions with proof receipts"
+  />
+</Frame>
 
 ## Related
 

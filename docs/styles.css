@@ -322,3 +322,11 @@ img.neus-how-it-works-diagram {
   height: auto;
   display: block;
 }
+
+/* Branded SVG flow diagrams (platform / agents) — glass panel matches handout + Mintlify skin */
+img.neus-docs-flow-diagram {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+}

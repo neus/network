@@ -4,7 +4,9 @@ description: Set up your NEUS account, app attribution, billing model, and first
 icon: book
 ---
 
-Use this when you are **shipping** (real users, credits, attribution). Exploring first? **[Quickstart](./quickstart)** — then come back here before launch.
+**Trust network:** one **`proofId`** feeds **gates**, **hub profile**, and **agents**—reuse it instead of one-off signatures. **Billing:** credits and sponsor grants are how metered verification maps to your org wallet; see **[Billing](./platform/billing)**.
+
+**Try code first?** **[Quickstart](./quickstart)** — then complete the steps below before production traffic.
 
 ## 1. Create your account
 
@@ -56,15 +58,15 @@ Grant issuance and caps: **[Workspace setup](./cookbook/hub-integrator)** and **
 
 ## 5. Choose your integration path
 
-|  | Next |
-|--|------|
-| **Hosted Verify** | **[Hosted Verify](./cookbook/auth-hosted-verify)** |
-| **Widgets** | **[Widgets](./widgets/overview)** |
-| **SDK** | **[SDK](./sdks/overview)** · **[JavaScript](./sdks/javascript)** |
-| **API** | **[API](./api/overview)** |
-| **MCP** | **[MCP](./mcp/overview)** |
+| Default | Next |
+|---------|------|
+| **Hosted Verify** (no embedded wallet) | **[Hosted Verify](./cookbook/auth-hosted-verify)** |
+| **React** | **[Widgets](./widgets/overview)** |
+| **Custom JS** | **[SDK](./sdks/overview)** · **[JavaScript](./sdks/javascript)** |
+| **AI tools** | **[MCP](./mcp/overview)** |
+| **Advanced HTTP** | **[API](./api/overview)** |
 
-**Undecided:** **[Choose path](./choose-an-integration-path)** · **Ship loop:** **[Integration](./integration)** (check → save → reuse).
+**Ship loop:** **[Integration](./integration)** · **all options:** **[Paths](./choose-an-integration-path)**.
 
 ## 6. Production readiness checklist
 
@@ -73,11 +75,6 @@ Grant issuance and caps: **[Workspace setup](./cookbook/hub-integrator)** and **
 - [ ] Client sends **`appId`** and uses **`sponsorGrant`** only when sponsoring
 - [ ] Team understands **[Billing](./platform/billing)** and **[x402](./platform/x402)** behavior
 - [ ] Verification receipts are stored and reused in your product logic
-
-## No app yet
-
-Use **[Quickstart](./quickstart)** and **[Hosted Verify](./cookbook/auth-hosted-verify)** for early testing.  
-Before launch, register your integration and add sponsor grants if your app will cover user costs.
 
 ## Related
 
