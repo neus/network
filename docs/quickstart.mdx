@@ -32,7 +32,7 @@ const proof = await client.verify({
 const proofId = proof.proofId;
 ```
 
-**Attestation vs gate:** this snippet is for **proving content**. For **access gates** that must **`gateCheck`** without the owner in-session, use **public unlisted** (`privacyLevel: 'public'`, `publicDisplay: false`)—see step 4 and **[SDK verification patterns](./sdks/verifications)**.
+**Attestation vs gate:** this snippet is for **proving content**. See more patterns here **[SDK verification patterns](./sdks/verifications)**.
 
 No injected wallet? Use **[Hosted Verify](./cookbook/auth-hosted-verify)** instead of `window.ethereum`.
 
