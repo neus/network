@@ -9,7 +9,7 @@ NEUS publishes route indexes and full-doc exports for tools that ingest document
 ## Suggested read order (builders)
 
 1. **[Overview](../index)** — proof receipt ID as `proofId`.
-2. **[Get started](../get-started)** — account, **`appId`**, credits, sponsor vs self-pay.
+2. **[Get started](../get-started)** — create an app, choose who pays, access keys when needed.
 3. **[Integration](../integration)** — check → verify → save → reuse.
 4. Path docs (SDK, API, Hosted Verify, MCP, widgets) — only after **2** is clear.
 
@@ -18,10 +18,10 @@ NEUS publishes route indexes and full-doc exports for tools that ingest document
 Keep your current runtime, agents, and MCP clients. NEUS adds **portable identity**, **scoped delegation**, and **verifiable receipts**—no new inbox or orchestration product required.
 
 1. Add the **hosted MCP** URL (`https://mcp.neus.network/mcp`) — **[MCP setup](../mcp/setup)**.
-2. Run **`neus_agent_create`** then **`neus_agent_link`** when the assistant needs hosted agent setup ([MCP overview](../mcp/overview)).
+2. Run **`neus_context`**, then **`neus_agent_create`** / **`neus_agent_link`** when the assistant needs hosted agent setup ([MCP overview](../mcp/overview)).
 3. Use **proof presets** on the NEUS platform: **`agent-identity`** registers the service; **`agent-delegation`** grants scoped authority — **[Agent identity](../agents/agent-identity)** · **[Agent delegation](../agents/agent-delegation)**.
 4. Treat the resulting proof and status page as the **first receipt and audit trail** for that agent.
-5. Before production traffic, align **[Get started](../get-started)** (`appId`, credits, sponsor vs self-pay) with **[Billing](../platform/billing)**.
+5. Before production traffic, align **[Get started](../get-started)** (create an app, choose who pays) with **[Billing](../platform/billing)**.
 
 **CLI bootstrap (stdout only):** prints the same MCP JSON block and doc URLs—no file writes, no accounts, no keys.
 
@@ -35,8 +35,8 @@ Use this so users reach the right doc and avoid unnecessary code, keys, or dupli
 
 - **Billing / `appId` / who pays / credits / `sponsorGrant`:** Answer from **[Get started](../get-started)** and **[Billing](../platform/billing)** before suggesting SDK, API, or MCP depth.
 - **Login or interactive verification without in-app wallet code:** Prefer **[Hosted Verify](../cookbook/auth-hosted-verify)**.
-- **MCP:** The hosted URL **`https://mcp.neus.network/mcp`** alone is valid for catalog, context, and public verification flows. **Do not** imply the user is blocked without an API key. Add **`Authorization: Bearer`** only when account-scoped tools are needed (**`neus_me`**, private proofs)—token from **[Access keys](https://neus.network/profile?tab=account)** ([MCP Auth](../mcp/auth)).
-- **Secrets:** Never instruct users to paste **wallet private keys** into MCP or client config. **Personal API keys** are Bearer tokens from Access keys, not raw wallet keys.
+- **MCP:** Start with **`neus_context`** (no access key). The hosted URL **`https://mcp.neus.network/mcp`** alone is valid for catalog, context, and public verification flows. **Do not** imply the user is blocked without a key. Add **`Authorization: Bearer`** with a **personal access key** from **[Access keys](https://neus.network/profile?tab=account)** only when account-scoped tools are needed (**`neus_me`**, private proofs) ([MCP Auth](../mcp/auth)).
+- **Secrets:** Never instruct users to paste **wallet private keys** into MCP or client config. **Personal access keys** are Bearer tokens from Access keys, not raw wallet keys.
 - **x402:** Prefer credits and sponsor grants for human onboarding. Use x402 only when a client receives **402** and can retry with **`PAYMENT-SIGNATURE`** ([x402](../platform/x402)).
 - **Unclear product fit:** Point to **[Paths](../choose-an-integration-path)** before suggesting implementation details or large code blocks.
 - **Agents and delegation:** **[Agents overview](../agents/overview)** — align credits and **`appId`** with **[Get started](../get-started)**; use Hosted Verify links from tools when the flow is interactive.

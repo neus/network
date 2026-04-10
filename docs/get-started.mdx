@@ -9,7 +9,7 @@ One **proof receipt ID** (`proofId`, same value as `qHash` on the wire) feeds ga
 ## 1. Create your account
 
 1. Sign in at [`https://neus.network/hub`](https://neus.network/hub) with passkey or wallet.
-2. Complete profile basics so you have a verified wallet and can open **Identity**, **Apps**, and **Credits** when you need them.
+2. Complete profile basics so you can see your **Apps**, **Credits**, and **Access keys**.
 
 ## 2. Run your first loop locally
 
@@ -25,15 +25,15 @@ When you need DNS domain proof, org OAuth, app linking, or sponsor grants at sca
 
 ## Before production
 
-Complete this block before production traffic. Details live in **[Billing](./platform/billing)** and **[Platform setup](./platform/setup)**.
+Three decisions: **create an app**, **choose who pays**, and **generate an access key** only when you need account-scoped API or MCP tools. Details for headers and limits live in **[Billing](./platform/billing)** and **[Platform setup](./platform/setup)**.
 
-### Register the integration and capture `appId`
+### Create an app
 
-1. Open **[Apps](https://neus.network/profile?tab=apps)**.
+1. Open **[Apps](https://neus.network/profile?tab=apps)** in your NEUS account.
 2. **Link app** or **Manage app**.
 3. Enter your **app domain** (for example `acme.com`), set a **daily credit cap**, and finish the modal.
 
-When registration succeeds, NEUS issues an **`appId`**. Send it as **`X-Neus-App`** on API traffic (the SDK maps this automatically).
+When registration succeeds, NEUS issues an **`appId`**. The SDK sends it as **`X-Neus-App`** on API traffic.
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -44,19 +44,13 @@ const client = new NeusClient({
 ```
 
 <Tip>
-  **`appId`** is an attribution identifier (which product made the request). It does **not** by itself move charges to your organization wallet. Use sponsor grants when you want to pay on behalf of users.
+  **`appId`** tells NEUS **which product** made the request. It does **not** by itself move charges to your organization. When **you** pay for users, add **sponsor grants** and org wallet credits. See **Choose who pays** and **[Billing](./platform/billing)**.
 </Tip>
 
-### Credits and who pays
+### Choose who pays
 
-1. **Credits** reflect balance on the **payer wallet**.
-2. If users self-pay, they need credits on **their** wallet. If your product pays, fund the org wallet and use **sponsor grants**. See **[Billing](./platform/billing)**.
-
-### Sponsor grants (`sponsorGrant` when you pay for users)
-
-If your product should pay verification costs for end users, fund the org wallet, issue short-lived sponsor grants, and pass them to the SDK as **`sponsorGrant`** (maps to **`X-Sponsor-Grant`**).
-
-If users should self-pay, do not send sponsor grants.
+1. **Your product pays:** fund credits on the **organization wallet** tied to your app, issue short-lived **sponsor grants**, pass **`sponsorGrant`** on the SDK (maps to **`X-Sponsor-Grant`**). **[Platform setup](./platform/setup)** has the full flow.
+2. **Users pay:** they use **their** credits (or **x402** when applicable). Do **not** send sponsor grants.
 
 ```javascript
 const client = new NeusClient({
@@ -65,17 +59,19 @@ const client = new NeusClient({
 });
 ```
 
-### Access keys
+### Generate an access key for account-scoped tools
 
-When you need a **personal API key** (same **`Authorization: Bearer`** token for **`api.neus.network`** and for MCP when you want account-scoped tools), open **[Access keys](https://neus.network/profile?tab=account)** and generate one. You can skip this until you run scripts, server calls, or MCP flows that return **`auth_required`**.
+Use **[Access keys](https://neus.network/profile?tab=account)** when you need **`Authorization: Bearer`** on **`api.neus.network`**, scripts, or MCP tools such as **`neus_me`** and private reads. You can skip this until something returns **`auth_required`**. **[MCP Auth](./mcp/auth)**
+
+Do **not** ship this key in browser bundles. End users complete interactive steps on **Hosted Verify**, not with your personal access key.
 
 ### Production readiness checklist
 
-- [ ] Integration domain is registered with a realistic daily cap
+- [ ] App registered with a realistic daily cap
 - [ ] Paying wallet has credits (yours or users', based on your model)
-- [ ] Client sends **`appId`** and uses **`sponsorGrant`** only when sponsoring
-- [ ] Team understands **[Billing](./platform/billing)** and **[x402](./platform/x402)** behavior
-- [ ] Verification receipts are stored and reused in your product logic (see **[Proof receipts](./platform/receipts-and-results)**)
+- [ ] Client sends **`appId`** and uses **`sponsorGrant`** only when you sponsor
+- [ ] Team understands **[Billing](./platform/billing)** and **[x402](./platform/x402)**
+- [ ] Verification receipts are stored and reused (see **[Proof receipts](./platform/receipts-and-results)**)
 
 ## Related
 

@@ -4,11 +4,11 @@ description: Quick setup for the hosted NEUS MCP endpoint.
 icon: code
 ---
 
-**Building on NEUS?** Do **[Get started](../get-started)** first so platform setup, **`appId`**, and credits match how you use MCP in production.
+**Building on NEUS?** Do **[Get started](../get-started)** first so **create an app**, **choose who pays**, and credits match how you use MCP in production.
 
-## Connect
+## Connect (URL only)
 
-Add this configuration to your MCP settings (Cursor, Claude Desktop, VS Code, or any client that supports HTTP MCP). Use the URL exactly as shown, including `/mcp`.
+Add this configuration to your MCP settings (Cursor, Claude Code, Claude Desktop, VS Code, or any client that supports HTTP MCP). Use the URL exactly as shown, including `/mcp`.
 
 ```json
 {
@@ -22,20 +22,58 @@ Add this configuration to your MCP settings (Cursor, Claude Desktop, VS Code, or
 }
 ```
 
-Reload the client if prompted. **You only need the URL** to use public discovery and verification flows. Add **`Authorization: Bearer`** with your **personal API key** when you need a signed-in session or private data ([Auth](./auth)); create the key on **[Access keys](https://neus.network/profile?tab=account)**.
+Reload the client if prompted. **You only need the URL** for **`neus_context`**, public catalog, context, and hosted verification flows.
 
 <Tip>
-  **Recommended:** connect with the URL first. If a tool returns **`auth_required`** and account context is required, add **`Authorization: Bearer`** using a personal API key from Access keys. Public catalog and verification flows do not require a key.
+  **Recommended:** connect with the URL first. Run **`neus_context`**. If a tool returns **`auth_required`** and you need account context, add **`Authorization: Bearer`** using a **personal access key** from **[Access keys](https://neus.network/profile?tab=account)**. See **Account-scoped connection** below.
 </Tip>
 
-Hosted verification links work for both web2 and web3 users: open the link, follow the NEUS flow, and only connect/sign when the selected proof actually requires it.
+## First call
+
+After connecting, have the assistant run **`neus_context`** once. It returns verifier and billing context in one round trip. **No access key** required.
+
+## Account-scoped connection
+
+When you need **`neus_me`**, private proof reads, or calls that debit **your** NEUS credits over MCP, add **`Authorization: Bearer`** with your **personal access key** from **[Access keys](https://neus.network/profile?tab=account)** (same token shape as **`api.neus.network`**). **[Auth](./auth)**
+
+Do **not** put this key in browser bundles or end-user clients. Production apps use **create an app**, **choose who pays**, and the SDK (see **[Get started](../get-started)**), not your personal access key on the public web.
+
+### Cursor
+
+Merge into `mcp.json` (or your user-level MCP config). Replace the placeholder with your access key, or use environment variable expansion if your client supports it.
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "type": "streamableHttp",
+      "url": "https://mcp.neus.network/mcp",
+      "description": "NEUS MCP",
+      "headers": {
+        "Authorization": "Bearer <your personal access key>"
+      }
+    }
+  }
+}
+```
+
+### Claude Code
+
+Use the same `mcpServers` block in **`.claude/mcp.json`** at the project or user scope.
+
+### Claude Desktop / VS Code
+
+Use the same **`type`**, **`url`**, and optional **`headers`** fields your MCP client documents for **Streamable HTTP** transports. If the UI only accepts a URL, keep URL-only mode and use tools that return hosted verify links until your client supports headers.
+
+Hosted verification links work for both web2 and web3 users: open the link, follow the NEUS flow, and only connect or sign when the selected proof requires it.
 
 ## First run
 
-1. Ask the assistant to run **`neus_verify_or_guide`** (or **`neus_proofs_check`**).
-2. **Open** any **`https://neus.network/verify`** link in the browser.
-3. Optional **`neus_proofs_get`** when you have an id. [Tools](./tools)
-4. Sessions / private data: [Auth](./auth).
+1. Run **`neus_context`**.
+2. Ask the assistant to run **`neus_verify_or_guide`** (or **`neus_proofs_check`**).
+3. **Open** any **`https://neus.network/verify`** link in the browser.
+4. Optional **`neus_proofs_get`** when you have an id. [Tools](./tools)
+5. Sessions / private data: add Bearer and [Auth](./auth).
 
 Then follow the [Overview](./overview) default path.
 

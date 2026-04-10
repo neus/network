@@ -4,22 +4,26 @@ description: Connect NEUS to MCP-compatible AI assistants.
 icon: plug
 ---
 
-**Endpoint alone:** public catalog, context, and hosted verification handoffs—**no API key**. **`Authorization: Bearer`** (personal key from **[Access keys](https://neus.network/profile?tab=account)**) adds **`neus_me`** and private proof reads. **[Auth](./auth)**
+**First call:** run **`neus_context`** after you connect. One response covers verifier context, billing model, and protocol rules. **No access key** required.
 
-**[Get started](../get-started)** — **`appId`**, credits, **`sponsorGrant`** when your product pays for users. **[Billing](../platform/billing)** · **[Setup](./setup)**
+**Endpoint alone:** public catalog, context, and hosted verification handoffs. Add **`Authorization: Bearer`** with your **personal access key** from **[Access keys](https://neus.network/profile?tab=account)** when you need **`neus_me`**, private proof reads, or usage debited to **your** account. **[Auth](./auth)**
+
+**[Get started](../get-started)** — create an app, choose who pays, generate an access key only when you need account-scoped tools. **[Billing](../platform/billing)** · **[Setup](./setup)**
 
 `https://mcp.neus.network/mcp`
 
 ## Workflow
 
-Add the MCP endpoint **once** in your client—see **[Setup](./setup)** for the configuration block.
+Add the MCP endpoint **once** in your client—see **[Setup](./setup)** for URL-only and authenticated configuration blocks.
 
-1. **Browser verify:** assistant runs **`neus_verify_or_guide`** or **`neus_proofs_check`**. User opens **`https://neus.network/verify`** from the tool. Passkey or wallet stays in NEUS.
-2. **Signed-in product:** same **`Authorization: Bearer`** as [SDK Authentication](../sdks/authentication). Then **`neus_me`**. **[Auth](./auth)**
-3. **Proof history:** only if you already have an address or id. **`neus_proofs_get`**. [Tools](./tools)
+1. **`neus_context`** — load SSOT context (public).
+2. **Browser verify:** assistant runs **`neus_verify_or_guide`** or **`neus_proofs_check`**. User opens **`https://neus.network/verify`** from the tool. Passkey or wallet stays in NEUS (no pasted one-time codes in MCP).
+3. **Signed-in assistant:** add **Bearer** with your **personal access key**, then **`neus_me`** when you need the current principal. **[Auth](./auth)**
+4. **Proof history:** when you already have an address or id, **`neus_proofs_get`**. [Tools](./tools)
 
 | Goal | Tool |
 |------|------|
+| Verifiers, billing model, protocol rules (call first) | `neus_context` |
 | Send someone to browser verification | `neus_verify_or_guide` |
 | Yes/no eligibility only | `neus_proofs_check` |
 | Proof list + profile (you have an id) | `neus_proofs_get` |
@@ -36,7 +40,7 @@ Open hosted URLs from tools.
 ## Next
 
 - **[Get started](../get-started)** — onboarding and billing before scale  
-- **[Setup](./setup)** — quick configuration block  
+- **[Setup](./setup)** — URL-only and authenticated configuration  
 - **[Tools](./tools)** — parameter names  
 - **[Auth](./auth)** — sessions and privacy  
 - **[Hosted Verify](../cookbook/auth-hosted-verify)** — browser verification flow  

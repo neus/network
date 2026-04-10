@@ -22,14 +22,15 @@ EVM **`0x…`**, **Solana base58**, or **`did:pkh:…`** where applicable.
 
 ## Suggested tool order
 
-1. **`neus_verify_or_guide`** / **`neus_proofs_check`**
-2. **`neus_verifiers_catalog`** (when you need ids)
-3. **`neus_proofs_get`** (when you have an id)
-4. **`neus_me`** (with Bearer only—[Auth](./auth))
-5. **Agent tools** when needed
+1. **`neus_context`** (public; call first for SSOT context)
+2. **`neus_verify_or_guide`** / **`neus_proofs_check`**
+3. **`neus_verifiers_catalog`** (when you need ids)
+4. **`neus_proofs_get`** (when you have an id)
+5. **`neus_me`** (with Bearer only—[Auth](./auth))
+6. **Agent tools** when needed
 
-Steps **1–3** and the catalog work **without** Bearer for typical public flows. **`neus_me`** and private reads need **`Authorization: Bearer`** (personal API key).
+**`neus_context`** and steps **2–4** work **without** Bearer for typical public flows. **`neus_me`** and private reads need **`Authorization: Bearer`** with your **personal access key** from **[Access keys](https://neus.network/profile?tab=account)**.
 
 ## Tool pages
 
-- [Verifier catalog](./verifiers-catalog) · [Proofs check](./proofs-check) · [Verify or guide](./verify-or-guide) · [Proofs get](./proofs-get) · [Current user](./me) · [Agent create](./agent-create) · [Agent link](./agent-link)
+- [Context](./context) · [Verifier catalog](./verifiers-catalog) · [Proofs check](./proofs-check) · [Verify or guide](./verify-or-guide) · [Proofs get](./proofs-get) · [Current user](./me) · [Agent create](./agent-create) · [Agent link](./agent-link)

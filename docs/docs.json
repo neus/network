@@ -220,6 +220,7 @@
           {
             "group": "Tool Pages",
             "pages": [
+              "mcp/context",
               "mcp/verifiers-catalog",
               "mcp/proofs-check",
               "mcp/verify-or-guide",

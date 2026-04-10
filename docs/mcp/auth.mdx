@@ -4,13 +4,15 @@ description: When you need sign-in and what stays public.
 icon: lock
 ---
 
-**Hosted MCP** works with **only the MCP URL** for catalog, context, hosted verification links, and other flows that do not require your NEUS account or billable usage on your balance.
+**Hosted MCP** works with **only the MCP URL** for **`neus_context`**, catalog, hosted verification links, and other flows that do not require your NEUS account or billable usage on your balance.
 
-Add **`Authorization: Bearer <token>`** when you need account-scoped tools—for example **`neus_me`**, **private proof reads**, or checks that debit **your** credits. Use the same token as the public API: create a **personal API key** on **[Access keys](https://neus.network/profile?tab=account)** (see [SDK Authentication](../sdks/authentication)). Call **`neus_me`** after connecting to confirm the session.
+**First call:** use **`neus_context`** (public) so assistants ground answers in the current verifier list and billing model before deeper tools.
 
-If you connect using only the MCP URL, tools can still return **`https://neus.network/verify`** links for browser completion. That browser step does not automatically attach your personal API key to your IDE MCP connection.
+Add **`Authorization: Bearer`** with your **personal access key** from **[Access keys](https://neus.network/profile?tab=account)** when you need account-scoped tools—for example **`neus_me`**, **private proof reads**, or checks that debit **your** credits. Same token you send to **`api.neus.network`** ([SDK Authentication](../sdks/authentication)). Call **`neus_me`** after connecting to confirm the session.
 
-**Your app already has a NEUS session:** if the client supports headers, send the same **`Authorization: Bearer`** value you use for API requests.
+If you connect using only the MCP URL, tools can still return **`https://neus.network/verify`** links for browser completion. That browser step uses NEUS hosted sign-in (passkey or wallet). It does **not** automatically attach your personal access key to your IDE MCP connection.
+
+**Backend or automation:** if a **server** already calls **`api.neus.network`** with **`Authorization: Bearer`**, you may send the **same personal access key** on the MCP HTTP transport from that trusted environment only. Never expose that value to browsers or mobile clients.
 
 **Privacy:** **`neus_proofs_check`** is yes/no only. Private proofs follow the same rules as the API when the user is signed in ([Proof context](./proofs-get)).
 

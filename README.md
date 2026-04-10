@@ -62,7 +62,7 @@ npm install @neus/sdk
 import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient({
-  appId: 'your-app-id', // optional for local try; register app in console before production
+  appId: 'your-app-id', // optional for local try; create an app in your NEUS account before production — https://docs.neus.network/get-started
 });
 
 const proof = await client.verify({
