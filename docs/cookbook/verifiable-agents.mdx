@@ -26,6 +26,7 @@ await client.verify({
   data: {
     agentId: 'my-agent',
     agentWallet: '0x...',
+    agentChainRef: 'eip155:8453',
     agentType: 'ai',
     description: 'My AI assistant',
     capabilities: ['web-search'],
@@ -44,7 +45,8 @@ await client.verify({
 | Field | Required | Description |
 |-------|----------|-------------|
 | `agentId` | Yes | Unique agent identifier (1–128 chars) |
-| `agentWallet` or `agentAccountId` | One required | Agent wallet or CAIP-10 account ID |
+| `agentWallet` | Yes | Agent wallet |
+| `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request | CAIP-2 chain for the agent wallet |
 | `agentLabel` | No | Human-readable display name (max 128 chars) |
 | `agentType` | No | `ai`, `bot`, `service`, `automation`, or `agent` |
 | `description` | No | Agent description (max 500 chars) |
@@ -62,7 +64,9 @@ await client.verify({
   verifier: 'agent-delegation',
   data: {
     controllerWallet: '0x...',  // API field: approving account; must match signer
+    controllerChainRef: 'eip155:8453',
     agentWallet: '0x...',
+    agentChainRef: 'eip155:8453',
     scope: 'payments:x402',
     permissions: ['execute', 'read'],
     // Token base units (no decimal point). 25 USDC → SDK toAgentDelegationMaxSpend('25', 6)
@@ -86,8 +90,10 @@ The signing split is simple:
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `controllerWallet` or `controllerAccountId` | Yes | Approving account; must match signer |
-| `agentWallet` or `agentAccountId` | Yes | Agent identity |
+| `controllerWallet` | Yes | Approving account; must match signer |
+| `controllerChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request | CAIP-2 chain for the controller |
+| `agentWallet` | Yes | Agent wallet |
+| `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request | CAIP-2 chain for the agent |
 | `agentId` | No | Reference to registered agent |
 | `scope` | No | Permission scope (e.g., `payments:x402`) |
 | `permissions` | No | Allowed actions |

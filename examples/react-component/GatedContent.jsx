@@ -3,6 +3,8 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 /**
  * Minimal VerifyGate example.
+ * Create mode defaults to unlisted public (privacyLevel public, publicDisplay false).
+ * Pass proofOptions only if you need listed public or private storage.
  * Replace the NFT contract and tokenId with your own.
  */
 export default function GatedContent() {

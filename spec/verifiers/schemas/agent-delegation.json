@@ -2,48 +2,28 @@
   "$id": "https://neus.network/schemas/agent-delegation.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "agent-delegation",
-  "description": "Delegates scoped authority from a delegating account to an agent, ERC-8004 compatible",
+  "description": "Delegation from a controller account to an agent; the controller signs. Use CAIP-2 chain references per wallet, or set chain or chainId on the verification request when both parties share the same network context. Proof output may include CAIP-10 account identifiers.",
   "type": "object",
-  "anyOf": [
-    {
-      "required": [
-        "controllerAccountId",
-        "agentAccountId"
-      ]
-    },
-    {
-      "required": [
-        "controllerWallet",
-        "controllerChainRef",
-        "agentWallet",
-        "agentChainRef"
-      ]
-    }
+  "required": [
+    "controllerWallet",
+    "controllerChainRef",
+    "agentWallet",
+    "agentChainRef"
   ],
   "properties": {
-    "controllerAccountId": {
-      "type": "string",
-      "format": "caip10-account",
-      "description": "Preferred CAIP-10 account ID for the controller."
-    },
     "controllerChainRef": {
       "type": "string",
       "format": "caip2-chain",
-      "description": "Required when using controllerWallet without controllerAccountId."
+      "description": "CAIP-2 network reference for controllerWallet. Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM)."
     },
     "controllerWallet": {
       "type": "string",
       "format": "universal-address"
     },
-    "agentAccountId": {
-      "type": "string",
-      "format": "caip10-account",
-      "description": "Preferred CAIP-10 account ID for the agent."
-    },
     "agentChainRef": {
       "type": "string",
       "format": "caip2-chain",
-      "description": "Required when using agentWallet without agentAccountId."
+      "description": "CAIP-2 network reference for agentWallet. Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM)."
     },
     "agentWallet": {
       "type": "string",
@@ -133,7 +113,8 @@
           },
           "configId": {
             "type": "string",
-            "maxLength": 128
+            "maxLength": 128,
+            "description": "Optional opaque integration or provider configuration reference. Not a secret, not an OAuth token, not credential material."
           },
           "enabled": {
             "type": "boolean"
@@ -141,5 +122,6 @@
         }
       }
     }
-  }
+  },
+  "additionalProperties": false
 }

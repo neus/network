@@ -1,40 +1,36 @@
 # AGENTS.md — network (public SDK, spec, docs)
 
 **Audience:** AI agents working in the **network** repository.  
-**Updated:** 2026-04-07
+**Updated:** 2026-04-09
 
 ---
 
-## Start here (multi-repo)
+## Scope
 
-**Monorepo manifest:** [`../AGENTS.md`](../AGENTS.md) (parent folder—session loop, bootstrap, boundaries).
-
-**Tooling map:** [`../TOOLING_SSOT.md`](../TOOLING_SSOT.md) (`.cursor` / `.claude` mirrors).
-
-This repo is **public**. It does **not** contain verifier implementation or private hub UI.
+This repository is **public**. It ships the SDK, OpenAPI description, verifier JSON Schemas under `spec/` and `docs/verifiers/schemas/`, and published documentation sources. It does **not** ship the private web application behind `neus.network`.
 
 ---
 
-## Repo role
+## Repo layout
 
 | What | Where |
 |------|--------|
 | SDK | `sdk/` |
-| Verifier schemas / public spec | `spec/`, `docs/verifiers/` |
-| OpenAPI / public API docs | `docs/openapi/` |
+| Verifier schemas / catalog assets | `spec/`, `docs/verifiers/` |
+| OpenAPI | `docs/openapi/` |
 | Examples | `examples/` |
 
 ---
 
-## Agent loop (short)
+## Contract alignment (do not invent)
 
-1. Read [`../AGENTS.md`](../AGENTS.md) if the task spans repos or public API shape.
-2. Align field names and verifier IDs with **backend SSOT** and **`network/spec`**—do not invent schemas.
-3. Run package scripts (`npm test`, lint) as defined in **`network/package.json`** before claiming done.
+1. Treat **`GET /api/v1/verification/verifiers`** and **`docs/openapi/public-api.json`** as the live contract references for runtime behavior.
+2. Keep verifier IDs and JSON Schemas aligned with **`spec/verifiers/schemas/*.json`** and the mirrored copies under **`docs/verifiers/schemas/`** (see `CONTRIBUTING.md`).
+3. Run scripts from **`network/package.json`** before claiming docs or SDK changes are complete.
 
 ---
 
 ## See also
 
 - [`README.md`](./README.md)
-- [`protocol/AGENTS.md`](../protocol/AGENTS.md) when backend behavior is in scope (from a full workspace checkout).
+- [`CONTRIBUTING.md`](./CONTRIBUTING.md)

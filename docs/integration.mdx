@@ -4,23 +4,36 @@ description: From first proof to shipped verification.
 icon: compass
 ---
 
-Align [Get started](./get-started) with this loop before you scale traffic. See [paths](./choose-an-integration-path), [billing](./platform/billing), and [LLM docs](./platform/llm-docs) when you need them.
+Align **[Get started](./get-started)** with this loop before you scale traffic. Use **[paths](./choose-an-integration-path)** to pick a surface, **[billing](./platform/billing)** for payers, **[LLM docs](./platform/llm-docs)** for assistants.
 
-Call `GET /api/v1/proofs/check` (or your own store of `proofId`) before prompting verification. Persist the receipt ID you get back. Reuse it for gates and policy. Do not treat signatures as durable records.
+Call `GET /api/v1/proofs/check` (or your own store of `proofId`) before prompting verification. Persist the receipt ID you get back. Reuse it for gates and policy. **[Proof receipts](./platform/receipts-and-results)** explains why you save **`proofId`**, not raw signatures.
 
 ## Loop
 
 1. **Check:** eligibility with a saved `proofId` or **`GET /api/v1/proofs/check`** before showing a verify flow
-2. **Verify:** only when needed ([Hosted Verify](./cookbook/auth-hosted-verify) or SDK/API)
-3. **Save:** `proofId` on the user or session
-4. **Reuse:** UI, `VerifyGate`, server policy, MCP—same ID everywhere
+2. **Verify:** only when needed (**[Hosted Verify](./cookbook/auth-hosted-verify)** or SDK/API)
+3. **Save:** `proofId` on the user or session (same value as **`qHash`**; see **[Proof receipts](./platform/receipts-and-results)**)
+4. **Reuse:** UI, `VerifyGate`, server policy, MCP. Same ID everywhere
+
+## Visibility modes
+
+Choose visibility once per proof. Full detail and `storeOriginalContent` guidance are in **[Security and trust](./platform/security-and-trust)**.
+
+| Mode | `privacyLevel` | `publicDisplay` | Use |
+|------|----------------|-----------------|-----|
+| Listed public | `public` | `true` | Publishing and attribution where the proof should be discoverable |
+| Unlisted public | `public` | `false` | Non-sensitive reuse, gates, and checks without listing for discovery |
+| Owner-only | `private` | `false` | Owner-only access and owner-authenticated reuse |
+
+- **Raw SDK `client.verify()`** defaults to **private** stored receipts (see **[SDK overview](./sdks/overview)**).
+- **`VerifyGate`** create mode defaults to **unlisted public** (`public` + `publicDisplay: false`) so the primary gating surface matches reuse-first flows.
 
 ## Checklist
 
 <Checklist>
-  <Item>Pick Hosted, Widgets, SDK, API, or MCP (one primary path)</Item>
+  <Item>Pick Hosted Verify, Widgets, SDK, API, or MCP (one primary path)</Item>
   <Item>Gate before prompting for verification</Item>
-  <Item>Persist proof IDs, not raw signatures</Item>
+  <Item>Persist proof receipt IDs, not raw signatures</Item>
   <Item>Test: verify → save → check → reuse</Item>
   <Item>[Get started](./get-started) · [Billing](./platform/billing)</Item>
 </Checklist>
@@ -45,13 +58,16 @@ Call `GET /api/v1/proofs/check` (or your own store of `proofId`) before promptin
 
 <CardGroup cols={2}>
   <Card title="Get started" icon="book" href="./get-started">
-    Platform + billing.
+    Onboarding and production checklist.
   </Card>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
     Hosted flows.
   </Card>
   <Card title="Receipts" icon="receipt" href="./platform/receipts-and-results">
     Persist IDs.
+  </Card>
+  <Card title="Security and trust" icon="lock" href="./platform/security-and-trust">
+    Visibility.
   </Card>
   <Card title="API" icon="terminal" href="./api/overview">
     HTTP.

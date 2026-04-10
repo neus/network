@@ -1,59 +1,55 @@
 ---
 title: Proof Receipts
-description: What to save and how to reuse proof receipts.
+description: Canonical terminology for proof receipt ID, proofId, and qHash.
 icon: receipt
 ---
 
-One ID. Reusable everywhere. **[Product flow (diagram) →](../index#how-it-works)**
+**Save the proof receipt ID. Do not treat raw signatures as your durable record.**
 
-## The Proof Receipt ID
+One ID. Reusable everywhere. Product flow: **[Home → How it works](../index#how-it-works)**.
 
-When verification completes, you get back a **proof receipt ID**:
+## proofId and qHash
 
-| Field | Where You See It |
-|-------|------------------|
-| `proofId` | SDK responses (primary name) |
-| `qHash` | HTTP path and wire field name for the same receipt ID |
-| Proof receipt ID | Documentation and product copy |
+When verification completes, you get a **proof receipt ID**. **`proofId`** is the primary SDK name. **`qHash`** is the HTTP path and wire field name for **the same value**.
 
-**Same value.** Save it once. Reuse it everywhere.
+| Name | Role |
+|------|------|
+| **`proofId`** | SDK and docs (primary) |
+| **`qHash`** | URL paths and some API fields |
+| Proof receipt ID | Product and doc wording |
 
----
-
-## What to Save
-
-| Save | Don't Save |
-|------|------------|
-| ✅ Proof receipt ID | ❌ Raw signatures |
-| ✅ Verification status | ❌ Private proof payloads |
-| ✅ Verifier IDs used | ❌ User credentials |
+**`proofId` = `qHash`** for the same receipt. Save once. Reuse everywhere. Visibility choices live only in **[Security and trust](./security-and-trust)**.
 
 ---
 
-## What to Do With It
+## What to save
+
+| Save | Do not rely on |
+|------|----------------|
+| Proof receipt ID | Raw signatures alone |
+| Verification status | Private proof payloads in public caches |
+| Verifier IDs used | End-user credentials |
+
+---
+
+## What to do with it
 
 | Purpose | How |
 |---------|-----|
 | **Display** | Link to `/proof/[proof-id]` |
-| **Gate** | Use `VerifyGate` widget |
-| **Check** | Call `/api/v1/proofs/check` |
-| **Verify** | Server-side eligibility check |
+| **Gate** | `VerifyGate` widget |
+| **Check** | `GET /api/v1/proofs/check` |
+| **Policy** | Server-side eligibility |
 
 ---
 
-## Proof Page
-
-Every proof has a public page:
+## Proof page
 
 ```
 https://neus.network/proof/[proof-id]
 ```
 
-Shows:
-- Proof receipt ID
-- Verification type
-- Timestamp
-- Visibility (public/private/unlisted)
+Shows proof receipt ID, verification type, timestamp, and visibility.
 
 ---
 
@@ -79,7 +75,7 @@ const eligible = await client.gateCheck({
 ## Using the API
 
 ```bash
-# Proof record by proofId
+# Proof record by proofId / qHash
 GET /api/v1/proofs/{qHash}
 
 # Gate check
@@ -88,11 +84,14 @@ GET /api/v1/proofs/check?address=0x...&verifierIds=ownership-basic
 
 ---
 
-## Next Steps
+## Next steps
 
 <CardGroup cols={2}>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
     Create proofs with the guided flow.
+  </Card>
+  <Card title="Security and trust" icon="lock" href="./security-and-trust">
+    Visibility modes.
   </Card>
   <Card title="API Overview" icon="terminal" href="../api/overview">
     Explore HTTP endpoints.

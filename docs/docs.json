@@ -81,10 +81,10 @@
             "group": "Essentials",
             "pages": [
               "index",
-              "quickstart",
               "get-started",
               "choose-an-integration-path",
               "integration",
+              "quickstart",
               "examples",
               "platform/llm-docs"
             ]
@@ -93,14 +93,14 @@
             "group": "Platform",
             "pages": [
               "platform/overview",
-              "platform/hub",
+              "platform/setup",
               "platform/receipts-and-results",
               "platform/presets"
             ]
           },
           {
             "group": "Hosted Flows",
-            "pages": ["cookbook/auth-hosted-verify", "cookbook/hub-integrator"]
+            "pages": ["cookbook/auth-hosted-verify"]
           },
           {
             "group": "Standards",
@@ -370,8 +370,20 @@
       "destination": "/platform/receipts-and-results"
     },
     {
+      "source": "/platform/hub",
+      "destination": "/platform/setup"
+    },
+    {
       "source": "/content/platform/hub",
-      "destination": "/platform/hub"
+      "destination": "/platform/setup"
+    },
+    {
+      "source": "/cookbook/hub-integrator",
+      "destination": "/platform/setup"
+    },
+    {
+      "source": "/content/cookbook/hub-integrator",
+      "destination": "/platform/setup"
     },
     {
       "source": "/content/platform/billing",
@@ -464,10 +476,6 @@
     {
       "source": "/content/cookbook/verifiable-agents",
       "destination": "/cookbook/verifiable-agents"
-    },
-    {
-      "source": "/content/cookbook/hub-integrator",
-      "destination": "/cookbook/hub-integrator"
     },
     {
       "source": "/content/api/overview",

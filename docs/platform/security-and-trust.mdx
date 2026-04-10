@@ -1,38 +1,70 @@
 ---
 title: Security and Trust
-description: Public versus private boundaries, least-privilege expectations, and proof handling guidance.
+description: Visibility and privacy: the single builder decision page for public, unlisted, and private proofs.
 icon: user-shield
 ---
 
+Use this page when you pick public, unlisted, or private behavior. Shorter guides link here for the full matrix and defaults.
+
 ## Trust boundaries
 
-- Verification completes in **NEUS** — do not treat the browser alone as proof of issuance.
+- Verification completes in **NEUS**. Do not treat the browser alone as proof of issuance.
 - Gate checks and status should return **only** what your product needs.
 - **Private** proof reads require the **owner signed in** (or your product’s explicit sharing rules).
 
-## Privacy defaults
+## Visibility modes
 
-Integrations default to **private stored** receipts (owner-authenticated reads; content tied to the wallet). For **reusable gates** and **`gateCheck`** without a signed-in owner session, create an **unlisted public** receipt: `privacyLevel: 'public'`, `publicDisplay: false`. Original content defaults to stored; set `storeOriginalContent: false` only for hash-only retention.
+| Mode | `privacyLevel` | `publicDisplay` | When to use |
+|------|----------------|-----------------|-------------|
+| Listed public | `public` | `true` | Publishing and attribution where the proof should be discoverable |
+| Unlisted public | `public` | `false` | Non-sensitive reuse, gates, and checks without listing for discovery |
+| Owner-only | `private` | `false` | Owner-only access and owner-authenticated reuse |
 
-| Setting | Effect |
-|---|---|
-| `privacyLevel: 'private'` | Default. Owner or authorized-session visibility. |
-| `privacyLevel: 'public'` | Enables policy checks without owner session when paired with the flags below. |
-| `publicDisplay: false` | Unlisted: usable in checks, not promoted in discovery (still public to anyone with the proof id). |
-| `storeOriginalContent: true` | Default. Retains original content unless you opt into hash-only. |
+Anyone with the proof receipt ID can fetch metadata appropriate to that mode. Treat IDs like capability-bearing links.
 
-## What Should Never Be Exposed Publicly
+**Fields:** `privacyLevel` chooses vaulted (private) versus checkable without a signed-in owner (public). `publicDisplay` chooses discoverable listing. Unlisted public proofs are still public to anyone who has the receipt id.
+
+## Default behavior by surface
+
+| Surface | Create default | Notes |
+|---------|----------------|-------|
+| **Raw SDK** `client.verify()` | `privacyLevel: 'private'`, `publicDisplay: false`, `storeOriginalContent: true` | Private-by-default for server and wallet flows |
+| **`VerifyGate`** create mode | `privacyLevel: 'public'`, `publicDisplay: false`, `storeOriginalContent: true` | Unlisted public for reuse-first gating |
+
+Override with explicit `proofOptions` / `options` when your product needs listed public or stricter private behavior.
+
+## storeOriginalContent
+
+| Value | Effect |
+|-------|--------|
+| `true` | Default. Retains original content for verification context unless you opt out. |
+| `false` | Hash-only or minimal retention where your flow allows it. |
+
+Use `false` only when you intentionally want hash-first storage and accept the tradeoffs for your verifier and policy.
+
+## What should never be exposed publicly
 
 - Raw signatures
 - Owner-only proof payloads
 - Private proof enumeration
 
-## Production Checklist
+## Production checklist
 
 <Checklist>
   <Item>Use gate checks for access decisions.</Item>
   <Item>Respect time windows for point-in-time verifiers.</Item>
   <Item>Route interactive verification through `/verify`.</Item>
   <Item>Consume verifier metadata from the API catalog.</Item>
-  <Item>Use private defaults; opt in to unlisted public receipts explicitly for reusable gates.</Item>
+  <Item>Pick visibility explicitly for raw SDK flows; know VerifyGate create defaults for widgets.</Item>
 </Checklist>
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Proof receipts" icon="receipt" href="./receipts-and-results">
+    Save proofId, not signatures.
+  </Card>
+  <Card title="Integration" icon="compass" href="../integration">
+    Check, verify, save, reuse.
+  </Card>
+</CardGroup>

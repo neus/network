@@ -11,7 +11,7 @@ Social media account ownership via OAuth
 ## Required fields
 
 - `provider` (`string enum: discord, github, facebook, x, farcaster, linkedin, telegram, coinbase`)
-- `internalSocialToken` (`string`) — OAuth session token from the hosted NEUS flow after you complete OAuth (this JSON property name is fixed for API compatibility).
+- `internalSocialToken` (`string`)
 
 ## Optional fields
 
@@ -26,7 +26,7 @@ await client.verify({
   verifier: 'ownership-social',
   data: {
     "provider": "discord",
-    "internalSocialToken": "<oauth-verification-token>",
+    "internalSocialToken": "social-token-example",
     "walletAddress": "0x2222222222222222222222222222222222222222"
   }
 });
@@ -38,7 +38,7 @@ await client.verify({
   ],
   "data": {
     "provider": "discord",
-    "internalSocialToken": "<oauth-verification-token>",
+    "internalSocialToken": "social-token-example",
     "walletAddress": "0x2222222222222222222222222222222222222222"
   },
   "walletAddress": "0x1234567890abcdef1234567890abcdef12345678",
@@ -51,5 +51,5 @@ await client.verify({
 ## Next steps
 
 - Use this verifier in `requiredVerifiers` for `VerifyGate` or in `verifierIds` for API gate checks.
-- For interactive verifiers, use hosted checkout (`hostedCheckoutUrl`).
+- For verifiers with `supportsDirectApi: false` in the public catalog, use hosted checkout (`hostedCheckoutUrl`) for the linked-check step.
 - Return to the [Verifier Catalog](./README.md).

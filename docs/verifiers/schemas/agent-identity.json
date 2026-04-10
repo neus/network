@@ -1,28 +1,11 @@
 {
   "$id": "https://neus.network/schemas/agent-identity.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "anyOf": [
-    {
-      "required": [
-        "agentAccountId"
-      ]
-    },
-    {
-      "required": [
-        "agentWallet",
-        "agentChainRef"
-      ]
-    }
-  ],
-  "description": "Register an agent identity. The agent wallet signs this proof itself. This verifier does not grant permissions; use agent-delegation for authority.",
+  "additionalProperties": false,
+  "description": "Register an agent identity signed by the agent wallet. Uses CAIP-2 chain references; proof output may include CAIP-10 account identifiers. Provide chain context as agentChainRef in data and/or as chain (CAIP-2) or chainId (EVM) on the verification request. Does not grant permissions; use agent-delegation for authority.",
   "properties": {
-    "agentAccountId": {
-      "description": "Preferred CAIP-10 account ID for the subject.",
-      "format": "caip10-account",
-      "type": "string"
-    },
     "agentChainRef": {
-      "description": "Required when using agentWallet without agentAccountId.",
+      "description": "CAIP-2 network reference for agentWallet (for example eip155:8453). Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).",
       "format": "caip2-chain",
       "type": "string"
     },
@@ -128,6 +111,7 @@
       "items": {
         "properties": {
           "configId": {
+            "description": "Optional opaque integration or provider configuration reference. Not a secret, not an OAuth token, not credential material.",
             "maxLength": 128,
             "type": "string"
           },
@@ -171,7 +155,9 @@
     }
   },
   "required": [
-    "agentId"
+    "agentId",
+    "agentWallet",
+    "agentChainRef"
   ],
   "title": "agent-identity",
   "type": "object"

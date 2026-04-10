@@ -28,13 +28,13 @@
 
 ---
 
-One **`proofId`** for gates, APIs, and agents. Private by default.
+One **proof receipt ID** (`proofId`, same value as `qHash` on the wire) for gates, APIs, and agents. Raw **`client.verify()`** is private by default. **`VerifyGate`** create mode defaults to unlisted public for reuse-first gates. See [Security and trust](https://docs.neus.network/platform/security-and-trust).
 
 ## Why NEUS
 
 - One receipt, many checks
 - Less bespoke verification code
-- Default-private outputs
+- Raw SDK defaults to private stored receipts; widgets default to unlisted public for gates
 - SDK · widgets · HTTP · MCP
 - Same format for humans and agents
 
@@ -62,7 +62,7 @@ npm install @neus/sdk
 import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient({
-  appId: 'your-app-id', // optional for local try; use hub Apps before production
+  appId: 'your-app-id', // optional for local try; register app in console before production
 });
 
 const proof = await client.verify({
@@ -97,7 +97,7 @@ const check = await client.gateCheck({
 
 | You are… | Link |
 |----------|------|
-| Shipping a product (hub, `appId`, credits) | [Get started](https://docs.neus.network/get-started) |
+| Shipping a product (`appId`, credits) | [Get started](https://docs.neus.network/get-started) |
 | First proof in code | [Quickstart](https://docs.neus.network/quickstart) |
 | No embedded wallet / guided login | [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) |
 | React gates | [Widgets](https://docs.neus.network/widgets/overview) |
@@ -113,10 +113,6 @@ import { VerifyGate } from '@neus/sdk/widgets';
   appId="your-app-id"
   requiredVerifiers={['nft-ownership']}
   verifierData={{ 'nft-ownership': { contractAddress: '0x...', tokenId: '1', chainId: 1 } }}
-  proofOptions={{
-    privacyLevel: 'public',
-    publicDisplay: false,
-  }}
 >
   <PremiumContent />
 </VerifyGate>

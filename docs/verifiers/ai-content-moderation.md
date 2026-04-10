@@ -51,5 +51,5 @@ await client.verify({
 ## Next steps
 
 - Use this verifier in `requiredVerifiers` for `VerifyGate` or in `verifierIds` for API gate checks.
-- For interactive verifiers, use hosted checkout (`hostedCheckoutUrl`).
+- For verifiers with `supportsDirectApi: false` in the public catalog, use hosted checkout (`hostedCheckoutUrl`) for the linked-check step.
 - Return to the [Verifier Catalog](./README.md).

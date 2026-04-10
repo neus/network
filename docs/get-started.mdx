@@ -1,27 +1,39 @@
 ---
 title: Get started
-description: Set up your NEUS account, app attribution, billing model, and first production integration.
+description: Builder onboarding: account, app, profile, integration loop, and production readiness.
 icon: book
 ---
 
-One `proofId` feeds gates, hub profile, and agents. Prefer the receipt ID over one-off signatures. Credits and sponsor grants are covered in [Billing](./platform/billing).
-
-For a local try first, use [Quickstart](./quickstart), then complete the steps below before production traffic.
+One **proof receipt ID** (`proofId`, same value as `qHash` on the wire) feeds gates, checks, and shareable proof pages. **[Proof receipts](./platform/receipts-and-results)** defines what to save. **[Security and trust](./platform/security-and-trust)** defines visibility.
 
 ## 1. Create your account
 
-1. Sign in to the **[hub](https://neus.network/hub)** with passkey or wallet.
-2. **Apps** — register products your integration will call from. **Credits** — balance for the wallet that pays. **Identity** — domain or org proofs when your flow needs them.
-3. Use the wallet that should own billing and app registration for this product.
-4. **Access keys** — when you need a **personal API key** (same **`Authorization: Bearer`** token for **`api.neus.network`** and for MCP when you want account-scoped tools), open **[Access keys](https://neus.network/profile?tab=account)** and generate one. You can skip this until you run scripts, server calls, or MCP flows that return **`auth_required`**.
+1. Sign in at [`https://neus.network/hub`](https://neus.network/hub) with passkey or wallet.
+2. Complete profile basics so you have a verified wallet and can open **Identity**, **Apps**, and **Credits** when you need them.
 
-## 2. Register your integration and capture `appId`
+## 2. Run your first loop locally
 
-1. Open **[Apps](https://neus.network/profile?tab=apps)** in the hub.
+Use **[Quickstart](./quickstart)** for a direct `ownership-basic` proof with the SDK, or **[Hosted Verify](./cookbook/auth-hosted-verify)** when the flow is interactive (social, org, human). **[Integration](./integration)** describes check, verify, save, reuse for every path.
+
+## 3. Pick how you integrate
+
+**[Choose an integration path](./choose-an-integration-path)** matches outcomes to surfaces: hosted verify, SDK, VerifyGate, `gateCheck`, MCP.
+
+## 4. Platform setup for production domains
+
+When you need DNS domain proof, org OAuth, app linking, or sponsor grants at scale, follow **[Platform setup](./platform/setup)** after you understand the integration loop.
+
+## Before production
+
+Complete this block before production traffic. Details live in **[Billing](./platform/billing)** and **[Platform setup](./platform/setup)**.
+
+### Register the integration and capture `appId`
+
+1. Open **[Apps](https://neus.network/profile?tab=apps)**.
 2. **Link app** or **Manage app**.
-3. Enter your **app domain** (e.g. `acme.com`), set a **daily credit cap**, and finish the modal.
+3. Enter your **app domain** (for example `acme.com`), set a **daily credit cap**, and finish the modal.
 
-When registration succeeds, NEUS issues an **`appId`** for that integration. Send it as **`X-Neus-App`** on API traffic (the SDK maps this automatically).
+When registration succeeds, NEUS issues an **`appId`**. Send it as **`X-Neus-App`** on API traffic (the SDK maps this automatically).
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -32,16 +44,15 @@ const client = new NeusClient({
 ```
 
 <Tip>
-  **`appId`** is an attribution identifier (which product made the request).  
-  It does **not** by itself move charges to your organization wallet. Use sponsor grants when you want to pay on behalf of users.
+  **`appId`** is an attribution identifier (which product made the request). It does **not** by itself move charges to your organization wallet. Use sponsor grants when you want to pay on behalf of users.
 </Tip>
 
-## 3. Fund the wallet that will pay
+### Credits and who pays
 
-1. **Credits** tab → balance on the **payer wallet**.
-2. If users self-pay, they need credits on **their** wallet. See **[Billing](./platform/billing)**.
+1. **Credits** reflect balance on the **payer wallet**.
+2. If users self-pay, they need credits on **their** wallet. If your product pays, fund the org wallet and use **sponsor grants**. See **[Billing](./platform/billing)**.
 
-## 4. Decide your billing model (`sponsorGrant` if you pay)
+### Sponsor grants (`sponsorGrant` when you pay for users)
 
 If your product should pay verification costs for end users, fund the org wallet, issue short-lived sponsor grants, and pass them to the SDK as **`sponsorGrant`** (maps to **`X-Sponsor-Grant`**).
 
@@ -54,27 +65,17 @@ const client = new NeusClient({
 });
 ```
 
-Grant issuance and caps: **[Workspace setup](./cookbook/hub-integrator)** and **[Billing](./platform/billing)**.
+### Access keys
 
-## 5. Choose your integration path
+When you need a **personal API key** (same **`Authorization: Bearer`** token for **`api.neus.network`** and for MCP when you want account-scoped tools), open **[Access keys](https://neus.network/profile?tab=account)** and generate one. You can skip this until you run scripts, server calls, or MCP flows that return **`auth_required`**.
 
-| Default | Next |
-|---------|------|
-| **Hosted Verify** (no embedded wallet) | **[Hosted Verify](./cookbook/auth-hosted-verify)** |
-| **React** | **[Widgets](./widgets/overview)** |
-| **Custom JS** | **[SDK](./sdks/overview)** · **[JavaScript](./sdks/javascript)** |
-| **AI tools** | **[MCP](./mcp/overview)** |
-| **Advanced HTTP** | **[API](./api/overview)** |
-
-**Ship loop:** **[Integration](./integration)** · **all options:** **[Paths](./choose-an-integration-path)**.
-
-## 6. Production readiness checklist
+### Production readiness checklist
 
 - [ ] Integration domain is registered with a realistic daily cap
 - [ ] Paying wallet has credits (yours or users', based on your model)
 - [ ] Client sends **`appId`** and uses **`sponsorGrant`** only when sponsoring
 - [ ] Team understands **[Billing](./platform/billing)** and **[x402](./platform/x402)** behavior
-- [ ] Verification receipts are stored and reused in your product logic
+- [ ] Verification receipts are stored and reused in your product logic (see **[Proof receipts](./platform/receipts-and-results)**)
 
 ## Related
 
@@ -82,13 +83,13 @@ Grant issuance and caps: **[Workspace setup](./cookbook/hub-integrator)** and **
   <Card title="Billing" icon="credit-card" href="./platform/billing">
     Who pays, x402, sponsor model.
   </Card>
-  <Card title="Workspace setup" icon="building" href="./cookbook/hub-integrator">
-    Domains, org verify, sponsor detail.
+  <Card title="Platform setup" icon="building" href="./platform/setup">
+    Domains, org verify, app linking, sponsors.
   </Card>
   <Card title="Integration" icon="compass" href="./integration">
-    Verify → save → reuse loop.
+    Verify, save, reuse loop.
   </Card>
-  <Card title="Overview" icon="house" href="./index">
-    Product summary.
+  <Card title="Security and trust" icon="lock" href="./platform/security-and-trust">
+    Visibility modes.
   </Card>
 </CardGroup>

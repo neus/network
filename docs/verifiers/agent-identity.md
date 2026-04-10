@@ -11,12 +11,11 @@ Portable agent identity, signed by the agent wallet itself. Use agent-delegation
 ## Required fields
 
 - `agentId` (`string max 128 min 1`)
+- `agentWallet` (`string format universal-address`)
+- `agentChainRef` (`string format caip2-chain`): CAIP-2 network reference for agentWallet (for example eip155:8453). Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).
 
 ## Optional fields
 
-- `agentAccountId` (`string format caip10-account`): Preferred CAIP-10 account ID for the subject.
-- `agentChainRef` (`string format caip2-chain`): Required when using `agentWallet` without `agentAccountId`.
-- `agentWallet` (`string format universal-address`)
 - `agentLabel` (`string max 128`)
 - `agentType` (`string enum: ai, bot, service, automation, agent`)
 - `description` (`string max 500`)
@@ -35,7 +34,7 @@ await client.verify({
   data: {
     "agentId": "agent-bot-1",
     "agentWallet": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    "agentAccountId": "eip155:84532:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "agentChainRef": "eip155:84532",
     "agentLabel": "Automation Bot",
     "agentType": "agent",
     "description": "Runs automations",
@@ -55,7 +54,7 @@ await client.verify({
   "data": {
     "agentId": "agent-bot-1",
     "agentWallet": "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-    "agentAccountId": "eip155:84532:0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+    "agentChainRef": "eip155:84532",
     "agentLabel": "Automation Bot",
     "agentType": "agent",
     "description": "Runs automations",
@@ -75,5 +74,5 @@ await client.verify({
 ## Next steps
 
 - Use this verifier in `requiredVerifiers` for `VerifyGate` or in `verifierIds` for API gate checks.
-- For interactive verifiers, use hosted checkout (`hostedCheckoutUrl`).
+- For verifiers with `supportsDirectApi: false` in the public catalog, use hosted checkout (`hostedCheckoutUrl`) for the linked-check step.
 - Return to the [Verifier Catalog](./README.md).

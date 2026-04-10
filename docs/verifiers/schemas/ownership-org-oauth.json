@@ -1,14 +1,13 @@
 {
   "$id": "https://neus.network/schemas/ownership-org-oauth.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Organization account verification through hosted OAuth completion.",
+  "description": "Organizational OAuth verification",
   "properties": {
     "expectedOrgDomain": {
       "format": "hostname",
       "type": "string"
     },
     "internalSocialToken": {
-      "description": "OAuth session token returned by the hosted NEUS verification flow.",
       "type": "string"
     },
     "provider": {

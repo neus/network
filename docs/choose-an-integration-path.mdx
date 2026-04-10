@@ -1,19 +1,20 @@
 ---
 title: Choose an Integration Path
-description: Pick the fastest path for your product.
+description: Match your outcome to the right NEUS surface.
 icon: route
 ---
 
-Match your stack to a row, then follow [Integration](./integration) for the check, save, and reuse loop.
+Pick the row that matches what you are proving, then follow **[Integration](./integration)** for check, verify, save, reuse.
 
-| Need | Start here | Effort |
-|------|------------|--------|
-| Guided login or no embedded wallet | **[Hosted Verify](./cookbook/auth-hosted-verify)** | Redirect or popup |
-| React gates / badges | **[Widgets](./widgets/overview)** | `<VerifyGate>` |
-| Custom app code | **[SDK](./sdks/overview)** | Full control |
-| AI tools (Cursor, Claude, VS Code, …) | **[MCP](./mcp/overview)** — endpoint only works without a key; **[Bearer](https://neus.network/profile?tab=account)** for **`neus_me`** / private reads ([Auth](./mcp/auth)) | Add URL once |
-| Agents | **[Agents](./agents/overview)** (after hub + billing) | Presets + proofs |
+| Outcome | Start here | Effort |
+|---------|------------|--------|
+| Social, human, or org proof (interactive) | **[Hosted Verify](./cookbook/auth-hosted-verify)** | Redirect or popup |
+| Direct-sign content proof (`ownership-basic`) | **[SDK](./sdks/overview)** or **[Quickstart](./quickstart)** | Wallet or server signing |
+| React gating and reuse-first UX | **[Widgets](./widgets/overview)** · `VerifyGate` | Drop-in component |
+| Backend eligibility without UI | **[API](./api/overview)** · SDK **`gateCheck`** | HTTP from your server |
+| Assistants and IDE tools | **[MCP](./mcp/overview)** — endpoint works without a key; **[Bearer token](https://neus.network/profile?tab=account)** for **`neus_me`** and private reads (**[Auth](./mcp/auth)**) | Add URL once |
+| Agent identity and delegation | **[Agents](./agents/overview)** (after **[Get started](./get-started)** billing and `appId`) | Presets + proofs |
 | Raw HTTP (advanced) | **[API](./api/overview)** | Sign + POST |
-| Unsure who pays | **[Get started](./get-started)** first | — |
+| Unsure who pays | **[Get started](./get-started)** | Credits and sponsors |
 
-**Then:** **[Integration](./integration)** — check → save → reuse.
+**Then:** **[Integration](./integration)** — check → verify → save → reuse.

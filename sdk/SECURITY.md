@@ -22,9 +22,11 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 
 ## Privacy defaults
 
-Defaults are **private** receipts with **original content stored** (owner-authenticated reads). Integrators see only that content is private and tied to the wallet unless they opt into other modes.
+**`client.verify()`** defaults to **private** receipts with **original content stored** (owner-authenticated reads).
 
-For **reusable gates** and **`gateCheck`** without an owner session, set **unlisted public** explicitly (`privacyLevel: 'public'`, `publicDisplay: false`). Original content still defaults to stored; anyone with the proof id can resolve public proofs—do not treat unlisted as secret.
+**`VerifyGate`** create mode defaults to **unlisted public** (`privacyLevel: 'public'`, `publicDisplay: false`, `storeOriginalContent: true`) so gates and `gateCheck` work without extra options.
+
+For raw SDK flows that must power **`gateCheck`** without an owner session, set **unlisted public** explicitly (`privacyLevel: 'public'`, `publicDisplay: false`). Anyone with the proof id can resolve public proofs. Do not treat unlisted as secret.
 
 **Hide original content** (metadata/hash only): set `storeOriginalContent: false` when your product must not persist original bytes.
 

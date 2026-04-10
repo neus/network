@@ -10,7 +10,7 @@
       "expiry": "permanent",
       "flow": "instant",
       "id": "ownership-basic",
-      "inputSchemaPath": "spec/verifiers/schemas/ownership-basic.json",
+      "inputSchemaPath": "docs/verifiers/schemas/ownership-basic.json",
       "interaction": "signature",
       "sdk": {
         "autoVerify": true,
@@ -21,14 +21,14 @@
     {
       "api": {
         "gateCheck": true,
-        "verificationRequest": true
+        "verificationRequest": false
       },
       "description": "Unique human verification for sybil resistance",
       "expiry": "expiring",
       "flow": "interactive",
       "id": "proof-of-human",
-      "inputSchemaPath": "spec/verifiers/schemas/proof-of-human.json",
-      "interaction": "zkpassport",
+      "inputSchemaPath": "docs/verifiers/schemas/proof-of-human.json",
+      "interaction": "hosted",
       "sdk": {
         "autoVerify": false,
         "verifyGateWidget": true
@@ -38,14 +38,14 @@
     {
       "api": {
         "gateCheck": true,
-        "verificationRequest": true
+        "verificationRequest": false
       },
       "description": "Social media account ownership via OAuth",
       "expiry": "permanent",
       "flow": "interactive",
       "id": "ownership-social",
-      "inputSchemaPath": "spec/verifiers/schemas/ownership-social.json",
-      "interaction": "oauth",
+      "inputSchemaPath": "docs/verifiers/schemas/ownership-social.json",
+      "interaction": "hosted",
       "sdk": {
         "autoVerify": false,
         "verifyGateWidget": true
@@ -61,7 +61,7 @@
       "expiry": "expiring",
       "flow": "instant",
       "id": "ownership-pseudonym",
-      "inputSchemaPath": "spec/verifiers/schemas/ownership-pseudonym.json",
+      "inputSchemaPath": "docs/verifiers/schemas/ownership-pseudonym.json",
       "interaction": "signature",
       "sdk": {
         "autoVerify": true,
@@ -78,8 +78,8 @@
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "ownership-dns-txt",
-      "inputSchemaPath": "spec/verifiers/schemas/ownership-dns-txt.json",
-      "interaction": "dns_txt",
+      "inputSchemaPath": "docs/verifiers/schemas/ownership-dns-txt.json",
+      "interaction": "passive",
       "recommendedMaxAgeMs": 3600000,
       "sdk": {
         "autoVerify": true,
@@ -90,14 +90,14 @@
     {
       "api": {
         "gateCheck": true,
-        "verificationRequest": true
+        "verificationRequest": false
       },
       "description": "Organizational OAuth verification",
       "expiry": "permanent",
       "flow": "interactive",
       "id": "ownership-org-oauth",
-      "inputSchemaPath": "spec/verifiers/schemas/ownership-org-oauth.json",
-      "interaction": "oauth",
+      "inputSchemaPath": "docs/verifiers/schemas/ownership-org-oauth.json",
+      "interaction": "hosted",
       "sdk": {
         "autoVerify": false,
         "verifyGateWidget": true
@@ -113,7 +113,7 @@
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "nft-ownership",
-      "inputSchemaPath": "spec/verifiers/schemas/nft-ownership.json",
+      "inputSchemaPath": "docs/verifiers/schemas/nft-ownership.json",
       "interaction": "passive",
       "recommendedMaxAgeMs": 3600000,
       "sdk": {
@@ -131,7 +131,7 @@
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "token-holding",
-      "inputSchemaPath": "spec/verifiers/schemas/token-holding.json",
+      "inputSchemaPath": "docs/verifiers/schemas/token-holding.json",
       "interaction": "passive",
       "recommendedMaxAgeMs": 3600000,
       "sdk": {
@@ -149,7 +149,7 @@
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "wallet-risk",
-      "inputSchemaPath": "spec/verifiers/schemas/wallet-risk.json",
+      "inputSchemaPath": "docs/verifiers/schemas/wallet-risk.json",
       "interaction": "passive",
       "recommendedMaxAgeMs": 3600000,
       "sdk": {
@@ -167,7 +167,7 @@
       "expiry": "permanent",
       "flow": "instant",
       "id": "wallet-link",
-      "inputSchemaPath": "spec/verifiers/schemas/wallet-link.json",
+      "inputSchemaPath": "docs/verifiers/schemas/wallet-link.json",
       "interaction": "signature",
       "sdk": {
         "autoVerify": true,
@@ -184,7 +184,7 @@
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "contract-ownership",
-      "inputSchemaPath": "spec/verifiers/schemas/contract-ownership.json",
+      "inputSchemaPath": "docs/verifiers/schemas/contract-ownership.json",
       "interaction": "passive",
       "recommendedMaxAgeMs": 3600000,
       "sdk": {
@@ -202,7 +202,7 @@
       "expiry": "permanent",
       "flow": "external_lookup",
       "id": "ai-content-moderation",
-      "inputSchemaPath": "spec/verifiers/schemas/ai-content-moderation.json",
+      "inputSchemaPath": "docs/verifiers/schemas/ai-content-moderation.json",
       "interaction": "passive",
       "sdk": {
         "autoVerify": true,
@@ -219,7 +219,7 @@
       "expiry": "permanent",
       "flow": "instant",
       "id": "agent-identity",
-      "inputSchemaPath": "spec/verifiers/schemas/agent-identity.json",
+      "inputSchemaPath": "docs/verifiers/schemas/agent-identity.json",
       "interaction": "signature",
       "sdk": {
         "autoVerify": true,
@@ -236,7 +236,7 @@
       "expiry": "expiring",
       "flow": "instant",
       "id": "agent-delegation",
-      "inputSchemaPath": "spec/verifiers/schemas/agent-delegation.json",
+      "inputSchemaPath": "docs/verifiers/schemas/agent-delegation.json",
       "interaction": "signature",
       "recommendedMaxAgeMs": 604800000,
       "sdk": {

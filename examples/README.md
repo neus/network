@@ -20,3 +20,5 @@ Integration examples for NEUS.
 | [Quickstart](https://docs.neus.network/quickstart) | Create your first proof |
 | [API Reference](https://docs.neus.network/api/overview) | HTTP endpoints |
 | [Verifier Catalog](https://docs.neus.network/verification/verifiers) | Verifier capabilities and requirements |
+| [Proof receipts](https://docs.neus.network/platform/receipts-and-results) | Save `proofId` (same as `qHash`) |
+| [Security and trust](https://docs.neus.network/platform/security-and-trust) | Visibility matrix |

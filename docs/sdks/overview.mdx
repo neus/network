@@ -32,7 +32,7 @@ const proofId = proof.proofId;
 await client.pollProofStatus(proofId, { interval: 3000, timeout: 60000 });
 
 await client.gateCheck({
-  address: '0x…',
+  address: '0x...',
   verifierIds: ['ownership-basic'],
 });
 
@@ -56,13 +56,17 @@ Optional: `timeout` on `NeusClient` constructor.
 
 ## Who pays for credits?
 
-**`appId`** → **`X-Neus-App`**. **Credits** follow the **signer** unless **`sponsorGrant`** or **x402**. **[Get started](../get-started)** · **[Billing](../platform/billing)**
+**`appId`** maps to **`X-Neus-App`**. **Credits** follow the **signer** unless **`sponsorGrant`** or **x402**. **[Get started](../get-started)** · **[Billing](../platform/billing)**
+
+## Raw SDK vs VerifyGate defaults
+
+**`client.verify()`** is **private-by-default** (see **[Security](./security)**). **`VerifyGate`** create mode defaults to **unlisted public** for reuse-first gates. Full matrix: **[Security and trust](../platform/security-and-trust)**.
 
 ## Pages
 
 <CardGroup cols={2}>
   <Card title="Get started" icon="book" href="../get-started">
-    Hub first.
+    Onboarding.
   </Card>
   <Card title="JavaScript" icon="bracket-curly" href="./javascript">
     Methods and types.

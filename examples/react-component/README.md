@@ -1,6 +1,6 @@
 # React Component Example
 
-Minimal VerifyGate integration.
+Minimal VerifyGate integration. Save **proof receipt IDs** (`proofId`), not signatures. **`VerifyGate`** defaults to unlisted public creates; raw **`client.verify()`** stays private-by-default. See [Security and trust](https://docs.neus.network/platform/security-and-trust) and [Integration](https://docs.neus.network/integration).
 
 ## Install
 

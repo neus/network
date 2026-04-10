@@ -10,6 +10,8 @@ npm install @neus/sdk react react-dom
 
 ## VerifyGate
 
+Create mode defaults to **unlisted public** for gate-friendly reuse. Override `proofOptions` when you need listed public or private.
+
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 

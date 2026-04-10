@@ -1,10 +1,10 @@
 ---
 title: Platform Overview
-description: Hosted verify, proof pages, hub, API, MCP.
+description: Thin map of NEUS surfaces and URLs.
 icon: globe
 ---
 
-Register apps and credits in the hub (**[Get started](../get-started)**) before relying on API or MCP at scale.
+**[Get started](../get-started)** is the onboarding source. This page lists URLs and where each surface lives.
 
 ## Components
 
@@ -12,7 +12,7 @@ Register apps and credits in the hub (**[Get started](../get-started)**) before 
 |-------|------|
 | **Hosted Verify** | UI at `/verify` |
 | **Proof pages** | `/proof/[id]` |
-| **Hub** | Profiles, apps, credits |
+| **Account and apps** | Web console at `/hub` |
 | **API** | Programmatic |
 | **MCP** | Assistants |
 
@@ -23,8 +23,8 @@ Register apps and credits in the hub (**[Get started](../get-started)**) before 
   <Card title="Proof pages" icon="receipt" href="./receipts-and-results">
     Shareable receipt pages.
   </Card>
-  <Card title="Hub" icon="user-circle" href="./hub">
-    Profiles, apps, agents.
+  <Card title="Platform setup" icon="building" href="./setup">
+    Domains, apps, sponsors.
   </Card>
   <Card title="Presets" icon="layer-group" href="./presets">
     Verifier bundles.
@@ -33,11 +33,11 @@ Register apps and credits in the hub (**[Get started](../get-started)**) before 
 
 ## Flow
 
-<Frame caption="Hosted verify → Proof API → shareable proof page; hub and your app reuse the same receipts.">
+<Frame caption="Hosted verify, Proof API, shareable proof page; your app reuses the same receipts.">
   <img
     className="neus-docs-flow-diagram"
     src="/images/diagrams/platform-flow.svg"
-    alt="NEUS Platform: /verify hosted, Proof API create, /proof display; branches to Platform hub and your app reusing proofs"
+    alt="NEUS: /verify hosted, Proof API create, /proof display; your app reusing proofs"
   />
 </Frame>
 
@@ -47,7 +47,7 @@ Register apps and credits in the hub (**[Get started](../get-started)**) before 
 |---------|-----|
 | Hosted Verify | `https://neus.network/verify` |
 | Proof Page | `https://neus.network/proof/[proof-id]` |
-| Platform (`/hub`) | `https://neus.network/hub` |
+| Account and apps | `https://neus.network/hub` |
 | API | `https://api.neus.network` |
 | MCP | `https://mcp.neus.network/mcp` |
 

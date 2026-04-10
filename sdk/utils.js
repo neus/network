@@ -882,7 +882,7 @@ export class StatusPoller {
  * NEUS Network Constants
  */
 export const NEUS_CONSTANTS = {
-  // Hub chain (where all verifications occur)
+  /** Default EVM chain id for NEUS protocol signing context (`HUB_CHAIN_ID` name kept for compatibility). */
   HUB_CHAIN_ID: 84532,
 
   // Supported target chains for cross-chain propagation
@@ -1241,7 +1241,7 @@ export function toAgentDelegationMaxSpend(humanAmount, decimals) {
 export const DEFAULT_HOSTED_VERIFY_URL = 'https://neus.network/verify';
 
 /**
- * Build standardized hosted checkout/verify URL for integrators.
+ * Build standardized hosted checkout/verify URL for your app.
  * Single typed entry point to avoid copy-paste errors.
  * @param {Object} opts
  * @param {string} [opts.gateId] - Gate ID for gate-backed checkout

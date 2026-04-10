@@ -29,7 +29,9 @@ Owner-only reads need extra signed headers. Use **SDK methods** for private proo
 
 ## Privacy defaults
 
-The SDK defaults to **`private`** receipts with **`storeOriginalContent: true`** (private stored). For **reusable gates** and **`gateCheck`** without an owner session, set **unlisted public** explicitly:
+**`client.verify()`** defaults to **`private`** with **`storeOriginalContent: true`**. **`VerifyGate`** create mode defaults to **unlisted public** (`public` + `publicDisplay: false`) for reuse-first gating. See **[Security and trust](../platform/security-and-trust)**.
+
+For raw SDK flows that must power **`gateCheck`** without an owner session, set unlisted public explicitly:
 
 ```javascript
 {
@@ -47,5 +49,5 @@ Set **`storeOriginalContent: false`** only when your product must **not** persis
 | `storeOriginalContent` | Retain original content (default true) vs hash-only |
 
 <Note>
-Default is **private stored**. Use the block above when you need the same receipt to power gates and server checks without the owner signed in. Unlisted public proofs are still public to anyone with the proof id.
+Unlisted public proofs are still public to anyone with the proof id.
 </Note>

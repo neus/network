@@ -3,7 +3,7 @@
   "info": {
     "title": "NEUS Network — Public Integrator API",
     "version": "1.0.0",
-    "description": "Public HTTP API for NEUS integrators.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).",
+    "description": "Public HTTP API for NEUS.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).",
     "license": {
       "name": "Business Source License 1.1",
       "url": "https://mariadb.com/bsl11/"
@@ -121,11 +121,11 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Advanced/optional. EVM signing-context hint; auto-resolved to the protocol hub chain when omitted. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
+            "description": "Advanced/optional. EVM signing-context hint; when omitted, resolved to the NEUS protocol primary chain for signing. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
           },
           "chain": {
             "type": "string",
-            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; the protocol resolves hub context automatically."
+            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; primary-chain signing context is resolved automatically."
           },
           "signatureMethod": {
             "type": "string"
@@ -228,11 +228,11 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Advanced/optional. EVM signing-context hint; auto-resolved to the protocol hub chain when omitted. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
+            "description": "Advanced/optional. EVM signing-context hint; when omitted, resolved to the NEUS protocol primary chain for signing. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
           },
           "chain": {
             "type": "string",
-            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; the protocol resolves hub context automatically."
+            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; primary-chain signing context is resolved automatically."
           },
           "signatureMethod": {
             "type": "string"
@@ -1512,7 +1512,7 @@
       "get": {
         "operationId": "getVerifierCatalog",
         "summary": "Get supported verifiers and configuration",
-        "description": "Returns a list of all supported verifier IDs, full verifier metadata (schemas + flow/access semantics), and the backend chain configuration (hub chain, asset allowlists).",
+        "description": "Returns a list of all supported verifier IDs, full verifier metadata (schemas + flow/access semantics), and chain configuration (protocol primary chain, asset allowlists).",
         "tags": [
           "Verification"
         ],
@@ -2109,7 +2109,7 @@
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "description": "EVM chain ID of the asset being checked (e.g. 1 for Ethereum Mainnet, 8453 for Base). Required for asset verifiers (nft-ownership, token-holding, contract-ownership). Not a hub or proof-storage filter."
+              "description": "EVM chain ID of the asset being checked (e.g. 1 for Ethereum Mainnet, 8453 for Base). Required for asset verifiers (nft-ownership, token-holding, contract-ownership). Not a protocol primary-chain or proof-storage filter."
             }
           },
           {

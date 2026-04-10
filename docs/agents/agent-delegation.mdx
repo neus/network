@@ -19,7 +19,9 @@ const proof = await client.verify({
   verifier: 'agent-delegation',
   data: {
     controllerWallet: '0x...',  // Must match signer (approving account)
+    controllerChainRef: 'eip155:8453',
     agentWallet: '0x...',
+    agentChainRef: 'eip155:8453',
     scope: 'global',
     permissions: ['read-proofs'],
   },
@@ -47,7 +49,9 @@ await client.verify({
   verifier: 'agent-delegation',
   data: {
     controllerWallet: '0x...',
+    controllerChainRef: 'eip155:8453',
     agentWallet: '0x...',
+    agentChainRef: 'eip155:8453',
     scope: 'payments:x402',
     permissions: ['execute', 'read'],
     maxSpend: toAgentDelegationMaxSpend('100.50', 6),
@@ -65,10 +69,10 @@ await client.verify({
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `controllerWallet` | One of wallet or accountId | Approving account wallet. Must match signer. |
-| `controllerAccountId` | One of wallet or accountId | CAIP-10 account ID for the approving account |
-| `agentWallet` | One of wallet or accountId | Agent wallet address |
-| `agentAccountId` | One of wallet or accountId | CAIP-10 account ID for agent |
+| `controllerWallet` | Yes | Approving account wallet. Must match signer. |
+| `controllerChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request for both wallets | CAIP-2 chain for the controller |
+| `agentWallet` | Yes | Agent wallet address |
+| `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request for both wallets | CAIP-2 chain for the agent |
 | `agentId` | No | Reference to a registered agent identity |
 | `scope` | No | Permission scope (default is often `global`; payment agents may use a narrower scope) |
 | `permissions` | No | Allowed actions (`execute`, `read`, etc.) |
@@ -78,6 +82,8 @@ await client.verify({
 | `expiresAt` | No | Expiration timestamp (Unix ms) |
 | `instructions` | No | Policy instructions (max 4000 chars) |
 | `skills` | No | Skill identifiers granted to the agent |
+
+Proof responses may include CAIP-10 `controllerAccountId` and `agentAccountId`. See [agent-delegation verifier doc](../verifiers/agent-delegation.md).
 
 ## What You Get Back
 

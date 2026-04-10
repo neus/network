@@ -1,12 +1,12 @@
 "use client";
 /**
  * NEUS ProofBadge Widget
- * Minimal verification badges for integrators
- * 
+ * Minimal verification badges for product UI
+ *
  * Design Philosophy:
  * - Non-intrusive, tiny by default
  * - Neutral colors - no forced green/red
- * - Integrators can theme via CSS variables
+ * - Host apps can theme via CSS variables
  * - Logo: inline data URL (CSP-safe); logoUrl prop overrides for custom branding
  * 
  * @license Apache-2.0

@@ -1,10 +1,9 @@
 {
   "$id": "https://neus.network/schemas/ownership-social.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Social account ownership via OAuth",
+  "description": "Social media account ownership via OAuth",
   "properties": {
     "internalSocialToken": {
-      "description": "OAuth session token returned by the hosted NEUS verification flow.",
       "type": "string"
     },
     "provider": {

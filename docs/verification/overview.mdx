@@ -39,10 +39,12 @@ Check ──▶ Verify (if needed) ──▶ Save ──▶ Reuse
 
 | Term | Meaning |
 |------|---------|
-| **Proof receipt ID** | Stable identifier for a proof, exposed as `proofId` in SDK responses |
+| **Proof receipt ID** | Stable identifier for a proof, exposed as `proofId` in SDK responses (same value as `qHash` on the wire). See **[Proof receipts](../platform/receipts-and-results)**. |
 | **Verifier** | The capability being verified |
 | **Signing string** | The message the wallet signs |
 | **Hosted verify** | NEUS-hosted UI at `/verify` |
+
+Every verifier starts in one of two ways: **direct-sign receipt** (wallet or server signing) or **Hosted Verify** (interactive). Visibility modes: **[Security and trust](../platform/security-and-trust)**.
 
 ## Response
 

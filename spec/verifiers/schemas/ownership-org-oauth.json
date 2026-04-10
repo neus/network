@@ -2,11 +2,10 @@
   "$id": "https://neus.network/schemas/ownership-org-oauth.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ownership-org-oauth",
-  "description": "Organizational OAuth verification",
+  "description": "Select the organization provider to complete in hosted verify.",
   "type": "object",
   "required": [
-    "provider",
-    "internalSocialToken"
+    "provider"
   ],
   "properties": {
     "provider": {
@@ -15,13 +14,6 @@
         "google",
         "microsoft"
       ]
-    },
-    "internalSocialToken": {
-      "type": "string"
-    },
-    "walletAddress": {
-      "type": "string",
-      "format": "universal-address"
     },
     "expectedOrgDomain": {
       "type": "string",

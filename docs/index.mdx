@@ -4,15 +4,15 @@ description: Portable proof receipts for login, trust, access, and agent workflo
 icon: house
 ---
 
-One portable proof receipt per verification. Save `proofId` for checks, gates, widgets, and `/proof` links. [Get started](./get-started) covers hub setup, credits, and billing.
+Ship verification once, save a **proof receipt ID**, reuse it for gates, APIs, widgets, and shareable `/proof` links. **[Get started](./get-started)** is the single onboarding path: account, app, profile, and production readiness.
 
 ## How it works
 
-<Frame caption="Verify once → receipt ID → reuse across apps, agents, and APIs">
+<Frame caption="Verify once, save proof receipt ID, reuse across apps, agents, and APIs">
   <img
     className="neus-how-it-works-diagram"
     src="/images/how-it-works.png"
-    alt="Verification: verify once, then Proof ID as verified proof receipt, then reusable proof across apps, agents, and APIs"
+    alt="Verification: verify once, then proof receipt ID, then reusable proof across apps, agents, and APIs"
   />
 </Frame>
 
@@ -20,23 +20,23 @@ One portable proof receipt per verification. Save `proofId` for checks, gates, w
 
 <CardGroup cols={3}>
   <Card title="Get started" icon="book" href="./get-started">
-    Hub, `appId`, credits, and who pays.
+    Account, app linking, profile, production checklist.
   </Card>
-  <Card title="Quickstart" icon="rocket" href="./quickstart">
-    First proof in code. Finish Get started before production traffic.
+  <Card title="Choose a path" icon="route" href="./choose-an-integration-path">
+    Hosted verify, SDK, VerifyGate, API, MCP.
   </Card>
   <Card title="Integration" icon="compass" href="./integration">
     Check, verify, save, reuse.
   </Card>
 </CardGroup>
 
-[Choose a path](./choose-an-integration-path) · [Hosted Verify](./cookbook/auth-hosted-verify) · [Widgets](./widgets/overview) · [MCP](./mcp/overview)
+[Quickstart](./quickstart) · [Hosted Verify](./cookbook/auth-hosted-verify) · [Widgets](./widgets/overview) · [MCP](./mcp/overview)
 
 ## Explore
 
 <CardGroup cols={2}>
   <Card title="Platform" icon="globe" href="./platform/overview">
-    Hosted verify, hub, proof pages, API and MCP entry points.
+    URLs for verify, proof pages, API, and MCP.
   </Card>
   <Card title="Verification" icon="shield" href="./verification/overview">
     Verifiers, lifecycle, and signing.
@@ -45,17 +45,17 @@ One portable proof receipt per verification. Save `proofId` for checks, gates, w
     Agent identity, delegation, and presets.
   </Card>
   <Card title="MCP" icon="plug" href="./mcp/overview">
-    Assistants and IDE runtimes. Endpoint and auth on linked pages.
+    Assistants and IDE runtimes.
   </Card>
 </CardGroup>
 
 ## Verifiers
 
-Choose a verifier ID and options in the [verifier catalog](./verification/verifiers). Capability reference pages document each verifier.
+Pick a verifier ID from the **[verifier catalog](./verification/verifiers)**. Capability reference pages document each verifier.
 
 ## Resources
 
 - [Examples](./examples) (React, Node.js, curl)
 - [LLM docs](./platform/llm-docs) (assistants and tool index)
 
-Endpoints: [Hosted verify](https://neus.network/verify) · [Hub](https://neus.network/hub) · `https://api.neus.network` · `https://mcp.neus.network/mcp` · [full URL matrix](./platform/overview#urls)
+Endpoints: [Hosted verify](https://neus.network/verify) · [Account and apps](https://neus.network/hub) · `https://api.neus.network` · `https://mcp.neus.network/mcp` · [full URL matrix](./platform/overview#urls)

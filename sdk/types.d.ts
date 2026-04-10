@@ -51,6 +51,9 @@ declare module '@neus/sdk' {
     
     /** List available verifiers */
     getVerifiers(): Promise<string[]>;
+
+    /** Get the public verifier catalog, including per-verifier capabilities. */
+    getVerifierCatalog(): Promise<VerifierCatalog>;
     
   /**
    * Poll verification status until completion
@@ -146,7 +149,7 @@ declare module '@neus/sdk' {
     extraHeaders?: Record<string, string>;
     /** Request timeout in milliseconds */
     timeout?: number;
-    /** Optional chain override used by some app integrations */
+    /** Advanced. NEUS protocol primary-chain id override; most integrators omit. */
     hubChainId?: number;
     /** Enable SDK logging */
     enableLogging?: boolean;
@@ -171,6 +174,24 @@ declare module '@neus/sdk' {
     /** Verifier-specific options */
     verifierOptions?: Record<string, any>;
   }
+
+  export interface VerifierCatalogMetadataEntry {
+    category?: string;
+    description?: string;
+    flowType?: 'instant' | 'interactive' | 'external_lookup' | string;
+    expiryType?: 'permanent' | 'point_in_time' | 'expiring' | string;
+    supportsDirectApi?: boolean;
+    supportsHostedVerify?: boolean;
+    dataSchema?: Record<string, any>;
+    requiredFields?: string[];
+    optionalFields?: string[];
+  }
+
+  export interface VerifierCatalog {
+    data: string[];
+    metadata: Record<string, VerifierCatalogMetadataEntry>;
+    meta?: Record<string, any>;
+  }
   
   /**
    * Parameters for manual verification
@@ -193,7 +214,7 @@ declare module '@neus/sdk' {
     signature?: string;
     /** Advanced/manual path: signed timestamp */
     signedTimestamp?: number;
-    /** Advanced/optional. EVM signing-context hint; auto-resolved to protocol hub chain when omitted. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data instead. */
+    /** Advanced/optional. EVM signing-context hint; when omitted, resolved to the NEUS protocol primary chain for signing. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data instead. */
     chainId?: number;
     /** CAIP-2 chain reference for universal mode (e.g. eip155:1, solana:mainnet) */
     chain?: string;
@@ -288,6 +309,7 @@ declare module '@neus/sdk' {
         }>;
         createdVouchers?: string[];
       };
+      /** Advanced. Primary-chain transaction metadata from the NEUS protocol. */
       hubTransaction?: {
         txHash: string;
         timestamp: number;
@@ -439,7 +461,7 @@ declare module '@neus/sdk' {
 
   /**
    * Resolve DID from wallet identity via profile resolver endpoint.
-   * EVM wallets auto-resolve to the protocol hub chain; chainId is optional.
+   * EVM wallets resolve to the NEUS protocol primary chain by default; chainId is optional.
    * Use `chain` (CAIP-2) for non-EVM wallets (e.g. `solana:mainnet`).
    */
   export function resolveDID(

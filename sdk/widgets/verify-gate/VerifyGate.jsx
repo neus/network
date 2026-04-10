@@ -1,12 +1,13 @@
 "use client";
 /**
- * VerifyGate — gate UI behind NEUS verification (hosted or wallet flows).
+ * VerifyGate: gate UI behind NEUS verification (hosted or wallet flows).
  * Verifier IDs and behavior: see docs.neus.network.
  * @license Apache-2.0
  */
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import { NeusClient } from '@neus/sdk/client';
 import NEUS_LOGO_DATA_URL from '../../neus-logo.svg';
+import { mergeVerifyGateCreateProofOptions } from './mergeCreateProofOptions.js';
 
 // CSS variable-based theming for consistency with host applications
 const THEME = {
@@ -72,7 +73,7 @@ const INTERACTIVE_VERIFIERS = new Set([
   'proof-of-human'
 ]);
 
-// Verifiers that need hosted checkout when integrator-provided verifierData is incomplete.
+// Verifiers that need hosted checkout when app-provided verifierData is incomplete.
 const HOSTED_WHEN_INCOMPLETE = new Set(['wallet-link']);
 
 const DEFAULT_HOSTED_CHECKOUT_URL = 'https://neus.network/verify';
@@ -160,7 +161,7 @@ export function VerifyGate({
   checkExisting = true, // Check for existing proofs before verification
   maxProofAgeMs = undefined, // Optional max age override (ms) for proof reuse
   allowPrivateReuse = true, // Allow owner-signed lookups for private proofs (interactive)
-  // Campaign / integrator chrome (passed through to hosted checkout URL)
+  // Optional campaign copy (passed through to hosted checkout URL)
   campaignTitle = undefined,
   campaignMessage = undefined,
   // Callbacks
@@ -629,13 +630,10 @@ export function VerifyGate({
         setIsProcessing(true);
         setState('signing');
 
-        const resolvedProofOptions = {
-            privacyLevel: 'private',
-            publicDisplay: false,
-            storeOriginalContent: true,
-          ...(proofOptions && typeof proofOptions === 'object' ? proofOptions : {}),
-            ...(verifierOptions && { verifierOptions })
-        };
+        const resolvedProofOptions = mergeVerifyGateCreateProofOptions(
+          proofOptions,
+          verifierOptions
+        );
         
         const buildDataForVerifier = (verifierId) => {
           if (!CREATABLE_VERIFIERS.has(verifierId)) {
@@ -985,7 +983,7 @@ export function VerifyGate({
         </svg>
       )}
       <span>{getLabel()}</span>
-      {error && <span style={{ opacity: 0.8, marginLeft: '8px' }}> — {error}</span>}
+      {error && <span style={{ opacity: 0.8, marginLeft: '8px' }}>: {error}</span>}
     </button>
   );
 }

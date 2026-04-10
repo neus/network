@@ -1,5 +1,5 @@
 ---
-description: Monorepo agent session loop — read parent AGENTS.md when changing SDK or public spec.
+description: Public SDK and spec — align changes with live API and network/spec.
 alwaysApply: true
 ---
 
@@ -7,8 +7,7 @@ alwaysApply: true
 
 Before changing **SDK surface**, **public spec**, or **verifier schemas**:
 
-1. Read **`../AGENTS.md`** (monorepo manifest) if the change affects contracts or aligns with backend.
-2. Keep names aligned with **backend SSOT** and **`spec/`**—no invented fields or verifier IDs.
-3. Run **`npm test`** / lint as in **`package.json`** before claiming done.
+1. Align with **`GET /api/v1/verification/verifiers`**, **`docs/openapi/public-api.json`**, and **`spec/`**—no invented fields or verifier IDs.
+2. Run **`npm test`** / lint as in **`package.json`** before claiming done.
 
 Repo index: **`AGENTS.md`** in this folder.

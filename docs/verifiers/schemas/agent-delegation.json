@@ -1,31 +1,11 @@
 {
   "$id": "https://neus.network/schemas/agent-delegation.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "anyOf": [
-    {
-      "required": [
-        "controllerAccountId",
-        "agentAccountId"
-      ]
-    },
-    {
-      "required": [
-        "controllerWallet",
-        "controllerChainRef",
-        "agentWallet",
-        "agentChainRef"
-      ]
-    }
-  ],
-  "description": "Delegates scoped authority from a delegating account to an agent, ERC-8004 compatible",
+  "additionalProperties": false,
+  "description": "Delegation from a controller account to an agent; the controller signs. Use CAIP-2 chain references per wallet, or set chain or chainId on the verification request when both parties share the same network context. Proof output may include CAIP-10 account identifiers.",
   "properties": {
-    "agentAccountId": {
-      "description": "Preferred CAIP-10 account ID for the agent.",
-      "format": "caip10-account",
-      "type": "string"
-    },
     "agentChainRef": {
-      "description": "Required when using agentWallet without agentAccountId.",
+      "description": "CAIP-2 network reference for agentWallet. Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).",
       "format": "caip2-chain",
       "type": "string"
     },
@@ -46,13 +26,8 @@
       "maxItems": 8,
       "type": "array"
     },
-    "controllerAccountId": {
-      "description": "Preferred CAIP-10 account ID for the controller.",
-      "format": "caip10-account",
-      "type": "string"
-    },
     "controllerChainRef": {
-      "description": "Required when using controllerWallet without controllerAccountId.",
+      "description": "CAIP-2 network reference for controllerWallet. Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).",
       "format": "caip2-chain",
       "type": "string"
     },
@@ -98,6 +73,7 @@
       "items": {
         "properties": {
           "configId": {
+            "description": "Optional opaque integration or provider configuration reference. Not a secret, not an OAuth token, not credential material.",
             "maxLength": 128,
             "type": "string"
           },
@@ -140,6 +116,12 @@
       "type": "array"
     }
   },
+  "required": [
+    "controllerWallet",
+    "controllerChainRef",
+    "agentWallet",
+    "agentChainRef"
+  ],
   "title": "agent-delegation",
   "type": "object"
 }

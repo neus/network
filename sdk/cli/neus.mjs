@@ -31,7 +31,7 @@ function printInit() {
     "## URLs",
     "MCP endpoint:     https://mcp.neus.network/mcp",
     "Hosted verify:    https://neus.network/verify",
-    "Hub:              https://neus.network/hub",
+    "Account and apps: https://neus.network/hub",
     "",
     "## Docs (hosted-first)",
     "MCP setup:        https://docs.neus.network/mcp/setup",

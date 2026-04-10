@@ -6,18 +6,16 @@ icon: network-wired
 
 Use these patterns to choose how your app creates or reuses proofs. In most products, `reuse-or-create` is the default.
 
-## Privacy and Visibility
+## Privacy and visibility
 
-The SDK defaults to **private stored** receipts: `privacyLevel: 'private'`, `publicDisplay: false`, `storeOriginalContent: true`. Owner-authenticated reads return full proof data; public/direct reads return only the safe minimal payload unless the caller is authorized.
+**Raw `client.verify()`** defaults to **private stored** receipts. **`VerifyGate`** create mode defaults to **unlisted public** so gates work without extra options. Full matrix: **[Security and trust](../platform/security-and-trust)**.
 
-For **reusable app gates** and server-side `gateCheck` without a signed-in owner, create an **unlisted public** receipt: `privacyLevel: 'public'` with `publicDisplay: false`. Original content still defaults to stored. **Warning:** unlisted is not discoverable in feeds, but it remains **public to anyone with the proof id**—do not use it for secrets.
-
-| Option | When to Use |
+| Option | When to use |
 |--------|-------------|
-| `privacyLevel: 'private'` | Default. Owner or authorized-session access; content vaulted to the wallet. |
-| `privacyLevel: 'public'` | Needed for reusable checks without owner session. Pair with `publicDisplay`. |
-| `publicDisplay: false` | Unlisted: eligible in checks and direct lookups, not surfaced in discovery. |
-| `publicDisplay: true` | Listed on a public profile (requires `privacyLevel: 'public'`). |
+| `privacyLevel: 'private'` | Raw SDK default. Owner or authorized-session access. |
+| `privacyLevel: 'public'` | Policy checks without owner session; pair with `publicDisplay`. |
+| `publicDisplay: false` | Unlisted: eligible in checks; still public to anyone with the proof id. |
+| `publicDisplay: true` | Listed / discoverable (requires `privacyLevel: 'public'`). |
 
 ### Hide original content
 
@@ -32,18 +30,14 @@ options: {
 }
 ```
 
-## Reuse-First Flow
+## Reuse-first flow
 
-Use this as the default UX. It minimizes user prompts while still issuing new proofs when needed.
+Use this as the default UX. It minimizes user prompts while still issuing new proofs when needed. **`VerifyGate`** already defaults create mode to unlisted public; add **`proofOptions`** only when you need listed public or private.
 
 ```jsx
 <VerifyGate
   requiredVerifiers={['ownership-basic']}
   strategy="reuse-or-create"
-  proofOptions={{
-    privacyLevel: 'public',
-    publicDisplay: false,
-  }}
 >
   <Protected />
 </VerifyGate>

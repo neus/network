@@ -18,6 +18,7 @@ const proof = await client.verify({
   data: {
     agentId: 'my-assistant',
     agentWallet: '0x...',
+    agentChainRef: 'eip155:8453',
     agentType: 'ai',
     description: 'My AI assistant',
   },
@@ -25,23 +26,9 @@ const proof = await client.verify({
 });
 ```
 
-### Using CAIP-10 Account ID
+You can supply chain context either in `data` as **`agentChainRef`** (CAIP-2) or on the verification request as **`chain`** (CAIP-2) or **`chainId`** (EVM). Those options satisfy the same requirement.
 
-For cross-chain compatibility, use `agentAccountId`:
-
-```javascript
-const proof = await client.verify({
-  verifier: 'agent-identity',
-  data: {
-    agentId: 'my-assistant',
-    agentAccountId: 'eip155:8453:0x...',
-    agentLabel: 'My Assistant',
-    agentType: 'ai',
-    description: 'My AI assistant',
-  },
-  walletAddress: agentWallet,
-});
-```
+Canonical field list: [agent-identity verifier doc](../verifiers/agent-identity.md).
 
 ## Full Example
 
@@ -51,6 +38,7 @@ await client.verify({
   data: {
     agentId: 'my-agent',
     agentWallet: '0x...',           // universal-address: EVM or Solana
+    agentChainRef: 'eip155:8453',
     agentType: 'ai',
     description: 'My AI assistant',
     capabilities: ['web-search'],
@@ -69,9 +57,8 @@ await client.verify({
 | Field | Required | Max Length | Description |
 |-------|----------|------------|-------------|
 | `agentId` | Yes | 1–128 chars | Unique identifier for the agent |
-| `agentWallet` | One of wallet or accountId | — | Agent wallet address (EVM or Solana) |
-| `agentAccountId` | One of wallet or accountId | — | CAIP-10 account ID (e.g., `eip155:8453:0x...`) |
-| `agentChainRef` | No | — | CAIP-2 chain reference when using `agentWallet` |
+| `agentWallet` | Yes | — | Agent wallet address (EVM or Solana) |
+| `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request | — | CAIP-2 chain reference for `agentWallet` |
 | `agentLabel` | No | 128 chars | Human-readable display name |
 | `agentType` | No | enum | `ai`, `bot`, `service`, `automation`, or `agent` |
 | `description` | No | 500 chars | Agent description |

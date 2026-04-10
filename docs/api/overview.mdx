@@ -26,7 +26,7 @@ icon: terminal
 **Proofs by wallet**
 
 ```bash
-curl "https://api.neus.network/api/v1/proofs/by-wallet/0x…?limit=50"
+curl "https://api.neus.network/api/v1/proofs/by-wallet/0x...?limit=50"
 ```
 
 Public and unlisted proofs are visible anonymously; **private** proofs need the user signed in.
@@ -34,7 +34,7 @@ Public and unlisted proofs are visible anonymously; **private** proofs need the 
 **Gate check**
 
 ```bash
-curl "https://api.neus.network/api/v1/proofs/check?address=0x…&verifierIds=ownership-basic"
+curl "https://api.neus.network/api/v1/proofs/check?address=0x...&verifierIds=ownership-basic"
 ```
 
 **Create proof:** standardize → sign → POST `/verification`. Bodies: OpenAPI / SDK.
@@ -54,7 +54,7 @@ curl https://api.neus.network/api/v1/verification/verifiers
 
 <CardGroup cols={2}>
   <Card title="Get started" icon="book" href="../get-started">
-    Platform + billing.
+    Onboarding and billing.
   </Card>
   <Card title="Authentication" icon="key" href="./authentication">
     Sessions and signing.

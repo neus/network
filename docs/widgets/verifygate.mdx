@@ -1,14 +1,26 @@
 ---
 title: VerifyGate Component
-description: Gate React UI behind verification requirements with hosted verify built in.
+description: Gate React UI behind verification with hosted verify built in.
 icon: object-group
 ---
 
-`VerifyGate` is the fastest React path for checking eligibility, launching hosted verify, and unlocking content.
+`VerifyGate` checks eligibility, launches hosted verify for interactive verifiers, and unlocks content. It is the **reuse-first** React surface: create mode defaults to **unlisted public** proofs so **`gateCheck`** and reuse work without passing **`proofOptions`**. Raw **`client.verify()`** stays **private-by-default**. See **[Security and trust](../platform/security-and-trust)**.
 
-**Platform + `appId` / `sponsorGrant`:** **[Get started](../get-started)** first.
+**`appId`** and **`sponsorGrant`:** **[Get started](../get-started)**.
 
-## Basic Usage
+## Default create behavior
+
+When **`proofOptions`** is omitted, create mode merges:
+
+| Field | Default |
+|-------|---------|
+| `privacyLevel` | `public` |
+| `publicDisplay` | `false` |
+| `storeOriginalContent` | `true` |
+
+Pass **`proofOptions`** to force **listed public** (`public` + `publicDisplay: true`) or **private** storage.
+
+## Basic usage
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -24,11 +36,7 @@ export function Page() {
           chainId: 8453
         }
       }}
-      proofOptions={{
-        privacyLevel: 'public',
-        publicDisplay: false,
-      }}
-      appId="neus-network"
+      appId="your-app-id"
     >
       <div>Unlocked</div>
     </VerifyGate>
@@ -36,14 +44,14 @@ export function Page() {
 }
 ```
 
-## Key Props
+## Key props
 
 | Prop | What it does |
 |------|--------------|
 | `requiredVerifiers` | Sets the verification policy |
 | `verifierData` | Supplies verifier-specific inputs |
 | `strategy` | Chooses reuse, reuse-or-create, or fresh |
-| `proofOptions` | Controls privacy and content storage |
+| `proofOptions` | Overrides privacy and content storage (defaults are unlisted public) |
 | `mode` | Chooses create vs access behavior |
 | `proofId` | Pass a proof receipt ID directly for access mode |
 | `appId` | Sends public app attribution |
@@ -51,7 +59,7 @@ export function Page() {
 | `hostedCheckoutUrl` | Overrides the hosted verify URL when needed |
 | `oauthProvider` | Pre-selects the OAuth provider when the user already chose one in your app |
 
-## Best Use Cases
+## Best use cases
 
 - gating paid or premium content
 - checking NFT or token access
@@ -60,7 +68,7 @@ export function Page() {
 
 ## Hosted OAuth
 
-Set `oauthProvider` when the user already picked a provider in your app. Hosted verification opens that sign-in instead of asking again.
+Interactive verifiers (**`ownership-social`**, **`ownership-org-oauth`**, **`proof-of-human`**) use **[Hosted Verify](../cookbook/auth-hosted-verify)**. Set `oauthProvider` when the user already picked a provider in your app.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -70,7 +78,7 @@ export function ConnectGithub() {
     <VerifyGate
       requiredVerifiers={['ownership-social']}
       oauthProvider="github"
-      appId="neus-network"
+      appId="your-app-id"
     />
   );
 }
@@ -82,3 +90,19 @@ Allowed values:
 - **Org:** `google`, `microsoft`
 
 **Popup:** still **`neus_checkout_done`**. `oauthProvider` only picks which sign-in opens first; proof payload and your handling stay the same.
+
+## Direct-sign vs hosted
+
+- **`ownership-basic`** and other wallet-creatable verifiers can run in-widget with a connected wallet.
+- Social, org, and human flows route through hosted verify. Start from **[Hosted Verify](../cookbook/auth-hosted-verify)** when you are unsure.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Integration" icon="compass" href="../integration">
+    Check, verify, save, reuse.
+  </Card>
+  <Card title="SDK verifications" icon="rotate" href="../sdks/verifications">
+    Patterns.
+  </Card>
+</CardGroup>

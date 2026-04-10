@@ -15,7 +15,7 @@ Content ownership verification with origin lock and optional provenance
 ## Optional fields
 
 - `content` (`string max 50000`): Content being claimed (max 50KB inline)
-- `contentHash` (`string pattern ^0x[a-fA-F0-9]{64}$`): Pre-computed 32-byte content hash. If `content` is also provided, NEUS verifies both values match.
+- `contentHash` (`string pattern ^0x[a-fA-F0-9]{64}$`): Pre-computed verifier content hash (32-byte hex). Treated as the standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match.
 - `contentType` (`string max 100`): MIME type hint
 - `reference` (`object`)
 - `provenance` (`object`)
@@ -66,5 +66,5 @@ await client.verify({
 ## Next steps
 
 - Use this verifier in `requiredVerifiers` for `VerifyGate` or in `verifierIds` for API gate checks.
-- For interactive verifiers, use hosted checkout (`hostedCheckoutUrl`).
+- For verifiers with `supportsDirectApi: false` in the public catalog, use hosted checkout (`hostedCheckoutUrl`) for the linked-check step.
 - Return to the [Verifier Catalog](./README.md).

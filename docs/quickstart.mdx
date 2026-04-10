@@ -1,10 +1,12 @@
 ---
 title: Quickstart (SDK)
-description: Install the SDK, create a proof, and reuse the receipt ID.
+description: First direct proof with ownership-basic via the SDK.
 icon: rocket
 ---
 
-Run a proof locally with the steps below. For hosted login and verify, use [Hosted Verify](./cookbook/auth-hosted-verify) or [MCP](./mcp/overview). Before production traffic, complete [Get started](./get-started) for `appId`, credits, and who pays.
+This page is for your **first direct-sign proof** with **`ownership-basic`**. Flows that need social, human, or org interaction start in **[Hosted Verify](./cookbook/auth-hosted-verify)**; reusable gate flows follow **[Integration](./integration)**.
+
+Before production traffic, complete **[Get started](./get-started)** for `appId`, credits, and who pays.
 
 ## 1. Install the SDK
 
@@ -14,7 +16,7 @@ npm install @neus/sdk
 
 ## 2. Create a proof
 
-Defaults are **private**, **unlisted**, and **original content stored** (owner-authenticated reads). Omit `options` unless you need a different mode.
+**Raw `client.verify()`** defaults to **private**, **unlisted**, and **stored content** (owner-authenticated reads). Omit `options` unless you need a different mode. **`VerifyGate`** uses different create defaults; see **[Widgets](./widgets/overview)** and **[Security and trust](./platform/security-and-trust)**.
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -32,9 +34,11 @@ const proof = await client.verify({
 const proofId = proof.proofId;
 ```
 
-**Attestation vs gate:** this snippet is for **proving content**. See more patterns here **[SDK verification patterns](./sdks/verifications)**.
+**Attestation vs gate:** this snippet is for **proving content**. See **[SDK verification patterns](./sdks/verifications)** for more shapes.
 
 No injected wallet? Use **[Hosted Verify](./cookbook/auth-hosted-verify)** instead of `window.ethereum`.
+
+Social, org, or human verification? Start in **[Hosted Verify](./cookbook/auth-hosted-verify)**, not here.
 
 ## 3. Wait for completion
 
@@ -47,7 +51,7 @@ const status = await client.pollProofStatus(proofId, {
 
 ## 4. Gate content in React
 
-For **gates**, set **`proofOptions`** so eligibility checks line up (same pattern as **[Widgets](./widgets/overview)**).
+For gates, **`VerifyGate`** defaults to **unlisted public** create mode so checks align without extra options. Override **`proofOptions`** when you need listed public or private behavior. See **[VerifyGate](./widgets/verifygate)** and **[Integration](./integration)**.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -55,16 +59,10 @@ import { VerifyGate } from '@neus/sdk/widgets';
 <VerifyGate
   appId="your-app-id"
   requiredVerifiers={['ownership-basic']}
-  proofOptions={{
-    privacyLevel: 'public',
-    publicDisplay: false,
-  }}
 >
   <ProtectedContent />
 </VerifyGate>
 ```
-
-More props: **[VerifyGate](./widgets/verifygate)**.
 
 ## 5. Check eligibility from your server
 
@@ -83,6 +81,6 @@ if (result.data?.eligible) {
 
 |  |  |
 |--|--|
-| Production (hub, `appId`, billing) | [Get started](./get-started) |
+| Production (`appId`, billing) | [Get started](./get-started) |
 | Other ways to integrate | [Paths](./choose-an-integration-path) |
 | Ship loop | [Integration](./integration) |

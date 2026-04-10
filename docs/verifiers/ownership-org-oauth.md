@@ -11,12 +11,13 @@ Organizational OAuth verification
 ## Required fields
 
 - `provider` (`string enum: google, microsoft`)
-- `internalSocialToken` (`string`) — OAuth session token from the hosted NEUS flow after you complete OAuth (this JSON property name is fixed for API compatibility).
+- `internalSocialToken` (`string`)
 
 ## Optional fields
 
 - `walletAddress` (`string format universal-address`)
 - `expectedOrgDomain` (`string format hostname`)
+
 - **Compatible with:** `agent-delegation`
 
 ## Example (schema-validated)
@@ -26,7 +27,7 @@ await client.verify({
   verifier: 'ownership-org-oauth',
   data: {
     "provider": "google",
-    "internalSocialToken": "oauth-session-token-example",
+    "internalSocialToken": "org-token-example",
     "walletAddress": "0x4444444444444444444444444444444444444444",
     "expectedOrgDomain": "example.com"
   }
@@ -39,7 +40,7 @@ await client.verify({
   ],
   "data": {
     "provider": "google",
-    "internalSocialToken": "oauth-session-token-example",
+    "internalSocialToken": "org-token-example",
     "walletAddress": "0x4444444444444444444444444444444444444444",
     "expectedOrgDomain": "example.com"
   },
@@ -53,6 +54,5 @@ await client.verify({
 ## Next steps
 
 - Use this verifier in `requiredVerifiers` for `VerifyGate` or in `verifierIds` for API gate checks.
-- For interactive verifiers, use hosted checkout (`hostedCheckoutUrl`).
+- For verifiers with `supportsDirectApi: false` in the public catalog, use hosted checkout (`hostedCheckoutUrl`) for the linked-check step.
 - Return to the [Verifier Catalog](./README.md).
-

@@ -4,7 +4,7 @@ description: React components for gating and proof display.
 icon: puzzle-piece
 ---
 
-**`appId`** / **`sponsorGrant`** same as SDK. **[Get started](../get-started)**
+**`VerifyGate`** is the reuse-first builder surface for React. **`appId`** and **`sponsorGrant`** match the SDK. Complete **[Get started](../get-started)** before production.
 
 ## Install
 
@@ -18,6 +18,8 @@ npm install @neus/sdk react react-dom
 | `ProofBadge` | Receipt display |
 
 ## VerifyGate
+
+Create mode defaults to **unlisted public** (`privacyLevel: 'public'`, `publicDisplay: false`, `storeOriginalContent: true`). Override **`proofOptions`** for listed public or private. Matrix: **[Security and trust](../platform/security-and-trust)**.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -34,7 +36,6 @@ export default function ProtectedPage() {
           chainId: 1,
         },
       }}
-      proofOptions={{ privacyLevel: 'public', publicDisplay: false }}
     >
       <ProtectedContent />
     </VerifyGate>
@@ -56,7 +57,7 @@ import { ProofBadge } from '@neus/sdk/widgets';
   <Card title="VerifyGate" icon="object-group" href="./verifygate">
     Props + examples.
   </Card>
-  <Card title="Quickstart (SDK)" icon="rocket" href="../quickstart">
-    First proof.
+  <Card title="Integration" icon="compass" href="../integration">
+    Check, verify, save, reuse.
   </Card>
 </CardGroup>

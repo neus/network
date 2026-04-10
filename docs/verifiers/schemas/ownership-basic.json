@@ -9,7 +9,7 @@
       "type": "string"
     },
     "contentHash": {
-      "description": "Pre-computed content hash (32-byte hex) for ownership-basic. If content is also provided, the verifier checks that both values match.",
+      "description": "Pre-computed verifier content hash (32-byte hex). Treated as the standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match.",
       "pattern": "^0x[a-fA-F0-9]{64}$",
       "type": "string"
     },

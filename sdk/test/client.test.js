@@ -162,6 +162,52 @@ describe('NeusClient', () => {
       expect(Array.isArray(verifiers)).toBe(true);
       expect(verifiers).toEqual([]);
     });
+
+    it('should return catalog metadata when requested', async () => {
+      const mockResponse = {
+        success: true,
+        data: ['ownership-social'],
+        metadata: {
+          'ownership-social': {
+            flowType: 'interactive',
+            supportsDirectApi: false
+          }
+        },
+        meta: { hubChainId: 8453 }
+      };
+
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(mockResponse)
+      });
+
+      const catalog = await client.getVerifierCatalog();
+      expect(catalog.data).toEqual(['ownership-social']);
+      expect(catalog.metadata['ownership-social']?.supportsDirectApi).toBe(false);
+      expect(catalog.meta?.hubChainId).toBe(8453);
+    });
+  });
+
+  describe('verify() catalog capabilities', () => {
+    it('rejects hosted-only verifiers based on public catalog capability', async () => {
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({
+          success: true,
+          data: ['ownership-social'],
+          metadata: {
+            'ownership-social': {
+              supportsDirectApi: false
+            }
+          }
+        })
+      });
+
+      await expect(client.verify({
+        verifier: 'ownership-social',
+        data: { provider: 'github' }
+      })).rejects.toThrow('requires hosted interactive checkout');
+    });
   });
 
   describe('isHealthy()', () => {

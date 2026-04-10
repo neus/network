@@ -13,28 +13,23 @@ import {
   NEUS_CONSTANTS
 } from './utils.js';
 
-const FALLBACK_PUBLIC_VERIFIERS = [
-  'ownership-basic',
-  'ownership-pseudonym',
-  'ownership-dns-txt',
-  'ownership-social',
-  'ownership-org-oauth',
-  'contract-ownership',
-  'nft-ownership',
-  'token-holding',
-  'wallet-link',
-  'wallet-risk',
-  'proof-of-human',
-  'agent-identity',
-  'agent-delegation',
-  'ai-content-moderation'
-];
-
-const INTERACTIVE_VERIFIERS = new Set([
-  'ownership-social',
-  'ownership-org-oauth',
-  'proof-of-human'
-]);
+/** Fallback when the live public verifier catalog is unavailable. Align with `network/spec/VERIFIERS.json` after `npm run verifier:generate` in protocol. */
+const FALLBACK_PUBLIC_VERIFIER_CATALOG = {
+  'ownership-basic': { supportsDirectApi: true },
+  'ownership-pseudonym': { supportsDirectApi: true },
+  'ownership-dns-txt': { supportsDirectApi: true },
+  'ownership-social': { supportsDirectApi: false },
+  'ownership-org-oauth': { supportsDirectApi: false },
+  'contract-ownership': { supportsDirectApi: true },
+  'nft-ownership': { supportsDirectApi: true },
+  'token-holding': { supportsDirectApi: true },
+  'wallet-link': { supportsDirectApi: true },
+  'wallet-risk': { supportsDirectApi: true },
+  'proof-of-human': { supportsDirectApi: false },
+  'agent-identity': { supportsDirectApi: true },
+  'agent-delegation': { supportsDirectApi: true },
+  'ai-content-moderation': { supportsDirectApi: true }
+};
 
 const EVM_ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
 
@@ -527,7 +522,7 @@ export class NeusClient {
    * @param {string} [params.walletAddress] - Wallet address that signed the request (manual path)
    * @param {string} [params.signature] - EIP-191 signature (manual path)
    * @param {number} [params.signedTimestamp] - Unix timestamp when signature was created (manual path)
-   * @param {number} [params.chainId] - EVM signing-context hint; auto-resolved to protocol hub chain when omitted
+   * @param {number} [params.chainId] - EVM signing-context hint; when omitted, resolved to the NEUS protocol primary chain for signing
    * @returns {Promise<Object>} Verification result with proofId
    *
    * @example
@@ -559,20 +554,21 @@ export class NeusClient {
         throw new ValidationError('content is required and must be a string (or use data param with owner + reference)');
       }
 
-      let validVerifiers = FALLBACK_PUBLIC_VERIFIERS;
+      let verifierCatalog = FALLBACK_PUBLIC_VERIFIER_CATALOG;
       try {
-        const discovered = await this.getVerifiers();
-        if (Array.isArray(discovered) && discovered.length > 0) {
-          validVerifiers = discovered;
+        const discovered = await this.getVerifierCatalog();
+        if (discovered && discovered.metadata && Object.keys(discovered.metadata).length > 0) {
+          verifierCatalog = discovered.metadata;
         }
       } catch {
         // Fallback keeps SDK usable if verifier catalog endpoint is temporarily unavailable.
       }
+      const validVerifiers = Object.keys(verifierCatalog);
       if (!validVerifiers.includes(verifier)) {
         throw new ValidationError(`Invalid verifier '${verifier}'. Must be one of: ${validVerifiers.join(', ')}.`);
       }
 
-      if (INTERACTIVE_VERIFIERS.has(verifier)) {
+      if (verifierCatalog?.[verifier]?.supportsDirectApi === false) {
         const hostedCheckoutUrl = options?.hostedCheckoutUrl || 'https://neus.network/verify';
         throw new ValidationError(
           `${verifier} requires hosted interactive checkout. Use VerifyGate or redirect to ${hostedCheckoutUrl}.`
@@ -1138,11 +1134,30 @@ export class NeusClient {
    * @returns {Promise<string[]>} Array of verifier IDs
    */
   async getVerifiers() {
+    const catalog = await this.getVerifierCatalog();
+    return Array.isArray(catalog?.data) ? catalog.data : [];
+  }
+
+  /**
+   * Get the public verifier catalog with per-verifier capabilities.
+   * @returns {Promise<{data: string[], metadata: Record<string, { supportsDirectApi?: boolean }>, meta?: object}>}
+   */
+  async getVerifierCatalog() {
     const response = await this._makeRequest('GET', '/api/v1/verification/verifiers');
     if (!response.success) {
       throw new ApiError(`Failed to get verifiers: ${response.error?.message || 'Unknown error'}`, response.error);
     }
-    return Array.isArray(response.data) ? response.data : [];
+    return {
+      data: Array.isArray(response.data) ? response.data : [],
+      metadata:
+        response.metadata && typeof response.metadata === 'object' && !Array.isArray(response.metadata)
+          ? response.metadata
+          : {},
+      meta:
+        response.meta && typeof response.meta === 'object' && !Array.isArray(response.meta)
+          ? response.meta
+          : {}
+    };
   }
 
   /**

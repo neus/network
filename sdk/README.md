@@ -18,7 +18,7 @@ npm install @neus/sdk
 
 ## CLI (`neus init`)
 
-Prints the hosted **MCP** JSON block (streamable HTTP), verification and hub URLs, and deep links to MCP setup, agents, and [LLM docs](https://docs.neus.network/platform/llm-docs). **Does not** write files, create accounts, or generate keys.
+Prints the hosted **MCP** JSON block (streamable HTTP), verification and account URLs, and deep links to MCP setup, agents, and [LLM docs](https://docs.neus.network/platform/llm-docs). **Does not** write files, create accounts, or generate keys.
 
 ```bash
 npx -y -p @neus/sdk neus init
@@ -63,16 +63,12 @@ const check = await client.gateCheck({
 
 ## Gate content in React
 
+`VerifyGate` create mode defaults to **unlisted public** (`privacyLevel: 'public'`, `publicDisplay: false`). Add `proofOptions` only for listed public or private.
+
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
-<VerifyGate
-  requiredVerifiers={['ownership-basic']}
-  proofOptions={{
-    privacyLevel: 'public',
-    publicDisplay: false,
-  }}
->
+<VerifyGate requiredVerifiers={['ownership-basic']}>
   <ProtectedContent />
 </VerifyGate>
 ```

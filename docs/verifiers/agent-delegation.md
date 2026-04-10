@@ -10,16 +10,13 @@ Delegates scoped authority from a delegating account to an agent, ERC-8004 compa
 
 ## Required fields
 
-- None
+- `controllerWallet` (`string format universal-address`)
+- `controllerChainRef` (`string format caip2-chain`): CAIP-2 network reference for controllerWallet. Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).
+- `agentWallet` (`string format universal-address`)
+- `agentChainRef` (`string format caip2-chain`): CAIP-2 network reference for agentWallet. Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).
 
 ## Optional fields
 
-- `controllerAccountId` (`string format caip10-account`): Preferred CAIP-10 account ID for the controller.
-- `controllerChainRef` (`string format caip2-chain`): Required when using `controllerWallet` (instead of `controllerAccountId`).
-- `controllerWallet` (`string format universal-address`)
-- `agentAccountId` (`string format caip10-account`): Preferred CAIP-10 account ID for the agent.
-- `agentChainRef` (`string format caip2-chain`): Required when using `agentWallet` (instead of `agentAccountId`).
-- `agentWallet` (`string format universal-address`)
 - `agentId` (`string max 128 min 1`)
 - `scope` (`string max 128`)
 - `permissions` (`array`)
@@ -39,9 +36,9 @@ await client.verify({
   verifier: 'agent-delegation',
   data: {
     "controllerWallet": "0xffffffffffffffffffffffffffffffffffffffff",
-    "controllerAccountId": "eip155:84532:0xffffffffffffffffffffffffffffffffffffffff",
+    "controllerChainRef": "eip155:84532",
     "agentWallet": "0x1111222233334444555566667777888899990000",
-    "agentAccountId": "eip155:84532:0x1111222233334444555566667777888899990000",
+    "agentChainRef": "eip155:84532",
     "agentId": "agent-bot-1",
     "scope": "trading",
     "permissions": [
@@ -60,9 +57,9 @@ await client.verify({
   ],
   "data": {
     "controllerWallet": "0xffffffffffffffffffffffffffffffffffffffff",
-    "controllerAccountId": "eip155:84532:0xffffffffffffffffffffffffffffffffffffffff",
+    "controllerChainRef": "eip155:84532",
     "agentWallet": "0x1111222233334444555566667777888899990000",
-    "agentAccountId": "eip155:84532:0x1111222233334444555566667777888899990000",
+    "agentChainRef": "eip155:84532",
     "agentId": "agent-bot-1",
     "scope": "trading",
     "permissions": [
@@ -82,5 +79,5 @@ await client.verify({
 ## Next steps
 
 - Use this verifier in `requiredVerifiers` for `VerifyGate` or in `verifierIds` for API gate checks.
-- For interactive verifiers, use hosted checkout (`hostedCheckoutUrl`).
+- For verifiers with `supportsDirectApi: false` in the public catalog, use hosted checkout (`hostedCheckoutUrl`) for the linked-check step.
 - Return to the [Verifier Catalog](./README.md).

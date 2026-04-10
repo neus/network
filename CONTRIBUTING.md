@@ -24,7 +24,7 @@ The **`neus`** binary (`neus init`) is **stdout-only** by design: hosted MCP sni
 
 ## Documentation standards
 
-Write for **integrators and builders**: clear procedures, neutral tone, task-oriented pages.
+Write for **builders**: clear procedures, neutral tone, task-oriented pages.
 
 - Prefer linking to **field lists** and schemas instead of duplicating them.
 - Fetch the current verifier catalog from **`GET /api/v1/verification/verifiers`**; static copies in the repo are for tooling and docs, not a substitute for the live response at runtime.

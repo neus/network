@@ -2,23 +2,12 @@
   "$id": "https://neus.network/schemas/agent-identity.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "agent-identity",
-  "description": "Register an agent identity. The agent wallet signs this proof itself. This verifier does not grant permissions; use agent-delegation for authority.",
+  "description": "Register an agent identity signed by the agent wallet. Uses CAIP-2 chain references; proof output may include CAIP-10 account identifiers. Provide chain context as agentChainRef in data and/or as chain (CAIP-2) or chainId (EVM) on the verification request. Does not grant permissions; use agent-delegation for authority.",
   "type": "object",
   "required": [
-    "agentId"
-  ],
-  "anyOf": [
-    {
-      "required": [
-        "agentAccountId"
-      ]
-    },
-    {
-      "required": [
-        "agentWallet",
-        "agentChainRef"
-      ]
-    }
+    "agentId",
+    "agentWallet",
+    "agentChainRef"
   ],
   "properties": {
     "agentId": {
@@ -26,15 +15,10 @@
       "minLength": 1,
       "maxLength": 128
     },
-    "agentAccountId": {
-      "type": "string",
-      "format": "caip10-account",
-      "description": "Preferred CAIP-10 account ID for the subject."
-    },
     "agentChainRef": {
       "type": "string",
       "format": "caip2-chain",
-      "description": "Required when using agentWallet without agentAccountId."
+      "description": "CAIP-2 network reference for agentWallet (for example eip155:8453). Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM)."
     },
     "agentWallet": {
       "type": "string",
@@ -140,7 +124,8 @@
           },
           "configId": {
             "type": "string",
-            "maxLength": 128
+            "maxLength": 128,
+            "description": "Optional opaque integration or provider configuration reference. Not a secret, not an OAuth token, not credential material."
           },
           "enabled": {
             "type": "boolean"
@@ -174,5 +159,6 @@
         }
       }
     }
-  }
+  },
+  "additionalProperties": false
 }
