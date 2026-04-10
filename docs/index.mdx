@@ -1,10 +1,10 @@
 ---
-title: Overview
+title: NEUS
 description: Portable proof receipts for login, trust, access, and agent workflows.
 icon: house
 ---
 
-**NEUS issues one portable proof receipt per completed verification.** Save the **proof receipt ID** as `proofId` and use it for checks, gates, widgets, and `/proof` links rather than treating raw signatures as the long-lived record. The same receipt ties **hub profile**, **access gates**, and **agent** flows together—fund credits and (when you sponsor users) sponsor grants from **[Get started](./get-started)** so billing matches your product.
+One portable proof receipt per verification. Save `proofId` for checks, gates, widgets, and `/proof` links. [Get started](./get-started) covers hub setup, credits, and billing.
 
 ## How it works
 
@@ -18,41 +18,44 @@ icon: house
 
 ## Start here
 
-Pick **one** row—then follow **[Integration](./integration)** (check → verify → save → reuse).
+<CardGroup cols={3}>
+  <Card title="Get started" icon="book" href="./get-started">
+    Hub, `appId`, credits, and who pays.
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="./quickstart">
+    First proof in code. Finish Get started before production traffic.
+  </Card>
+  <Card title="Integration" icon="compass" href="./integration">
+    Check, verify, save, reuse.
+  </Card>
+</CardGroup>
 
-| You are… | Start here |
-|----------|------------|
-| **Shipping a product** (attribution + credits) | **[Get started](./get-started)** — hub, **`appId`**, who pays |
-| **First proof in code** (local try) | **[Quickstart](./quickstart)** — return to Get started before production |
-| **No wallet / guided login in browser** | **[Hosted Verify](./cookbook/auth-hosted-verify)** |
-| **React gate or badge** | **[Widgets](./widgets/overview)** |
-| **Cursor / Claude / VS Code** | **[MCP](./mcp/overview)** |
-| **Unsure** | **[Choose a path](./choose-an-integration-path)** |
+[Choose a path](./choose-an-integration-path) · [Hosted Verify](./cookbook/auth-hosted-verify) · [Widgets](./widgets/overview) · [MCP](./mcp/overview)
 
-**Assistants:** **[LLM docs](./platform/llm-docs)**.
+## Explore
 
-## What you can build
+<CardGroup cols={2}>
+  <Card title="Platform" icon="globe" href="./platform/overview">
+    Hosted verify, hub, proof pages, API and MCP entry points.
+  </Card>
+  <Card title="Verification" icon="shield" href="./verification/overview">
+    Verifiers, lifecycle, and signing.
+  </Card>
+  <Card title="Agents" icon="robot" href="./agents/overview">
+    Agent identity, delegation, and presets.
+  </Card>
+  <Card title="MCP" icon="plug" href="./mcp/overview">
+    Assistants and IDE runtimes. Endpoint and auth on linked pages.
+  </Card>
+</CardGroup>
 
-| Use case | Verifier |
-|----------|----------|
-| Human-only signup or access | `proof-of-human` |
-| Token / NFT gated products | `nft-ownership` · `token-holding` |
-| Verified creator or org badges | `ownership-basic` · `ownership-org-oauth` |
-| Proof-backed content and posts | `ownership-basic` |
-| Agent identity and delegation | `agent-identity` · `agent-delegation` |
-| Domain-verified organizations | `ownership-dns-txt` |
+## Verifiers
 
-[Full verifier catalog →](./verification/verifiers)
+Choose a verifier ID and options in the [verifier catalog](./verification/verifiers). Capability reference pages document each verifier.
 
-## URLs
+## Resources
 
-| What | URL |
-|------|-----|
-| Hosted verification | `https://neus.network/verify` |
-| Platform | `https://neus.network/hub` |
-| API | `https://api.neus.network` |
-| MCP | `https://mcp.neus.network/mcp` |
+- [Examples](./examples) (React, Node.js, curl)
+- [LLM docs](./platform/llm-docs) (assistants and tool index)
 
-## Examples
-
-[React, Node.js, curl →](./examples) · [LLM / assistant index →](./platform/llm-docs)
+Endpoints: [Hosted verify](https://neus.network/verify) · [Hub](https://neus.network/hub) · `https://api.neus.network` · `https://mcp.neus.network/mcp` · [full URL matrix](./platform/overview#urls)

@@ -38,5 +38,5 @@ import { ProofBadge } from '@neus/sdk/widgets';
 ## Docs
 
 - [Widgets Overview](https://docs.neus.network/widgets/overview)
-- [VerifyGate Component](https://docs.neus.network/widgets/verifygate)
+- [Verify Component](https://docs.neus.network/widgets/verifygate)
 - [Quickstart](https://docs.neus.network/quickstart)

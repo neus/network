@@ -4,11 +4,9 @@ description: From first proof to shipped verification.
 icon: compass
 ---
 
-**Before you scale traffic:** align **[Get started](./get-started)** (who pays, **`appId`**, credits) with this loop—otherwise checks and billing may not match your intent.
+Align [Get started](./get-started) with this loop before you scale traffic. See [paths](./choose-an-integration-path), [billing](./platform/billing), and [LLM docs](./platform/llm-docs) when you need them.
 
-Call **`GET /api/v1/proofs/check`** (or your own store of `proofId`) before prompting verification. Persist the receipt ID you get back; reuse it for gates and policy—do not treat signatures as durable records.
-
-**Also:** **[Paths](./choose-an-integration-path)** · **[Billing](./platform/billing)** · **[LLM docs](./platform/llm-docs)** (assistants).
+Call `GET /api/v1/proofs/check` (or your own store of `proofId`) before prompting verification. Persist the receipt ID you get back. Reuse it for gates and policy. Do not treat signatures as durable records.
 
 ## Loop
 
