@@ -22,6 +22,10 @@ Do **not** include private keys, API tokens, bearer secrets, or sensitive conten
 
 The **`neus`** binary (`neus init`) is **stdout-only** by design: hosted MCP snippet and documentation URLs. Do not add file writes, account creation, or key generation without an explicit product decision and semver major.
 
+## `@neus/mcp-server` (npm)
+
+The published **`@neus/mcp-server`** package declares **Node >= 22.13** in its npm `engines` field. The **`neus`** SDK supports **Node >= 20**. Use Node 22 when working in a repo that depends on the MCP package directly. MCP setup: **[docs.neus.network/mcp](https://docs.neus.network/mcp/overview)**.
+
 ## Documentation standards
 
 Write for **builders**: clear procedures, neutral tone, task-oriented pages.

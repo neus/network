@@ -3,7 +3,7 @@
   "info": {
     "title": "NEUS Network — Public Integrator API",
     "version": "1.0.0",
-    "description": "Public HTTP API for NEUS.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).",
+    "description": "Public HTTP API for NEUS integrators.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).\n\nSome verifiers require pro access. Administrative endpoints are not included in this specification.",
     "license": {
       "name": "Business Source License 1.1",
       "url": "https://mariadb.com/bsl11/"
@@ -121,11 +121,11 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Advanced/optional. EVM signing-context hint; when omitted, resolved to the NEUS protocol primary chain for signing. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
+            "description": "Advanced/optional. EVM signing-context hint; auto-resolved to the protocol hub chain when omitted. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
           },
           "chain": {
             "type": "string",
-            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; primary-chain signing context is resolved automatically."
+            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; the protocol resolves hub context automatically."
           },
           "signatureMethod": {
             "type": "string"
@@ -228,18 +228,17 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Advanced/optional. EVM signing-context hint; when omitted, resolved to the NEUS protocol primary chain for signing. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
+            "description": "Advanced/optional. EVM signing-context hint; auto-resolved to the protocol hub chain when omitted. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
           },
           "chain": {
             "type": "string",
-            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; primary-chain signing context is resolved automatically."
+            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; the protocol resolves hub context automatically."
           },
           "signatureMethod": {
             "type": "string"
           },
           "options": {
             "type": "object",
-            "description": "Proof creation options. Defaults when omitted: privacyLevel private, publicDisplay false, storeOriginalContent true. For reusable gates without owner session, use privacyLevel public with publicDisplay false (public unlisted). Set storeOriginalContent false only to retain metadata/hash without original bytes.",
             "additionalProperties": true
           },
           "meta": {
@@ -282,7 +281,7 @@
               },
               "proofUrl": {
                 "type": "string",
-                "description": "Stable URL for the proof record (GET /api/v1/proofs/{qHash}). The path segment is the proof receipt id; SDK responses use proofId for the same value."
+                "description": "Canonical URL to fetch the proof record (GET /api/v1/proofs/{qHash})"
               }
             },
             "additionalProperties": true
@@ -335,13 +334,8 @@
           "status": {
             "type": "string"
           },
-          "proofId": {
-            "type": "string",
-            "description": "Proof receipt id. API payloads may expose this value as qHash."
-          },
           "qHash": {
-            "type": "string",
-            "description": "API compatibility alias for the proof receipt id (same bytes32 as proofId)."
+            "type": "string"
           },
           "cached": {
             "type": "boolean"
@@ -353,15 +347,30 @@
         "additionalProperties": true
       },
       "ProofRecordResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/VerificationStatusResponse"
+        "type": "object",
+        "description": "Proof record and verification state. The `data` object is shaped for the caller (public, owner-authenticated, or minimal private).",
+        "properties": {
+          "success": {
+            "type": "boolean"
           },
-          {
+          "data": {
             "type": "object",
-            "description": "Proof record and verification state. The `data` object is shaped for the caller (public, owner-authenticated, or minimal private)."
+            "additionalProperties": true
+          },
+          "status": {
+            "type": "string"
+          },
+          "qHash": {
+            "type": "string"
+          },
+          "cached": {
+            "type": "boolean"
+          },
+          "cachedAt": {
+            "type": "number"
           }
-        ]
+        },
+        "additionalProperties": true
       },
       "VerificationStatusBatchResponse": {
         "type": "object",
@@ -547,7 +556,7 @@
           "contentHash": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{64}$",
-            "description": "Pre-computed content hash (32-byte hex). If content is also provided, NEUS verifies that both values match."
+            "description": "Pre-computed verifier content hash (32-byte hex). Treated as the standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match."
           },
           "contentType": {
             "type": "string",
@@ -675,8 +684,7 @@
             ]
           },
           "internalSocialToken": {
-            "type": "string",
-            "description": "OAuth session token from the hosted NEUS verification flow."
+            "type": "string"
           },
           "walletAddress": {
             "type": "string",
@@ -744,8 +752,7 @@
             ]
           },
           "internalSocialToken": {
-            "type": "string",
-            "description": "OAuth session token from the hosted NEUS verification flow."
+            "type": "string"
           },
           "walletAddress": {
             "type": "string",
@@ -1075,22 +1082,11 @@
       },
       "VerifierData_agent_identity": {
         "type": "object",
-        "description": "Register an agent identity. The agent wallet signs this proof itself. This verifier does not grant permissions; use agent-delegation for authority.",
+        "description": "Register an agent identity signed by the agent wallet. Uses CAIP-2 chain references; proof output may include CAIP-10 account identifiers. Provide chain context as agentChainRef in data and/or as chain (CAIP-2) or chainId (EVM) on the verification request. Does not grant permissions; use agent-delegation for authority.",
         "required": [
-          "agentId"
-        ],
-        "anyOf": [
-          {
-            "required": [
-              "agentAccountId"
-            ]
-          },
-          {
-            "required": [
-              "agentWallet",
-              "agentChainRef"
-            ]
-          }
+          "agentId",
+          "agentWallet",
+          "agentChainRef"
         ],
         "properties": {
           "agentId": {
@@ -1098,14 +1094,9 @@
             "minLength": 1,
             "maxLength": 128
           },
-          "agentAccountId": {
-            "type": "string",
-            "format": "caip10-account",
-            "description": "Preferred CAIP-10 account ID for the subject."
-          },
           "agentChainRef": {
             "type": "string",
-            "description": "Required when using agentWallet with no agentAccountId.",
+            "description": "CAIP-2 network reference for agentWallet (for example eip155:8453). Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "agentWallet": {
@@ -1212,7 +1203,8 @@
                 },
                 "configId": {
                   "type": "string",
-                  "maxLength": 128
+                  "maxLength": 128,
+                  "description": "Optional opaque integration or provider configuration reference. Not a secret, not an OAuth token, not credential material."
                 },
                 "enabled": {
                   "type": "boolean"
@@ -1246,49 +1238,31 @@
               }
             }
           }
-        }
+        },
+        "additionalProperties": false
       },
       "VerifierData_agent_delegation": {
         "type": "object",
-        "anyOf": [
-          {
-            "required": [
-              "controllerAccountId",
-              "agentAccountId"
-            ]
-          },
-          {
-            "required": [
-              "controllerWallet",
-              "controllerChainRef",
-              "agentWallet",
-              "agentChainRef"
-            ]
-          }
+        "description": "Delegation from a controller account to an agent; the controller signs. Use CAIP-2 chain references per wallet, or set chain or chainId on the verification request when both parties share the same network context. Proof output may include CAIP-10 account identifiers.",
+        "required": [
+          "controllerWallet",
+          "controllerChainRef",
+          "agentWallet",
+          "agentChainRef"
         ],
         "properties": {
-          "controllerAccountId": {
-            "type": "string",
-            "format": "caip10-account",
-            "description": "Preferred CAIP-10 account ID for the controller."
-          },
           "controllerChainRef": {
             "type": "string",
-            "description": "Required when using controllerWallet with no controllerAccountId.",
+            "description": "CAIP-2 network reference for controllerWallet. Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "controllerWallet": {
             "type": "string",
             "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
-          "agentAccountId": {
-            "type": "string",
-            "format": "caip10-account",
-            "description": "Preferred CAIP-10 account ID for the agent."
-          },
           "agentChainRef": {
             "type": "string",
-            "description": "Required when using agentWallet with no agentAccountId.",
+            "description": "CAIP-2 network reference for agentWallet. Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).",
             "pattern": "^[a-z0-9]+:[a-zA-Z0-9._-]+$"
           },
           "agentWallet": {
@@ -1379,7 +1353,8 @@
                 },
                 "configId": {
                   "type": "string",
-                  "maxLength": 128
+                  "maxLength": 128,
+                  "description": "Optional opaque integration or provider configuration reference. Not a secret, not an OAuth token, not credential material."
                 },
                 "enabled": {
                   "type": "boolean"
@@ -1387,7 +1362,8 @@
               }
             }
           }
-        }
+        },
+        "additionalProperties": false
       },
       "VerificationDataFlat": {
         "oneOf": [
@@ -1512,7 +1488,7 @@
       "get": {
         "operationId": "getVerifierCatalog",
         "summary": "Get supported verifiers and configuration",
-        "description": "Returns a list of all supported verifier IDs, full verifier metadata (schemas + flow/access semantics), and chain configuration (protocol primary chain, asset allowlists).",
+        "description": "Returns the public verifier catalog: supported verifier IDs, sanitized public metadata (input schemas + direct-vs-hosted capabilities), and backend chain configuration (hub chain, asset allowlists). Internal transport/provider fields are not exposed here.",
         "tags": [
           "Verification"
         ],
@@ -1574,7 +1550,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1666,7 +1642,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1920,7 +1896,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2109,7 +2085,7 @@
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "description": "EVM chain ID of the asset being checked (e.g. 1 for Ethereum Mainnet, 8453 for Base). Required for asset verifiers (nft-ownership, token-holding, contract-ownership). Not a protocol primary-chain or proof-storage filter."
+              "description": "EVM chain ID of the asset being checked (e.g. 1 for Ethereum Mainnet, 8453 for Base). Required for asset verifiers (nft-ownership, token-holding, contract-ownership). Not a hub or proof-storage filter."
             }
           },
           {
@@ -2386,7 +2362,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2487,7 +2463,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2635,7 +2611,7 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal error",
             "content": {
               "application/json": {
                 "schema": {

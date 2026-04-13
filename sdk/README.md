@@ -31,7 +31,7 @@ import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient();
 
-// Create a proof (defaults: private, unlisted, original content stored)
+// Create a proof (defaults: private receipt, original content stored when options omit storeOriginalContent)
 const proof = await client.verify({
   verifier: 'ownership-basic',
   content: 'Hello NEUS',

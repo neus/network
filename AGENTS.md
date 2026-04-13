@@ -3,11 +3,6 @@
 **Audience:** AI agents working in the **network** repository.  
 **Updated:** 2026-04-09
 
----
-
-## Scope
-
-This repository is **public**. It ships the SDK, OpenAPI description, verifier JSON Schemas under `spec/` and `docs/verifiers/schemas/`, and published documentation sources. It does **not** ship the private web application behind `neus.network`.
 
 ---
 

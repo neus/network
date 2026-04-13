@@ -17,6 +17,8 @@ NEUS publishes route indexes and full-doc exports for tools that ingest document
 
 Keep your current runtime, agents, and MCP clients. NEUS adds **portable identity**, **scoped delegation**, and **verifiable receipts**—no new inbox or orchestration product required.
 
+**Recommended tool order** (proofs + MCP): use the numbered **Recommended flow** in **[MCP overview](../mcp/overview)** — `neus_context` first; `neus_proofs_check` vs `neus_verify_or_guide`; follow `hostedVerifyUrl`; Bearer only for account-scoped tools; `neus_verify` without signature already runs **`/standardize`** once (reuse the same payload when signing; do not call **`/standardize`** again).
+
 1. Add the **hosted MCP** URL (`https://mcp.neus.network/mcp`) — **[MCP setup](../mcp/setup)**.
 2. Run **`neus_context`**, then **`neus_agent_create`** / **`neus_agent_link`** when the assistant needs hosted agent setup ([MCP overview](../mcp/overview)).
 3. Use **proof presets** on the NEUS platform: **`agent-identity`** registers the service; **`agent-delegation`** grants scoped authority — **[Agent identity](../agents/agent-identity)** · **[Agent delegation](../agents/agent-delegation)**.

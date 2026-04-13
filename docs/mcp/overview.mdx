@@ -6,9 +6,21 @@ icon: plug
 
 **First call:** run **`neus_context`** after you connect. One response covers verifier context, billing model, and protocol rules. **No access key** required.
 
-**Endpoint alone:** public catalog, context, and hosted verification handoffs. Add **`Authorization: Bearer`** with your **personal access key** from **[Access keys](https://neus.network/profile?tab=account)** when you need **`neus_me`**, private proof reads, or usage debited to **your** account. **[Auth](./auth)**
+### Recommended flow
 
-**[Get started](../get-started)** — create an app, choose who pays, generate an access key only when you need account-scoped tools. **[Billing](../platform/billing)** · **[Setup](./setup)**
+Follow this order unless you have a specific reason not to:
+
+1. **`neus_context`** — Live verifier IDs, hub hint, billing hints, constraints (no access key).
+2. **Check** — **`neus_proofs_check(wallet, verifiers)`** for **yes/no eligibility only** (no browser). Prefer **`neus_verify_or_guide`** when the user may need a browser, passkey, or onboarding.
+3. **Hosted verify** — If a tool returns **`hostedVerifyUrl`**, open it (`https://neus.network/verify`); do not substitute a different URL.
+4. **Proof list** — **`neus_proofs_get(identifier)`** for proof records + profile summary.
+5. **Account / private vault** — Add **`Authorization: Bearer`** (personal access key from **[Access keys](https://neus.network/profile?tab=account)**) only when you need **`neus_me`** or private reads. See **[Auth](./auth)**.
+6. **Programmatic signing** — **`neus_verify`** without `signature` triggers **one** server **`/standardize`** step and returns **`signerString`** + **`hostedVerifyUrl`**. On the signed follow-up, reuse the **same** `walletAddress`, `verifierIds`, `data`, `signedTimestamp`, and `chain`; you do **not** call **`/standardize`** again. Response may include **`sigVersion`** / **`bodyPreview`** for signing parity.
+7. **Agents (advanced)** — **`neus_agent_create`** → complete hosted steps → **`neus_agent_link`** to confirm.
+
+If the API returns **402**, follow **[Billing](../platform/billing)** and **[x402](../platform/x402)** (retry with **`PAYMENT-SIGNATURE`** when your client supports it).
+
+**Summary:** the hosted MCP URL covers public catalog, context, and hosted verify handoffs without a key. Add **`Authorization: Bearer`** (personal access key from **[Access keys](https://neus.network/profile?tab=account)**) only for **`neus_me`**, private reads, or debiting **your** credits — **[Auth](./auth)**. For **`appId`**, payer model, and keys before scale: **[Get started](../get-started)** · **[Billing](../platform/billing)** · **[Setup](./setup)**.
 
 `https://mcp.neus.network/mcp`
 
@@ -16,7 +28,7 @@ icon: plug
 
 Add the MCP endpoint **once** in your client—see **[Setup](./setup)** for URL-only and authenticated configuration blocks.
 
-1. **`neus_context`** — load SSOT context (public).
+1. **`neus_context`** — load live verifier catalog and protocol context (public).
 2. **Browser verify:** assistant runs **`neus_verify_or_guide`** or **`neus_proofs_check`**. User opens **`https://neus.network/verify`** from the tool. Passkey or wallet stays in NEUS (no pasted one-time codes in MCP).
 3. **Signed-in assistant:** add **Bearer** with your **personal access key**, then **`neus_me`** when you need the current principal. **[Auth](./auth)**
 4. **Proof history:** when you already have an address or id, **`neus_proofs_get`**. [Tools](./tools)
