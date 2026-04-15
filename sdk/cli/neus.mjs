@@ -1,8 +1,4 @@
 #!/usr/bin/env node
-/**
- * NEUS SDK CLI — stdout-only. No file writes, no account creation, no key generation.
- * Usage: npx -y -p @neus/sdk neus init
- */
 const argv = process.argv.slice(2);
 const sub = argv[0];
 
@@ -23,31 +19,28 @@ function printInit() {
   };
 
   const lines = [
-    "# NEUS — copy-paste bootstrap",
+    "# NEUS",
     "",
-    "## Hosted MCP (public tools; URL only)",
+    "## MCP",
     JSON.stringify(mcpBlock, null, 2),
     "",
     "## URLs",
-    "MCP endpoint:     https://mcp.neus.network/mcp",
-    "Hosted verify:    https://neus.network/verify",
-    "Account and apps: https://neus.network/hub",
+    "MCP: https://mcp.neus.network/mcp",
+    "Verify:    https://neus.network/verify",
+    "Hub:       https://neus.network/hub",
     "",
-    "## Docs (hosted-first)",
+    "## Docs",
     "MCP setup:        https://docs.neus.network/mcp/setup",
     "LLM / assistants: https://docs.neus.network/platform/llm-docs",
-    "Agents overview:  https://docs.neus.network/agents/overview",
+    "Agents:           https://docs.neus.network/agents/overview",
     "Agent identity:   https://docs.neus.network/agents/agent-identity",
     "Agent delegation: https://docs.neus.network/agents/agent-delegation",
-    "Integration loop: https://docs.neus.network/integration",
+    "Integration:      https://docs.neus.network/integration",
     "Quickstart:       https://docs.neus.network/quickstart",
+    "Route index:      https://docs.neus.network/llms.txt",
     "",
-    "Machine-readable route index: https://docs.neus.network/llms.txt",
-    "",
-    "## Notes",
-    "- This command only prints to stdout. It does not modify files or create accounts.",
-    "- Use Authorization: Bearer <personal API key> when a tool returns auth_required (see docs MCP auth).",
-    "- Prefer credits and sponsor grants for onboarding; use x402 only when you receive HTTP 402 (see platform x402).",
+    "This command only prints to stdout; it does not modify files or create accounts.",
+    "Use Authorization: Bearer <access key> when a tool returns auth_required (see MCP auth).",
   ];
 
   process.stdout.write(`${lines.join("\n")}\n`);

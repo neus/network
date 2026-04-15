@@ -6,7 +6,7 @@ icon: receipt
 
 **Save the proof receipt ID. Do not treat raw signatures as your durable record.**
 
-One ID. Reusable everywhere. Product flow: **[Home → How it works](../index#how-it-works)**.
+One ID. Reusable everywhere. Product flow: **[Integration](../integration)**.
 
 ## proofId and qHash
 
@@ -63,9 +63,10 @@ const proofId = proof.proofId;
 // Check status
 const record = await client.getProof(proofId);
 
-// Gate check
+// Gate check — same address as the proof signer; prefer saved proofId + proofs/check before prompting verify again
+const signerAddress = '0x...'; // from the wallet used in verify()
 const eligible = await client.gateCheck({
-  address: '0x...',
+  address: signerAddress,
   verifierIds: ['ownership-basic'],
 });
 ```

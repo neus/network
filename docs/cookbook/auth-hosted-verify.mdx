@@ -4,6 +4,10 @@ description: Use the NEUS-hosted UI for login and interactive verification.
 icon: key
 ---
 
+<Note>
+**Default path:** users verify on NEUS → your app saves the **proof receipt ID** → your backend reuses it with checks ([Integration](../integration#loop)). **Most integrations:** your app pays via sponsor grants—users are not asked to manage billing first ([Get started](../get-started#choose-who-pays)).
+</Note>
+
 **Shipping an app?** **[Get started](../get-started)** for **`appId`**, credits, sponsors.
 
 Users verify on **neus.network**. Your app sets **`returnUrl`** and builds the link with the SDK.

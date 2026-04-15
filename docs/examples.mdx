@@ -1,16 +1,24 @@
 ---
 title: Examples
-description: Working code for React, Node.js, and HTTP.
+description: Runnable Node + Vite React samples; curl walkthrough.
 icon: code
 ---
 
-Add **`appId`** from **[Get started](./get-started)** for production traffic.
+<Note>
+**Most teams start with [Hosted Verify](./cookbook/auth-hosted-verify)** before cloning samples. These repos show **check → verify → save proof receipt ID → reuse** in code.
+</Note>
+
+<Tip>
+**Loop:** [Check](./integration#loop) → verify if needed → save **proof receipt ID** → reuse. Interactive flows: **[Hosted Verify](./cookbook/auth-hosted-verify)**. [Proof receipts](./platform/receipts-and-results)
+</Tip>
+
+Add **`appId`** from **[Get started](./get-started)** for production traffic (`X-Neus-App`) and **[Billing](./platform/billing)** for who pays.
 
 | Repo | Stack | Covers |
 |------|-------|--------|
-| [react-component](https://github.com/neus/network/tree/main/examples/react-component) | React | `VerifyGate` |
-| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Node.js | SDK |
-| [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | HTTP | API |
+| [react-component](https://github.com/neus/network/tree/main/examples/react-component) | React (Vite) | Runnable `VerifyGate` — clone, `npm install`, `npm run dev` |
+| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Node.js | Runnable SDK + `gateCheck` |
+| [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | HTTP | Copy-paste **walkthrough** (not a single run script) |
 
 ---
 

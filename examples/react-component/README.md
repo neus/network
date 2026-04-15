@@ -1,14 +1,15 @@
-# React Component Example
+# React + VerifyGate (Vite)
 
-Minimal VerifyGate integration. Save **proof receipt IDs** (`proofId`), not signatures. **`VerifyGate`** defaults to unlisted public creates; raw **`client.verify()`** stays private-by-default. See [Security and trust](https://docs.neus.network/platform/security-and-trust) and [Integration](https://docs.neus.network/integration).
-
-## Install
+Save **`proofId`** (receipt id), not raw signatures. Visibility defaults: [Security and trust](https://docs.neus.network/platform/security-and-trust).
 
 ```bash
-npm install @neus/sdk
+cd examples/react-component
+npm install
+cp .env.example .env.local   # optional VITE_NEUS_APP_ID
+npm run dev
 ```
 
-## Usage
+This repo uses `file:../../sdk`; in your app: `npm install @neus/sdk react react-dom`.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -16,106 +17,20 @@ import { VerifyGate } from '@neus/sdk/widgets';
 export default function Page() {
   return (
     <VerifyGate
+      appId={import.meta.env.VITE_NEUS_APP_ID}
       requiredVerifiers={['nft-ownership']}
       verifierData={{
         'nft-ownership': {
           contractAddress: '0x...',
           tokenId: '1',
-          chainId: 1
-        }
+          chainId: 1,
+        },
       }}
     >
-      <div>
-        <h2>Exclusive Content</h2>
-        <p>Only visible to NFT holders.</p>
-      </div>
+      <div>…</div>
     </VerifyGate>
   );
 }
 ```
 
-## Other Verifiers
-
-**Token holding:**
-
-```jsx
-<VerifyGate
-  requiredVerifiers={['token-holding']}
-  verifierData={{
-    'token-holding': {
-      contractAddress: '0x...',
-      minBalance: '100.0',
-      chainId: 1
-    }
-  }}
->
-  <DAOContent />
-</VerifyGate>
-```
-
-**Content ownership:**
-
-```jsx
-<VerifyGate requiredVerifiers={['ownership-basic']}>
-  <CreatorContent />
-</VerifyGate>
-```
-
----
-
-## Advanced: Next.js Proxy
-
-For Next.js apps, you can optionally use a proxy route.
-
-**Create `/app/api/neus/[...path]/route.js`:**
-
-```javascript
-const BASE = 'https://api.neus.network';
-
-export async function GET(req, { params }) {
-  const url = new URL(req.url);
-  const upstream = `${BASE}/${params.path.join('/')}?${url.searchParams.toString()}`;
-  const res = await fetch(upstream, {
-    method: 'GET',
-    headers: { Accept: req.headers.get('accept') || 'application/json' }
-  });
-  return new Response(await res.text(), {
-    status: res.status,
-    headers: { 'Content-Type': res.headers.get('content-type') || 'application/json' }
-  });
-}
-
-export async function POST(req, { params }) {
-  const res = await fetch(`${BASE}/${params.path.join('/')}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: await req.text()
-  });
-  return new Response(await res.text(), {
-    status: res.status,
-    headers: { 'Content-Type': res.headers.get('content-type') || 'application/json' }
-  });
-}
-```
-
-**Use the proxy:**
-
-```jsx
-<VerifyGate
-  apiUrl="/api/neus"
-  requiredVerifiers={['nft-ownership']}
-  verifierData={{ ... }}
->
-  <GatedContent />
-</VerifyGate>
-```
-
-This is optional. The default API URL works directly in most environments.
-
----
-
-## Next Steps
-
-- [Quickstart](https://docs.neus.network/quickstart) — Create your first proof
-- [Verifier Catalog](https://docs.neus.network/verification/verifiers) — Verifier capabilities and requirements
-- [API Reference](https://docs.neus.network/api/overview) — HTTP endpoints
+[Get started](https://docs.neus.network/get-started) · [Integration](https://docs.neus.network/integration) · [Quickstart](https://docs.neus.network/quickstart)

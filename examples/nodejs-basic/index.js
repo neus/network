@@ -102,6 +102,13 @@ async function main() {
     }
   });
   console.log('Final Status:', final?.status || final?.data?.status);
+
+  console.log('\nGate check (reuse eligibility without re-running verification)...');
+  const gate = await client.gateCheck({
+    address: walletAddress,
+    verifierIds: ['ownership-basic']
+  });
+  console.log('Eligible:', gate?.data?.eligible, gate?.data?.matchedCount != null ? `(matched: ${gate.data.matchedCount})` : '');
 }
 
 main().catch(console.error);

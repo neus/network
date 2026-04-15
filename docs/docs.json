@@ -82,9 +82,10 @@
             "pages": [
               "index",
               "get-started",
+              "cookbook/auth-hosted-verify",
               "choose-an-integration-path",
-              "integration",
               "quickstart",
+              "integration",
               "examples",
               "platform/llm-docs"
             ]
@@ -97,10 +98,6 @@
               "platform/receipts-and-results",
               "platform/presets"
             ]
-          },
-          {
-            "group": "Hosted Flows",
-            "pages": ["cookbook/auth-hosted-verify"]
           },
           {
             "group": "Standards",
@@ -168,7 +165,6 @@
               "platform/rate-limits-and-retries",
               "platform/security-and-trust",
               "platform/x402",
-              "platform/llm-docs",
               "brand-kit"
             ]
           }
@@ -281,6 +277,10 @@
     {
       "source": "/mcp/default-instructions",
       "destination": "/mcp/overview"
+    },
+    {
+      "source": "/mcp/authentication",
+      "destination": "/mcp/auth"
     },
     {
       "source": "/learn/standards-and-eips",
@@ -521,6 +521,22 @@
     {
       "source": "/mcp/proofs",
       "destination": "/mcp/proofs-get"
+    },
+    {
+      "source": "/learn-more",
+      "destination": "/get-started"
+    },
+    {
+      "source": "/learn/manifesto",
+      "destination": "/"
+    },
+    {
+      "source": "/learn/support-and-contact",
+      "destination": "/get-started"
+    },
+    {
+      "source": "/neus/how-to-prove-whats-real",
+      "destination": "/integration"
     }
   ],
   "contextual": {

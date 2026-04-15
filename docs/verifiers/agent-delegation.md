@@ -17,6 +17,8 @@ Delegates scoped authority from a delegating account to an agent, ERC-8004 compa
 
 ## Optional fields
 
+- `controllerAccountId` (`string format caip10-account`): Optional CAIP-10 account identifier for controllerWallet. May be injected when inputs are normalized from wallet + chain context.
+- `agentAccountId` (`string format caip10-account`): Optional CAIP-10 account identifier for agentWallet. May be injected when inputs are normalized from wallet + chain context.
 - `agentId` (`string max 128 min 1`)
 - `scope` (`string max 128`)
 - `permissions` (`array`)

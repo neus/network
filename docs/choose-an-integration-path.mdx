@@ -4,11 +4,19 @@ description: Match your outcome to the right NEUS surface.
 icon: route
 ---
 
-Pick the row that matches what you are proving, then follow **[Integration](./integration)** for check, verify, save, reuse.
+<Note>
+**Most teams start here:** [Hosted Verify](./cookbook/auth-hosted-verify) → save **proof receipt ID** → server checks / receipts ([Integration](./integration#loop)) → app-paid billing by default ([Get started](./get-started#choose-who-pays)).
+</Note>
+
+<Tip>
+**Loop:** [Check](./integration#loop) → verify if needed → save **proof receipt ID** → reuse. Interactive flows: **[Hosted Verify](./cookbook/auth-hosted-verify)**. [Proof receipts](./platform/receipts-and-results)
+</Tip>
+
+Use this table after **[Get started](./get-started)** when you need a surface match; then follow **[Integration](./integration)**.
 
 | Outcome | Start here | Effort |
 |---------|------------|--------|
-| Social, human, or org proof (interactive) | **[Hosted Verify](./cookbook/auth-hosted-verify)** | Redirect or popup |
+| **Default:** login, social, human, org (interactive) | **[Hosted Verify](./cookbook/auth-hosted-verify)** | Redirect or popup |
 | Direct-sign content proof (`ownership-basic`) | **[SDK](./sdks/overview)** or **[Quickstart](./quickstart)** | Wallet or server signing |
 | React gating and reuse-first UX | **[Widgets](./widgets/overview)** · `VerifyGate` | Drop-in component |
 | Backend eligibility without UI | **[API](./api/overview)** · SDK **`gateCheck`** | HTTP from your server |

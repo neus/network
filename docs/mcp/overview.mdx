@@ -1,58 +1,50 @@
 ---
 title: MCP Overview
-description: Connect NEUS to MCP-compatible AI assistants.
+description: NEUS MCP for assistants.
 icon: plug
 ---
 
-**First call:** run **`neus_context`** after you connect. One response covers verifier context, billing model, and protocol rules. **No access key** required.
+**First call:** `neus_context` after you connect — verifier context, billing hints, constraints. No access key required.
 
-### Recommended flow
+### Proof vs runtime
 
-Follow this order unless you have a specific reason not to:
+Skill refs on an agent proof are declarative caps, not secrets or executable tools. Your MCP host supplies credentials and execution; keep sensitive config out of proof payloads. **≤48** skill refs per proof.
 
-1. **`neus_context`** — Live verifier IDs, hub hint, billing hints, constraints (no access key).
-2. **Check** — **`neus_proofs_check(wallet, verifiers)`** for **yes/no eligibility only** (no browser). Prefer **`neus_verify_or_guide`** when the user may need a browser, passkey, or onboarding.
-3. **Hosted verify** — If a tool returns **`hostedVerifyUrl`**, open it (`https://neus.network/verify`); do not substitute a different URL.
-4. **Proof list** — **`neus_proofs_get(identifier)`** for proof records + profile summary.
-5. **Account / private vault** — Add **`Authorization: Bearer`** (personal access key from **[Access keys](https://neus.network/profile?tab=account)**) only when you need **`neus_me`** or private reads. See **[Auth](./auth)**.
-6. **Programmatic signing** — **`neus_verify`** without `signature` triggers **one** server **`/standardize`** step and returns **`signerString`** + **`hostedVerifyUrl`**. On the signed follow-up, reuse the **same** `walletAddress`, `verifierIds`, `data`, `signedTimestamp`, and `chain`; you do **not** call **`/standardize`** again. Response may include **`sigVersion`** / **`bodyPreview`** for signing parity.
-7. **Agents (advanced)** — **`neus_agent_create`** → complete hosted steps → **`neus_agent_link`** to confirm.
+### Flow
 
-If the API returns **402**, follow **[Billing](../platform/billing)** and **[x402](../platform/x402)** (retry with **`PAYMENT-SIGNATURE`** when your client supports it).
+1. **`neus_context`**
+2. **`neus_proofs_check`** — yes/no only; or **`neus_verify_or_guide`** if the user may need a browser / passkey
+3. Open **`hostedVerifyUrl`** as `https://neus.network/verify` when returned
+4. **`neus_proofs_get`** when you have an identifier
+5. **`Authorization: Bearer`** ([Access keys](https://neus.network/profile?tab=account)) for **`neus_me`** and vaulted reads — [Auth](./auth)
+6. **`neus_verify`** unsigned: one `/standardize`; reuse the same payload on the signed call (no second `/standardize`)
+7. Agents: **`neus_agent_create`** → hosted steps → **`neus_agent_link`**
 
-**Summary:** the hosted MCP URL covers public catalog, context, and hosted verify handoffs without a key. Add **`Authorization: Bearer`** (personal access key from **[Access keys](https://neus.network/profile?tab=account)**) only for **`neus_me`**, private reads, or debiting **your** credits — **[Auth](./auth)**. For **`appId`**, payer model, and keys before scale: **[Get started](../get-started)** · **[Billing](../platform/billing)** · **[Setup](./setup)**.
+**402:** [Billing](../platform/billing), [x402](../platform/x402).
+
+**Summary:** hosted URL covers public tools without a key. Bearer for account-scoped tools and credits. [Get started](../get-started) · [Billing](../platform/billing) · [Setup](./setup).
 
 `https://mcp.neus.network/mcp`
 
 ## Workflow
 
-Add the MCP endpoint **once** in your client—see **[Setup](./setup)** for URL-only and authenticated configuration blocks.
+[Setup](./setup) — drop the URL into your client.
 
-1. **`neus_context`** — load live verifier catalog and protocol context (public).
-2. **Browser verify:** assistant runs **`neus_verify_or_guide`** or **`neus_proofs_check`**. User opens **`https://neus.network/verify`** from the tool. Passkey or wallet stays in NEUS (no pasted one-time codes in MCP).
-3. **Signed-in assistant:** add **Bearer** with your **personal access key**, then **`neus_me`** when you need the current principal. **[Auth](./auth)**
-4. **Proof history:** when you already have an address or id, **`neus_proofs_get`**. [Tools](./tools)
+1. **`neus_context`**
+2. **`neus_verify_or_guide`** / **`neus_proofs_check`** → user hits **`https://neus.network/verify`** when needed
+3. Bearer + **`neus_me`** when signed-in context matters — [Auth](./auth)
+4. **`neus_proofs_get`** for history — [Tools](./tools)
 
 | Goal | Tool |
-|------|------|
-| Verifiers, billing model, protocol rules (call first) | `neus_context` |
-| Send someone to browser verification | `neus_verify_or_guide` |
-| Yes/no eligibility only | `neus_proofs_check` |
-| Proof list + profile (you have an id) | `neus_proofs_get` |
-| Signed-in “who am I” | `neus_me` · Bearer · [Auth](./auth) |
-| Pick verifier IDs safely | `neus_verifiers_catalog` |
+| --- | --- |
+| Context (call first) | `neus_context` |
+| Browser verification | `neus_verify_or_guide` |
+| Eligibility only | `neus_proofs_check` |
+| Proof list + profile | `neus_proofs_get` |
+| Current principal | `neus_me` + Bearer |
+| Safe ID pick | `neus_verifiers_catalog` |
 | Agents | `neus_agent_create`, `neus_agent_link` |
-
-Open hosted URLs from tools.
-
-## Agents
-
-1. **`neus_agent_create`** → open any hosted URL returned → **`neus_agent_link`** to confirm.
 
 ## Next
 
-- **[Get started](../get-started)** — onboarding and billing before scale  
-- **[Setup](./setup)** — URL-only and authenticated configuration  
-- **[Tools](./tools)** — parameter names  
-- **[Auth](./auth)** — sessions and privacy  
-- **[Hosted Verify](../cookbook/auth-hosted-verify)** — browser verification flow  
+[Get started](../get-started) · [Setup](./setup) · [Tools](./tools) · [Auth](./auth) · [Hosted Verify](../cookbook/auth-hosted-verify)

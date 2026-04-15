@@ -6,6 +6,8 @@ icon: id-card
 
 Use `agent-identity` to register an AI or automation agent with a reusable receipt.
 
+**MCP vs proof skill ids:** declarative `skills` on the proof are not MCP installs — see [MCP overview](../mcp/overview). Prefer **Open Agent Skills** ids ([spec](https://agentskills.io/specification), [directory](https://skills.sh)) so hosts can resolve the same `SKILL.md` packs.
+
 **Default path:** **`neus_agent_create`** (MCP) or the [hosted verify flow](../cookbook/auth-hosted-verify). This page is for SDK-level detail when you already know you need it.
 
 **Verifier ID:** `agent-identity`
@@ -43,7 +45,7 @@ await client.verify({
     description: 'My AI assistant',
     capabilities: ['web-search'],
     instructions: 'System prompt (max 4000 chars)',
-    skills: ['web-search', 'code-execution'],   // max 48, each max 64 chars
+    skills: ['web-search', 'vercel-react-best-practices'],   // max 48, each max 64 chars; hyphen ids match agentskills.io
     services: [                                  // max 16
       { name: 'metrics', endpoint: 'https://metrics.example.com/v1', version: '1.0' }
     ]

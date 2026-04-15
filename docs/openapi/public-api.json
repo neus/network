@@ -321,31 +321,6 @@
         },
         "additionalProperties": true
       },
-      "VerificationStatusResponse": {
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "data": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "status": {
-            "type": "string"
-          },
-          "qHash": {
-            "type": "string"
-          },
-          "cached": {
-            "type": "boolean"
-          },
-          "cachedAt": {
-            "type": "number"
-          }
-        },
-        "additionalProperties": true
-      },
       "ProofRecordResponse": {
         "type": "object",
         "description": "Proof record and verification state. The `data` object is shaped for the caller (public, owner-authenticated, or minimal private).",
@@ -1103,6 +1078,11 @@
             "type": "string",
             "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
+          "agentAccountId": {
+            "type": "string",
+            "format": "caip10-account",
+            "description": "Optional CAIP-10 account identifier for agentWallet. May be injected when inputs are normalized from wallet + chain context."
+          },
           "agentLabel": {
             "type": "string",
             "maxLength": 128
@@ -1260,6 +1240,11 @@
             "type": "string",
             "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
+          "controllerAccountId": {
+            "type": "string",
+            "format": "caip10-account",
+            "description": "Optional CAIP-10 account identifier for controllerWallet. May be injected when inputs are normalized from wallet + chain context."
+          },
           "agentChainRef": {
             "type": "string",
             "description": "CAIP-2 network reference for agentWallet. Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).",
@@ -1268,6 +1253,11 @@
           "agentWallet": {
             "type": "string",
             "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
+          },
+          "agentAccountId": {
+            "type": "string",
+            "format": "caip10-account",
+            "description": "Optional CAIP-10 account identifier for agentWallet. May be injected when inputs are normalized from wallet + chain context."
           },
           "agentId": {
             "type": "string",
@@ -2118,6 +2108,18 @@
             "required": false,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "namespace",
+            "in": "query",
+            "required": false,
+            "description": "When set, requires ownership-pseudonym proofs to include this namespace (matches verifier data.namespace; legacy proofs without namespace default to neus).",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64,
+              "pattern": "^[a-z0-9._-]+$"
             }
           },
           {

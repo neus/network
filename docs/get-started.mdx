@@ -4,7 +4,15 @@ description: Builder onboarding: account, app, profile, integration loop, and pr
 icon: book
 ---
 
-One **proof receipt ID** (`proofId`, same value as `qHash` on the wire) feeds gates, checks, and shareable proof pages. **[Proof receipts](./platform/receipts-and-results)** defines what to save. **[Security and trust](./platform/security-and-trust)** defines visibility.
+<Note>
+**Most teams start here:** [Hosted Verify](./cookbook/auth-hosted-verify) → save **proof receipt ID** → reuse with checks ([Integration](./integration#loop)). **For most integrations, your app pays:** org credits + **sponsor grants**; end users are not expected to manage billing first ([Choose who pays](#choose-who-pays) below).
+</Note>
+
+<Tip>
+**Loop:** [Check](./integration#loop) → verify if needed → save **proof receipt ID** → reuse. Interactive flows: **[Hosted Verify](./cookbook/auth-hosted-verify)**. [Proof receipts](./platform/receipts-and-results)
+</Tip>
+
+One **proof receipt ID** feeds gates, checks, and shareable proof pages. **[Proof receipts](./platform/receipts-and-results)** defines what to save. **[Security and trust](./platform/security-and-trust)** defines visibility.
 
 ## 1. Create your account
 
@@ -13,15 +21,11 @@ One **proof receipt ID** (`proofId`, same value as `qHash` on the wire) feeds ga
 
 ## 2. Run your first loop locally
 
-Use **[Quickstart](./quickstart)** for a direct `ownership-basic` proof with the SDK, or **[Hosted Verify](./cookbook/auth-hosted-verify)** when the flow is interactive (social, org, human). **[Integration](./integration)** describes check, verify, save, reuse for every path.
+Use **[Hosted Verify](./cookbook/auth-hosted-verify)** when the flow needs the hosted UI (passkey, OAuth, cross-device). For a first direct-sign SDK proof, follow **[Quickstart](./quickstart)**. **[Integration](./integration)** describes the check → verify → save → reuse loop.
 
-## 3. Pick how you integrate
+## 3. Platform setup for production domains
 
-**[Choose an integration path](./choose-an-integration-path)** matches outcomes to surfaces: hosted verify, SDK, VerifyGate, `gateCheck`, MCP.
-
-## 4. Platform setup for production domains
-
-When you need DNS domain proof, org OAuth, app linking, or sponsor grants at scale, follow **[Platform setup](./platform/setup)** after you understand the integration loop.
+For DNS domain proof, org OAuth, app linking, or sponsor grants at scale, use **[Platform setup](./platform/setup)** after the integration loop is clear.
 
 ## Before production
 
@@ -49,8 +53,9 @@ const client = new NeusClient({
 
 ### Choose who pays
 
-1. **Your product pays:** fund credits on the **organization wallet** tied to your app, issue short-lived **sponsor grants**, pass **`sponsorGrant`** on the SDK (maps to **`X-Sponsor-Grant`**). **[Platform setup](./platform/setup)** has the full flow.
-2. **Users pay:** they use **their** credits (or **x402** when applicable). Do **not** send sponsor grants.
+**Default for shipped products:** **your product pays** via org-wallet credits and short-lived **sponsor grants** (`sponsorGrant` on the SDK → **`X-Sponsor-Grant`**). Users run Hosted Verify; they should not hit “buy credits” as a first step. **[Platform setup](./platform/setup)** has the full flow.
+
+**Advanced / self-serve:** end users pay with **their** credits or **x402** when applicable. Do **not** send sponsor grants on those flows.
 
 ```javascript
 const client = new NeusClient({

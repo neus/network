@@ -630,6 +630,21 @@ declare module '@neus/sdk' {
     baseUrl?: string;
   }): string;
 
+  /**
+   * Public gate monetization.charge from GET /api/v1/profile/gates/{gateId} (sanitized).
+   * Safe for clients: no payout secrets; `recipient` is the published settlement address when enabled.
+   */
+  export type NeusPublicGateCharge = {
+    enabled: boolean;
+    scheme: string;
+    label: string;
+    amountUsd: number;
+    methods: string[];
+    appliesTo: string;
+    executionOrder?: string;
+    recipient?: string;
+  };
+
   export const NEUS_CONSTANTS: {
     HUB_CHAIN_ID: number;
     TESTNET_CHAINS: number[];
@@ -817,6 +832,10 @@ declare module '@neus/sdk' {
     // Wallet filters
     /** Risk assessment provider hint. Known value: webacy. */
     provider?: string;
+    /** Social handle (ownership-social) or pseudonym handle (ownership-pseudonym); server matches data.handle / pseudonymId */
+    handle?: string;
+    /** ownership-pseudonym namespace filter (matches GET /api/v1/proofs/check `namespace` query) */
+    namespace?: string;
     ownerAddress?: string;
     riskLevel?: string;
     sanctioned?: boolean;

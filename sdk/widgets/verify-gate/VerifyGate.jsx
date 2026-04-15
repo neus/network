@@ -1,48 +1,30 @@
 "use client";
-/**
- * VerifyGate: gate UI behind NEUS verification (hosted or wallet flows).
- * Verifier IDs and behavior: see docs.neus.network.
- * @license Apache-2.0
- */
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import { NeusClient } from '@neus/sdk/client';
 import NEUS_LOGO_DATA_URL from '../../neus-logo.svg';
 import { mergeVerifyGateCreateProofOptions } from './mergeCreateProofOptions.js';
 
-// CSS variable-based theming for consistency with host applications
 const THEME = {
-  // Primary colors - use CSS variables with fallbacks
   primary: 'var(--neus-primary, #98C0EF)',
   primaryHover: 'var(--neus-primary-hover,rgb(91, 126, 182))',
   success: 'var(--neus-success, #22c55e)',
   error: 'var(--neus-error, #ef4444)',
   warning: 'var(--neus-warning, #f59e0b)',
-  // Background colors
   bgDark: 'var(--neus-bg-dark, rgba(2, 6, 23, 0.95))',
   bgCard: 'var(--neus-bg-card, rgba(15, 23, 42, 0.8))',
-  // Text colors
   textPrimary: 'var(--neus-text-primary, #ffffff)',
   textSecondary: 'var(--neus-text-secondary, #94a3b8)',
   textMuted: 'var(--neus-text-muted, #64748b)',
-  // Border colors
   border: 'var(--neus-border, rgba(148, 163, 184, 0.2))',
   borderHover: 'var(--neus-border-hover, rgba(61, 114, 201, 0.4))',
 };
 
-/**
- * Default max-age (ms) for proof reuse.
- *
- * For point-in-time / expiring verifiers, reuse should be bounded to prevent stale reads.
- * Values align with `spec/VERIFIERS.json` recommendedMaxAgeMs.
- */
 const DEFAULT_MAX_AGE_MS_BY_VERIFIER = {
-  // point_in_time (recommended: 1 hour)
   'ownership-dns-txt': 60 * 60 * 1000,
   'contract-ownership': 60 * 60 * 1000,
   'nft-ownership': 60 * 60 * 1000,
   'token-holding': 60 * 60 * 1000,
   'wallet-risk': 60 * 60 * 1000,
-  // expiring (recommended: 7 days)
   'agent-delegation': 7 * 24 * 60 * 60 * 1000
 };
 
@@ -51,7 +33,6 @@ const maxAgeMsForVerifier = (verifierId, overrideMs) => {
   return DEFAULT_MAX_AGE_MS_BY_VERIFIER[verifierId];
 };
 
-// Verifiers that can be created via the SDK wallet flow.
 const CREATABLE_VERIFIERS = new Set([
   'ownership-basic',
   'ownership-pseudonym',
@@ -66,21 +47,41 @@ const CREATABLE_VERIFIERS = new Set([
   'ai-content-moderation'
 ]);
 
-// Verifiers that always require hosted interactive checkout (OAuth / ZK).
 const INTERACTIVE_VERIFIERS = new Set([
   'ownership-social',
   'ownership-org-oauth',
   'proof-of-human'
 ]);
 
-// Verifiers that need hosted checkout when app-provided verifierData is incomplete.
 const HOSTED_WHEN_INCOMPLETE = new Set(['wallet-link']);
 
 const DEFAULT_HOSTED_CHECKOUT_URL = 'https://neus.network/verify';
 const HOSTED_CHECKOUT_MESSAGE_TYPE = 'neus_checkout_done';
 
+function dispatchNeusProofCreatedForHost({ qHash, proofId, walletAddress }) {
+  try {
+    if (typeof window === 'undefined') return;
+    const raw =
+      (typeof qHash === 'string' && qHash.trim()) ||
+      (typeof proofId === 'string' && proofId.trim()) ||
+      '';
+    if (!raw) return;
+    const w = typeof walletAddress === 'string' ? walletAddress.trim() : '';
+    const normalizedWallet =
+      w && /^0x[a-fA-F0-9]{40}$/.test(w) ? w.toLowerCase() : w;
+    window.dispatchEvent(
+      new CustomEvent('neusAccessUpdated', {
+        detail: {
+          proofCreated: true,
+          qHash: raw,
+          ...(normalizedWallet ? { walletAddress: normalizedWallet } : {}),
+        },
+      }),
+    );
+  } catch (_err) {
+  }
+}
 
-// Logo component: inline data URL (CSP-safe, no external fetch)
 const NeusLogo = ({ size = 16 }) => (
   <img
     src={NEUS_LOGO_DATA_URL}
@@ -101,7 +102,6 @@ const NeusLogo = ({ size = 16 }) => (
   />
 );
 
-// Loading spinner component
 const Spinner = ({ size = 16 }) => (
   <svg 
     className="animate-spin" 
@@ -139,32 +139,21 @@ export function VerifyGate({
   oauthProvider = undefined,
   style = undefined,
   children = undefined,
-  // Verifier configuration
   verifierOptions = undefined,
   verifierData = undefined,
-  // Proof creation options (privacy, discoverability, content storage)
   proofOptions = undefined,
-  // Display options
   showBrand = true,
   disabled = false,
-  buttonText = undefined, // Custom button text
-  // Private proof access mode
-  mode = 'create', // 'create' or 'access'
+  buttonText = undefined,
+  mode = 'create',
   proofId = null,
   qHash = null,
-  // Proof strategy for static vs dynamic verification
-  // - 'reuse': Always use existing proof if available (best for static facts)
-  // - 'fresh': Always create new proof (best for dynamic facts that change)
-  // - 'reuse-or-create': Use existing if valid, else create new (default)
   strategy = 'reuse-or-create',
-  // Gate-first options (used when strategy includes 'reuse')
-  checkExisting = true, // Check for existing proofs before verification
-  maxProofAgeMs = undefined, // Optional max age override (ms) for proof reuse
-  allowPrivateReuse = true, // Allow owner-signed lookups for private proofs (interactive)
-  // Optional campaign copy (passed through to hosted checkout URL)
+  checkExisting = true,
+  maxProofAgeMs = undefined,
+  allowPrivateReuse = true,
   campaignTitle = undefined,
   campaignMessage = undefined,
-  // Callbacks
   onStateChange = undefined,
   onError = undefined,
   wallet = undefined,
@@ -177,14 +166,13 @@ export function VerifyGate({
   const [isProcessing, setIsProcessing] = useState(false);
   const [walletAddress, setWalletAddress] = useState(null);
   const [existingProofs, setExistingProofs] = useState(null);
-  const [operation, setOperation] = useState('verify'); // 'verify' | 'reuse' | 'access'
-  
+  const [operation, setOperation] = useState('verify');
+
   const client = useMemo(
     () => new NeusClient({ apiUrl, appId, sponsorGrant, paymentSignature, extraHeaders }),
     [apiUrl, appId, sponsorGrant, paymentSignature, extraHeaders]
   );
 
-  // Support multi-verifier requests
   const verifierList = useMemo(() => {
     return Array.isArray(requiredVerifiers) && requiredVerifiers.length > 0 
       ? requiredVerifiers 
@@ -217,8 +205,7 @@ export function VerifyGate({
     }
     return DEFAULT_HOSTED_CHECKOUT_URL;
   }, [apiUrl, hostedCheckoutUrl]);
-  
-  // Only check existing proofs if strategy allows reuse
+
   const shouldCheckExisting = checkExisting && strategy !== 'fresh';
 
   const inferChainFromAddress = useCallback((address) => {
@@ -272,7 +259,6 @@ export function VerifyGate({
       throw new Error('No wallet provider available');
     }
 
-    // Solana / generic non-EVM provider paths.
     if (provider.publicKey && typeof provider.publicKey.toBase58 === 'function') {
       const pk = provider.publicKey.toBase58();
       if (pk) return pk;
@@ -288,7 +274,6 @@ export function VerifyGate({
       throw new Error('No wallet provider available');
     }
 
-    // Prefer existing connection without prompting.
     let accounts = await provider.request({ method: 'eth_accounts' });
     if (!accounts || accounts.length === 0) {
       await provider.request({ method: 'eth_requestAccounts' });
@@ -301,7 +286,6 @@ export function VerifyGate({
   }, [wallet]);
 
   const tryPrivateReuse = useCallback(async (address) => {
-    // Owner-signed private reuse: use minimal gate checks (no private proof payload download).
     setOperation('reuse');
     setState('signing');
 
@@ -447,7 +431,6 @@ export function VerifyGate({
         try {
           if (!popup.closed) popup.close();
         } catch (_err) {
-          // Ignore cross-origin popup close issues
         }
       };
 
@@ -471,18 +454,15 @@ export function VerifyGate({
     });
   }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider]);
 
-  // Notify parent of state changes
   useEffect(() => {
     onStateChange?.(state);
   }, [state, onStateChange]);
 
-  // Gate-first: Check for existing proofs on mount and wallet connect
   useEffect(() => {
     if (!shouldCheckExisting || mode === 'access') return;
     
     const checkExistingProofs = async () => {
       try {
-        // Get wallet address
         const provider =
           wallet ||
           (typeof window !== 'undefined' ? window.ethereum : null);
@@ -493,8 +473,7 @@ export function VerifyGate({
         
         const address = accounts[0];
         setWalletAddress(address);
-        
-        // Check gate with current requirements (public/discoverable proofs)
+
         const gateResult = await client.checkGate({
           walletAddress: address,
           requirements: buildGateRequirements()
@@ -503,13 +482,11 @@ export function VerifyGate({
         setExistingProofs(gateResult);
         applySatisfiedGateResult(gateResult, address);
       } catch (err) {
-        // Silently fail - gate check is optional enhancement
       }
     };
-    
+
     checkExistingProofs();
-    
-    // Re-check on wallet account changes
+
     const provider =
       wallet ||
       (typeof window !== 'undefined' ? window.ethereum : null);
@@ -526,19 +503,16 @@ export function VerifyGate({
     }
   }, [shouldCheckExisting, mode, client, buildGateRequirements, applySatisfiedGateResult, state, wallet]);
 
-  // Standard verification flow
   const handleClick = useCallback(async () => {
     if (disabled || isProcessing) return;
-    
-    // If already verified (from gate check), do nothing
+
     if (state === 'verified' && existingProofs?.satisfied) {
       return;
     }
     
     setError(null);
     setNotice(null);
-    
-    // Gate-first: Check existing public/discoverable proofs before verification (respects strategy)
+
     if (shouldCheckExisting && walletAddress) {
       try {
         const gateResult = await client.checkGate({
@@ -548,7 +522,6 @@ export function VerifyGate({
         
         if (applySatisfiedGateResult(gateResult, walletAddress)) return;
       } catch (err) {
-        // Continue to verification if gate check fails
       }
     }
 
@@ -558,14 +531,12 @@ export function VerifyGate({
         setIsProcessing(true);
         setState('signing');
 
-        // Private proof access mode - requires wallet signature
         if (!resolvedProofId) {
           throw new Error('proofId is required for access mode');
         }
         
         setState('verifying');
-        
-        // Use SDK's private access method with wallet signature
+
         const privateData = await client.getPrivateProof(
           resolvedProofId,
           wallet || (typeof window !== 'undefined' ? window.ethereum : null)
@@ -582,7 +553,6 @@ export function VerifyGate({
         });
         
       } else if (strategy === 'reuse') {
-        // Reuse-only: never creates new proofs.
         setOperation('reuse');
 
         if (!allowPrivateReuse) {
@@ -607,8 +577,17 @@ export function VerifyGate({
 
           const checkoutResult = await launchHostedCheckout();
           const checkoutProofId = checkoutResult?.proofId || checkoutResult?.qHash || null;
+          const handoffWallet =
+            (typeof checkoutResult?.walletAddress === 'string' && checkoutResult.walletAddress.trim()) ||
+            (walletAddress && String(walletAddress).trim()) ||
+            '';
 
           setState('verified');
+          dispatchNeusProofCreatedForHost({
+            qHash: checkoutProofId,
+            proofId: checkoutProofId,
+            walletAddress: handoffWallet,
+          });
           onVerified?.({
             proofId: checkoutProofId,
             qHash: checkoutProofId,
@@ -625,7 +604,6 @@ export function VerifyGate({
           return;
         }
 
-        // Standard verification creation mode
         setOperation('verify');
         setIsProcessing(true);
         setState('signing');
@@ -644,11 +622,9 @@ export function VerifyGate({
           if (explicit && typeof explicit === 'object') return explicit;
 
           if (verifierId === 'ownership-basic') {
-            // ownership-basic can be created from a simple content string
             return null;
           }
           if (verifierId === 'wallet-risk') {
-            // wallet-risk requires an object, but defaults walletAddress to the connected wallet
             return {};
           }
           if (verifierId === 'wallet-link') {
@@ -726,6 +702,15 @@ export function VerifyGate({
 
         const last = results[results.length - 1];
         const lastProofId = last?.proofId || last?.qHash || null;
+        const handoffAddr =
+          (last?.address && String(last.address).trim()) ||
+          (walletAddress && String(walletAddress).trim()) ||
+          '';
+        dispatchNeusProofCreatedForHost({
+          qHash: lastProofId,
+          proofId: lastProofId,
+          walletAddress: handoffAddr,
+        });
         onVerified?.({
           proofId: lastProofId,
           qHash: lastProofId,
@@ -804,7 +789,6 @@ export function VerifyGate({
     }
   }, [disabled, isProcessing, mode, allowPrivateReuse, walletAddress, getOrRequestWalletAddress, tryPrivateReuse, applySatisfiedGateResult, onError]);
 
-  // Widget state labels
   const getLabel = () => {
     if (buttonText) return buttonText;
     
@@ -837,7 +821,6 @@ export function VerifyGate({
     }[state];
   };
 
-  // Button style based on state
   const buttonBaseStyle = {
     display: 'inline-flex',
     alignItems: 'center',
@@ -879,7 +862,6 @@ export function VerifyGate({
         border: `1px solid rgba(61, 114, 201, 0.3)`,
       };
     }
-    // Default idle state
     return {
       ...buttonBaseStyle,
       background: THEME.primary,
@@ -889,14 +871,11 @@ export function VerifyGate({
     };
   };
 
-  // If children provided, render as gate wrapper
   if (children) {
-    // Show children only when verified
     if (state === 'verified') {
       return <>{children}</>;
     }
-    
-    // Show verification button when not verified
+
     return (
       <div style={{ textAlign: 'center', padding: '20px', ...style }}>
         <button 
@@ -966,7 +945,6 @@ export function VerifyGate({
     );
   }
 
-  // Render as standalone button
   return (
     <button 
       onClick={handleClick} 

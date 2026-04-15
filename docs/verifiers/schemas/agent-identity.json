@@ -4,6 +4,11 @@
   "additionalProperties": false,
   "description": "Register an agent identity signed by the agent wallet. Uses CAIP-2 chain references; proof output may include CAIP-10 account identifiers. Provide chain context as agentChainRef in data and/or as chain (CAIP-2) or chainId (EVM) on the verification request. Does not grant permissions; use agent-delegation for authority.",
   "properties": {
+    "agentAccountId": {
+      "description": "Optional CAIP-10 account identifier for agentWallet. May be injected when inputs are normalized from wallet + chain context.",
+      "format": "caip10-account",
+      "type": "string"
+    },
     "agentChainRef": {
       "description": "CAIP-2 network reference for agentWallet (for example eip155:8453). Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).",
       "format": "caip2-chain",

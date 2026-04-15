@@ -6,11 +6,13 @@ icon: credit-card
 
 **[Get started](../get-started)** covers first-touch onboarding. This page is payer mechanics, sponsor detail, x402, and edge cases.
 
+**Default for shipped products:** **your organization pays** verification (org credits + **sponsor grants**). End users run Hosted Verify; they should not need to fund personal credits as a first step. Self-pay and **x402** are advanced paths—linked below—not the default story.
+
 ## Attribution and charges
 
 **`appId` on `NeusClient`** sends **`X-Neus-App`** so NEUS can **attribute** usage to your product. It does **not**, by itself, move the bill to your NEUS account balance.
 
-**Billed wallet** comes from authentication: **signing wallet**, **sponsor grant**, **x402 receipt**, or some **gate** setups. Until one applies, **`appId` alone does not move billing**. End users may still need credits or another payer.
+**Billed wallet** comes from authentication: **sponsor grant** (preferred for customer flows), **signing wallet**, **x402 receipt**, or some **gate** setups. **Without** a valid sponsor grant, the **signing wallet** may be charged—appropriate for personal or dev use; use sponsors for production customer traffic.
 
 ---
 

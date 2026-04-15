@@ -4,16 +4,16 @@ description: Start agent setup; finish in hosted flow when prompted.
 icon: robot
 ---
 
-1. Call with an **`agentId`** (and **`controllerWallet`** if there is no NEUS session).
+1. Call with **`agentId`** and **`agentWallet`** (and **`controllerWallet`** if there is no NEUS session).
 2. **Open** any hosted URL the response gives you.
 3. **`neus_agent_link`** on the agent wallet to confirm readiness.
 
-Vocabulary: [Agent concepts](../agents/concepts). **`agentWallet: "generate"`** is advanced — you must custody keys.
+Vocabulary: [Agent concepts](../agents/concepts). **`agentWallet` is required** — generate and custody keys in your own environment.
 
 ## Minimal input
 
 ```json
-{ "agentId": "my-assistant" }
+{ "agentId": "my-assistant", "agentWallet": "0x1234567890abcdef1234567890abcdef12345678" }
 ```
 
 ## Optional delegation fields

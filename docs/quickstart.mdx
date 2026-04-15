@@ -4,6 +4,14 @@ description: First direct proof with ownership-basic via the SDK.
 icon: rocket
 ---
 
+<Note>
+**Most teams start with [Hosted Verify](./cookbook/auth-hosted-verify)**. This page is the **SDK fast path** after you understand the loop: verify the user → **persist `proofId` (proof receipt ID)** with that user → **check before showing verify again** with the **same signer address** and verifier policy.
+</Note>
+
+<Tip>
+**Loop:** [Check](./integration#loop) → verify if needed → save **proof receipt ID** → reuse. Interactive flows: **[Hosted Verify](./cookbook/auth-hosted-verify)**. [Proof receipts](./platform/receipts-and-results)
+</Tip>
+
 This page is for your **first direct-sign proof** with **`ownership-basic`**. Flows that need social, human, or org interaction start in **[Hosted Verify](./cookbook/auth-hosted-verify)**; reusable gate flows follow **[Integration](./integration)**.
 
 Before production traffic, complete **[Get started](./get-started)** for `appId`, credits, and who pays.
@@ -33,6 +41,8 @@ const proof = await client.verify({
 
 const proofId = proof.proofId;
 ```
+
+**Save `proofId` on your server with the same user you verified.** It is the **proof receipt ID** (many API payloads also use **`qHash`** for the same value). You will reuse it for checks and receipts—not the raw signature string.
 
 **Attestation vs gate:** this snippet is for **proving content**. See **[SDK verification patterns](./sdks/verifications)** for more shapes.
 
@@ -66,14 +76,21 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 ## 5. Check eligibility from your server
 
+**Rules that prevent “it doesn’t work” bugs:**
+
+- **`gateCheck` `address` must be the same identity** that signed **`verify()`** (for `ownership-basic`, the wallet you passed as `wallet`).
+- **Prefer a stored proof receipt ID:** call the proofs check API (via **`gateCheck`** or **`GET /api/v1/proofs/check`**) **before** you show another verify flow when you already created a proof for this user.
+- **Verifier policy must match:** same `verifierIds` (and equivalent `verifierData` constraints) you used at creation time.
+
 ```javascript
+const signerAddress = '0x...';
+
 const result = await client.gateCheck({
-  address: '0x...',
+  address: signerAddress,
   verifierIds: ['ownership-basic'],
 });
 
 if (result.data?.eligible) {
-  // allow access
 }
 ```
 
@@ -82,5 +99,5 @@ if (result.data?.eligible) {
 |  |  |
 |--|--|
 | Production (`appId`, billing) | [Get started](./get-started) |
-| Other ways to integrate | [Paths](./choose-an-integration-path) |
+| Surfaces at a glance | [Choose a path](./choose-an-integration-path) |
 | Ship loop | [Integration](./integration) |

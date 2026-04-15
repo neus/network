@@ -1,28 +1,13 @@
-# Node.js Example
-
-Server-side verification with ethers.js.
-
-## Setup
+# Node.js example
 
 ```bash
 cd nodejs-basic
 npm install
+export TEST_WALLET_PRIVATE_KEY=0x...   # test wallet only
 node index.js
 ```
 
-Set `TEST_WALLET_PRIVATE_KEY` to a test wallet key:
-
-```bash
-export TEST_WALLET_PRIVATE_KEY=0x...
-```
-
-Use a test wallet only. Do not use production keys.
-
-## How It Works
-
-### 1. Build and sign
-
-The NEUS protocol requires a cryptographic signature over the request data. The recommended way to avoid signing-string drift is to ask the API for the exact string to sign.
+Uses `standardize` → sign → submit → poll, then `gateCheck`.
 
 ```javascript
 const standardizeRes = await fetch('https://api.neus.network/api/v1/verification/standardize', {
@@ -32,29 +17,8 @@ const standardizeRes = await fetch('https://api.neus.network/api/v1/verification
 });
 const standardized = await standardizeRes.json();
 const message = standardized.data.signerString;
-
-const signature = await wallet.signMessage(message); // EIP-191
+const signature = await wallet.signMessage(message);
 ```
 
-### 2. Submit to API
-
-The signed request is submitted to the NEUS API.
-
-```javascript
-const response = await fetch('https://api.neus.network/api/v1/verification', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    walletAddress,
-    verifierIds: ['ownership-basic'],
-    data,
-    signedTimestamp,
-    signature
-  })
-});
-```
-
-## Next Steps
-
-- [SDK](../../sdk/README.md) — JavaScript SDK (recommended)
-- [API Overview](https://docs.neus.network/api/overview) — HTTP endpoints and auth patterns
+- [SDK](../../sdk/README.md)
+- [API](https://docs.neus.network/api/overview)

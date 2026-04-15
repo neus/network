@@ -1,14 +1,13 @@
 <p align="center">
   <a href="https://neus.network">
-    <img src="sdk/neus-logo.svg" width="80" alt="NEUS" />
+    <img src="sdk/neus-logo.svg" width="84" alt="NEUS" />
   </a>
 </p>
 
 <h1 align="center">NEUS</h1>
 
 <p align="center">
-  <strong>Verify once. Prove everywhere.</strong><br/>
-  Portable proof receipts for apps, APIs, and agents.
+  <strong>Portable proof receipts.</strong> Verify once, save <code>proofId</code>, reuse in UI, APIs, and agents.
 </p>
 
 <p align="center">
@@ -18,107 +17,66 @@
 </p>
 
 <p align="center">
-  <a href="https://docs.neus.network"><strong>Docs</strong></a> ·
-  <a href="https://docs.neus.network/quickstart"><strong>Quickstart (SDK)</strong></a> ·
   <a href="https://docs.neus.network/get-started"><strong>Get started</strong></a> ·
-  <a href="https://docs.neus.network/api/overview"><strong>API</strong></a> ·
-  <a href="https://docs.neus.network/mcp/overview"><strong>MCP</strong></a> ·
+  <a href="https://neus.network/verify"><strong>Hosted Verify</strong></a> ·
+  <a href="https://docs.neus.network/quickstart"><strong>Quickstart</strong></a> ·
+  <a href="https://docs.neus.network"><strong>Docs</strong></a> ·
   <a href="./examples"><strong>Examples</strong></a>
 </p>
 
 ---
 
-One **proof receipt ID** (`proofId`, same value as `qHash` on the wire) for gates, APIs, and agents. Raw **`client.verify()`** is private by default. **`VerifyGate`** create mode defaults to unlisted public for reuse-first gates. See [Security and trust](https://docs.neus.network/platform/security-and-trust).
-
-## Why NEUS
-
-- One receipt, many checks
-- Less bespoke verification code
-- Raw SDK defaults to private stored receipts; widgets default to unlisted public for gates
-- SDK · widgets · HTTP · MCP
-- Same format for humans and agents
-
-## How it works
-
-<p>
-  <a href="https://docs.neus.network#how-it-works" title="NEUS docs — Overview">
-    <img
-      src="./docs/images/how-it-works.png"
-      alt="Verify once, then Proof ID, then reuse across apps, agents, and APIs"
-      width="100%"
-    />
-  </a>
-</p>
-
-<p align="center"><em>Verify once → receipt ID → reuse across apps, agents, and APIs</em></p>
-
-## Quick start (SDK)
+## Quickstart
 
 ```bash
 npm install @neus/sdk
 ```
 
-```javascript
+```ts
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient({
-  appId: 'your-app-id', // optional for local try; create an app in your NEUS account before production — https://docs.neus.network/get-started
-});
+const client = new NeusClient({ appId: 'your-app-id' });
 
 const proof = await client.verify({
   verifier: 'ownership-basic',
-  content: 'My content',
+  content: 'Verified bounty submission',
   wallet: window.ethereum,
 });
 
-const proofId = proof.proofId;
+const { proofId } = proof;
+const signerAddress = '0x...';
 
 const check = await client.gateCheck({
-  address: '0x...',
+  address: signerAddress,
   verifierIds: ['ownership-basic'],
 });
+
+console.log(check.data?.eligible);
 ```
 
-> **No wallet in your app?** [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) · **Shipping:** [Get started](https://docs.neus.network/get-started) (`appId`, credits).
+Details: [SDK README](./sdk/README.md), [docs.neus.network](https://docs.neus.network).
 
-## What you can build
-
-| Use case | Verifier |
-|----------|----------|
-| Human-only access | `proof-of-human` |
-| NFT / token gates | `nft-ownership` · `token-holding` |
-| Creator / authorship | `ownership-basic` |
-| Org / domain | `ownership-dns-txt` · `ownership-org-oauth` |
-| Agents | `agent-identity` · `agent-delegation` |
-
-[Verifiers →](https://docs.neus.network/verification/verifiers)
-
-## Start here
-
-| You are… | Link |
-|----------|------|
-| Shipping a product (`appId`, credits) | [Get started](https://docs.neus.network/get-started) |
-| First proof in code | [Quickstart](https://docs.neus.network/quickstart) |
-| No embedded wallet / guided login | [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) |
-| React gates | [Widgets](https://docs.neus.network/widgets/overview) |
-| Cursor / Claude / VS Code | [MCP](https://docs.neus.network/mcp/overview) |
-| Compare all paths | [Paths](https://docs.neus.network/choose-an-integration-path) |
-
-## Gate in React
+## React gate
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
 <VerifyGate
   appId="your-app-id"
-  requiredVerifiers={['nft-ownership']}
-  verifierData={{ 'nft-ownership': { contractAddress: '0x...', tokenId: '1', chainId: 1 } }}
+  requiredVerifiers={['token-holding']}
+  verifierData={{
+    'token-holding': {
+      contractAddress: '0x...',
+      minBalance: '100.0',
+      chainId: 1,
+    },
+  }}
 >
-  <PremiumContent />
+  <RewardClaimForm />
 </VerifyGate>
 ```
 
-## MCP
+## MCP (agents / tools)
 
 ```json
 {
@@ -131,20 +89,90 @@ import { VerifyGate } from '@neus/sdk/widgets';
 }
 ```
 
-[Setup](https://docs.neus.network/mcp/setup)
+[docs.neus.network/mcp](https://docs.neus.network/mcp/overview)
 
-## AI assistants
+## Hosted Verify
 
-[`llms.txt`](https://docs.neus.network/llms.txt) · [LLM docs](https://docs.neus.network/platform/llm-docs) · CLI: `npx -y -p @neus/sdk neus init`
+`https://neus.network/verify?preset=agent-pack`  
+`https://neus.network/verify?verifiers=proof-of-human&returnUrl=https://myapp.com/callback`
+
+## Verifiers (live list)
+
+**`GET /api/v1/verification/verifiers`** — same family as [`spec/VERIFIERS.json`](./spec/VERIFIERS.json).
+
+| Verifier | Partner |
+| --- | --- |
+| `wallet-risk` | [Webacy / DD.xyz](https://webacy.com) |
+| `proof-of-human` | [ZKPassport](https://zkpassport.id) |
+| `proof-of-audit` | [SafeStack AI](https://safestackai.com) *(not in live catalog yet)* |
+
+| Use case | ID |
+| --- | --- |
+| Social ownership | `ownership-social` |
+| Domain | `ownership-dns-txt` |
+| Org OAuth | `ownership-org-oauth` |
+| Pseudonym | `ownership-pseudonym` |
+| Content / provenance | `ownership-basic` |
+| Human verification | `proof-of-human` |
+| Token balance | `token-holding` |
+| NFT | `nft-ownership` |
+| Contract | `contract-ownership` |
+| Wallet risk | `wallet-risk` |
+| Linked wallets | `wallet-link` |
+| Content moderation | `ai-content-moderation` |
+| Agent identity | `agent-identity` |
+| Agent delegation | `agent-delegation` |
+
+## Agents (SDK)
+
+```ts
+await client.verify({
+  verifier: 'agent-identity',
+  data: {
+    agentId: 'my-bot',
+    agentWallet: '0x...',
+    agentChainRef: 'eip155:8453',
+    agentType: 'ai',
+  },
+  walletAddress: agentWallet,
+});
+
+await client.verify({
+  verifier: 'agent-delegation',
+  data: {
+    controllerWallet: '0x...',
+    controllerChainRef: 'eip155:8453',
+    agentWallet: '0x...',
+    agentChainRef: 'eip155:8453',
+    scope: 'payments:x402',
+    permissions: ['execute', 'read'],
+    maxSpend: '25000000',
+    expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
+  },
+  walletAddress: controllerWallet,
+});
+```
+
+[Agent identity](https://docs.neus.network/agents/agent-identity) · [Delegation](https://docs.neus.network/agents/agent-delegation)
+
+## Visibility
+
+| Mode | Role |
+| --- | --- |
+| Vaulted | Owner-only reads |
+| Unlisted | Reuse links, not discoverable |
+| Public | Discoverable |
+
+[Security and trust](https://docs.neus.network/platform/security-and-trust)
 
 ## Support
 
-|  |  |
-|--|--|
-| [Docs](https://docs.neus.network) | Guides |
+| | |
+| --- | --- |
+| [Docs](https://docs.neus.network) | Reference |
 | [Discussions](https://github.com/neus/network/discussions) | Q&A |
 | [Issues](https://github.com/neus/network/issues) | Bugs |
-| [dev@neus.network](mailto:dev@neus.network) | Security (private) |
+| [dev@neus.network](mailto:dev@neus.network) | Security |
 
 [CONTRIBUTING.md](./CONTRIBUTING.md)
 

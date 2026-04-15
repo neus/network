@@ -4,6 +4,11 @@
   "additionalProperties": false,
   "description": "Delegation from a controller account to an agent; the controller signs. Use CAIP-2 chain references per wallet, or set chain or chainId on the verification request when both parties share the same network context. Proof output may include CAIP-10 account identifiers.",
   "properties": {
+    "agentAccountId": {
+      "description": "Optional CAIP-10 account identifier for agentWallet. May be injected when inputs are normalized from wallet + chain context.",
+      "format": "caip10-account",
+      "type": "string"
+    },
     "agentChainRef": {
       "description": "CAIP-2 network reference for agentWallet. Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).",
       "format": "caip2-chain",
@@ -25,6 +30,11 @@
       },
       "maxItems": 8,
       "type": "array"
+    },
+    "controllerAccountId": {
+      "description": "Optional CAIP-10 account identifier for controllerWallet. May be injected when inputs are normalized from wallet + chain context.",
+      "format": "caip10-account",
+      "type": "string"
     },
     "controllerChainRef": {
       "description": "CAIP-2 network reference for controllerWallet. Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).",

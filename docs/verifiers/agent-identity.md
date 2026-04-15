@@ -16,6 +16,7 @@ Portable agent identity, signed by the agent wallet itself. Use agent-delegation
 
 ## Optional fields
 
+- `agentAccountId` (`string format caip10-account`): Optional CAIP-10 account identifier for agentWallet. May be injected when inputs are normalized from wallet + chain context.
 - `agentLabel` (`string max 128`)
 - `agentType` (`string enum: ai, bot, service, automation, agent`)
 - `description` (`string max 500`)

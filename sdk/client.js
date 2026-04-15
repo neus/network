@@ -1,9 +1,3 @@
-/**
- * NEUS SDK Client
- * Create and verify cryptographic proofs across applications
- * @license Apache-2.0
- */
-
 import { ApiError, ValidationError, NetworkError, ConfigurationError } from './errors.js';
 import {
   constructVerificationMessage,
@@ -13,7 +7,6 @@ import {
   NEUS_CONSTANTS
 } from './utils.js';
 
-/** Fallback when the live public verifier catalog is unavailable. Align with `network/spec/VERIFIERS.json` after `npm run verifier:generate` in protocol. */
 const FALLBACK_PUBLIC_VERIFIER_CATALOG = {
   'ownership-basic': { supportsDirectApi: true },
   'ownership-pseudonym': { supportsDirectApi: true },
@@ -498,10 +491,6 @@ export class NeusClient {
       signatureMethod: params.signatureMethod
     });
   }
-
-  // ============================================================================
-  // CORE VERIFICATION METHODS
-  // ============================================================================
 
   /**
    * Create a verification proof.
@@ -996,10 +985,6 @@ export class NeusClient {
     return this._formatResponse(response);
   }
 
-  // ============================================================================
-  // STATUS AND UTILITY METHODS
-  // ============================================================================
-
   /**
    * Get proof record by proof receipt id.
    *
@@ -1038,7 +1023,6 @@ export class NeusClient {
       throw new ValidationError('proofId is required');
     }
 
-    // Allow pre-signed universal owner auth (e.g. Solana) to avoid wallet-provider assumptions.
     const isPreSignedAuth = wallet &&
       typeof wallet === 'object' &&
       typeof wallet.walletAddress === 'string' &&
@@ -1317,10 +1301,6 @@ export class NeusClient {
     return true;
   }
 
-  // ============================================================================
-  // PROOFS & GATING METHODS
-  // ============================================================================
-
   /**
    * GET PROOFS BY WALLET - Fetch proofs for a wallet address
    *
@@ -1555,6 +1535,8 @@ export class NeusClient {
 
     // Wallet filters
     setIfPresent('provider', params.provider);
+    setIfPresent('handle', params.handle);
+    setIfPresent('namespace', params.namespace);
     setIfPresent('ownerAddress', params.ownerAddress);
     setIfPresent('riskLevel', params.riskLevel);
     setBoolIfPresent('sanctioned', params.sanctioned);
@@ -1753,6 +1735,12 @@ export class NeusClient {
                 actualValue = data.verificationMethod;
               } else if (key === 'domain') {
                 actualValue = data.domain;
+              } else if (key === 'handle') {
+                actualValue = data.handle || data.pseudonymId;
+              } else if (key === 'namespace') {
+                actualValue = data.namespace != null && data.namespace !== ''
+                  ? data.namespace
+                  : 'neus';
               } else if (key === 'claims.sanctions_passed') {
                 actualValue = claims.sanctions_passed ?? claims.sanctionsPassed;
               } else if (key === 'claims.age_min') {
@@ -1839,14 +1827,6 @@ export class NeusClient {
     };
   }
 
-  // ============================================================================
-  // PRIVATE UTILITY METHODS
-  // ============================================================================
-
-  /**
-   * Get connected wallet address
-   * @private
-   */
   async _getWalletAddress() {
     if (typeof window === 'undefined' || !window.ethereum) {
       throw new ConfigurationError('No Web3 wallet detected');
@@ -1860,10 +1840,6 @@ export class NeusClient {
     return accounts[0];
   }
 
-  /**
-   * Make HTTP request to API
-   * @private
-   */
   async _makeRequest(method, endpoint, data = null, headersOverride = null) {
     const url = `${this.baseUrl}${endpoint}`;
 
@@ -1914,10 +1890,6 @@ export class NeusClient {
     }
   }
 
-  /**
-   * Format API response for consistent structure
-   * @private
-   */
   _formatResponse(response) {
     const proofId = response?.data?.proofId ||
                     response?.proofId ||
@@ -1951,10 +1923,6 @@ export class NeusClient {
     };
   }
 
-  /**
-   * Check if status is terminal (completed or failed)
-   * @private
-   */
   _isTerminalStatus(status) {
     const terminalStates = [
       'verified',

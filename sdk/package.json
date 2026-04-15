@@ -1,7 +1,7 @@
 {
   "name": "@neus/sdk",
   "version": "1.0.4",
-  "description": "NEUS SDK - Create and verify cryptographic proofs with simple, clean API",
+  "description": "Verify once. Get a receipt. Reuse it everywhere. Open SDK for portable NEUS proof receipts across apps, APIs, gates, and agents.",
   "bin": {
     "neus": "./cli/neus.mjs"
   },
