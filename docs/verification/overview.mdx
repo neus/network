@@ -1,70 +1,70 @@
 ---
 title: Verification Overview
-description: From request to reusable proof receipt.
+description: Terms, verifier types, responses.
 icon: file-signature
 ---
 
-Product flow (diagram): **[Overview → How it works](../index#how-it-works)**. This page names **terms**, **verifier types**, and what you get in responses.
+Full flow: [How it works](./how-it-works). Here: vocabulary and shapes.
 
 ## Loop
 
 ```
-Check ──▶ Verify (if needed) ──▶ Save ──▶ Reuse
+Check → Verify → Save → Reuse
 ```
 
-1. **Check:** existing `proofId` still satisfies policy?
-2. **Verify:** if not, run a flow (hosted, SDK, or API)
-3. **Save:** proof receipt ID on the user or record
-4. **Reuse:** gates, proof pages, agents, MCP—without re-verifying
+1. **Check** — still valid for policy?  
+2. **Verify** — hosted, SDK, or API  
+3. **Save** — receipt id  
+4. **Reuse** — gates, pages, agents, MCP  
 
 ## Outcomes
 
-| Outcome | Examples |
-|---------|-----------|
-| Identity | Login, social linking, team verification |
-| Ownership | Content provenance, file receipts, authorship |
-| Access | NFT gating, token thresholds, premium content |
-| Abuse Prevention | Human verification, wallet safety |
-| Agents | Agent registration, scoped delegation |
+|  | Examples |
+|--|----------|
+| Identity | Login, social, team |
+| Ownership | Content, files, authorship |
+| Access | NFT, token thresholds |
+| Abuse | Human, wallet safety |
+| Agents | Identity, delegation |
 
-## Types
+## Verifier types
 
-| Type | Behavior | Examples |
-|------|--------------|----------|
-| **Instant** | Wallet signs, proof created | ownership-basic, agent-identity |
-| **Interactive** | User completes hosted flow | social linking, human verification |
-| **Lookup** | Check against live state | NFT ownership, token balance |
+| Type | How | Examples |
+|------|-----|----------|
+| Instant | Wallet signs | ownership-basic, agent-identity |
+| Interactive | Hosted steps | social, human |
+| Lookup | Live state | NFT, balance |
 
 ## Terms
 
 | Term | Meaning |
 |------|---------|
-| **Proof receipt ID** | Stable identifier for a proof See **[Proof receipts](../platform/receipts-and-results)**. |
-| **Verifier** | The capability being verified |
-| **Signing string** | The message the wallet signs |
-| **Hosted verify** | NEUS-hosted UI at `/verify` |
+| Proof receipt id | Stable id — [Receipts](../platform/receipts-and-results) |
+| Verifier | Capability checked |
+| Signing string | Wallet message |
+| Hosted verify | `/verify` UI |
 
-Every verifier starts in one of two ways: **direct-sign receipt** (wallet or server signing) or **Hosted Verify** (interactive). Visibility modes: **[Security and trust](../platform/security-and-trust)**.
+Direct-sign **or** hosted. Visibility: [Security and trust](../platform/security-and-trust)
 
 ## Response
 
-- `proofId`
-- `status` · `verified` · `processing` · `failed`
-- Page · `https://neus.network/proof/[proof-id]`
+- `proofId`  
+- `status`: verified · processing · failed  
+- Page: `https://neus.network/proof/[proof-id]`  
 
 ## Next
 
 <CardGroup cols={2}>
   <Card title="Verifiers" icon="list-tree" href="./verifiers">
-    Pick capability.
+    Catalog.
   </Card>
   <Card title="How it works" icon="shield-check" href="./how-it-works">
-    Flow detail.
+    Flow.
   </Card>
   <Card title="Signing" icon="file-signature" href="./signing-format">
     Messages.
   </Card>
   <Card title="Lifecycle" icon="rotate" href="./lifecycle">
-    Poll + revoke.
+    Poll, revoke.
   </Card>
 </CardGroup>

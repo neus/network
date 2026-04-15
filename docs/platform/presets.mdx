@@ -1,41 +1,33 @@
 ---
 title: Presets
-description: Preconfigured hosted verify bundles for the most common NEUS onboarding and trust flows.
+description: Short hosted-verify bundles (`preset=`).
 icon: layer-group
 ---
 
-Presets are short hosted verify bundles for common flows. Use `preset=<id>` for a simple hosted URL instead of assembling a longer verifier list yourself.
-
-## URL Format
+Use `preset=<id>` for common hosted URLs instead of long verifier lists.
 
 ```text
 https://neus.network/verify?preset=<id>
 ```
 
-Optional params: `returnUrl`, `gateId`, `mode=popup`, `origin`.
+Add `returnUrl`, `gateId`, `mode=popup`, `origin` as needed.
 
-## When To Use Presets
+## Catalog
 
-- You need the shortest hosted verify URL for a common flow.
-- You want stable, memorable entry points for docs, support, and in-app links.
-- You want users to start from an outcome instead of a raw verifier list.
-
-## Preset Catalog
-
-| Preset ID | Public meaning | Use case |
-|-----------|-----------|----------|
-| `basic-pack` | Ownership and provenance | Publish a proof-backed claim, file, or artifact |
-| `human-pack` | Human verification | Add stronger anti-bot or uniqueness checks |
-| `project-pack` | Project ownership trust | Verify project legitimacy through ownership and domain trust |
-| `creator-pack` | Content trust | Pair ownership and provenance with content safety review |
-| `agent-pack` | Agent setup | Register an agent, set permissions, and add a safety screen |
-| `holder-pack` | Holder access | Gate access by holdings with an added safety screen |
-| `social-pack` | Linked accounts | Connect a social account to a portable profile |
-| `domain-pack` | Domain verification | Prove control of a site, app, or community domain |
-| `org-pack` | Team and organization verification | Verify workspace or company association |
-| `nft-pack` | NFT holder access | Gate by NFT ownership |
-| `wallet-link-pack` | Linked wallets | Connect multiple wallets into one linked identity |
-| `pseudonym-pack` | Username and namespace claims | Claim a portable handle or namespaced identity |
+| Preset | For |
+|--------|-----|
+| `basic-pack` | Ownership / provenance |
+| `human-pack` | Human verification |
+| `project-pack` | Project trust |
+| `creator-pack` | Content trust |
+| `agent-pack` | Agent setup |
+| `holder-pack` | Holder + safety |
+| `social-pack` | Linked accounts |
+| `domain-pack` | Domain control |
+| `org-pack` | Team / org |
+| `nft-pack` | NFT gate |
+| `wallet-link-pack` | Linked wallets |
+| `pseudonym-pack` | Handle / namespace |
 
 ## Examples
 
@@ -45,14 +37,12 @@ https://neus.network/verify?preset=basic-pack&returnUrl=https://myapp.com/callba
 https://neus.network/verify?preset=social-pack&mode=popup&origin=https://myapp.com
 ```
 
-## SDK and Widgets
-
-Pass `preset` when building hosted verify URLs:
+## SDK
 
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
-const url = getHostedCheckoutUrl({
+getHostedCheckoutUrl({
   preset: 'agent-pack',
   returnUrl: 'https://myapp.com/callback',
 });
@@ -61,10 +51,10 @@ const url = getHostedCheckoutUrl({
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="Auth + Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    Hosted URL params and popup flow.
+  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+    Params + popup.
   </Card>
-  <Card title="Capability Catalog" icon="list-tree" href="../verification/verifiers">
-    Verifier catalog for the capabilities behind each preset.
+  <Card title="Verifiers" icon="list-tree" href="../verification/verifiers">
+    What presets bundle.
   </Card>
 </CardGroup>

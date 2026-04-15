@@ -59,7 +59,7 @@ await client.verify({
     receiptDisclosure: 'summary',
     expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
     instructions: 'Policy instructions for the delegated agent',
-    skills: ['market-data']
+    skills: [{ id: 'market-data' }]
   },
   walletAddress: controllerWallet,
 });
@@ -81,25 +81,22 @@ await client.verify({
 | `receiptDisclosure` | No | `summary`, `full`, or `none` |
 | `expiresAt` | No | Expiration timestamp (Unix ms) |
 | `instructions` | No | Policy instructions (max 4000 chars) |
-| `skills` | No | Skill identifiers granted to the agent |
+| `skills` | No | Up to 48 skill objects (`id` required) |
 
-Proof responses may include CAIP-10 `controllerAccountId` and `agentAccountId`. See [agent-delegation verifier doc](../verifiers/agent-delegation.md).
+Proof responses may include CAIP-10 `controllerAccountId` and `agentAccountId`. Schema: [`agent-delegation.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/agent-delegation.json).
 
-## What You Get Back
+## What you get
 
-You receive a proof receipt ID that can be reused for agent policy checks and delegated actions.
+Proof receipt id for policy checks and delegated actions.
 
 ## Checking access
 
 Use proof checks or MCP **`neus_agent_link`** (readiness check) from your app — you typically do not need raw REST from the default integration path.
 
-## Security Best Practices
+## Security
 
 <Warning>
-- Always set `expiresAt` for time-limited delegation
-- Use `maxSpend` to limit financial exposure
-- Regularly audit delegation proofs
-- Revoke unused delegations
+Set `expiresAt` and `maxSpend` when money or high-risk actions are in scope. Revoke proofs you no longer trust.
 </Warning>
 
 ## Revocation

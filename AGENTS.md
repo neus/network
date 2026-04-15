@@ -9,7 +9,7 @@
 | Area | Path |
 | --- | --- |
 | SDK | `sdk/` |
-| Schemas | `spec/`, `docs/verifiers/` |
+| Schemas | `spec/`, `docs/verifiers/schemas/` |
 | OpenAPI | `docs/openapi/` |
 | Examples | `examples/` |
 

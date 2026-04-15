@@ -1,28 +1,20 @@
 ---
 title: Choose an Integration Path
-description: Match your outcome to the right NEUS surface.
+description: Pick SDK, widgets, API, or MCP.
 icon: route
 ---
 
-<Note>
-**Most teams start here:** [Hosted Verify](./cookbook/auth-hosted-verify) → save **proof receipt ID** → server checks / receipts ([Integration](./integration#loop)) → app-paid billing by default ([Get started](./get-started#choose-who-pays)).
-</Note>
+After [Get started](./get-started), choose a row, then [Integration](./integration).
 
-<Tip>
-**Loop:** [Check](./integration#loop) → verify if needed → save **proof receipt ID** → reuse. Interactive flows: **[Hosted Verify](./cookbook/auth-hosted-verify)**. [Proof receipts](./platform/receipts-and-results)
-</Tip>
+| Goal | Primary doc | Shape |
+|------|-------------|-------|
+| Login, social, human, org | [Hosted Verify](./cookbook/auth-hosted-verify) | Redirect or popup |
+| Direct-sign (`ownership-basic`) | [SDK](./sdks/overview) · [Quickstart](./quickstart) | Browser or server wallet |
+| React | [Widgets](./widgets/overview) | VerifyGate |
+| Server eligibility | [API](./api/overview), `gateCheck` | HTTP |
+| Assistants / IDE | [MCP](./mcp/overview) | MCP URL; Bearer for [account tools](./mcp/auth) |
+| Agents | [Agents](./agents/overview) | After app and billing |
+| HTTP only | [API](./api/overview) | Standardize → sign → POST |
+| Billing | [Get started](./get-started) | Credits, sponsors |
 
-Use this table after **[Get started](./get-started)** when you need a surface match; then follow **[Integration](./integration)**.
-
-| Outcome | Start here | Effort |
-|---------|------------|--------|
-| **Default:** login, social, human, org (interactive) | **[Hosted Verify](./cookbook/auth-hosted-verify)** | Redirect or popup |
-| Direct-sign content proof (`ownership-basic`) | **[SDK](./sdks/overview)** or **[Quickstart](./quickstart)** | Wallet or server signing |
-| React gating and reuse-first UX | **[Widgets](./widgets/overview)** · `VerifyGate` | Drop-in component |
-| Backend eligibility without UI | **[API](./api/overview)** · SDK **`gateCheck`** | HTTP from your server |
-| Assistants and IDE tools | **[MCP](./mcp/overview)** — endpoint works without a key; **[Bearer token](https://neus.network/profile?tab=account)** for **`neus_me`** and private reads (**[Auth](./mcp/auth)**) | Add URL once |
-| Agent identity and delegation | **[Agents](./agents/overview)** (after **[Get started](./get-started)** billing and `appId`) | Presets + proofs |
-| Raw HTTP (advanced) | **[API](./api/overview)** | Sign + POST |
-| Unsure who pays | **[Get started](./get-started)** | Credits and sponsors |
-
-**Then:** **[Integration](./integration)** — check → verify → save → reuse.
+Interactive verifiers: Hosted Verify or VerifyGate. In-browser signing: SDK `verify` with `wallet`.

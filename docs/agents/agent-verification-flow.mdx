@@ -1,70 +1,42 @@
 ---
 title: Agent Verification Flow
-description: How agent identity, delegation, and MCP fit together for AI-facing NEUS integrations.
+description: Register agent, optional delegation, consume via API or MCP.
 icon: arrow-progress
 ---
 
-Use this flow when you need to identify an agent, define what it can do, and let an app or AI runtime consume that result.
+Terms: [Agent concepts](./concepts).
 
-For definitions of **approving account**, **agent wallet**, and **session**, see [Agent concepts](./concepts).
-
-## What this flow includes
-
-1. Agent registration
-2. Optional agent permissions
-3. A runtime such as MCP or the API that consumes the result
-
-## Recommended Sequence
+## Sequence
 
 <Steps>
-  <Step title="Register the agent">
-    Create an agent registration proof that binds the agent wallet and its public metadata to one reusable proof receipt.
+  <Step title="Register">
+    `agent-identity` — agent wallet signs; one receipt for public metadata.
   </Step>
-  <Step title="Add agent permissions when an approving account is involved">
-    If a person, team, or service is granting authority to the agent, create an agent permissions proof with scope, permissions, and any limits.
+  <Step title="Delegate (if needed)">
+    `agent-delegation` — approving account (`controllerWallet`) signs scope, caps, expiry.
   </Step>
-  <Step title="Use MCP or the API in the runtime">
-    Your app, agent runtime, or tool can read the verifier catalog, check access, and send users to hosted verify when interactive completion is still needed.
+  <Step title="Runtime">
+    MCP or API: catalog, checks, hosted verify for interactive steps.
   </Step>
 </Steps>
 
-`agent-identity` registers the agent. `agent-delegation` grants authority. Keep those two concepts separate in your app and docs.
+## MCP handoff
 
-## What you configure
+`neus_agent_link` → `status: "link_required"`: open **`hostedVerifyUrl`**, finish browser flow, call **`neus_agent_link`** again. Readiness for identity + permissions — not a generic wallet-link tool.
 
-- The agent wallet
-- The agent label, type, and public description
-- Optional permissions, scope, expiry, and limits when an approving account is granting authority
-
-## What your app gets back
-
-- A proof receipt ID for agent registration
-- An optional proof receipt ID for agent permissions
-- A stable way to reuse those results in hosted verify, MCP, and API checks
-
-## Hosted handoff
-
-When `neus_agent_link` (MCP) returns `status: "link_required"`, the default path is simple:
-
-1. Open the `hostedVerifyUrl` from the tool response.
-2. Finish the guided browser flow.
-3. Call `neus_agent_link` again to confirm identity and access approval are both on file.
-
-You do not need to build or manage the hosted URL yourself for the normal MCP path. This tool is a **readiness check** (identity + permissions), not a wallet-linking flow.
-
-## Related pages
+## Related
 
 <CardGroup cols={3}>
   <Card title="Concepts" icon="book-open" href="./concepts">
-    Approving account, agent wallet, and API field names.
+    Roles and field names.
   </Card>
-  <Card title="Agent Registration" icon="robot" href="./agent-identity">
-    Register a verifiable agent.
+  <Card title="Agent identity" icon="robot" href="./agent-identity">
+    Registration.
   </Card>
-  <Card title="Agent Permissions" icon="key" href="./agent-delegation">
-    Define delegated authority and limits.
+  <Card title="Delegation" icon="key" href="./agent-delegation">
+    Scoped authority.
   </Card>
-  <Card title="MCP Server" icon="plug" href="../mcp/overview">
-    Connect proofs to agent tools and runtimes.
+  <Card title="MCP" icon="plug" href="../mcp/overview">
+    Assistant runtime.
   </Card>
 </CardGroup>

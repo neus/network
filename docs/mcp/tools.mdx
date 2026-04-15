@@ -1,36 +1,32 @@
 ---
 title: MCP Tools Overview
-description: Which NEUS tool to call for checks, verification, and agents.
+description: Which tool to call, in order.
 icon: wrench
 ---
 
-**Platform + billing:** **[Get started](../get-started)**. **`neus_proofs_check`** accepts **`sponsorGrant`** for sponsored or higher-limit scans when your setup uses grants.
+`neus_proofs_check` can take `sponsorGrant` if you use sponsors ([Get started](../get-started)). You mostly **open** verify URLs the model returns.
 
-The **assistant** chooses tools; you mainly **open links** they return. For **“verify it’s me”**, prefer anything that hands you a **`neus.network/verify`** URL.
+Bearer: [Auth](./auth)
 
-## Parameter names
+## Field names
 
-Your client also loads schemas from the server. This table only prevents the common mistake of using the wrong field name:
-
-| Tool | Who / address field | Verifier field |
-|------|---------------------|----------------|
+| Tool | Address | Verifiers |
+|------|---------|-----------|
 | `neus_proofs_check` | `wallet` | `verifiers` |
 | `neus_verify_or_guide`, `neus_verify` | `walletAddress` | `verifierIds` |
 | `neus_proofs_get` | `identifier` | — |
 
-EVM **`0x…`**, **Solana base58**, or **`did:pkh:…`** where applicable.
+EVM `0x…`, Solana base58, or `did:pkh:…` as applicable.
 
-## Suggested tool order
+## Order
 
-1. **`neus_context`** (public; call first for live verifier catalog and protocol context)
-2. **`neus_verify_or_guide`** / **`neus_proofs_check`**
-3. **`neus_verifiers_catalog`** (when you need ids)
-4. **`neus_proofs_get`** (when you have an id)
-5. **`neus_me`** (with Bearer only—[Auth](./auth))
-6. **Agent tools** when needed
+1. `neus_context`
+2. `neus_verify_or_guide` / `neus_proofs_check`
+3. `neus_verifiers_catalog` (ids)
+4. `neus_proofs_get` (have id)
+5. `neus_me` (Bearer — [Auth](./auth))
+6. Agent tools if needed
 
-**`neus_context`** and steps **2–4** work **without** Bearer for typical public flows. **`neus_me`** and private reads need **`Authorization: Bearer`** with your **personal access key** from **[Access keys](https://neus.network/profile?tab=account)**.
+## Pages
 
-## Tool pages
-
-- [Context](./context) · [Verifier catalog](./verifiers-catalog) · [Proofs check](./proofs-check) · [Verify or guide](./verify-or-guide) · [Proofs get](./proofs-get) · [Current user](./me) · [Agent create](./agent-create) · [Agent link](./agent-link)
+[Context](./context) · [Catalog](./verifiers-catalog) · [Check](./proofs-check) · [Verify or guide](./verify-or-guide) · [Proofs get](./proofs-get) · [Me](./me) · [Agent create](./agent-create) · [Agent link](./agent-link)

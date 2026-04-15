@@ -1,73 +1,44 @@
 ---
 title: Sybil Resistance
-description: Prevent Sybil attacks with proof-based identity verification.
+description: Layer verifiers and recency for stronger assurance than wallet-only.
 icon: shield-halved
 ---
 
-Use this recipe when a product action should require stronger proof than “a wallet exists.”
+| Layer | Verifier | When |
+|-------|----------|------|
+| Wallet | `ownership-basic` | Baseline uniqueness |
+| Social | `ownership-social` | Linked account |
+| Human | `proof-of-human` | Anti-bot |
 
-## Strategy Overview
-
-| Approach | Verifier | Use Case |
-|----------|----------|----------|
-| Wallet uniqueness | `ownership-basic` | Basic one-wallet-one-vote |
-| Social verification | `ownership-social` | Link social accounts |
-| Human verification | `proof-of-human` | Anti-bot protection |
-
-## Basic Implementation
-
-### Wallet-Based (One Wallet Per User)
+## gateCheck examples
 
 ```javascript
-const result = await client.gateCheck({
+const basic = await client.gateCheck({
   address: walletAddress,
   verifierIds: ['ownership-basic'],
-  since: Date.now() - 24 * 60 * 60 * 1000, // 24 hours
+  since: Date.now() - 24 * 60 * 60 * 1000,
 });
-```
 
-### Social Verification
-
-```jsx
-<VerifyGate
-  requiredVerifiers={['ownership-social']}
-  onVerified={(result) => {
-    // Store the returned proof receipt ID for vote or claim replay protection
-  }}
->
-  <button>Verify to Vote</button>
-</VerifyGate>
-```
-
-## Best Practices
-
-<Warning>
-- Always enforce recency windows for point-in-time checks
-- Store the proof receipt identifier to prevent replay attacks
-- Consider combining multiple verifiers for higher assurance
-</Warning>
-
-### Multi-Verifier Approach
-
-```javascript
-const result = await client.gateCheck({
+const layered = await client.gateCheck({
   address: walletAddress,
   verifierIds: ['ownership-basic', 'proof-of-human'],
   since: Date.now() - 60 * 60 * 1000,
 });
 ```
 
-## Airdrop Protection
+## Hosted social
 
-```javascript
-// Check before airdrop claim
-const proofs = await client.gateCheck({
-  address: claimerAddress,
-  verifierIds: ['proof-of-human'],
-  since: Date.now() - 7 * 24 * 60 * 60 * 1000, // 7 days
-});
-
-if (!proofs.data?.eligible) {
-  throw new Error('Human verification required');
-}
+```jsx
+<VerifyGate
+  requiredVerifiers={['ownership-social']}
+  onVerified={(result) => {
+    // persist proof id for replay protection
+  }}
+>
+  <button>Verify to continue</button>
+</VerifyGate>
 ```
+
+<Warning>
+Use **`since`** on point-in-time checks. Store proof ids where replay matters.
+</Warning>

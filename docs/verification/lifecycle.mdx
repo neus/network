@@ -1,45 +1,40 @@
 ---
 title: Verification Lifecycle
-description: Creation, async processing, status polling, reuse policy, and revocation for NEUS proofs.
+description: Create, poll, reuse, revoke.
 icon: rotate
 ---
 
-## Lifecycle Stages
+## Stages
 
-| Stage | Meaning | Where |
-|---|---|---|
-| Flow starts | Verification is launched | Hosted verify, SDK, or API |
-| Request accepted | NEUS accepts the verification | SDK or `POST /api/v1/verification` |
-| Processing | An async verifier is still running | Status endpoint or SDK polling |
-| Complete | The proof receipt is ready | SDK result, widget callback, or status endpoint |
-| Reused | Another product check uses the saved proof receipt | Proof page, gate check, policy, MCP |
-| Revoked or stale | The proof no longer meets the target policy | Revocation route or freshness rule |
+| Stage | Meaning |
+|-------|---------|
+| Start | Hosted, SDK, or API |
+| Accepted | Request in flight |
+| Processing | Async verifier |
+| Complete | Receipt id ready |
+| Reused | Checks / gates / MCP |
+| Stale / revoked | Policy or user revoke |
 
-## Reuse Strategy
+## Strategies
 
-| Strategy | What it does | Use when |
-|---|---|---|
-| `reuse-or-create` | Reuse an existing eligible proof, otherwise create one | Default in most hosted and SDK flows |
-| `reuse` | Only check existing proofs | Read-only access checks |
-| `fresh` | Always force new verification | High-stakes actions |
+| Strategy | Use |
+|----------|-----|
+| `reuse-or-create` | Default — reuse if valid |
+| `reuse` | Read-only checks |
+| `fresh` | Force new proof |
 
-## Freshness Guidance
+## Freshness
 
-- Use a recency window for point-in-time verifiers such as balances, risk, and ownership.
-- Treat status checks as cheap reads; only create new proofs when policy actually demands a fresh assertion.
-- Prefer `since` or `sinceDays` in gate checks instead of re-verifying on every request.
+- Point-in-time verifiers (balance, risk): respect recency.  
+- Prefer cheap checks + `since` / `sinceDays`; verify only when policy needs it.
 
-## Revocation
-
-If a user needs to invalidate a proof they own, use the self-revocation flow:
+## Revoke (owner)
 
 ```http
 POST /api/v1/proofs/revoke-self/{qHash}
 ```
 
-The path parameter value is the same proof receipt ID returned as `proofId` in SDK responses.
-
-In the JavaScript SDK:
+`qHash` = same value as SDK `proofId`.
 
 ```javascript
 await client.revokeOwnProof(proofId, wallet);
@@ -48,16 +43,16 @@ await client.revokeOwnProof(proofId, wallet);
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="How Verification Works" icon="shield-check" href="./how-it-works">
-    Requests, signer strings, and hosted interaction.
+  <Card title="How it works" icon="shield-check" href="./how-it-works">
+    Flow.
   </Card>
-  <Card title="Receipts & Results" icon="file-check" href="../platform/receipts-and-results">
-    Proof receipt structure and field semantics.
+  <Card title="Receipts" icon="file-check" href="../platform/receipts-and-results">
+    Id semantics.
   </Card>
-  <Card title="Verifier Catalog" icon="list-tree" href="./verifiers">
-    Verifier pages and use cases.
+  <Card title="Signing" icon="file-signature" href="./signing-format">
+    Messages.
   </Card>
-  <Card title="API Overview" icon="terminal" href="../api/overview">
-    HTTP endpoints.
+  <Card title="Verifiers" icon="list-tree" href="./verifiers">
+    Catalog.
   </Card>
 </CardGroup>

@@ -1,22 +1,18 @@
 ---
 title: SDK Authentication
-description: Hosted login and optional signature-based verification.
+description: Hosted login, Bearer, signatures.
 icon: key
 ---
 
-## Hosted login
+## Hosted
 
-1. Hosted verify with **`returnUrl`** via **`getHostedCheckoutUrl`**. [Hosted Verify](../cookbook/auth-hosted-verify)
-2. User completes passkey or wallet on **neus.network**.
-3. **Finish login with `@neus/sdk`**. Keep **`Authorization: Bearer`** for API calls.
+1. `getHostedCheckoutUrl` + `returnUrl` — [Hosted Verify](../cookbook/auth-hosted-verify)  
+2. User finishes on **neus.network**  
+3. Finish session with `@neus/sdk`; Bearer on API as needed  
 
-You can create a **personal access key** on **[Access keys](https://neus.network/profile?tab=account)** and send it as **`Authorization: Bearer`** on API and MCP requests (same header).
+[Access keys](https://neus.network/profile?tab=account) → `Authorization: Bearer` on API/MCP (same header). MCP: [Auth](../mcp/auth) (`neus_me`)
 
-**Bearer** on MCP → **`neus_me`**. [MCP Auth](../mcp/auth)
-
-## Signature-based login
-
-For flows that stay in your app without a hosted session:
+## In-app signature
 
 ```javascript
 import { standardizeVerificationRequest, signMessage } from '@neus/sdk';
@@ -31,4 +27,4 @@ const signature = await signMessage({
 });
 ```
 
-Use the SDK helpers instead of assembling signing strings yourself. Details: [Signing format](../verification/signing-format), [API authentication](../api/authentication).
+Use SDK helpers—don’t craft strings by hand. [Signing format](../verification/signing-format) · [API authentication](../api/authentication)

@@ -1,14 +1,14 @@
 ---
 title: API Overview
-description: HTTP endpoints for verification, status, and gate checks.
+description: NEUS HTTP API—verify, proofs, checks.
 icon: terminal
 ---
 
 **Base:** `https://api.neus.network`
 
-**Billing:** Same payer rules as the SDK and MCP. **[Get started](../get-started)** · **`appId`** · **`X-Neus-App`** · **`X-Sponsor-Grant`** · credits
+**Billing:** same as SDK/MCP. [Get started](../get-started) · `appId` · `X-Neus-App` · `X-Sponsor-Grant`
 
-**SDK** when possible; **HTTP** for server-only.
+Prefer **SDK**; use **HTTP** when you must.
 
 ## Endpoints
 
@@ -16,30 +16,30 @@ icon: terminal
 |------|--------|---------|
 | `/api/v1/verification` | POST | Create proof |
 | `/api/v1/verification/standardize` | POST | Signing string |
-| `/api/v1/proofs/{qHash}` | GET | Proof record (path value is the SDK `proofId`) |
-| `/api/v1/proofs/check` | GET | Eligibility only |
-| `/api/v1/proofs/by-wallet/{address}` | GET | Proofs for wallet |
-| `/api/v1/verification/verifiers` | GET | Verifier catalog |
+| `/api/v1/proofs/{qHash}` | GET | Proof (`qHash` = SDK `proofId`) |
+| `/api/v1/proofs/check` | GET | Eligibility |
+| `/api/v1/proofs/by-wallet/{address}` | GET | List by wallet |
+| `/api/v1/verification/verifiers` | GET | Catalog |
 
 ## Examples
 
-**Proofs by wallet**
+**By wallet**
 
 ```bash
 curl "https://api.neus.network/api/v1/proofs/by-wallet/0x...?limit=50"
 ```
 
-Public and unlisted proofs are visible anonymously; **private** proofs need the user signed in.
+Public / unlisted: anonymous ok. **Private:** user signed in.
 
-**Gate check**
+**Check**
 
 ```bash
 curl "https://api.neus.network/api/v1/proofs/check?address=0x...&verifierIds=ownership-basic"
 ```
 
-**Create proof:** standardize → sign → POST `/verification`. Bodies: OpenAPI / SDK.
+**Create:** standardize → sign → POST `/verification`. Shapes: **API Reference** (OpenAPI).
 
-**Verifier catalog**
+**Catalog**
 
 ```bash
 curl https://api.neus.network/api/v1/verification/verifiers
@@ -47,19 +47,19 @@ curl https://api.neus.network/api/v1/verification/verifiers
 
 ## Auth
 
-- **Reads:** public/unlisted without login; private when the user is signed in.
-- **Writes:** wallet signature (see [Authentication](./authentication)).
+- **Reads:** public/unlisted without login; private when owner session applies.
+- **Writes:** wallet signature — [Authentication](./authentication)
 
 ## Next
 
 <CardGroup cols={2}>
   <Card title="Get started" icon="book" href="../get-started">
-    Onboarding and billing.
+    Onboarding.
   </Card>
   <Card title="Authentication" icon="key" href="./authentication">
-    Sessions and signing.
+    Signing.
   </Card>
   <Card title="Errors" icon="triangle-exclamation" href="./errors">
-    Status codes.
+    Codes.
   </Card>
 </CardGroup>

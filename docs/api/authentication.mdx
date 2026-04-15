@@ -1,29 +1,27 @@
 ---
 title: Authentication
-description: How API requests are authenticated for NEUS integrations.
+description: API auth—sessions and wallet signing.
 icon: fingerprint
 ---
 
-**Default:** [Hosted Verify](../cookbook/auth-hosted-verify) or **SDK**. No raw HTTP signing for normal flows.
+**Default:** [Hosted Verify](../cookbook/auth-hosted-verify) or **SDK**. Raw HTTP only when intentional.
 
-Use the paths below only when you intentionally call the HTTP API without the SDK.
+## Wallet standards
 
-## Wallet signing standards
-
-| Type | Standard | Typical wallets |
-|------|----------|-----------------|
+| Type | Standard | Wallets |
+|------|----------|---------|
 | EOA | EIP-191 | MetaMask, Coinbase, Rainbow |
-| Smart contract | EIP-1271 | Safe, Argent, Sequence |
-| Counterfactual | EIP-6492 | Undeployed smart accounts |
+| Contract | EIP-1271 | Safe, Argent, Sequence |
+| Counterfactual | EIP-6492 | Undeployed accounts |
 
-## Programmatic proof creation (HTTP)
+## HTTP create (advanced)
 
-1. **`POST /api/v1/verification/standardize`:** body for your verifiers → **`signerString`**.
-2. Sign **`signerString`** with the user’s wallet.
-3. **`POST /api/v1/verification`:** same fields + **`signature`**.
+1. `POST /api/v1/verification/standardize` → `signerString`
+2. Sign with user wallet
+3. `POST /api/v1/verification` — same body + `signature`
 
-Request and response shapes: **OpenAPI** (`docs/openapi/public-api.json`). Narrative: [Signing format](../verification/signing-format).
+Shapes: **API Reference** (OpenAPI). Story: [Signing format](../verification/signing-format)
 
-## Embedded / picky wallets
+## Picky wallets
 
-Use **`signMessage`** from **`@neus/sdk`** instead of calling the wallet with a hand-built payload.
+Use `signMessage` from `@neus/sdk`—don’t hand-build payloads.

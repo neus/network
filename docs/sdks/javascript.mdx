@@ -4,7 +4,7 @@ description: JavaScript client for the NEUS Network verification API.
 icon: code
 ---
 
-SDK for proof creation, hosted handoff, polling. Prefer over raw HTTP when you can.
+Proof creation, hosted URLs, polling. Prefer this over ad-hoc HTTP.
 
 ## Install
 
@@ -93,17 +93,7 @@ const res = await client.verify({
 });
 ```
 
-This is the advanced path. With MCP, manual signing is typically unnecessary.
-
-## What Verifiers Are Available?
-
-**Verifier catalog:** API is authoritative for IDs, schema, metadata.
-
-```
-GET /api/v1/verification/verifiers
-```
-
-The SDK may ship fallbacks or examples; always treat the API response as authoritative for production.
+Catalog: `GET /api/v1/verification/verifiers` — treat the response as authoritative (SDK examples are non-normative).
 
 ## Gate checks: `gateCheck` vs `checkGate`
 
@@ -168,7 +158,7 @@ if (!res.data?.eligible) {
 
 ## Polling
 
-**`pollProofStatus()`** backs off automatically on rate limits (**`429`**) and transient errors.
+`pollProofStatus()` backs off on `429` and transient errors.
 
 ## Advanced: Private Proof Operations
 

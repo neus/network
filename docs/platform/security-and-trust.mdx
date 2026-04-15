@@ -1,70 +1,66 @@
 ---
 title: Security and Trust
-description: Visibility and privacy: the single builder decision page for public, unlisted, and private proofs.
+description: Public, unlisted, and private proofs—one decision page.
 icon: user-shield
 ---
 
-Use this page when you pick public, unlisted, or private behavior. Shorter guides link here for the full matrix and defaults.
+Pick visibility here. Short guides link in for defaults.
 
-## Trust boundaries
+## Boundaries
 
-- Verification completes in **NEUS**. Do not treat the browser alone as proof of issuance.
-- Gate checks and status should return **only** what your product needs.
-- **Private** proof reads require the **owner signed in** (or your product’s explicit sharing rules).
+- Issuance happens in **NEUS**—not “trust the browser alone.”
+- Return **only** what your product needs from checks.
+- **Private** reads need the owner signed in (or your sharing rules).
 
-## Visibility modes
+## Modes
 
-| Mode | `privacyLevel` | `publicDisplay` | When to use |
-|------|----------------|-----------------|-------------|
-| Listed public | `public` | `true` | Publishing and attribution where the proof should be discoverable |
-| Unlisted public | `public` | `false` | Non-sensitive reuse, gates, and checks without listing for discovery |
-| Owner-only | `private` | `false` | Owner-only access and owner-authenticated reuse |
+| Mode | `privacyLevel` | `publicDisplay` | Use |
+|------|----------------|-----------------|-----|
+| Listed public | `public` | `true` | Discoverable |
+| Unlisted public | `public` | `false` | Gates, reuse, not listed |
+| Owner-only | `private` | `false` | Owner auth |
 
-Anyone with the proof receipt ID can fetch metadata appropriate to that mode. Treat IDs like capability-bearing links.
+Receipt ids are capability-bearing links for the mode you chose.
 
-**Fields:** `privacyLevel` chooses vaulted (private) versus checkable without a signed-in owner (public). `publicDisplay` chooses discoverable listing. Unlisted public proofs are still public to anyone who has the receipt id.
+`privacyLevel`: vaulted vs checkable without sign-in. `publicDisplay`: listed vs not. Unlisted public still works for anyone with the id.
 
-## Default behavior by surface
+## Defaults
 
-| Surface | Create default | Notes |
-|---------|----------------|-------|
-| **Raw SDK** `client.verify()` | `privacyLevel: 'private'`, `publicDisplay: false`, `storeOriginalContent: true` | Private-by-default for server and wallet flows |
-| **`VerifyGate`** create mode | `privacyLevel: 'public'`, `publicDisplay: false`, `storeOriginalContent: true` | Unlisted public for reuse-first gating |
+| Surface | Create default |
+|---------|----------------|
+| `client.verify()` | `private`, `storeOriginalContent: true` |
+| VerifyGate | unlisted public (`public` + `publicDisplay: false` + `storeOriginalContent: true`) |
 
-Override with explicit `proofOptions` / `options` when your product needs listed public or stricter private behavior.
+Override with `proofOptions` when you need listed public or stricter private.
 
 ## storeOriginalContent
 
-| Value | Effect |
-|-------|--------|
-| `true` | Default. Retains original content for verification context unless you opt out. |
-| `false` | Hash-only or minimal retention where your flow allows it. |
+|  | Effect |
+|--|--------|
+| `true` (default) | Keep content context for verification. |
+| `false` | Hash-first where your verifier allows—know the tradeoff. |
 
-Use `false` only when you intentionally want hash-first storage and accept the tradeoffs for your verifier and policy.
+## Never ship publicly
 
-## What should never be exposed publicly
+Raw signatures · owner-only payloads · private proof enumeration
 
-- Raw signatures
-- Owner-only proof payloads
-- Private proof enumeration
-
-## Production checklist
+## Checklist
 
 <Checklist>
-  <Item>Use gate checks for access decisions.</Item>
-  <Item>Respect time windows for point-in-time verifiers.</Item>
-  <Item>Route interactive verification through `/verify`.</Item>
-  <Item>Consume verifier metadata from the API catalog.</Item>
-  <Item>Pick visibility explicitly for raw SDK flows; know VerifyGate create defaults for widgets.</Item>
+  <Item>Decide access with gate checks.</Item>
+  <Item>Respect verifier time windows.</Item>
+  <Item>Interactive flows via `/verify`.</Item>
+  <Item>Verifier list from live API catalog.</Item>
+  <Item>Set visibility for raw SDK; know VerifyGate defaults.</Item>
 </Checklist>
 
 ## Related
 
 <CardGroup cols={2}>
   <Card title="Proof receipts" icon="receipt" href="./receipts-and-results">
-    Save proofId, not signatures.
+    Save ids.
   </Card>
   <Card title="Integration" icon="compass" href="../integration">
-    Check, verify, save, reuse.
+    Loop.
   </Card>
 </CardGroup>

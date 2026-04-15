@@ -1,5 +1,5 @@
-# Verifier docs
+# Verifier schemas
 
-Per-verifier `.md` and `schemas/*.json` aligned with **`GET /api/v1/verification/verifiers`**.
+JSON Schemas for verifier inputs live in **`schemas/`**. They align with **`GET /api/v1/verification/verifiers`**.
 
-Start: [Verifier catalog](https://docs.neus.network/verification/verifiers).
+Human-readable capability docs: [Verifier catalog](https://docs.neus.network/verification/verifiers).

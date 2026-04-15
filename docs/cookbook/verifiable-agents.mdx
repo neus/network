@@ -1,115 +1,23 @@
 ---
 title: Verifiable Agents
-description: Create and delegate agent identities for AI and automation.
+description: Register agents, delegate authority, consume proofs (MCP or SDK).
 icon: robot
 ---
 
-Use this guide when you want a public agent flow: register an agent, grant scoped permissions, and reuse those proofs in your application or MCP workflows.
+`agent-identity` (agent wallet signs) and `agent-delegation` (approving account signs) are **separate** proofs. One person can do both, or roles can split. [Agent concepts](../agents/concepts).
 
-Registering an agent and approving access are **separate steps** — one person can do both, or a **publisher** can register and a different **approver** can sign access approval. No wallet “linking” is required between those roles. See [Agent concepts](../agents/concepts).
-
-If you are using **MCP**, the easier default is usually:
+## MCP
 
 1. `neus_agent_create`
-2. Open the hosted URL it returns
+2. Open hosted URL from the response
 3. `neus_agent_link`
 
-Use the lower-level SDK flow below only when you are intentionally building a custom integration.
+## SDK
 
-## 1. Register the Agent
+| Step | Page |
+|------|------|
+| Register | [Agent identity](../agents/agent-identity) |
+| Delegate | [Agent delegation](../agents/agent-delegation) |
+| Check | `GET /api/v1/proofs/check` · MCP tools |
 
-Use `agent-identity` to register an AI or automation agent:
-
-```javascript
-await client.verify({
-  verifier: 'agent-identity',
-  data: {
-    agentId: 'my-agent',
-    agentWallet: '0x...',
-    agentChainRef: 'eip155:8453',
-    agentType: 'ai',
-    description: 'My AI assistant',
-    capabilities: ['web-search'],
-    instructions: 'System prompt (max 4000 chars)',
-    skills: ['web-search', 'code-execution'],
-    services: [
-      { name: 'metrics', endpoint: 'https://metrics.example.com/v1', version: '1.0' }
-    ]
-  },
-  walletAddress: agentWallet,
-});
-```
-
-### Main Fields
-
-| Field | Required | Description |
-|-------|----------|-------------|
-| `agentId` | Yes | Unique agent identifier (1–128 chars) |
-| `agentWallet` | Yes | Agent wallet |
-| `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request | CAIP-2 chain for the agent wallet |
-| `agentLabel` | No | Human-readable display name (max 128 chars) |
-| `agentType` | No | `ai`, `bot`, `service`, `automation`, or `agent` |
-| `description` | No | Agent description (max 500 chars) |
-| `capabilities` | No | List of capabilities (max 32 items) |
-| `instructions` | No | System prompt (max 4000 chars) |
-| `skills` | No | List of skills (max 48 items) |
-| `services` | No | Service endpoints (max 16 items) |
-
-## 2. Delegate Authority
-
-Use `agent-delegation` to grant permissions to an agent:
-
-```javascript
-await client.verify({
-  verifier: 'agent-delegation',
-  data: {
-    controllerWallet: '0x...',  // API field: approving account; must match signer
-    controllerChainRef: 'eip155:8453',
-    agentWallet: '0x...',
-    agentChainRef: 'eip155:8453',
-    scope: 'payments:x402',
-    permissions: ['execute', 'read'],
-    // Token base units (no decimal point). 25 USDC → SDK toAgentDelegationMaxSpend('25', 6)
-    maxSpend: '25000000',
-    allowedPaymentTypes: ['x402'],
-    receiptDisclosure: 'summary',
-    expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-    instructions: 'Policy instructions for the agent',
-    skills: ['market-data']
-  },
-  walletAddress: controllerWallet,
-});
-```
-
-The signing split is simple:
-
-- `agent-identity` is signed by the **agent wallet**.
-- `agent-delegation` is signed by the **approving account** (the wallet that matches `controllerWallet` in the payload).
-
-### Main Fields
-
-| Field | Required | Description |
-|-------|----------|-------------|
-| `controllerWallet` | Yes | Approving account; must match signer |
-| `controllerChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request | CAIP-2 chain for the controller |
-| `agentWallet` | Yes | Agent wallet |
-| `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request | CAIP-2 chain for the agent |
-| `agentId` | No | Reference to registered agent |
-| `scope` | No | Permission scope (e.g., `payments:x402`) |
-| `permissions` | No | Allowed actions |
-| `maxSpend` | No | Whole-number string in token base units (e.g. USDC: six decimal places). Use `toAgentDelegationMaxSpend` from `@neus/sdk`. |
-| `allowedPaymentTypes` | No | Payment types allowed |
-| `receiptDisclosure` | No | `summary`, `full`, or `none` |
-| `expiresAt` | No | Expiration timestamp |
-
-## 3. Consume the Proofs
-
-Once both proofs exist, use MCP or API checks to confirm whether the agent is registered and what it is allowed to do. Treat the agent wallet as the anchor for related trust signals.
-
-## Use Cases
-
-| Use Case | Description |
-|----------|-------------|
-| AI assistants | Register and control AI agents |
-| Payment delegation | Allow agents to spend on your behalf |
-| Automation | Grant scoped permissions to bots |
+Payload shapes match the JSON Schemas in [`docs/verifiers/schemas/`](https://github.com/neus/network/tree/main/docs/verifiers/schemas) (`agent-identity.json`, `agent-delegation.json`).

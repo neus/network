@@ -1,59 +1,60 @@
 ---
 title: Production Integration
-description: From first proof to shipped verification.
+description: Check, verify, save, reuse—ship path.
 icon: compass
 ---
 
-<Note>
-**Most teams start here:** [Hosted Verify](./cookbook/auth-hosted-verify) → persist **proof receipt ID** → run checks before prompting verify again → **app pays** by default ([Get started](./get-started#choose-who-pays)).
-</Note>
+[Hosted Verify](./cookbook/auth-hosted-verify) · [SDK](./sdks/overview) · [Widgets](./widgets/overview) · [API](./api/overview) · [MCP](./mcp/overview) · [Billing](./platform/billing) · [LLM docs](./platform/llm-docs)
 
-Surfaces: [Hosted Verify](./cookbook/auth-hosted-verify), [SDK](./sdks/overview), [Widgets](./widgets/overview), [API](./api/overview), [MCP](./mcp/overview). [Billing](./platform/billing). [LLM docs](./platform/llm-docs).
-
-Call `GET /api/v1/proofs/check` (or use a stored `proofId`) before prompting verify. Persist **`proofId`** (same as **`qHash`**) — [Proof receipts](./platform/receipts-and-results).
+**Check** (`GET /api/v1/proofs/check` or a saved receipt id) before prompting verify again. **Save** the receipt id from the response ([Proof receipts](./platform/receipts-and-results)).
 
 ## Loop
 
-1. **Check:** eligibility with a saved `proofId` or **`GET /api/v1/proofs/check`** before showing a verify flow
-2. **Verify:** only when needed (**[Hosted Verify](./cookbook/auth-hosted-verify)** or SDK/API)
-3. **Save:** `proofId` on the user or session (same value as **`qHash`**; see **[Proof receipts](./platform/receipts-and-results)**)
-4. **Reuse:** UI, `VerifyGate`, server policy, MCP. Same ID everywhere
+1. **Check** — saved id or proofs/check
+2. **Verify** — only if needed (hosted, SDK, or API)
+3. **Save** — receipt id on user/session
+4. **Reuse** — UI, VerifyGate, server, MCP
 
-## Visibility modes
+| Situation | Approach |
+|-----------|----------|
+| Repeat visits | Run `gateCheck` or use a stored receipt id before a new verify |
+| Balance / NFT gates | Narrow `since` or `fresh` strategy — [SDK verifications](./sdks/verifications) |
+| Org and domain | [Platform setup](./platform/setup), then the same loop |
 
-Choose visibility once per proof. Full detail and `storeOriginalContent` guidance are in **[Security and trust](./platform/security-and-trust)**.
+## Visibility
 
-| Mode | `privacyLevel` | `publicDisplay` | Use |
-|------|----------------|-----------------|-----|
-| Listed public | `public` | `true` | Publishing and attribution where the proof should be discoverable |
-| Unlisted public | `public` | `false` | Non-sensitive reuse, gates, and checks without listing for discovery |
-| Owner-only | `private` | `false` | Owner-only access and owner-authenticated reuse |
+[Security and trust](./platform/security-and-trust) has the full matrix.
 
-- **Raw SDK `client.verify()`** defaults to **private** stored receipts (see **[SDK overview](./sdks/overview)**).
-- **`VerifyGate`** create mode defaults to **unlisted public** (`public` + `publicDisplay: false`) so the primary gating surface matches reuse-first flows.
+| Mode | Use |
+|------|-----|
+| Listed public | Discoverable attribution |
+| Unlisted public | Gates and reuse, not listed |
+| Owner-only | Signed-in owner |
+
+SDK `client.verify()` defaults **private**. VerifyGate create defaults **unlisted public**.
 
 ## Checklist
 
 <Checklist>
-  <Item>Pick Hosted Verify, Widgets, SDK, API, or MCP (one primary path)</Item>
-  <Item>Gate before prompting for verification</Item>
-  <Item>Persist proof receipt IDs, not raw signatures</Item>
+  <Item>One primary path: Hosted Verify, Widgets, SDK, API, or MCP</Item>
+  <Item>Check before showing verify</Item>
+  <Item>Store receipt ids—not only raw signatures</Item>
   <Item>Test: verify → save → check → reuse</Item>
   <Item>[Get started](./get-started) · [Billing](./platform/billing)</Item>
 </Checklist>
 
-## Verification strategies (SDK / API)
+## Strategies (SDK / API)
 
 | Strategy | When |
 |----------|------|
-| `reuse-or-create` | Default: reuse a valid proof if you have one; otherwise start verification |
-| `fresh` | Force a new verification even when an older proof might still be valid |
-| `reuse` | Never create; require an existing proof or fail (read-only / display paths) |
+| `reuse-or-create` | Default: reuse if valid, else verify |
+| `fresh` | Always new proof |
+| `reuse` | Existing proof only |
 
 ## URLs
 
-| Purpose | URL |
-|---------|-----|
+|  |  |
+|--|--|
 | Hosted Verify | `https://neus.network/verify` |
 | API | `https://api.neus.network` |
 | MCP | `https://mcp.neus.network/mcp` |
@@ -62,13 +63,13 @@ Choose visibility once per proof. Full detail and `storeOriginalContent` guidanc
 
 <CardGroup cols={2}>
   <Card title="Get started" icon="book" href="./get-started">
-    Onboarding and production checklist.
+    Onboarding.
   </Card>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Hosted flows.
+    Hosted UX.
   </Card>
   <Card title="Receipts" icon="receipt" href="./platform/receipts-and-results">
-    Persist IDs.
+    What to store.
   </Card>
   <Card title="Security and trust" icon="lock" href="./platform/security-and-trust">
     Visibility.
@@ -77,9 +78,9 @@ Choose visibility once per proof. Full detail and `storeOriginalContent` guidanc
     HTTP.
   </Card>
   <Card title="Verifiers" icon="list-tree" href="./verification/verifiers">
-    Full list.
+    Catalog.
   </Card>
   <Card title="Billing" icon="credit-card" href="./platform/billing">
-    Payers, sponsors, x402.
+    Payers, x402.
   </Card>
 </CardGroup>

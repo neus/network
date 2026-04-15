@@ -4,17 +4,15 @@ description: Retry and recovery guidance for proof polling, private proof reads,
 icon: triangle-exclamation
 ---
 
-Recovery guide for polling, hosted flows, private proof reads, and verifier failures.
+## When things fail
 
-## Common Failure Classes
-
-| Failure class | Where it appears | Recovery |
-|---|---|---|
-| Validation error | Local SDK usage | Fix the request shape before retrying |
-| Hosted interactive handoff | Interactive verifier in a custom flow | Redirect to hosted verify or use `VerifyGate` |
-| Async processing | Proof not finished yet | Poll status with backoff |
-| Private proof auth required | Owner-only reads | Re-authenticate the owner and retry |
-| Temporary errors | Login / session | Respect `Retry-After` and let the user retry |
+| Class | Fix |
+|-------|-----|
+| Validation | Fix request shape |
+| Interactive | Hosted `/verify` or VerifyGate |
+| Async | Poll with backoff |
+| Private read | Owner auth, retry |
+| Transient | Backoff; `Retry-After` |
 
 ## Polling Example
 
@@ -31,8 +29,5 @@ const final = await client.pollProofStatus(proofId, {
 const privateData = await client.getPrivateProof(proofId, window.ethereum);
 ```
 
-## Recommendations
-
-- Do not spam verification creation on ambiguous failures.
-- Keep proof receipt IDs so you can resume polling or display the proof later.
-- Show interactive verifier requirements clearly; do not hide hosted handoffs behind generic error copy.
+- Don’t loop-create on ambiguous errors—keep receipt ids for resume.  
+- Say when a hosted step is required—avoid generic “error” only.  

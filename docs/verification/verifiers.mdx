@@ -1,97 +1,89 @@
 ---
 title: Verifier Catalog
-description: Choose the right verification for your use case.
+description: Pick a capability by outcome.
 icon: list-tree
 ---
 
 ## By outcome
 
 | Need | Verifier | Type |
-|----------|----------|------|
-| Prove content ownership | [ownership-basic](./ownership-basic) | Instant |
-| Link social accounts | [ownership-social](./ownership-social) | Interactive |
-| Verify domain control | [ownership-dns-txt](./ownership-dns-txt) | Lookup |
-| Verify team/org membership | [ownership-org-oauth](./ownership-org-oauth) | Interactive |
-| Gate by NFT ownership | [nft-ownership](./nft-ownership) | Lookup |
-| Gate by token balance | [token-holding](./token-holding) | Lookup |
-| Human verification | [proof-of-human](./proof-of-human) | Interactive |
-| Wallet safety check | [wallet-risk](./wallet-risk) | Lookup |
-| Register AI agent | [agent-identity](../agents/agent-identity) | Instant |
-| Delegate agent permissions | [agent-delegation](../agents/agent-delegation) | Instant |
-
----
+|------|----------|------|
+| Content ownership | [ownership-basic](./ownership-basic) | Instant |
+| Social link | [ownership-social](./ownership-social) | Interactive |
+| Domain | [ownership-dns-txt](./ownership-dns-txt) | Lookup |
+| Org / team | [ownership-org-oauth](./ownership-org-oauth) | Interactive |
+| NFT gate | [nft-ownership](./nft-ownership) | Lookup |
+| Token gate | [token-holding](./token-holding) | Lookup |
+| Human | [proof-of-human](./proof-of-human) | Interactive |
+| Wallet risk | [wallet-risk](./wallet-risk) | Lookup |
+| Agent register | [agent-identity](../agents/agent-identity) | Instant |
+| Agent delegate | [agent-delegation](../agents/agent-delegation) | Instant |
 
 ## Types
 
 | Type | Behavior | Examples |
-|------|--------------|----------|
-| **Instant** | Wallet signs, proof created immediately | ownership-basic, agent-identity |
-| **Interactive** | User completes hosted flow | ownership-social, proof-of-human |
-| **Lookup** | Check against live state | nft-ownership, token-holding, wallet-risk |
+|------|----------|----------|
+| Instant | Wallet signs | ownership-basic, agent-identity |
+| Interactive | Hosted flow | ownership-social, proof-of-human |
+| Lookup | Live state | nft-ownership, token-holding |
 
----
-
-## Categories
+## By category
 
 ### Identity
 
 | Verifier | Proves |
-|----------|----------------|
-| [ownership-social](./ownership-social) | Linked social account |
-| [ownership-dns-txt](./ownership-dns-txt) | Domain control |
-| [ownership-org-oauth](./ownership-org-oauth) | Team/org membership |
-| [ownership-pseudonym](./ownership-pseudonym) | Username claim |
-| [wallet-link](./wallet-link) | Multiple wallets, one identity |
+|----------|--------|
+| [ownership-social](./ownership-social) | Social account |
+| [ownership-dns-txt](./ownership-dns-txt) | Domain |
+| [ownership-org-oauth](./ownership-org-oauth) | Org membership |
+| [ownership-pseudonym](./ownership-pseudonym) | Username |
+| [wallet-link](./wallet-link) | Linked wallets |
 
 ### Ownership
 
 | Verifier | Proves |
-|----------|----------------|
-| [ownership-basic](./ownership-basic) | Content or claim ownership |
-| [contract-ownership](./contract-ownership) | Smart-contract ownership or admin control |
+|----------|--------|
+| [ownership-basic](./ownership-basic) | Content / claim |
+| [contract-ownership](./contract-ownership) | Contract control |
 
 ### Access
 
 | Verifier | Proves |
-|----------|----------------|
-| [nft-ownership](./nft-ownership) | NFT holder status |
-| [token-holding](./token-holding) | Token balance threshold |
+|----------|--------|
+| [nft-ownership](./nft-ownership) | NFT holder |
+| [token-holding](./token-holding) | Balance threshold |
 
 ### Abuse
 
 | Verifier | Proves |
-|----------|----------------|
-| [proof-of-human](./proof-of-human) | Human verification |
-| [wallet-risk](./wallet-risk) | Wallet safety score |
+|----------|--------|
+| [proof-of-human](./proof-of-human) | Human |
+| [wallet-risk](./wallet-risk) | Risk signal |
 | [ai-content-moderation](./ai-content-moderation) | Content safety |
 
 ### Agents
 
 | Verifier | Proves |
-|----------|----------------|
-| [agent-identity](../agents/agent-identity) | Agent registration |
-| [agent-delegation](../agents/agent-delegation) | Agent permissions |
-
----
+|----------|--------|
+| [agent-identity](../agents/agent-identity) | Registration |
+| [agent-delegation](../agents/agent-delegation) | Delegation |
 
 ## Bundles
 
 | Bundle | Verifiers | For |
-|--------|-----------|----------|
-| AI Trust | ownership-basic + proof-of-human | AI content with human verification |
-| Agent Pack | agent-identity + agent-delegation | Verified agents with scoped permissions |
-| Community Gate | nft-ownership + proof-of-human | Protected communities |
-| Org Onboard | ownership-org-oauth + ownership-dns-txt | Team and domain verification |
-
----
+|--------|-----------|-----|
+| AI Trust | ownership-basic + proof-of-human | AI + human |
+| Agent Pack | agent-identity + agent-delegation | Scoped agents |
+| Community Gate | nft-ownership + proof-of-human | Communities |
+| Org Onboard | ownership-org-oauth + ownership-dns-txt | Org + domain |
 
 ## Next
 
 <CardGroup cols={2}>
-  <Card title="Quickstart (SDK)" icon="rocket" href="../quickstart">
+  <Card title="Quickstart" icon="rocket" href="../quickstart">
     First proof.
   </Card>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    Guided flow.
+    Guided.
   </Card>
 </CardGroup>

@@ -6,13 +6,12 @@ icon: image
 
 **Verifier ID:** `nft-ownership`
 
-Use this verifier when access depends on NFT ownership.
+Lookup gate: wallet must hold the NFT at check time.
 
 ## Best For
 
-- token-gated communities
-- premium drops
-- collector-only content
+- Token-gated access
+- Drops and collector-only content
 
 ## Flow Type
 
@@ -36,8 +35,4 @@ Lookup. NEUS checks on-chain ownership.
 }
 ```
 
-This result can be reused for access checks and proof-aware member experiences.
-
-## Reader Note
-
-For high-stakes access, pair this with freshness checks or require a fresh proof.
+High-stakes access: pair with freshness checks or require a new proof when policy demands it.

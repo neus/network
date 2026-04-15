@@ -4,7 +4,7 @@ description: Error codes and responses for the NEUS API.
 icon: bug
 ---
 
-Handle API errors with the same basic pattern: `code`, `message`, and `type`. Decide whether to fix the request, retry later, or send the user into a hosted flow.
+Responses use `code`, `message`, `type`. Fix the request, retry with backoff, or route to hosted verify.
 
 ## Error Response
 

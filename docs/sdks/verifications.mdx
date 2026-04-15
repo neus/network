@@ -1,27 +1,25 @@
 ---
 title: SDK Verification Patterns
-description: Reuse-first, fresh-proof, hosted interactive, and gate-check patterns with the NEUS SDK.
+description: Reuse, fresh, hosted, and privacy options.
 icon: network-wired
 ---
 
-Use these patterns to choose how your app creates or reuses proofs. In most products, `reuse-or-create` is the default.
+Default strategy: **`reuse-or-create`**.
 
-## Privacy and visibility
+## Privacy
 
-**Raw `client.verify()`** defaults to **private stored** receipts. **`VerifyGate`** create mode defaults to **unlisted public** so gates work without extra options. Full matrix: **[Security and trust](../platform/security-and-trust)**.
+`client.verify()` → **private** stored receipts. VerifyGate create → **unlisted public**. Full matrix: [Security and trust](../platform/security-and-trust)
 
-| Option | When to use |
-|--------|-------------|
-| `privacyLevel: 'private'` | Raw SDK default. Owner or authorized-session access. |
-| `privacyLevel: 'public'` | Policy checks without owner session; pair with `publicDisplay`. |
-| `publicDisplay: false` | Unlisted: eligible in checks; still public to anyone with the proof id. |
-| `publicDisplay: true` | Listed / discoverable (requires `privacyLevel: 'public'`). |
+| Option | When |
+|--------|------|
+| `privacyLevel: 'private'` | SDK default; owner / authorized session |
+| `privacyLevel: 'public'` | Checks without owner session; pair with `publicDisplay` |
+| `publicDisplay: false` | Unlisted — still public to anyone with id |
+| `publicDisplay: true` | Listed / discoverable (needs `public`) |
 
-### Hide original content
+`storeOriginalContent: false` — hash-first when your verifier/policy allows.
 
-Set `storeOriginalContent: false` when your product should retain only proof metadata/hash/policy status, not original bytes (hash-only mode).
-
-Example (unlisted public, typical for gates):
+Unlisted gate example:
 
 ```javascript
 options: {
@@ -30,9 +28,7 @@ options: {
 }
 ```
 
-## Reuse-first flow
-
-Use this as the default UX. It minimizes user prompts while still issuing new proofs when needed. **`VerifyGate`** already defaults create mode to unlisted public; add **`proofOptions`** only when you need listed public or private.
+## Reuse-first
 
 ```jsx
 <VerifyGate
@@ -43,22 +39,27 @@ Use this as the default UX. It minimizes user prompts while still issuing new pr
 </VerifyGate>
 ```
 
-## Fresh Proof Flow
+## Fresh
 
-Use this when the action is high stakes and you need a newly created assertion.
+High-stakes actions — force new proof:
 
 ```jsx
-<VerifyGate
-  requiredVerifiers={['wallet-risk']}
-  strategy="fresh"
->
+<VerifyGate strategy="fresh" requiredVerifiers={['ownership-basic']}>
   <Protected />
 </VerifyGate>
 ```
 
-## Hosted Interactive Flow
+## Read-only gate
 
-Interactive verifiers hand off to NEUS hosted verification (`/verify`).
+```jsx
+<VerifyGate strategy="reuse" requiredVerifiers={['ownership-basic']}>
+  <Protected />
+</VerifyGate>
+```
+
+## Hosted interactive
+
+Hand off to `/verify` when the verifier needs it:
 
 ```jsx
 <VerifyGate
@@ -67,9 +68,11 @@ Interactive verifiers hand off to NEUS hosted verification (`/verify`).
 />
 ```
 
-## Policy checks from your app
+[Hosted Verify](../cookbook/auth-hosted-verify)
 
-Use the SDK **`gateCheck`** helper instead of downloading full proof payloads for every decision.
+## Server check
+
+Prefer **`gateCheck`** over pulling full proofs for every decision:
 
 ```javascript
 const result = await client.gateCheck({
@@ -80,3 +83,14 @@ const result = await client.gateCheck({
   chainId: 8453,
 });
 ```
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="VerifyGate" icon="object-group" href="../widgets/verifygate">
+    Props.
+  </Card>
+  <Card title="Integration" icon="compass" href="../integration">
+    Loop.
+  </Card>
+</CardGroup>

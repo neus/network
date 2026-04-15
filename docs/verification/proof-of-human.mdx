@@ -6,36 +6,19 @@ icon: user-check
 
 **Verifier ID:** `proof-of-human`
 
-Use this verifier when you need a strong anti-bot or anti-sybil signal before access, payouts, or sensitive actions.
-
-**Start here:** Hosted Verify (or `VerifyGate` with hosted checkout). Visibility: **[Security and trust](../platform/security-and-trust)**.
+Hosted human check. `VerifyGate` or `/verify`. Visibility: [Security and trust](../platform/security-and-trust).
 
 ## Best For
 
-- sybil resistance
-- reward programs
-- high-value onboarding
-
-## Starts in hosted verify
-
-Launch hosted verify or `VerifyGate`. The user completes the human-verification step in the NEUS flow.
+- Sybil resistance
+- Rewards and high-value onboarding
 
 ## What You Configure
 
 | Field | Required | Notes |
 |------|----------|-------|
-| `provider` | No | Use when you need to request a specific supported provider |
+| `provider` | No | Optional: pin a supported provider |
 
-## What the User Does
+## Flow
 
-- Starts the hosted human-verification flow
-- Completes the provider step
-- Returns to your app after completion
-
-## What Your App Receives
-
-Your app receives a proof receipt ID that can be reused for gated actions, reward programs, or abuse reduction policies.
-
-## Use Hosted Verify
-
-This verifier should be launched through `/verify` or a widget-driven hosted flow.
+Hosted — user completes the step in NEUS, then returns to your app with a proof id.

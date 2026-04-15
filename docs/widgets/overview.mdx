@@ -1,10 +1,10 @@
 ---
 title: Widgets Overview
-description: React components for gating and proof display.
+description: React: VerifyGate and ProofBadge.
 icon: puzzle-piece
 ---
 
-**`VerifyGate`** is the reuse-first builder surface for React. **`appId`** and **`sponsorGrant`** match the SDK. Complete **[Get started](../get-started)** before production.
+**VerifyGate** = reuse-first gating. Same **`appId`** / **`sponsorGrant`** as SDK. Prod: [Get started](../get-started)
 
 ## Install
 
@@ -14,12 +14,12 @@ npm install @neus/sdk react react-dom
 
 | Widget | For |
 |--------|-----|
-| `VerifyGate` | Gated UI |
-| `ProofBadge` | Receipt display |
+| VerifyGate | Gated UI |
+| ProofBadge | Show receipt |
 
 ## VerifyGate
 
-Create mode defaults to **unlisted public** (`privacyLevel: 'public'`, `publicDisplay: false`, `storeOriginalContent: true`). Override **`proofOptions`** for listed public or private. Matrix: **[Security and trust](../platform/security-and-trust)**.
+Defaults: **unlisted public** (`privacyLevel: 'public'`, `publicDisplay: false`, `storeOriginalContent: true`). Override `proofOptions` for listed or private. [Security and trust](../platform/security-and-trust)
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -55,9 +55,9 @@ import { ProofBadge } from '@neus/sdk/widgets';
 
 <CardGroup cols={2}>
   <Card title="VerifyGate" icon="object-group" href="./verifygate">
-    Props + examples.
+    Props.
   </Card>
   <Card title="Integration" icon="compass" href="../integration">
-    Check, verify, save, reuse.
+    Loop.
   </Card>
 </CardGroup>

@@ -1,34 +1,30 @@
 ---
 title: x402 Pay-Per-Use
-description: Pay per request when credits run out. Retry with a payment receipt.
+description: Retry with payment when credits run out.
 icon: coins
 ---
 
-Prefer **credits** and **sponsor grants**. **[Get started](../get-started)**
+Default: **credits** + **sponsors** ([Get started](../get-started)).
 
-For the lowest-friction web2/web3 UX, keep users on credits or sponsor grants by default. Use x402 when a payment-aware API, MCP, or agent client receives a **402** quote and can retry with a receipt.
+**x402:** API returns **402** + quote → pay → retry with `PAYMENT-SIGNATURE`.
 
-**x402:** API returns **402** with a quote → pay → retry with **`PAYMENT-SIGNATURE`**.
+## When
 
-## Where 402 appears
-
-| Flow | When |
-|------|------|
+|  |  |
+|--|--|
 | `POST /api/v1/verification` | No credits |
 | `GET /api/v1/proofs/check` | No credits |
-| MCP tools | No credits |
-| Hosted-adjacent billable calls | No credits on the paying party |
+| MCP | No credits |
+| Other billable calls | No credits on payer |
 
-## Steps
+## Flow
 
-1. Call API.
-2. Receive **402** + quote.
-3. Pay.
-4. Retry with **`PAYMENT-SIGNATURE: <receipt>`**.
+1. Call API  
+2. **402** + quote  
+3. Pay  
+4. Retry with `PAYMENT-SIGNATURE: <receipt>`
 
-## Surfaces
-
-Verification, gate checks, hosted billable calls, and agent delegation with **`payments:x402`** can use the same pattern.
+Same idea for verification, checks, hosted-adjacent calls, and agent flows that allow x402.
 
 ## Header
 
@@ -46,12 +42,12 @@ PAYMENT-SIGNATURE: <receipt>
     Who pays.
   </Card>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    Hosted flows.
+    Hosted.
   </Card>
   <Card title="MCP" icon="plug" href="../mcp/overview">
-    MCP + x402.
+    Assistants.
   </Card>
   <Card title="Agent delegation" icon="robot" href="../agents/agent-delegation">
-    `payments:x402`.
+    Delegation + payments.
   </Card>
 </CardGroup>

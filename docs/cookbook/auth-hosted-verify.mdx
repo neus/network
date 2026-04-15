@@ -1,78 +1,72 @@
 ---
 title: Hosted Verify
-description: Use the NEUS-hosted UI for login and interactive verification.
+description: NEUS-hosted UI for login and interactive verification.
 icon: key
 ---
 
-<Note>
-**Default path:** users verify on NEUS → your app saves the **proof receipt ID** → your backend reuses it with checks ([Integration](../integration#loop)). **Most integrations:** your app pays via sponsor grants—users are not asked to manage billing first ([Get started](../get-started#choose-who-pays)).
-</Note>
+**Default:** users verify on NEUS; you store the **receipt id** and **check** before the next verify ([Integration](../integration#loop)). **Billing:** org credits + sponsors for most shipped apps ([Get started](../get-started#choose-who-pays)).
 
-**Shipping an app?** **[Get started](../get-started)** for **`appId`**, credits, sponsors.
+Apps: [Get started](../get-started) for `appId`, credits, sponsors.
 
-Users verify on **neus.network**. Your app sets **`returnUrl`** and builds the link with the SDK.
+Build links with the SDK (`returnUrl`). After redirect, finish session with `@neus/sdk`; use Bearer on API where needed ([SDK Authentication](../sdks/authentication)).
 
-After completion: finish session with **`@neus/sdk`**, **`Authorization: Bearer`** on API calls. [SDK Authentication](../sdks/authentication)
+**MCP:** `neus_context` first; verify URLs work without a key. Bearer + [Access keys](https://neus.network/profile?tab=account) for account tools ([MCP Auth](../mcp/auth)).
 
-**MCP:** run **`neus_context`** first; tools return **`neus.network/verify`** links without requiring a key. Add **Bearer** with your **personal access key** from **[Access keys](https://neus.network/profile?tab=account)** when you need a signed-in MCP session. [MCP Auth](../mcp/auth)
-
-## When to use
+## When
 
 | Need | Why hosted |
 |------|------------|
-| Login / signup | Guided signer |
-| Social linking | OAuth in NEUS |
-| Human / org checks | Interactive flows |
+| Login | Guided signer |
+| Social | OAuth in NEUS |
+| Human / org | Interactive |
 
 ## URL
 
-**Base:** `https://neus.network/verify`
+Base: `https://neus.network/verify`
 
 | Param | Role |
 |-------|------|
-| `intent=login` | Session-first login |
-| `verifiers` | Comma-separated IDs |
-| `preset` | Bundled verifier set |
+| `intent=login` | Session-first |
+| `verifiers` | Comma-separated ids |
+| `preset` | Bundled set |
 | `gateId` | Gate requirements |
-| `returnUrl` | Where to send the user next |
+| `returnUrl` | Next page |
 | `mode=popup` | Popup + `postMessage` |
-| `origin` | Opener origin (popup) |
+| `origin` | Popup opener |
 
 ## Auth surfaces
 
-How hosted login behaves by environment (passkeys use **WebAuthn** in a **secure context**; a missing *platform* authenticator does not block **cross-device** or **security-key** prompts).
+Passkeys = WebAuthn in a **secure context**. Missing platform authenticator ≠ blocked cross-device / security-key.
 
-| Surface | Passkeys | Wallet (AppKit / WalletConnect) |
-|--------|----------|----------------------------------|
-| Desktop browser | Local passkey, phone handoff, or cross-device when the browser supports it | **Connect Wallet** from the page; QR and mobile flows need a normal user gesture |
-| Mobile browser or installed PWA | Platform password manager or authenticator when available | Prefer the wallet app or the deep link the browser offers |
+| Surface | Passkeys | Wallet |
+|--------|----------|--------|
+| Desktop | Local, handoff, cross-device | Connect from page; QR needs a gesture |
+| Mobile / PWA | Platform manager when available | Prefer wallet app / deep link |
 
-**WebAuthn:** use **`https`**, or **`http://localhost`** with an origin that matches your NEUS profile. Avoid raw LAN IPs.
+Use **https** or **http://localhost** with an origin that matches your NEUS profile—not raw LAN IPs.
 
-**PWA:** service worker does not intercept `/api/`; do not cache auth traffic for hosted flows.
+PWAs: don’t cache `/api/` auth traffic.
 
 ## Code
 
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
-const verifyUrl = getHostedCheckoutUrl({
+window.location.href = getHostedCheckoutUrl({
   verifiers: ['ownership-basic'],
   returnUrl: 'https://myapp.com/callback',
 });
-
-window.location.href = verifyUrl;
 ```
 
-**Popup:** `mode: 'popup'`, `origin: window.location.origin`, then `window.open`. Listen for **`neus_checkout_done`** or **`neus_login_complete`**. **Redirect:** handle **`returnUrl`** and finish with the SDK.
+**Popup:** `mode: 'popup'`, `origin: window.location.origin`, `window.open`, listen for `neus_checkout_done` / `neus_login_complete`. **Redirect:** handle `returnUrl` + SDK.
 
 ## Next
 
 <CardGroup cols={2}>
   <Card title="Authentication" icon="key" href="../sdks/authentication">
-    Session token and Bearer.
+    Session + Bearer.
   </Card>
   <Card title="Receipts" icon="receipt" href="../platform/receipts-and-results">
-    What to store after verify.
+    After verify.
   </Card>
 </CardGroup>

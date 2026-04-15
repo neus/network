@@ -6,19 +6,12 @@ icon: share-nodes
 
 **Verifier ID:** `ownership-social`
 
-Use this verifier when you need to prove that a user controls a social account such as X, Discord, GitHub, Farcaster, or Telegram.
-
-**Start here:** Hosted Verify (or `VerifyGate`, which opens hosted checkout for this verifier). Visibility: **[Security and trust](../platform/security-and-trust)**.
-
-## Starts in hosted verify
-
-Launch hosted verify or `VerifyGate`. The user completes the account-link step in the NEUS flow.
+Hosted: X, Discord, GitHub, Farcaster, Telegram, etc. `VerifyGate` or `/verify`. Visibility: [Security and trust](../platform/security-and-trust).
 
 ## Best For
 
-- social-linked trust pages
-- community onboarding
-- account reputation and discovery
+- Trust pages and reputation
+- Community onboarding
 
 ## What You Configure
 
@@ -27,16 +20,4 @@ Launch hosted verify or `VerifyGate`. The user completes the account-link step i
 | `provider` | Yes | Example: `github`, `discord`, `x`, or `farcaster` |
 | `walletAddress` | No | Optional subject override |
 
-## What the User Does
-
-- Chooses the social provider
-- Signs in or authorizes access through the provider
-- Returns to your app through the hosted flow
-
-## What Your App Receives
-
-Your app receives a proof receipt ID after the hosted flow completes. Save it and reuse it for profiles, access checks, or proof display.
-
-## Use Hosted Verify
-
-Always route users through `/verify` or `VerifyGate` for this verifier. Do not ask users for raw OAuth tokens.
+User picks provider → provider auth → return via hosted flow. You get a proof id; store and reuse. Do not collect raw OAuth tokens.

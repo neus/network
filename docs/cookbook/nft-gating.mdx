@@ -1,12 +1,12 @@
 ---
 title: NFT Gating
-description: Gate content behind NFT ownership verification.
+description: VerifyGate + gateCheck with nft-ownership.
 icon: image
 ---
 
-Use this recipe when NFT ownership should unlock a page, route, or premium experience.
+Verifier: [`nft-ownership`](../verification/nft-ownership). Ownership is **point-in-time** — enforce `since` / fresh proofs for high-stakes gates.
 
-## Basic Setup
+## Widget
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -24,13 +24,13 @@ export function NFTGatedContent() {
       }}
       appId="my-nft-gate"
     >
-      <div>Exclusive content for NFT holders</div>
+      <div>Exclusive content</div>
     </VerifyGate>
   );
 }
 ```
 
-## Server-Side Check
+## Server: gateCheck
 
 ```javascript
 const result = await client.gateCheck({
@@ -39,31 +39,15 @@ const result = await client.gateCheck({
   contractAddress: '0x...',
   tokenId: '1',
   chainId: 8453,
+  since: Date.now() - 60 * 60 * 1000,
 });
 
-if (result.data?.eligible) {
-  // Grant access
+if (!result.data?.eligible) {
+  throw new Error('Access denied');
 }
 ```
 
-## Freshness Requirements
-
-<Warning>
-NFT ownership is a point-in-time check. Always enforce recency for high-stakes actions.
-</Warning>
-
-```javascript
-const result = await client.gateCheck({
-  address: '0x...',
-  verifierIds: ['nft-ownership'],
-  contractAddress: '0x...',
-  tokenId: '1',
-  chainId: 8453,
-  since: Date.now() - 60 * 60 * 1000, // Last hour
-});
-```
-
-## Multiple NFTs
+## Multiple token configs
 
 ```jsx
 <VerifyGate
@@ -75,6 +59,6 @@ const result = await client.gateCheck({
     ],
   }}
 >
-  <div>Content for holders of any listed NFT</div>
+  <div>Holders of any listed NFT</div>
 </VerifyGate>
 ```

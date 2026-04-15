@@ -1,28 +1,18 @@
 ---
 title: Examples
-description: Runnable Node + Vite React samples; curl walkthrough.
+description: Runnable Node, React, and curl samples.
 icon: code
 ---
 
-<Note>
-**Most teams start with [Hosted Verify](./cookbook/auth-hosted-verify)** before cloning samples. These repos show **check → verify → save proof receipt ID → reuse** in code.
-</Note>
+**check → verify → save id → reuse.** Production: [Get started](./get-started) · [Billing](./platform/billing)
 
-<Tip>
-**Loop:** [Check](./integration#loop) → verify if needed → save **proof receipt ID** → reuse. Interactive flows: **[Hosted Verify](./cookbook/auth-hosted-verify)**. [Proof receipts](./platform/receipts-and-results)
-</Tip>
+| Repository | Contents |
+|------------|----------|
+| [react-component](https://github.com/neus/network/tree/main/examples/react-component) | Vite, VerifyGate, browser wallet |
+| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Node, server signing, `gateCheck` |
+| [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | HTTP: standardize, sign, submit |
 
-Add **`appId`** from **[Get started](./get-started)** for production traffic (`X-Neus-App`) and **[Billing](./platform/billing)** for who pays.
-
-| Repo | Stack | Covers |
-|------|-------|--------|
-| [react-component](https://github.com/neus/network/tree/main/examples/react-component) | React (Vite) | Runnable `VerifyGate` — clone, `npm install`, `npm run dev` |
-| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Node.js | Runnable SDK + `gateCheck` |
-| [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | HTTP | Copy-paste **walkthrough** (not a single run script) |
-
----
-
-## React: Gate Content
+## React: gate
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -36,7 +26,7 @@ export default function ProtectedPage() {
         'nft-ownership': {
           contractAddress: '0x...',
           tokenId: '1',
-          chainId: 1,
+          chainId: 8453,
         },
       }}
     >
@@ -46,47 +36,25 @@ export default function ProtectedPage() {
 }
 ```
 
----
+## Node: proof
 
-## Node.js: Create Proof
+No wallet in `client.verify()` on the server → **standardize → sign → submit** ([JavaScript SDK](./sdks/javascript)) or [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic).
 
-Server-side signing is **not** `client.verify()` without a wallet—use **`standardize` → sign → submit** (see **[JavaScript SDK](../sdks/javascript)**) or copy **[nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic)** (`TEST_WALLET_PRIVATE_KEY`).
-
----
-
-## HTTP: Create Proof (advanced)
+## HTTP (advanced)
 
 ```bash
-# 1. Get signing string
 curl -X POST https://api.neus.network/api/v1/verification/standardize \
   -H "Content-Type: application/json" \
-  -d '{
-    "walletAddress": "0x...",
-    "verifierIds": ["ownership-basic"],
-    "data": { "content": "Hello NEUS" }
-  }'
-
-# 2. Sign the returned signerString with your wallet
-
-# 3. Submit verification
-curl -X POST https://api.neus.network/api/v1/verification \
-  -H "Content-Type: application/json" \
-  -d '{
-    "walletAddress": "0x...",
-    "signature": "0x...",
-    "verifierIds": ["ownership-basic"],
-    "data": { "content": "Hello NEUS" }
-  }'
+  -d '{"walletAddress":"0x...","verifierIds":["ownership-basic"],"data":{"content":"Hello NEUS"}}'
+# sign signerString, then POST /api/v1/verification with signature
 ```
-
----
 
 ## Docs
 
 |  |  |
 |--|--|
-| [Get started](./get-started) | App id + billing (before production) |
-| [Hosted Verify](./cookbook/auth-hosted-verify) | Guided login |
-| [MCP](./mcp/overview) | Agents |
-| [Quickstart (SDK)](./quickstart) | First proof in code |
-| [API](./api/overview) | Endpoints |
+| [Get started](./get-started) | App + billing |
+| [Hosted Verify](./cookbook/auth-hosted-verify) | Hosted UX |
+| [MCP](./mcp/overview) | Assistants |
+| [Quickstart](./quickstart) | First SDK proof |
+| [API](./api/overview) | HTTP |

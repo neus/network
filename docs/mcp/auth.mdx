@@ -1,31 +1,29 @@
 ---
 title: MCP Auth & Security
-description: When you need sign-in and what stays public.
+description: Public MCP vs Bearer for account tools.
 icon: lock
 ---
 
-**Hosted MCP** works with **only the MCP URL** for **`neus_context`**, catalog, hosted verification links, and other flows that do not require your NEUS account or billable usage on your balance.
+**URL-only:** `neus_context`, catalog, verify links—no NEUS account on your balance. Order: [Overview](./overview).
 
-**First call:** use **`neus_context`** (public) so assistants ground answers in the current verifier list and billing model before deeper tools.
+**Bearer** ([Access keys](https://neus.network/profile?tab=account)): `neus_me`, private reads, calls that debit **your** credits. Same shape as `api.neus.network` ([SDK Authentication](../sdks/authentication)). Confirm with `neus_me` after connect.
 
-Add **`Authorization: Bearer`** with your **personal access key** from **[Access keys](https://neus.network/profile?tab=account)** when you need account-scoped tools—for example **`neus_me`**, **private proof reads**, or checks that debit **your** credits. Same token you send to **`api.neus.network`** ([SDK Authentication](../sdks/authentication)). Call **`neus_me`** after connecting to confirm the session.
+Hosted `neus.network/verify` does **not** attach your IDE Bearer.
 
-If you connect using only the MCP URL, tools can still return **`https://neus.network/verify`** links for browser completion. That browser step uses NEUS hosted sign-in (passkey or wallet). It does **not** automatically attach your personal access key to your IDE MCP connection.
+**Servers only:** trusted automation may reuse the same personal key on MCP HTTP. Never in browsers or mobile apps.
 
-**Backend or automation:** if a **server** already calls **`api.neus.network`** with **`Authorization: Bearer`**, you may send the **same personal access key** on the MCP HTTP transport from that trusted environment only. Never expose that value to browsers or mobile clients.
-
-**Privacy:** **`neus_proofs_check`** is yes/no only. Private proofs follow the same rules as the API when the user is signed in ([Proof context](./proofs-get)).
+`neus_proofs_check` = yes/no only. Private proofs = API rules when signed in ([Proofs get](./proofs-get)).
 
 ## Related
 
 <CardGroup cols={2}>
   <Card title="Overview" icon="plug" href="./overview">
-    Default flow.
+    Flow.
   </Card>
   <Card title="Setup" icon="code" href="./setup">
     Connect.
   </Card>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    User UX.
+    Users.
   </Card>
 </CardGroup>

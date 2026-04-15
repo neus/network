@@ -4,17 +4,15 @@ description: Security best practices for NEUS SDK integrations.
 icon: lock
 ---
 
-Minimize exposed data. Interactive flows → hosted verify. Private proofs → owner auth only.
+Less surface area: interactive → hosted; private → owner auth.
 
-## Authentication Model
+## Auth by operation
 
-| Operation | Authentication |
-|-----------|----------------|
-| Verification submission (`POST /api/v1/verification`) | Signature over NEUS Standard Signing String |
-| Proof record by receipt id (`GET /api/v1/proofs/{qHash}`) | Public for public proofs; minimal payload for private unless owner-authenticated |
-| Owner-only reads of private proofs | Additional owner signature |
-
-Owner-only reads need extra signed headers. Use **SDK methods** for private proofs.
+| Operation | Auth |
+|-----------|------|
+| `POST /api/v1/verification` | Wallet signature (standard string) |
+| `GET /api/v1/proofs/{qHash}` | Public metadata for public/unlisted; private needs owner rules |
+| Private payload reads | Owner signature / SDK helpers |
 
 ## Do Not
 
@@ -27,11 +25,11 @@ Owner-only reads need extra signed headers. Use **SDK methods** for private proo
   - third-party auth credentials or provider tokens
 </Warning>
 
-## Privacy defaults
+## Defaults
 
-**`client.verify()`** defaults to **`private`** with **`storeOriginalContent: true`**. **`VerifyGate`** create mode defaults to **unlisted public** (`public` + `publicDisplay: false`) for reuse-first gating. See **[Security and trust](../platform/security-and-trust)**.
+`client.verify()` → **private**, `storeOriginalContent: true`. VerifyGate create → **unlisted public**. [Security and trust](../platform/security-and-trust)
 
-For raw SDK flows that must power **`gateCheck`** without an owner session, set unlisted public explicitly:
+SDK + `gateCheck` without owner session → set unlisted public explicitly:
 
 ```javascript
 {

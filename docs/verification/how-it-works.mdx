@@ -1,64 +1,63 @@
 ---
 title: How Verification Works
-description: The request, signer, verifier, hosted interaction, and receipt model behind NEUS verification.
+description: From request to receipt id.
 icon: shield-check
 ---
 
-<Frame caption="Product stages above; detailed pipeline below.">
+<Frame caption="Verify once → receipt id → reuse everywhere.">
   <img
     className="neus-how-it-works-diagram"
     src="/images/how-it-works.png"
-    alt="Verification: verify once, then Proof ID as verified proof receipt, then reusable proof across apps, agents, and APIs"
+    alt="Verification flow: receipt id reused across apps, agents, APIs"
   />
 </Frame>
 
-## What Happens
+## Stages
 
 <Steps>
-  <Step title="Your app starts a verification flow">
-    The flow can begin in hosted verify, the SDK, or the raw API.
+  <Step title="Start">
+    Hosted `/verify`, SDK, or API.
   </Step>
-  <Step title="The user or wallet completes the needed action">
-    That can be a wallet signature, a hosted account link, a human-verification step, or a lookup against live state.
+  <Step title="Complete">
+    Signature, hosted step, human flow, or on-chain lookup—per verifier.
   </Step>
-  <Step title="NEUS runs the verification">
-    Some verifiers finish immediately. Others complete asynchronously and need a status check.
+  <Step title="NEUS verifies">
+    Some instant; some async (poll status).
   </Step>
-  <Step title="Your app receives a proof receipt ID">
-    Save it and reuse it for proof pages, access checks, policy, and profile trust.
+  <Step title="Receipt id">
+    Save it—proof pages, checks, policy, profile.
   </Step>
 </Steps>
 
-## Main Flow Types
+## Modes
 
-| Mode | Use case | Notes |
-|---|---|---|
-| Hosted verify | Guided login and interactive verification | Standard path for social accounts, team checks, and human verification |
-| SDK verification | Browser or server product flows | Direct control over verification requests |
-| Raw HTTP verification | Advanced or server-owned integrations | Use only when you need direct API control |
-| Hosted interactive verification | OAuth, human proof, social flows | Widgets and MCP will hand off to hosted verify automatically |
-| Gate checks | Server-side policy decisions | Use `GET /api/v1/proofs/check` for minimal yes/no eligibility |
+| Mode | When |
+|------|------|
+| Hosted `/verify` | Login, OAuth, human, org |
+| SDK | Product-controlled flows |
+| Raw HTTP | Server-only / advanced |
+| Gate check | `GET /api/v1/proofs/check` — eligibility only |
 
-## What You Get Back
+## You get
 
-- A verification response that can include status data
-- A hosted verify handoff for interactive flows
-- A pollable status endpoint for asynchronous verifiers
-- A reusable proof receipt ID
+- Response + status  
+- Hosted handoff when needed  
+- Poll endpoint when async  
+- **Receipt id** to reuse  
 
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="Verification Lifecycle" icon="rotate" href="./lifecycle">
-    Statuses, polling, reuse, and revocation.
+  <Card title="Lifecycle" icon="rotate" href="./lifecycle">
+    Poll, reuse, revoke.
   </Card>
-  <Card title="Signing Format" icon="file-signature" href="./signing-format">
-    Hosted, SDK, and advanced signing guidance.
+  <Card title="Signing" icon="file-signature" href="./signing-format">
+    Wallet message.
   </Card>
-  <Card title="Verifier Catalog" icon="list-tree" href="./verifiers">
-    Choose the right verification capability.
+  <Card title="Verifiers" icon="list-tree" href="./verifiers">
+    Pick capability.
   </Card>
-  <Card title="API Overview" icon="terminal" href="../api/overview">
-    HTTP endpoints and advanced API usage.
+  <Card title="API" icon="terminal" href="../api/overview">
+    HTTP.
   </Card>
 </CardGroup>

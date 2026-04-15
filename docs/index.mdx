@@ -1,22 +1,22 @@
 ---
 title: NEUS
-description: Standardize verification once. Reuse it everywhere. The open, neutral layer for portable proof receipts across apps, APIs, gates, and agents.
+description: Verify once. Trust everywhere. Proof receipts for login, access, and agents.
 icon: house
 ---
 
-## What is NEUS?
+## Verify once. Trust everywhere.
 
-NEUS is the **verification layer for portable trust**.
+Verification yields a **proof receipt**. Save its id once—reuse it for checks, gates, API, and agents.
 
-It turns a completed verification into a **portable proof receipt** you can verify once and reuse across your app, API, access gates, and agent workflows.
+**Start:** [Hosted Verify](https://neus.network/verify) · [Hosted Verify guide](./cookbook/auth-hosted-verify) · [Get started](./get-started) · [Integration](./integration)
 
-<Note>
-**Most teams start here:** [Hosted Verify](./cookbook/auth-hosted-verify) for login and interactive verifiers → save the **proof receipt ID** → reuse with checks ([Integration](./integration#loop)) → **your app pays** by default ([Get started](./get-started#choose-who-pays)). SDK, widgets, and MCP are next steps when you outgrow that path—not parallel “first screens.”
-</Note>
+## Common uses
 
-<Tip>
-**Loop:** [Check](./integration#loop) → verify if needed → save **proof receipt ID** → reuse. Interactive flows: **[Hosted Verify](./cookbook/auth-hosted-verify)**. [Proof receipts](./platform/receipts-and-results)
-</Tip>
+| Use case | Documentation |
+|----------|---------------|
+| Access control with saved receipts | [Integration](./integration) · [`gateCheck`](./sdks/javascript) |
+| NFT, token, or domain checks | [Examples](./examples) · [NFT gating](./cookbook/nft-gating) · [Domain](./cookbook/domain-verification) |
+| MCP clients | [MCP](./mcp/overview) |
 
 ## Start here
 
@@ -25,39 +25,39 @@ It turns a completed verification into a **portable proof receipt** you can veri
     Account, app, billing, first proof.
   </Card>
   <Card title="Choose a path" icon="route" href="./choose-an-integration-path">
-    Match your surface: SDK, widgets, API, MCP.
+    SDK, widgets, API, MCP.
   </Card>
   <Card title="Integration" icon="compass" href="./integration">
     Check, verify, save, reuse.
   </Card>
 </CardGroup>
 
-**Next:** [Hosted Verify](https://neus.network/verify) · [Get started](./get-started) · [Quickstart](./quickstart) · [Widgets](./widgets/overview) · [MCP](./mcp/overview)
+[Quickstart](./quickstart) · [Widgets](./widgets/overview) · [MCP](./mcp/overview)
 
 ## Explore
 
 <CardGroup cols={2}>
   <Card title="Platform" icon="globe" href="./platform/overview">
-    URLs for verify, proof pages, API, and MCP.
+    URLs, setup, receipts, billing.
   </Card>
   <Card title="Verification" icon="shield" href="./verification/overview">
-    Verifiers, lifecycle, and signing.
+    Verifiers, lifecycle, signing.
   </Card>
   <Card title="Agents" icon="robot" href="./agents/overview">
-    Agent identity, delegation, and presets.
+    Identity, delegation, presets.
   </Card>
   <Card title="MCP" icon="plug" href="./mcp/overview">
-    Assistants and IDE runtimes.
+    Assistants and IDEs.
   </Card>
 </CardGroup>
 
 ## Verifiers
 
-Pick a verifier ID from the **[verifier catalog](./verification/verifiers)**. Capability reference pages document each verifier.
+[Verifier catalog](./verification/verifiers) — capability pages under **Verification**.
 
 ## Resources
 
-- [Examples](./examples) — runnable **Node** + **Vite React**; **curl** is a copy-paste walkthrough
-- [LLM docs](./platform/llm-docs) (assistants and tool index)
+- [Examples](./examples)
+- [LLM docs](./platform/llm-docs)
 
-Endpoints: [Hosted verify](https://neus.network/verify) · [Account and apps](https://neus.network/hub) · `https://api.neus.network` · `https://mcp.neus.network/mcp` · [full URL matrix](./platform/overview#urls)
+[Hosted verify](https://neus.network/verify) · [Hub](https://neus.network/hub) · `https://api.neus.network` · `https://mcp.neus.network/mcp` · [URL matrix](./platform/overview#urls)

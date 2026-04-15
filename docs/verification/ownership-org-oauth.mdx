@@ -6,23 +6,14 @@ icon: building
 
 **Verifier ID:** `ownership-org-oauth`
 
-Use this verifier when you need to prove that a user belongs to a company, workspace, or team.
-
-**Start here:** Hosted Verify (or `VerifyGate` with hosted checkout). Visibility: **[Security and trust](../platform/security-and-trust)**.
+Google or Microsoft workspace membership. Hosted `/verify` or `VerifyGate`—avoid custom OAuth UI. Visibility: [Security and trust](../platform/security-and-trust).
 
 ## Best For
 
-- enterprise onboarding
-- employee-only product access
-- org-scoped agent or app controls
+- Enterprise / employee-only access
+- Org-scoped agents and apps
 
-## Starts in hosted verify
-
-Launch hosted verify or `VerifyGate`. The user completes the workspace verification step in the NEUS flow.
-
-## Simplest Integration
-
-For most products, do not build your own OAuth UI. Launch hosted `/verify` and let NEUS run the provider flow.
+## Example
 
 ```text
 https://neus.network/verify?preset=org-pack&returnUrl=https://app.example.com/verified
@@ -35,20 +26,6 @@ https://neus.network/verify?preset=org-pack&returnUrl=https://app.example.com/ve
 | `provider` | Yes | `google` or `microsoft` |
 | `expectedOrgDomain` | No | Restrict the proof to one company domain such as `acme.com` |
 
-## What the User Does
-
-- Starts the hosted flow
-- Signs in with the selected provider
-- Returns to your app after the check completes
-
-## What Your App Receives
-
-Your app receives a proof receipt ID after completion. Save it and reuse it for onboarding, access checks, or profile trust.
-
-## Use Hosted Verify
-
-This verifier should resolve through `/verify` instead of a custom OAuth UI.
-
 <Tip>
-Only send `expectedOrgDomain` when access should be limited to a specific company domain. If any valid Google Workspace or Microsoft 365 membership is acceptable, leave it out.
+`expectedOrgDomain` only when a single company domain should pass; omit if any Workspace / M365 tenant is OK.
 </Tip>

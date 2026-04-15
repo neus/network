@@ -4,11 +4,9 @@ description: Register and verify AI agent identities.
 icon: id-card
 ---
 
-Use `agent-identity` to register an AI or automation agent with a reusable receipt.
+Register an agent; agent wallet signs. Proof `skills` are declarative caps, not MCP installs — [MCP overview](../mcp/overview). Prefer portable skill ids ([spec](https://agentskills.io/specification), [directory](https://skills.sh)).
 
-**MCP vs proof skill ids:** declarative `skills` on the proof are not MCP installs — see [MCP overview](../mcp/overview). Prefer **Open Agent Skills** ids ([spec](https://agentskills.io/specification), [directory](https://skills.sh)) so hosts can resolve the same `SKILL.md` packs.
-
-**Default path:** **`neus_agent_create`** (MCP) or the [hosted verify flow](../cookbook/auth-hosted-verify). This page is for SDK-level detail when you already know you need it.
+Default: **`neus_agent_create`** (MCP) or [hosted verify](../cookbook/auth-hosted-verify). Below = SDK detail.
 
 **Verifier ID:** `agent-identity`
 
@@ -30,7 +28,7 @@ const proof = await client.verify({
 
 You can supply chain context either in `data` as **`agentChainRef`** (CAIP-2) or on the verification request as **`chain`** (CAIP-2) or **`chainId`** (EVM). Those options satisfy the same requirement.
 
-Canonical field list: [agent-identity verifier doc](../verifiers/agent-identity.md).
+Field names and limits: **Fields** (below). JSON Schema: [`agent-identity.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/agent-identity.json).
 
 ## Full Example
 
@@ -39,16 +37,19 @@ await client.verify({
   verifier: 'agent-identity',
   data: {
     agentId: 'my-agent',
-    agentWallet: '0x...',           // universal-address: EVM or Solana
+    agentWallet: '0x...',
     agentChainRef: 'eip155:8453',
     agentType: 'ai',
     description: 'My AI assistant',
-    capabilities: ['web-search'],
+    capabilities: { search: true, mcp: true },
     instructions: 'System prompt (max 4000 chars)',
-    skills: ['web-search', 'vercel-react-best-practices'],   // max 48, each max 64 chars; hyphen ids match agentskills.io
-    services: [                                  // max 16
-      { name: 'metrics', endpoint: 'https://metrics.example.com/v1', version: '1.0' }
-    ]
+    skills: [
+      { id: 'web-search', kind: 'mcp' },
+      { id: 'vercel-react-best-practices', kind: 'plugin' },
+    ],
+    services: [
+      { name: 'metrics', endpoint: 'https://metrics.example.com/v1', version: '1.0' },
+    ],
   },
   walletAddress: agentWallet,
 });
@@ -64,18 +65,14 @@ await client.verify({
 | `agentLabel` | No | 128 chars | Human-readable display name |
 | `agentType` | No | enum | `ai`, `bot`, `service`, `automation`, or `agent` |
 | `description` | No | 500 chars | Agent description |
-| `capabilities` | No | 32 items | List of declared capabilities |
+| `capabilities` | No | — | Boolean flags (`search`, `mcp`, `proofs`, …) — see schema |
 | `instructions` | No | 4000 chars | System prompt or behavioral instructions |
-| `skills` | No | 48 items | List of skill identifiers |
-| `services` | No | 16 items | Service endpoint definitions |
+| `skills` | No | 48 objects | Each object requires `id`; optional `kind`, `label`, … |
+| `services` | No | 16 items | `name` + `endpoint` (+ optional `version`) |
 
-## What You Get Back
+## What you get
 
-You receive a proof receipt ID that can be reused for public agent identity, profile trust, and agent-aware product flows.
-
-`agent-identity` is a **self-attestation**. The agent wallet signs this proof itself.
-
-It **does not** grant permissions. Use `agent-delegation` when an account needs to grant scoped authority to that agent.
+Proof receipt id. **Self-attestation:** agent wallet signs. **No permissions** — use [`agent-delegation`](./agent-delegation) for scoped authority.
 
 ## Verification
 
@@ -83,10 +80,3 @@ It **does not** grant permissions. Use `agent-delegation` when an account needs 
 GET /api/v1/proofs/check?verifierIds=agent-identity&address=0x...
 ```
 
-## Use Cases
-
-| Use Case | Description |
-|----------|-------------|
-| AI assistants | Register ChatGPT-like agents |
-| Trading bots | Register automated trading agents |
-| DAO delegates | Register governance delegates |

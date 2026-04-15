@@ -1,59 +1,35 @@
 ---
 title: Domain Verification
-description: Verify domain ownership with DNS TXT records.
+description: DNS TXT at _neus — prove domain control with ownership-dns-txt.
 icon: globe
 ---
 
-Use this recipe when you want to prove that a domain belongs to the wallet behind your app, site, or profile.
+Verifier: [`ownership-dns-txt`](../verification/ownership-dns-txt). Full platform notes: [Platform setup](../platform/setup#dns-domain).
 
-## How It Works
+## Steps
 
-1. Add a DNS TXT record to your domain
-2. Create a proof that verifies the record matches your wallet
-3. Use the proof for domain-gated access or verification
+1. **TXT** at `_neus.<yourdomain>`:
 
-## Setup
+   ```text
+   neus=<your-wallet-address>
+   ```
 
-### Step 1: Add DNS TXT Record
+   Example: `_neus.example.com` → `neus=0x1234…5678`
 
-Add a TXT record at `_neus.<yourdomain.com>`:
+2. **Proof** (browser or server signing as for other direct-sign verifiers):
 
-```text
-neus=<your-wallet-address>
-```
+   ```javascript
+   const proof = await client.verify({
+     verifier: 'ownership-dns-txt',
+     data: { domain: 'example.com', walletAddress: '0x...' },
+     walletAddress: '0x...',
+   });
+   ```
 
-Example:
-```text
-_neus.example.com TXT "neus=0x1234567890abcdef1234567890abcdef12345678"
-```
+3. **Check:**
 
-### Step 2: Create Domain Proof
+   ```bash
+   GET /api/v1/proofs/check?verifierIds=ownership-dns-txt&address=0x...
+   ```
 
-```javascript
-const proof = await client.verify({
-  verifier: 'ownership-dns-txt',
-  data: {
-    domain: 'example.com',
-    walletAddress: '0x...',
-  },
-  walletAddress: '0x...',
-});
-```
-
-### Step 3: Verify Proof
-
-```bash
-GET /api/v1/proofs/check?verifierIds=ownership-dns-txt&address=0x...
-```
-
-## Propagation Time
-
-DNS changes typically propagate within minutes but can take up to 24 hours depending on your DNS provider.
-
-## Use Cases
-
-| Use Case | Description |
-|----------|-------------|
-| Org onboarding | Prove your team controls the public domain |
-| Brand trust | Link the domain to the wallet behind your NEUS presence |
-| Public proof display | Show a reusable proof page for domain control |
+DNS can take minutes to propagate (sometimes longer per provider).

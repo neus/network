@@ -1,54 +1,38 @@
 ---
 title: Ownership and Provenance
-description: Bind a wallet to content, files, references, and provenance so the result can travel as a reusable proof receipt.
+description: Wallet-signed claim bound to content, hash, or reference—reusable proof receipt.
 icon: wallet
 ---
 
 **Verifier ID:** `ownership-basic`
 
-**Start here:** direct-sign receipt (SDK, API, or `VerifyGate` with a connected wallet). Not an interactive hosted-only flow. Visibility: **[Security and trust](../platform/security-and-trust)**.
-
-Use this capability when you need the foundational NEUS proof: a wallet signs a claim and binds it to content, a file, a reference, or a proof-backed action. This is the simplest way to turn authorship, provenance, context, and ownership into a reusable proof receipt.
+Direct-sign (SDK, API, or `VerifyGate` with wallet). Not hosted-only. Visibility: [Security and trust](../platform/security-and-trust).
 
 ## Best For
 
-- publishing digital ownership
-- content and file provenance
-- source attribution and authorship
-- referenced artifacts and linked context
-- licensing and usage terms
-- bounty and submission receipts
-- marketplace or listing integrity
-- reusable proof-backed identity actions
+- Content and file provenance
+- Authorship and licensing claims
+- Portable receipts (listings, bounties, submissions)
 
 ## Flow Type
 
-Instant. The signer creates the proof directly after signing the standardized request.
+Instant — signer creates the proof after signing the standardized request.
 
 ## What You Configure
 
 | Field | Required | Notes |
 |------|----------|-------|
-| `owner` | Yes | Must match the signer wallet |
-| `content` | No | Human-readable content or claim |
-| `contentHash` | No | Precomputed hash for large or external content |
-| `reference` | No | URL, IPFS, contract, transaction, or other stable pointer |
-| `provenance` | No | Context about human, AI, or mixed origin |
+| `owner` | Yes | Must match signer |
+| `content` | No | Short human-readable claim |
+| `contentHash` | No | Large or external content |
+| `reference` | No | URL, IPFS, tx, contract, etc. |
+| `provenance` | No | Human / AI / mixed context |
 
-## Common Patterns
-
-| Pattern | How teams use it today |
-|------|-------|
-| Publish an article or media item | Bind the work to a wallet and share the proof page as the portable receipt |
-| Prove a file or artifact existed | Sign a content hash or stable reference instead of storing large payloads inline |
-| Add provenance to AI or mixed-origin content | Pair the proof with provenance metadata and optional safety or human checks |
-| Submit work to a bounty or grant | Attach a reusable receipt to the submission instead of re-verifying later |
-| Add trust to a listing or public claim | Use the receipt as the integrity layer for the claim being shown |
-| Anchor a proof-backed identity action | Reuse the same receipt across profile, app, and marketplace surfaces |
+Use `content` for small text; `contentHash` or `reference` for large or off-chain artifacts.
 
 ## What You Get Back
 
-You get a proof receipt ID that can be reused for proof pages, product trust, access checks, and downstream policy.
+Proof receipt id — reuse for pages, gates, and policy checks.
 
 ## Example
 
@@ -63,20 +47,6 @@ You get a proof receipt ID that can be reused for proof pages, product trust, ac
 }
 ```
 
-## Working With Content, Hashes, and References
+## Content retrieval
 
-- Use `content` when the claim is small and human-readable.
-- Use `contentHash` when the source is large, sensitive, or stored elsewhere.
-- Use `reference` when the real artifact lives at a URL, IPFS CID, contract, transaction, or another stable pointer.
-- Use provenance fields when downstream readers should understand whether the output is human-authored, AI-generated, or mixed.
-
-## Content Retrieval
-
-**Core Principle:** Content retrieval requires either:
-
-1. **Stored original content**: The proof was created with content storage enabled in `publicContent.content`
-2. **Stable reference**: The proof references external content via `reference.type` + `reference.id`
-
-When the **same user is signed in**, private content can resolve without extra query parameters.
-
-Returns `contentResolutionStatus`: `resolved` or `hash_only_not_recoverable`.
+Resolution needs either stored `publicContent.content` or a stable `reference`. Same signed-in user can resolve private content without extra params. Response includes `contentResolutionStatus`: `resolved` or `hash_only_not_recoverable`.

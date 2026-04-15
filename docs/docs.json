@@ -41,9 +41,9 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "NEUS Documentation - Portable proof receipts for login, trust, access, and agent workflows",
+      "description": "NEUS Docs — verify once, trust everywhere. Proof receipts for login, access, and agents.",
       "og:title": "NEUS Documentation",
-      "og:description": "Portable proof receipts for login, trust, access, and agent workflows",
+      "og:description": "Proof receipts for login, access, and agents.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
@@ -51,7 +51,7 @@
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
       "twitter:title": "NEUS Documentation",
-      "twitter:description": "Portable proof receipts for login, trust, access, and agent workflows",
+      "twitter:description": "Proof receipts for login, access, and agents.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
@@ -492,7 +492,39 @@
     },
     {
       "source": "/content/ecosystems/overview",
-      "destination": "/ecosystems/overview"
+      "destination": "/choose-an-integration-path"
+    },
+    {
+      "source": "/ecosystems/overview",
+      "destination": "/choose-an-integration-path"
+    },
+    {
+      "source": "/ecosystems/verifiers",
+      "destination": "/verification/verifiers"
+    },
+    {
+      "source": "/content/ecosystems/verifiers",
+      "destination": "/verification/verifiers"
+    },
+    {
+      "source": "/cookbook/mcp",
+      "destination": "/mcp/overview"
+    },
+    {
+      "source": "/platform/how-verification-works",
+      "destination": "/verification/how-it-works"
+    },
+    {
+      "source": "/platform/verification-lifecycle",
+      "destination": "/verification/lifecycle"
+    },
+    {
+      "source": "/platform/signing-format",
+      "destination": "/verification/signing-format"
+    },
+    {
+      "source": "/platform/verifiers",
+      "destination": "/verification/verifiers"
     },
     {
       "source": "/content/learn/legal/nft-sale-terms",

@@ -1,38 +1,38 @@
 ---
 title: Agents Overview
-description: Register and delegate authority to AI agents.
+description: Register agents, delegate scope, reuse receipts.
 icon: robot
 ---
 
-Same onboarding as any integration: **[Get started](../get-started)** (`appId`, credits, billing), then agent verifiers below.
+Same start as any integration: [Get started](../get-started) (`appId`, credits, billing). Then agent verifiers below.
 
 ## Flow
 
-1. **Register agent** (`agent-identity`)  
-2. **Delegate** (`agent-delegation`)  
-3. **Hosted verify** for interactive steps; MCP uses the same URLs
+1. **Register** — `agent-identity`  
+2. **Delegate** — `agent-delegation`  
+3. **Hosted** steps when needed; MCP uses the same verify URLs  
 
-Steps 1–2 can be different people. **[Concepts](./concepts)** (roles, wallets, fields).
+Steps 1–2 can be different wallets. [Concepts](./concepts)
 
-## What this solves
+## Why
 
-| Question | Answer |
-|----------|--------|
-| Which agent is acting? | Agent registration binds agent to wallet |
+| Need | How |
+|------|-----|
+| Which agent? | Registration binds wallet |
 | What can it do? | Delegation scopes permissions |
-| How it plugs in | MCP + receipts |
+| Product fit | MCP + receipts |
 
 <CardGroup cols={2}>
   <Card title="Concepts" icon="book-open" href="./concepts">
-    Roles, wallets, fields.
+    Roles, fields.
   </Card>
   <Card title="Registration" icon="badge-check" href="./agent-identity">
-    `agent-identity`
+    agent-identity
   </Card>
   <Card title="Delegation" icon="key" href="./agent-delegation">
-    `agent-delegation`
+    agent-delegation
   </Card>
-  <Card title="Verification flow" icon="route" href="./agent-verification-flow">
+  <Card title="Flow" icon="route" href="./agent-verification-flow">
     Sequence.
   </Card>
   <Card title="Cookbook" icon="book-open" href="../cookbook/verifiable-agents">
@@ -40,12 +40,10 @@ Steps 1–2 can be different people. **[Concepts](./concepts)** (roles, wallets,
   </Card>
 </CardGroup>
 
-## Start
-
-### Register
+## Register
 
 ```javascript
-const agent = await client.verify({
+await client.verify({
   verifier: 'agent-identity',
   data: {
     agentId: 'my-agent',
@@ -57,10 +55,10 @@ const agent = await client.verify({
 });
 ```
 
-### Delegate
+## Delegate
 
 ```javascript
-const delegation = await client.verify({
+await client.verify({
   verifier: 'agent-delegation',
   data: {
     agentId: 'my-agent',
@@ -72,23 +70,4 @@ const delegation = await client.verify({
 });
 ```
 
-## Diagram
-
-<Frame caption="Register the agent, delegate from the controller wallet, then operate with proof receipts.">
-  <img
-    className="neus-docs-flow-diagram"
-    src="/images/diagrams/agents-trust-loop.svg"
-    alt="Agent flow: agent-identity registration, agent-delegation from controller, then actions with proof receipts"
-  />
-</Frame>
-
-## Related
-
-<CardGroup cols={2}>
-  <Card title="MCP" icon="plug" href="../mcp/overview">
-    Tools + URLs.
-  </Card>
-  <Card title="Verifiers" icon="list-tree" href="../verification/verifiers">
-    Full list.
-  </Card>
-</CardGroup>
+Details: [agent-identity](./agent-identity) · [agent-delegation](./agent-delegation) · [MCP](../mcp/overview) (`neus_agent_create`, `neus_agent_link`)

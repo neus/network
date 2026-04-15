@@ -1,22 +1,12 @@
 ---
 title: Quickstart (SDK)
-description: First direct proof with ownership-basic via the SDK.
+description: First ownership-basic proof with the JavaScript SDK.
 icon: rocket
 ---
 
-<Note>
-**Most teams start with [Hosted Verify](./cookbook/auth-hosted-verify)**. This page is the **SDK fast path** after you understand the loop: verify the user → **persist `proofId` (proof receipt ID)** with that user → **check before showing verify again** with the **same signer address** and verifier policy.
-</Note>
+Direct-sign **`ownership-basic`**. Social / human / org → [Hosted Verify](./cookbook/auth-hosted-verify). Production → [Get started](./get-started).
 
-<Tip>
-**Loop:** [Check](./integration#loop) → verify if needed → save **proof receipt ID** → reuse. Interactive flows: **[Hosted Verify](./cookbook/auth-hosted-verify)**. [Proof receipts](./platform/receipts-and-results)
-</Tip>
-
-This page is for your **first direct-sign proof** with **`ownership-basic`**. Flows that need social, human, or org interaction start in **[Hosted Verify](./cookbook/auth-hosted-verify)**; reusable gate flows follow **[Integration](./integration)**.
-
-Before production traffic, complete **[Get started](./get-started)** for `appId`, credits, and who pays.
-
-## 1. Install the SDK
+## 1. Install
 
 ```bash
 npm install @neus/sdk
@@ -24,13 +14,13 @@ npm install @neus/sdk
 
 ## 2. Create a proof
 
-**Raw `client.verify()`** defaults to **private**, **unlisted**, and **stored content** (owner-authenticated reads). Omit `options` unless you need a different mode. **`VerifyGate`** uses different create defaults; see **[Widgets](./widgets/overview)** and **[Security and trust](./platform/security-and-trust)**.
+`client.verify()` defaults **private** unless you set options. VerifyGate differs—[Widgets](./widgets/overview) · [Security and trust](./platform/security-and-trust).
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient({
-  appId: 'your-app-id', // optional for local try; required for production — [Get started](./get-started)
+  appId: 'your-app-id', // optional locally; required in prod — [Get started](./get-started)
 });
 
 const proof = await client.verify({
@@ -42,15 +32,11 @@ const proof = await client.verify({
 const proofId = proof.proofId;
 ```
 
-**Save `proofId` on your server with the same user you verified.** It is the **proof receipt ID** (many API payloads also use **`qHash`** for the same value). You will reuse it for checks and receipts—not the raw signature string.
+Persist `proofId` with the subject (same wallet passed to `verify`). The API may expose this as `qHash` — [Proof receipts](./platform/receipts-and-results). Reuse via `gateCheck` or VerifyGate.
 
-**Attestation vs gate:** this snippet is for **proving content**. See **[SDK verification patterns](./sdks/verifications)** for more shapes.
+More patterns: [SDK verifications](./sdks/verifications). No wallet in-page → [Hosted Verify](./cookbook/auth-hosted-verify).
 
-No injected wallet? Use **[Hosted Verify](./cookbook/auth-hosted-verify)** instead of `window.ethereum`.
-
-Social, org, or human verification? Start in **[Hosted Verify](./cookbook/auth-hosted-verify)**, not here.
-
-## 3. Wait for completion
+## 3. Poll
 
 ```javascript
 const status = await client.pollProofStatus(proofId, {
@@ -59,9 +45,7 @@ const status = await client.pollProofStatus(proofId, {
 });
 ```
 
-## 4. Gate content in React
-
-For gates, **`VerifyGate`** defaults to **unlisted public** create mode so checks align without extra options. Override **`proofOptions`** when you need listed public or private behavior. See **[VerifyGate](./widgets/verifygate)** and **[Integration](./integration)**.
+## 4. Gate (React)
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -74,30 +58,26 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>
 ```
 
-## 5. Check eligibility from your server
+[VerifyGate](./widgets/verifygate) · [Integration](./integration)
 
-**Rules that prevent “it doesn’t work” bugs:**
+## 5. Server check
 
-- **`gateCheck` `address` must be the same identity** that signed **`verify()`** (for `ownership-basic`, the wallet you passed as `wallet`).
-- **Prefer a stored proof receipt ID:** call the proofs check API (via **`gateCheck`** or **`GET /api/v1/proofs/check`**) **before** you show another verify flow when you already created a proof for this user.
-- **Verifier policy must match:** same `verifierIds` (and equivalent `verifierData` constraints) you used at creation time.
+- `gateCheck` **address** = identity that signed `verify()` (here, the `wallet` you passed).
+- Prefer a **saved receipt id** + check before another verify.
+- Verifier policy must match creation.
 
 ```javascript
-const signerAddress = '0x...';
-
 const result = await client.gateCheck({
-  address: signerAddress,
+  address: '0x...',
   verifierIds: ['ownership-basic'],
 });
-
-if (result.data?.eligible) {
-}
 ```
 
-## Next
+## See also
 
 |  |  |
 |--|--|
-| Production (`appId`, billing) | [Get started](./get-started) |
-| Surfaces at a glance | [Choose a path](./choose-an-integration-path) |
-| Ship loop | [Integration](./integration) |
+| [Get started](./get-started) | App, billing, production |
+| [Choose a path](./choose-an-integration-path) | SDK, widgets, API, MCP |
+| [Integration](./integration) | Check → verify → save → reuse |
+| [Examples](./examples) | Repositories |

@@ -1,27 +1,27 @@
 ---
 title: Rate Limits and Retries
-description: What to do when requests are throttled or fail temporarily.
+description: 429s, backoff, and safe retries.
 icon: clock
 ---
 
-NEUS APIs may return **`429`** or short-lived errors.
+APIs may return **429** or transient errors.
 
-- Use **exponential backoff** and respect **`Retry-After`** when the response includes it.
-- When **creating** proofs, avoid blind retries — confirm whether the first request succeeded before posting again.
-- For **polling**, space requests a few seconds apart and back off on errors.
+- Exponential backoff; honor **Retry-After** when present.
+- **Creates:** don’t blind-retry—confirm the first request didn’t succeed.
+- **Polling:** a few seconds between polls; backoff on errors.
 
-Credits, tiers, and pay-per-use: [Billing](./billing).
+Credits: [Billing](./billing) · Code: [SDK errors](../sdks/error-handling)
 
 ## Related
 
 <CardGroup cols={2}>
   <Card title="Billing" icon="credit-card" href="./billing">
-    Credits and usage.
+    Usage.
   </Card>
-  <Card title="SDK error handling" icon="triangle-exclamation" href="../sdks/error-handling">
-    Retries in code.
+  <Card title="SDK errors" icon="triangle-exclamation" href="../sdks/error-handling">
+    In-app retries.
   </Card>
-  <Card title="API overview" icon="terminal" href="../api/overview">
+  <Card title="API" icon="terminal" href="../api/overview">
     Endpoints.
   </Card>
 </CardGroup>
