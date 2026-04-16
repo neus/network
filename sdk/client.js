@@ -1738,7 +1738,7 @@ export class NeusClient {
               } else if (key === 'handle') {
                 actualValue = data.handle || data.pseudonymId;
               } else if (key === 'namespace') {
-                actualValue = data.namespace != null && data.namespace !== ''
+                actualValue = data.namespace !== null && data.namespace !== undefined && data.namespace !== ''
                   ? data.namespace
                   : 'neus';
               } else if (key === 'claims.sanctions_passed') {

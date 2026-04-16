@@ -140,6 +140,8 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 **Live catalog:** [Verifier catalog](https://docs.neus.network/verification/verifiers). Machine-readable verifier lists and schemas ship in [`spec/`](./spec/VERIFIERS.json) with this project for reference and validation tooling.
 
+### Verifiers live list
+
 | Verifier | Partner |
 | --- | --- |
 | `wallet-risk` | [Webacy / DD.xyz](https://webacy.com) |
