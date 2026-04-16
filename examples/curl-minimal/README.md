@@ -1,8 +1,12 @@
-# HTTP API Example
+# HTTP API example
 
-Create verification proofs using direct HTTP requests.
+**Prefer [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify), the [JavaScript SDK](https://docs.neus.network/quickstart), or widgets** so end users are not pushed through manual signing steps.
 
-## Create a Proof
+**Use this sample when** you want zero SDK dependency, you are prototyping in curl, or you need to see the exact signing string the API expects before porting to another language.
+
+You get the same outcome as the SDK: a **`proofId`** receipt you can store, look up, and reuse in gate checks.
+
+## Create a proof
 
 ### 1. Ask the API for the exact string to sign
 
@@ -85,7 +89,7 @@ Use the `/standardize` request above and verify that the submitted body matches 
 | `SIGNATURE_EXPIRED` | Timestamp within 5 minutes |
 | `INVALID_WALLET_ADDRESS` | Check address format |
 
-## Next Steps
+## Next steps
 
 - [Node.js example](../nodejs-basic/) — programmatic signing
 - [API reference](https://docs.neus.network/api/overview) — HTTP endpoints and patterns

@@ -1,34 +1,52 @@
 ---
 title: NEUS
-description: Verify once. Trust everywhere. Proof receipts for login, access, and agents.
+description: Verify once. Reusable receipts. One receipt flow for people, agents, and organizations.
 icon: house
 ---
 
-## Verify once. Trust everywhere.
+<Note>
+**One receipt id** (`proofId` in API responses) — [check](./integration) before re-verifying. Same pattern for **people, agents, orgs**: SDK, widgets, API, MCP, shareable proof URLs.
+</Note>
 
-Verification yields a **proof receipt**. Save its id once—reuse it for checks, gates, API, and agents.
+**Start:** [Hosted Verify](https://neus.network/verify) · [Get started](./get-started) · [Choose a path](./choose-an-integration-path) · [Agents](./agents/overview)
 
-**Start:** [Hosted Verify](https://neus.network/verify) · [Hosted Verify guide](./cookbook/auth-hosted-verify) · [Get started](./get-started) · [Integration](./integration)
+## Capabilities
+
+<CardGroup cols={2}>
+  <Card title="Universal identity" icon="users" href="./agents/overview">
+    Resolve wallets, domains, socials, and agents from one profile: card URL, DID, or MCP lookup.
+  </Card>
+  <Card title="Reusable receipts" icon="receipt" href="./integration">
+    Store `proofId`. GateCheck / API / widgets — skip repeat verification.
+  </Card>
+  <Card title="MCP & assistants" icon="plug" href="./mcp/overview">
+    Hosted MCP tools + handoff URLs to Hosted Verify when a browser step is required.
+  </Card>
+  <Card title="Gates & billing" icon="credit-card" href="./platform/billing">
+    Sponsors, credits, x402 — org-paid and self-serve paths.
+  </Card>
+</CardGroup>
 
 ## Common uses
 
 | Use case | Documentation |
 |----------|---------------|
-| Access control with saved receipts | [Integration](./integration) · [`gateCheck`](./sdks/javascript) |
-| NFT, token, or domain checks | [Examples](./examples) · [NFT gating](./cookbook/nft-gating) · [Domain](./cookbook/domain-verification) |
-| MCP clients | [MCP](./mcp/overview) |
+| Identity + linked accounts | [Agents](./agents/overview) · [Wallet link](./verification/wallet-link) · [Hosted Verify](./cookbook/auth-hosted-verify) |
+| Access with saved receipts | [Integration](./integration) · [`gateCheck`](./sdks/javascript) |
+| Token, NFT, domain gates | [Examples](./examples) · [NFT gating](./cookbook/nft-gating) · [Domain](./cookbook/domain-verification) |
+| Tooling / IDE | [MCP](./mcp/overview) |
 
 ## Start here
 
 <CardGroup cols={3}>
   <Card title="Get started" icon="book" href="./get-started">
-    Account, app, billing, first proof.
+    Hub account, billing, then check → verify → save once.
   </Card>
   <Card title="Choose a path" icon="route" href="./choose-an-integration-path">
-    SDK, widgets, API, MCP.
+    SDK · widgets · API · MCP.
   </Card>
   <Card title="Integration" icon="compass" href="./integration">
-    Check, verify, save, reuse.
+    Check → verify → save → reuse.
   </Card>
 </CardGroup>
 
@@ -60,4 +78,4 @@ Verification yields a **proof receipt**. Save its id once—reuse it for checks,
 - [Examples](./examples)
 - [LLM docs](./platform/llm-docs)
 
-[Hosted verify](https://neus.network/verify) · [Hub](https://neus.network/hub) · `https://api.neus.network` · `https://mcp.neus.network/mcp` · [URL matrix](./platform/overview#urls)
+[Hosted verify](https://neus.network/verify) · [Hub](https://neus.network/hub) · [Where NEUS is hosted](./platform/overview#urls) (verify, API, MCP)

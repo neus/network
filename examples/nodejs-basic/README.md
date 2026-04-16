@@ -1,5 +1,9 @@
 # Node.js example
 
+**Prefer [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) or browser `client.verify()`** for product flows. This repo is for **backend-held keys** or learning the **standardize → sign → submit** HTTP pattern.
+
+**Run the full server-side flow** (prepare signing text, sign, submit, wait for completion, then gate check) in one file—ideal when your backend already has a wallet key or signer and you want receipts you can persist like any other ID.
+
 ```bash
 cd nodejs-basic
 npm install
@@ -7,7 +11,7 @@ export TEST_WALLET_PRIVATE_KEY=0x...   # test wallet only
 node index.js
 ```
 
-Uses `standardize` → sign → submit → poll, then `gateCheck`.
+Core pattern:
 
 ```javascript
 const standardizeRes = await fetch('https://api.neus.network/api/v1/verification/standardize', {

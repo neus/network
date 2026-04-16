@@ -6,11 +6,13 @@ icon: code
 
 **check → verify → save id → reuse.** Production: [Get started](./get-started) · [Billing](./platform/billing)
 
+**Prefer creating proofs** via [Quickstart](./quickstart), [Hosted Verify](./cookbook/auth-hosted-verify), or **widgets**—not raw HTTP.
+
 | Repository | Contents |
 |------------|----------|
 | [react-component](https://github.com/neus/network/tree/main/examples/react-component) | Vite, VerifyGate, browser wallet |
-| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Node, server signing, `gateCheck` |
-| [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | HTTP: standardize, sign, submit |
+| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | **Advanced:** Node, server-held key, standardize + sign + `gateCheck` |
+| [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | **Advanced:** HTTP-only standardize → sign → submit |
 
 ## React: gate
 
@@ -38,7 +40,7 @@ export default function ProtectedPage() {
 
 ## Node: proof
 
-No wallet in `client.verify()` on the server → **standardize → sign → submit** ([JavaScript SDK](./sdks/javascript)) or [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic).
+For **server-held keys** or **HTTP-only** stacks: **standardize → sign → submit** ([JavaScript SDK](./sdks/javascript)) or [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic). For most products, use **Hosted Verify** or **browser `client.verify()`** instead so you are not maintaining signing plumbing.
 
 ## HTTP (advanced)
 
@@ -46,7 +48,7 @@ No wallet in `client.verify()` on the server → **standardize → sign → subm
 curl -X POST https://api.neus.network/api/v1/verification/standardize \
   -H "Content-Type: application/json" \
   -d '{"walletAddress":"0x...","verifierIds":["ownership-basic"],"data":{"content":"Hello NEUS"}}'
-# sign signerString, then POST /api/v1/verification with signature
+# sign signerString, then POST /api/v1/verification with the same body + signature
 ```
 
 ## Docs

@@ -5,7 +5,7 @@ icon: book
 ---
 
 <Note>
-**Default:** [Hosted Verify](./cookbook/auth-hosted-verify) for users; you store the **receipt id** and **check** before asking them to verify again ([Integration](./integration#loop)). **Shipped products:** your org usually pays—credits + sponsor grants ([Choose who pays](#choose-who-pays)).
+**Default:** [Hosted Verify](./cookbook/auth-hosted-verify) for users; you store the **receipt id** and **check** before asking them to verify again ([Integration](./integration#loop)). **Shipped products:** plan for **org-paid credits + sponsor grants** unless you intentionally use self-serve billing ([Choose who pays](#choose-who-pays)).
 </Note>
 
 One receipt id powers gates, checks, and proof pages. [Proof receipts](./platform/receipts-and-results) · [Security and trust](./platform/security-and-trust)
@@ -23,13 +23,13 @@ One receipt id powers gates, checks, and proof pages. [Proof receipts](./platfor
 
 ## 2. First loop
 
-Interactive flows → [Hosted Verify](./cookbook/auth-hosted-verify). First SDK sign → [Quickstart](./quickstart). Loop → [Integration](./integration).
+Browser-friendly verification → [Hosted Verify](./cookbook/auth-hosted-verify). First SDK wallet sign → [Quickstart](./quickstart). Loop → [Integration](./integration).
 
 ## 3. Production setup
 
 DNS, org OAuth, apps, sponsors at scale → [Platform setup](./platform/setup) after the loop is clear.
 
-## Before launch
+## Ship to production
 
 Decisions: **app**, **who pays**, **access key** (only for account-scoped API/MCP). Details: [Billing](./platform/billing) · [Platform setup](./platform/setup)
 
@@ -38,7 +38,7 @@ Decisions: **app**, **who pays**, **access key** (only for account-scoped API/MC
 1. [Apps](https://neus.network/profile?tab=apps) → **Link app** / **Manage app**.
 2. **App domain** + **daily credit cap**.
 
-You get an `appId`; the SDK sends `X-Neus-App`.
+You get an `appId`; pass it into the SDK so NEUS can attribute usage to your app.
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -52,7 +52,7 @@ const client = new NeusClient({
 
 ### Choose who pays
 
-**Shipped products:** org credits + `sponsorGrant` (`X-Sponsor-Grant`). Users shouldn’t hit “buy credits” first. [Platform setup](./platform/setup)
+**Shipped products:** org credits plus a **sponsor grant** on SDK calls so usage bills your org. Users shouldn’t hit “buy credits” first. [Platform setup](./platform/setup)
 
 **Self-serve:** user credits or x402—no sponsor on those flows.
 
@@ -65,11 +65,11 @@ const client = new NeusClient({
 
 ### Access keys
 
-[Access keys](https://neus.network/profile?tab=account) when you need `Authorization: Bearer` on `api.neus.network`, scripts, or MCP (e.g. `neus_me`). Wait until you see `auth_required`. [MCP Auth](./mcp/auth)
+[Access keys](https://neus.network/profile?tab=account) when a tool or script needs to act on **your** account (for example certain MCP tools). Create a key only after the product returns **`auth_required`**. [MCP Auth](./mcp/auth)
 
 Never ship this key in the browser. Users use Hosted Verify, not your personal key.
 
-### Launch checklist
+### Checklist
 
 - [ ] App + realistic daily cap
 - [ ] Credits for your payer model
@@ -80,6 +80,9 @@ Never ship this key in the browser. Users use Hosted Verify, not your personal k
 ## Related
 
 <CardGroup cols={2}>
+  <Card title="Agents (portable identity)" icon="robot" href="./agents/overview">
+    Proof-backed profile, shareable card URL, MCP lookup—chat UIs and IDEs.
+  </Card>
   <Card title="Billing" icon="credit-card" href="./platform/billing">
     Who pays, x402, sponsors.
   </Card>
@@ -90,6 +93,6 @@ Never ship this key in the browser. Users use Hosted Verify, not your personal k
     Production loop.
   </Card>
   <Card title="Security and trust" icon="lock" href="./platform/security-and-trust">
-    Visibility.
+    Who can see proofs and receipts.
   </Card>
 </CardGroup>

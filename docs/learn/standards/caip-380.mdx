@@ -4,9 +4,9 @@ description: Wallet-signed envelope and NEUS receipt anchor.
 icon: file-signature
 ---
 
-NEUS tracks the [CAIP-380](https://github.com/ChainAgnostic/CAIPs/pull/380) draft. Draft names may differ; **signing and hashing on NEUS** match production behavior.
+NEUS tracks the [CAIP-380](https://github.com/ChainAgnostic/CAIPs/pull/380) proposal on GitHub. **This page matches how NEUS signs and hashes proofs in production** (the CAIP text may still say “draft”).
 
-## Draft idea
+## Scope of the proposal
 
 One wallet-signed envelope; apps validate off-chain; stable receipt id.
 
@@ -15,15 +15,15 @@ One wallet-signed envelope; apps validate off-chain; stable receipt id.
 
 ## NEUS anchor
 
-Receipt = **`qHash`** (0x…): SHAKE-256, 256-bit, over normalized material. SDK often calls the same value **`proofId`**. [Proof receipts](../../platform/receipts-and-results)
+Receipt = **`qHash`** (0x…): SHAKE-256 (256-bit) **of the standardized proof request fields** (fixed encoding and field order). SDK responses often use **`proofId`** for the same value. [Proof receipts](../../platform/receipts-and-results)
 
 ## Inputs (conceptual)
 
-Account + chain · `verifierIds` · `data` (deterministic JSON) · `signedTimestamp` · EVM `chainId` or non-EVM `chain`
+Account + chain · `verifierIds` · `data` (JSON—**use `/standardize` so field order matches what was signed**) · `signedTimestamp` · EVM `chainId` or non-EVM `chain`
 
 ## Signer string
 
-Six-line UTF-8, LF. Always from `POST /api/v1/verification/standardize` → `signerString` (or SDK `standardizeVerificationRequest`).
+Six-line UTF-8, LF. The wallet must sign these exact bytes. **`POST /api/v1/verification/standardize`** returns **`signerString`** for raw HTTP and debugging; the SDK **`verify()`** path builds the same message client-side (or use **`standardizeVerificationRequest`** when you need the API round-trip).
 
 ```text
 NEUS Verification Request

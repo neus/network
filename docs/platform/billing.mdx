@@ -10,7 +10,7 @@ Onboarding: [Get started](../get-started). Here: **payer order**, sponsors, **x4
 
 ## Charges
 
-`appId` → `X-Neus-App` (**attribution**). It does **not** move the bill by itself.
+**`appId`** labels traffic to your app (**attribution**). It does **not** choose the payer by itself.
 
 Who pays: sponsor grant (best for customers) → signing wallet → x402 → limits. No sponsor → signer may pay—fine for dev; use sponsors for customer traffic.
 
@@ -26,8 +26,8 @@ Same SDK/API—different funder.
 ## You pay for users
 
 1. App + org credits.
-2. Short-lived `X-Sponsor-Grant` so usage hits **your** balance.
-3. `new NeusClient({ appId, sponsorGrant })`.
+2. Short-lived **sponsor grant** so usage hits **your** balance.
+3. `new NeusClient({ appId, sponsorGrant })` so both values are sent on SDK calls.
 
 [Platform setup](./setup)
 
@@ -49,11 +49,11 @@ Not: “bill this `appId`” in the body—payer comes from session/crypto.
 
 ## SDK
 
-| Field | Sends |
-|-------|--------|
-| `appId` | `X-Neus-App` |
-| `sponsorGrant` | `X-Sponsor-Grant` |
-| `paymentSignature` | After 402 |
+| Field | Role |
+|-------|------|
+| `appId` | App attribution on requests |
+| `sponsorGrant` | Bill your org for this session |
+| `paymentSignature` | Reply after an x402 payment challenge |
 
 SDK doesn’t auto-pay x402—you retry after payment or keep credits healthy.
 

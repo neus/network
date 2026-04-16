@@ -12,7 +12,24 @@ icon: key
 
 [Access keys](https://neus.network/profile?tab=account) → `Authorization: Bearer` on API/MCP (same header). MCP: [Auth](../mcp/auth) (`neus_me`)
 
-## In-app signature
+## In-app verify (default)
+
+Use **`NeusClient.verify()`** so the SDK prepares the signing payload and submits—see [Quickstart](../quickstart).
+
+```javascript
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient({ appId: 'your-app-id' });
+await client.verify({
+  verifier: 'ownership-basic',
+  content: 'Hello NEUS',
+  wallet: window.ethereum,
+});
+```
+
+## Advanced: manual standardize + sign
+
+Only when you need full control over the request body (custom `verifierIds` / `data`) before submit:
 
 ```javascript
 import { standardizeVerificationRequest, signMessage } from '@neus/sdk';

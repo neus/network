@@ -4,7 +4,7 @@ description: First ownership-basic proof with the JavaScript SDK.
 icon: rocket
 ---
 
-Direct-sign **`ownership-basic`**. Social / human / org → [Hosted Verify](./cookbook/auth-hosted-verify). Production → [Get started](./get-started).
+Wallet-signed **`ownership-basic`**. Social / human / org → [Hosted Verify](./cookbook/auth-hosted-verify). Production → [Get started](./get-started).
 
 ## 1. Install
 
@@ -32,9 +32,9 @@ const proof = await client.verify({
 const proofId = proof.proofId;
 ```
 
-Persist `proofId` with the subject (same wallet passed to `verify`). The API may expose this as `qHash` — [Proof receipts](./platform/receipts-and-results). Reuse via `gateCheck` or VerifyGate.
+Persist `proofId` with the subject (same wallet passed to `verify`). Depending on the response, the receipt id may be `proofId` or `qHash`—see [Proof receipts](./platform/receipts-and-results). Reuse with an eligibility check or VerifyGate.
 
-More patterns: [SDK verifications](./sdks/verifications). No wallet in-page → [Hosted Verify](./cookbook/auth-hosted-verify).
+Other verifier flows: [SDK verifications](./sdks/verifications). No wallet in-page → [Hosted Verify](./cookbook/auth-hosted-verify).
 
 ## 3. Poll
 

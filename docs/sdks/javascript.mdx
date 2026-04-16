@@ -55,9 +55,9 @@ const client = new NeusClient({
 
 See [Verification Patterns](./verifications) for privacy levels and widget options.
 
-## Create a Proof (manual signing)
+## Advanced: manual signing (full control)
 
-If the wallet signs in your app, get the signing string from the API first:
+Prefer **`client.verify()`** above when a browser wallet is available. Use this path only when you must assemble `verifierIds` / `data` yourself, then sign the API-standardized string:
 
 ```javascript
 import { standardizeVerificationRequest, signMessage } from '@neus/sdk';

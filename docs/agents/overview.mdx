@@ -1,26 +1,47 @@
 ---
 title: Agents Overview
-description: Register agents, delegate scope, reuse receipts.
+description: Verifier-backed agent identity — receipts, stable URLs, MCP — any client.
 icon: robot
 ---
 
-Same start as any integration: [Get started](../get-started) (`appId`, credits, billing). Then agent verifiers below.
+<Note>
+Prerequisite: [Get started](../get-started) — `appId`, credits, billing. Same **check → verify → save → reuse** loop as [Integration](../integration).
+</Note>
+
+| Building block | Role |
+|-----------|------|
+| `agent-identity` | **Agent wallet signs** the identity proof; stable **wallet / DID** |
+| `agent-delegation` | Approver binds scope, spend cap, expiry |
+| URLs | Agent profile · proof pages · optional downloadable config for tools |
+| MCP | `neus_proofs_get` · `neus_context` — live eligibility + catalog |
+| Linked surface | Add ownership + [wallet-link](../verification/wallet-link) so automation shares proofs with people/org flows |
 
 ## Flow
 
-1. **Register** — `agent-identity`  
-2. **Delegate** — `agent-delegation`  
-3. **Hosted** steps when needed; MCP uses the same verify URLs  
+<Steps>
+  <Step title="Register">
+    `agent-identity` — agent wallet signs.
+  </Step>
+  <Step title="Delegate (optional)">
+    `agent-delegation` — approver signs (can be a different wallet). [Concepts](./concepts)
+  </Step>
+  <Step title="Resolve">
+    Share card URL, proof URL, wallet, or DID; wire NEUS MCP so clients fetch state.
+  </Step>
+  <Step title="Hosted handoff">
+    When the tool returns `hostedVerifyUrl`, open it — same links as other integrations.
+  </Step>
+</Steps>
 
-Steps 1–2 can be different wallets. [Concepts](./concepts)
+## At a glance
 
-## Why
-
-| Need | How |
-|------|-----|
-| Which agent? | Registration binds wallet |
-| What can it do? | Delegation scopes permissions |
-| Product fit | MCP + receipts |
+| Need | Mechanism |
+|------|-----------|
+| Attributable automation | `agent-identity` metadata + wallet binding |
+| Scoped capability | `agent-delegation` permissions / spend / TTL |
+| Any chat / API / server | Receipt ids + MCP + public proof URLs |
+| Org / site / social linkage | Verifiers from [catalog](../verification/verifiers) |
+| Paid or gated actions | [x402](../platform/x402) + [Billing](../platform/billing) |
 
 <CardGroup cols={2}>
   <Card title="Concepts" icon="book-open" href="./concepts">

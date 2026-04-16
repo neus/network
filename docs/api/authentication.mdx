@@ -4,7 +4,15 @@ description: API auth—sessions and wallet signing.
 icon: fingerprint
 ---
 
-**Default:** [Hosted Verify](../cookbook/auth-hosted-verify) or **SDK**. Raw HTTP only when intentional.
+## Default (low friction)
+
+No manual signing string for most integrations:
+
+- **[Hosted Verify](../cookbook/auth-hosted-verify)** — redirect or popup; user completes NEUS-hosted steps.
+- **SDK** — `NeusClient.verify()` with a browser wallet (see [Quickstart](../quickstart)); the client handles signing and submit.
+- **MCP** — `neus_verify_or_guide` for assistants when a hosted handoff is appropriate.
+
+Use **HTTP** directly when you need server-side **`gateCheck`-style reads** or a **non-SDK** stack.
 
 ## Wallet standards
 
@@ -14,13 +22,18 @@ icon: fingerprint
 | Contract | EIP-1271 | Safe, Argent, Sequence |
 | Counterfactual | EIP-6492 | Undeployed accounts |
 
-## HTTP create (advanced)
+## Raw HTTP create (advanced)
 
-1. `POST /api/v1/verification/standardize` → `signerString`
-2. Sign with user wallet
-3. `POST /api/v1/verification` — same body + `signature`
+Only if you implement `POST /api/v1/verification` without the SDK:
 
-Shapes: **API Reference** (OpenAPI). Story: [Signing format](../verification/signing-format)
+1. Build the JSON body (`walletAddress`, `verifierIds`, `data`, `signedTimestamp`, chain fields as required).
+2. **`POST /api/v1/verification/standardize`** with that body → `signerString`.
+3. Sign `signerString` with the same wallet as `walletAddress`.
+4. **`POST /api/v1/verification`** with the **same body** + `signature`.
+
+If verification fails with a signature error, repeat step 2 and confirm the body you sign matches the body you POST—see [Signing format](../verification/signing-format).
+
+Field-by-field shapes: **API reference** on the documentation site.
 
 ## Picky wallets
 

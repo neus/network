@@ -1,20 +1,50 @@
 ---
 title: Choose an Integration Path
-description: Pick SDK, widgets, API, or MCP.
+description: Pick SDK, widgets, API, or MCP from one table.
 icon: route
 ---
 
-After [Get started](./get-started), choose a row, then [Integration](./integration).
+<Note>
+Do **[Get started](./get-started)** first (`appId`, credits, billing). Then match **goal → doc** and ship **[Integration](./integration)** (check → verify → save → reuse).
+</Note>
+
+## Primary paths
+
+<CardGroup cols={2}>
+  <Card title="Universal identity" icon="users" href="./agents/overview">
+    Agents · linked accounts · MCP · agent card / config URL.
+  </Card>
+  <Card title="Hosted Verify" icon="globe" href="./cookbook/auth-hosted-verify">
+    Login, social, human, org — redirect or popup.
+  </Card>
+  <Card title="SDK & widgets" icon="code" href="./sdks/overview">
+    Direct sign · [Quickstart](./quickstart) · [VerifyGate](./widgets/overview).
+  </Card>
+  <Card title="MCP" icon="plug" href="./mcp/overview">
+    Assistants / IDE — hosted MCP URL; access key for [account tools](./mcp/auth).
+  </Card>
+  <Card title="API" icon="server" href="./api/overview">
+    **`proofs/check`**, **`proofs/by-wallet`** — raw **`POST /verification`** only when you must.
+  </Card>
+  <Card title="Billing" icon="credit-card" href="./platform/billing">
+    Sponsors · credits · [x402](./platform/x402).
+  </Card>
+</CardGroup>
+
+## Full matrix
 
 | Goal | Primary doc | Shape |
 |------|-------------|-------|
+| Universal identity (agents + linked proofs) | [Agents](./agents/overview) · [Wallet link](./verification/wallet-link) | Receipts + URLs + MCP |
 | Login, social, human, org | [Hosted Verify](./cookbook/auth-hosted-verify) | Redirect or popup |
-| Direct-sign (`ownership-basic`) | [SDK](./sdks/overview) · [Quickstart](./quickstart) | Browser or server wallet |
+| In-wallet sign (`ownership-basic`) | [SDK](./sdks/overview) · [Quickstart](./quickstart) | Browser or server wallet |
 | React | [Widgets](./widgets/overview) | VerifyGate |
-| Server eligibility | [API](./api/overview), `gateCheck` | HTTP |
-| Assistants / IDE | [MCP](./mcp/overview) | MCP URL; Bearer for [account tools](./mcp/auth) |
-| Agents | [Agents](./agents/overview) | After app and billing |
-| HTTP only | [API](./api/overview) | Standardize → sign → POST |
-| Billing | [Get started](./get-started) | Credits, sponsors |
+| Server eligibility | [API](./api/overview), `gateCheck` | HTTP reads / checks |
+| Assistants / IDE | [MCP](./mcp/overview) | MCP URL; access key for [account tools](./mcp/auth) |
+| Raw HTTP proof create | [API](./api/overview) · [Authentication](./api/authentication) | Advanced: build the signed request body → sign → POST `/verification` |
+| Who pays | [Get started](./get-started) | Credits, sponsors |
 
-Interactive verifiers: Hosted Verify or VerifyGate. In-browser signing: SDK `verify` with `wallet`.
+| Mode | When |
+|------|------|
+| Interactive | Hosted Verify or VerifyGate |
+| In-browser wallet | SDK `verify` + `wallet` |

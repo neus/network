@@ -1,8 +1,8 @@
 # NEUS Widgets
 
-React components for proof-aware UI.
+**Proof-aware React components** (VerifyGate, ProofBadge) so your UI can show verified state and gate content **using the same checks your server already trusts**—avoid re-implementing verifier rules only in the browser.
 
-## React Install
+## Install
 
 ```bash
 npm install @neus/sdk react react-dom
@@ -18,6 +18,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 export function Page() {
   return (
     <VerifyGate
+      appId="your-app-id"
       requiredVerifiers={['nft-ownership']}
       verifierData={{
         'nft-ownership': { contractAddress: '0x...', tokenId: '1', chainId: 8453 }

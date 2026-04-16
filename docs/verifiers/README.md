@@ -1,5 +1,5 @@
 # Verifier schemas
 
-JSON Schemas for verifier inputs live in **`schemas/`**. They align with **`GET /api/v1/verification/verifiers`**.
+**Machine-readable inputs for every verifier**—so apps and validators can check payloads against one shared format.
 
-Human-readable capability docs: [Verifier catalog](https://docs.neus.network/verification/verifiers).
+JSON Schemas live in **`schemas/`** and stay aligned with the [verifier catalog](https://docs.neus.network/verification/verifiers).

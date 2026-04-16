@@ -4,7 +4,7 @@ description: Register and verify AI agent identities.
 icon: id-card
 ---
 
-Register an agent; agent wallet signs. Proof `skills` are declarative caps, not MCP installs — [MCP overview](../mcp/overview). Prefer portable skill ids ([spec](https://agentskills.io/specification), [directory](https://skills.sh)).
+Register an agent; agent wallet signs. Proof `skills` are **metadata only**—they **do not** install MCP servers — [MCP overview](../mcp/overview). Prefer portable skill ids ([spec](https://agentskills.io/specification), [directory](https://skills.sh)).
 
 Default: **`neus_agent_create`** (MCP) or [hosted verify](../cookbook/auth-hosted-verify). Below = SDK detail.
 
@@ -72,7 +72,7 @@ await client.verify({
 
 ## What you get
 
-Proof receipt id. **Self-attestation:** agent wallet signs. **No permissions** — use [`agent-delegation`](./agent-delegation) for scoped authority.
+Proof receipt id. **Signed with the agent wallet.** **No spend or permission grants** — use [`agent-delegation`](./agent-delegation) for scoped authority.
 
 ## Verification
 

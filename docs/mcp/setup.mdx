@@ -28,13 +28,13 @@ Reload if needed. URL-only is enough for `neus_context`, catalog, and verify lin
 
 `neus_context` once after connect.
 
-## Bearer
+## Account access (optional)
 
-For `neus_me`, private reads, or **your** credits: `Authorization: Bearer` + [Access keys](https://neus.network/profile?tab=account). Same token as `api.neus.network`. [Auth](./auth)
+For `neus_me`, private reads, or **your** credits: add an access token from [Access keys](https://neus.network/profile?tab=account) in the MCP client headers. Use the same key you would use for other account-scoped NEUS tools. [Auth](./auth)
 
 Never in browser bundles. Prod apps: [Get started](../get-started), not your personal key.
 
-### Cursor
+### Example: Cursor (`mcp.json`)
 
 `mcp.json`:
 
@@ -50,13 +50,13 @@ Never in browser bundles. Prod apps: [Get started](../get-started), not your per
 }
 ```
 
-### Claude Code
+### Example: Claude Code
 
-Same block in `.claude/mcp.json`.
+Use the same JSON block in your client’s MCP settings (see that product’s **MCP over HTTP** guide).
 
 ### Other clients
 
-Match your app’s **Streamable HTTP** docs. URL-only until headers are supported.
+Follow your client’s **MCP over HTTP** setup: paste the URL first; add headers when supported.
 
 ## First run
 
@@ -64,7 +64,7 @@ Match your app’s **Streamable HTTP** docs. URL-only until headers are supporte
 2. `neus_verify_or_guide` or `neus_proofs_check`
 3. Open `https://neus.network/verify` when given
 4. `neus_proofs_get` if needed — [Tools](./tools)
-5. Bearer for account — [Auth](./auth)
+5. Access key for account tools — [Auth](./auth)
 
 Then [Overview](./overview).
 
@@ -72,13 +72,13 @@ Then [Overview](./overview).
 
 <CardGroup cols={2}>
   <Card title="Overview" icon="plug" href="./overview">
-    Flow.
+    When to call each tool.
   </Card>
   <Card title="Tools" icon="wrench" href="./tools">
-    Reference.
+    Tool names and inputs.
   </Card>
   <Card title="Auth" icon="lock" href="./auth">
-    Bearer.
+    Access keys.
   </Card>
   <Card title="Endpoints" icon="globe" href="./endpoints">
     Discovery.

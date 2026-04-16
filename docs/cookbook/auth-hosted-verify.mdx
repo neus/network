@@ -8,9 +8,9 @@ icon: key
 
 Apps: [Get started](../get-started) for `appId`, credits, sponsors.
 
-Build links with the SDK (`returnUrl`). After redirect, finish session with `@neus/sdk`; use Bearer on API where needed ([SDK Authentication](../sdks/authentication)).
+Build links with the SDK (`returnUrl`). After redirect, finish session with `@neus/sdk`; add an access key on server or tool calls only when the docs say you need account-scoped access ([SDK Authentication](../sdks/authentication)).
 
-**MCP:** `neus_context` first; verify URLs work without a key. Bearer + [Access keys](https://neus.network/profile?tab=account) for account tools ([MCP Auth](../mcp/auth)).
+**MCP:** `neus_context` first; verify URLs work without a key. Add a personal [access key](https://neus.network/profile?tab=account) for account tools ([MCP Auth](../mcp/auth)).
 
 ## When
 
@@ -45,7 +45,7 @@ Passkeys = WebAuthn in a **secure context**. Missing platform authenticator ≠ 
 
 Use **https** or **http://localhost** with an origin that matches your NEUS profile—not raw LAN IPs.
 
-PWAs: don’t cache `/api/` auth traffic.
+PWAs: do not cache NEUS authentication responses in your service worker.
 
 ## Code
 
@@ -64,7 +64,7 @@ window.location.href = getHostedCheckoutUrl({
 
 <CardGroup cols={2}>
   <Card title="Authentication" icon="key" href="../sdks/authentication">
-    Session + Bearer.
+    Session + access keys.
   </Card>
   <Card title="Receipts" icon="receipt" href="../platform/receipts-and-results">
     After verify.

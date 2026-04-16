@@ -1,14 +1,14 @@
 ---
 title: MCP Auth & Security
-description: Public MCP vs Bearer for account tools.
+description: When you need a URL only, and when to add a personal access key.
 icon: lock
 ---
 
 **URL-only:** `neus_context`, catalog, verify links—no NEUS account on your balance. Order: [Overview](./overview).
 
-**Bearer** ([Access keys](https://neus.network/profile?tab=account)): `neus_me`, private reads, calls that debit **your** credits. Same shape as `api.neus.network` ([SDK Authentication](../sdks/authentication)). Confirm with `neus_me` after connect.
+**Personal access key** ([Access keys in Hub](https://neus.network/profile?tab=account)): required for `neus_me`, private reads, and calls that debit **your** credits. Configure it in your MCP client headers as shown in [Setup](./setup); it matches what server integrations use for account-scoped NEUS calls ([SDK Authentication](../sdks/authentication)). Confirm with `neus_me` after connect.
 
-Hosted `neus.network/verify` does **not** attach your IDE Bearer.
+Hosted `neus.network/verify` never uses your IDE or automation access key—end users sign in there separately.
 
 **Servers only:** trusted automation may reuse the same personal key on MCP HTTP. Never in browsers or mobile apps.
 

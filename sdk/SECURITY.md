@@ -4,12 +4,9 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 
 ## Authentication model
 
-- **Verification submission** (`POST /api/v1/verification`) is authenticated by a signature over the **NEUS Standard Signing String**.
-- **Proof record by receipt ID** is safe to call publicly for public proofs; private proofs return a minimal payload unless the caller is the owner (session or signed headers).
-- **Owner-only reads** of private proof payloads require an additional owner signature. The SDK uses:
-  - `x-wallet-address`
-  - `x-signature`
-  - `x-signed-timestamp`
+- **Verification requests** are authenticated with a wallet signature over the **NEUS standard signing string** (never roll your own message format in production—use the SDK or the hosted preparation step documented for HTTP integrations).
+- **Proof lookups by receipt id** are safe for public proofs. Private proofs return a minimal payload unless the caller proves ownership (session or signed request).
+- **Owner-only reads** of private proof payloads require an extra owner-signed request. The SDK attaches the required signed headers for you.
 
 ## Do not
 

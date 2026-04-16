@@ -74,7 +74,7 @@ await client.verify({
 | `agentWallet` | Yes | Agent wallet address |
 | `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request for both wallets | CAIP-2 chain for the agent |
 | `agentId` | No | Reference to a registered agent identity |
-| `scope` | No | Permission scope (default is often `global`; payment agents may use a narrower scope) |
+| `scope` | No | Permission scope (**default:** `global`; confirm for your integration—payment agents may use a narrower scope) |
 | `permissions` | No | Allowed actions (`execute`, `read`, etc.) |
 | `maxSpend` | No | Whole-number string: spend cap in token base units. See above. |
 | `allowedPaymentTypes` | No | Allowed payment rails for delegated spend |

@@ -4,23 +4,33 @@ description: Wallet message for verification requests.
 icon: file-code
 ---
 
-**Default:** hosted `/verify` or **SDK**. Raw `POST /api/v1/verification` only when you must.
+**Default:** [Hosted Verify](../cookbook/auth-hosted-verify) or **SDK** `client.verify()`—you do not need to read this page to ship.
+
+Use this reference when you implement **raw `POST /api/v1/verification`** or debug **`SIGNATURE_VERIFICATION_FAILED` / invalid signature** responses.
 
 ## Why
 
 The wallet agrees to the request; NEUS returns a **receipt**.
 
-## HTTP
+## Raw HTTP only
 
-1. `POST /api/v1/verification/standardize` → `signerString`  
-2. Sign it  
-3. `POST /api/v1/verification` — **same body** + `signature`  
+If you call the API without the SDK:
 
-Only sign what `standardize` returns (or SDK `standardizeVerificationRequest`).
+1. Build the verification **JSON body** you will submit.
+2. **`POST /api/v1/verification/standardize`** with that body → **`signerString`** (exact bytes to sign).
+3. Sign **`signerString`**.
+4. **`POST /api/v1/verification`** with the **same body** + **`signature`**.
+
+Do not hand-edit the six-line text. Only sign what **`standardize`** returns (or SDK **`standardizeVerificationRequest`**) for that exact body.
+
+## Troubleshooting
+
+- Re-run **`/standardize`** on the same payload and compare **`signerString`** to what the wallet signed.
+- **`walletAddress`**, **`verifierIds`**, **`data`**, **`signedTimestamp`**, and chain fields must match between standardize and submit.
 
 ## Shape
 
-UTF-8, **LF** newlines. Do not edit by hand.
+UTF-8, **LF** newlines.
 
 ```text
 NEUS Verification Request
@@ -31,13 +41,13 @@ Data: <json payload>
 Timestamp: <unix-ms>
 ```
 
-## SDK
+## SDK helpers
 
 ```javascript
 import { standardizeVerificationRequest, signMessage } from '@neus/sdk';
 ```
 
-Full example: [JavaScript SDK](../sdks/javascript)
+Prefer **`client.verify()`** when possible: [JavaScript SDK](../sdks/javascript) · [Quickstart](../quickstart)
 
 ## Wallets
 

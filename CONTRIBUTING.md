@@ -1,26 +1,36 @@
 # Contributing
 
-Public SDK, docs source, examples, and verifier specs. Integrate via **[docs.neus.network](https://docs.neus.network)** and the hosted APIs.
+Thank you for helping improve NEUS materials in this open project.
 
-| Need | Channel |
+**If you are integrating NEUS into a product**, use **[docs.neus.network](https://docs.neus.network)** and the live product first—the table below is for people proposing changes here.
+
+| Need | Where |
 | --- | --- |
-| Docs | [docs.neus.network](https://docs.neus.network) |
-| Bugs | [Issues](https://github.com/neus/network/issues) |
-| Ideas | [Discussions](https://github.com/neus/network/discussions) |
-| Security | [dev@neus.network](mailto:dev@neus.network) (do not file publicly) |
+| Product documentation | [docs.neus.network](https://docs.neus.network) |
+| Possible bugs | [Issues](https://github.com/neus/network/issues) |
+| Ideas and questions | [Discussions](https://github.com/neus/network/discussions) |
+| Security reports | [dev@neus.network](mailto:dev@neus.network) (do not post publicly) |
 
-**Welcome:** focused bug reports (repro, no secrets), verifier proposals with expected behavior, SDK/docs/example fixes aligned with the live API, tests when contracts change.
+## What helps
 
-**Do not** post keys, tokens, bearer secrets, or sensitive proof content in issues or PRs.
+- Bug reports with clear steps to reproduce and no secrets in the thread.
+- Verifier suggestions that spell out the user-visible outcome you want.
+- Updates to the SDK, examples, or documentation that match what the live product does today.
+- Tests or examples when you change behavior that builders rely on.
 
-**CLI:** `npx -y -p @neus/sdk neus init` prints MCP JSON and doc URLs to stdout only.
+**Do not** share keys, tokens, bearer secrets, or private proof content in public issues or change descriptions.
 
-**Node:** root `package.json` — Node ≥ 20 (docs tooling). `sdk/package.json` — Node ≥ 20. Run `npm run test:sdk` or `npm --prefix sdk test` for SDK changes.
+## Local setup hints
 
-MCP: **[docs.neus.network/mcp](https://docs.neus.network/mcp/overview)**. This repo includes `mcp/` for the published `@neus/mcp-server` package.
+- `npx -y -p @neus/sdk neus init` prints hosted MCP connection details and links to the documentation (terminal output only).
+- Building the documentation site or working on the SDK needs a supported **Node.js** version (see **`engines`** in the root **`package.json`** and in **`sdk/package.json`**). After SDK edits, run the SDK test script defined there.
 
-**Docs:** Task-oriented, neutral tone. Link schemas instead of copying. Live verifier list: `GET /api/v1/verification/verifiers`. Schemas: [docs/verifiers/README.md](docs/verifiers/README.md).
+## What lives in this tree
 
-**Specs:** `spec/VERIFIERS.json` and `spec/verifiers/schemas/*.json`; copies under `docs/verifiers/schemas/` for the doc site. PRs that change verifiers should state user-visible or contract impact.
+- Published documentation is served from **docs.neus.network**; sources live under **`docs/`** here.
+- The **`mcp/`** directory accompanies the published **`@neus/mcp-server`** package.
+- Verifier field schemas live under **`docs/verifiers/schemas/`** and related **`spec/`** files—prefer linking to the [verifier catalog](https://docs.neus.network/verification/verifiers) in prose instead of duplicating long tables.
 
-**PRs:** Summarize contract impact for OpenAPI/spec/docs changes; note tests run for code.
+## Describing your change
+
+Explain **what builders or end users will experience differently** (for example new fields, new errors, or renamed concepts). If you adjust verifiers or any documented HTTP surface, keep the written API reference and examples aligned with the live product.

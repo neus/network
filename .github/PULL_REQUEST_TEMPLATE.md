@@ -2,11 +2,11 @@
 
 What changed and why.
 
-## Risk
+## User impact
 
-User-facing or contract impact (if any).
+What builders or end users might notice (if anything).
 
-## Verification
+## Checklist
 
-- [ ] Tests run (e.g. `npm --prefix sdk test`, `npm run docs:validate` for doc-only changes)
-- [ ] No secrets, tokens, or private proof content in the diff or description
+- [ ] Checks in [CONTRIBUTING.md](../CONTRIBUTING.md) were run when relevant.
+- [ ] No secrets, tokens, or private proof content in the change or description.

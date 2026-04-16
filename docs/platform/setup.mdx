@@ -28,11 +28,7 @@ const proof = await client.verify({
 });
 ```
 
-Confirm:
-
-```bash
-GET /api/v1/proofs/check?verifierIds=ownership-dns-txt&address=0x...
-```
+Confirm the proof the same way your app will before opening a gate—for example from the Hub, or with the check step in [Integration](../integration).
 
 ## Organization
 
@@ -71,15 +67,15 @@ You rarely need your own Google/Microsoft OAuth app.
 
 |  |  |
 |--|--|
-| 1 | Hub → link app |
+| 1 | In Hub, link your app |
 | 2 | App domain |
 | 3 | Daily credit cap |
 | 4 | Lock **Origin** in prod |
-| 5 | `X-Neus-App` + `Origin` from allowed origins |
+| 5 | SDK supplies your app id; browser traffic must come from **allowed origins** you configure for the app |
 
 ## Attribution
 
-`appId` is public—not secret. Send `X-Neus-App: <appId>`.
+`appId` is public—not secret. The SDK attaches it on your behalf when you construct the client with your id.
 
 ```javascript
 const client = new NeusClient({ appId: 'your-app-id' });

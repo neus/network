@@ -4,13 +4,25 @@ description: Register agents, delegate authority, consume proofs (MCP or SDK).
 icon: robot
 ---
 
-`agent-identity` (agent wallet signs) and `agent-delegation` (approving account signs) are **separate** proofs. One person can do both, or roles can split. [Agent concepts](../agents/concepts).
+<Note>
+Same **receipts + URLs + MCP** model as people and org flows. [Agents overview](../agents/overview)
+</Note>
+
+`agent-identity` (agent wallet signs) and `agent-delegation` (approving account signs) are **separate** proofs. One person can do both, or roles can split. [Agent concepts](../agents/concepts)
 
 ## MCP
 
-1. `neus_agent_create`
-2. Open hosted URL from the response
-3. `neus_agent_link`
+<Steps>
+  <Step title="Create">
+    `neus_agent_create`
+  </Step>
+  <Step title="Hosted handoff">
+    Open **hostedVerifyUrl** from the response.
+  </Step>
+  <Step title="Link">
+    `neus_agent_link` until readiness reports identity (+ delegation if configured).
+  </Step>
+</Steps>
 
 ## SDK
 
@@ -18,6 +30,17 @@ icon: robot
 |------|------|
 | Register | [Agent identity](../agents/agent-identity) |
 | Delegate | [Agent delegation](../agents/agent-delegation) |
-| Check | `GET /api/v1/proofs/check` · MCP tools |
+| Check | [Integration](../integration) loop · MCP tools |
 
-Payload shapes match the JSON Schemas in [`docs/verifiers/schemas/`](https://github.com/neus/network/tree/main/docs/verifiers/schemas) (`agent-identity.json`, `agent-delegation.json`).
+Payload shapes are documented on each verifier page under **Verification**; matching JSON Schemas ship in this project under **`docs/verifiers/schemas/`**.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Agents overview" icon="robot" href="../agents/overview">
+    Card URL · DID · optional tool manifest.
+  </Card>
+  <Card title="MCP overview" icon="plug" href="../mcp/overview">
+    Full tool list + auth.
+  </Card>
+</CardGroup>

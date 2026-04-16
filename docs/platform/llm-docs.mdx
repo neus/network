@@ -1,12 +1,12 @@
 ---
 title: LLM Docs
-description: Assistant-oriented index and exports.
+description: Short reading order, MCP URL, and export URLs for assistants.
 icon: sparkles
 ---
 
-Stable URLs: **docs.neus.network**. Use linked pages for exact fields.
+Docs live at **docs.neus.network**—open the linked pages for field-level detail.
 
-## Read order
+## Read this first
 
 1. [Home](../index) — receipts  
 2. [Get started](../get-started) — app, billing, keys  
@@ -16,17 +16,17 @@ Stable URLs: **docs.neus.network**. Use linked pages for exact fields.
 
 1. `https://mcp.neus.network/mcp` — [Setup](../mcp/setup)  
 2. `neus_context` → check / verify-or-guide → open `hostedVerifyUrl`  
-3. Bearer ([Access keys](https://neus.network/profile?tab=account)) for `neus_me` / vault — [Auth](../mcp/auth)  
-4. `neus_verify`: one prep; same payload on signed call (no second `/standardize`)
+3. Personal [access key](https://neus.network/profile?tab=account) for `neus_me` / vault — [Auth](../mcp/auth)  
+4. `neus_verify`: one preparation call; reuse the **same** payload when signing (do not repeat preparation)
 
-CLI: `npx -y -p @neus/sdk neus init` (stdout only)
+CLI: `npx -y -p @neus/sdk neus init` (prints connection details to the terminal)
 
 ## Rules
 
 - Billing / `appId`: [Get started](../get-started), [Billing](../platform/billing)  
 - No in-app wallet: [Hosted Verify](../cookbook/auth-hosted-verify)  
-- Never put **wallet private keys** in MCP; Bearer = Access keys only  
-- HTTP **402**: `PAYMENT-SIGNATURE` — [x402](../platform/x402)  
+- Never put **wallet private keys** in MCP; use **Access keys** from Hub for account tools only  
+- Paid retries (**HTTP 402**): follow [x402](../platform/x402)  
 - Agents: [Agents](../agents/overview)  
 - Reuse saved `proofId`  
 
@@ -38,6 +38,8 @@ curl https://docs.neus.network/llms-full.txt
 ```
 
 ## MCP JSON
+
+Use the **`type` value your MCP client expects**; many clients accept `streamableHttp` for the hosted URL.
 
 ```json
 {

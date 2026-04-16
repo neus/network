@@ -6,19 +6,19 @@ icon: terminal
 
 **Base:** `https://api.neus.network`
 
-**Billing:** same as SDK/MCP. [Get started](../get-started) · `appId` · `X-Neus-App` · `X-Sponsor-Grant`
+**Billing:** Same as the SDK and MCP—[Get started](../get-started) covers `appId`, attribution, and sponsor options.
 
-Prefer **SDK**; use **HTTP** when you must.
+**Create proofs:** Prefer **[Hosted Verify](../cookbook/auth-hosted-verify)**, **[SDK Quickstart](../quickstart)**, or **widgets** so users are not forced through raw signing steps. Use **HTTP** for **checks**, **reads**, and **only when you must** implement `POST /api/v1/verification` yourself.
 
 ## Endpoints
 
 | Path | Method | Purpose |
 |------|--------|---------|
-| `/api/v1/verification` | POST | Create proof |
-| `/api/v1/verification/standardize` | POST | Signing string |
-| `/api/v1/proofs/{qHash}` | GET | Proof (`qHash` = SDK `proofId`) |
-| `/api/v1/proofs/check` | GET | Eligibility |
+| `/api/v1/proofs/check` | GET | Eligibility (server gates) |
 | `/api/v1/proofs/by-wallet/{address}` | GET | List by wallet |
+| `/api/v1/proofs/{qHash}` | GET | Proof by receipt id (`qHash` = SDK `proofId`) |
+| `/api/v1/verification` | POST | Create proof (**advanced**—see [Authentication](./authentication)) |
+| `/api/v1/verification/standardize` | POST | Exact `signerString` for raw HTTP and **troubleshooting** |
 | `/api/v1/verification/verifiers` | GET | Catalog |
 
 ## Examples
@@ -37,7 +37,9 @@ Public / unlisted: anonymous ok. **Private:** user signed in.
 curl "https://api.neus.network/api/v1/proofs/check?address=0x...&verifierIds=ownership-basic"
 ```
 
-**Create:** standardize → sign → POST `/verification`. Shapes: **API Reference** (OpenAPI).
+**Create a proof**
+
+Use the SDK or Hosted Verify for the default path. Raw HTTP: build the request body, call **`POST /api/v1/verification/standardize`** when you need the exact bytes to sign or after a signature error, sign `signerString`, then **`POST /api/v1/verification`** with the **same JSON body** plus `signature`. Shapes: **API reference** on the documentation site.
 
 **Catalog**
 
@@ -48,7 +50,7 @@ curl https://api.neus.network/api/v1/verification/verifiers
 ## Auth
 
 - **Reads:** public/unlisted without login; private when owner session applies.
-- **Writes:** wallet signature — [Authentication](./authentication)
+- **Writes:** wallet signature (or session where applicable)—[Authentication](./authentication)
 
 ## Next
 

@@ -4,9 +4,12 @@ description: Check, verify, save, reuse—ship path.
 icon: compass
 ---
 
-[Hosted Verify](./cookbook/auth-hosted-verify) · [SDK](./sdks/overview) · [Widgets](./widgets/overview) · [API](./api/overview) · [MCP](./mcp/overview) · [Billing](./platform/billing) · [LLM docs](./platform/llm-docs)
+Same loop on every surface: **check → verify → save → reuse**.
 
-**Check** (`GET /api/v1/proofs/check` or a saved receipt id) before prompting verify again. **Save** the receipt id from the response ([Proof receipts](./platform/receipts-and-results)).
+- **Surfaces:** [Choose an integration path](./choose-an-integration-path) — Hosted Verify, SDK, widgets, API, MCP.
+- **Platform:** [Billing](./platform/billing) · [Proof receipts](./platform/receipts-and-results) · [Security and trust](./platform/security-and-trust) · [LLM docs](./platform/llm-docs)
+
+**Check** whether the person or wallet already has a valid proof (saved receipt id or a server-side eligibility check) before asking them to verify again. **Save** the receipt id from the response ([Proof receipts](./platform/receipts-and-results)).
 
 ## Loop
 
@@ -17,7 +20,7 @@ icon: compass
 
 | Situation | Approach |
 |-----------|----------|
-| Repeat visits | Run `gateCheck` or use a stored receipt id before a new verify |
+| Repeat visits | Run an eligibility check or use a stored receipt id before a new verify |
 | Balance / NFT gates | Narrow `since` or `fresh` strategy — [SDK verifications](./sdks/verifications) |
 | Org and domain | [Platform setup](./platform/setup), then the same loop |
 
@@ -63,7 +66,10 @@ SDK `client.verify()` defaults **private**. VerifyGate create defaults **unliste
 
 <CardGroup cols={2}>
   <Card title="Get started" icon="book" href="./get-started">
-    Onboarding.
+    Account, app, billing, first proof loop.
+  </Card>
+  <Card title="Universal identity" icon="users" href="./agents/overview">
+    Agents · linked accounts · MCP.
   </Card>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
     Hosted UX.
@@ -72,13 +78,13 @@ SDK `client.verify()` defaults **private**. VerifyGate create defaults **unliste
     What to store.
   </Card>
   <Card title="Security and trust" icon="lock" href="./platform/security-and-trust">
-    Visibility.
+    Who can see proofs and receipts.
   </Card>
   <Card title="API" icon="terminal" href="./api/overview">
-    HTTP.
+    REST checks and advanced POST flows.
   </Card>
   <Card title="Verifiers" icon="list-tree" href="./verification/verifiers">
-    Catalog.
+    Verifier list and capability pages.
   </Card>
   <Card title="Billing" icon="credit-card" href="./platform/billing">
     Payers, x402.

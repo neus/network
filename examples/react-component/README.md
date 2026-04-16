@@ -1,6 +1,8 @@
 # React + VerifyGate (Vite)
 
-Save **`proofId`** (receipt id), not raw signatures. Visibility defaults: [Security and trust](https://docs.neus.network/platform/security-and-trust).
+**Drop a gate around any React surface**—claims, premium content, admin tools—without hand-rolling wallet modals and verifier-specific forms. Users who pass get a **`proofId`**: **store it**, then **`gateCheck`** or **`VerifyGate`** for that policy—a proof id is **not** a session token or bearer credential.
+
+Visibility defaults: [Security and trust](https://docs.neus.network/platform/security-and-trust).
 
 ```bash
 cd examples/react-component
@@ -9,7 +11,7 @@ cp .env.example .env.local   # optional VITE_NEUS_APP_ID
 npm run dev
 ```
 
-This repo uses `file:../../sdk`; in your app: `npm install @neus/sdk react react-dom`.
+In this examples repo the SDK is linked locally; in your own app run `npm install @neus/sdk react react-dom`.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';

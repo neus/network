@@ -2,7 +2,9 @@
 
 [![npm](https://img.shields.io/npm/v/%40neus%2Fsdk?logo=npm&label=%40neus%2Fsdk&color=98C0EF)](https://www.npmjs.com/package/@neus/sdk)
 
-JavaScript SDK for NEUS proof receipts. **Catalog and enforcement** come from the API (`GET /api/v1/verification/verifiers`, `GET /api/v1/proofs/check`, verification writes). Prefer **`gateCheck()`** for allow/deny; **`checkGate()`** is local preview only.
+**Ship proof checks in production without hosting your own verification service.** The JavaScript SDK wraps NEUS proof creation, polling, and **server-side eligibility** (`gateCheck`) so your app stores a **`proofId`** once and reuses it across flows.
+
+**Why this matters:** NEUS runs the verifier checks. You integrate once; when verifier rules or partners change, you are not forking a second copy into your codebase.
 
 ## Install
 
@@ -10,15 +12,15 @@ JavaScript SDK for NEUS proof receipts. **Catalog and enforcement** come from th
 npm install @neus/sdk
 ```
 
-## CLI
+## One-command onboarding
 
 ```bash
 npx -y -p @neus/sdk neus init
 ```
 
-Prints hosted MCP JSON and doc URLs (stdout only).
+Prints the hosted MCP URL and documentation links in your terminal—fast setup in IDEs and agent clients.
 
-## Example
+## Minimal working example
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -48,21 +50,23 @@ const check = await client.gateCheck({
 | `client.verify()` | Create proof |
 | `client.getProof()` | Fetch by `proofId` |
 | `client.pollProofStatus()` | Wait for async completion |
-| `client.gateCheck()` | Server eligibility |
-| `client.checkGate()` | Local preview |
+| `client.gateCheck()` | **Server eligibility** (use for real gates) |
+| `client.checkGate()` | Local preview only |
 | `getHostedCheckoutUrl()` | Hosted verify URL |
 
-## VerifyGate
+## VerifyGate (React)
 
 Defaults: unlisted public create (`privacyLevel: 'public'`, `publicDisplay: false`). Set `proofOptions` for other visibility.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
-<VerifyGate requiredVerifiers={['ownership-basic']}>
+<VerifyGate appId="your-app-id" requiredVerifiers={['ownership-basic']}>
   <ProtectedContent />
 </VerifyGate>
 ```
+
+[Widgets README](./widgets/README.md)
 
 ## Config
 
