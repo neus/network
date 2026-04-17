@@ -4,11 +4,11 @@ description: When you need a URL only, and when to add a personal access key.
 icon: lock
 ---
 
-**URL-only:** `neus_context`, catalog, verify links—no NEUS account on your balance. Order: [Overview](./overview).
+**URL-only:** `neus_context`, catalog, verify links - no NEUS account on your balance. Order: [Overview](./overview).
 
-**Personal access key** ([Access keys in Hub](https://neus.network/profile?tab=account)): required for `neus_me`, private reads, and calls that debit **your** credits. Configure it in your MCP client headers as shown in [Setup](./setup); it matches what server integrations use for account-scoped NEUS calls ([SDK Authentication](../sdks/authentication)). Confirm with `neus_me` after connect.
+**Personal access key** ([Profile to Access keys](https://neus.network/profile?tab=account)): required for `neus_me`, private reads, and calls that debit **your** credits. Add it to MCP headers per [Setup](./setup); same shape as [SDK Authentication](../sdks/authentication). Confirm with `neus_me` after connect.
 
-Hosted `neus.network/verify` never uses your IDE or automation access key—end users sign in there separately.
+Hosted `neus.network/verify` never uses your IDE or automation access key - end users sign in there separately.
 
 **Servers only:** trusted automation may reuse the same personal key on MCP HTTP. Never in browsers or mobile apps.
 
@@ -17,13 +17,13 @@ Hosted `neus.network/verify` never uses your IDE or automation access key—end 
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="Overview" icon="plug" href="./overview">
-    Flow.
-  </Card>
-  <Card title="Setup" icon="code" href="./setup">
-    Connect.
-  </Card>
-  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    Users.
-  </Card>
+ <Card title="Overview" icon="plug" href="./overview">
+ Flow.
+ </Card>
+ <Card title="Setup" icon="code" href="./setup">
+ Connect.
+ </Card>
+ <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+ Users.
+ </Card>
 </CardGroup>

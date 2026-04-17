@@ -4,15 +4,15 @@ description: Runnable Node, React, and curl samples.
 icon: code
 ---
 
-**check → verify → save id → reuse.** Production: [Get started](./get-started) · [Billing](./platform/billing)
+**check, verify, save id, reuse.** [Get started](./get-started) | [Billing](./platform/billing)
 
-**Prefer creating proofs** via [Quickstart](./quickstart), [Hosted Verify](./cookbook/auth-hosted-verify), or **widgets**—not raw HTTP.
+**Prefer** [Quickstart](./quickstart), [Hosted Verify](./cookbook/auth-hosted-verify), or **widgets** - not raw HTTP.
 
-| Repository | Contents |
+| Example | Use it for |
 |------------|----------|
-| [react-component](https://github.com/neus/network/tree/main/examples/react-component) | Vite, VerifyGate, browser wallet |
-| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | **Advanced:** Node, server-held key, standardize + sign + `gateCheck` |
-| [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | **Advanced:** HTTP-only standardize → sign → submit |
+| [react-component](https://github.com/neus/network/tree/main/examples/react-component) | Browser `VerifyGate` (Vite) |
+| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | **Advanced:** server key, sign + `gateCheck` |
+| [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | **Advanced:** raw HTTP sign + submit |
 
 ## React: gate
 
@@ -40,7 +40,7 @@ export default function ProtectedPage() {
 
 ## Node: proof
 
-For **server-held keys** or **HTTP-only** stacks: **standardize → sign → submit** ([JavaScript SDK](./sdks/javascript)) or [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic). For most products, use **Hosted Verify** or **browser `client.verify()`** instead so you are not maintaining signing plumbing.
+**Server-held keys** or **HTTP-only:** [SDK](./sdks/javascript) or [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) (`standardize` to sign to submit). Most apps should use **Hosted Verify** or **`client.verify()`** instead.
 
 ## HTTP (advanced)
 
@@ -53,7 +53,7 @@ curl -X POST https://api.neus.network/api/v1/verification/standardize \
 
 ## Docs
 
-|  |  |
+| | |
 |--|--|
 | [Get started](./get-started) | App + billing |
 | [Hosted Verify](./cookbook/auth-hosted-verify) | Hosted UX |

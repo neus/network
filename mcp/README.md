@@ -1,8 +1,8 @@
 # @neus/mcp-server
 
-**Let ChatGPT, Cursor, and other MCP clients query NEUS** for proof checks, the verifier catalog, and guided verify—with fewer manual paste steps. **Do not put wallet private keys or seed phrases in prompts**; use Hosted Verify or your wallet app for signing.
+**MCP clients** call NEUS for **gate checks**, the verifier catalog, and guided verify. **Never put wallet seed phrases or private keys in prompts** - use Hosted Verify or your wallet to sign.
 
-**Hosted endpoint (most integrations):** `https://mcp.neus.network/mcp` — [setup](https://docs.neus.network/mcp/setup).
+**Hosted endpoint (most integrations):** `https://mcp.neus.network/mcp` - [setup](https://docs.neus.network/mcp/setup).
 
 Most teams only add the **hosted URL** to the MCP client. The **`@neus/mcp-server`** package on [npm](https://www.npmjs.com/package/@neus/mcp-server) is for self-hosted or advanced setups; check npm for engine requirements.
 

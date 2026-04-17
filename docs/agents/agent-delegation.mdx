@@ -35,10 +35,10 @@ Use this section for payment-scoped delegation, spend caps, or extra policy fiel
 
 ### `maxSpend` (optional)
 
-`maxSpend` is a **whole-number string** in **token base units** (no decimal separator, 1–78 digits). This matches common on-chain amount encoding and avoids floating-point rounding issues.
+`maxSpend` is a **whole-number string** in **token base units** (no decimal separator, 1 - 78 digits). This matches common on-chain amount encoding and avoids floating-point rounding issues.
 
-- **USDC (typical `payments:x402`):** six decimal places — e.g. 25 USDC → `"25000000"`. Use `toAgentDelegationMaxSpend('25', 6)` from `@neus/sdk`.
-- **Native ETH-style assets:** eighteen decimal places — e.g. 1 ETH → `"1000000000000000000"`.
+- **USDC (typical `payments:x402`):** six decimal places - e.g. 25 USDC to `"25000000"`. Use `toAgentDelegationMaxSpend('25', 6)` from `@neus/sdk`.
+- **Native ETH-style assets:** eighteen decimal places - e.g. 1 ETH to `"1000000000000000000"`.
 
 Token metadata is not stored on the proof; resolve the cap using your scope and product defaults.
 
@@ -74,7 +74,7 @@ await client.verify({
 | `agentWallet` | Yes | Agent wallet address |
 | `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request for both wallets | CAIP-2 chain for the agent |
 | `agentId` | No | Reference to a registered agent identity |
-| `scope` | No | Permission scope (**default:** `global`; confirm for your integration—payment agents may use a narrower scope) |
+| `scope` | No | Permission scope (**default:** `global`; confirm for your integration - payment agents may use a narrower scope) |
 | `permissions` | No | Allowed actions (`execute`, `read`, etc.) |
 | `maxSpend` | No | Whole-number string: spend cap in token base units. See above. |
 | `allowedPaymentTypes` | No | Allowed payment rails for delegated spend |
@@ -87,11 +87,11 @@ Proof responses may include CAIP-10 `controllerAccountId` and `agentAccountId`. 
 
 ## What you get
 
-Proof receipt id for policy checks and delegated actions.
+Verification id for policy checks and delegated actions.
 
 ## Checking access
 
-Use proof checks or MCP **`neus_agent_link`** (readiness check) from your app — you typically do not need raw REST from the default integration path.
+Use proof checks or MCP **`neus_agent_link`** (readiness check) from your app - you typically do not need raw REST from the default integration path.
 
 ## Security
 

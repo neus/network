@@ -4,31 +4,31 @@ description: Short reading order, MCP URL, and export URLs for assistants.
 icon: sparkles
 ---
 
-Docs live at **docs.neus.network**—open the linked pages for field-level detail.
+Docs live at **docs.neus.network** - open the linked pages for field-level detail.
 
 ## Read this first
 
-1. [Home](../index) — receipts  
-2. [Get started](../get-started) — app, billing, keys  
-3. [Integration](../integration) — loop  
+1. [Home](../index) - product map 
+2. [Get started](../get-started) - app, billing, keys 
+3. [Integration](../integration) - loop 
 
 ## MCP
 
-1. `https://mcp.neus.network/mcp` — [Setup](../mcp/setup)  
-2. `neus_context` → check / verify-or-guide → open `hostedVerifyUrl`  
-3. Personal [access key](https://neus.network/profile?tab=account) for `neus_me` / vault — [Auth](../mcp/auth)  
+1. `https://mcp.neus.network/mcp` - [Setup](../mcp/setup) 
+2. `neus_context` to check / verify-or-guide to open `hostedVerifyUrl` 
+3. Personal [access key](https://neus.network/profile?tab=account) for `neus_me` / vault - [Auth](../mcp/auth) 
 4. `neus_verify`: one preparation call; reuse the **same** payload when signing (do not repeat preparation)
 
 CLI: `npx -y -p @neus/sdk neus init` (prints connection details to the terminal)
 
 ## Rules
 
-- Billing / `appId`: [Get started](../get-started), [Billing](../platform/billing)  
-- No in-app wallet: [Hosted Verify](../cookbook/auth-hosted-verify)  
-- Never put **wallet private keys** in MCP; use **Access keys** from Hub for account tools only  
-- Paid retries (**HTTP 402**): follow [x402](../platform/x402)  
-- Agents: [Agents](../agents/overview)  
-- Reuse saved `proofId`  
+- Billing / `appId`: [Get started](../get-started), [Billing](../platform/billing) 
+- No in-app wallet: [Hosted Verify](../cookbook/auth-hosted-verify) 
+- Never put **wallet private keys** in MCP; use **Access keys** (profile) for account tools only 
+- Paid retries (**HTTP 402**): follow [x402](../platform/x402) 
+- Agents: [Agents](../agents/overview) 
+- Reuse saved `proofId` 
 
 ## Exports
 
@@ -52,4 +52,4 @@ Use the **`type` value your MCP client expects**; many clients accept `streamabl
 }
 ```
 
-[MCP overview](../mcp/overview) · [Setup](../mcp/setup) · [API](../api/overview)
+[MCP overview](../mcp/overview) | [Setup](../mcp/setup) | [API](../api/overview)

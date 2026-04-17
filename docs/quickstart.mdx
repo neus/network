@@ -1,10 +1,10 @@
 ---
 title: Quickstart (SDK)
-description: First ownership-basic proof with the JavaScript SDK.
+description: First ownership-basic verification with the JavaScript SDK.
 icon: rocket
 ---
 
-Wallet-signed **`ownership-basic`**. Social / human / org → [Hosted Verify](./cookbook/auth-hosted-verify). Production → [Get started](./get-started).
+Wallet **`ownership-basic`**. Social / human / org: [Hosted Verify](./cookbook/auth-hosted-verify). Production: [Get started](./get-started).
 
 ## 1. Install
 
@@ -14,13 +14,13 @@ npm install @neus/sdk
 
 ## 2. Create a proof
 
-`client.verify()` defaults **private** unless you set options. VerifyGate differs—[Widgets](./widgets/overview) · [Security and trust](./platform/security-and-trust).
+`client.verify()` defaults **private**. VerifyGate defaults differ - [Widgets](./widgets/overview), [Security and trust](./platform/security-and-trust).
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient({
-  appId: 'your-app-id', // optional locally; required in prod — [Get started](./get-started)
+  appId: 'your-app-id', // optional locally; required in prod - [Get started](./get-started)
 });
 
 const proof = await client.verify({
@@ -32,9 +32,9 @@ const proof = await client.verify({
 const proofId = proof.proofId;
 ```
 
-Persist `proofId` with the subject (same wallet passed to `verify`). Depending on the response, the receipt id may be `proofId` or `qHash`—see [Proof receipts](./platform/receipts-and-results). Reuse with an eligibility check or VerifyGate.
+Save **`proofId`**. Same value is **`qHash`** in some API paths - [Verification results](./platform/receipts-and-results). **Check** before asking the user to verify again.
 
-Other verifier flows: [SDK verifications](./sdks/verifications). No wallet in-page → [Hosted Verify](./cookbook/auth-hosted-verify).
+Other verifiers: [SDK verifications](./sdks/verifications). No in-page wallet: [Hosted Verify](./cookbook/auth-hosted-verify).
 
 ## 3. Poll
 
@@ -58,13 +58,13 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>
 ```
 
-[VerifyGate](./widgets/verifygate) · [Integration](./integration)
+[VerifyGate](./widgets/verifygate) | [Integration](./integration)
 
 ## 5. Server check
 
-- `gateCheck` **address** = identity that signed `verify()` (here, the `wallet` you passed).
-- Prefer a **saved receipt id** + check before another verify.
-- Verifier policy must match creation.
+- **`gateCheck` `address`** = wallet that signed `verify()`.
+- Prefer a **stored id** + check before a new verify.
+- Verifier list must match what you issued.
 
 ```javascript
 const result = await client.gateCheck({
@@ -75,9 +75,9 @@ const result = await client.gateCheck({
 
 ## See also
 
-|  |  |
+| | |
 |--|--|
 | [Get started](./get-started) | App, billing, production |
 | [Choose a path](./choose-an-integration-path) | SDK, widgets, API, MCP |
-| [Integration](./integration) | Check → verify → save → reuse |
+| [Integration](./integration) | Check, verify, save, reuse |
 | [Examples](./examples) | Repositories |

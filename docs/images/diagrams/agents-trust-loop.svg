@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" fill="none" role="img" aria-labelledby="agentsFlowTitle agentsFlowDesc">
   <title id="agentsFlowTitle">Agent registration and delegation</title>
-  <desc id="agentsFlowDesc">Register agent identity, delegate scope from controller, then act with proof receipts.</desc>
+  <desc id="agentsFlowDesc">Register agent identity, delegate scope from controller, then act with stored verification IDs.</desc>
   <defs>
     <linearGradient id="ag-canvas" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#121418"/>
@@ -29,7 +29,7 @@
     <text x="200" y="184" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc">Controller delegates scope</text>
     <text x="200" y="204" text-anchor="middle" font-size="10.5" font-weight="600" fill="#98C0EF">agent-delegation</text>
     <rect x="72" y="250" width="256" height="52" rx="12" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-    <text x="200" y="282" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc">Agent acts with proof receipt</text>
+    <text x="200" y="282" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc">Agent reuses verification ID</text>
   </g>
   <!-- Vertical arrows -->
   <line x1="200" y1="128" x2="200" y2="148" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round"/>

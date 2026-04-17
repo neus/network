@@ -5,44 +5,46 @@ icon: route
 ---
 
 <Note>
-Do **[Get started](./get-started)** first (`appId`, credits, billing). Then match **goal → doc** and ship **[Integration](./integration)** (check → verify → save → reuse).
+Do **[Get started](./get-started)** (`appId`, credits, billing), then **[Integration](./integration)** (check, verify, save, reuse).
 </Note>
+
+The integration loop lives in **[Integration](./integration)**. This page only helps you **pick a surface**.
 
 ## Primary paths
 
 <CardGroup cols={2}>
-  <Card title="Universal identity" icon="users" href="./agents/overview">
-    Agents · linked accounts · MCP · agent card / config URL.
-  </Card>
-  <Card title="Hosted Verify" icon="globe" href="./cookbook/auth-hosted-verify">
-    Login, social, human, org — redirect or popup.
-  </Card>
-  <Card title="SDK & widgets" icon="code" href="./sdks/overview">
-    Direct sign · [Quickstart](./quickstart) · [VerifyGate](./widgets/overview).
-  </Card>
-  <Card title="MCP" icon="plug" href="./mcp/overview">
-    Assistants / IDE — hosted MCP URL; access key for [account tools](./mcp/auth).
-  </Card>
-  <Card title="API" icon="server" href="./api/overview">
-    **`proofs/check`**, **`proofs/by-wallet`** — raw **`POST /verification`** only when you must.
-  </Card>
-  <Card title="Billing" icon="credit-card" href="./platform/billing">
-    Sponsors · credits · [x402](./platform/x402).
-  </Card>
+ <Card title="Universal identity" icon="users" href="./agents/overview">
+ Agents, linked accounts, MCP, agent card or config URL.
+ </Card>
+ <Card title="Hosted Verify" icon="globe" href="./cookbook/auth-hosted-verify">
+ Login, social, human, org - redirect or popup.
+ </Card>
+ <Card title="SDK & widgets" icon="code" href="./sdks/overview">
+ Direct sign, [Quickstart](./quickstart), [VerifyGate](./widgets/overview).
+ </Card>
+ <Card title="MCP" icon="plug" href="./mcp/overview">
+ Assistants / IDE - hosted MCP URL; access key for [account tools](./mcp/auth).
+ </Card>
+ <Card title="API" icon="server" href="./api/overview">
+ **`proofs/check`**, **`proofs/by-wallet`** - raw **`POST /verification`** only when you must.
+ </Card>
+ <Card title="Billing" icon="credit-card" href="./platform/billing">
+ Sponsors, credits, [x402](./platform/x402).
+ </Card>
 </CardGroup>
 
 ## Full matrix
 
 | Goal | Primary doc | Shape |
 |------|-------------|-------|
-| Universal identity (agents + linked proofs) | [Agents](./agents/overview) · [Wallet link](./verification/wallet-link) | Receipts + URLs + MCP |
+| Universal identity (agents + linked proofs) | [Agents](./agents/overview), [Wallet link](./verification/wallet-link) | IDs, URLs, MCP |
 | Login, social, human, org | [Hosted Verify](./cookbook/auth-hosted-verify) | Redirect or popup |
-| In-wallet sign (`ownership-basic`) | [SDK](./sdks/overview) · [Quickstart](./quickstart) | Browser or server wallet |
+| Wallet sign (`ownership-basic`) | [SDK](./sdks/overview), [Quickstart](./quickstart) | Browser or server wallet |
 | React | [Widgets](./widgets/overview) | VerifyGate |
 | Server eligibility | [API](./api/overview), `gateCheck` | HTTP reads / checks |
 | Assistants / IDE | [MCP](./mcp/overview) | MCP URL; access key for [account tools](./mcp/auth) |
-| Raw HTTP proof create | [API](./api/overview) · [Authentication](./api/authentication) | Advanced: build the signed request body → sign → POST `/verification` |
-| Who pays | [Get started](./get-started) | Credits, sponsors |
+| Raw HTTP proof create | [API](./api/overview), [Authentication](./api/authentication) | Advanced: build the signed body, sign, POST `/verification` |
+| Who pays | [Get started](./get-started) | Credits and sponsors |
 
 | Mode | When |
 |------|------|

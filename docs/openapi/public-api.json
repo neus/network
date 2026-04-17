@@ -1504,7 +1504,6 @@
       "post": {
         "operationId": "buildSigningString",
         "summary": "Build the Standard Signing String",
-        "description": "Returns the exact `signerString` to sign for a given verification body. Intended for raw HTTP clients and troubleshooting signature errors—not the default integration path (prefer SDK or Hosted Verify).",
         "tags": [
           "Verification"
         ],

@@ -9,34 +9,34 @@ Terms: [Agent concepts](./concepts).
 ## Sequence
 
 <Steps>
-  <Step title="Register">
-    `agent-identity` — agent wallet signs; one receipt for public metadata.
-  </Step>
-  <Step title="Delegate (if needed)">
-    `agent-delegation` — approving account (`controllerWallet`) signs scope, caps, expiry.
-  </Step>
-  <Step title="Runtime">
-    MCP or API: catalog, checks, hosted verify for interactive steps.
-  </Step>
+ <Step title="Register">
+ `agent-identity` - agent wallet signs; one **verification ID** for public metadata.
+ </Step>
+ <Step title="Delegate (if needed)">
+ `agent-delegation` - approving account (`controllerWallet`) signs scope, caps, expiry.
+ </Step>
+ <Step title="Runtime">
+ MCP or API: catalog, checks, hosted verify for interactive steps.
+ </Step>
 </Steps>
 
 ## MCP handoff
 
-`neus_agent_link` → `status: "link_required"`: open **`hostedVerifyUrl`**, finish browser flow, call **`neus_agent_link`** again. Readiness for identity + permissions — not a generic wallet-link tool.
+`neus_agent_link` to `status: "link_required"`: open **`hostedVerifyUrl`**, finish browser flow, call **`neus_agent_link`** again. Readiness for identity + permissions - not a generic wallet-link tool.
 
 ## Related
 
 <CardGroup cols={3}>
-  <Card title="Concepts" icon="book-open" href="./concepts">
-    Roles and field names.
-  </Card>
-  <Card title="Agent identity" icon="robot" href="./agent-identity">
-    Registration.
-  </Card>
-  <Card title="Delegation" icon="key" href="./agent-delegation">
-    Scoped authority.
-  </Card>
-  <Card title="MCP" icon="plug" href="../mcp/overview">
-    Assistant runtime.
-  </Card>
+ <Card title="Concepts" icon="book-open" href="./concepts">
+ Roles and field names.
+ </Card>
+ <Card title="Agent identity" icon="robot" href="./agent-identity">
+ Registration.
+ </Card>
+ <Card title="Delegation" icon="key" href="./agent-delegation">
+ Scoped authority.
+ </Card>
+ <Card title="MCP" icon="plug" href="../mcp/overview">
+ Assistant runtime.
+ </Card>
 </CardGroup>

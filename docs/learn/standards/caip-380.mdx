@@ -1,6 +1,6 @@
 ---
 title: CAIP-380 Portable Proof
-description: Wallet-signed envelope and NEUS receipt anchor.
+description: Wallet-signed envelope and NEUS verification anchor (qHash).
 icon: file-signature
 ---
 
@@ -8,25 +8,25 @@ NEUS tracks the [CAIP-380](https://github.com/ChainAgnostic/CAIPs/pull/380) prop
 
 ## Scope of the proposal
 
-One wallet-signed envelope; apps validate off-chain; stable receipt id.
+One wallet-signed envelope; apps validate off-chain; stable **verification ID**.
 
-- Identities: CAIP-10 style (`did:pkh:…`) where used  
-- Chains: CAIP-2 (`eip155:1`, `solana:mainnet`, …)  
+- Identities: CAIP-10 style (`did:pkh:…`) where used 
+- Chains: CAIP-2 (`eip155:1`, `solana:mainnet`, …) 
 
 ## NEUS anchor
 
-Receipt = **`qHash`** (0x…): SHAKE-256 (256-bit) **of the standardized proof request fields** (fixed encoding and field order). SDK responses often use **`proofId`** for the same value. [Proof receipts](../../platform/receipts-and-results)
+**`qHash`** (0x…) is SHAKE-256 (256-bit) **of the standardized proof request fields** (fixed encoding and field order). SDK responses use **`proofId`** for the same value. [Verification results](../../platform/receipts-and-results)
 
 ## Inputs (conceptual)
 
-Account + chain · `verifierIds` · `data` (JSON—**use `/standardize` so field order matches what was signed**) · `signedTimestamp` · EVM `chainId` or non-EVM `chain`
+Account + chain, `verifierIds`, `data` (JSON; **use `/standardize` so field order matches what was signed**), `signedTimestamp`, EVM `chainId` or non-EVM `chain`.
 
 ## Signer string
 
 Six-line UTF-8, LF. The wallet must sign these exact bytes. **`POST /api/v1/verification/standardize`** returns **`signerString`** for raw HTTP and debugging; the SDK **`verify()`** path builds the same message client-side (or use **`standardizeVerificationRequest`** when you need the API round-trip).
 
 ```text
-NEUS Verification Request
+Portable Proof Verification Request
 Wallet: <address>
 Chain: <chainId or CAIP-2 chain>
 Verifiers: <comma-separated-ids>
@@ -38,7 +38,7 @@ Same as [Signing format](../../verification/signing-format).
 
 ## Profiles
 
-|  | Chain | Signature |
+| | Chain | Signature |
 |--|-------|-----------|
 | EVM | `chainId` | EIP-191 / 1271 / 6492 |
 | Solana | `solana:…` | Ed25519 |

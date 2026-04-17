@@ -4,7 +4,7 @@ description: Gate React UI behind verification with hosted verify built in.
 icon: object-group
 ---
 
-`VerifyGate`: check → hosted verify when needed → unlock. Create defaults **unlisted public** so gates work without extra `proofOptions`. Raw `client.verify()` stays **private**. [Security and trust](../platform/security-and-trust) · [Get started](../get-started)
+`VerifyGate`: check to hosted verify when needed to unlock. Create defaults **unlisted public** so gates work without extra `proofOptions`. Raw `client.verify()` stays **private**. [Security and trust](../platform/security-and-trust) | [Get started](../get-started)
 
 ## Default create behavior
 
@@ -51,9 +51,9 @@ export function Page() {
 | `strategy` | Chooses reuse, reuse-or-create, or fresh |
 | `proofOptions` | Overrides privacy and content storage (defaults are unlisted public) |
 | `mode` | Chooses create vs access behavior |
-| `proofId` | Pass a proof receipt ID directly for access mode |
+| `proofId` | Existing id for access mode |
 | `appId` | Sends public app attribution |
-| `sponsorGrant` | Enables sponsored proof creation |
+| `sponsorGrant` | Bill your org for customer traffic ([Billing](../platform/billing)) |
 | `hostedCheckoutUrl` | Overrides the hosted verify URL when needed |
 | `oauthProvider` | Pre-selects the OAuth provider when the user already chose one in your app |
 
@@ -97,10 +97,10 @@ Allowed values:
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="Integration" icon="compass" href="../integration">
-    Check, verify, save, reuse.
-  </Card>
-  <Card title="SDK verifications" icon="rotate" href="../sdks/verifications">
-    Patterns.
-  </Card>
+ <Card title="Integration" icon="compass" href="../integration">
+ Check, verify, save, reuse.
+ </Card>
+ <Card title="SDK verifications" icon="rotate" href="../sdks/verifications">
+ Patterns.
+ </Card>
 </CardGroup>

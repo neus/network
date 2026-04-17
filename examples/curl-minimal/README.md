@@ -4,7 +4,7 @@
 
 **Use this sample when** you want zero SDK dependency, you are prototyping in curl, or you need to see the exact signing string the API expects before porting to another language.
 
-You get the same outcome as the SDK: a **`proofId`** receipt you can store, look up, and reuse in gate checks.
+You get the same outcome as the SDK: a **`proofId`** you can store, look up, and reuse in gate checks.
 
 ## Create a proof
 
@@ -71,7 +71,7 @@ Omit `options` to use defaults (**private**, unlisted, **original content stored
 ### 4. Check status
 
 ```bash
-# Proof receipt ID returned by NEUS.
+# verification ID (`proofId`) returned by NEUS
 curl https://api.neus.network/api/v1/proofs/0x{proofId}
 ```
 
@@ -91,6 +91,6 @@ Use the `/standardize` request above and verify that the submitted body matches 
 
 ## Next steps
 
-- [Node.js example](../nodejs-basic/) — programmatic signing
-- [API reference](https://docs.neus.network/api/overview) — HTTP endpoints and patterns
-- [JavaScript SDK](../../sdk/README.md) — `@neus/sdk`
+- [Node.js example](../nodejs-basic/) - programmatic signing
+- [API reference](https://docs.neus.network/api/overview) - HTTP endpoints and patterns
+- [JavaScript SDK](../../sdk/README.md) - `@neus/sdk`

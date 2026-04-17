@@ -29,7 +29,7 @@ Responses use `code`, `message`, `type`. Fix the request, retry with backoff, or
 | `INVALID_WALLET` | Wallet address format is invalid | Fix the request before retrying |
 | `VERIFIER_NOT_FOUND` | Requested verifier does not exist | Read the live verifier catalog and correct the request |
 | `VERIFICATION_FAILED` | The requested check did not pass | Treat as a failed verification, not a transport error |
-| `PROOF_NOT_FOUND` | Proof receipt was not found | Confirm the proof receipt ID and visibility |
+| `PROOF_NOT_FOUND` | Id not found | Confirm the id and visibility |
 | `UNAUTHORIZED` | The caller is not allowed to perform this action | Re-authenticate the right owner or user |
 | `RATE_LIMITED` | Too many requests | Back off and retry later |
 

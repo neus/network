@@ -4,20 +4,20 @@ description: Wallet message for verification requests.
 icon: file-code
 ---
 
-**Default:** [Hosted Verify](../cookbook/auth-hosted-verify) or **SDK** `client.verify()`—you do not need to read this page to ship.
+**Default:** [Hosted Verify](../cookbook/auth-hosted-verify) or **SDK** `client.verify()` - you do not need to read this page to ship.
 
 Use this reference when you implement **raw `POST /api/v1/verification`** or debug **`SIGNATURE_VERIFICATION_FAILED` / invalid signature** responses.
 
 ## Why
 
-The wallet agrees to the request; NEUS returns a **receipt**.
+The wallet agrees to the request; NEUS returns a **verification ID** (`proofId` / `qHash`).
 
 ## Raw HTTP only
 
 If you call the API without the SDK:
 
 1. Build the verification **JSON body** you will submit.
-2. **`POST /api/v1/verification/standardize`** with that body → **`signerString`** (exact bytes to sign).
+2. **`POST /api/v1/verification/standardize`** with that body to **`signerString`** (exact bytes to sign).
 3. Sign **`signerString`**.
 4. **`POST /api/v1/verification`** with the **same body** + **`signature`**.
 
@@ -33,7 +33,7 @@ Do not hand-edit the six-line text. Only sign what **`standardize`** returns (or
 UTF-8, **LF** newlines.
 
 ```text
-NEUS Verification Request
+Portable Proof Verification Request
 Wallet: <address>
 Chain: <chainId or CAIP-2 chain>
 Verifiers: <comma-separated-ids>
@@ -47,7 +47,7 @@ Timestamp: <unix-ms>
 import { standardizeVerificationRequest, signMessage } from '@neus/sdk';
 ```
 
-Prefer **`client.verify()`** when possible: [JavaScript SDK](../sdks/javascript) · [Quickstart](../quickstart)
+Prefer **`client.verify()`** when possible: [JavaScript SDK](../sdks/javascript) | [Quickstart](../quickstart)
 
 ## Wallets
 
@@ -60,16 +60,16 @@ Prefer **`client.verify()`** when possible: [JavaScript SDK](../sdks/javascript)
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="How it works" icon="shield-check" href="./how-it-works">
-    Flow.
-  </Card>
-  <Card title="API auth" icon="key" href="../api/authentication">
-    HTTP.
-  </Card>
-  <Card title="Verifiers" icon="list-tree" href="./verifiers">
-    Ids.
-  </Card>
-  <Card title="CAIP-380" icon="file-signature" href="../learn/standards/caip-380">
-    Envelope.
-  </Card>
+ <Card title="How it works" icon="shield-check" href="./how-it-works">
+ Flow.
+ </Card>
+ <Card title="API auth" icon="key" href="../api/authentication">
+ HTTP.
+ </Card>
+ <Card title="Verifiers" icon="list-tree" href="./verifiers">
+ Ids.
+ </Card>
+ <Card title="CAIP-380" icon="file-signature" href="../learn/standards/caip-380">
+ Envelope.
+ </Card>
 </CardGroup>

@@ -1,8 +1,8 @@
 # Node.js example
 
-**Prefer [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) or browser `client.verify()`** for product flows. This repo is for **backend-held keys** or learning the **standardize → sign → submit** HTTP pattern.
+**Prefer [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) or browser `client.verify()`** for product flows. This repo is for **backend-held keys** or learning the **standardize to sign to submit** HTTP pattern.
 
-**Run the full server-side flow** (prepare signing text, sign, submit, wait for completion, then gate check) in one file—ideal when your backend already has a wallet key or signer and you want receipts you can persist like any other ID.
+**Run the full server-side flow** (prepare signing text, sign, submit, wait for completion, then gate check) in one file - ideal when your backend already has a wallet key or signer and you want **`proofId`** values you can persist like any other id.
 
 ```bash
 cd nodejs-basic

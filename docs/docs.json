@@ -41,9 +41,9 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "NEUS Docs — verify once, trust everywhere. Proof receipts for login, access, and agents.",
+      "description": "NEUS Docs - verification checkout for access and claims. Hosted Verify, SDK, save a verification ID, check later.",
       "og:title": "NEUS Documentation",
-      "og:description": "Proof receipts for login, access, and agents.",
+      "og:description": "Verification checkout for access and claims. Hosted Verify, SDK, reusable verification results.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
@@ -51,7 +51,7 @@
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
       "twitter:title": "NEUS Documentation",
-      "twitter:description": "Proof receipts for login, access, and agents.",
+      "twitter:description": "Verification checkout for access and claims. Hosted Verify and reusable results.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
@@ -565,6 +565,10 @@
     {
       "source": "/learn/support-and-contact",
       "destination": "/get-started"
+    },
+    {
+      "source": "/how-to-prove-whats-real",
+      "destination": "/integration"
     },
     {
       "source": "/neus/how-to-prove-whats-real",

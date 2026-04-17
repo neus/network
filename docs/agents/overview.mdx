@@ -1,36 +1,36 @@
 ---
 title: Agents Overview
-description: Verifier-backed agent identity — receipts, stable URLs, MCP — any client.
+description: Verifier-backed agent identity, stable URLs, and MCP for any client.
 icon: robot
 ---
 
 <Note>
-Prerequisite: [Get started](../get-started) — `appId`, credits, billing. Same **check → verify → save → reuse** loop as [Integration](../integration).
+[Get started](../get-started), then [Integration](../integration).
 </Note>
 
 | Building block | Role |
 |-----------|------|
 | `agent-identity` | **Agent wallet signs** the identity proof; stable **wallet / DID** |
 | `agent-delegation` | Approver binds scope, spend cap, expiry |
-| URLs | Agent profile · proof pages · optional downloadable config for tools |
-| MCP | `neus_proofs_get` · `neus_context` — live eligibility + catalog |
+| URLs | Agent profile, proof pages, optional downloadable config for tools |
+| MCP | `neus_proofs_get`, `neus_context` (live eligibility and catalog) |
 | Linked surface | Add ownership + [wallet-link](../verification/wallet-link) so automation shares proofs with people/org flows |
 
 ## Flow
 
 <Steps>
-  <Step title="Register">
-    `agent-identity` — agent wallet signs.
-  </Step>
-  <Step title="Delegate (optional)">
-    `agent-delegation` — approver signs (can be a different wallet). [Concepts](./concepts)
-  </Step>
-  <Step title="Resolve">
-    Share card URL, proof URL, wallet, or DID; wire NEUS MCP so clients fetch state.
-  </Step>
-  <Step title="Hosted handoff">
-    When the tool returns `hostedVerifyUrl`, open it — same links as other integrations.
-  </Step>
+ <Step title="Register">
+ `agent-identity` - agent wallet signs.
+ </Step>
+ <Step title="Delegate (optional)">
+ `agent-delegation` - approver signs (can be a different wallet). [Concepts](./concepts)
+ </Step>
+ <Step title="Resolve">
+ Share card URL, proof URL, wallet, or DID; wire NEUS MCP so clients fetch state.
+ </Step>
+ <Step title="Hosted handoff">
+ When the tool returns `hostedVerifyUrl`, open it - same links as other integrations.
+ </Step>
 </Steps>
 
 ## At a glance
@@ -39,26 +39,26 @@ Prerequisite: [Get started](../get-started) — `appId`, credits, billing. Same 
 |------|-----------|
 | Attributable automation | `agent-identity` metadata + wallet binding |
 | Scoped capability | `agent-delegation` permissions / spend / TTL |
-| Any chat / API / server | Receipt ids + MCP + public proof URLs |
+| Any chat / API / server | Stored ids + MCP + public proof URLs |
 | Org / site / social linkage | Verifiers from [catalog](../verification/verifiers) |
 | Paid or gated actions | [x402](../platform/x402) + [Billing](../platform/billing) |
 
 <CardGroup cols={2}>
-  <Card title="Concepts" icon="book-open" href="./concepts">
-    Roles, fields.
-  </Card>
-  <Card title="Registration" icon="badge-check" href="./agent-identity">
-    agent-identity
-  </Card>
-  <Card title="Delegation" icon="key" href="./agent-delegation">
-    agent-delegation
-  </Card>
-  <Card title="Flow" icon="route" href="./agent-verification-flow">
-    Sequence.
-  </Card>
-  <Card title="Cookbook" icon="book-open" href="../cookbook/verifiable-agents">
-    End-to-end.
-  </Card>
+ <Card title="Concepts" icon="book-open" href="./concepts">
+ Roles, fields.
+ </Card>
+ <Card title="Registration" icon="badge-check" href="./agent-identity">
+ agent-identity
+ </Card>
+ <Card title="Delegation" icon="key" href="./agent-delegation">
+ agent-delegation
+ </Card>
+ <Card title="Flow" icon="route" href="./agent-verification-flow">
+ Sequence.
+ </Card>
+ <Card title="Cookbook" icon="book-open" href="../cookbook/verifiable-agents">
+ End-to-end.
+ </Card>
 </CardGroup>
 
 ## Register
@@ -91,4 +91,4 @@ await client.verify({
 });
 ```
 
-Details: [agent-identity](./agent-identity) · [agent-delegation](./agent-delegation) · [MCP](../mcp/overview) (`neus_agent_create`, `neus_agent_link`)
+Details: [agent-identity](./agent-identity), [agent-delegation](./agent-delegation), [MCP](../mcp/overview) (`neus_agent_create`, `neus_agent_link`).

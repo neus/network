@@ -1,5 +1,6 @@
 import { ApiError, ValidationError, NetworkError, ConfigurationError } from './errors.js';
 import {
+  PORTABLE_PROOF_SIGNER_HEADER,
   constructVerificationMessage,
   validateWalletAddress,
   validateUniversalAddress,
@@ -1738,9 +1739,10 @@ export class NeusClient {
               } else if (key === 'handle') {
                 actualValue = data.handle || data.pseudonymId;
               } else if (key === 'namespace') {
-                actualValue = data.namespace != null && data.namespace !== ''
-                  ? data.namespace
-                  : 'neus';
+                actualValue =
+                  data.namespace !== undefined && data.namespace !== null && data.namespace !== ''
+                    ? data.namespace
+                    : 'neus';
               } else if (key === 'claims.sanctions_passed') {
                 actualValue = claims.sanctions_passed ?? claims.sanctionsPassed;
               } else if (key === 'claims.age_min') {
@@ -1955,5 +1957,5 @@ export class NeusClient {
   }
 }
 
-// Export the constructVerificationMessage function for advanced use
-export { constructVerificationMessage };
+// Export signing helpers for advanced use
+export { PORTABLE_PROOF_SIGNER_HEADER, constructVerificationMessage };

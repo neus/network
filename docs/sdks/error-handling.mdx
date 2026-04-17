@@ -29,5 +29,5 @@ const final = await client.pollProofStatus(proofId, {
 const privateData = await client.getPrivateProof(proofId, window.ethereum);
 ```
 
-- Don’t loop-create on ambiguous errors—keep receipt ids for resume.  
-- Say when a hosted step is required—avoid generic “error” only.  
+- Don’t loop-create on ambiguous errors - keep stored ids for resume. 
+- Say when a hosted step is required - avoid generic “error” only. 

@@ -47,7 +47,7 @@ const client = new NeusClient({
 
 | Option | When to Use |
 |--------|-------------|
-| `persist: true` | Store the proof when you need a reusable proof receipt |
+| `persist: true` | Persist a reusable **verification ID** |
 | `ipfs: true` / `pin: true` | Use when you need IPFS-backed storage |
 | `strategy: 'reuse-or-create'` | Check existing proof first, create if missing. Default. |
 | `strategy: 'fresh'` | Always create new proof. Use for high-stakes checks. |
@@ -93,13 +93,13 @@ const res = await client.verify({
 });
 ```
 
-Catalog: `GET /api/v1/verification/verifiers` — treat the response as authoritative (SDK examples are non-normative).
+Catalog: `GET /api/v1/verification/verifiers` - treat the response as authoritative (SDK examples are non-normative).
 
 ## Gate checks: `gateCheck` vs `checkGate`
 
 | Method | Use when |
 |--------|----------|
-| **`gateCheck()`** | **Production allow/deny.** Calls `GET /api/v1/proofs/check`; server-enforced eligibility. |
+| **`gateCheck()`** | **Allow/deny** via `GET /api/v1/proofs/check` (server-enforced). |
 | **`checkGate()`** | Preview against proofs you already loaded. Not for security-sensitive allow/deny vs **`gateCheck()`**. |
 
 ## App Attribution (`appId`)
@@ -163,7 +163,7 @@ if (!res.data?.eligible) {
 ## Advanced: Private Proof Operations
 
 ```javascript
-// Private proof by proof receipt ID
+// Private proof by proofId
 const privateData = await client.getPrivateProof(proofId, window.ethereum);
 
 // Private proofs by wallet/DID (requires owner signature)

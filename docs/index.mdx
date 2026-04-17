@@ -1,81 +1,68 @@
 ---
 title: NEUS
-description: Verify once. Reusable receipts. One receipt flow for people, agents, and organizations.
+description: Verification checkout for access and claims. Save a verification ID, check it later, ship faster.
 icon: house
 ---
 
-<Note>
-**One receipt id** (`proofId` in API responses) — [check](./integration) before re-verifying. Same pattern for **people, agents, orgs**: SDK, widgets, API, MCP, shareable proof URLs.
-</Note>
+**Verification checkout** - save a **verification ID**, **check** later. Gates, payouts, agents.
 
-**Start:** [Hosted Verify](https://neus.network/verify) · [Get started](./get-started) · [Choose a path](./choose-an-integration-path) · [Agents](./agents/overview)
-
-## Capabilities
+## Access, claims, checkout, reuse
 
 <CardGroup cols={2}>
-  <Card title="Universal identity" icon="users" href="./agents/overview">
-    Resolve wallets, domains, socials, and agents from one profile: card URL, DID, or MCP lookup.
+  <Card title="Access" icon="lock" href="./cookbook/auth-hosted-verify">
+    Gate tools, content, and actions after verification, not repeated manual checks.
   </Card>
-  <Card title="Reusable receipts" icon="receipt" href="./integration">
-    Store `proofId`. GateCheck / API / widgets — skip repeat verification.
+  <Card title="Claims" icon="gift" href="./integration">
+    Run trusted eligibility for drops, bounties, campaigns, and rewards.
   </Card>
-  <Card title="MCP & assistants" icon="plug" href="./mcp/overview">
-    Hosted MCP tools + handoff URLs to Hosted Verify when a browser step is required.
+  <Card title="Checkout" icon="globe" href="./cookbook/auth-hosted-verify">
+    Hosted Verify is the fastest browser flow; parameterize what you require.
   </Card>
-  <Card title="Gates & billing" icon="credit-card" href="./platform/billing">
-    Sponsors, credits, x402 — org-paid and self-serve paths.
+  <Card title="Reuse" icon="refresh-cw" href="./integration">
+    Store the verification ID and check again before asking users to re-verify.
   </Card>
 </CardGroup>
-
-## Common uses
-
-| Use case | Documentation |
-|----------|---------------|
-| Identity + linked accounts | [Agents](./agents/overview) · [Wallet link](./verification/wallet-link) · [Hosted Verify](./cookbook/auth-hosted-verify) |
-| Access with saved receipts | [Integration](./integration) · [`gateCheck`](./sdks/javascript) |
-| Token, NFT, domain gates | [Examples](./examples) · [NFT gating](./cookbook/nft-gating) · [Domain](./cookbook/domain-verification) |
-| Tooling / IDE | [MCP](./mcp/overview) |
 
 ## Start here
 
 <CardGroup cols={3}>
   <Card title="Get started" icon="book" href="./get-started">
-    Hub account, billing, then check → verify → save once.
+    Account, app setup, and your first verification loop.
   </Card>
   <Card title="Choose a path" icon="route" href="./choose-an-integration-path">
-    SDK · widgets · API · MCP.
+    SDK first, then widgets, HTTP API, or MCP.
   </Card>
-  <Card title="Integration" icon="compass" href="./integration">
-    Check → verify → save → reuse.
+  <Card title="Integration loop" icon="compass" href="./integration">
+    Check, verify, save, reuse.
   </Card>
 </CardGroup>
 
-[Quickstart](./quickstart) · [Widgets](./widgets/overview) · [MCP](./mcp/overview)
+[Quickstart](./quickstart) | [Widgets](./widgets/overview) | [MCP](./mcp/overview)
 
 ## Explore
 
 <CardGroup cols={2}>
   <Card title="Platform" icon="globe" href="./platform/overview">
-    URLs, setup, receipts, billing.
+    URLs, app setup, verification results, billing overview.
   </Card>
   <Card title="Verification" icon="shield" href="./verification/overview">
-    Verifiers, lifecycle, signing.
+    Types, lifecycle, and signing reference.
   </Card>
   <Card title="Agents" icon="robot" href="./agents/overview">
-    Identity, delegation, presets.
+    Identity, delegation, and automation paths.
   </Card>
   <Card title="MCP" icon="plug" href="./mcp/overview">
-    Assistants and IDEs.
+    Assistants and IDE integrations with Hosted Verify handoff.
   </Card>
 </CardGroup>
 
 ## Verifiers
 
-[Verifier catalog](./verification/verifiers) — capability pages under **Verification**.
+[Capability reference](./verification/verifiers). Detailed pages under **Verification**.
 
 ## Resources
 
 - [Examples](./examples)
 - [LLM docs](./platform/llm-docs)
 
-[Hosted verify](https://neus.network/verify) · [Hub](https://neus.network/hub) · [Where NEUS is hosted](./platform/overview#urls) (verify, API, MCP)
+[Hosted Verify](https://neus.network/verify) | [Hub](https://neus.network/hub) | [URLs](./platform/overview#urls)

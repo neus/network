@@ -4,22 +4,19 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 
 ## Authentication model
 
-- **Verification requests** are authenticated with a wallet signature over the **NEUS standard signing string** (never roll your own message format in production—use the SDK or the hosted preparation step documented for HTTP integrations).
-- **Proof lookups by receipt id** are safe for public proofs. Private proofs return a minimal payload unless the caller proves ownership (session or signed request).
+- **Verification requests** are authenticated with a wallet signature over the **CAIP-380 Portable Proof** six-line signing string (NEUS implementation). Never roll your own message format in production—use the SDK or the hosted preparation step documented for HTTP integrations.
+- **Proof lookups by `proofId`** are safe for public proofs. Private proofs return a minimal payload unless the caller proves ownership (session or signed request).
 - **Owner-only reads** of private proof payloads require an extra owner-signed request. The SDK attaches the required signed headers for you.
 
 ## Do not
 
 - Do not treat proof signatures as bearer tokens (they are request-bound).
 - Do not embed API keys in browser apps. Keep API keys server-side only.
-- Do not log or persist:
-  - proof signatures
-  - API keys
-  - third-party auth credentials or provider tokens (if your integration uses them)
+- Do not log or persist proof signatures, API keys, or third-party auth credentials (if your integration uses them).
 
 ## Privacy defaults
 
-**`client.verify()`** defaults to **private** receipts with **original content stored** (owner-authenticated reads).
+**`client.verify()`** defaults to **private** stored results with **original content stored** (owner-authenticated reads).
 
 **`VerifyGate`** create mode defaults to **unlisted public** (`privacyLevel: 'public'`, `publicDisplay: false`, `storeOriginalContent: true`) so gates and `gateCheck` work without extra options.
 
@@ -29,8 +26,8 @@ For raw SDK flows that must power **`gateCheck`** without an owner session, set 
 
 Controls:
 
-- `privacyLevel` — private (vaulted to the wallet) vs public (eligible for policy checks without owner session)
-- `publicDisplay` — discovery vs unlisted
-- `storeOriginalContent` — retain original content vs hash/metadata only
+- `privacyLevel` - private (vaulted to the wallet) vs public (eligible for policy checks without owner session)
+- `publicDisplay` - discovery vs unlisted
+- `storeOriginalContent` - retain original content vs hash/metadata only
 
 Discoverable listings require **`privacyLevel: 'public'`** and **`publicDisplay: true`**.

@@ -5,6 +5,7 @@ export { NeusClient } from './client.js';
 
 // Essential utilities
 export {
+  PORTABLE_PROOF_SIGNER_HEADER,
   constructVerificationMessage,
   validateWalletAddress,
   validateUniversalAddress,

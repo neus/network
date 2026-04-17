@@ -4,23 +4,22 @@ description: NEUS MCP for assistants and IDEs.
 icon: plug
 ---
 
-`https://mcp.neus.network/mcp` — [Setup](./setup)
+Endpoint: `https://mcp.neus.network/mcp` - [Setup](./setup)
 
-## Flow
+## Typical use
 
-1. `neus_context` (no key)
-2. `neus_proofs_check` or `neus_verify_or_guide`
-3. Open `hostedVerifyUrl` → `https://neus.network/verify`
-4. `neus_proofs_get` when you have an id
-5. Personal [access key](https://neus.network/profile?tab=account) for `neus_me` + private reads — [Auth](./auth)
-6. `neus_verify`: one unsigned preparation call, then sign the **same** payload (do not repeat preparation)
-7. Agents: `neus_agent_create` → hosted → `neus_agent_link`
+1. **`neus_context`** (no access key).
+2. **`neus_proofs_check`** or **`neus_verify_or_guide`**; open **`hostedVerifyUrl`** when the tool returns it.
+3. **`neus_proofs_get`** when you have a wallet or **verification ID**.
+4. **Access key** from the hub only for **`neus_me`** and private reads - [Auth](./auth).
+5. **Agents:** **`neus_agent_create`**, then **`neus_agent_link`**.
+6. **`neus_verify`:** one unsigned prepare, then sign the **same** payload (do not call prepare twice).
 
-HTTP **402**: [Billing](../platform/billing) · [x402](../platform/x402)
+HTTP **402:** same credits model as the rest of the API - [Billing](../platform/billing), [x402](../platform/x402).
 
 ### Agent proofs vs MCP
 
-`skills` on a proof are **metadata**—not MCP installs. The host supplies execution. Max **48** skill refs.
+`skills` on a proof are **labels**, not installed MCP servers. The host runs tools. Max **48** skill refs.
 
 | Goal | Tool |
 |------|------|
@@ -29,7 +28,7 @@ HTTP **402**: [Billing](../platform/billing) · [x402](../platform/x402)
 | Eligibility | `neus_proofs_check` |
 | List + profile | `neus_proofs_get` |
 | Signed-in user | `neus_me` + access key |
-| Pick ids | `neus_verifiers_catalog` |
+| Verifier ids | `neus_verifiers_catalog` |
 | Agents | `neus_agent_create`, `neus_agent_link` |
 
-[Get started](../get-started) · [Setup](./setup) · [Tools](./tools) · [Auth](./auth) · [Hosted Verify](../cookbook/auth-hosted-verify)
+[Get started](../get-started) | [Setup](./setup) | [Tools](./tools) | [Auth](./auth) | [Hosted Verify](../cookbook/auth-hosted-verify)

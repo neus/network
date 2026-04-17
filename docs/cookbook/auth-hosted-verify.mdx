@@ -4,11 +4,9 @@ description: NEUS-hosted UI for login and interactive verification.
 icon: key
 ---
 
-**Default:** users verify on NEUS; you store the **receipt id** and **check** before the next verify ([Integration](../integration#loop)). **Billing:** org credits + sponsors for most shipped apps ([Get started](../get-started#choose-who-pays)).
+**Default:** user completes steps on NEUS; your app stores the **verification ID** and **checks** before asking again ([Integration](../integration#loop)). **Billing:** [Get started](../get-started) (app setup, org credits, **`sponsorGrant`** for customer traffic).
 
-Apps: [Get started](../get-started) for `appId`, credits, sponsors.
-
-Build links with the SDK (`returnUrl`). After redirect, finish session with `@neus/sdk`; add an access key on server or tool calls only when the docs say you need account-scoped access ([SDK Authentication](../sdks/authentication)).
+Build links with the SDK (`returnUrl`). After return, read the result with the SDK. Use an **access key** only when [SDK Authentication](../sdks/authentication) or [MCP Auth](../mcp/auth) says you need account scope.
 
 **MCP:** `neus_context` first; verify URLs work without a key. Add a personal [access key](https://neus.network/profile?tab=account) for account tools ([MCP Auth](../mcp/auth)).
 
@@ -36,14 +34,14 @@ Base: `https://neus.network/verify`
 
 ## Auth surfaces
 
-Passkeys = WebAuthn in a **secure context**. Missing platform authenticator ≠ blocked cross-device / security-key.
+Passkeys = WebAuthn in a **secure context**. Missing platform authenticator is not blocked cross-device / security-key.
 
 | Surface | Passkeys | Wallet |
 |--------|----------|--------|
 | Desktop | Local, handoff, cross-device | Connect from page; QR needs a gesture |
 | Mobile / PWA | Platform manager when available | Prefer wallet app / deep link |
 
-Use **https** or **http://localhost** with an origin that matches your NEUS profile—not raw LAN IPs.
+Use **https** or **http://localhost** with an origin that matches your NEUS profile - not raw LAN IPs.
 
 PWAs: do not cache NEUS authentication responses in your service worker.
 
@@ -63,10 +61,10 @@ window.location.href = getHostedCheckoutUrl({
 ## Next
 
 <CardGroup cols={2}>
-  <Card title="Authentication" icon="key" href="../sdks/authentication">
-    Session + access keys.
-  </Card>
-  <Card title="Receipts" icon="receipt" href="../platform/receipts-and-results">
-    After verify.
-  </Card>
+ <Card title="Authentication" icon="key" href="../sdks/authentication">
+ Session + access keys.
+ </Card>
+ <Card title="Verification results" icon="receipt" href="../platform/receipts-and-results">
+ Save proofId.
+ </Card>
 </CardGroup>

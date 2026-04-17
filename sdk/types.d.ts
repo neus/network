@@ -433,6 +433,9 @@ declare module '@neus/sdk' {
     chainId?: number;
     chain?: string;
   }): string;
+
+  /** CAIP-380 six-line signer message — line 1 */
+  export const PORTABLE_PROOF_SIGNER_HEADER: string;
   
   /**
    * Validate Ethereum wallet address

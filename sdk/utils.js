@@ -5,6 +5,9 @@
 
 import { SDKError, ApiError, ValidationError } from './errors.js';
 
+/** CAIP-380 six-line signer message — line 1 (fixed context label). */
+export const PORTABLE_PROOF_SIGNER_HEADER = 'Portable Proof Verification Request';
+
 const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 
 function encodeBase58Bytes(input) {
@@ -67,20 +70,35 @@ function deterministicStringify(obj) {
   }
 
   if (typeof obj !== 'object') {
+    if (typeof obj === 'string') return JSON.stringify(obj.normalize('NFC'));
     return JSON.stringify(obj);
   }
 
   if (Array.isArray(obj)) {
-    return `[${  obj.map(item => deterministicStringify(item)).join(',')  }]`;
+    return `[${  obj.map(item => (item === undefined ? 'null' : deterministicStringify(item))).join(',')  }]`;
   }
 
-  // Sort object keys for deterministic output
-  const sortedKeys = Object.keys(obj).sort();
+  const sortedKeys = Object.keys(obj).filter((k) => obj[k] !== undefined).sort();
   const pairs = sortedKeys.map(key =>
     `${JSON.stringify(key)  }:${  deterministicStringify(obj[key])}`
   );
 
   return `{${  pairs.join(',')  }}`;
+}
+
+/**
+ * CAIP-380 EVM: line3 is decimal chainId. Non-EVM: CAIP-2 chain string.
+ */
+function chainLineForPortableProofSigner(chain, chainId) {
+  if (typeof chain === 'string' && chain.length > 0) {
+    const m = chain.match(/^eip155:(\d+)$/);
+    if (m) return Number(m[1]);
+    return chain;
+  }
+  if (typeof chainId === 'number' && Number.isFinite(chainId) && chainId > 0) {
+    return chainId;
+  }
+  throw new SDKError('chainId is required (or provide chain for universal mode)', 'INVALID_CHAIN_CONTEXT');
 }
 
 /**
@@ -109,18 +127,17 @@ export function constructVerificationMessage({ walletAddress, signedTimestamp, d
     throw new SDKError('verifierIds is required and must be a non-empty array', 'INVALID_VERIFIER_IDS');
   }
 
-  // Chain context: prefer explicit `chain` when provided (e.g. "solana:mainnet"),
-  // Otherwise use numeric chainId (EVM).
-  const chainContext = (typeof chain === 'string' && chain.length > 0) ? chain : chainId;
-  if (!chainContext) {
+  if ((typeof chain !== 'string' || !chain.length) && !(typeof chainId === 'number' && chainId > 0)) {
     throw new SDKError('chainId is required (or provide chain for universal mode)', 'INVALID_CHAIN_CONTEXT');
   }
-  if (chainContext === chainId && typeof chainId !== 'number') {
-    throw new SDKError('chainId must be a number when provided', 'INVALID_CHAIN_ID');
-  }
-  if (chainContext === chain && (typeof chain !== 'string' || !chain.includes(':'))) {
+  if (typeof chain === 'string' && chain.length > 0 && (!chain.includes(':'))) {
     throw new SDKError('chain must be a "namespace:reference" string', 'INVALID_CHAIN');
   }
+  if ((!chain || !chain.length) && typeof chainId !== 'number') {
+    throw new SDKError('chainId must be a number when provided', 'INVALID_CHAIN_ID');
+  }
+
+  const chainLine = chainLineForPortableProofSigner(chain, chainId);
 
   // Address normalization: EVM (`eip155`) is lowercased; non-EVM namespaces preserve the original string.
   const namespace = (typeof chain === 'string' && chain.includes(':')) ? chain.split(':')[0] : 'eip155';
@@ -129,15 +146,15 @@ export function constructVerificationMessage({ walletAddress, signedTimestamp, d
   const dataString = deterministicStringify(data);
 
   const messageComponents = [
-    'NEUS Verification Request',
+    PORTABLE_PROOF_SIGNER_HEADER,
     `Wallet: ${normalizedWalletAddress}`,
-    `Chain: ${chainContext}`,
+    `Chain: ${chainLine}`,
     `Verifiers: ${verifierIds.join(',')}`,
     `Data: ${dataString}`,
     `Timestamp: ${signedTimestamp}`
   ];
 
-  return messageComponents.join('\n');
+  return messageComponents.join('\n').normalize('NFC');
 }
 
 /**

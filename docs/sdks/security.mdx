@@ -4,7 +4,7 @@ description: Security best practices for NEUS SDK integrations.
 icon: lock
 ---
 
-Less surface area: interactive → hosted; private → owner auth.
+Less surface area: prefer interactive hosted flows; private reads need owner auth.
 
 ## Auth by operation
 
@@ -20,16 +20,16 @@ Less surface area: interactive → hosted; private → owner auth.
 - Do not treat proof signatures as bearer tokens (they are request-bound)
 - Do not embed **secrets** in browser bundles
 - Do not log or persist:
-  - proof signatures
-  - API keys
-  - third-party auth credentials or provider tokens
+ - proof signatures
+ - API keys
+ - third-party auth credentials or provider tokens
 </Warning>
 
 ## Defaults
 
-`client.verify()` → **private**, `storeOriginalContent: true`. VerifyGate create → **unlisted public**. [Security and trust](../platform/security-and-trust)
+`client.verify()` defaults **private** with `storeOriginalContent: true`. VerifyGate create defaults **unlisted public**. [Security and trust](../platform/security-and-trust)
 
-SDK + `gateCheck` without owner session → set unlisted public explicitly:
+If you use SDK `gateCheck` without an owner session, set unlisted public explicitly when you need that visibility:
 
 ```javascript
 {

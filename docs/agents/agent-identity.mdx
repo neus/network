@@ -4,7 +4,7 @@ description: Register and verify AI agent identities.
 icon: id-card
 ---
 
-Register an agent; agent wallet signs. Proof `skills` are **metadata only**—they **do not** install MCP servers — [MCP overview](../mcp/overview). Prefer portable skill ids ([spec](https://agentskills.io/specification), [directory](https://skills.sh)).
+Register an agent; agent wallet signs. Proof `skills` are **metadata only** - they **do not** install MCP servers - [MCP overview](../mcp/overview). Prefer portable skill ids ([spec](https://agentskills.io/specification), [directory](https://skills.sh)).
 
 Default: **`neus_agent_create`** (MCP) or [hosted verify](../cookbook/auth-hosted-verify). Below = SDK detail.
 
@@ -59,20 +59,20 @@ await client.verify({
 
 | Field | Required | Max Length | Description |
 |-------|----------|------------|-------------|
-| `agentId` | Yes | 1–128 chars | Unique identifier for the agent |
-| `agentWallet` | Yes | — | Agent wallet address (EVM or Solana) |
-| `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request | — | CAIP-2 chain reference for `agentWallet` |
+| `agentId` | Yes | 1 - 128 chars | Unique identifier for the agent |
+| `agentWallet` | Yes | - | Agent wallet address (EVM or Solana) |
+| `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request | - | CAIP-2 chain reference for `agentWallet` |
 | `agentLabel` | No | 128 chars | Human-readable display name |
 | `agentType` | No | enum | `ai`, `bot`, `service`, `automation`, or `agent` |
 | `description` | No | 500 chars | Agent description |
-| `capabilities` | No | — | Boolean flags (`search`, `mcp`, `proofs`, …) — see schema |
+| `capabilities` | No | - | Boolean flags (`search`, `mcp`, `proofs`, …) - see schema |
 | `instructions` | No | 4000 chars | System prompt or behavioral instructions |
 | `skills` | No | 48 objects | Each object requires `id`; optional `kind`, `label`, … |
 | `services` | No | 16 items | `name` + `endpoint` (+ optional `version`) |
 
 ## What you get
 
-Proof receipt id. **Signed with the agent wallet.** **No spend or permission grants** — use [`agent-delegation`](./agent-delegation) for scoped authority.
+Verification id. **Signed with the agent wallet.** **No spend or permission grants** - use [`agent-delegation`](./agent-delegation) for scoped authority.
 
 ## Verification
 

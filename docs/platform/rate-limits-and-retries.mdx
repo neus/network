@@ -7,21 +7,21 @@ icon: clock
 APIs may return **429** or transient errors.
 
 - Exponential backoff; honor **Retry-After** when present.
-- **Creates:** don’t blind-retry—confirm the first request didn’t succeed.
+- **Creates:** don’t blind-retry - confirm the first request didn’t succeed.
 - **Polling:** a few seconds between polls; backoff on errors.
 
-Credits: [Billing](./billing) · Code: [SDK errors](../sdks/error-handling)
+Credits: [Billing](./billing) | Code: [SDK errors](../sdks/error-handling)
 
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="Billing" icon="credit-card" href="./billing">
-    Usage.
-  </Card>
-  <Card title="SDK errors" icon="triangle-exclamation" href="../sdks/error-handling">
-    In-app retries.
-  </Card>
-  <Card title="API" icon="terminal" href="../api/overview">
-    Endpoints.
-  </Card>
+ <Card title="Billing" icon="credit-card" href="./billing">
+ Usage.
+ </Card>
+ <Card title="SDK errors" icon="triangle-exclamation" href="../sdks/error-handling">
+ In-app retries.
+ </Card>
+ <Card title="API" icon="terminal" href="../api/overview">
+ Endpoints.
+ </Card>
 </CardGroup>

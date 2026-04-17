@@ -6,15 +6,15 @@ icon: key
 
 ## Hosted
 
-1. `getHostedCheckoutUrl` + `returnUrl` — [Hosted Verify](../cookbook/auth-hosted-verify)  
-2. User finishes on **neus.network**  
-3. Finish session with `@neus/sdk`; Bearer on API as needed  
+1. `getHostedCheckoutUrl` + `returnUrl` - [Hosted Verify](../cookbook/auth-hosted-verify) 
+2. User finishes on **neus.network** 
+3. Finish session with `@neus/sdk`; Bearer on API as needed 
 
-[Access keys](https://neus.network/profile?tab=account) → `Authorization: Bearer` on API/MCP (same header). MCP: [Auth](../mcp/auth) (`neus_me`)
+[Access keys](https://neus.network/profile?tab=account) to `Authorization: Bearer` on API/MCP (same header). MCP: [Auth](../mcp/auth) (`neus_me`)
 
 ## In-app verify (default)
 
-Use **`NeusClient.verify()`** so the SDK prepares the signing payload and submits—see [Quickstart](../quickstart).
+Use **`NeusClient.verify()`** so the SDK prepares the signing payload and submits - see [Quickstart](../quickstart).
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -44,4 +44,4 @@ const signature = await signMessage({
 });
 ```
 
-Use SDK helpers—don’t craft strings by hand. [Signing format](../verification/signing-format) · [API authentication](../api/authentication)
+Use SDK helpers - don’t craft strings by hand. [Signing format](../verification/signing-format) | [API authentication](../api/authentication)

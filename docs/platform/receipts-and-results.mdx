@@ -1,22 +1,21 @@
 ---
-title: Proof Receipts
-description: What to save after verification—proofId and qHash.
+title: Verification results
+description: Save one id: SDK proofId, paths qHash.
 icon: receipt
 ---
 
-**Save the receipt id.** Don’t treat a raw signature as your long-term record.
+**Terminology:** docs say **verification ID**; the SDK returns **`proofId`**; some URLs and API paths use **`qHash`**. Same value.
 
-One id, many surfaces. Flow: [Integration](../integration).
+**Save that id.** A raw signature is not your long-term record.
 
-## proofId and qHash
+Details in one place: [Integration](../integration).
 
-Same receipt: SDK calls it **`proofId`**; URLs / some API fields use **`qHash`**.
+## `proofId` and `qHash`
 
-|  | Role |
+| | Role |
 |--|--|
-| `proofId` | SDK (primary) |
-| `qHash` | Paths / some responses |
-| Proof receipt id | Product wording |
+| `proofId` | SDK response |
+| `qHash` | Paths / some API fields |
 
 Visibility: [Security and trust](./security-and-trust)
 
@@ -24,7 +23,7 @@ Visibility: [Security and trust](./security-and-trust)
 
 | Save | Skip as sole record |
 |------|---------------------|
-| Receipt id | Signature string only |
+| Verification id | Signature string only |
 | Status | Private payloads in public caches |
 | Verifier ids used | User secrets |
 

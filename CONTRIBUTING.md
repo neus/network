@@ -2,7 +2,7 @@
 
 Thank you for helping improve NEUS materials in this open project.
 
-**If you are integrating NEUS into a product**, use **[docs.neus.network](https://docs.neus.network)** and the live product first—the table below is for people proposing changes here.
+**If you are integrating NEUS into a product**, use **[docs.neus.network](https://docs.neus.network)** and the live product first - the table below is for people proposing changes here.
 
 | Need | Where |
 | --- | --- |
@@ -29,7 +29,7 @@ Thank you for helping improve NEUS materials in this open project.
 
 - Published documentation is served from **docs.neus.network**; sources live under **`docs/`** here.
 - The **`mcp/`** directory accompanies the published **`@neus/mcp-server`** package.
-- Verifier field schemas live under **`docs/verifiers/schemas/`** and related **`spec/`** files—prefer linking to the [verifier catalog](https://docs.neus.network/verification/verifiers) in prose instead of duplicating long tables.
+- Verifier field schemas live under **`docs/verifiers/schemas/`** and related **`spec/`** files - prefer linking to the [verifier catalog](https://docs.neus.network/verification/verifiers) in prose instead of duplicating long tables.
 
 ## Describing your change
 

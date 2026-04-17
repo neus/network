@@ -1,27 +1,27 @@
 ---
-title: Production Integration
-description: Check, verify, save, reuse—ship path.
+title: Integration
+description: Check, verify, save, reuse on every surface.
 icon: compass
 ---
 
-Same loop on every surface: **check → verify → save → reuse**.
+Same loop on every surface: **Check, verify, save, reuse**.
 
-- **Surfaces:** [Choose an integration path](./choose-an-integration-path) — Hosted Verify, SDK, widgets, API, MCP.
-- **Platform:** [Billing](./platform/billing) · [Proof receipts](./platform/receipts-and-results) · [Security and trust](./platform/security-and-trust) · [LLM docs](./platform/llm-docs)
+- **Surfaces:** [Choose an integration path](./choose-an-integration-path) - Hosted Verify, SDK, widgets, API, MCP.
+- **Platform:** [Billing](./platform/billing), [Verification results](./platform/receipts-and-results), [Security and trust](./platform/security-and-trust), [LLM docs](./platform/llm-docs)
 
-**Check** whether the person or wallet already has a valid proof (saved receipt id or a server-side eligibility check) before asking them to verify again. **Save** the receipt id from the response ([Proof receipts](./platform/receipts-and-results)).
+**Check** whether the person or wallet already has a valid result (saved **verification ID** or a server-side eligibility check) before asking them to verify again. **Save** the **verification ID** from the response ([Verification results](./platform/receipts-and-results)). The API field is **`proofId`**.
 
 ## Loop
 
-1. **Check** — saved id or proofs/check
-2. **Verify** — only if needed (hosted, SDK, or API)
-3. **Save** — receipt id on user/session
-4. **Reuse** — UI, VerifyGate, server, MCP
+1. **Check** - saved id or proofs/check
+2. **Verify** - only if needed (hosted, SDK, or API)
+3. **Save** - verification ID on user/session
+4. **Reuse** - UI, VerifyGate, server, MCP
 
 | Situation | Approach |
 |-----------|----------|
-| Repeat visits | Run an eligibility check or use a stored receipt id before a new verify |
-| Balance / NFT gates | Narrow `since` or `fresh` strategy — [SDK verifications](./sdks/verifications) |
+| Repeat visits | Run an eligibility check or use a stored verification ID before a new verify |
+| Balance / NFT gates | Narrow `since` or `fresh` strategy - [SDK verifications](./sdks/verifications) |
 | Org and domain | [Platform setup](./platform/setup), then the same loop |
 
 ## Visibility
@@ -39,11 +39,11 @@ SDK `client.verify()` defaults **private**. VerifyGate create defaults **unliste
 ## Checklist
 
 <Checklist>
-  <Item>One primary path: Hosted Verify, Widgets, SDK, API, or MCP</Item>
-  <Item>Check before showing verify</Item>
-  <Item>Store receipt ids—not only raw signatures</Item>
-  <Item>Test: verify → save → check → reuse</Item>
-  <Item>[Get started](./get-started) · [Billing](./platform/billing)</Item>
+ <Item>One primary path: Hosted Verify, Widgets, SDK, API, or MCP</Item>
+ <Item>Check before showing verify</Item>
+ <Item>Store verification IDs - not only raw signatures</Item>
+ <Item>Test: verify, save, check, reuse</Item>
+ <Item>[Get started](./get-started), [Billing](./platform/billing)</Item>
 </Checklist>
 
 ## Strategies (SDK / API)
@@ -51,12 +51,14 @@ SDK `client.verify()` defaults **private**. VerifyGate create defaults **unliste
 | Strategy | When |
 |----------|------|
 | `reuse-or-create` | Default: reuse if valid, else verify |
-| `fresh` | Always new proof |
-| `reuse` | Existing proof only |
+| `fresh` | Always new verification |
+| `reuse` | Existing verification only |
+
+More filters: [SDK verifications](./sdks/verifications).
 
 ## URLs
 
-|  |  |
+| | |
 |--|--|
 | Hosted Verify | `https://neus.network/verify` |
 | API | `https://api.neus.network` |
@@ -65,28 +67,28 @@ SDK `client.verify()` defaults **private**. VerifyGate create defaults **unliste
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="Get started" icon="book" href="./get-started">
-    Account, app, billing, first proof loop.
-  </Card>
-  <Card title="Universal identity" icon="users" href="./agents/overview">
-    Agents · linked accounts · MCP.
-  </Card>
-  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Hosted UX.
-  </Card>
-  <Card title="Receipts" icon="receipt" href="./platform/receipts-and-results">
-    What to store.
-  </Card>
-  <Card title="Security and trust" icon="lock" href="./platform/security-and-trust">
-    Who can see proofs and receipts.
-  </Card>
-  <Card title="API" icon="terminal" href="./api/overview">
-    REST checks and advanced POST flows.
-  </Card>
-  <Card title="Verifiers" icon="list-tree" href="./verification/verifiers">
-    Verifier list and capability pages.
-  </Card>
-  <Card title="Billing" icon="credit-card" href="./platform/billing">
-    Payers, x402.
-  </Card>
+ <Card title="Get started" icon="book" href="./get-started">
+ Account, app setup, first loop.
+ </Card>
+ <Card title="Universal identity" icon="users" href="./agents/overview">
+ Agents, linked accounts, MCP.
+ </Card>
+ <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
+ Hosted UX.
+ </Card>
+ <Card title="Verification results" icon="receipt" href="./platform/receipts-and-results">
+ IDs, visibility, reuse.
+ </Card>
+ <Card title="Security and trust" icon="lock" href="./platform/security-and-trust">
+ Privacy defaults and modes.
+ </Card>
+ <Card title="API" icon="terminal" href="./api/overview">
+ Advanced HTTP integration.
+ </Card>
+ <Card title="Verifiers" icon="list-tree" href="./verification/verifiers">
+ Capability reference.
+ </Card>
+ <Card title="Billing" icon="credit-card" href="./platform/billing">
+ App setup and who pays.
+ </Card>
 </CardGroup>

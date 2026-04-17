@@ -1,6 +1,6 @@
 # React + VerifyGate (Vite)
 
-**Drop a gate around any React surface**—claims, premium content, admin tools—without hand-rolling wallet modals and verifier-specific forms. Users who pass get a **`proofId`**: **store it**, then **`gateCheck`** or **`VerifyGate`** for that policy—a proof id is **not** a session token or bearer credential.
+**Drop a gate around any React surface** - claims, premium content, admin tools - without hand-rolling wallet modals and verifier-specific forms. Users who pass get a **`proofId`**: **store it**, then **`gateCheck`** or **`VerifyGate`** for that policy - a proof id is **not** a session token or bearer credential.
 
 Visibility defaults: [Security and trust](https://docs.neus.network/platform/security-and-trust).
 
@@ -35,4 +35,4 @@ export default function Page() {
 }
 ```
 
-[Get started](https://docs.neus.network/get-started) · [Integration](https://docs.neus.network/integration) · [Quickstart](https://docs.neus.network/quickstart)
+[Get started](https://docs.neus.network/get-started) | [Integration](https://docs.neus.network/integration) | [Quickstart](https://docs.neus.network/quickstart)

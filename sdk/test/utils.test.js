@@ -42,8 +42,9 @@ describe('Utils', () => {
       const message = constructVerificationMessage(params);
 
       expect(typeof message).toBe('string');
-      expect(message).toContain('NEUS Verification Request');
-      expect(message).toContain('0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db');
+      expect(message).toContain('Portable Proof Verification Request');
+      expect(message).toContain('\nChain: 84532\n');
+      expect(message).toContain('0x742d35cc6634c0532925a3b8d82ab78c0d73c3db');
       expect(message).toContain('1678886400000');
       expect(message).toContain('ownership-basic');
     });

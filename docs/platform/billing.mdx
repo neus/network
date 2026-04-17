@@ -1,65 +1,63 @@
 ---
 title: Billing and Credits
-description: Who pays—sponsors, wallets, x402.
+description: App setup, credits, and who pays for verification.
 icon: credit-card
 ---
 
-Onboarding: [Get started](../get-started). Here: **payer order**, sponsors, **x402**.
+Start with [Get started](../get-started). This page covers **credits**, **who pays**, and **x402**.
 
-**Shipped products:** org pays (credits + sponsor grants). Users aren’t asked to fund credits first. Self-pay + x402 → [x402](./x402).
+**Default:** you configure the app in **app setup** (org credits, caps). Users see Hosted Verify or your UI, not billing internals. Self-pay and **x402**: [x402](./x402).
 
-## Charges
+## `appId` and credits
 
-**`appId`** labels traffic to your app (**attribution**). It does **not** choose the payer by itself.
+**`appId`** tells NEUS which app the traffic belongs to. It **does not** move money by itself.
 
-Who pays: sponsor grant (best for customers) → signing wallet → x402 → limits. No sponsor → signer may pay—fine for dev; use sponsors for customer traffic.
+## Who pays
+
+1. **Customer traffic (typical product):** pass **`sponsorGrant`** on the SDK with **`appId`** so charges debit **your** org credits. [Platform setup](./setup).
+2. **No sponsor:** the **signing wallet’s** NEUS balance is used when a call is billable. Fine for development; not what you want for anonymous production volume.
+3. **HTTP 402:** pay via **x402**, then retry with **`PAYMENT-SIGNATURE`**. [x402](./x402).
+
+NEUS resolves the payer from the **request** (sponsor grant, signer, payment header). You cannot “bill by `appId`” with `appId` alone in the body.
 
 ## Who you are
 
-|  | Billing |
+| | Billing |
 |--|---------|
-| **Product** | You pay: sponsors + org credits. Users see hosted verify / your UI. |
+| **Product** | Org credits + **`sponsorGrant`** so usage hits **your** balance. |
 | **Solo** | Your credits (or x402). `appId` optional. |
 
-Same SDK/API—different funder.
+## Bill customer traffic to your org
 
-## You pay for users
-
-1. App + org credits.
-2. Short-lived **sponsor grant** so usage hits **your** balance.
-3. `new NeusClient({ appId, sponsorGrant })` so both values are sent on SDK calls.
+1. App + org credits in [app setup](./setup).
+2. Short-lived **`sponsorGrant`** tied to your org.
+3. `new NeusClient({ appId, sponsorGrant })` on SDK calls.
 
 [Platform setup](./setup)
 
 <Warning>
-Heavy anonymous checks without a payer ≠ production. No sponsor / no session → dev or tiny volume only.
+High-volume anonymous checks without a sponsor or session are for **dev or tiny volume** only.
 </Warning>
 
 ## Individuals
 
-1. Hosted verify or SDK + your wallet.
+1. Hosted verify or SDK with **your** wallet.
 2. Your NEUS balance.
-3. HTTP 402 → x402 + `PAYMENT-SIGNATURE` → [x402](./x402)
+3. On **402**, complete x402. [x402](./x402)
 
-## Payer order
-
-Paid receipt → sponsor grant → gate owner (if set) → signing wallet → x402 → payment required.
-
-Not: “bill this `appId`” in the body—payer comes from session/crypto.
-
-## SDK
+## SDK fields
 
 | Field | Role |
 |-------|------|
-| `appId` | App attribution on requests |
-| `sponsorGrant` | Bill your org for this session |
-| `paymentSignature` | Reply after an x402 payment challenge |
+| `appId` | App attribution |
+| `sponsorGrant` | Bill your org for this client/session |
+| `paymentSignature` | After an x402 challenge |
 
-SDK doesn’t auto-pay x402—you retry after payment or keep credits healthy.
+The SDK does not auto-pay x402: retry after payment or keep credits healthy.
 
 ## Visibility vs billing
 
-Public / unlisted: eligibility without login. Private: visibility rules—not the same as who pays.
+Public or unlisted proofs can be **checked** without login. **Who can see** a proof is separate from **who pays**.
 
 ## Related
 
@@ -68,7 +66,7 @@ Public / unlisted: eligibility without login. Private: visibility rules—not th
     Pay when credits run out.
   </Card>
   <Card title="Platform setup" icon="building" href="./setup">
-    Apps, sponsors.
+    Apps, domains, org.
   </Card>
   <Card title="Security" icon="lock" href="./security-and-trust">
     Privacy defaults.
@@ -77,5 +75,3 @@ Public / unlisted: eligibility without login. Private: visibility rules—not th
     Client.
   </Card>
 </CardGroup>
-
-**App owner pays everything** = sponsors + org credits—not `appId` alone.

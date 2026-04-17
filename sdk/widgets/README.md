@@ -1,6 +1,6 @@
 # NEUS Widgets
 
-**Proof-aware React components** (VerifyGate, ProofBadge) so your UI can show verified state and gate content **using the same checks your server already trusts**—avoid re-implementing verifier rules only in the browser.
+**Proof-aware React components** (VerifyGate, ProofBadge) so your UI can show verified state and gate content **using the same checks your server already trusts** - avoid re-implementing verifier rules only in the browser.
 
 ## Install
 

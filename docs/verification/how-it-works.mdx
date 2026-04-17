@@ -1,16 +1,18 @@
 ---
 title: How Verification Works
-description: From request to receipt id.
+description: From request to saved verification ID.
 icon: shield-check
 ---
 
-<Frame caption="Verify once → receipt id → reuse everywhere.">
+<Frame caption="Verify once, save the id, reuse for checks and gates.">
   <img
     className="neus-how-it-works-diagram"
     src="/images/how-it-works.png"
-    alt="Verification flow: receipt id reused across apps, agents, APIs"
+    alt="Flow: one verification ID reused across apps and APIs"
   />
 </Frame>
+
+Loop detail: [Integration](../integration).
 
 ## Stages
 
@@ -18,14 +20,11 @@ icon: shield-check
   <Step title="Start">
     Hosted `/verify`, SDK, or API.
   </Step>
-  <Step title="Complete">
-    Signature, hosted step, human flow, or on-chain lookup—per verifier.
+  <Step title="Finish">
+    Per verifier: sign, hosted step, lookup, etc.
   </Step>
-  <Step title="NEUS verifies">
-    Some instant; some async (poll status).
-  </Step>
-  <Step title="Receipt id">
-    Save it—proof pages, checks, policy, profile.
+  <Step title="Save id">
+    Store **`proofId`** / **`qHash`** - [Verification results](../platform/receipts-and-results).
   </Step>
 </Steps>
 
@@ -35,29 +34,29 @@ icon: shield-check
 |------|------|
 | Hosted `/verify` | Login, OAuth, human, org |
 | SDK | Product-controlled flows |
-| Raw HTTP | Server-only / advanced |
-| Gate check | `GET /api/v1/proofs/check` — eligibility only |
+| Raw HTTP | Advanced / server-only |
+| Gate check | `GET /api/v1/proofs/check` |
 
 ## You get
 
-- Response + status  
-- Hosted handoff when needed  
-- Poll endpoint when async  
-- **Receipt id** to reuse  
+- Response + status
+- **`hostedVerifyUrl`** when a browser step is required
+- Poll when async
+- **Verification id** to store
 
 ## Related
 
 <CardGroup cols={2}>
+  <Card title="Integration" icon="compass" href="../integration">
+    Check, verify, save, reuse.
+  </Card>
+  <Card title="Verification results" icon="receipt" href="../platform/receipts-and-results">
+    proofId / qHash.
+  </Card>
   <Card title="Lifecycle" icon="rotate" href="./lifecycle">
     Poll, reuse, revoke.
   </Card>
-  <Card title="Signing" icon="file-signature" href="./signing-format">
-    Wallet message.
-  </Card>
   <Card title="Verifiers" icon="list-tree" href="./verifiers">
     Pick capability.
-  </Card>
-  <Card title="API" icon="terminal" href="../api/overview">
-    HTTP.
   </Card>
 </CardGroup>

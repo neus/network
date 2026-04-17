@@ -8,16 +8,16 @@ Default strategy: **`reuse-or-create`**.
 
 ## Privacy
 
-`client.verify()` → **private** stored receipts. VerifyGate create → **unlisted public**. Full matrix: [Security and trust](../platform/security-and-trust)
+`client.verify()` defaults to **private** stored results. VerifyGate create defaults to **unlisted public**. Full matrix: [Security and trust](../platform/security-and-trust)
 
 | Option | When |
 |--------|------|
 | `privacyLevel: 'private'` | SDK default; owner / authorized session |
 | `privacyLevel: 'public'` | Checks without owner session; pair with `publicDisplay` |
-| `publicDisplay: false` | Unlisted — still public to anyone with id |
+| `publicDisplay: false` | Unlisted - still public to anyone with id |
 | `publicDisplay: true` | Listed / discoverable (needs `public`) |
 
-`storeOriginalContent: false` — hash-first when your verifier/policy allows.
+`storeOriginalContent: false` - hash-first when your verifier/policy allows.
 
 Unlisted gate example:
 
@@ -41,7 +41,7 @@ options: {
 
 ## Fresh
 
-High-stakes actions — force new proof:
+High-stakes actions - force new proof:
 
 ```jsx
 <VerifyGate strategy="fresh" requiredVerifiers={['ownership-basic']}>
@@ -87,10 +87,10 @@ const result = await client.gateCheck({
 ## Next
 
 <CardGroup cols={2}>
-  <Card title="VerifyGate" icon="object-group" href="../widgets/verifygate">
-    Props.
-  </Card>
-  <Card title="Integration" icon="compass" href="../integration">
-    Loop.
-  </Card>
+ <Card title="VerifyGate" icon="object-group" href="../widgets/verifygate">
+ Props.
+ </Card>
+ <Card title="Integration" icon="compass" href="../integration">
+ Loop.
+ </Card>
 </CardGroup>

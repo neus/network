@@ -1,0 +1,41 @@
+---
+description: network repo public docs - portable proof, proof receipts, Hosted Verify first; professional formatting; no protocol terminology churn
+globs: "**/*.{md,mdx}"
+alwaysApply: false
+---
+
+# NEUS network — public documentation positioning
+
+Applies to the **network** repository (`docs/`, root `README.md`, `AGENTS.md`, `sdk/README.md`, `examples/**`, `mcp/README.md`).
+
+## Lead with
+
+**Open trust infrastructure** and **portable proof**: verify once, get a **proof receipt**, reuse across apps, agents, APIs, and billing. **Hosted Verify** for the default human flow. **Check** before re-verifying.
+
+## Do not lead with
+
+Verifier catalog as hero for simple flows, preset/pack jargon for single-check integrations, operator-only billing mechanics on landing copy, or abstract protocol lectures.
+
+## Terms (accurate, not churned)
+
+- **Product prose:** portable proof, proof receipt, trust that travels, verify once / reuse.
+- **Wire / code:** **`proofId`**, **`qHash`**, and schema field names exactly as shipped - **no bulk renames** for tone.
+- It is **correct** to use **proof receipt** and **`proofId`** in the same doc when you explain the mapping once.
+
+## Hard ban
+
+Do **not** mass-replace **proof receipt**, **portable proof**, **verification ID**, **`proofId`**, or **`qHash`** across docs unless there is an explicit, scoped product decision. Protocol public copy is **stabilized**.
+
+## Copy bar
+
+One tight sentence after the title when possible. No filler. If a sentence does not help a builder ship, cut it.
+
+**Typography:** ASCII ` - ` for asides, not em dash. No middle dot in headings/body. Do not use `|` as a list separator inside table cells or card bodies.
+
+## Billing
+
+Frame as **app-owned** via **app setup**. Deep pages: **`appId`**, **`sponsorGrant`**, signer balance, **402 / x402**.
+
+## Agent SSOT
+
+Full playbook: `.cursor/agents/neus-network-docs-positioning.md`

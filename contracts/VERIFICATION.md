@@ -2,7 +2,7 @@
 
 Verified smart contract deployments with explorer links.
 
-## Hub Chain (Base Sepolia - 84532)
+## On-chain registry (Base Sepolia testnet, chain 84532)
 
 | Contract | Address | Explorer |
 |----------|---------|----------|
@@ -29,7 +29,7 @@ No mainnet token. NEUSToken listed here is testnet-only (MIT) on Base Sepolia.
 ## Contract ABIs
 
 - [`../abis/NEUSVerifierRegistry.json`](../abis/NEUSVerifierRegistry.json)
-- [`../abis/NEUSVoucherHub.json`](../abis/NEUSVoucherHub.json)  
+- [`../abis/NEUSVoucherHub.json`](../abis/NEUSVoucherHub.json) 
 - [`../abis/NEUSVoucherSpoke.json`](../abis/NEUSVoucherSpoke.json)
 - [`../abis/NEUSToken.json`](../abis/NEUSToken.json)
 
@@ -38,6 +38,6 @@ No mainnet token. NEUSToken listed here is testnet-only (MIT) on Base Sepolia.
 - [`NEUSVerifierRegistry.sol`](./NEUSVerifierRegistry.sol) - Main verification registry
 - [`NEUSVoucherHub.sol`](./NEUSVoucherHub.sol) - Cross-chain hub
 - [`NEUSVoucherSpoke.sol`](./NEUSVoucherSpoke.sol) - Cross-chain spoke
-- [`NEUSToken.sol`](./NEUSToken.sol) - Protocol token
+- [`NEUSToken.sol`](./NEUSToken.sol) - NEUS token (testnet)
 - [`INEUSVerifierRegistry.sol`](./INEUSVerifierRegistry.sol) - Registry interface
 - [`IVoucherHub.sol`](./IVoucherHub.sol) - Hub interface

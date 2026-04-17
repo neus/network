@@ -4,22 +4,11 @@ description: Terms, verifier types, responses.
 icon: file-signature
 ---
 
-Full flow: [How it works](./how-it-works). Here: vocabulary and shapes.
-
-## Loop
-
-```
-Check → Verify → Save → Reuse
-```
-
-1. **Check** — still valid for policy?  
-2. **Verify** — hosted, SDK, or API  
-3. **Save** — receipt id  
-4. **Reuse** — gates, pages, agents, MCP  
+How it fits together: [How it works](./how-it-works). **Loop:** [Integration](../integration) (check, verify, save, reuse).
 
 ## Outcomes
 
-|  | Examples |
+| | Examples |
 |--|----------|
 | Identity | Login, social, team |
 | Ownership | Content, files, authorship |
@@ -39,7 +28,7 @@ Check → Verify → Save → Reuse
 
 | Term | Meaning |
 |------|---------|
-| Proof receipt id | Stable id — [Receipts](../platform/receipts-and-results) |
+| Verification id | Stable id after verify - [Results](../platform/receipts-and-results) |
 | Verifier | Capability checked |
 | Signing string | Wallet message |
 | Hosted verify | `/verify` UI |
@@ -48,9 +37,9 @@ Direct-sign **or** hosted. Visibility: [Security and trust](../platform/security
 
 ## Response
 
-- `proofId`  
-- `status`: verified · processing · failed  
-- Page: `https://neus.network/proof/[proof-id]`  
+- `proofId`
+- `status`: verified, processing, failed
+- Page: `https://neus.network/proof/[proof-id]`
 
 ## Next
 

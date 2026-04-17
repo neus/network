@@ -1,6 +1,6 @@
 ---
 title: Security and Trust
-description: Public, unlisted, and private proofs—one decision page.
+description: Public, unlisted, and private proofs - one decision page.
 icon: user-shield
 ---
 
@@ -8,7 +8,7 @@ Pick visibility here. Short guides link in for defaults.
 
 ## Boundaries
 
-- Issuance happens in **NEUS**—not “trust the browser alone.”
+- Issuance happens in **NEUS** - not “trust the browser alone.”
 - Return **only** what your product needs from checks.
 - **Private** reads need the owner signed in (or your sharing rules).
 
@@ -20,7 +20,7 @@ Pick visibility here. Short guides link in for defaults.
 | Unlisted public | `public` | `false` | Gates, reuse, not listed |
 | Owner-only | `private` | `false` | Owner auth |
 
-Receipt ids are capability-bearing links for the mode you chose.
+Saved **verification IDs** are capability-bearing links for the mode you chose.
 
 `privacyLevel`: vaulted vs checkable without sign-in. `publicDisplay`: listed vs not. Unlisted public still works for anyone with the id.
 
@@ -35,32 +35,32 @@ Override with `proofOptions` when you need listed public or stricter private.
 
 ## storeOriginalContent
 
-|  | Effect |
+| | Effect |
 |--|--------|
 | `true` (default) | Keep content context for verification. |
-| `false` | Hash-first where your verifier allows—know the tradeoff. |
+| `false` | Hash-first where your verifier allows - know the tradeoff. |
 
 ## Never ship publicly
 
-Raw signatures · owner-only payloads · private proof enumeration
+Raw signatures, owner-only payloads, private proof enumeration.
 
 ## Checklist
 
 <Checklist>
-  <Item>Decide access with gate checks.</Item>
-  <Item>Respect verifier time windows.</Item>
-  <Item>Interactive flows via `/verify`.</Item>
-  <Item>Verifier list from live API catalog.</Item>
-  <Item>Set visibility for raw SDK; know VerifyGate defaults.</Item>
+ <Item>Decide access with gate checks.</Item>
+ <Item>Respect verifier time windows.</Item>
+ <Item>Interactive flows via `/verify`.</Item>
+ <Item>Verifier list from live API catalog.</Item>
+ <Item>Set visibility for raw SDK; know VerifyGate defaults.</Item>
 </Checklist>
 
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="Proof receipts" icon="receipt" href="./receipts-and-results">
-    Save ids.
-  </Card>
-  <Card title="Integration" icon="compass" href="../integration">
-    Loop.
-  </Card>
+ <Card title="Verification results" icon="receipt" href="./receipts-and-results">
+ Save ids.
+ </Card>
+ <Card title="Integration" icon="compass" href="../integration">
+ Loop.
+ </Card>
 </CardGroup>

@@ -4,9 +4,9 @@ description: DNS, org verify, apps, sponsors.
 icon: building
 ---
 
-After [Get started](../get-started) and [Integration](../integration): **domains**, **org**, **apps**, **sponsors**. Receipts / privacy: [Proof receipts](./receipts-and-results) · [Security and trust](./security-and-trust)
+After [Get started](../get-started) and [Integration](../integration): **domains**, **org**, **apps**, **sponsors**. Results / privacy: [Verification results](./receipts-and-results) | [Security and trust](./security-and-trust)
 
-[Hub](https://neus.network/hub) for profile, apps, credits.
+[Dashboard](https://neus.network/hub) - profile, apps, credits.
 
 ## DNS domain
 
@@ -28,16 +28,16 @@ const proof = await client.verify({
 });
 ```
 
-Confirm the proof the same way your app will before opening a gate—for example from the Hub, or with the check step in [Integration](../integration).
+Confirm proofs the same way your app will before gating - e.g. [Dashboard](https://neus.network/hub) or the check step in [Integration](../integration).
 
 ## Organization
 
-Google Workspace / Microsoft 365 → hosted verify; NEUS runs OAuth.
+Google Workspace / Microsoft 365 to hosted verify; NEUS runs OAuth.
 
 1. `https://neus.network/verify`
 2. `preset=org-pack` when membership alone is enough
 3. `returnUrl` or popup
-4. Store receipt id
+4. Store **verification ID**
 
 ```text
 https://neus.network/verify?preset=org-pack&returnUrl=https://app.example.com/verified
@@ -65,9 +65,9 @@ You rarely need your own Google/Microsoft OAuth app.
 
 ## Link app
 
-|  |  |
+| | |
 |--|--|
-| 1 | In Hub, link your app |
+| 1 | In Dashboard to Apps, link your app |
 | 2 | App domain |
 | 3 | Daily credit cap |
 | 4 | Lock **Origin** in prod |
@@ -75,14 +75,14 @@ You rarely need your own Google/Microsoft OAuth app.
 
 ## Attribution
 
-`appId` is public—not secret. The SDK attaches it on your behalf when you construct the client with your id.
+`appId` is public - not secret. The SDK attaches it on your behalf when you construct the client with your id.
 
 ```javascript
 const client = new NeusClient({ appId: 'your-app-id' });
 ```
 
 <Card title="Billing" icon="credit-card" href="./billing">
-  Credits and sponsors.
+ Credits and sponsors.
 </Card>
 
 ## Sponsor grants
@@ -95,21 +95,21 @@ new NeusClient({ appId: 'your-app-id', sponsorGrant: '<token>' });
 Short-lived tokens. Re-issue per session. No long-lived secrets in client bundles.
 </Warning>
 
-Hosted UX: [Hosted Verify](../cookbook/auth-hosted-verify) · [Integration](../integration)
+Hosted UX: [Hosted Verify](../cookbook/auth-hosted-verify) | [Integration](../integration)
 
 ## Related
 
 <CardGroup cols={2}>
-  <Card title="Get started" icon="book" href="../get-started">
-    Onboarding.
-  </Card>
-  <Card title="Proof receipts" icon="receipt" href="./receipts-and-results">
-    Save ids.
-  </Card>
-  <Card title="Security" icon="lock" href="./security-and-trust">
-    Visibility.
-  </Card>
-  <Card title="Billing" icon="credit-card" href="./billing">
-    Payers.
-  </Card>
+ <Card title="Get started" icon="book" href="../get-started">
+ Onboarding.
+ </Card>
+ <Card title="Verification results" icon="receipt" href="./receipts-and-results">
+ Save ids.
+ </Card>
+ <Card title="Security" icon="lock" href="./security-and-trust">
+ Visibility.
+ </Card>
+ <Card title="Billing" icon="credit-card" href="./billing">
+ Payers.
+ </Card>
 </CardGroup>

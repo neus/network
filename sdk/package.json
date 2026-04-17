@@ -1,7 +1,7 @@
 {
   "name": "@neus/sdk",
   "version": "1.0.4",
-  "description": "Verify once. Get a receipt. Reuse it everywhere. Open SDK for portable NEUS proof receipts across apps, APIs, gates, and agents.",
+  "description": "Verify once, store a verification ID, reuse it across apps, APIs, gates, and agents.",
   "bin": {
     "neus": "./cli/neus.mjs"
   },
@@ -84,6 +84,7 @@
     "node": ">=20.0.0"
   },
   "peerDependencies": {
+    "@zkpassport/sdk": "0.12.5",
     "ethers": "^6.0.0",
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0"
@@ -100,7 +101,7 @@
     }
   },
   "optionalDependencies": {
-    "@zkpassport/sdk": ">=1.0.0"
+    "@zkpassport/sdk": "0.12.5"
   },
   "dependencies": {
     "bs58": "^6.0.0"
@@ -111,16 +112,6 @@
     "eslint": "^8.56.0",
     "prettier": "^3.2.0",
     "vitest": "^4.1.3"
-  },
-  "overrides": {
-    "vite": {
-      "esbuild": "0.28.0"
-    },
-    "rollup": "4.60.1",
-    "flatted": "3.4.2",
-    "minimatch": "3.1.4",
-    "brace-expansion": "1.1.13",
-    "ajv": "6.14.0"
   },
   "files": [
     "cli/neus.mjs",
