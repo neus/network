@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "NEUS Network — Public Integrator API",
+    "title": "NEUS API — Public Integrator API",
     "version": "1.0.0",
     "description": "Public HTTP API for NEUS integrators.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).\n\nSome verifiers require pro access. Administrative endpoints are not included in this specification.",
     "license": {
@@ -73,6 +73,7 @@
       },
       "StandardizeRequest": {
         "type": "object",
+        "description": "Phase 1 of the raw HTTP verification handshake. Send the exact JSON body you intend to submit for verification. The returned signerString is the only valid message to sign for that body.",
         "required": [
           "walletAddress",
           "verifierIds",
@@ -81,7 +82,8 @@
         ],
         "properties": {
           "walletAddress": {
-            "type": "string"
+            "type": "string",
+            "description": "Signer wallet address. Must be the same wallet that signs the returned signerString and the same walletAddress later submitted to POST /api/v1/verification."
           },
           "verifierIds": {
             "type": "array",
@@ -117,15 +119,16 @@
             ]
           },
           "signedTimestamp": {
-            "type": "number"
+            "type": "number",
+            "description": "Unix ms timestamp that becomes part of the signerString. For raw HTTP, reuse this exact value unchanged when later submitting POST /api/v1/verification."
           },
           "chainId": {
             "type": "integer",
-            "description": "Advanced/optional. EVM signing-context hint; auto-resolved to the protocol hub chain when omitted. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
+            "description": "Advanced/optional. EVM signing-context hint; when omitted, the API applies its default signing chain. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
           },
           "chain": {
             "type": "string",
-            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; the protocol resolves hub context automatically."
+            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets typically omit this; defaults apply for signing context."
           },
           "signatureMethod": {
             "type": "string"
@@ -135,6 +138,7 @@
       },
       "StandardizeResponse": {
         "type": "object",
+        "description": "Phase 1 response for raw HTTP verification. Sign data.signerString exactly as returned, then submit the same request body plus signature to POST /api/v1/verification.",
         "required": [
           "success",
           "data"
@@ -154,10 +158,12 @@
             ],
             "properties": {
               "signerString": {
-                "type": "string"
+                "type": "string",
+                "description": "Exact UTF-8 message to sign for the standardized request body. Do not hand-build or modify this string."
               },
               "bodyPreview": {
                 "type": "object",
+                "description": "Normalized preview of the standardized request. This is diagnostic only; submit the same original request body, not a body reconstructed from this preview.",
                 "additionalProperties": true
               }
             },
@@ -168,6 +174,7 @@
       },
       "VerificationRequest": {
         "type": "object",
+        "description": "Phase 2 of the raw HTTP verification handshake. For raw HTTP callers, first call POST /api/v1/verification/standardize with this same body (minus signature), sign the returned signerString, then submit this body with signature. Treat this as a continuation of the standardized request, not as an independent one-step POST.",
         "required": [
           "verifierIds",
           "data",
@@ -212,7 +219,7 @@
           },
           "walletAddress": {
             "type": "string",
-            "description": "Signer wallet address (who authenticates the request)"
+            "description": "Signer wallet address (who authenticates the request). For raw HTTP, this must match the walletAddress used during POST /api/v1/verification/standardize and the wallet that produced signature."
           },
           "subjectWallet": {
             "type": "string",
@@ -220,19 +227,19 @@
           },
           "signature": {
             "type": "string",
-            "description": "Required unless authenticated session is present"
+            "description": "Required unless authenticated session is present. For raw HTTP, sign the exact signerString returned by POST /api/v1/verification/standardize for this same request body."
           },
           "signedTimestamp": {
             "type": "number",
-            "description": "Required unless authenticated session is present"
+            "description": "Required unless authenticated session is present. For raw HTTP, this must exactly match the signedTimestamp used during POST /api/v1/verification/standardize."
           },
           "chainId": {
             "type": "integer",
-            "description": "Advanced/optional. EVM signing-context hint; auto-resolved to the protocol hub chain when omitted. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
+            "description": "Advanced/optional. EVM signing-context hint; when omitted, the API applies its default signing chain. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
           },
           "chain": {
             "type": "string",
-            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; the protocol resolves hub context automatically."
+            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets typically omit this; defaults apply for signing context."
           },
           "signatureMethod": {
             "type": "string"
@@ -1478,7 +1485,7 @@
       "get": {
         "operationId": "getVerifierCatalog",
         "summary": "Get supported verifiers and configuration",
-        "description": "Returns the public verifier catalog: supported verifier IDs, sanitized public metadata (input schemas + direct-vs-hosted capabilities), and backend chain configuration (hub chain, asset allowlists). Internal transport/provider fields are not exposed here.",
+        "description": "Returns the public verifier catalog: supported verifier IDs, sanitized metadata (input schemas and hosted-vs-direct hints), and public chain configuration (default EVM signing context, asset allowlists). Operator-only fields are omitted from this response.",
         "tags": [
           "Verification"
         ],
@@ -1503,7 +1510,8 @@
     "/api/v1/verification/standardize": {
       "post": {
         "operationId": "buildSigningString",
-        "summary": "Build the Standard Signing String",
+        "summary": "Phase 1: build the standard signing string",
+        "description": "Raw HTTP verification uses a strict two-phase handshake. First send the exact verification body here, sign the returned signerString, then submit the same body plus signature to POST /api/v1/verification.",
         "tags": [
           "Verification"
         ],
@@ -1555,7 +1563,8 @@
     "/api/v1/verification": {
       "post": {
         "operationId": "submitVerification",
-        "summary": "Submit a verification request",
+        "summary": "Phase 2: submit a verification request",
+        "description": "For raw HTTP callers, this request must continue a prior POST /api/v1/verification/standardize call using the same body and signedTimestamp. Do not treat this as a one-step schema-only POST; sign the exact signerString from phase 1 and submit that signature here.",
         "tags": [
           "Verification"
         ],
@@ -1657,7 +1666,7 @@
     "/api/v1/verification/status-batch": {
       "post": {
         "operationId": "getVerificationStatusBatch",
-        "summary": "Batch get verification status (minimal)",
+        "summary": "Batch get verification status",
         "tags": [
           "Verification"
         ],
@@ -2075,7 +2084,7 @@
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "description": "EVM chain ID of the asset being checked (e.g. 1 for Ethereum Mainnet, 8453 for Base). Required for asset verifiers (nft-ownership, token-holding, contract-ownership). Not a hub or proof-storage filter."
+              "description": "EVM chain ID of the asset being checked (e.g. 1 for Ethereum Mainnet, 8453 for Base). Required for asset verifiers (nft-ownership, token-holding, contract-ownership). Applies to asset checks only—not a generic proof-query filter."
             }
           },
           {
@@ -2256,14 +2265,6 @@
           },
           {
             "name": "sanctionsPassed",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "claimsOnly",
             "in": "query",
             "required": false,
             "schema": {

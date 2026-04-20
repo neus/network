@@ -1,7 +1,7 @@
 {
   "name": "@neus/sdk",
   "version": "1.0.4",
-  "description": "Verify once, store a verification ID, reuse it across apps, APIs, gates, and agents.",
+  "description": "Portable trust for people, apps, and agents. Store a proof ID; check gates across surfaces.",
   "bin": {
     "neus": "./cli/neus.mjs"
   },

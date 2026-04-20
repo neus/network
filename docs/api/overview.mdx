@@ -6,9 +6,9 @@ icon: terminal
 
 **Base:** `https://api.neus.network`
 
-**Billing:** Same as the SDK and MCP - [Get started](../get-started) covers `appId`, attribution, and sponsor options.
+**Billing.** [Get started](../get-started), [Billing](../platform/billing).
 
-**Create proofs:** Prefer **[Hosted Verify](../cookbook/auth-hosted-verify)**, **[SDK Quickstart](../quickstart)**, or **widgets** so users are not forced through raw signing steps. Use **HTTP** for **checks**, **reads**, and **only when you must** implement `POST /api/v1/verification` yourself.
+**Create proofs.** [Hosted Verify](../cookbook/auth-hosted-verify) at `https://neus.network/verify`, [Quickstart](../quickstart), or widgets. Use **HTTP** for checks and reads. Use `POST /api/v1/verification` only when you need raw HTTP ([Authentication](./authentication)).
 
 ## Endpoints
 
@@ -18,7 +18,7 @@ icon: terminal
 | `/api/v1/proofs/by-wallet/{address}` | GET | List by wallet |
 | `/api/v1/proofs/{qHash}` | GET | Fetch by id (`qHash` same as SDK `proofId`) |
 | `/api/v1/verification` | POST | Create proof (**advanced** - see [Authentication](./authentication)) |
-| `/api/v1/verification/standardize` | POST | Exact `signerString` for raw HTTP and **troubleshooting** |
+| `/api/v1/verification/standardize` | POST | **Mandatory phase 1** for raw HTTP: exact `signerString` for the body you will submit |
 | `/api/v1/verification/verifiers` | GET | Catalog |
 
 ## Examples
@@ -29,7 +29,7 @@ icon: terminal
 curl "https://api.neus.network/api/v1/proofs/by-wallet/0x...?limit=50"
 ```
 
-Public / unlisted: anonymous ok. **Private:** user signed in.
+Public / unlisted: anonymous ok. **Private:** requires access as the proof owner ([Authentication](./authentication)).
 
 **Check**
 
@@ -39,7 +39,14 @@ curl "https://api.neus.network/api/v1/proofs/check?address=0x...&verifierIds=own
 
 **Create a proof**
 
-Use the SDK or Hosted Verify for the default path. Raw HTTP: build the request body, call **`POST /api/v1/verification/standardize`** when you need the exact bytes to sign or after a signature error, sign `signerString`, then **`POST /api/v1/verification`** with the **same JSON body** plus `signature`. Shapes: **API reference** on the documentation site.
+For most apps, create proofs via the SDK or the hosted browser flow at `https://neus.network/verify` (**Hosted Verify**). Raw HTTP is a **strict two-phase handshake**, not a single-step request:
+
+1. Build the exact JSON body you will submit.
+2. **`POST /api/v1/verification/standardize`** with that body.
+3. Sign the returned **`signerString`**.
+4. **`POST /api/v1/verification`** with the **same JSON body** plus `signature`.
+
+If phase 2 fails with a signature error, re-run phase 1 on the same payload and compare the signer string. Shapes: **API reference** on the documentation site.
 
 **Catalog**
 
@@ -49,8 +56,8 @@ curl https://api.neus.network/api/v1/verification/verifiers
 
 ## Auth
 
-- **Reads:** public/unlisted without login; private when owner session applies.
-- **Writes:** wallet signature (or session where applicable) - [Authentication](./authentication)
+- **Reads:** public and unlisted proofs without a caller; private proofs only with allowed access.
+- **Writes:** wallet signature, or authenticated caller when the API accepts it—[Authentication](./authentication)
 
 ## Next
 

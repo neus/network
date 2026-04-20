@@ -1,7 +1,7 @@
 "use client";
 /**
  * NEUS ProofBadge Widget
- * Minimal verification badges for product UI
+ * Minimal verification badges for Platform
  *
  * Design Philosophy:
  * - Non-intrusive, tiny by default

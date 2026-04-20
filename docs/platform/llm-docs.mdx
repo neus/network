@@ -1,45 +1,49 @@
 ---
 title: LLM Docs
-description: Short reading order, MCP URL, and export URLs for assistants.
+description: Reading order, MCP URL, llms.txt, integration rules.
 icon: sparkles
 ---
 
-Docs live at **docs.neus.network** - open the linked pages for field-level detail.
+**docs.neus.network.** Read in this order for correct fields and flows.
 
-## Read this first
+## Read first
 
-1. [Home](../index) - product map 
-2. [Get started](../get-started) - app, billing, keys 
-3. [Integration](../integration) - loop 
+1. [Home](../index)
+2. [Get started](../get-started)
+3. [Integration](../integration)
+4. [JavaScript SDK](../sdks/javascript)
+5. [MCP tools](../mcp/tools)
+6. [Choose an integration path](../choose-an-integration-path)
 
-## MCP
+## MCP tool order
 
-1. `https://mcp.neus.network/mcp` - [Setup](../mcp/setup) 
-2. `neus_context` to check / verify-or-guide to open `hostedVerifyUrl` 
-3. Personal [access key](https://neus.network/profile?tab=account) for `neus_me` / vault - [Auth](../mcp/auth) 
-4. `neus_verify`: one preparation call; reuse the **same** payload when signing (do not repeat preparation)
+1. `https://mcp.neus.network/mcp`. [Setup](../mcp/setup)
+2. **`neus_context`**
+3. Bearer, then **`neus_me`** (`status: ok`). [Auth](../mcp/auth)
+4. **`neus_proofs_check`**, **`neus_verify`**, **`neus_verify_or_guide`**, agents. [Overview](../mcp/overview)
+5. **`neus_proofs_get`**. [Proofs get](../mcp/proofs-get)
 
-CLI: `npx -y -p @neus/sdk neus init` (prints connection details to the terminal)
+`npx -y -p @neus/sdk neus init` prints MCP URL and doc links (stdout only).
 
 ## Rules
 
-- Billing / `appId`: [Get started](../get-started), [Billing](../platform/billing) 
-- No in-app wallet: [Hosted Verify](../cookbook/auth-hosted-verify) 
-- Never put **wallet private keys** in MCP; use **Access keys** (profile) for account tools only 
-- Paid retries (**HTTP 402**): follow [x402](../platform/x402) 
-- Agents: [Agents](../agents/overview) 
-- Reuse saved `proofId` 
+- Billing / `appId`: [Get started](../get-started), [Billing](../platform/billing)
+- No in-app wallet: [Hosted Verify](../cookbook/auth-hosted-verify)
+- No wallet **private keys** in MCP; **Access keys** only for Bearer account tools
+- **402:** [x402](../platform/x402)
+- Agents: [Agents](../agents/overview)
+- Reuse **`proofId`**
 
 ## Exports
 
 ```bash
-curl https://docs.neus.network/llms.txt
-curl https://docs.neus.network/llms-full.txt
+# Canonical machine summary (source: `neus` repo `public/llms.txt`)
+curl https://neus.network/llms.txt
 ```
 
 ## MCP JSON
 
-Use the **`type` value your MCP client expects**; many clients accept `streamableHttp` for the hosted URL.
+**`type`** is client-specific; many accept **`streamableHttp`** for this URL.
 
 ```json
 {

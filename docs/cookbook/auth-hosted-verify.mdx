@@ -1,14 +1,14 @@
 ---
 title: Hosted Verify
-description: NEUS-hosted UI for login and interactive verification.
+description: NEUS-hosted browser flow. Store the ID and use it again on the next surface.
 icon: key
 ---
 
-**Default:** user completes steps on NEUS; your app stores the **verification ID** and **checks** before asking again ([Integration](../integration#loop)). **Billing:** [Get started](../get-started) (app setup, org credits, **`sponsorGrant`** for customer traffic).
+**Default.** The user finishes on NEUS. Your app stores the **proof ID**. **Check** before asking again. [Integration](../integration#loop). **Billing.** [Billing](../platform/billing).
 
-Build links with the SDK (`returnUrl`). After return, read the result with the SDK. Use an **access key** only when [SDK Authentication](../sdks/authentication) or [MCP Auth](../mcp/auth) says you need account scope.
+Build links with the SDK (`returnUrl`). Read the result with the SDK after return.
 
-**MCP:** `neus_context` first; verify URLs work without a key. Add a personal [access key](https://neus.network/profile?tab=account) for account tools ([MCP Auth](../mcp/auth)).
+**Automation.** [MCP](../mcp/overview). Interactive steps use this hosted URL.
 
 ## When
 
@@ -34,16 +34,18 @@ Base: `https://neus.network/verify`
 
 ## Auth surfaces
 
-Passkeys = WebAuthn in a **secure context**. Missing platform authenticator is not blocked cross-device / security-key.
+Passkeys require a **secure context** (HTTPS or localhost). Browsers may offer cross-device or security-key flows.
 
 | Surface | Passkeys | Wallet |
 |--------|----------|--------|
-| Desktop | Local, handoff, cross-device | Connect from page; QR needs a gesture |
-| Mobile / PWA | Platform manager when available | Prefer wallet app / deep link |
+| Desktop | Device passkeys, handoff, cross-device | Connect from page; QR needs a gesture |
+| Mobile / PWA | OS or browser passkey UI when available | Prefer wallet app / deep link |
 
-Use **https** or **http://localhost** with an origin that matches your NEUS profile - not raw LAN IPs.
+Use **https** or **http://localhost** with an origin that matches the app domain you configured for Hosted Verify—not raw LAN IPs.
 
-PWAs: do not cache NEUS authentication responses in your service worker.
+PWAs: do not cache Hosted Verify or login responses in your service worker.
+
+`getHostedCheckoutUrl` builds a **Hosted Verify** URL - the same `https://neus.network/verify` flow as the query-string examples below.
 
 ## Code
 
@@ -61,10 +63,8 @@ window.location.href = getHostedCheckoutUrl({
 ## Next
 
 <CardGroup cols={2}>
- <Card title="Authentication" icon="key" href="../sdks/authentication">
- Session + access keys.
- </Card>
- <Card title="Verification results" icon="receipt" href="../platform/receipts-and-results">
- Save proofId.
- </Card>
+  <Card title="Authentication" icon="key" href="../sdks/authentication">
+  </Card>
+  <Card title="Verification results" icon="receipt" href="../platform/receipts-and-results">
+  </Card>
 </CardGroup>

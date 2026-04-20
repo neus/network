@@ -1,18 +1,9 @@
 ---
 title: Context (`neus_context`)
-description: Single call for verifier catalog context, billing hints, and verification constraints.
+description: Live verifier catalog, constraints, billing hints.
 icon: database
 ---
 
-**`neus_context`** first on connect - **no** access key. Current verifiers, constraints, billing hints before verify/check/catalog calls.
+On each **new MCP connection**, call **`neus_context`** first. **No access key.** The response carries **`requiredFields`**, default chain hints, and live verifier constraints—use it before **`neus_proofs_check`**, **`neus_verify`**, or **`neus_verifiers_catalog`** so you do not rely on stale verifier IDs.
 
-## Related
-
-<CardGroup cols={2}>
- <Card title="Overview" icon="plug" href="./overview">
- Full MCP workflow.
- </Card>
- <Card title="Setup" icon="code" href="./setup">
- URL-only and optional account key.
- </Card>
-</CardGroup>
+Full playbook: [Overview](./overview).

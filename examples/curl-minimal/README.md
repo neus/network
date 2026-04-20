@@ -10,7 +10,7 @@ You get the same outcome as the SDK: a **`proofId`** you can store, look up, and
 
 ### 1. Ask the API for the exact string to sign
 
-Do not hand-assemble the signing string in production. Call `/standardize` and sign the returned `signerString`.
+Do not hand-assemble the signing string in production. Raw HTTP uses a strict two-phase handshake: call `/standardize` first, then sign the returned `signerString`.
 
 ```bash
 curl -X POST https://api.neus.network/api/v1/verification/standardize \
@@ -53,7 +53,7 @@ curl -X POST https://api.neus.network/api/v1/verification \
   }'
 ```
 
-Omit `options` to use defaults (**private**, unlisted, **original content stored**). For reusable gates without an owner session, add `options` with `privacyLevel: "public"` and `publicDisplay: false` (public unlisted; still public to anyone with the proof id). Set `storeOriginalContent: false` only for hash-only retention.
+Omit `options` to use defaults (**private**, unlisted, **original content stored**). For reusable gates without owner-authenticated access, add `options` with `privacyLevel: "public"` and `publicDisplay: false` (public unlisted; still public to anyone with the proof id). Set `storeOriginalContent: false` only for hash-only retention.
 
 **Response:**
 
@@ -71,7 +71,7 @@ Omit `options` to use defaults (**private**, unlisted, **original content stored
 ### 4. Check status
 
 ```bash
-# verification ID (`proofId`) returned by NEUS
+# proof ID (`proofId`) returned by NEUS
 curl https://api.neus.network/api/v1/proofs/0x{proofId}
 ```
 

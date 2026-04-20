@@ -62,8 +62,7 @@ jobs:
         run: npm audit --omit=dev --audit-level=high
         working-directory: sdk
 
-      # Build before pack checks so the dry-run validates the real publish artifact
-      # (widgets/verify-gate/dist/** and cjs/** are generated during build/prepack).
+      # Build before pack so dry-run matches the published tarball.
       - name: Build
         run: npm run build
         working-directory: sdk
@@ -74,15 +73,12 @@ jobs:
 
       - name: Configure npm authentication
         run: |
-          # Remove any existing npm config that might interfere
           rm -f ~/.npmrc
-          # Create .npmrc in the SDK directory (where npm publish runs)
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
           echo "registry=${{ env.NPM_REGISTRY }}" >> .npmrc
           echo "//registry.npmjs.org/:always-auth=true" >> .npmrc
-          # Verify token type and authentication
           echo "Verifying npm authentication..."
-          npm whoami --registry=${{ env.NPM_REGISTRY }} || (echo "ERROR: npm authentication failed. Ensure NPM_TOKEN is a granular access token with 'Bypass 2FA' enabled." && exit 1)
+          npm whoami --registry=${{ env.NPM_REGISTRY }} || (echo "ERROR: npm authentication failed. Configure the repository secret NPM_TOKEN for this workflow." && exit 1)
           echo "Authentication verified successfully"
         working-directory: sdk
         env:
@@ -90,7 +86,6 @@ jobs:
 
       - name: Publish @neus/sdk
         run: |
-          # Ensure we're using the .npmrc from the SDK directory
           export NPM_CONFIG_USERCONFIG="$(pwd)/.npmrc"
           npm publish --access public --provenance
         working-directory: sdk

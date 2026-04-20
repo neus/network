@@ -1,16 +1,22 @@
 ---
 title: SDK Authentication
-description: Hosted login, Bearer, signatures.
+description: Hosted flows, personal access keys for server calls, signatures.
 icon: key
 ---
 
+## Calling the REST API from your backend
+
+Use **`Authorization: Bearer`** with a personal access key **`npk_*`** from [Access keys](https://neus.network/profile?tab=account) for servers, scripts, and **MCP** ([MCP Auth](../mcp/auth)). That is how non-browser clients authenticate to the same HTTP API the SDK uses under the hood.
+
+End-user browsers normally do **not** need this—use hosted checkout and **`NeusClient`** instead.
+
 ## Hosted
 
-1. `getHostedCheckoutUrl` + `returnUrl` - [Hosted Verify](../cookbook/auth-hosted-verify) 
-2. User finishes on **neus.network** 
-3. Finish session with `@neus/sdk`; Bearer on API as needed 
+1. `getHostedCheckoutUrl` + `returnUrl` - [Hosted Verify](../cookbook/auth-hosted-verify)
+2. User finishes on **neus.network**
+3. Continue in your app with the proof result; for **server-to-API** calls, use **`npk_*`** as in [API authentication](../api/authentication).
 
-[Access keys](https://neus.network/profile?tab=account) to `Authorization: Bearer` on API/MCP (same header). MCP: [Auth](../mcp/auth) (`neus_me`)
+[Access keys](https://neus.network/profile?tab=account) → `Authorization: Bearer` on API/MCP. MCP: [Auth](../mcp/auth) (`neus_me`).
 
 ## In-app verify (default)
 

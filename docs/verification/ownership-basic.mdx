@@ -1,38 +1,35 @@
 ---
 title: Ownership and Provenance
-description: Wallet-signed claim bound to content, hash, or reference. Reusable verification ID.
+description: Wallet-signed content, hash, or reference. Storage and retrieval.
 icon: wallet
 ---
 
 **Verifier ID:** `ownership-basic`
 
-Direct-sign (SDK, API, or `VerifyGate` with wallet). Not hosted-only. Visibility: [Security and trust](../platform/security-and-trust).
+Instant proof: SDK, API, or `VerifyGate` with a wallet. Visibility: [Security and trust](../platform/security-and-trust).
 
-## Best For
+## Best for
 
 - Content and file provenance
 - Authorship and licensing claims
-- Portable **verification IDs** (listings, bounties, submissions)
+- Portable verification IDs (listings, bounties, submissions)
 
-## Flow Type
-
-Instant - signer creates the proof after signing the standardized request.
-
-## What You Configure
+## Payload
 
 | Field | Required | Notes |
 |------|----------|-------|
 | `owner` | Yes | Must match signer |
-| `content` | No | Short human-readable claim |
-| `contentHash` | No | Large or external content |
-| `reference` | No | URL, IPFS, tx, contract, etc. |
-| `provenance` | No | Human / AI / mixed context |
+| `content` | No | **Include to persist text** in `proof.publicContent` (same object on standardize + submit; max 50k chars). Omit only if you want hash/reference-only. |
+| `contentHash` | No | Pre-hashed body; verifier can integrity-check against `content` if both sent |
+| `reference` | No | Pointer (URL, IPFS, tx, file id, …). Server does not fetch it. Send `content` if you need bytes stored. |
+| `provenance` | No | Human / AI / mixed (advisory) |
 
-Use `content` for small text; `contentHash` or `reference` for large or off-chain artifacts.
+## Persisting text (`publicContent`)
 
-## What You Get Back
-
-Verification id. Reuse for pages, gates, and checks.
+- Stored bytes live in **`proof.publicContent.content`** (field name is historical; visibility is `options.privacyLevel`).
+- **Private** and **unlisted public** (`privacyLevel=public`, `publicDisplay=false`): originals are stored **by default** when `data.content` is present. Opt out: `options.storeOriginalContent: false`.
+- **Feed-discoverable** (`privacyLevel=public`, `publicDisplay=true`): **hash-first by default**; set `options.storeOriginalContent: true` to store full text in listings-capable proofs.
+- API responses keep long text out of `verifiedVerifiers[].data` (compact allowlist); use **`publicContent`** for the body.
 
 ## Example
 
@@ -47,6 +44,6 @@ Verification id. Reuse for pages, gates, and checks.
 }
 ```
 
-## Content retrieval
+## Retrieval
 
-Resolution needs either stored `publicContent.content` or a stable `reference`. Same signed-in user can resolve private content without extra params. Response includes `contentResolutionStatus`: `resolved` or `hash_only_not_recoverable`.
+For proofs that expose content, responses can return stored `publicContent.content` or rely on a stable `reference`. Responses may include `contentResolutionStatus`: `resolved` or `hash_only_not_recoverable`.

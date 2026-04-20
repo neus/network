@@ -1,98 +1,35 @@
 ---
-title: Get started
-description: Account, app setup, billing, and your first verification loop.
+title: Get started with NEUS
+description: Account, linked app, first verification loop.
 icon: book
 ---
 
-<Note>
-**Default path:** [Hosted Verify](./cookbook/auth-hosted-verify) for end users. Store the **verification ID** and **[check](./integration#loop)** before asking them to verify again. Configure **app setup** (app, credits, caps) so usage attributes cleanly - see [Choose who pays](#choose-who-pays).
-</Note>
+NEUS gives you portable **verification IDs**. **Save** the ID. **Check** it before starting another verification. **Use** it again on the next surface for gates and decisions. [Integration](./integration).
 
-One **verification ID** powers gates, checks, and profile surfaces. [Verification results](./platform/receipts-and-results) - [Security and trust](./platform/security-and-trust)
+## 1. Sign in to NEUS
 
-| Topic | Reference |
-|-------|-----------|
-| Check before re-verifying | [Integration](./integration#loop) |
-| App billing | [Choose who pays](#choose-who-pays) |
-| Sample repositories | [Examples](./examples) |
+[Open your account](https://neus.network/hub) with passkey or wallet. Complete your profile so **Apps** and **Credits** are available.
 
-## 1. Account
+## 2. Link your app
 
-1. [Hub](https://neus.network/hub) - passkey or wallet.
-2. Finish profile so **Apps**, **Credits**, and **Access keys** are available.
+[Platform setup](./platform/setup). Domain, caps, **`appId`**. Traffic ties to your billing profile.
 
-## 2. First loop
+## 3. Run your first loop
 
-Browser-friendly verification to [Hosted Verify](./cookbook/auth-hosted-verify). First SDK wallet sign to [Quickstart](./quickstart). Loop to [Integration](./integration).
+1. **Hosted checkout.** [Hosted Verify](./cookbook/auth-hosted-verify). `https://neus.network/verify`
+2. **SDK.** [Quickstart](./quickstart)
 
-## 3. Org setup
+**Billing.** Credits on your linked profile. Then [x402](./platform/x402). Optional visitor charges: [payment gates](./platform/payment-gates). [Billing](./platform/billing).
 
-DNS, org OAuth, apps to [Platform setup](./platform/setup) once the loop is clear.
-
-## Launch checklist
-
-**App**, **who pays**, **access key** (only for account-scoped API/MCP). [Billing](./platform/billing) | [Platform setup](./platform/setup)
-
-### Create an app
-
-1. [Apps](https://neus.network/profile?tab=apps) to **Link app** / **Manage app**.
-2. **App domain** + **daily credit cap**.
-
-You get an `appId`; pass it into the SDK so NEUS can attribute usage to your app.
-
-```javascript
-import { NeusClient } from '@neus/sdk';
-
-const client = new NeusClient({
-  appId: 'your-app-id',
-});
-```
-
-`appId` is attribution. Tie it to **your org billing** in app setup; use a **sponsor grant** on SDK calls when you want customer traffic to bill your balance - [Billing](./platform/billing).
-
-### Choose who pays
-
-**Typical product:** org credits plus a short-lived **`sponsorGrant`** on the SDK so customer sessions debit **your** balance, not the end user. [Platform setup](./platform/setup)
-
-**Self-serve:** user credits or x402 (no sponsor).
-
-```javascript
-const client = new NeusClient({
-  appId: 'your-app-id',
-  sponsorGrant: '<sponsor-grant-token>',
-});
-```
-
-### Access keys
-
-[Access keys](https://neus.network/profile?tab=account) when a tool or script needs to act on **your** account (for example certain MCP tools). Create a key only after the product returns **`auth_required`**. [MCP Auth](./mcp/auth)
-
-Never ship this key in the browser. Users use Hosted Verify, not your personal key.
-
-### Checklist
-
-- [ ] App + realistic daily cap
-- [ ] Credits aligned to your payer model
-- [ ] Billing matches your model: `appId` + `sponsorGrant` for org-paid customer traffic; otherwise the signer pays ([Billing](./platform/billing))
-- [ ] Team read [Billing](./platform/billing) and [x402](./platform/x402)
-- [ ] Verification IDs stored and reused ([Verification results](./platform/receipts-and-results))
-
-## Related
+## Next
 
 <CardGroup cols={2}>
- <Card title="Agents (portable identity)" icon="robot" href="./agents/overview">
- Profile surfaces, shareable URLs, MCP lookup for chat and IDE clients.
- </Card>
- <Card title="Billing" icon="credit-card" href="./platform/billing">
- App setup, credits, who pays, x402.
- </Card>
- <Card title="Platform setup" icon="building" href="./platform/setup">
- Domains, org, apps, sponsors.
- </Card>
-  <Card title="Integration" icon="compass" href="./integration">
-    Check, verify, save, reuse.
+  <Card title="Platform setup" icon="building" href="./platform/setup">
   </Card>
- <Card title="Security and trust" icon="lock" href="./platform/security-and-trust">
- Who can see verification results and how visibility works.
- </Card>
+  <Card title="Billing" icon="credit-card" href="./platform/billing">
+  </Card>
+  <Card title="Integration" icon="compass" href="./integration">
+  </Card>
+  <Card title="Choose a surface" icon="route" href="./choose-an-integration-path">
+  </Card>
 </CardGroup>

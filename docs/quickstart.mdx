@@ -1,10 +1,10 @@
 ---
 title: Quickstart (SDK)
-description: First ownership-basic verification with the JavaScript SDK.
+description: First proof in minutes with the JavaScript SDK.
 icon: rocket
 ---
 
-Wallet **`ownership-basic`**. Social / human / org: [Hosted Verify](./cookbook/auth-hosted-verify). Production: [Get started](./get-started).
+Start with **`ownership-basic`** when the user has a browser wallet. Social, human, or org flows: [Hosted Verify](./cookbook/auth-hosted-verify). Before production: [Get started](./get-started) (app link, billing).
 
 ## 1. Install
 
@@ -20,7 +20,7 @@ npm install @neus/sdk
 import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient({
-  appId: 'your-app-id', // optional locally; required in prod - [Get started](./get-started)
+  appId: 'your-app-id', // production: create in NEUS Apps — see [Get started](./get-started)
 });
 
 const proof = await client.verify({

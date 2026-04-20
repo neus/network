@@ -4,7 +4,7 @@ description: Start agent setup; finish in hosted flow when prompted.
 icon: robot
 ---
 
-1. Call with **`agentId`** and **`agentWallet`** (and **`controllerWallet`** if there is no NEUS session).
+1. Call with **`agentId`** and **`agentWallet`** (and **`controllerWallet`** when you must supply the approver wallet explicitly—for example before hosted linking completes).
 2. **Open** any hosted URL the response gives you.
 3. **`neus_agent_link`** on the agent wallet to confirm readiness.
 
@@ -16,10 +16,10 @@ Vocabulary: [Agent concepts](../agents/concepts). **`agentWallet` is required** 
 { "agentId": "my-assistant", "agentWallet": "0x1234567890abcdef1234567890abcdef12345678" }
 ```
 
-## Optional delegation fields
-
-- **`maxSpend`**: optional whole-number string in token base units (1 - 78 digits, no decimal point). For USDC (`payments:x402`), use six decimal places; convert display amounts with SDK `toAgentDelegationMaxSpend` before passing the value.
+Delegation, spend limits, and production agent fields: [Agent delegation](../agents/agent-delegation) and the SDK—not required for the minimal create → hosted flow above.
 
 ## Related
+
+Account tools (`neus_me`, private reads with Bearer): [Auth](./auth).
 
 [Agent link](./agent-link) | [Overview](./overview)

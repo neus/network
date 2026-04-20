@@ -4,8 +4,8 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 
 ## Authentication model
 
-- **Verification requests** are authenticated with a wallet signature over the **CAIP-380 Portable Proof** six-line signing string (NEUS implementation). Never roll your own message format in production—use the SDK or the hosted preparation step documented for HTTP integrations.
-- **Proof lookups by `proofId`** are safe for public proofs. Private proofs return a minimal payload unless the caller proves ownership (session or signed request).
+- **Verification requests** are authenticated with a wallet signature over the **CAIP-380 Portable Proof** six-line signing string. Never roll your own message format in production—use the SDK or the hosted preparation step documented for HTTP integrations.
+- **Proof lookups by `proofId`** are safe for public proofs. Private proofs return a minimal payload unless the caller proves ownership (authenticated owner or signed request).
 - **Owner-only reads** of private proof payloads require an extra owner-signed request. The SDK attaches the required signed headers for you.
 
 ## Do not
@@ -20,13 +20,13 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 
 **`VerifyGate`** create mode defaults to **unlisted public** (`privacyLevel: 'public'`, `publicDisplay: false`, `storeOriginalContent: true`) so gates and `gateCheck` work without extra options.
 
-For raw SDK flows that must power **`gateCheck`** without an owner session, set **unlisted public** explicitly (`privacyLevel: 'public'`, `publicDisplay: false`). Anyone with the proof id can resolve public proofs. Do not treat unlisted as secret.
+For raw SDK flows that must power **`gateCheck`** without owner-authenticated access, set **unlisted public** explicitly (`privacyLevel: 'public'`, `publicDisplay: false`). Anyone with the proof id can resolve public proofs. Do not treat unlisted as secret.
 
 **Hide original content** (metadata/hash only): set `storeOriginalContent: false` when your product must not persist original bytes.
 
 Controls:
 
-- `privacyLevel` - private (vaulted to the wallet) vs public (eligible for policy checks without owner session)
+- `privacyLevel` - private (vaulted to the wallet) vs public (eligible for policy checks without proving owner identity)
 - `publicDisplay` - discovery vs unlisted
 - `storeOriginalContent` - retain original content vs hash/metadata only
 

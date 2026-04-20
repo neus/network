@@ -7,7 +7,8 @@
 <h1 align="center">NEUS</h1>
 
 <p align="center">
- <strong>Verification checkout for access and claims.</strong> Run Hosted Verify or the SDK, store a verification ID, and check eligibility later instead of re-running the same flow.
+ <strong>NEUS is the trust layer for apps, agents, and the next internet.</strong><br />
+Most systems stop at the check. NEUS turns the result into portable trust. That means users carry their identity, context, memory, and proof forward instead of starting over, while apps and agents can verify, gate, personalize, and act without repeatedly asking for the same raw data.
 </p>
 
 <p align="center">
@@ -28,18 +29,18 @@
 
 ## Why teams pick NEUS
 
-| You want… | NEUS gives you… |
+| Outcome | How NEUS delivers it |
 | --- | --- |
-| Less “prove it again” friction | One verification flow, a stored **verification ID**, **check** before re-verifying |
-| Trust users can carry across surfaces | Resolvable URLs and handles - not one-off screenshots |
-| Agents with clear limits | **`agent-identity`** + **`agent-delegation`** with scoped permissions |
-| Live state in chat and IDE tools | Hosted **MCP** so clients read current results instead of static copy |
+| Ship faster with less “prove it again” | One flow, a **receipt ID**, **lookup** before you re-run verification |
+| Reuse trust across web, API, and agents | Resolvable URLs and handles. Not screenshots that go stale |
+| Safe agent identity and delegation | **`agent-identity`** and **`agent-delegation`** with scoped permissions |
+| Tools that see live truth | **Remote MCP** over HTTPS so assistants read current results, not pasted text |
 
 ## Who this is for
 
-- **Product teams** gating drops, bounties, or premium surfaces behind wallet, token, NFT, or human checks 
-- **Platforms** that want one verification model across web, API, and automation 
-- **Agent builders** wiring identity, delegation, and optional x402-style spend boundaries 
+- **Product and GTM teams** turning wallet, token, NFT, or human checks into gates for drops, bounties, or paid tiers
+- **Platforms** standardizing one trust model across web, API, and automation
+- **Agent builders** shipping identity, delegation, and optional **x402** payment unlock ([docs](https://docs.neus.network/platform/x402))
 
 ## Quickstart
 
@@ -85,8 +86,8 @@ Next: [SDK README](./sdk/README.md) | [docs.neus.network](https://docs.neus.netw
 
 ### Setup (any chat or IDE)
 
-1. [Get started](https://docs.neus.network/get-started) - `appId`, org billing in **Apps**; access keys only when a tool needs account scope.
-2. Register agents via SDK, [Hosted Verify](https://neus.network/verify), or MCP [`neus_agent_create`](https://docs.neus.network/mcp/agent-create) (open `hostedVerifyUrl` when returned), then [`neus_agent_link`](https://docs.neus.network/mcp/agent-link). [Agents](https://docs.neus.network/agents/overview) | [Cookbook](https://docs.neus.network/cookbook/verifiable-agents).
+1. [Get started](https://docs.neus.network/get-started)
+2. Register agents via SDK, [Hosted Verify](https://neus.network/verify), or MCP [`neus_agent_create`](https://docs.neus.network/mcp/agent-create), then [`neus_agent_link`](https://docs.neus.network/mcp/agent-link). [Agents](https://docs.neus.network/agents/overview) | [Cookbook](https://docs.neus.network/cookbook/verifiable-agents).
 3. Share a **resolvable handle** (agent URL, result URL, wallet, DID) and use **NEUS MCP** for live state.
 4. Optional: export config JSON for hosts that load tool manifests from a URL.
 
@@ -131,11 +132,13 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 ## Hosted Verify
 
+**Hosted Verify** is the browser flow at `https://neus.network/verify`: a parameterized checkout on NEUS. Your app keeps the **proof ID** and **checks** before you prompt again.
+
 Examples:
 
 `https://neus.network/verify?verifiers=proof-of-human&returnUrl=https://myapp.com/callback`
 
-Agent onboarding (when you need the bundled agent verifiers): `https://neus.network/verify?preset=agent-pack`
+Agent onboarding: `https://neus.network/verify?preset=agent-pack`
 
 ## Verifiers (overview)
 
@@ -202,11 +205,11 @@ await client.verify({
 
 ## Support
 
-| | |
+| Channel | Use for |
 | --- | --- |
-| [Docs](https://docs.neus.network) | Reference |
-| [Discussions](https://github.com/neus/network/discussions) | Q&A |
-| [Issues](https://github.com/neus/network/issues) | Bugs |
+| [Docs](https://docs.neus.network) | Reference and integration |
+| [Discussions](https://github.com/neus/network/discussions) | Questions and patterns |
+| [Issues](https://github.com/neus/network/issues) | Bugs and requests |
 | [dev@neus.network](mailto:dev@neus.network) | Security |
 
 [CONTRIBUTING.md](./CONTRIBUTING.md)

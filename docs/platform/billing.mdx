@@ -1,77 +1,32 @@
 ---
-title: Billing and Credits
-description: App setup, credits, and who pays for verification.
+title: Billing and credits
+description: Usage bills your linked profile. Credits then x402.
 icon: credit-card
 ---
 
-Start with [Get started](../get-started). This page covers **credits**, **who pays**, and **x402**.
+NEUS bills **metered usage** (API, verification, related calls) to the **profile linked to your app**. **Credits** spend first. If a call is not covered, use **x402** ([x402](./x402)).
 
-**Default:** you configure the app in **app setup** (org credits, caps). Users see Hosted Verify or your UI, not billing internals. Self-pay and **x402**: [x402](./x402).
+## What `appId` does
 
-## `appId` and credits
+`appId` identifies your app on each request. It is **public** (not a secret). Create the app in [Platform setup](./setup). Pass the same value from the SDK or widgets.
 
-**`appId`** tells NEUS which app the traffic belongs to. It **does not** move money by itself.
+## When credits run out
 
-## Who pays
+Billable calls return **402** with a quote. Complete **x402**. **Retry** with `PAYMENT-SIGNATURE`. Steps: [x402](./x402).
 
-1. **Customer traffic (typical product):** pass **`sponsorGrant`** on the SDK with **`appId`** so charges debit **your** org credits. [Platform setup](./setup).
-2. **No sponsor:** the **signing wallet’s** NEUS balance is used when a call is billable. Fine for development; not what you want for anonymous production volume.
-3. **HTTP 402:** pay via **x402**, then retry with **`PAYMENT-SIGNATURE`**. [x402](./x402).
+## Payment gates
 
-NEUS resolves the payer from the **request** (sponsor grant, signer, payment header). You cannot “bill by `appId`” with `appId` alone in the body.
+Optional visitor charges. [Payment gates](./payment-gates).
 
-## Who you are
-
-| | Billing |
-|--|---------|
-| **Product** | Org credits + **`sponsorGrant`** so usage hits **your** balance. |
-| **Solo** | Your credits (or x402). `appId` optional. |
-
-## Bill customer traffic to your org
-
-1. App + org credits in [app setup](./setup).
-2. Short-lived **`sponsorGrant`** tied to your org.
-3. `new NeusClient({ appId, sponsorGrant })` on SDK calls.
-
-[Platform setup](./setup)
-
-<Warning>
-High-volume anonymous checks without a sponsor or session are for **dev or tiny volume** only.
-</Warning>
-
-## Individuals
-
-1. Hosted verify or SDK with **your** wallet.
-2. Your NEUS balance.
-3. On **402**, complete x402. [x402](./x402)
-
-## SDK fields
-
-| Field | Role |
-|-------|------|
-| `appId` | App attribution |
-| `sponsorGrant` | Bill your org for this client/session |
-| `paymentSignature` | After an x402 challenge |
-
-The SDK does not auto-pay x402: retry after payment or keep credits healthy.
-
-## Visibility vs billing
-
-Public or unlisted proofs can be **checked** without login. **Who can see** a proof is separate from **who pays**.
-
-## Related
+## Next
 
 <CardGroup cols={2}>
+  <Card title="Link your app" icon="building" href="./setup">
+  </Card>
   <Card title="x402" icon="coins" href="./x402">
-    Pay when credits run out.
   </Card>
-  <Card title="Platform setup" icon="building" href="./setup">
-    Apps, domains, org.
-  </Card>
-  <Card title="Security" icon="lock" href="./security-and-trust">
-    Privacy defaults.
+  <Card title="Payment gates" icon="lock" href="./payment-gates">
   </Card>
   <Card title="SDK" icon="package" href="../sdks/overview">
-    Client.
   </Card>
 </CardGroup>

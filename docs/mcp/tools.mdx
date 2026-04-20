@@ -1,32 +1,44 @@
 ---
 title: MCP Tools Overview
-description: Which tool to call, in order.
+description: Tool choice, field names, recommended call order.
 icon: wrench
 ---
 
-`neus_proofs_check` can take `sponsorGrant` if you use sponsors ([Get started](../get-started)). You mostly **open** verify URLs the model returns.
-
-Bearer: [Auth](./auth)
+**Bearer is optional.** [Auth](./auth). With Bearer, set **`walletAddress`** to your **profile wallet** for signatureless **`neus_verify`** on **instant** verifiers when the key profile matches. Interactive flows: **`neus_verify_or_guide`** returns **`hostedVerifyUrl`**.
 
 ## Field names
 
 | Tool | Address | Verifiers |
 |------|---------|-----------|
 | `neus_proofs_check` | `wallet` | `verifiers` |
-| `neus_verify_or_guide`, `neus_verify` | `walletAddress` | `verifierIds` |
-| `neus_proofs_get` | `identifier` | - |
+| `neus_verify`, `neus_verify_or_guide` | `walletAddress` | `verifierIds` |
+| `neus_proofs_get` | `identifier` | optional `tags` (comma-separated, `proof.meta.tags`) |
 
-EVM `0x…`, Solana base58, or `did:pkh:…` as applicable.
+EVM `0x…`, Solana base58, or `did:pkh:…`. Delegated reads: **`agentWallet`** on **`neus_proofs_get`** ( **`x-agent-wallet`** on the API).
 
-## Order
+## Recommended order
 
-1. `neus_context`
-2. `neus_verify_or_guide` / `neus_proofs_check`
-3. `neus_verifiers_catalog` (ids)
-4. `neus_proofs_get` (have id)
-5. `neus_me` (Bearer - [Auth](./auth))
-6. Agent tools if needed
+Same as [Overview](./overview): connect → **`neus_context`** → **`neus_me`** if Bearer → work (**`neus_verifiers_catalog`** only if you need raw schemas beyond context) → **`neus_proofs_get`**.
 
-## Pages
+**Headless prepare/sign:** [Overview](./overview#headless-signing).
 
-[Context](./context) | [Catalog](./verifiers-catalog) | [Check](./proofs-check) | [Verify or guide](./verify-or-guide) | [Proofs get](./proofs-get) | [Me](./me) | [Agent create](./agent-create) | [Agent link](./agent-link)
+## Reference pages
+
+<CardGroup cols={2}>
+  <Card title="Context" icon="circle-info" href="./context">
+  </Card>
+  <Card title="Catalog" icon="list-tree" href="./verifiers-catalog">
+  </Card>
+  <Card title="Check" icon="circle-check" href="./proofs-check">
+  </Card>
+  <Card title="Verify or guide" icon="signs-post" href="./verify-or-guide">
+  </Card>
+  <Card title="Proofs get" icon="receipt" href="./proofs-get">
+  </Card>
+  <Card title="Me" icon="user" href="./me">
+  </Card>
+  <Card title="Agent create" icon="robot" href="./agent-create">
+  </Card>
+  <Card title="Agent link" icon="link" href="./agent-link">
+  </Card>
+</CardGroup>

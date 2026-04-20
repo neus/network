@@ -6,7 +6,7 @@ icon: code
 
 **check, verify, save id, reuse.** [Get started](./get-started) | [Billing](./platform/billing)
 
-**Prefer** [Quickstart](./quickstart), [Hosted Verify](./cookbook/auth-hosted-verify), or **widgets** - not raw HTTP.
+Start with [Quickstart](./quickstart), [Hosted Verify](./cookbook/auth-hosted-verify), or widgets. Raw HTTP samples below are **advanced**.
 
 | Example | Use it for |
 |------------|----------|
@@ -40,15 +40,15 @@ export default function ProtectedPage() {
 
 ## Node: proof
 
-**Server-held keys** or **HTTP-only:** [SDK](./sdks/javascript) or [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) (`standardize` to sign to submit). Most apps should use **Hosted Verify** or **`client.verify()`** instead.
+**Server-held keys** or **HTTP-only:** [SDK](./sdks/javascript) or [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) (`standardize` to sign to submit). Most apps should use **Hosted Verify** at `https://neus.network/verify` or **`client.verify()`** instead.
 
 ## HTTP (advanced)
 
 ```bash
 curl -X POST https://api.neus.network/api/v1/verification/standardize \
   -H "Content-Type: application/json" \
-  -d '{"walletAddress":"0x...","verifierIds":["ownership-basic"],"data":{"content":"Hello NEUS"}}'
-# sign signerString, then POST /api/v1/verification with the same body + signature
+  -d '{"walletAddress":"0x...","verifierIds":["ownership-basic"],"data":{"content":"Hello NEUS","owner":"0x..."},"signedTimestamp":1713312000000}'
+# phase 1 is mandatory for raw HTTP: sign signerString, then POST /api/v1/verification with the same body + signature
 ```
 
 ## Docs

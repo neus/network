@@ -52,8 +52,7 @@ export function Page() {
 | `proofOptions` | Overrides privacy and content storage (defaults are unlisted public) |
 | `mode` | Chooses create vs access behavior |
 | `proofId` | Existing id for access mode |
-| `appId` | Sends public app attribution |
-| `sponsorGrant` | Bill your org for customer traffic ([Billing](../platform/billing)) |
+| `appId` | Sends public app attribution; usage bills the linked app owner profile |
 | `hostedCheckoutUrl` | Overrides the hosted verify URL when needed |
 | `oauthProvider` | Pre-selects the OAuth provider when the user already chose one in your app |
 
@@ -94,13 +93,13 @@ Allowed values:
 - **`ownership-basic`** and other wallet-creatable verifiers can run in-widget with a connected wallet.
 - Social, org, and human flows route through hosted verify. Start from **[Hosted Verify](../cookbook/auth-hosted-verify)** when you are unsure.
 
-## Related
+## Next
 
-<CardGroup cols={2}>
- <Card title="Integration" icon="compass" href="../integration">
- Check, verify, save, reuse.
- </Card>
- <Card title="SDK verifications" icon="rotate" href="../sdks/verifications">
- Patterns.
- </Card>
+<CardGroup cols={3}>
+  <Card title="Integration" icon="compass" href="../integration">
+  </Card>
+  <Card title="SDK verifications" icon="list-check" href="../sdks/verifications">
+  </Card>
+  <Card title="Payment gates" icon="lock" href="../platform/payment-gates">
+  </Card>
 </CardGroup>

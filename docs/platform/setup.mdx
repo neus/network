@@ -1,115 +1,37 @@
 ---
-title: Platform Setup
-description: DNS, org verify, apps, sponsors.
+title: Link your app
+description: Domains, caps, and app identity in Platform.
 icon: building
 ---
 
-After [Get started](../get-started) and [Integration](../integration): **domains**, **org**, **apps**, **sponsors**. Results / privacy: [Verification results](./receipts-and-results) | [Security and trust](./security-and-trust)
+In [Platform](https://neus.network/hub), link your product so requests carry **`appId`** and bill the right profile.
 
-[Dashboard](https://neus.network/hub) - profile, apps, credits.
+## Steps
 
-## DNS domain
-
-TXT at `_neus.<domain>`:
-
-```text
-neus=<your-wallet-address>
-```
-
-Then prove (example):
+1. **Apps** → create or link an app
+2. Set **domain** and **daily credit cap**
+3. Pass **`appId`** from the SDK or widgets (public, not a secret)
 
 ```javascript
-const proof = await client.verify({
-  verifier: 'ownership-dns-txt',
-  data: { domain: 'yourdomain.com', walletAddress: '0x...' },
-  walletAddress: '0x...',
-  signature: '0x...',
-  signedTimestamp: Date.now(),
-});
-```
+import { NeusClient } from '@neus/sdk';
 
-Confirm proofs the same way your app will before gating - e.g. [Dashboard](https://neus.network/hub) or the check step in [Integration](../integration).
-
-## Organization
-
-Google Workspace / Microsoft 365 to hosted verify; NEUS runs OAuth.
-
-1. `https://neus.network/verify`
-2. `preset=org-pack` when membership alone is enough
-3. `returnUrl` or popup
-4. Store **verification ID**
-
-```text
-https://neus.network/verify?preset=org-pack&returnUrl=https://app.example.com/verified
-```
-
-```text
-https://neus.network/verify?preset=org-pack&mode=popup&origin=https://app.example.com
-```
-
-One company only:
-
-```jsx
-<VerifyGate
-  hostedCheckoutUrl="https://neus.network/verify"
-  requiredVerifiers={['ownership-org-oauth']}
-  verifierData={{
-    'ownership-org-oauth': { provider: 'google', expectedOrgDomain: 'acme.com' },
-  }}
->
-  <ProtectedContent />
-</VerifyGate>
-```
-
-You rarely need your own Google/Microsoft OAuth app.
-
-## Link app
-
-| | |
-|--|--|
-| 1 | In Dashboard to Apps, link your app |
-| 2 | App domain |
-| 3 | Daily credit cap |
-| 4 | Lock **Origin** in prod |
-| 5 | SDK supplies your app id; browser traffic must come from **allowed origins** you configure for the app |
-
-## Attribution
-
-`appId` is public - not secret. The SDK attaches it on your behalf when you construct the client with your id.
-
-```javascript
 const client = new NeusClient({ appId: 'your-app-id' });
 ```
 
-<Card title="Billing" icon="credit-card" href="./billing">
- Credits and sponsors.
-</Card>
-
-## Sponsor grants
-
-```javascript
-new NeusClient({ appId: 'your-app-id', sponsorGrant: '<token>' });
-```
-
-<Warning>
-Short-lived tokens. Re-issue per session. No long-lived secrets in client bundles.
-</Warning>
-
-Hosted UX: [Hosted Verify](../cookbook/auth-hosted-verify) | [Integration](../integration)
-
-## Related
+## Hosted checkout
 
 <CardGroup cols={2}>
- <Card title="Get started" icon="book" href="../get-started">
- Onboarding.
- </Card>
- <Card title="Verification results" icon="receipt" href="./receipts-and-results">
- Save ids.
- </Card>
- <Card title="Security" icon="lock" href="./security-and-trust">
- Visibility.
- </Card>
- <Card title="Billing" icon="credit-card" href="./billing">
- Payers.
- </Card>
+  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+  </Card>
+  <Card title="Integration" icon="compass" href="../integration">
+  </Card>
+</CardGroup>
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Billing" icon="credit-card" href="./billing">
+  </Card>
+  <Card title="Security and trust" icon="user-shield" href="./security-and-trust">
+  </Card>
 </CardGroup>

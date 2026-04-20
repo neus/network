@@ -1,11 +1,17 @@
-# @neus/mcp-server
+# NEUS MCP (this repository)
 
-**MCP clients** call NEUS for **gate checks**, the verifier catalog, and guided verify. **Never put wallet seed phrases or private keys in prompts** - use Hosted Verify or your wallet to sign.
+Reference material for the **hosted** NEUS MCP service. Integrators should connect clients to:
 
-**Hosted endpoint (most integrations):** `https://mcp.neus.network/mcp` - [setup](https://docs.neus.network/mcp/setup).
+**`https://mcp.neus.network/mcp`**
 
-Most teams only add the **hosted URL** to the MCP client. The **`@neus/mcp-server`** package on [npm](https://www.npmjs.com/package/@neus/mcp-server) is for self-hosted or advanced setups; check npm for engine requirements.
+## For integrators
 
-More detail: [docs.neus.network/mcp](https://docs.neus.network/mcp/overview).
+- **Setup:** [docs.neus.network/mcp/setup](https://docs.neus.network/mcp/setup)
+- **Auth:** Personal access keys (`npk_*`) — [docs.neus.network/mcp/auth](https://docs.neus.network/mcp/auth)
+- **Tool order and playbook:** [docs.neus.network/mcp/overview](https://docs.neus.network/mcp/overview)
+
+Treat access keys like secrets: keep them in MCP or server config, not in public repos or chat logs.
+
+## License
 
 Apache-2.0

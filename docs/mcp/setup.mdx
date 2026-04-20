@@ -4,39 +4,26 @@ description: Connect to hosted NEUS MCP.
 icon: code
 ---
 
-Shipping a product? [Get started](../get-started) first.
+Product integration: [Get started](../get-started).
 
-## URL only
+## Config
 
-Paste into MCP config (Cursor, Claude Code, Desktop, VS Code, …). Keep `/mcp` in the URL.
+Keep **`/mcp`** in the URL.
 
 ```json
 {
   "mcpServers": {
     "neus": {
       "type": "streamableHttp",
-      "url": "https://mcp.neus.network/mcp",
-      "description": "NEUS MCP"
+      "url": "https://mcp.neus.network/mcp"
     }
   }
 }
 ```
 
-Reload if needed. URL-only is enough for `neus_context`, catalog, and verify links.
+## Optional Bearer
 
-## First call
-
-`neus_context` once after connect.
-
-## Account access (optional)
-
-For `neus_me`, private reads, or **your** credits: add a key from [Access keys](https://neus.network/profile?tab=account) to MCP headers. [Auth](./auth)
-
-Never in browser bundles. Prod apps: [Get started](../get-started), not your personal key.
-
-### Example: Cursor (`mcp.json`)
-
-`mcp.json`:
+`Authorization: Bearer` with a personal access key (`npk_*`) authenticates MCP the same way as REST. Use it for **`neus_me`**, private reads, credits, and signatureless **`neus_verify`** when the profile wallet matches ([Auth](./auth)).
 
 ```json
 {
@@ -50,37 +37,21 @@ Never in browser bundles. Prod apps: [Get started](../get-started), not your per
 }
 ```
 
-### Example: Claude Code
-
-Use the same JSON block in your client’s MCP settings (see that product’s **MCP over HTTP** guide).
-
-### Other clients
-
-Follow your client’s **MCP over HTTP** setup: paste the URL first; add headers when supported.
+Mint keys: [Access keys](https://neus.network/profile?tab=account). Confirm: **`neus_me`** → **`status: ok`**. Never ship keys to the browser.
 
 ## First run
 
-1. `neus_context`
-2. `neus_verify_or_guide` or `neus_proofs_check`
-3. Open `https://neus.network/verify` when given
-4. `neus_proofs_get` if needed - [Tools](./tools)
-5. Access key for account tools - [Auth](./auth)
+1. Connect (above).
+2. **`neus_context`**
+3. If Bearer is set → **`neus_me`**; else skip.
+4. Verify, check, agents. [Tools](./tools).
+5. **`neus_proofs_get`** when you need proofs or **`qHash`**.
 
-Then [Overview](./overview).
-
-## Related
+Other clients: same URL, same optional **`Authorization`** header.
 
 <CardGroup cols={2}>
- <Card title="Overview" icon="plug" href="./overview">
- When to call each tool.
- </Card>
- <Card title="Tools" icon="wrench" href="./tools">
- Tool names and inputs.
- </Card>
- <Card title="Auth" icon="lock" href="./auth">
- Access keys.
- </Card>
- <Card title="Endpoints" icon="globe" href="./endpoints">
- Discovery.
- </Card>
+  <Card title="MCP overview" icon="plug" href="./overview">
+  </Card>
+  <Card title="Endpoints" icon="globe" href="./endpoints">
+  </Card>
 </CardGroup>

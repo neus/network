@@ -8,7 +8,7 @@ icon: package
 npm install @neus/sdk
 ```
 
-[Get started](../get-started) first.
+[Get started](../get-started) first. **Assistants / IDEs:** same product via [NEUS MCP](../mcp/overview) and [LLM docs](../platform/llm-docs).
 
 ## One flow
 
@@ -47,31 +47,25 @@ Optional: `timeout` on `NeusClient`.
 
 ## Who pays
 
-`appId` labels your app on requests. Credits follow the **signer** unless you pass `sponsorGrant` or use x402. [Get started](../get-started) | [Billing](../platform/billing)
+Usage bills the **profile linked to your app** in Platform. [Billing](../platform/billing). Server-side API calls: [Authentication](./authentication).
 
 ## Defaults
 
-`client.verify()` to **private** ([Security](./security)). VerifyGate create to **unlisted public**. Matrix: [Security and trust](../platform/security-and-trust)
+`client.verify()` defaults **private**. [Security](./security). VerifyGate create defaults **unlisted public**. [Security and trust](../platform/security-and-trust)
 
-## Pages
+## Next
 
 <CardGroup cols={2}>
- <Card title="Get started" icon="book" href="../get-started">
- Onboarding.
- </Card>
- <Card title="JavaScript" icon="bracket-curly" href="./javascript">
- API surface.
- </Card>
- <Card title="Verifications" icon="rotate" href="./verifications">
- Patterns.
- </Card>
- <Card title="Authentication" icon="key" href="./authentication">
- Sessions.
- </Card>
- <Card title="Errors" icon="bug" href="./error-handling">
- Retries.
- </Card>
- <Card title="Billing" icon="credit-card" href="../platform/billing">
- Who pays.
- </Card>
+  <Card title="JavaScript" icon="code" href="./javascript">
+  </Card>
+  <Card title="Verifications" icon="list-check" href="./verifications">
+  </Card>
+  <Card title="Authentication" icon="key" href="./authentication">
+  </Card>
+  <Card title="Billing" icon="credit-card" href="../platform/billing">
+  </Card>
+  <Card title="MCP" icon="plug" href="../mcp/overview">
+  </Card>
+  <Card title="LLM docs" icon="sparkles" href="../platform/llm-docs">
+  </Card>
 </CardGroup>

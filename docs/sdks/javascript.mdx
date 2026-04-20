@@ -1,10 +1,10 @@
 ---
 title: JavaScript SDK
-description: JavaScript client for the NEUS Network verification API.
+description: Create verifications, poll for proofId, gateCheck eligibility, and hosted checkout URLs from TypeScript or JavaScript.
 icon: code
 ---
 
-Proof creation, hosted URLs, polling. Prefer this over ad-hoc HTTP.
+Proof creation, hosted URLs, polling. Use instead of ad-hoc HTTP when you can.
 
 ## Install
 
@@ -47,7 +47,7 @@ const client = new NeusClient({
 
 | Option | When to Use |
 |--------|-------------|
-| `persist: true` | Persist a reusable **verification ID** |
+| `persist: true` | Persist a reusable **proof ID** |
 | `ipfs: true` / `pin: true` | Use when you need IPFS-backed storage |
 | `strategy: 'reuse-or-create'` | Check existing proof first, create if missing. Default. |
 | `strategy: 'fresh'` | Always create new proof. Use for high-stakes checks. |

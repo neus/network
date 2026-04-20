@@ -35,9 +35,9 @@ Stable JSON / query names:
 | `agentWallet` | Agent wallet address |
 | `controllerWallet` | **Approving account** in delegation (not “product controller”) |
 | `linked` (MCP) | Readiness: identity + access approval present |
-| `principal` (`neus_me`) | Signed-in account summary; not the approver unless same session |
+| `principal` (`neus_me`) | Account summary for the Bearer key; not the delegation approver unless it is the same account |
 
-**Private proofs:** only when that user is signed in. Delegation **approving account** is separate.
+**Private proofs:** only with allowed access for that user. Delegation **approving account** is separate.
 
 ## Next
 

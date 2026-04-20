@@ -8,7 +8,7 @@ Pick visibility here. Short guides link in for defaults.
 
 ## Boundaries
 
-- Issuance happens in **NEUS** - not “trust the browser alone.”
+- Proof issuance runs in **NEUS**.
 - Return **only** what your product needs from checks.
 - **Private** reads need the owner signed in (or your sharing rules).
 
@@ -40,6 +40,8 @@ Override with `proofOptions` when you need listed public or stricter private.
 | `true` (default) | Keep content context for verification. |
 | `false` | Hash-first where your verifier allows - know the tradeoff. |
 
+Wallet-signed **`ownership-basic`** (API / MCP): storage and listed-public behavior. [Ownership and Provenance](../verification/ownership-basic).
+
 ## Never ship publicly
 
 Raw signatures, owner-only payloads, private proof enumeration.
@@ -54,13 +56,11 @@ Raw signatures, owner-only payloads, private proof enumeration.
  <Item>Set visibility for raw SDK; know VerifyGate defaults.</Item>
 </Checklist>
 
-## Related
+## Next
 
 <CardGroup cols={2}>
- <Card title="Verification results" icon="receipt" href="./receipts-and-results">
- Save ids.
- </Card>
- <Card title="Integration" icon="compass" href="../integration">
- Loop.
- </Card>
+  <Card title="Verification results" icon="receipt" href="./receipts-and-results">
+  </Card>
+  <Card title="Integration" icon="compass" href="../integration">
+  </Card>
 </CardGroup>

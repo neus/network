@@ -1,30 +1,17 @@
 ---
-title: x402 Pay-Per-Use
-description: Retry with payment when credits run out.
+title: x402 overflow
+description: Pay per call when credits are exhausted. Retry with the receipt header.
 icon: coins
 ---
 
-Default: org **credits** and **`sponsorGrant`** when you bill customer traffic ([Get started](../get-started), [Billing](./billing)).
-
-**x402:** API returns **402** and a quote; retry with **`PAYMENT-SIGNATURE`**. Same account model as the rest of billing, not a separate product.
-
-## When
-
-| | |
-|--|--|
-| `POST /api/v1/verification` | No credits |
-| `GET /api/v1/proofs/check` | No credits |
-| MCP | No credits |
-| Other billable calls | No credits on payer |
+When **credits** cannot cover a billable call, the API returns **402** with a quote. Pay. **Retry** with `PAYMENT-SIGNATURE`. [Billing](./billing).
 
 ## Flow
 
-1. Call API 
-2. **402** + quote 
-3. Pay 
+1. Call the API
+2. **402** and quote
+3. Pay
 4. Retry with `PAYMENT-SIGNATURE: <receipt>`
-
-Same idea for verification, checks, hosted-adjacent calls, and agent flows that allow x402.
 
 ## Header
 
@@ -32,22 +19,11 @@ Same idea for verification, checks, hosted-adjacent calls, and agent flows that 
 PAYMENT-SIGNATURE: <receipt>
 ```
 
-## Related
+## Next
 
 <CardGroup cols={2}>
- <Card title="Get started" icon="book" href="../get-started">
- Credits first.
- </Card>
- <Card title="Billing" icon="credit-card" href="./billing">
- Who pays.
- </Card>
- <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
- Hosted.
- </Card>
- <Card title="MCP" icon="plug" href="../mcp/overview">
- Assistants.
- </Card>
- <Card title="Agent delegation" icon="robot" href="../agents/agent-delegation">
- Delegation + payments.
- </Card>
+  <Card title="Billing" icon="credit-card" href="./billing">
+  </Card>
+  <Card title="JavaScript SDK" icon="code" href="../sdks/javascript">
+  </Card>
 </CardGroup>

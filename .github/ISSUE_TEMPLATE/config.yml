@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
-  - name: "Report a security vulnerability (private)"
+  - name: "Report a security vulnerability (confidential)"
     url: mailto:dev@neus.network
-    about: "Do NOT open a public issue. Email the security team directly."
+    about: "Do not open a public issue. Use this email for coordinated disclosure."
   - name: "General Q&A / Ideas"
     url: https://github.com/neus/network/discussions
     about: "Use Discussions for questions and open-ended ideas."

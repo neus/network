@@ -1,34 +1,52 @@
 ---
 title: MCP Overview
-description: NEUS MCP for assistants and IDEs.
+description: Hosted NEUS MCP, optional Bearer, verification and proof tools.
 icon: plug
 ---
 
-Endpoint: `https://mcp.neus.network/mcp` - [Setup](./setup)
+**Endpoint:** `https://mcp.neus.network/mcp`.
 
-## Typical use
+<CardGroup cols={3}>
+  <Card title="Setup" icon="code" href="./setup">
+  </Card>
+  <Card title="Tools" icon="wrench" href="./tools">
+  </Card>
+  <Card title="Auth" icon="lock" href="./auth">
+  </Card>
+</CardGroup>
 
-1. **`neus_context`** (no access key).
-2. **`neus_proofs_check`** or **`neus_verify_or_guide`**; open **`hostedVerifyUrl`** when the tool returns it.
-3. **`neus_proofs_get`** when you have a wallet or **verification ID**.
-4. **Access key** from the hub only for **`neus_me`** and private reads - [Auth](./auth).
-5. **Agents:** **`neus_agent_create`**, then **`neus_agent_link`**.
-6. **`neus_verify`:** one unsigned prepare, then sign the **same** payload (do not call prepare twice).
+## Two URLs
 
-HTTP **402:** same credits model as the rest of the API - [Billing](../platform/billing), [x402](../platform/x402).
+| URL | Use |
+|-----|-----|
+| `https://mcp.neus.network/mcp` | MCP client transport for **`neus_*`** tools. |
+| **`hostedVerifyUrl`** (from tools) | Browser verification. Open the URL from the tool response. |
 
-### Agent proofs vs MCP
+## Recommended tool order
 
-`skills` on a proof are **labels**, not installed MCP servers. The host runs tools. Max **48** skill refs.
+1. **Connect.** [Setup](./setup).
+2. **`neus_context`.** Live verifiers, **`requiredFields`**, defaults (no key).
+3. **Bearer.** **`neus_me`** → **`status: ok`**. Skip if you use public tools only ([Auth](./auth)).
+4. **Work.** **`neus_proofs_check`**. **`neus_verify`** on instant verifiers when Bearer profile wallet matches **`walletAddress`**, or **`neus_verify_or_guide`** → **`hostedVerifyUrl`**. Agents: **`neus_agent_create`**, hosted steps, **`neus_agent_link`**.
+5. **`neus_proofs_get`.** Proofs, profile summary, optional **`tags=`**, **`qHash`**.
 
-| Goal | Tool |
-|------|------|
-| Context | `neus_context` |
-| Browser verify | `neus_verify_or_guide` |
-| Eligibility | `neus_proofs_check` |
-| List + profile | `neus_proofs_get` |
-| Signed-in user | `neus_me` + access key |
-| Verifier ids | `neus_verifiers_catalog` |
-| Agents | `neus_agent_create`, `neus_agent_link` |
+Use **`neus_context`** for current **`requiredFields`**.
 
-[Get started](../get-started) | [Setup](./setup) | [Tools](./tools) | [Auth](./auth) | [Hosted Verify](../cookbook/auth-hosted-verify)
+## Headless signing
+
+**`neus_verify`** without **`signature`** (prepare) → sign **`signerString`** → **`neus_verify`** again with the **same** `walletAddress`, `verifierIds`, `data`, `signedTimestamp`, `chain`, plus **`signature`**. Do not repeat prepare.
+
+Field names and tool list: [Tools](./tools). **`ownership-basic`:** [Ownership](../verification/ownership-basic). **402:** [x402](../platform/x402).
+
+**Apps:**
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="../quickstart">
+  </Card>
+  <Card title="JavaScript SDK" icon="code" href="../sdks/javascript">
+  </Card>
+  <Card title="Get started" icon="book" href="../get-started">
+  </Card>
+  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+  </Card>
+</CardGroup>

@@ -17,7 +17,7 @@ describe('neus CLI', () => {
     expect(stdout).toContain('https://mcp.neus.network/mcp');
     expect(stdout).toContain('streamableHttp');
     expect(stdout).toContain('https://docs.neus.network/platform/llm-docs');
-    expect(stdout).toContain('https://docs.neus.network/llms.txt');
+    expect(stdout).toContain('https://neus.network/llms.txt');
     expect(stdout).toContain('does not modify files');
   });
 

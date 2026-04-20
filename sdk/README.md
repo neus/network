@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/%40neus%2Fsdk?logo=npm&label=%40neus%2Fsdk&color=98C0EF)](https://www.npmjs.com/package/@neus/sdk)
 
-**Ship verification without hosting your own checks.** The JavaScript SDK runs NEUS verification, polling, and **`gateCheck`**. Store **`proofId`** (your **verification ID**) once, then reuse. NEUS runs the checks; you do not fork verifier logic into your repo.
+**Portable trust, shipped as APIs and widgets.** The JavaScript SDK runs NEUS verification, polling, and **`gateCheck`**. Store **`proofId`** (your **proof ID**) once, then reuse. NEUS runs the checks; you do not fork verifier logic into your repo.
 
 ## Install
 
@@ -80,17 +80,11 @@ const client = new NeusClient({
 
 - [Quickstart](https://docs.neus.network/quickstart)
 - [SDK](https://docs.neus.network/sdks/javascript)
+- [MCP](https://docs.neus.network/mcp/overview) (IDEs and assistants)
 - [Widgets](https://docs.neus.network/widgets/overview)
 - [API](https://docs.neus.network/api/overview)
 - [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify)
 
-## Publishing (`npm publish`)
+## Contributing
 
-Maintainers: `prepublishOnly` runs **lint**, **test**, and **build**. From `network/sdk`:
-
-1. Bump `version` in `package.json` (semver).
-2. Ensure `@zkpassport/sdk` peer + optional pin matches the NEUS app + protocol verifier stack (`0.12.5` today).
-3. `npm ci` (or `npm install`), then `npm run prepublishOnly` locally to match npm’s publish gate.
-4. `npm publish` (registry auth + 2FA per org policy).
-
-Consumers get only the `files[]` whitelist (no tests, no private docs). Public API defaults (e.g. `https://api.neus.network`) are intentional product endpoints, not secrets. Transitive dev dependency versions are pinned by **`package-lock.json`** in this package (no root `overrides` in `package.json`).
+See [CONTRIBUTING.md](../CONTRIBUTING.md) for how to propose documentation, SDK, and example changes.

@@ -1,26 +1,26 @@
 ---
 title: Integration
-description: Check, verify, save, reuse on every surface.
+description: Check, verify, save, reuse across Hosted Verify, SDK, API, and MCP.
 icon: compass
 ---
 
 Same loop on every surface: **Check, verify, save, reuse**.
 
-- **Surfaces:** [Choose an integration path](./choose-an-integration-path) - Hosted Verify, SDK, widgets, API, MCP.
-- **Platform:** [Billing](./platform/billing), [Verification results](./platform/receipts-and-results), [Security and trust](./platform/security-and-trust), [LLM docs](./platform/llm-docs)
+- **Integrations:** [Choose an integration path](./choose-an-integration-path).
+- **Also see:** [Billing](./platform/billing), [Verification results](./platform/receipts-and-results), [Security and trust](./platform/security-and-trust), [LLM docs](./platform/llm-docs)
 
-**Check** whether the person or wallet already has a valid result (saved **verification ID** or a server-side eligibility check) before asking them to verify again. **Save** the **verification ID** from the response ([Verification results](./platform/receipts-and-results)). The API field is **`proofId`**.
+**Check** for a valid result (saved **proof ID** or server eligibility) before a new verify. **Save** the **proof ID** from the response ([Verification results](./platform/receipts-and-results)). API field **`proofId`**.
 
 ## Loop
 
 1. **Check** - saved id or proofs/check
 2. **Verify** - only if needed (hosted, SDK, or API)
-3. **Save** - verification ID on user/session
+3. **Save** - proof ID in your app (per user or device)
 4. **Reuse** - UI, VerifyGate, server, MCP
 
 | Situation | Approach |
 |-----------|----------|
-| Repeat visits | Run an eligibility check or use a stored verification ID before a new verify |
+| Repeat visits | Run an eligibility check or use a stored proof ID before a new verify |
 | Balance / NFT gates | Narrow `since` or `fresh` strategy - [SDK verifications](./sdks/verifications) |
 | Org and domain | [Platform setup](./platform/setup), then the same loop |
 
@@ -32,14 +32,14 @@ Same loop on every surface: **Check, verify, save, reuse**.
 |------|-----|
 | Listed public | Discoverable attribution |
 | Unlisted public | Gates and reuse, not listed |
-| Owner-only | Signed-in owner |
+| Owner-only | Only the proof owner (private reads) |
 
 SDK `client.verify()` defaults **private**. VerifyGate create defaults **unlisted public**.
 
 ## Checklist
 
 <Checklist>
- <Item>One primary path: Hosted Verify, Widgets, SDK, API, or MCP</Item>
+ <Item>Hosted browser checkout, Widgets, SDK, API, or MCP</Item>
  <Item>Check before showing verify</Item>
  <Item>Store verification IDs - not only raw signatures</Item>
  <Item>Test: verify, save, check, reuse</Item>
@@ -64,31 +64,15 @@ More filters: [SDK verifications](./sdks/verifications).
 | API | `https://api.neus.network` |
 | MCP | `https://mcp.neus.network/mcp` |
 
-## Related
+## Next
 
 <CardGroup cols={2}>
- <Card title="Get started" icon="book" href="./get-started">
- Account, app setup, first loop.
- </Card>
- <Card title="Universal identity" icon="users" href="./agents/overview">
- Agents, linked accounts, MCP.
- </Card>
- <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
- Hosted UX.
- </Card>
- <Card title="Verification results" icon="receipt" href="./platform/receipts-and-results">
- IDs, visibility, reuse.
- </Card>
- <Card title="Security and trust" icon="lock" href="./platform/security-and-trust">
- Privacy defaults and modes.
- </Card>
- <Card title="API" icon="terminal" href="./api/overview">
- Advanced HTTP integration.
- </Card>
- <Card title="Verifiers" icon="list-tree" href="./verification/verifiers">
- Capability reference.
- </Card>
- <Card title="Billing" icon="credit-card" href="./platform/billing">
- App setup and who pays.
- </Card>
+  <Card title="Get started" icon="book" href="./get-started">
+  </Card>
+  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
+  </Card>
+  <Card title="Billing" icon="credit-card" href="./platform/billing">
+  </Card>
+  <Card title="Payment gates" icon="lock" href="./platform/payment-gates">
+  </Card>
 </CardGroup>

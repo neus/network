@@ -1,12 +1,12 @@
 ---
 title: Proof Context (`neus_proofs_get`)
-description: Proofs + profile summary for a wallet or DID.
+description: Proofs and profile summary for a wallet or DID.
 icon: receipt
 ---
 
-Use when you **already have** an **`identifier`** (from NEUS, or user pasted it). If they still need to verify, **`neus_verify_or_guide`** + open the hosted link first.
+Use when you have an **`identifier`**. If the user still needs to verify, **`neus_verify_or_guide`** first.
 
-**Visibility:** Without sign-in, you see what public browsing would show. With **Bearer** for that user, **private** proofs can appear ([Auth](./auth)).
+**Visibility:** no Bearer → public-scope view; Bearer → can include **private** proofs for that account ([Auth](./auth)).
 
 ## Input
 
@@ -14,16 +14,23 @@ Use when you **already have** an **`identifier`** (from NEUS, or user pasted it)
 {
   "identifier": "0x…",
   "limit": 25,
-  "offset": 0
+  "offset": 0,
+  "tags": "memory,skill,job",
+  "agentWallet": "0x…"
 }
 ```
 
-`identifier`: EVM, Solana base58, or `did:pkh:…`.
+**`identifier`:** EVM, Solana base58, **`did:pkh:…`**. **`tags`:** comma-separated filter on **`proof.meta.tags`**. **`agentWallet`:** delegation (**`x-agent-wallet`**).
 
-## You get
+## Response
 
-Resolved wallet/DID, paginated **proofs**, **profileSummary**, optional **agentContext** / **contextPack**. Use the **`pagination`** object in the response as returned (including optional totals).
+Proofs, **`profileSummary`**, pagination: follow the live tool response. **Tags** and proof bodies come from this call.
 
-## Related
+## Next
 
-[Proof check](./proofs-check) - [Overview](./overview)
+<CardGroup cols={2}>
+  <Card title="Proof check" icon="circle-check" href="./proofs-check">
+  </Card>
+  <Card title="MCP overview" icon="plug" href="./overview">
+  </Card>
+</CardGroup>

@@ -1,8 +1,22 @@
 ---
 title: Authentication
-description: API auth - sessions and wallet signing.
+description: Personal access keys for servers and MCP; hosted and SDK flows for products.
 icon: fingerprint
 ---
+
+## Personal access keys (`npk_*`)
+
+Use **`Authorization: Bearer`** with a key from **[Access keys](https://neus.network/profile?tab=account)** when **your** server, job, or **MCP** client calls the REST API. Store keys only in secure environments (server config, MCP settings)—not in public web bundles.
+
+[MCP Auth](../mcp/auth) · [SDK Authentication](../sdks/authentication)
+
+## Browser and mobile products
+
+Typical integrations use **[Hosted Verify](../cookbook/auth-hosted-verify)** or the **SDK** so end users sign in and verify on NEUS. Use **`appId`** for attribution; keep secrets and keys off the client.
+
+## Verification requests and signatures
+
+**`POST /api/v1/verification`** may require a **wallet signature** depending on anonymity and how **`walletAddress`** relates to the caller. When the API accepts the caller for that wallet, a separate signature may not be required—follow response errors and the verification flow you use.
 
 ## Default (low friction)
 
@@ -10,7 +24,7 @@ No manual signing string for most integrations:
 
 - **[Hosted Verify](../cookbook/auth-hosted-verify)** - redirect or popup; user completes NEUS-hosted steps.
 - **SDK** - `NeusClient.verify()` with a browser wallet (see [Quickstart](../quickstart)); the client handles signing and submit.
-- **MCP** - `neus_verify_or_guide` for assistants when a hosted handoff is appropriate.
+- **MCP** - Bearer `npk_*` on the MCP connection; **`neus_verify_or_guide`** when a hosted browser handoff is required (passkey, OAuth, provider).
 
 Use **HTTP** directly when you need server-side **`gateCheck`-style reads** or a **non-SDK** stack.
 
@@ -24,14 +38,14 @@ Use **HTTP** directly when you need server-side **`gateCheck`-style reads** or a
 
 ## Raw HTTP create (advanced)
 
-Only if you implement `POST /api/v1/verification` without the SDK:
+Only if you implement `POST /api/v1/verification` without the SDK. Treat this as a strict two-phase cryptographic handshake, not a schema-only single POST:
 
 1. Build the JSON body (`walletAddress`, `verifierIds`, `data`, `signedTimestamp`, chain fields as required).
 2. **`POST /api/v1/verification/standardize`** with that body to `signerString`.
 3. Sign `signerString` with the same wallet as `walletAddress`.
 4. **`POST /api/v1/verification`** with the **same body** + `signature`.
 
-If verification fails with a signature error, repeat step 2 and confirm the body you sign matches the body you POST - see [Signing format](../verification/signing-format).
+If verification fails with a signature error, repeat step 2 and confirm the body you sign matches the body you POST byte-for-byte for `walletAddress`, `verifierIds`, `data`, `signedTimestamp`, and chain fields - see [Signing format](../verification/signing-format).
 
 Field-by-field shapes: **API reference** on the documentation site.
 

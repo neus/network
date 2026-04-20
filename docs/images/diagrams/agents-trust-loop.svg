@@ -29,7 +29,7 @@
     <text x="200" y="184" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc">Controller delegates scope</text>
     <text x="200" y="204" text-anchor="middle" font-size="10.5" font-weight="600" fill="#98C0EF">agent-delegation</text>
     <rect x="72" y="250" width="256" height="52" rx="12" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-    <text x="200" y="282" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc">Agent reuses verification ID</text>
+    <text x="200" y="282" text-anchor="middle" font-size="13" font-weight="700" fill="#f8fafc">Agent reuses proof ID</text>
   </g>
   <!-- Vertical arrows -->
   <line x1="200" y1="128" x2="200" y2="148" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" stroke-linecap="round"/>

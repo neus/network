@@ -29,7 +29,7 @@ Less surface area: prefer interactive hosted flows; private reads need owner aut
 
 `client.verify()` defaults **private** with `storeOriginalContent: true`. VerifyGate create defaults **unlisted public**. [Security and trust](../platform/security-and-trust)
 
-If you use SDK `gateCheck` without an owner session, set unlisted public explicitly when you need that visibility:
+If you use SDK `gateCheck` without owner-authenticated access, set unlisted public explicitly when you need that visibility:
 
 ```javascript
 {
@@ -42,7 +42,7 @@ Set **`storeOriginalContent: false`** only when your product must **not** persis
 
 | Control | Purpose |
 |---------|---------|
-| `privacyLevel` | Vaulted (`private`) vs policy-checkable without session (`public`) |
+| `privacyLevel` | Vaulted (`private`) vs policy-checkable without owner auth (`public`) |
 | `publicDisplay` | Discovery vs unlisted |
 | `storeOriginalContent` | Retain original content (default true) vs hash-only |
 

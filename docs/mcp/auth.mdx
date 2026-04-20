@@ -1,29 +1,48 @@
 ---
 title: MCP Auth & Security
-description: When you need a URL only, and when to add a personal access key.
+description: Bearer personal access key for MCP. Use Access keys from your NEUS profile.
 icon: lock
 ---
 
-**URL-only:** `neus_context`, catalog, verify links - no NEUS account on your balance. Order: [Overview](./overview).
+## Without Bearer
 
-**Personal access key** ([Profile to Access keys](https://neus.network/profile?tab=account)): required for `neus_me`, private reads, and calls that debit **your** credits. Add it to MCP headers per [Setup](./setup); same shape as [SDK Authentication](../sdks/authentication). Confirm with `neus_me` after connect.
+**`neus_context`**, **`neus_proofs_check`**, public-scope **`neus_proofs_get`**, and catalog reads work with no key ([Overview](./overview)).
 
-Hosted `neus.network/verify` never uses your IDE or automation access key - end users sign in there separately.
+## With Bearer
 
-**Servers only:** trusted automation may reuse the same personal key on MCP HTTP. Never in browsers or mobile apps.
+Personal access key from [Access keys](https://neus.network/profile?tab=account):
 
-`neus_proofs_check` = yes/no only. Private proofs = API rules when signed in ([Proofs get](./proofs-get)).
+`Authorization: Bearer <npk_...>`
 
-## Related
+on the MCP HTTP connection ([Setup](./setup)). Same **`Authorization: Bearer`** pattern as [API authentication](../api/authentication) for REST.
 
-<CardGroup cols={2}>
- <Card title="Overview" icon="plug" href="./overview">
- Flow.
- </Card>
- <Card title="Setup" icon="code" href="./setup">
- Connect.
- </Card>
- <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
- Users.
- </Card>
+Use **`npk_*`** whenever an MCP tool needs your **account** (for example **`neus_me`** or private reads)—not the end user’s browser login.
+
+After Bearer: call **`neus_me`** after **`neus_context`**. Expect **`status: ok`**.
+
+## What Bearer enables
+
+Bearer enables **`neus_me`**, authenticated **`neus_proofs_get`**, profile reads, and **`neus_verify`** without an extra wallet signature when the key **profile wallet** matches **`walletAddress`** on instant verifiers ([Overview](./overview)). Interactive verifiers use [Hosted Verify](../cookbook/auth-hosted-verify).
+
+## End users vs automation
+
+| Situation | What to do |
+|-----------|------------|
+| User needs hosted passkey, OAuth, or social steps | Open **`neus.network/verify`** using **`hostedVerifyUrl`** from the tool response. |
+| User has a connected wallet | **`neus_verify`** with signature, or the same hosted URL when the tool returns it. |
+| You automate from an IDE or server | **`npk_*` Bearer** on MCP; direct HTTP uses the same header—[API authentication](../api/authentication). |
+
+## Security
+
+- Store keys in server or IDE MCP config only.
+- Rotate from Access keys if exposed.
+- When a tool returns **`hostedVerifyUrl`**, send the user to **`neus.network/verify`** for interactive steps.
+
+<CardGroup cols={3}>
+  <Card title="MCP overview" icon="plug" href="./overview">
+  </Card>
+  <Card title="Setup" icon="code" href="./setup">
+  </Card>
+  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+  </Card>
 </CardGroup>

@@ -3,6 +3,7 @@
  * Test utility functions for Day 1 production readiness
  */
 import { describe, it, expect } from 'vitest';
+import { createRequire } from 'module';
 import {
   constructVerificationMessage,
   validateWalletAddress,
@@ -26,6 +27,9 @@ import {
   getHostedCheckoutUrl,
   toAgentDelegationMaxSpend
 } from '../utils.js';
+
+const require = createRequire(import.meta.url);
+const cjsUtils = require('../cjs/utils.cjs');
 
 describe('Utils', () => {
 
@@ -62,6 +66,22 @@ describe('Utils', () => {
 
       expect(message).toContain('ownership-basic');
       expect(message).toContain('nft-ownership');
+    });
+
+    it('should keep CommonJS bundle signer format in sync with ESM source', () => {
+      const params = {
+        walletAddress: '0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db',
+        signedTimestamp: 1678886400000,
+        data: { content: 'test', owner: '0x742d35Cc6634C0532925a3b8D82AB78c0D73C3Db' },
+        verifierIds: ['ownership-basic'],
+        chainId: 84532
+      };
+
+      const esmMessage = constructVerificationMessage(params);
+      const cjsMessage = cjsUtils.constructVerificationMessage(params);
+
+      expect(cjsMessage).toBe(esmMessage);
+      expect(cjsMessage).toContain('Portable Proof Verification Request');
     });
   });
 

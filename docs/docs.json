@@ -41,17 +41,17 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "NEUS Docs - verification checkout for access and claims. Hosted Verify, SDK, save a verification ID, check later.",
-      "og:title": "NEUS Documentation",
-      "og:description": "Verification checkout for access and claims. Hosted Verify, SDK, reusable verification results.",
+      "description": "Portable trust for people, apps, and agents.",
+      "og:title": "NEUS Docs | The Portable Trust Layer",
+      "og:description": "Portable trust for people, apps, and agents.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
       "og:type": "website",
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
-      "twitter:title": "NEUS Documentation",
-      "twitter:description": "Verification checkout for access and claims. Hosted Verify and reusable results.",
+      "twitter:title": "NEUS Docs | The Portable Trust Layer",
+      "twitter:description": "Portable trust for people, apps, and agents. Proof earned in one place unlocks access, claims, payouts, and trusted actions everywhere else.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
@@ -68,7 +68,7 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Open platform",
+      "label": "Open Platform",
       "href": "https://neus.network/hub"
     }
   },
@@ -82,10 +82,14 @@
             "pages": [
               "index",
               "get-started",
+              "platform/setup",
+              "platform/billing",
+              "platform/payment-gates",
+              "platform/x402",
+              "integration",
+              "quickstart",
               "cookbook/auth-hosted-verify",
               "choose-an-integration-path",
-              "quickstart",
-              "integration",
               "examples",
               "platform/llm-docs"
             ]
@@ -94,7 +98,6 @@
             "group": "Platform",
             "pages": [
               "platform/overview",
-              "platform/setup",
               "platform/receipts-and-results",
               "platform/presets"
             ]
@@ -160,11 +163,9 @@
           {
             "group": "Production",
             "pages": [
-              "platform/billing",
               "platform/environments",
               "platform/rate-limits-and-retries",
               "platform/security-and-trust",
-              "platform/x402",
               "brand-kit"
             ]
           }
@@ -207,15 +208,15 @@
             "group": "MCP Basics",
             "pages": [
               "mcp/overview",
-              "mcp/endpoints",
               "mcp/setup",
               "mcp/auth",
-              "mcp/tools"
+              "mcp/endpoints"
             ]
           },
           {
-            "group": "Tool Pages",
+            "group": "Tool reference",
             "pages": [
+              "mcp/tools",
               "mcp/context",
               "mcp/verifiers-catalog",
               "mcp/proofs-check",
@@ -552,6 +553,14 @@
     },
     {
       "source": "/mcp/proofs",
+      "destination": "/mcp/proofs-get"
+    },
+    {
+      "source": "/mcp/proofs-index",
+      "destination": "/mcp/proofs-get"
+    },
+    {
+      "source": "/mcp/proof-content",
       "destination": "/mcp/proofs-get"
     },
     {
