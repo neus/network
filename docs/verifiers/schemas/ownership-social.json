@@ -4,9 +4,11 @@
   "description": "Social media account ownership via OAuth",
   "properties": {
     "internalSocialToken": {
+      "description": "Opaque token from the hosted link session after the user authorizes; not your app API key.",
       "type": "string"
     },
     "provider": {
+      "description": "OAuth provider to verify against.",
       "enum": [
         "discord",
         "github",
@@ -20,6 +22,7 @@
       "type": "string"
     },
     "walletAddress": {
+      "description": "Wallet bound to the social account when applicable.",
       "format": "universal-address",
       "type": "string"
     }

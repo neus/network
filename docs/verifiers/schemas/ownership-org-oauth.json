@@ -4,13 +4,16 @@
   "description": "Organizational OAuth verification",
   "properties": {
     "expectedOrgDomain": {
+      "description": "Optional DNS hostname for the organization (e.g. company.com) to match against the IdP directory.",
       "format": "hostname",
       "type": "string"
     },
     "internalSocialToken": {
+      "description": "Opaque token from the hosted org sign-in session; not your app API key.",
       "type": "string"
     },
     "provider": {
+      "description": "Identity provider for workspace or org sign-in.",
       "enum": [
         "google",
         "microsoft"
@@ -18,6 +21,7 @@
       "type": "string"
     },
     "walletAddress": {
+      "description": "Wallet to associate with the verified org identity.",
       "format": "universal-address",
       "type": "string"
     }

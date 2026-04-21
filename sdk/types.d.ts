@@ -141,8 +141,6 @@ declare module '@neus/sdk' {
     apiKey?: string;
     /** Optional public app attribution ID (maps to X-Neus-App) */
     appId?: string;
-    /** Optional sponsor capability token (maps to X-Sponsor-Grant) */
-    sponsorGrant?: string;
     /** Optional x402 receipt token for retry calls (maps to PAYMENT-SIGNATURE) */
     paymentSignature?: string;
     /** Optional extra passthrough headers for advanced integrations */
@@ -1211,8 +1209,6 @@ declare module '@neus/sdk/widgets' {
     apiUrl?: string;
     /** Optional public app attribution ID (maps to X-Neus-App) */
     appId?: string;
-    /** Optional sponsor capability token (maps to X-Sponsor-Grant) */
-    sponsorGrant?: string;
     /** Optional x402 receipt token for retry calls (maps to PAYMENT-SIGNATURE) */
     paymentSignature?: string;
     /** Optional extra passthrough headers for advanced integrations */

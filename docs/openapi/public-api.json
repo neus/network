@@ -124,11 +124,11 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Advanced/optional. EVM signing-context hint; when omitted, the API applies its default signing chain. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
+            "description": "Advanced/optional. EVM signing-context hint; auto-resolved to the protocol hub chain when omitted. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
           },
           "chain": {
             "type": "string",
-            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets typically omit this; defaults apply for signing context."
+            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; the protocol resolves hub context automatically."
           },
           "signatureMethod": {
             "type": "string"
@@ -235,11 +235,11 @@
           },
           "chainId": {
             "type": "integer",
-            "description": "Advanced/optional. EVM signing-context hint; when omitted, the API applies its default signing chain. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
+            "description": "Advanced/optional. EVM signing-context hint; auto-resolved to the protocol hub chain when omitted. Not required for standard integrations. For non-EVM, use chain (CAIP-2) instead. For chain-specific asset claims (NFT, token, contract), set chainId inside verifier data, not here."
           },
           "chain": {
             "type": "string",
-            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets typically omit this; defaults apply for signing context."
+            "description": "CAIP-2 chain identifier for non-EVM wallets (e.g. solana:mainnet). EVM wallets do not need this field; the protocol resolves hub context automatically."
           },
           "signatureMethod": {
             "type": "string"
@@ -1485,7 +1485,7 @@
       "get": {
         "operationId": "getVerifierCatalog",
         "summary": "Get supported verifiers and configuration",
-        "description": "Returns the public verifier catalog: supported verifier IDs, sanitized metadata (input schemas and hosted-vs-direct hints), and public chain configuration (default EVM signing context, asset allowlists). Operator-only fields are omitted from this response.",
+        "description": "Returns the public verifier catalog: supported verifier IDs, sanitized public metadata (input schemas + direct-vs-hosted capabilities), and backend chain configuration (hub chain, asset allowlists). Internal transport/provider fields are not exposed here.",
         "tags": [
           "Verification"
         ],
@@ -1666,7 +1666,7 @@
     "/api/v1/verification/status-batch": {
       "post": {
         "operationId": "getVerificationStatusBatch",
-        "summary": "Batch get verification status",
+        "summary": "Batch get verification status (minimal)",
         "tags": [
           "Verification"
         ],
@@ -2084,7 +2084,7 @@
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "description": "EVM chain ID of the asset being checked (e.g. 1 for Ethereum Mainnet, 8453 for Base). Required for asset verifiers (nft-ownership, token-holding, contract-ownership). Applies to asset checks only—not a generic proof-query filter."
+              "description": "EVM chain ID of the asset being checked (e.g. 1 for Ethereum Mainnet, 8453 for Base). Required for asset verifiers (nft-ownership, token-holding, contract-ownership). Not a hub or proof-storage filter."
             }
           },
           {

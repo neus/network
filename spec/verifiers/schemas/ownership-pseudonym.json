@@ -12,21 +12,25 @@
       "type": "string",
       "pattern": "^[a-z0-9][a-z0-9._-]{1,30}[a-z0-9]$",
       "minLength": 3,
-      "maxLength": 32
+      "maxLength": 32,
+      "description": "Stable handle for this identity within `namespace` (lowercase alphanumeric, dots, hyphens, underscores; 3–32 chars)."
     },
     "namespace": {
       "type": "string",
       "pattern": "^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$",
       "minLength": 1,
       "maxLength": 64,
-      "default": "neus"
+      "default": "neus",
+      "description": "Logical partition so the same `pseudonymId` can exist in different apps or communities. Omit to use the default namespace."
     },
     "displayName": {
       "type": "string",
-      "maxLength": 64
+      "maxLength": 64,
+      "description": "Optional display label for UX; omit or minimize PII if you do not need it."
     },
     "metadata": {
-      "type": "object"
+      "type": "object",
+      "description": "Optional app-defined structured fields (keep small; avoid secrets)."
     }
   }
 }

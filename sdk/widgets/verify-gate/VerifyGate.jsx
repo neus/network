@@ -132,7 +132,6 @@ export function VerifyGate({
   onVerified = undefined,
   apiUrl = undefined,
   appId = undefined,
-  sponsorGrant = undefined,
   paymentSignature = undefined,
   extraHeaders = undefined,
   hostedCheckoutUrl = undefined,
@@ -169,8 +168,8 @@ export function VerifyGate({
   const [operation, setOperation] = useState('verify');
 
   const client = useMemo(
-    () => new NeusClient({ apiUrl, appId, sponsorGrant, paymentSignature, extraHeaders }),
-    [apiUrl, appId, sponsorGrant, paymentSignature, extraHeaders]
+    () => new NeusClient({ apiUrl, appId, paymentSignature, extraHeaders }),
+    [apiUrl, appId, paymentSignature, extraHeaders]
   );
 
   const verifierList = useMemo(() => {

@@ -19,7 +19,8 @@
         "linkedin",
         "telegram",
         "coinbase"
-      ]
+      ],
+      "description": "OAuth provider to verify against."
     }
   }
 }

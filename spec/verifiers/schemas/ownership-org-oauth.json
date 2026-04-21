@@ -13,11 +13,13 @@
       "enum": [
         "google",
         "microsoft"
-      ]
+      ],
+      "description": "Identity provider for workspace or org sign-in."
     },
     "expectedOrgDomain": {
       "type": "string",
-      "format": "hostname"
+      "format": "hostname",
+      "description": "Optional DNS hostname for the organization (e.g. company.com) to match against the IdP directory."
     }
   }
 }

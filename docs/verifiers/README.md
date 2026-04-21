@@ -1,5 +1,6 @@
 # Verifier schemas
 
-**Machine-readable inputs for every verifier** - so apps and validators can check payloads against one shared format.
+JSON Schemas in **`schemas/`** describe the `data` object for each public verifier. They are generated from the protocol catalog so they stay aligned with validation.
 
-JSON Schemas live in **`schemas/`** and stay aligned with the [verifier catalog](https://docs.neus.network/verification/verifiers).
+- [Verifier catalog](https://docs.neus.network/verification/verifiers) (overview and usage)
+- Each **`*.md`** file in this folder lists fields, hosted-flow inputs where applicable, and an illustrative example payload.

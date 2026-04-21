@@ -340,9 +340,6 @@ export class NeusClient {
     if (typeof this.config.appId === 'string' && this.config.appId.trim().length > 0) {
       this.defaultHeaders['X-Neus-App'] = this.config.appId.trim();
     }
-    if (typeof this.config.sponsorGrant === 'string' && this.config.sponsorGrant.trim().length > 0) {
-      this.defaultHeaders['X-Sponsor-Grant'] = this.config.sponsorGrant.trim();
-    }
     if (typeof this.config.paymentSignature === 'string' && this.config.paymentSignature.trim().length > 0) {
       this.defaultHeaders['PAYMENT-SIGNATURE'] = this.config.paymentSignature.trim();
     }

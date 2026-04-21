@@ -24,6 +24,11 @@
       "type": "string",
       "format": "universal-address"
     },
+    "agentAccountId": {
+      "type": "string",
+      "format": "caip10-account",
+      "description": "Optional CAIP-10 account identifier for agentWallet. May be injected when inputs are normalized from wallet + chain context."
+    },
     "agentLabel": {
       "type": "string",
       "maxLength": 128
