@@ -102,6 +102,25 @@ Catalog: `GET /api/v1/verification/verifiers` - treat the response as authoritat
 | **`gateCheck()`** | **Allow/deny** via `GET /api/v1/proofs/check` (server-enforced). |
 | **`checkGate()`** | Preview against proofs you already loaded. Not for security-sensitive allow/deny vs **`gateCheck()`**. |
 
+## Wallet-link: hosted first, direct when needed
+
+For normal browser UX, route users to Hosted Verify so wallet selection, secondary-wallet signing, and proof creation stay guided. Use direct mode only when your integration already controls the secondary wallet/provider.
+
+```javascript
+const walletLinkData = await client.createWalletLinkData({
+  primaryWalletAddress: '0xprimary...',
+  secondaryWalletAddress: '0xsecondary...',
+  wallet: window.ethereum,
+  relationshipType: 'linked',
+  label: 'ops-wallet'
+});
+
+const res = await client.verify({
+  verifier: 'wallet-link',
+  data: walletLinkData
+});
+```
+
 ## App Attribution (`appId`)
 
 Set `appId` on the client to attribute usage and analytics to your app. `appId` is a public identifier, not a secret.

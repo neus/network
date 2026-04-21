@@ -3,7 +3,7 @@
   "version": "1.0.4",
   "description": "Portable trust for people, apps, and agents. Store a proof ID; check gates across surfaces.",
   "bin": {
-    "neus": "./cli/neus.mjs"
+    "neus": "cli/neus.mjs"
   },
   "main": "index.js",
   "type": "module",

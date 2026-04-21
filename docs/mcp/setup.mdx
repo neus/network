@@ -6,6 +6,18 @@ icon: code
 
 Product integration: [Get started](../get-started).
 
+## Fastest setup
+
+```bash
+npx -y -p @neus/sdk neus init
+```
+
+That command configures NEUS MCP in supported clients automatically. Add `--project` when you want shared repo config. Add personal auth later with:
+
+```bash
+npx -y -p @neus/sdk neus auth --access-key <npk_...>
+```
+
 ## Config
 
 Keep **`/mcp`** in the URL.

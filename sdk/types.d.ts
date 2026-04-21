@@ -54,6 +54,20 @@ declare module '@neus/sdk' {
 
     /** Get the public verifier catalog, including per-verifier capabilities. */
     getVerifierCatalog(): Promise<VerifierCatalog>;
+
+    /**
+     * Build and sign a wallet-link verifier payload with the secondary wallet.
+     * Use this for advanced direct/API flows; browser user-facing flows should still prefer hosted `/verify`.
+     */
+    createWalletLinkData(params: {
+      primaryWalletAddress: string;
+      secondaryWalletAddress: string;
+      wallet?: WalletLike;
+      chain?: string;
+      signedTimestamp?: number;
+      relationshipType?: 'primary' | 'personal' | 'org' | 'affiliate' | 'agent' | 'linked';
+      label?: string;
+    }): Promise<WalletLinkData>;
     
   /**
    * Poll verification status until completion

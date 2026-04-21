@@ -36,19 +36,22 @@ _Fields in the `data` object for the completed verification request (after signa
 
 _Illustrative values only. Use real addresses and tokens from your integration._
 
+**Recommended:** use hosted checkout for user-facing flows so the browser can guide wallet selection, collect the secondary-wallet signature, show a linked-success state, and only then create the proof.
+
+**Advanced direct mode:** if your integration already controls the secondary-wallet signature step, build the completed payload first and then call `verify()`:
+
 ```javascript
+const walletLinkData = await client.createWalletLinkData({
+  primaryWalletAddress: '0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+  secondaryWalletAddress: '0xcccccccccccccccccccccccccccccccccccccccc',
+  wallet: window.ethereum,
+  relationshipType: 'linked',
+  label: 'alt-wallet'
+});
+
 await client.verify({
   verifier: 'wallet-link',
-  data: {
-    "primaryWalletAddress": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-    "secondaryWalletAddress": "0xcccccccccccccccccccccccccccccccccccccccc",
-    "signature": "0xsecondary-signed",
-    "chain": "eip155:84532",
-    "signatureMethod": "eip191",
-    "signedTimestamp": 1700000000000,
-    "relationshipType": "linked",
-    "label": "alt-wallet"
-  }
+  data: walletLinkData
 });
 
 // Request shape (illustrative)

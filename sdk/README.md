@@ -16,7 +16,22 @@ npm install @neus/sdk
 npx -y -p @neus/sdk neus init
 ```
 
-Prints the hosted MCP URL and documentation links in your terminal - fast setup in IDEs and agent clients.
+Configures supported MCP clients automatically. By default the command installs NEUS into user-level Claude Code, Cursor, and VS Code MCP config when those clients are detected.
+
+## CLI
+
+```bash
+# Autopilot setup for detected clients
+npx -y -p @neus/sdk neus init
+
+# Enable personal account tools such as neus_me and private reads
+npx -y -p @neus/sdk neus auth --access-key <npk_...>
+
+# Inspect current NEUS MCP setup
+npx -y -p @neus/sdk neus status --json
+```
+
+Use `neus init --project` when you want shared repo config instead of personal user-scope setup. Access keys stay user-scope only so secrets do not land in checked-in config.
 
 ## Minimal working example
 
@@ -51,6 +66,7 @@ const check = await client.gateCheck({
 | `client.gateCheck()` | **Server eligibility** (use for real gates) |
 | `client.checkGate()` | Local preview only |
 | `getHostedCheckoutUrl()` | Hosted verify URL |
+| `client.createWalletLinkData()` | Build advanced direct wallet-link payload |
 
 ## VerifyGate (React)
 
@@ -73,6 +89,27 @@ const client = new NeusClient({
   apiUrl: 'https://api.neus.network',
   appId: 'my-app',
   timeout: 30000,
+});
+```
+
+## Wallet-link
+
+For user-facing browser flows, prefer Hosted Verify so the user can select a secondary wallet, sign once, see the linked state, and only then continue to proof creation.
+
+Use `client.createWalletLinkData()` only for advanced direct/API flows where your app already controls the secondary-wallet provider:
+
+```javascript
+const walletLinkData = await client.createWalletLinkData({
+  primaryWalletAddress: '0xprimary...',
+  secondaryWalletAddress: '0xsecondary...',
+  wallet: window.ethereum,
+  relationshipType: 'linked',
+  label: 'ops-wallet'
+});
+
+await client.verify({
+  verifier: 'wallet-link',
+  data: walletLinkData
 });
 ```
 

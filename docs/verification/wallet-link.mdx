@@ -16,6 +16,17 @@ icon: link
 
 Instant. The secondary wallet signs the linking payload.
 
+## Recommended UX
+
+For end-user browser flows, prefer **Hosted Verify** at [`/verify`](https://neus.network/verify). The hosted flow now stages wallet linking first:
+
+1. Connect the secondary wallet
+2. Sign the wallet-link payload
+3. Show **Linked**
+4. Continue to create the proof
+
+Use direct/API mode only for advanced integrations that already control the secondary-wallet signature step.
+
 ## Required Fields
 
 | Field | Required | Notes |
@@ -28,6 +39,8 @@ Instant. The secondary wallet signs the linking payload.
 
 ## Example
 
+Advanced direct/API payload after the secondary wallet has already signed:
+
 ```json
 {
   "primaryWalletAddress": "0x...",
@@ -37,4 +50,3 @@ Instant. The secondary wallet signs the linking payload.
   "signedTimestamp": 1730000000000
 }
 ```
-

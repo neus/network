@@ -210,6 +210,42 @@ describe('NeusClient', () => {
     });
   });
 
+  describe('createWalletLinkData()', () => {
+    it('builds a signed wallet-link payload for direct advanced flows', async () => {
+      const wallet = {
+        selectedAddress: '0x2222222222222222222222222222222222222222',
+        request: vi.fn(async ({ method, params }) => {
+          if (method === 'personal_sign') {
+            expect(typeof params?.[0]).toBe('string');
+            expect(params?.[1]).toBe('0x2222222222222222222222222222222222222222');
+            return '0xsigned';
+          }
+          throw new Error(`Unexpected method: ${method}`);
+        })
+      };
+
+      const data = await client.createWalletLinkData({
+        primaryWalletAddress: '0x1111111111111111111111111111111111111111',
+        secondaryWalletAddress: '0x2222222222222222222222222222222222222222',
+        wallet,
+        relationshipType: 'ORG',
+        label: ' Team wallet '
+      });
+
+      expect(data).toMatchObject({
+        primaryWalletAddress: '0x1111111111111111111111111111111111111111',
+        secondaryWalletAddress: '0x2222222222222222222222222222222222222222',
+        chain: `eip155:${client._getHubChainId()}`,
+        signature: '0xsigned',
+        signatureMethod: 'eip191',
+        relationshipType: 'org',
+        label: 'Team wallet'
+      });
+      expect(typeof data.signedTimestamp).toBe('number');
+      expect(wallet.request).toHaveBeenCalledTimes(1);
+    });
+  });
+
   describe('isHealthy()', () => {
     it('should return true for healthy API', async () => {
       fetch.mockResolvedValueOnce({

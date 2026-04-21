@@ -634,7 +634,7 @@ export function VerifyGate({
               !explicit?.signatureMethod
             ) {
               throw new Error(
-                'wallet-link requires verifierData: { secondaryWalletAddress, signature, chain, signatureMethod }'
+                'wallet-link direct mode requires verifierData: { secondaryWalletAddress, signature, chain, signatureMethod }. For user-facing flows, prefer hosted checkout.'
               );
             }
             return explicit;

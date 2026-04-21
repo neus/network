@@ -2481,7 +2481,7 @@
     "/api/v1/proofs/{qHash}": {
       "get": {
         "operationId": "getProofRecord",
-        "summary": "Get proof record by receipt id (qHash)",
+        "summary": "Get proof record by id",
         "description": "Returns the proof record and verification state. Payload is shaped for the caller (public vs owner vs private).",
         "tags": [
           "Proofs"

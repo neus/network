@@ -26,6 +26,12 @@ const FALLBACK_PUBLIC_VERIFIER_CATALOG = {
 };
 
 const EVM_ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;
+const WALLET_LINK_RELATIONSHIP_TYPES = new Set(['primary', 'personal', 'org', 'affiliate', 'agent', 'linked']);
+
+function normalizeWalletLinkRelationshipType(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  return WALLET_LINK_RELATIONSHIP_TYPES.has(normalized) ? normalized : 'linked';
+}
 
 const validateVerifierData = (verifierId, data) => {
   if (!data || typeof data !== 'object') {
@@ -488,6 +494,82 @@ export class NeusClient {
       chain: params.chain,
       signatureMethod: params.signatureMethod
     });
+  }
+
+  async createWalletLinkData(params = {}) {
+    const normalizedPrimary = this._normalizeIdentity(params.primaryWalletAddress);
+    const normalizedSecondary = this._normalizeIdentity(params.secondaryWalletAddress);
+
+    if (!EVM_ADDRESS_RE.test(normalizedPrimary)) {
+      throw new ValidationError('wallet-link requires a valid primaryWalletAddress');
+    }
+    if (!EVM_ADDRESS_RE.test(normalizedSecondary)) {
+      throw new ValidationError('wallet-link requires a valid secondaryWalletAddress');
+    }
+    if (normalizedPrimary === normalizedSecondary) {
+      throw new ValidationError('wallet-link secondaryWalletAddress must differ from primaryWalletAddress');
+    }
+
+    const providerWallet = params.wallet || this._getDefaultBrowserWallet();
+    const { signerWalletAddress, provider } = await this._resolveWalletSigner(providerWallet);
+    const normalizedSigner = this._normalizeIdentity(signerWalletAddress);
+    if (!EVM_ADDRESS_RE.test(normalizedSigner)) {
+      throw new ValidationError('wallet-link requires an EVM wallet/provider for the secondary wallet');
+    }
+    if (normalizedSigner !== normalizedSecondary) {
+      throw new ValidationError('wallet-link wallet/provider must be connected to secondaryWalletAddress');
+    }
+
+    const resolvedChain = (() => {
+      const raw = String(params.chain || '').trim();
+      if (!raw) return `eip155:${this._getHubChainId()}`;
+      if (!/^eip155:\d+$/.test(raw)) {
+        throw new ValidationError('wallet-link requires chain in the form eip155:<chainId>');
+      }
+      return raw;
+    })();
+    const signedTimestamp = Number.isFinite(Number(params.signedTimestamp)) && Number(params.signedTimestamp) > 0
+      ? Number(params.signedTimestamp)
+      : Date.now();
+    const linkData = {
+      primaryAccountId: `${resolvedChain}:${normalizedPrimary}`,
+      secondaryAccountId: `${resolvedChain}:${normalizedSecondary}`,
+      primaryWalletAddress: normalizedPrimary,
+      secondaryWalletAddress: normalizedSecondary
+    };
+    const message = constructVerificationMessage({
+      walletAddress: normalizedSecondary,
+      signedTimestamp,
+      data: linkData,
+      verifierIds: ['wallet-link'],
+      chain: resolvedChain
+    });
+
+    let signature;
+    try {
+      signature = await signMessage({
+        provider,
+        message,
+        walletAddress: signerWalletAddress
+      });
+    } catch (error) {
+      if (error?.code === 4001) {
+        throw new ValidationError('User rejected wallet-link signature request');
+      }
+      throw new ValidationError(`Failed to sign wallet-link message: ${error?.message || String(error)}`);
+    }
+
+    const label = String(params.label || '').trim().slice(0, 64);
+    return {
+      primaryWalletAddress: normalizedPrimary,
+      secondaryWalletAddress: normalizedSecondary,
+      signature,
+      chain: resolvedChain,
+      signatureMethod: 'eip191',
+      signedTimestamp,
+      relationshipType: normalizeWalletLinkRelationshipType(params.relationshipType),
+      ...(label ? { label } : {})
+    };
   }
 
   /**
