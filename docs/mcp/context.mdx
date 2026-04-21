@@ -4,6 +4,10 @@ description: Live verifier catalog, constraints, billing hints.
 icon: database
 ---
 
-On each **new MCP connection**, call **`neus_context`** first. **No access key.** The response carries **`requiredFields`**, default chain hints, and live verifier constraints—use it before **`neus_proofs_check`**, **`neus_verify`**, or **`neus_verifiers_catalog`** so you do not rely on stale verifier IDs.
+Call **`neus_context`** first on each **new MCP connection**. **No access key.**
 
-Full playbook: [Overview](./overview).
+| Provides | Use before |
+|------------|------------|
+| **`requiredFields`**, chain hints, live verifier constraints | **`neus_proofs_check`**, **`neus_verify`**, **`neus_verifiers_catalog`** (avoids stale verifier IDs) |
+
+Playbook: [Overview](./overview).

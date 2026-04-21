@@ -4,23 +4,29 @@ description: Tool choice, field names, recommended call order.
 icon: wrench
 ---
 
-**Bearer is optional.** [Auth](./auth). With Bearer, set **`walletAddress`** to your **profile wallet** for signatureless **`neus_verify`** on **instant** verifiers when the key profile matches. Interactive flows: **`neus_verify_or_guide`** returns **`hostedVerifyUrl`**.
+| Topic | Detail |
+|-------|--------|
+| Bearer | Optional ([Auth](./auth)). With Bearer, set **`walletAddress`** to your **profile wallet** for signatureless **`neus_verify`** on **instant** verifiers when the key profile matches. |
+| Interactive | **`neus_verify_or_guide`** → **`hostedVerifyUrl`** |
 
 ## Field names
 
-| Tool | Address | Verifiers |
-|------|---------|-----------|
+| Tool | Address field | Verifiers / filters |
+|------|---------------|---------------------|
 | `neus_proofs_check` | `wallet` | `verifiers` |
 | `neus_verify`, `neus_verify_or_guide` | `walletAddress` | `verifierIds` |
 | `neus_proofs_get` | `identifier` | optional `tags` (comma-separated, `proof.meta.tags`) |
 
-EVM `0x…`, Solana base58, or `did:pkh:…`. Delegated reads: **`agentWallet`** on **`neus_proofs_get`** ( **`x-agent-wallet`** on the API).
+EVM `0x…`, Solana base58, or `did:pkh:…`. Delegated reads: **`agentWallet`** on **`neus_proofs_get`** (**`x-agent-wallet`** on the API).
 
-## Recommended order
+## Order
 
-Same as [Overview](./overview): connect → **`neus_context`** → **`neus_me`** if Bearer → work (**`neus_verifiers_catalog`** only if you need raw schemas beyond context) → **`neus_proofs_get`**.
+| Phase | Calls |
+|-------|--------|
+| Default | Connect → **`neus_context`** → **`neus_me`** if Bearer → work → **`neus_proofs_get`** |
+| Catalog | **`neus_verifiers_catalog`** only when you need raw schemas beyond context |
 
-**Headless prepare/sign:** [Overview](./overview#headless-signing).
+Same flow as [Overview](./overview). **Headless prepare/sign:** [Overview](./overview#headless-signing).
 
 ## Reference pages
 

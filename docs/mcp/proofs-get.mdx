@@ -4,9 +4,12 @@ description: Proofs and profile summary for a wallet or DID.
 icon: receipt
 ---
 
-Use when you have an **`identifier`**. If the user still needs to verify, **`neus_verify_or_guide`** first.
+Use when you have an **`identifier`**. If the user still needs to verify, run **`neus_verify_or_guide`** first.
 
-**Visibility:** no Bearer → public-scope view; Bearer → can include **private** proofs for that account ([Auth](./auth)).
+| Auth | Visibility |
+|------|------------|
+| None | Public-scope view |
+| Bearer | Can include **private** proofs for that account ([Auth](./auth)) |
 
 ## Input
 
@@ -20,11 +23,15 @@ Use when you have an **`identifier`**. If the user still needs to verify, **`neu
 }
 ```
 
-**`identifier`:** EVM, Solana base58, **`did:pkh:…`**. **`tags`:** comma-separated filter on **`proof.meta.tags`**. **`agentWallet`:** delegation (**`x-agent-wallet`**).
+| Field | Notes |
+|-------|-------|
+| `identifier` | EVM, Solana base58, **`did:pkh:…`** |
+| `tags` | Comma-separated filter on **`proof.meta.tags`** |
+| `agentWallet` | Delegation (**`x-agent-wallet`**) |
 
 ## Response
 
-Proofs, **`profileSummary`**, pagination: follow the live tool response. **Tags** and proof bodies come from this call.
+Proofs, **`profileSummary`**, pagination—follow the live tool response. Tags and proof bodies come from this call.
 
 ## Next
 

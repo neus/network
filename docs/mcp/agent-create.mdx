@@ -4,11 +4,13 @@ description: Start agent setup; finish in hosted flow when prompted.
 icon: robot
 ---
 
-1. Call with **`agentId`** and **`agentWallet`** (and **`controllerWallet`** when you must supply the approver wallet explicitly—for example before hosted linking completes).
-2. **Open** any hosted URL the response gives you.
-3. **`neus_agent_link`** on the agent wallet to confirm readiness.
+| Step | Action |
+|------|--------|
+| 1 | Call with **`agentId`** and **`agentWallet`** (and **`controllerWallet`** when you must set the approver explicitly—e.g. before hosted linking completes) |
+| 2 | Open any hosted URL in the response |
+| 3 | **`neus_agent_link`** on the agent wallet to confirm readiness |
 
-Vocabulary: [Agent concepts](../agents/concepts). **`agentWallet` is required** - generate and custody keys in your own environment.
+Vocabulary: [Agent concepts](../agents/concepts). **`agentWallet` is required**—generate and custody keys in your environment.
 
 ## Minimal input
 
@@ -16,10 +18,10 @@ Vocabulary: [Agent concepts](../agents/concepts). **`agentWallet` is required** 
 { "agentId": "my-assistant", "agentWallet": "0x1234567890abcdef1234567890abcdef12345678" }
 ```
 
-Delegation, spend limits, and production agent fields: [Agent delegation](../agents/agent-delegation) and the SDK—not required for the minimal create → hosted flow above.
+Delegation, spend limits, and production fields: [Agent delegation](../agents/agent-delegation) and the SDK—not required for the minimal create → hosted flow above.
 
 ## Related
 
-Account tools (`neus_me`, private reads with Bearer): [Auth](./auth).
+Account tools (**`neus_me`**, private reads with Bearer): [Auth](./auth).
 
-[Agent link](./agent-link) | [Overview](./overview)
+[Agent link](./agent-link) · [Overview](./overview)

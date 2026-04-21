@@ -23,7 +23,7 @@ Keep **`/mcp`** in the URL.
 
 ## Optional Bearer
 
-`Authorization: Bearer` with a personal access key (`npk_*`) authenticates MCP the same way as REST. Use it for **`neus_me`**, private reads, credits, and signatureless **`neus_verify`** when the profile wallet matches ([Auth](./auth)).
+`Authorization: Bearer` with **`npk_*`** matches REST. Enables **`neus_me`**, private reads, credits, and signatureless **`neus_verify`** when the profile wallet matches ([Auth](./auth)).
 
 ```json
 {
@@ -37,15 +37,21 @@ Keep **`/mcp`** in the URL.
 }
 ```
 
-Mint keys: [Access keys](https://neus.network/profile?tab=account). Confirm: **`neus_me`** → **`status: ok`**. Never ship keys to the browser.
+| Check | |
+|-------|--|
+| Keys | [Access keys](https://neus.network/profile?tab=account) |
+| Confirm | **`neus_me`** → **`status: ok`** |
+| Never | Ship keys to the browser |
 
 ## First run
 
-1. Connect (above).
-2. **`neus_context`**
-3. If Bearer is set → **`neus_me`**; else skip.
-4. Verify, check, agents. [Tools](./tools).
-5. **`neus_proofs_get`** when you need proofs or **`qHash`**.
+| # | Step |
+|---|------|
+| 1 | Connect (config above) |
+| 2 | **`neus_context`** |
+| 3 | If Bearer → **`neus_me`**; else skip |
+| 4 | Verify, check, agents — [Tools](./tools) |
+| 5 | **`neus_proofs_get`** when you need proofs or **`qHash`** |
 
 Other clients: same URL, same optional **`Authorization`** header.
 

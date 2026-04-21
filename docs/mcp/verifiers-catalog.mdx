@@ -4,7 +4,10 @@ description: Live verifier IDs and metadata from NEUS.
 icon: table
 ---
 
-Full catalog JSON from the API. **Most integrations only need `neus_context`**; open this page when you need the complete raw list or schemas.
+| Situation | Tool |
+|-----------|------|
+| Typical integration | **`neus_context`** |
+| Full raw catalog / schemas | This tool |
 
 ## Input
 
@@ -14,4 +17,4 @@ Full catalog JSON from the API. **Most integrations only need `neus_context`**; 
 
 ## Output
 
-An array of verifiers (id, labels, flow hints, and more) plus **`meta.count`**. The full response shape is defined by the tool schema.
+Array of verifiers (id, labels, flow hints, …) and **`meta.count`**. Full shape: live tool schema.

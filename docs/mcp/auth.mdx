@@ -4,39 +4,39 @@ description: Bearer personal access key for MCP. Use Access keys from your NEUS 
 icon: lock
 ---
 
-## Without Bearer
+Personal access keys: [Access keys](https://neus.network/profile?tab=account). Same **`Authorization: Bearer`** pattern as [API authentication](../api/authentication). Apply on the MCP HTTP connection ([Setup](./setup)).
 
-**`neus_context`**, **`neus_proofs_check`**, public-scope **`neus_proofs_get`**, and catalog reads work with no key ([Overview](./overview)).
+| Auth | What works |
+|------|------------|
+| **None** | `neus_context`, `neus_proofs_check`, public-scope `neus_proofs_get`, verifier catalog reads ([Overview](./overview)) |
 
-## With Bearer
+| Bearer (`npk_*`) | Detail |
+|------------------|--------|
+| Unlocks | `neus_me`, authenticated `neus_proofs_get`, profile reads |
+| `neus_verify` (instant) | No extra signature when **profile wallet** matches **`walletAddress`** ([Overview](./overview)) |
+| Interactive verifiers | [Hosted Verify](../cookbook/auth-hosted-verify) |
 
-Personal access key from [Access keys](https://neus.network/profile?tab=account):
+#### Header
 
-`Authorization: Bearer <npk_...>`
+```
+Authorization: Bearer <npk_...>
+```
 
-on the MCP HTTP connection ([Setup](./setup)). Same **`Authorization: Bearer`** pattern as [API authentication](../api/authentication) for REST.
+Use **`npk_*`** when a tool needs **your account** (e.g. `neus_me`, private reads)—not the end user’s browser login.
 
-Use **`npk_*`** whenever an MCP tool needs your **account** (for example **`neus_me`** or private reads)—not the end user’s browser login.
-
-After Bearer: call **`neus_me`** after **`neus_context`**. Expect **`status: ok`**.
-
-## What Bearer enables
-
-Bearer enables **`neus_me`**, authenticated **`neus_proofs_get`**, profile reads, and **`neus_verify`** without an extra wallet signature when the key **profile wallet** matches **`walletAddress`** on instant verifiers ([Overview](./overview)). Interactive verifiers use [Hosted Verify](../cookbook/auth-hosted-verify).
-
-## End users vs automation
+**With Bearer:** call `neus_context`, then `neus_me` → expect **`status: ok`**.
 
 | Situation | What to do |
 |-----------|------------|
 | User needs hosted passkey, OAuth, or social steps | Open **`neus.network/verify`** using **`hostedVerifyUrl`** from the tool response. |
-| User has a connected wallet | **`neus_verify`** with signature, or the same hosted URL when the tool returns it. |
-| You automate from an IDE or server | **`npk_*` Bearer** on MCP; direct HTTP uses the same header—[API authentication](../api/authentication). |
+| User has a connected wallet | **`neus_verify`** with signature, or the hosted URL when the tool returns it. |
+| IDE or server automation | **`npk_*` Bearer** on MCP; direct HTTP uses the same header ([API authentication](../api/authentication)). |
 
-## Security
-
-- Store keys in server or IDE MCP config only.
-- Rotate from Access keys if exposed.
-- When a tool returns **`hostedVerifyUrl`**, send the user to **`neus.network/verify`** for interactive steps.
+| Topic | Rule |
+|-------|------|
+| Store keys | Server or IDE MCP config only. |
+| Rotate | Re-issue from Access keys if exposed. |
+| `hostedVerifyUrl` | Send the user to **`neus.network/verify`**. |
 
 <CardGroup cols={3}>
   <Card title="MCP overview" icon="plug" href="./overview">

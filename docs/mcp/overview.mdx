@@ -4,7 +4,7 @@ description: Hosted NEUS MCP, optional Bearer, verification and proof tools.
 icon: plug
 ---
 
-**Endpoint:** `https://mcp.neus.network/mcp`.
+**Endpoint:** `https://mcp.neus.network/mcp`
 
 <CardGroup cols={3}>
   <Card title="Setup" icon="code" href="./setup">
@@ -15,28 +15,36 @@ icon: plug
   </Card>
 </CardGroup>
 
-## Two URLs
+## URLs
 
-| URL | Use |
-|-----|-----|
-| `https://mcp.neus.network/mcp` | MCP client transport for **`neus_*`** tools. |
-| **`hostedVerifyUrl`** (from tools) | Browser verification. Open the URL from the tool response. |
+| URL | Role |
+|-----|------|
+| `https://mcp.neus.network/mcp` | MCP transport for **`neus_*`** tools |
+| **`hostedVerifyUrl`**| Browser verification—open from the response |
 
-## Recommended tool order
+## Playbook
 
-1. **Connect.** [Setup](./setup).
-2. **`neus_context`.** Live verifiers, **`requiredFields`**, defaults (no key).
-3. **Bearer.** **`neus_me`** → **`status: ok`**. Skip if you use public tools only ([Auth](./auth)).
-4. **Work.** **`neus_proofs_check`**. **`neus_verify`** on instant verifiers when Bearer profile wallet matches **`walletAddress`**, or **`neus_verify_or_guide`** → **`hostedVerifyUrl`**. Agents: **`neus_agent_create`**, hosted steps, **`neus_agent_link`**.
-5. **`neus_proofs_get`.** Proofs, profile summary, optional **`tags=`**, **`qHash`**.
+| Step | Action |
+|------|--------|
+| 1 | Connect — [Setup](./setup) |
+| 2 | **`neus_context`** — live verifiers, **`requiredFields`**, defaults (no key) |
+| 3 | If using Bearer — **`neus_me`** → **`status: ok`** ([Auth](./auth)); skip if you only use public tools |
+| 4 | Verify — **`neus_proofs_check`**; **`neus_verify`** (instant + matching profile wallet) or **`neus_verify_or_guide`** → **`hostedVerifyUrl`** |
+| 5 | Agents — **`neus_agent_create`**, hosted steps, **`neus_agent_link`** |
+| 6 | **`neus_proofs_get`** — proofs, profile summary, optional **`tags=`**, **`qHash`** |
 
 Use **`neus_context`** for current **`requiredFields`**.
 
 ## Headless signing
 
-**`neus_verify`** without **`signature`** (prepare) → sign **`signerString`** → **`neus_verify`** again with the **same** `walletAddress`, `verifierIds`, `data`, `signedTimestamp`, `chain`, plus **`signature`**. Do not repeat prepare.
+| Step | What to send |
+|------|----------------|
+| Prepare | **`neus_verify`** without **`signature`** → sign **`signerString`** |
+| Finish | **`neus_verify`** again with the **same** `walletAddress`, `verifierIds`, `data`, `signedTimestamp`, `chain`, plus **`signature`** |
 
-Field names and tool list: [Tools](./tools). **`ownership-basic`:** [Ownership](../verification/ownership-basic). **402:** [x402](../platform/x402).
+Do not repeat prepare.
+
+Field names and tools: [Tools](./tools). **`ownership-basic`:** [Ownership](../verification/ownership-basic). **402:** [x402](../platform/x402).
 
 **Apps:**
 

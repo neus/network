@@ -4,9 +4,14 @@ description: Current account via MCP when you send a personal access key.
 icon: user-circle
 ---
 
-Call after **`neus_context`** when the MCP connection sends **`Authorization: Bearer`** with a personal access key from [Access keys](https://neus.network/profile?tab=account) ([Auth](./auth), [Overview](./overview)). Same header shape as [API authentication](../api/authentication). **`neus_me`** needs that Bearer—an end user’s interactive login in the browser is not passed through MCP. URL-only MCP returns **`auth_required`**.
+Call after **`neus_context`** when the connection sends **`Authorization: Bearer`** with a personal access key from [Access keys](https://neus.network/profile?tab=account) ([Auth](./auth), [Overview](./overview)). Same header as [API authentication](../api/authentication).
 
-End-user verification without your key: **`neus_verify_or_guide`**. Public identifier lookup: **`neus_proofs_get`** (visibility rules apply).
+| Topic | Detail |
+|-------|--------|
+| **`neus_me` + Bearer** | End-user browser login is **not** passed through MCP |
+| URL-only MCP | Returns **`auth_required`** |
+| No key, user must verify | **`neus_verify_or_guide`** |
+| Public identifier lookup | **`neus_proofs_get`** (visibility rules apply) |
 
 ## Input
 
@@ -16,4 +21,7 @@ End-user verification without your key: **`neus_verify_or_guide`**. Public ident
 
 ## Output
 
-**`status: ok`:** `principal` (DID, handle, primary account), optional `agents`. **`status: auth_required`:** optional **`ui_url`**.
+| `status` | Payload |
+|----------|---------|
+| **`ok`** | `principal` (DID, handle, primary account), optional `agents` |
+| **`auth_required`** | Optional **`ui_url`** |
