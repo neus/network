@@ -21,7 +21,7 @@ body:
     attributes:
       label: Version(s)
       description: Package versions or git SHA
-      placeholder: "sdk@1.0.0 / widgets@1.0.0 / commit abc123"
+      placeholder: "sdk@1.0.5 (widgets included in sdk) / mcp@1.0.0 / commit abc123"
     validations: { required: true }
 
   - type: input
