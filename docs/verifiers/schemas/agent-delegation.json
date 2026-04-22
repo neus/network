@@ -50,7 +50,7 @@
       "type": "integer"
     },
     "instructions": {
-      "maxLength": 4000,
+      "maxLength": 16000,
       "type": "string"
     },
     "maxSpend": {

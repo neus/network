@@ -30,7 +30,7 @@ _Fields in the `data` object for the completed verification request (after signa
 - `allowedPaymentTypes` (`array`)
 - `receiptDisclosure` (`string enum: none, summary, full`)
 - `expiresAt` (`integer`)
-- `instructions` (`string max 4000`)
+- `instructions` (`string max 16000`)
 - `skills` (`array`): Agent skills as structured objects
 
 - **Compatible with:** `agent-identity`, `ownership-org-oauth`, `wallet-risk`, `wallet-link`

@@ -140,7 +140,7 @@ Examples:
 
 Agent onboarding: `https://neus.network/verify?preset=agent-pack`
 
-## Verifiers (overview)
+## Verifiers
 
 **Live catalog:** [Verifier catalog](https://docs.neus.network/verification/verifiers). Machine-readable lists and schemas ship in [`spec/`](./spec/VERIFIERS.json) for reference and validation tooling.
 

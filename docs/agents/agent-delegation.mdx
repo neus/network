@@ -80,7 +80,7 @@ await client.verify({
 | `allowedPaymentTypes` | No | Allowed payment rails for delegated spend |
 | `receiptDisclosure` | No | `summary`, `full`, or `none` |
 | `expiresAt` | No | Expiration timestamp (Unix ms) |
-| `instructions` | No | Policy instructions (max 4000 chars) |
+| `instructions` | No | Policy instructions (max 16000 chars) |
 | `skills` | No | Up to 48 skill objects (`id` required) |
 
 Proof responses may include CAIP-10 `controllerAccountId` and `agentAccountId`. Schema: [`agent-delegation.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/agent-delegation.json).

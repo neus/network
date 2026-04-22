@@ -83,7 +83,7 @@
     },
     "instructions": {
       "type": "string",
-      "maxLength": 4000
+      "maxLength": 16000
     },
     "skills": {
       "type": "array",

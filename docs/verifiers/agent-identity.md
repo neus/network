@@ -25,7 +25,7 @@ _Fields in the `data` object for the completed verification request (after signa
 - `agentType` (`string enum: ai, bot, service, automation, agent`)
 - `description` (`string max 500`)
 - `capabilities` (`object`): Agent capabilities as boolean flags
-- `instructions` (`string max 4000`)
+- `instructions` (`string max 16000`)
 - `skills` (`array`): Agent skills as structured objects
 - `services` (`array`)
 

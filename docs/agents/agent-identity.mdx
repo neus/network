@@ -42,7 +42,7 @@ await client.verify({
     agentType: 'ai',
     description: 'My AI assistant',
     capabilities: { search: true, mcp: true },
-    instructions: 'System prompt (max 4000 chars)',
+    instructions: 'System and operating instructions (max 16000 chars)',
     skills: [
       { id: 'web-search', kind: 'mcp' },
       { id: 'vercel-react-best-practices', kind: 'plugin' },
@@ -66,7 +66,7 @@ await client.verify({
 | `agentType` | No | enum | `ai`, `bot`, `service`, `automation`, or `agent` |
 | `description` | No | 500 chars | Agent description |
 | `capabilities` | No | - | Boolean flags (`search`, `mcp`, `proofs`, …) - see schema |
-| `instructions` | No | 4000 chars | System prompt or behavioral instructions |
+| `instructions` | No | 16000 chars | System prompt, tool/connector policy, output format, and safety/PII handling; portable in the signed identity |
 | `skills` | No | 48 objects | Each object requires `id`; optional `kind`, `label`, … |
 | `services` | No | 16 items | `name` + `endpoint` (+ optional `version`) |
 

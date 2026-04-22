@@ -92,27 +92,6 @@ const client = new NeusClient({
 });
 ```
 
-## Wallet-link
-
-For user-facing browser flows, prefer Hosted Verify so the user can select a secondary wallet, sign once, see the linked state, and only then continue to proof creation.
-
-Use `client.createWalletLinkData()` only for advanced direct/API flows where your app already controls the secondary-wallet provider:
-
-```javascript
-const walletLinkData = await client.createWalletLinkData({
-  primaryWalletAddress: '0xprimary...',
-  secondaryWalletAddress: '0xsecondary...',
-  wallet: window.ethereum,
-  relationshipType: 'linked',
-  label: 'ops-wallet'
-});
-
-await client.verify({
-  verifier: 'wallet-link',
-  data: walletLinkData
-});
-```
-
 ## Docs
 
 - [Quickstart](https://docs.neus.network/quickstart)
