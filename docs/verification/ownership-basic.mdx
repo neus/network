@@ -26,10 +26,9 @@ Instant proof: SDK, API, or `VerifyGate` with a wallet. Visibility: [Security an
 
 ## Persisting text (`publicContent`)
 
-- Stored bytes live in **`proof.publicContent.content`** (field name is historical; visibility is `options.privacyLevel`).
-- **Private** and **unlisted public** (`privacyLevel=public`, `publicDisplay=false`): originals are stored **by default** when `data.content` is present. Opt out: `options.storeOriginalContent: false`.
-- **Feed-discoverable** (`privacyLevel=public`, `publicDisplay=true`): **hash-first by default**; set `options.storeOriginalContent: true` to store full text in listings-capable proofs.
-- API responses keep long text out of `verifiedVerifiers[].data` (compact allowlist); use **`publicContent`** for the body.
+- If you send `content`, NEUS can store it with the proof.
+- Most builders should keep the default private visibility and only change storage behavior for advanced cases.
+- Public proof behavior depends on the visibility options you choose. Start with [Security and trust](../platform/security-and-trust).
 
 ## Example
 

@@ -8,18 +8,18 @@ Default strategy: **`reuse-or-create`**.
 
 ## Privacy
 
-`client.verify()` defaults to **private** stored results. VerifyGate create defaults to **unlisted public**. Full matrix: [Security and trust](../platform/security-and-trust)
+`client.verify()` defaults to **private**. `VerifyGate` create also defaults to **private**. Full matrix: [Security and trust](../platform/security-and-trust)
 
 | Option | When |
 |--------|------|
-| `privacyLevel: 'private'` | SDK default; owner or authorized access for private reads |
-| `privacyLevel: 'public'` | Eligibility checks without owner auth; pair with `publicDisplay` |
+| `privacyLevel: 'private'` | Default; owner or authorized access for private reads |
+| `privacyLevel: 'public'` | Public reuse without owner auth; pair with `publicDisplay` |
 | `publicDisplay: false` | Unlisted - still public to anyone with id |
 | `publicDisplay: true` | Listed / discoverable (needs `public`) |
 
-`storeOriginalContent: false` - hash-first when your verifier/policy allows.
+`storeOriginalContent` is an advanced storage control.
 
-Unlisted gate example:
+Public-unlisted example:
 
 ```javascript
 options: {

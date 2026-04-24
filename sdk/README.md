@@ -70,7 +70,7 @@ const check = await client.gateCheck({
 
 ## VerifyGate (React)
 
-Defaults: unlisted public create (`privacyLevel: 'public'`, `publicDisplay: false`). Set `proofOptions` for other visibility.
+Defaults: private create (`privacyLevel: 'private'`, `publicDisplay: false`). Set `proofOptions` only when you intentionally need public visibility.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';

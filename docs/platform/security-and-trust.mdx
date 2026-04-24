@@ -1,10 +1,10 @@
 ---
 title: Security and Trust
-description: Public, unlisted, and private proofs - one decision page.
+description: Choose proof visibility. Default to private.
 icon: user-shield
 ---
 
-Pick visibility here. Short guides link in for defaults.
+Use this page only to choose visibility. Most builders should stay private.
 
 ## Boundaries
 
@@ -16,31 +16,22 @@ Pick visibility here. Short guides link in for defaults.
 
 | Mode | `privacyLevel` | `publicDisplay` | Use |
 |------|----------------|-----------------|-----|
-| Listed public | `public` | `true` | Discoverable |
-| Unlisted public | `public` | `false` | Gates, reuse, not listed |
-| Owner-only | `private` | `false` | Owner auth |
+| Private | `private` | `false` | Default. Owner-only reads. |
+| Unlisted public | `public` | `false` | Public by link or id, not listed. |
+| Listed public | `public` | `true` | Discoverable public proof. |
 
-Saved **verification IDs** are capability-bearing links for the mode you chose.
+Saved **verification IDs** follow the visibility you chose.
 
-`privacyLevel`: vaulted vs checkable without sign-in. `publicDisplay`: listed vs not. Unlisted public still works for anyone with the id.
+`privacyLevel` decides private vs public. `publicDisplay` only matters for public proofs. Unlisted public still works for anyone with the id.
 
 ## Defaults
 
 | Surface | Create default |
 |---------|----------------|
-| `client.verify()` | `private`, `storeOriginalContent: true` |
-| VerifyGate | unlisted public (`public` + `publicDisplay: false` + `storeOriginalContent: true`) |
+| `client.verify()` | `private` |
+| `VerifyGate` | `private` |
 
-Override with `proofOptions` when you need listed public or stricter private.
-
-## storeOriginalContent
-
-| | Effect |
-|--|--------|
-| `true` (default) | Keep content context for verification. |
-| `false` | Hash-first where your verifier allows - know the tradeoff. |
-
-Wallet-signed **`ownership-basic`** (API / MCP): storage and listed-public behavior. [Ownership and Provenance](../verification/ownership-basic).
+Override with `proofOptions` only when you intentionally need public reuse or discovery.
 
 ## Never ship publicly
 
@@ -53,7 +44,7 @@ Raw signatures, owner-only payloads, private proof enumeration.
  <Item>Respect verifier time windows.</Item>
  <Item>Interactive flows via `/verify`.</Item>
  <Item>Verifier list from live API catalog.</Item>
- <Item>Set visibility for raw SDK; know VerifyGate defaults.</Item>
+ <Item>Keep proofs private unless your product explicitly needs public visibility.</Item>
 </Checklist>
 
 ## Next

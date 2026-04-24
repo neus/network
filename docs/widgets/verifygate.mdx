@@ -4,7 +4,7 @@ description: Gate React UI behind verification with hosted verify built in.
 icon: object-group
 ---
 
-`VerifyGate`: check to hosted verify when needed to unlock. Create defaults **unlisted public** so gates work without extra `proofOptions`. Raw `client.verify()` stays **private**. [Security and trust](../platform/security-and-trust) | [Get started](../get-started)
+`VerifyGate`: check to hosted verify when needed to unlock. Create defaults **private**, matching raw `client.verify()`. [Security and trust](../platform/security-and-trust) | [Get started](../get-started)
 
 ## Default create behavior
 
@@ -12,11 +12,10 @@ When **`proofOptions`** is omitted, create mode merges:
 
 | Field | Default |
 |-------|---------|
-| `privacyLevel` | `public` |
+| `privacyLevel` | `private` |
 | `publicDisplay` | `false` |
-| `storeOriginalContent` | `true` |
 
-Pass **`proofOptions`** to force **listed public** (`public` + `publicDisplay: true`) or **private** storage.
+Pass **`proofOptions`** only when you intentionally need **unlisted public** or **listed public**.
 
 ## Basic usage
 
@@ -49,7 +48,7 @@ export function Page() {
 | `requiredVerifiers` | Sets the verification policy |
 | `verifierData` | Supplies verifier-specific inputs |
 | `strategy` | Chooses reuse, reuse-or-create, or fresh |
-| `proofOptions` | Overrides privacy and content storage (defaults are unlisted public) |
+| `proofOptions` | Overrides privacy and content storage (defaults are private) |
 | `mode` | Chooses create vs access behavior |
 | `proofId` | Existing id for access mode |
 | `appId` | Sends public app attribution; usage bills the linked app owner profile |

@@ -1,53 +1,43 @@
 ---
 title: Hosted Verify
-description: NEUS-hosted browser flow. Store the ID and use it again on the next surface.
+description: NEUS-hosted verification flow for login, social checks, human checks, org checks, and gated access.
 icon: key
 ---
 
-**Default.** The user finishes on NEUS. Your app stores the **proof ID**. **Check** before asking again. [Integration](../integration#loop). **Billing.** [Billing](../platform/billing).
+NEUS-hosted verification flow for login, social checks, human checks, org checks, and gated access.
 
-Build links with the SDK (`returnUrl`). Read the result with the SDK after return.
+Use Hosted Verify when the user needs to complete an interactive step on NEUS. After completion, your app receives the result, stores the proof ID, and checks that proof before asking the user to verify again.
 
-**Automation.** [MCP](../mcp/overview). Interactive steps use this hosted URL.
+## When to use Hosted Verify
 
-## When
-
-| Need | Why hosted |
-|------|------------|
-| Login | Guided signer |
-| Social | OAuth in NEUS |
-| Human / org | Interactive |
+| Need | Why |
+| --- | --- |
+| Login | Guided wallet and session flow |
+| Social verification | OAuth completes on NEUS |
+| Human or org verification | Interactive provider flow |
+| Gate access | User completes requirements before unlock |
 
 ## URL
 
-Base: `https://neus.network/verify`
+Base URL:
+
+```txt
+https://neus.network/verify
+```
+
+Supported parameters:
 
 | Param | Role |
-|-------|------|
-| `intent=login` | Session-first |
-| `verifiers` | Comma-separated ids |
-| `preset` | Bundled set |
+| --- | --- |
+| `intent` | Flow type, such as login |
+| `verifiers` | Comma-separated verifier IDs |
+| `preset` | Bundled verifier set |
 | `gateId` | Gate requirements |
-| `returnUrl` | Next page |
-| `mode=popup` | Popup + `postMessage` |
-| `origin` | Popup opener |
+| `returnUrl` | Where to send the user after completion |
+| `mode=popup` | Popup flow |
+| `origin` | Popup opener origin |
 
-## Auth surfaces
-
-Passkeys require a **secure context** (HTTPS or localhost). Browsers may offer cross-device or security-key flows.
-
-| Surface | Passkeys | Wallet |
-|--------|----------|--------|
-| Desktop | Device passkeys, handoff, cross-device | Connect from page; QR needs a gesture |
-| Mobile / PWA | OS or browser passkey UI when available | Prefer wallet app / deep link |
-
-Use **https** or **http://localhost** with an origin that matches the app domain you configured for Hosted Verify—not raw LAN IPs.
-
-PWAs: do not cache Hosted Verify or login responses in your service worker.
-
-`getHostedCheckoutUrl` builds a **Hosted Verify** URL - the same `https://neus.network/verify` flow as the query-string examples below.
-
-## Code
+## SDK
 
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';
@@ -58,13 +48,13 @@ window.location.href = getHostedCheckoutUrl({
 });
 ```
 
-**Popup:** `mode: 'popup'`, `origin: window.location.origin`, `window.open`, listen for `neus_checkout_done` / `neus_login_complete`. **Redirect:** handle `returnUrl` + SDK.
+## Popup flow
 
-## Next
+Use `mode: 'popup'`, pass `origin: window.location.origin`, open the Hosted Verify URL, and listen for:
 
-<CardGroup cols={2}>
-  <Card title="Authentication" icon="key" href="../sdks/authentication">
-  </Card>
-  <Card title="Verification results" icon="receipt" href="../platform/receipts-and-results">
-  </Card>
-</CardGroup>
+- `neus_checkout_done`
+- `neus_login_complete`
+
+## Result handling
+
+After redirect or popup completion, read the result with the SDK, store the proof ID, and reuse that proof before asking the user to verify again.

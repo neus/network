@@ -4,8 +4,6 @@ description: Security best practices for NEUS SDK integrations.
 icon: lock
 ---
 
-Less surface area: prefer interactive hosted flows; private reads need owner auth.
-
 ## Auth by operation
 
 | Operation | Auth |
@@ -27,9 +25,9 @@ Less surface area: prefer interactive hosted flows; private reads need owner aut
 
 ## Defaults
 
-`client.verify()` defaults **private** with `storeOriginalContent: true`. VerifyGate create defaults **unlisted public**. [Security and trust](../platform/security-and-trust)
+`client.verify()` defaults **private**. `VerifyGate` create also defaults **private**. [Security and trust](../platform/security-and-trust)
 
-If you use SDK `gateCheck` without owner-authenticated access, set unlisted public explicitly when you need that visibility:
+If you need proof reuse without owner-authenticated access, opt into unlisted public explicitly:
 
 ```javascript
 {
@@ -38,13 +36,13 @@ If you use SDK `gateCheck` without owner-authenticated access, set unlisted publ
 }
 ```
 
-Set **`storeOriginalContent: false`** only when your product must **not** persist original bytes (hash/metadata only).
+Do not treat unlisted public proofs as secret.
 
 | Control | Purpose |
 |---------|---------|
-| `privacyLevel` | Vaulted (`private`) vs policy-checkable without owner auth (`public`) |
+| `privacyLevel` | Default private; switch to public only for intentional public reuse |
 | `publicDisplay` | Discovery vs unlisted |
-| `storeOriginalContent` | Retain original content (default true) vs hash-only |
+| `storeOriginalContent` | Advanced storage control |
 
 <Note>
 Unlisted public proofs are still public to anyone with the proof id.

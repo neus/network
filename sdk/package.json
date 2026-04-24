@@ -84,7 +84,7 @@
     "node": ">=20.0.0"
   },
   "peerDependencies": {
-    "@zkpassport/sdk": "0.12.5",
+    "@zkpassport/sdk": "0.13.1",
     "ethers": "^6.0.0",
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0"
@@ -101,7 +101,7 @@
     }
   },
   "optionalDependencies": {
-    "@zkpassport/sdk": "0.12.5"
+    "@zkpassport/sdk": "0.13.1"
   },
   "dependencies": {
     "bs58": "^6.0.0"

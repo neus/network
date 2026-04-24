@@ -16,18 +16,23 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 
 ## Privacy defaults
 
-**`client.verify()`** defaults to **private** stored results with **original content stored** (owner-authenticated reads).
+**`client.verify()`** defaults to **private**.
 
-**`VerifyGate`** create mode defaults to **unlisted public** (`privacyLevel: 'public'`, `publicDisplay: false`, `storeOriginalContent: true`) so gates and `gateCheck` work without extra options.
+**`VerifyGate`** create mode also defaults to **private**.
 
-For raw SDK flows that must power **`gateCheck`** without owner-authenticated access, set **unlisted public** explicitly (`privacyLevel: 'public'`, `publicDisplay: false`). Anyone with the proof id can resolve public proofs. Do not treat unlisted as secret.
+Use public visibility only when you intentionally need proof reuse without owner-authenticated access:
 
-**Hide original content** (metadata/hash only): set `storeOriginalContent: false` when your product must not persist original bytes.
+- unlisted public: `privacyLevel: 'public'`, `publicDisplay: false`
+- listed public: `privacyLevel: 'public'`, `publicDisplay: true`
+
+Do not treat unlisted public proofs as secret.
+
+`storeOriginalContent` is an advanced storage control. Most integrations should leave the default as-is.
 
 Controls:
 
-- `privacyLevel` - private (vaulted to the wallet) vs public (eligible for policy checks without proving owner identity)
+- `privacyLevel` - private by default; switch to public only for intentional public reuse
 - `publicDisplay` - discovery vs unlisted
-- `storeOriginalContent` - retain original content vs hash/metadata only
+- `storeOriginalContent` - advanced content-storage control
 
 Discoverable listings require **`privacyLevel: 'public'`** and **`publicDisplay: true`**.

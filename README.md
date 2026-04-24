@@ -80,7 +80,7 @@ Next: [SDK README](./sdk/README.md) | [docs.neus.network](https://docs.neus.netw
 | Resolvable handles | `https://neus.network/agent/<agentId>`, result URLs, wallet, DID |
 | Tooling manifest | Optional JSON from the agent profile. See [Agents](https://docs.neus.network/agents/overview). |
 | Live checks | NEUS MCP: `neus_context`, `neus_proofs_get` ([MCP docs](https://docs.neus.network/mcp/overview)) |
-| Linked accounts | Ownership verifiers + `wallet-link` with the same result model ([verifier table](#verifiers-overview)) |
+| Linked accounts | Ownership verifiers + `wallet-link` with the same result model ([verifier table](#verifiers)) |
 
 **Fast path:** [Hosted Verify](https://neus.network/verify) | billing and caps in [app setup](https://docs.neus.network/get-started) | paid flows: [x402](https://docs.neus.network/platform/x402)
 
