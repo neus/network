@@ -6,18 +6,31 @@ import { mergeVerifyGateCreateProofOptions } from './mergeCreateProofOptions.js'
 
 const THEME = {
   primary: 'var(--neus-primary, #98C0EF)',
-  primaryHover: 'var(--neus-primary-hover,rgb(91, 126, 182))',
-  success: 'var(--neus-success, #22c55e)',
+  primaryHover: 'var(--neus-primary-hover, rgb(61, 114, 201))',
+  onAccent: '#0a0a0a',
+  success: 'var(--neus-trust, var(--neus-primary, #98C0EF))',
   error: 'var(--neus-error, #ef4444)',
   warning: 'var(--neus-warning, #f59e0b)',
   bgDark: 'var(--neus-bg-dark, rgba(2, 6, 23, 0.95))',
   bgCard: 'var(--neus-bg-card, rgba(15, 23, 42, 0.8))',
-  textPrimary: 'var(--neus-text-primary, #ffffff)',
+  textPrimary: 'var(--neus-text-primary, rgba(255, 255, 255, 0.93))',
   textSecondary: 'var(--neus-text-secondary, #94a3b8)',
   textMuted: 'var(--neus-text-muted, #64748b)',
   border: 'var(--neus-border, rgba(148, 163, 184, 0.2))',
   borderHover: 'var(--neus-border-hover, rgba(61, 114, 201, 0.4))',
 };
+
+if (typeof document !== 'undefined') {
+  const sid = 'neus-vg-primary-cta';
+  if (!document.getElementById(sid)) {
+    const el = document.createElement('style');
+    el.id = sid;
+    el.textContent =
+      'button.neus-vg__primary{ color: #0a0a0a !important; -webkit-text-fill-color: #0a0a0a; }' +
+      'button.neus-vg__primary .neus-vg__label,button.neus-vg__primary span.neus-vg__label{ color: inherit !important; -webkit-text-fill-color: inherit; }';
+    document.head.appendChild(el);
+  }
+}
 
 const DEFAULT_MAX_AGE_MS_BY_VERIFIER = {
   'ownership-dns-txt': 60 * 60 * 1000,
@@ -82,25 +95,42 @@ function dispatchNeusProofCreatedForHost({ qHash, proofId, walletAddress }) {
   }
 }
 
-const NeusLogo = ({ size = 16 }) => (
-  <img
-    src={NEUS_LOGO_DATA_URL}
-    alt=""
-    aria-hidden="true"
-    width={size}
-    height={size}
-    style={{
-      width: size,
-      height: size,
-      marginRight: 8,
-      verticalAlign: 'middle',
-      borderRadius: 4,
-      flexShrink: 0,
-      objectFit: 'contain',
-      display: 'block'
-    }}
-  />
-);
+const NeusLogo = ({ size = 16, onPrimaryFill = false }) => {
+  const img = (
+    <img
+      src={NEUS_LOGO_DATA_URL}
+      alt=""
+      aria-hidden="true"
+      width={size}
+      height={size}
+      style={{
+        width: size,
+        height: size,
+        verticalAlign: 'middle',
+        borderRadius: 3,
+        flexShrink: 0,
+        objectFit: 'contain',
+        display: 'block',
+        ...(onPrimaryFill
+          ? { filter: 'brightness(0)', opacity: 0.88 }
+          : {})
+      }}
+    />
+  );
+
+  if (onPrimaryFill) {
+    return (
+      <span
+        className="neus-vg__mark"
+        style={{ marginRight: 8, display: 'inline-flex', lineHeight: 0, flexShrink: 0, alignItems: 'center' }}
+      >
+        {img}
+      </span>
+    );
+  }
+
+  return <span style={{ marginRight: 8, display: 'inline-flex', lineHeight: 0, flexShrink: 0 }}>{img}</span>;
+};
 
 const Spinner = ({ size = 16 }) => (
   <svg 
@@ -141,7 +171,7 @@ export function VerifyGate({
   verifierOptions = undefined,
   verifierData = undefined,
   proofOptions = undefined,
-  showBrand = true,
+  showBrand = false,
   disabled = false,
   buttonText = undefined,
   mode = 'create',
@@ -788,9 +818,12 @@ export function VerifyGate({
     }
   }, [disabled, isProcessing, mode, allowPrivateReuse, walletAddress, getOrRequestWalletAddress, tryPrivateReuse, applySatisfiedGateResult, onError]);
 
+  const primaryCtaClass =
+    state === 'idle' || state === 'interactive-checkout' ? 'neus-vg__primary' : '';
+
   const getLabel = () => {
-    if (buttonText) return buttonText;
-    
+    if (buttonText && state === 'idle') return buttonText;
+
     if (mode === 'access') {
       return {
     idle: 'Sign to view',
@@ -840,9 +873,9 @@ export function VerifyGate({
     if (state === 'verified') {
       return {
         ...buttonBaseStyle,
-        background: `rgba(34, 197, 94, 0.15)`,
+        background: 'var(--neus-verified-bg, rgba(152, 192, 239, 0.12))',
         color: THEME.success,
-        border: `1px solid rgba(34, 197, 94, 0.3)`,
+        border: '1px solid var(--neus-verified-border, rgba(61, 114, 201, 0.28))',
       };
     }
     if (state === 'error') {
@@ -857,16 +890,16 @@ export function VerifyGate({
       return {
         ...buttonBaseStyle,
         background: `rgba(61, 114, 201, 0.15)`,
-        color: '#98c0ef',
+        color: 'var(--neus-accent, #98C0EF)',
         border: `1px solid rgba(61, 114, 201, 0.3)`,
       };
     }
     return {
       ...buttonBaseStyle,
       background: THEME.primary,
-      color: THEME.textPrimary,
+      color: THEME.onAccent,
       border: 'none',
-      boxShadow: '0 4px 14px rgba(61, 114, 201, 0.25)',
+      boxShadow: '0 10px 26px rgba(0, 0, 0, 0.34)',
     };
   };
 
@@ -877,21 +910,23 @@ export function VerifyGate({
 
     return (
       <div style={{ textAlign: 'center', padding: '20px', ...style }}>
-        <button 
-          onClick={handleClick} 
+        <button
+          type="button"
+          onClick={handleClick}
           disabled={disabled || isProcessing}
+          className={primaryCtaClass}
           style={getButtonStyle()}
         >
           {(state === 'signing' || state === 'verifying' || state === 'interactive-checkout') && (
             <Spinner size={16} />
           )}
-          {showBrand && state === 'idle' && <NeusLogo size={16} />}
+          {showBrand && state === 'idle' && <NeusLogo size={16} onPrimaryFill />}
           {state === 'verified' && (
             <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           )}
-          <span>{getLabel()}</span>
+          <span className="neus-vg__label" style={{ color: 'inherit' }}>{getLabel()}</span>
         </button>
         {notice && (
           <div style={{
@@ -945,21 +980,23 @@ export function VerifyGate({
   }
 
   return (
-    <button 
-      onClick={handleClick} 
+    <button
+      type="button"
+      onClick={handleClick}
+      className={primaryCtaClass}
       style={{ ...getButtonStyle(), ...style }}
       disabled={disabled || isProcessing}
     >
       {(state === 'signing' || state === 'verifying' || state === 'interactive-checkout') && (
         <Spinner size={16} />
       )}
-      {showBrand && state === 'idle' && <NeusLogo size={16} />}
+      {showBrand && state === 'idle' && <NeusLogo size={16} onPrimaryFill />}
       {state === 'verified' && (
         <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
         </svg>
       )}
-      <span>{getLabel()}</span>
+      <span className="neus-vg__label" style={{ color: 'inherit' }}>{getLabel()}</span>
       {error && <span style={{ opacity: 0.8, marginLeft: '8px' }}>: {error}</span>}
     </button>
   );

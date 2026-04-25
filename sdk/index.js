@@ -1,9 +1,6 @@
-// NEUS SDK - Create and verify cryptographic proofs
 
-// Core client
 export { NeusClient } from './client.js';
 
-// Essential utilities
 export {
   PORTABLE_PROOF_SIGNER_HEADER,
   constructVerificationMessage,
@@ -38,15 +35,12 @@ export {
   toAgentDelegationMaxSpend
 } from './utils.js';
 
-// Example gate presets (choose per product; not defaults)
 export {
-  // Time constants
   HOUR,
   DAY,
   WEEK,
   MONTH,
   YEAR,
-  // Recipe gates
   GATE_NFT_HOLDER,
   GATE_TOKEN_HOLDER,
   GATE_CONTRACT_ADMIN,
@@ -57,12 +51,10 @@ export {
   GATE_CONTENT_MODERATION,
   GATE_WALLET_RISK,
   GATE_PSEUDONYM,
-  // Helpers
   createGate,
   combineGates
 } from './gates.js';
 
-// Error classes
 export {
   SDKError,
   ApiError,
@@ -73,7 +65,6 @@ export {
   AuthenticationError
 } from './errors.js';
 
-// Default export
 export default {
   NeusClient: () => import('./client.js').then(m => m.NeusClient),
   toString: () => '[neus/sdk]'

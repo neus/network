@@ -1,16 +1,19 @@
 ---
 title: Examples
-description: Runnable Node, React, and curl samples.
+description: Start with the trust receipts showcase, then Node, React, and curl.
 icon: code
 ---
 
 **check, verify, save id, reuse.** [Get started](./get-started) | [Billing](./platform/billing)
 
-Start with [Quickstart](./quickstart), [Hosted Verify](./cookbook/auth-hosted-verify), or widgets. Raw HTTP samples below are **advanced**.
+**Default showcase:** [trust receipts showcase](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) (clone and `npm run dev`) maps real-world outcomes to verifiers. **Live product demo:** [neus.network/demo](https://neus.network/demo) — try flows in the browser, then use the same patterns from the open-source app.
+
+For SDK setup, [Quickstart](./quickstart) and [Hosted Verify](./cookbook/auth-hosted-verify) come first. Raw HTTP samples at the bottom of this page are **advanced**.
 
 | Example | Use it for |
 |------------|----------|
-| [react-component](https://github.com/neus/network/tree/main/examples/react-component) | Browser `VerifyGate` (Vite) |
+| [**trust-receipts-showcase** (default)](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) | Full **VerifyGate** + gate check: each card is a trust outcome and a verifier |
+| [react-component](https://github.com/neus/network/tree/main/examples/react-component) | Minimal browser **`VerifyGate`** (Vite) |
 | [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | **Advanced:** server key, sign + `gateCheck` |
 | [curl-minimal](https://github.com/neus/network/tree/main/examples/curl-minimal) | **Advanced:** raw HTTP sign + submit |
 

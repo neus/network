@@ -49,9 +49,9 @@ const client = new NeusClient({
 |--------|-------------|
 | `persist: true` | Persist a reusable **proof ID** |
 | `ipfs: true` / `pin: true` | Use when you need IPFS-backed storage |
-| `strategy: 'reuse-or-create'` | Check existing proof first, create if missing. Default. |
+| `strategy: 'reuse-or-create'` | Check eligible proof first, create if missing. Default. |
 | `strategy: 'fresh'` | Always create new proof. Use for high-stakes checks. |
-| `strategy: 'reuse'` | Only check existing proofs; never create. |
+| `strategy: 'reuse'` | Only check eligible proofs; never create. |
 
 See [Verification Patterns](./verifications) for privacy levels and widget options.
 

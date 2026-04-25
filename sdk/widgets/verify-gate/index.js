@@ -1,9 +1,5 @@
 'use client';
 
-/**
- * NEUS Widgets (VerifyGate + ProofBadge)
- */
-
 export { VerifyGate } from './dist/VerifyGate.js';
 export {
   ProofBadge,

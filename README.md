@@ -23,6 +23,7 @@ Most systems stop at the check. NEUS turns the result into portable trust. That 
  | <a href="https://docs.neus.network/quickstart"><strong>Quickstart</strong></a>
  | <a href="https://docs.neus.network"><strong>Docs</strong></a>
  | <a href="./examples"><strong>Examples</strong></a>
+ | <a href="https://neus.network/demo"><strong>Live demo</strong></a>
 </p>
 
 ---

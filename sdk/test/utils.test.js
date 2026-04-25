@@ -1,7 +1,3 @@
-/**
- * NEUS SDK Utils Tests
- * Test utility functions for Day 1 production readiness
- */
 import { describe, it, expect } from 'vitest';
 import { createRequire } from 'module';
 import {

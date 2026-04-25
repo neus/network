@@ -1,4 +1,4 @@
-# NEUS MCP (this repository)
+# NEUS MCP
 
 Integrators connect to **`https://mcp.neus.network/mcp`**.
 

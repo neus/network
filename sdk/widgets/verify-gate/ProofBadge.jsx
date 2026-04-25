@@ -1,23 +1,9 @@
 "use client";
-/**
- * NEUS ProofBadge Widget
- * Minimal verification badges for Platform
- *
- * Design Philosophy:
- * - Non-intrusive, tiny by default
- * - Neutral colors - no forced green/red
- * - Host apps can theme via CSS variables
- * - Logo: inline data URL (CSP-safe); logoUrl prop overrides for custom branding
- * 
- * @license Apache-2.0
- */
 import React, { useEffect, useState } from 'react';
 import NEUS_LOGO_DATA_URL from '../../neus-logo.svg';
 
-// Default API base - can be overridden via prop
 const DEFAULT_API_BASE = 'https://api.neus.network';
 
-// Brand logo: inline SVG data URL (no external fetch, CSP-safe). logoUrl prop overrides.
 const NeusLogo = ({ size = 12, logoUrl }) => (
   <img
     src={logoUrl ?? NEUS_LOGO_DATA_URL}
@@ -36,10 +22,6 @@ const NeusLogo = ({ size = 12, logoUrl }) => (
   />
 );
 
-/**
- * ProofBadge - Minimal inline verification badge
- * Tiny, non-intrusive, neutral colors by default
- */
 export function ProofBadge({
   proofId,
   qHash,
@@ -122,7 +104,6 @@ export function ProofBadge({
     ? `${base}${String(proofUrlPattern).replace(':proofId', resolvedProofId).replace(':qHash', resolvedProofId)}`
     : base;
   
-  // Minimal sizing
   const isSm = size === 'sm';
   const logoSize = isSm ? 12 : 14;
   const fontSize = isSm ? 10 : 11;
@@ -133,14 +114,13 @@ export function ProofBadge({
   const label = status === 'verified' ? 'Verified' : 
                 status === 'pending' ? 'Pending' : status === 'unknown' ? 'Unknown' : 'Unverified';
 
-  // Neutral styling - rounded pill, not intrusive, easily themed
   const style = {
     display: 'inline-flex',
     alignItems: 'center',
     gap,
     textDecoration: 'none',
     padding: `${padY}px ${padX}px`,
-    borderRadius: 9999, // rounded-full
+    borderRadius: 9999,
     border: '1px solid var(--neus-badge-border, rgba(148, 163, 184, 0.2))',
     background: 'var(--neus-badge-bg, rgba(148, 163, 184, 0.06))',
     color: 'var(--neus-badge-text, #94a3b8)',
@@ -186,9 +166,6 @@ export function ProofBadge({
   );
 }
 
-/**
- * SimpleProofBadge - Even more compact, just logo + optional text
- */
 export function SimpleProofBadge({
   proofId,
   qHash,
@@ -257,7 +234,7 @@ export function SimpleProofBadge({
     gap: 4,
     textDecoration: 'none',
     padding: '2px 6px',
-    borderRadius: 9999, // rounded-full
+    borderRadius: 9999,
     border: '1px solid var(--neus-badge-border, rgba(148, 163, 184, 0.2))',
     background: 'var(--neus-badge-bg, transparent)',
     color: 'var(--neus-badge-text, #94a3b8)',
@@ -296,9 +273,6 @@ export function SimpleProofBadge({
   );
 }
 
-/**
- * NeusPillLink - Minimal navigation link
- */
 export function NeusPillLink({
   proofId,
   qHash,
@@ -324,7 +298,7 @@ export function NeusPillLink({
     gap: 4,
     textDecoration: 'none',
     padding: '2px 6px',
-    borderRadius: 9999, // rounded-full
+    borderRadius: 9999,
     border: '1px solid var(--neus-badge-border, rgba(148, 163, 184, 0.2))',
     background: 'var(--neus-badge-bg, transparent)',
     color: 'var(--neus-badge-text, #94a3b8)',
@@ -361,10 +335,6 @@ export function NeusPillLink({
   );
 }
 
-/**
- * VerifiedIcon - Just the logo, nothing else
- * For when you just want a tiny indicator
- */
 export function VerifiedIcon({
   proofId,
   qHash,

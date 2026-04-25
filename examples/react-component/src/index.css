@@ -1,0 +1,50 @@
+@import '../../shared/css/neus-tokens.css';
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--neus-bg-base);
+  color: var(--neus-text-primary);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-feature-settings: 'ss01' on, 'cv01' on;
+}
+
+.neus-sdk-example {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+}
+
+.neus-sdk-example h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.5rem;
+  color: var(--neus-text-primary);
+}
+
+.neus-sdk-gated {
+  border-radius: var(--neus-radius-md);
+  border: 1px solid var(--neus-border);
+  background: var(--neus-surface-glass);
+  box-shadow: var(--neus-shadow-card);
+  padding: 1.25rem 1.25rem 1rem;
+}
+
+.neus-sdk-gated h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--neus-text-primary);
+}
+
+.neus-sdk-gated p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--neus-text-secondary);
+  line-height: 1.5;
+}

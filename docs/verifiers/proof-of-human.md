@@ -10,7 +10,7 @@ Hosted human verification for sybil resistance
 
 ## Hosted input
 
-_What you pass to start the hosted flow. NEUS collects and submits the raw proof bundle internally._
+_What you pass to start the hosted flow. NEUS collects and submits the raw proof bundle in the hosted session._
 
 ### Required fields
 

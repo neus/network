@@ -1,10 +1,3 @@
-/**
- * NEUS SDK Error Classes
- */
-
-/**
- * Base SDK Error Class
- */
 export class SDKError extends Error {
   constructor(message, code = 'SDK_ERROR', details = {}) {
     super(message);
@@ -13,7 +6,6 @@ export class SDKError extends Error {
     this.details = details;
     this.timestamp = Date.now();
 
-    // Ensure proper prototype chain
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, SDKError);
     }
@@ -30,9 +22,6 @@ export class SDKError extends Error {
   }
 }
 
-/**
- * API-related errors (server responses, HTTP issues)
- */
 export class ApiError extends SDKError {
   constructor(message, statusCode = 500, code = 'API_ERROR', response = null) {
     super(message, code);
@@ -40,7 +29,6 @@ export class ApiError extends SDKError {
     this.statusCode = statusCode;
     this.response = response;
 
-    // Additional classification
     this.isClientError = statusCode >= 400 && statusCode < 500;
     this.isServerError = statusCode >= 500;
     this.isRetryable = this.isServerError || statusCode === 429; // Server errors or rate limit
@@ -67,9 +55,6 @@ export class ApiError extends SDKError {
   }
 }
 
-/**
- * Client-side validation errors (invalid parameters, missing required fields)
- */
 export class ValidationError extends SDKError {
   constructor(message, field = null, value = null) {
     super(message, 'VALIDATION_ERROR');
@@ -89,9 +74,6 @@ export class ValidationError extends SDKError {
   }
 }
 
-/**
- * Network-related errors (connectivity, timeouts, DNS issues)
- */
 export class NetworkError extends SDKError {
   constructor(message, code = 'NETWORK_ERROR', originalError = null) {
     super(message, code);
@@ -122,9 +104,6 @@ export class NetworkError extends SDKError {
   }
 }
 
-/**
- * Configuration-related errors (missing configuration, invalid settings)
- */
 export class ConfigurationError extends SDKError {
   constructor(message, configKey = null) {
     super(message, 'CONFIGURATION_ERROR');
@@ -142,9 +121,6 @@ export class ConfigurationError extends SDKError {
   }
 }
 
-/**
- * Verification-specific errors (verifier failures, invalid proofs)
- */
 export class VerificationError extends SDKError {
   constructor(message, verifierId = null, code = 'VERIFICATION_ERROR') {
     super(message, code);
@@ -162,9 +138,6 @@ export class VerificationError extends SDKError {
   }
 }
 
-/**
- * Authentication-related errors (signature validation, wallet connection)
- */
 export class AuthenticationError extends SDKError {
   constructor(message, code = 'AUTHENTICATION_ERROR') {
     super(message, code);
@@ -180,15 +153,11 @@ export class AuthenticationError extends SDKError {
   }
 }
 
-/**
- * Utility function to create appropriate error from generic error
- */
 export function createErrorFromGeneric(error, context = {}) {
   if (error instanceof SDKError) {
     return error;
   }
 
-  // Network-related errors
   if (NetworkError.isNetworkError(error)) {
     return new NetworkError(
       error.message || 'Network error occurred',
@@ -197,12 +166,10 @@ export function createErrorFromGeneric(error, context = {}) {
     );
   }
 
-  // Timeout errors
   if (error.name === 'AbortError' || error.message.includes('timeout')) {
     return new NetworkError('Request timeout', 'TIMEOUT', error);
   }
 
-  // Generic error wrapper
   return new SDKError(
     error.message || 'Unknown error occurred',
     error.code || 'UNKNOWN_ERROR',
@@ -210,7 +177,6 @@ export function createErrorFromGeneric(error, context = {}) {
   );
 }
 
-// Export all error classes as default
 export default {
   SDKError,
   ApiError,

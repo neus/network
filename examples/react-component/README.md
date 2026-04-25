@@ -13,6 +13,8 @@ npm run dev
 
 In this examples repo the SDK is linked locally; in your own app run `npm install @neus/sdk react react-dom`.
 
+`src/index.css` imports tokens from [`examples/shared/css/neus-tokens.css`](../../shared/css/neus-tokens.css).
+
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 

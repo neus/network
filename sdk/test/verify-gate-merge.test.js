@@ -1,7 +1,3 @@
-/**
- * VerifyGate create-mode defaults: omitted proofOptions must resolve to the
- * same private-first contract as raw SDK verification.
- */
 import { describe, it, expect } from 'vitest';
 import { mergeVerifyGateCreateProofOptions } from '../widgets/verify-gate/mergeCreateProofOptions.js';
 

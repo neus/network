@@ -61,7 +61,6 @@ const validateVerifierData = (verifierId, data) => {
         return { valid: false, error: 'contentType must be a string (max 100 chars) when provided' };
       }
       const base = String(data.contentType).split(';')[0].trim().toLowerCase();
-      // Minimal MIME sanity check (server validates more precisely).
       if (!base || base.includes(' ') || !base.includes('/')) {
         return { valid: false, error: 'contentType must be a valid MIME type when provided' };
       }
@@ -110,8 +109,6 @@ const validateVerifierData = (verifierId, data) => {
         return { valid: false, error: 'reference must be an object when provided' };
       }
       if (!data.reference.type || typeof data.reference.type !== 'string') {
-        // Only required when reference object is present (or when doing reference-only proofs).
-        // Server requires reference.type when reference is used for traceability.
         return { valid: false, error: 'reference.type is required when reference is provided' };
       }
     }
@@ -128,7 +125,6 @@ const validateVerifierData = (verifierId, data) => {
     }
     break;
   case 'nft-ownership':
-    // ownerAddress is optional; server injects from request walletAddress when omitted.
     if (
       !data.contractAddress ||
         data.tokenId === null ||
@@ -154,7 +150,6 @@ const validateVerifierData = (verifierId, data) => {
     }
     break;
   case 'token-holding':
-    // ownerAddress is optional; server injects from request walletAddress when omitted.
     if (
       !data.contractAddress ||
         data.minBalance === null ||
@@ -245,7 +240,6 @@ const validateVerifierData = (verifierId, data) => {
       return { valid: false, error: 'contentType (MIME type) is required' };
     }
     {
-      // Only allow content types that are actually moderated (no "verified but skipped" bypass).
       const contentType = String(data.contentType).split(';')[0].trim().toLowerCase();
       const validTypes = [
         'image/jpeg',
@@ -263,7 +257,6 @@ const validateVerifierData = (verifierId, data) => {
       }
       const isTextual = contentType.startsWith('text/') || contentType.includes('markdown');
       if (isTextual) {
-        // Backend enforces 50KB UTF-8 limit for textual moderation payloads.
         try {
           const maxBytes = 50 * 1024;
           const bytes = (typeof TextEncoder !== 'undefined')
@@ -276,7 +269,6 @@ const validateVerifierData = (verifierId, data) => {
             };
           }
         } catch {
-          // If encoding fails, defer to server.
         }
       }
     }
@@ -288,17 +280,14 @@ const validateVerifierData = (verifierId, data) => {
     if (!data.pseudonymId || typeof data.pseudonymId !== 'string') {
       return { valid: false, error: 'pseudonymId is required' };
     }
-    // Validate handle format (3-64 chars, lowercase alphanumeric with ._-)
     if (!/^[a-z0-9._-]{3,64}$/.test(data.pseudonymId.trim().toLowerCase())) {
       return { valid: false, error: 'pseudonymId must be 3-64 characters, lowercase alphanumeric with dots, underscores, or hyphens' };
     }
-    // Validate namespace if provided (1-64 chars)
     if (data.namespace && typeof data.namespace === 'string') {
       if (!/^[a-z0-9._-]{1,64}$/.test(data.namespace.trim().toLowerCase())) {
         return { valid: false, error: 'namespace must be 1-64 characters, lowercase alphanumeric with dots, underscores, or hyphens' };
       }
     }
-    // Note: signature is not required - envelope signature provides authentication
     break;
   case 'wallet-risk':
     if (data.walletAddress && !validateUniversalAddress(data.walletAddress, data.chain)) {
@@ -319,20 +308,16 @@ export class NeusClient {
     };
 
     this.baseUrl = this.config.apiUrl || 'https://api.neus.network';
-    // Enforce HTTPS for neus.network domains to satisfy CSP and normalize URLs
     try {
       const url = new URL(this.baseUrl);
       if (url.hostname.endsWith('neus.network') && url.protocol === 'http:') {
         url.protocol = 'https:';
       }
-      // Always remove trailing slash for consistency
       this.baseUrl = url.toString().replace(/\/$/, '');
     } catch {
-      // If invalid URL string, leave as-is
     }
     this.config.apiUrl = this.baseUrl;
 
-    // Default headers
 
     this.defaultHeaders = {
       'Content-Type': 'application/json',
@@ -363,7 +348,6 @@ export class NeusClient {
         this.defaultHeaders['X-Client-Origin'] = window.location.origin;
       }
     } catch {
-      // ignore: optional browser metadata header
     }
   }
 
@@ -393,7 +377,6 @@ export class NeusClient {
     if (EVM_ADDRESS_RE.test(raw)) {
       return `eip155:${this._getHubChainId()}`;
     }
-    // Default non-EVM chain for universal wallet paths when caller omits chain.
     return 'solana:mainnet';
   }
 
@@ -572,53 +555,10 @@ export class NeusClient {
     };
   }
 
-  /**
-   * Create a verification proof.
-   *
-   * Supports two paths:
-   *   - **Auto:** Supply `verifier`, `content`, and/or `data` with an optional
-   *     `wallet` provider. The SDK performs signing in the client.
-   *   - **Manual:** Supply pre-signed `verifierIds`, `data`, `walletAddress`,
-   *     `signature`, and `signedTimestamp`.
-   *
-   * @param {Object} params - Verification parameters
-   * @param {string} [params.verifier] - Verifier ID (auto path, e.g. 'ownership-basic')
-   * @param {string} [params.content] - Content to verify (auto path)
-   * @param {Object} [params.data] - Structured verification data
-   * @param {Object} [params.wallet] - Wallet provider (auto path)
-   * @param {Object} [params.options] - Additional options
-   * @param {Array<string>} [params.verifierIds] - Array of verifier IDs (manual path)
-   * @param {string} [params.walletAddress] - Wallet address that signed the request (manual path)
-   * @param {string} [params.signature] - EIP-191 signature (manual path)
-   * @param {number} [params.signedTimestamp] - Unix timestamp when signature was created (manual path)
-   * @param {number} [params.chainId] - EVM signing-context hint; when omitted, resolved to the NEUS protocol primary chain for signing
-   * @returns {Promise<Object>} Verification result with proofId
-   *
-   * @example
-   * // Auto path
-   * const proof = await client.verify({
-   *   verifier: 'ownership-basic',
-   *   content: 'Hello World',
-   *   wallet: window.ethereum
-   * });
-   *
-   * @example
-   * // Manual path
-   * const proof = await client.verify({
-   *   verifierIds: ['ownership-basic'],
-   *   data: { content: "My content", owner: walletAddress },
-   *   walletAddress: '0x...',
-   *   signature: '0x...',
-   *   signedTimestamp: Date.now(),
-   *   options: { targetChains: [421614, 11155111] }
-   * });
-   */
   async verify(params) {
-    // Auto path: if no manual signature fields but auto fields are provided, perform inline wallet flow
     if ((!params?.signature || !params?.walletAddress) && (params?.verifier || params?.content || params?.data)) {
       const { content, verifier = 'ownership-basic', data = null, wallet = null, options = {} } = params;
 
-      // ownership-basic: content required for simple mode, but data param mode allows contentHash or reference
       if (verifier === 'ownership-basic' && !data && (!content || typeof content !== 'string')) {
         throw new ValidationError('content is required and must be a string (or use data param with owner + reference)');
       }
@@ -630,7 +570,6 @@ export class NeusClient {
           verifierCatalog = discovered.metadata;
         }
       } catch {
-        // Fallback keeps SDK usable if verifier catalog endpoint is temporarily unavailable.
       }
       const validVerifiers = Object.keys(verifierCatalog);
       if (!validVerifiers.includes(verifier)) {
@@ -644,7 +583,6 @@ export class NeusClient {
         );
       }
 
-      // These verifiers require explicit data parameter (no auto-path)
       const requiresDataParam = [
         'ownership-dns-txt',
         'wallet-link',
@@ -661,18 +599,22 @@ export class NeusClient {
         }
       }
 
-      // Auto-detect wallet and get address
       let walletAddress, provider;
       if (wallet) {
         walletAddress =
           wallet.address ||
           wallet.selectedAddress ||
           wallet.walletAddress ||
-          (typeof wallet.getAddress === 'function' ? await wallet.getAddress() : null);
+          (typeof wallet.getAddress === 'function' ? await wallet.getAddress().catch(() => null) : null);
         provider = wallet.provider || wallet;
         if (!walletAddress && provider && typeof provider.request === 'function') {
-          const accounts = await provider.request({ method: 'eth_accounts' });
-          walletAddress = Array.isArray(accounts) ? accounts[0] : null;
+          let accounts = await provider.request({ method: 'eth_accounts' });
+          walletAddress = Array.isArray(accounts) && accounts.length > 0 ? accounts[0] : null;
+          if (!walletAddress) {
+            await provider.request({ method: 'eth_requestAccounts' });
+            accounts = await provider.request({ method: 'eth_accounts' });
+            walletAddress = Array.isArray(accounts) && accounts.length > 0 ? accounts[0] : null;
+          }
         }
       } else {
         if (typeof window === 'undefined' || !window.ethereum) {
@@ -684,11 +626,13 @@ export class NeusClient {
         walletAddress = accounts[0];
       }
 
-      // Prepare verification data based on verifier type
+      if (!walletAddress || typeof walletAddress !== 'string') {
+        throw new ConfigurationError('No wallet accounts available. Connect a wallet to continue.');
+      }
+
       let verificationData;
       if (verifier === 'ownership-basic') {
         if (data && typeof data === 'object') {
-          // Data param mode: use provided data, inject owner if missing
           verificationData = {
             owner: data.owner || walletAddress,
             reference: data.reference,
@@ -698,7 +642,6 @@ export class NeusClient {
             ...(data.provenance && { provenance: data.provenance })
           };
         } else {
-          // Simple content mode: derive reference from content
           verificationData = {
             content: content,
             owner: walletAddress,
@@ -835,12 +778,9 @@ export class NeusClient {
           ...(data?.metadata && { metadata: data.metadata })
         };
       } else if (verifier === 'wallet-risk') {
-        // wallet-risk defaults to verifying the connected wallet
         verificationData = {
           walletAddress: data?.walletAddress || walletAddress,
           ...(data?.provider && { provider: data.provider }),
-          // Mainnet-first semantics: if caller doesn't provide chainId, default to Ethereum mainnet (1).
-          // This avoids accidental testnet semantics for risk providers.
           chainId: (typeof data?.chainId === 'number' && Number.isFinite(data.chainId)) ? data.chainId : 1,
           ...(data?.includeDetails !== undefined && { includeDetails: data.includeDetails })
         };
@@ -862,7 +802,7 @@ export class NeusClient {
         signedTimestamp,
         data: verificationData,
         verifierIds,
-        chainId: this._getHubChainId() // Protocol-managed chain
+        chainId: this._getHubChainId()
       });
 
       let signature;
@@ -881,7 +821,6 @@ export class NeusClient {
           }
         };
 
-        // Detect Farcaster wallet - requires hex-encoded messages FIRST
         const isFarcasterWallet = (() => {
           if (typeof window === 'undefined') return false;
           try {
@@ -893,7 +832,6 @@ export class NeusClient {
             if (w.mini && w.mini.wallet === provider && fc && fc.context) return true;
             if (w.ethereum === provider && fc && fc.context) return true;
           } catch {
-            // ignore: optional Farcaster detection
           }
           return false;
         })();
@@ -903,7 +841,6 @@ export class NeusClient {
             const hexMsg = toHexUtf8(message);
             signature = await provider.request({ method: 'personal_sign', params: [hexMsg, walletAddress] });
           } catch (e) {
-            // Fall through
           }
         }
 
@@ -939,20 +876,17 @@ export class NeusClient {
                 try {
                   if (typeof window !== 'undefined') window.__NEUS_ALLOW_ETH_SIGN__ = true;
                 } catch {
-                  // ignore
                 }
                 signature = await provider.request({ method: 'eth_sign', params: [walletAddress, payloadHex], neusAllowEthSign: true });
                 try {
                   if (typeof window !== 'undefined') delete window.__NEUS_ALLOW_ETH_SIGN__;
                 } catch {
-                  // ignore
                 }
               } catch (fallbackErr) {
                 this._log('eth_sign fallback failed', { message: fallbackErr?.message || String(fallbackErr) });
                 try {
                   if (typeof window !== 'undefined') delete window.__NEUS_ALLOW_ETH_SIGN__;
                 } catch {
-                  // ignore
                 }
                 throw e;
               }
@@ -996,7 +930,6 @@ export class NeusClient {
 
     const resolvedChainId = chainId || (chain ? null : NEUS_CONSTANTS.HUB_CHAIN_ID);
 
-    // Normalize verifier IDs
     const normalizeVerifierId = (id) => {
       if (typeof id !== 'string') return id;
       const match = id.match(/^(.*)@\d+$/);
@@ -1004,7 +937,6 @@ export class NeusClient {
     };
     const normalizedVerifierIds = Array.isArray(verifierIds) ? verifierIds.map(normalizeVerifierId) : [];
 
-    // Validate required parameters
     if (!normalizedVerifierIds || normalizedVerifierIds.length === 0) {
       throw new ValidationError('verifierIds array is required');
     }
@@ -1024,7 +956,6 @@ export class NeusClient {
       throw new ValidationError('chainId must be a number');
     }
 
-    // Validate verifier data
     for (const verifierId of normalizedVerifierIds) {
       const validation = validateVerifierData(verifierId, data);
       if (!validation.valid) {
@@ -1032,11 +963,9 @@ export class NeusClient {
       }
     }
 
-    // Build options payload.
     const optionsPayload = {
       ...(options && typeof options === 'object' ? options : {}),
       targetChains: Array.isArray(options?.targetChains) ? options.targetChains : [],
-      // Privacy and storage options (defaults)
       privacyLevel: options?.privacyLevel || 'private',
       publicDisplay: options?.publicDisplay || false,
       storeOriginalContent:
@@ -1065,16 +994,6 @@ export class NeusClient {
     return this._formatResponse(response);
   }
 
-  /**
-   * Get proof record by proof receipt id.
-   *
-   * @param {string} proofId - Proof receipt ID (0x + 64 hex).
-   * @returns {Promise<Object>} Proof record and verification state
-   *
-   * @example
-   * const result = await client.getProof('0x...');
-   * console.log('Status:', result.status);
-   */
   async getProof(proofId) {
     if (!proofId || typeof proofId !== 'string') {
       throw new ValidationError('proofId is required');
@@ -1088,16 +1007,6 @@ export class NeusClient {
     return this._formatResponse(response);
   }
 
-  /**
-   * Get private proof record with wallet signature
-   *
-   * @param {string} proofId - Proof receipt ID.
-   * @param {Object} wallet - Wallet provider (window.ethereum or ethers Wallet)
-   * @returns {Promise<Object>} Private proof record and verification state
-   *
-   * @example
-   * const privateData = await client.getPrivateProof(proofId, window.ethereum);
-   */
   async getPrivateProof(proofId, wallet = null) {
     if (!proofId || typeof proofId !== 'string') {
       throw new ValidationError('proofId is required');
@@ -1178,11 +1087,6 @@ export class NeusClient {
     return this._formatResponse(response);
   }
 
-  /**
-   * Check API health
-   *
-   * @returns {Promise<boolean>} True if API is healthy
-   */
   async isHealthy() {
     try {
       const response = await this._makeRequest('GET', '/api/v1/health');
@@ -1192,20 +1096,11 @@ export class NeusClient {
     }
   }
 
-  /**
-   * List available verifiers
-   *
-   * @returns {Promise<string[]>} Array of verifier IDs
-   */
   async getVerifiers() {
     const catalog = await this.getVerifierCatalog();
     return Array.isArray(catalog?.data) ? catalog.data : [];
   }
 
-  /**
-   * Get the public verifier catalog with per-verifier capabilities.
-   * @returns {Promise<{data: string[], metadata: Record<string, { supportsDirectApi?: boolean }>, meta?: object}>}
-   */
   async getVerifierCatalog() {
     const response = await this._makeRequest('GET', '/api/v1/verification/verifiers');
     if (!response.success) {
@@ -1224,31 +1119,6 @@ export class NeusClient {
     };
   }
 
-  /**
-   * POLL PROOF STATUS - Wait for verification completion
-   *
-   * Polls the verification status until it reaches a terminal state (completed or failed).
-   * Useful for providing real-time feedback to users during verification.
-   *
-   * @param {string} proofId - Proof ID to poll.
-   * @param {Object} [options] - Polling options
-   * @param {number} [options.interval=5000] - Polling interval in ms
-   * @param {number} [options.timeout=120000] - Total timeout in ms
-   * @param {Function} [options.onProgress] - Progress callback function
-   * @returns {Promise<Object>} Final verification status
-   *
-   * @example
-   * const finalStatus = await client.pollProofStatus(proofId, {
-   *   interval: 3000,
-   *   timeout: 60000,
-   *   onProgress: (status) => {
-   *     console.log('Current status:', status.status);
-   *     if (status.crosschain) {
-   *       console.log(`Cross-chain: ${status.crosschain.finalized}/${status.crosschain.totalChains}`);
-   *     }
-   *   }
-   * });
-   */
   async pollProofStatus(proofId, options = {}) {
     const {
       interval = 5000,
@@ -1268,24 +1138,20 @@ export class NeusClient {
         const status = await this.getProof(proofId);
         consecutiveRateLimits = 0;
 
-        // Call progress callback if provided
         if (onProgress && typeof onProgress === 'function') {
           onProgress(status.data || status);
         }
 
-        // Check for terminal states
         const currentStatus = status.data?.status || status.status;
         if (this._isTerminalStatus(currentStatus)) {
           this._log('Verification completed', { status: currentStatus, duration: Date.now() - startTime });
           return status;
         }
 
-        // Wait before next poll
         await new Promise(resolve => setTimeout(resolve, interval));
 
       } catch (error) {
         this._log('Status poll error', error.message);
-        // Continue polling unless it's a validation error
         if (error instanceof ValidationError) {
           throw error;
         }
@@ -1293,11 +1159,11 @@ export class NeusClient {
         let nextDelay = interval;
         if (error instanceof ApiError && Number(error.statusCode) === 429) {
           consecutiveRateLimits += 1;
-          const exp = Math.min(6, consecutiveRateLimits); // cap growth
+          const exp = Math.min(6, consecutiveRateLimits);
           const base = Math.max(500, Number(interval) || 0);
-          const max = 30000; // 30s cap to keep UX responsive
+          const max = 30000;
           const backoff = Math.min(max, base * Math.pow(2, exp));
-          const jitter = Math.floor(backoff * (0.5 + Math.random() * 0.5)); // 50-100%
+          const jitter = Math.floor(backoff * (0.5 + Math.random() * 0.5));
           nextDelay = jitter;
         }
 
@@ -1308,11 +1174,6 @@ export class NeusClient {
     throw new NetworkError(`Polling timeout after ${timeout}ms`, 'POLLING_TIMEOUT');
   }
 
-  /**
-   * DETECT CHAIN ID - Get current wallet chain
-   *
-   * @returns {Promise<number>} Current chain ID
-   */
   async detectChainId() {
     if (typeof window === 'undefined' || !window.ethereum) {
       throw new ConfigurationError('No Web3 wallet detected');
@@ -1326,7 +1187,6 @@ export class NeusClient {
     }
   }
 
-  /** Revoke your own proof (owner-signed) */
   async revokeOwnProof(proofId, wallet) {
     if (!proofId || typeof proofId !== 'string') {
       throw new ValidationError('proofId is required');
@@ -1381,22 +1241,6 @@ export class NeusClient {
     return true;
   }
 
-  /**
-   * GET PROOFS BY WALLET - Fetch proofs for a wallet address
-   *
-   * @param {string} walletAddress - Wallet identity (EVM/Solana/DID)
-   * @param {Object} [options] - Filter options
-   * @param {number} [options.limit] - Max results (default: 50; higher limits require owner access)
-   * @param {number} [options.offset] - Pagination offset (default: 0)
-   * @param {string} [options.qHash] - Filter to single proof by qHash
-   * @returns {Promise<Object>} Proofs result
-   *
-   * @example
-   * const result = await client.getProofsByWallet('0x...', {
-   *   limit: 50,
-   *   offset: 0
-   * });
-   */
   async getProofsByWallet(walletAddress, options = {}) {
     if (!walletAddress || typeof walletAddress !== 'string') {
       throw new ValidationError('walletAddress is required');
@@ -1420,7 +1264,6 @@ export class NeusClient {
       throw new ApiError(`Failed to get proofs: ${response.error?.message || 'Unknown error'}`, response.error);
     }
 
-    // Normalize response structure
     const proofs = response.data?.proofs || response.data || response.proofs || [];
     return {
       success: true,
@@ -1431,18 +1274,6 @@ export class NeusClient {
     };
   }
 
-  /**
-   * Get proofs by wallet (owner access)
-   *
-   * Signs an owner-access intent and requests private proofs via signature headers.
-   *
-   * @param {string} walletAddress - Wallet identity (EVM/Solana/DID)
-   * @param {Object} [options]
-   * @param {number} [options.limit] - Max results (server enforces caps)
-   * @param {number} [options.offset] - Pagination offset
-   * @param {string} [options.qHash] - Filter to single proof by qHash
-   * @param {Object} [wallet] - Optional injected wallet/provider (MetaMask/ethers Wallet)
-   */
   async getPrivateProofsByWallet(walletAddress, options = {}, wallet = null) {
     if (!walletAddress || typeof walletAddress !== 'string') {
       throw new ValidationError('walletAddress is required');
@@ -1453,7 +1284,6 @@ export class NeusClient {
 
     const requestedIdentity = this._normalizeIdentity(id);
 
-    // Auto-detect wallet if not provided
     if (!wallet) {
       const defaultWallet = this._getDefaultBrowserWallet();
       if (!defaultWallet) {
@@ -1530,38 +1360,12 @@ export class NeusClient {
     };
   }
 
-  /**
-   * Gate check (HTTP API) — minimal eligibility response.
-   *
-   * Calls the gate endpoint and returns a **minimal** yes/no response.
-   * By default this checks **public + unlisted** proofs.
-   *
-   * When `includePrivate=true`, this can perform owner-signed private checks
-   * (no full proof payloads returned) by providing a wallet/provider.
-   *
-   * Prefer this over `checkGate()` when you need the smallest, most stable
-   * response shape and do not need full proof payloads.
-   *
-   * @param {Object} params - Gate check query params
-   * @param {string} params.address - Wallet identity to check (EVM/Solana/DID)
-   * @param {Array<string>|string} [params.verifierIds] - Verifier IDs to match (array or comma-separated)
-   * @param {boolean} [params.requireAll] - Require all verifierIds on a single proof
-   * @param {number} [params.minCount] - Minimum number of matching proofs
-   * @param {number} [params.sinceDays] - Optional time window in days
-   * @param {number} [params.since] - Optional unix timestamp in ms (lower bound)
-   * @param {number} [params.limit] - Max rows to scan (server may clamp)
-   * @param {boolean} [params.includePrivate] - Include private proofs for owner-authenticated requests
-   * @param {boolean} [params.includeQHashes] - Include matched qHashes in response (minimal IDs only)
-   * @param {Object} [params.wallet] - Optional wallet/provider used to sign includePrivate owner checks
-   * @returns {Promise<Object>} API response ({ success, data })
-   */
   async gateCheck(params = {}) {
     const address = (params.address || '').toString();
     if (!validateUniversalAddress(address, params.chain)) {
       throw new ValidationError('Valid address is required');
     }
 
-    // Build query string safely (stringify all values; allow arrays for common fields)
     const qs = new URLSearchParams();
     qs.set('address', address);
 
@@ -1587,7 +1391,6 @@ export class NeusClient {
       setIfPresent(key, value);
     };
 
-    // Common filters
     setCsvIfPresent('verifierIds', params.verifierIds);
     setBoolIfPresent('requireAll', params.requireAll);
     setIfPresent('minCount', params.minCount);
@@ -1597,7 +1400,6 @@ export class NeusClient {
     setBoolIfPresent('includePrivate', params.includePrivate);
     setBoolIfPresent('includeQHashes', params.includeQHashes);
 
-    // Common match filters (optional)
     setIfPresent('referenceType', params.referenceType);
     setIfPresent('referenceId', params.referenceId);
     setIfPresent('tag', params.tag);
@@ -1606,14 +1408,12 @@ export class NeusClient {
     setIfPresent('content', params.content);
     setIfPresent('contentHash', params.contentHash);
 
-    // Asset/ownership filters
     setIfPresent('contractAddress', params.contractAddress);
     setIfPresent('tokenId', params.tokenId);
     setIfPresent('chainId', params.chainId);
     setIfPresent('domain', params.domain);
     setIfPresent('minBalance', params.minBalance);
 
-    // Wallet filters
     setIfPresent('provider', params.provider);
     setIfPresent('handle', params.handle);
     setIfPresent('namespace', params.namespace);
@@ -1641,7 +1441,6 @@ export class NeusClient {
         }
       }
       if (!auth) {
-        // Without a signer: public and unlisted proofs only.
       } else {
         const normalizedAuthWallet = this._normalizeIdentity(auth.walletAddress);
         const normalizedAddress = this._normalizeIdentity(address);
@@ -1669,45 +1468,6 @@ export class NeusClient {
     return response;
   }
 
-  /**
-   * CHECK GATE — Local preview against proofs you already have in memory or from `getProofsByWallet`.
-   *
-   * **Not authoritative for access control.** For production allow/deny, use {@link NeusClient#gateCheck}
-   * (`GET /api/v1/proofs/check`), which applies the same rules as the NEUS API. This method is useful for
-   * UI previews, offline-ish flows, or when you already fetched proofs and want a quick match without
-   * another round trip — but it can disagree with the server (e.g. `contentHash` matching uses a local
-   * approximation when proof data only has inline `content`; the API uses the standard server-side hash).
-   *
-   * Gate-first verification: checks if wallet has valid proofs satisfying requirements.
-   * Returns which requirements are missing/expired.
-   *
-   * @param {Object} params - Gate check parameters
-   * @param {string} params.walletAddress - Target wallet
-   * @param {Array<Object>} params.requirements - Array of gate requirements
-   * @param {string} params.requirements[].verifierId - Required verifier ID
-   * @param {number} [params.requirements[].maxAgeMs] - Max proof age in ms (TTL)
-   * @param {boolean} [params.requirements[].optional] - If true, not required for gate satisfaction
-   * @param {number} [params.requirements[].minCount] - Minimum proofs needed (default: 1)
-   * @param {Object} [params.requirements[].match] - Verifier data match criteria
-   *   Supports nested fields: 'reference.type', 'reference.id', 'content', 'contentHash', 'input.*', 'license.*'
-   *   Supports verifier-specific:
-   *     - NFT/Token: 'contractAddress', 'tokenId', 'chainId', 'ownerAddress', 'minBalance'
-   *     - DNS: 'domain', 'walletAddress'
-   *     - Wallet-link: 'primaryWalletAddress', 'secondaryWalletAddress', 'chain', 'signatureMethod'
-   *     - Contract-ownership: 'contractAddress', 'chainId', 'owner', 'verificationMethod'
-   *   Note: contentHash matching uses approximation in SDK; for exact SHA-256 matching, use backend API
-   * @param {Array} [params.proofs] - Pre-fetched proofs (skip API call)
-   * @returns {Promise<Object>} Gate result with satisfied, missing, existing
-   *
-   * @example
-   * // Basic gate check
-   * const result = await client.checkGate({
-   *   walletAddress: '0x...',
-   *   requirements: [
-   *     { verifierId: 'nft-ownership', match: { contractAddress: '0x...' } }
-   *   ]
-   * });
-   */
   async checkGate(params) {
     const { walletAddress, requirements, proofs: preloadedProofs } = params;
 
@@ -1718,7 +1478,6 @@ export class NeusClient {
       throw new ValidationError('requirements array is required and must not be empty');
     }
 
-    // Use preloaded proofs or fetch from API
     let proofs = preloadedProofs;
     if (!proofs) {
       const result = await this.getProofsByWallet(walletAddress, { limit: 100 });
@@ -1732,30 +1491,24 @@ export class NeusClient {
     for (const req of requirements) {
       const { verifierId, maxAgeMs, optional = false, minCount = 1, match } = req;
 
-      // Find matching proofs for this verifier
       const matchingProofs = (proofs || []).filter(proof => {
-        // Must have this verifier and be verified
         const verifiedVerifiers = proof.verifiedVerifiers || [];
         const verifier = verifiedVerifiers.find(
           v => v.verifierId === verifierId && v.verified === true
         );
         if (!verifier) return false;
 
-        // Check proof is not revoked
         if (proof.revokedAt) return false;
 
-        // Check TTL if specified
         if (maxAgeMs) {
           const proofTimestamp = proof.createdAt || proof.signedTimestamp || 0;
           const proofAge = now - proofTimestamp;
           if (proofAge > maxAgeMs) return false;
         }
 
-        // Check custom match criteria if specified
         if (match && typeof match === 'object') {
           const data = verifier.data || {};
-          const input = data.input || {}; // NFT/token verifiers store fields in input
-          // Gate format: match as array [{path, op, value}]. Convert to {path: value} for iteration.
+          const input = data.input || {};
           const matchObj = Array.isArray(match)
             ? Object.fromEntries(
               match
@@ -1767,7 +1520,6 @@ export class NeusClient {
           for (const [key, expected] of Object.entries(matchObj)) {
             let actualValue = null;
 
-            // Handle nested field access
             if (key.includes('.')) {
               const parts = key.split('.');
               let current = data;
@@ -1794,7 +1546,6 @@ export class NeusClient {
               actualValue = data.reference?.id || data.content;
             }
 
-            // Special handling for verifier-specific fields (claim-based, aligns with proofs/check)
             if (actualValue === undefined) {
               const claims = data.claims || {};
               if (key === 'contractAddress') {
@@ -1837,10 +1588,8 @@ export class NeusClient {
               }
             }
 
-            // Content hash check (approximation)
             if (key === 'contentHash' && actualValue === undefined && data.content) {
               try {
-                // Simple hash approximation for non-crypto envs
                 let hash = 0;
                 const str = String(data.content);
                 for (let i = 0; i < str.length; i++) {
@@ -1861,7 +1610,6 @@ export class NeusClient {
               return false;
             }
 
-            // Boolean claims (sanctions_passed, sanctioned, poisoned)
             if (typeof actualValue === 'boolean' || (key && (key.includes('sanctions') || key.includes('sanctioned') || key.includes('poisoned')))) {
               const bActual = Boolean(actualValue);
               const bExpected = expected === true || expected === 'true' || String(expected).toLowerCase() === 'true';
@@ -2017,24 +1765,19 @@ export class NeusClient {
     return typeof status === 'string' && terminalStates.some(state => status.includes(state));
   }
 
-  /** SDK logging (opt-in via config.enableLogging) */
   _log(message, data = {}) {
     if (this.config.enableLogging) {
       try {
         const prefix = '[neus/sdk]';
         if (data && Object.keys(data).length > 0) {
-          // eslint-disable-next-line no-console
           console.log(prefix, message, data);
         } else {
-          // eslint-disable-next-line no-console
           console.log(prefix, message);
         }
       } catch {
-        // ignore logging failures
       }
     }
   }
 }
 
-// Export signing helpers for advanced use
 export { PORTABLE_PROOF_SIGNER_HEADER, constructVerificationMessage };

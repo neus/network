@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NEUS | Demo verify (local)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/neus-tokens.css" />
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Inter, system-ui, sans-serif;
+        font-feature-settings: 'ss01' on, 'cv01' on;
+        background: var(--neus-bg-base);
+        color: var(--neus-text-primary);
+        padding: 24px;
+      }
+      .card {
+        max-width: 400px;
+        width: 100%;
+        border-radius: 16px;
+        border: 1px solid var(--neus-border);
+        padding: 24px 22px 20px;
+        background: var(--neus-surface-glass);
+        box-shadow: var(--neus-shadow-card);
+      }
+      p {
+        margin: 0 0 8px;
+        line-height: 1.5;
+        font-size: 14px;
+        color: var(--neus-text-secondary);
+      }
+      h1 {
+        margin: 0 0 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        letter-spacing: -0.02em;
+        color: var(--neus-text-primary);
+      }
+      .accent {
+        color: var(--neus-accent);
+      }
+      code {
+        font-size: 12px;
+        word-break: break-all;
+        color: var(--neus-text-muted);
+      }
+      button {
+        margin-top: 18px;
+        width: 100%;
+        padding: 12px 16px;
+        border: none;
+        border-radius: 10px;
+        background: var(--neus-accent);
+        color: var(--neus-on-accent);
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.15s ease, box-shadow 0.15s ease;
+      }
+      button:hover {
+        background: var(--neus-accent-dim);
+      }
+      button:focus-visible {
+        outline: var(--neus-focus-ring);
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Local demo: interactive verify</h1>
+      <p>
+        This page simulates NEUS <span class="accent">Hosted Verify</span> for the trust receipts showcase.
+      </p>
+      <p><code id="v"></code></p>
+      <button type="button" id="btn">Simulate success</button>
+    </div>
+    <script>
+      (function () {
+        const params = new URLSearchParams(window.location.search);
+        const ver = params.get('verifiers') || '';
+        document.getElementById('v').textContent = 'Verifiers: ' + (ver || '—');
+        const proof = '0x' + Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) => b.toString(16).padStart(2, '0')).join('');
+
+        function done() {
+          if (window.opener && !window.opener.closed) {
+            window.opener.postMessage(
+              { type: 'neus_checkout_done', proofId: proof, qHash: proof, eligible: true, proofUrl: null },
+              window.location.origin
+            );
+          }
+          window.close();
+        }
+
+        document.getElementById('btn').addEventListener('click', done);
+      })();
+    </script>
+  </body>
+</html>

@@ -1,12 +1,7 @@
-/**
- * NEUS SDK Client Tests
- * Basic functionality tests
- */
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NeusClient } from '../client.js';
 import { ValidationError, NetworkError, ApiError } from '../errors.js';
 
-// Mock fetch globally
 global.fetch = vi.fn();
 
 describe('NeusClient', () => {
@@ -282,7 +277,6 @@ describe('NeusClient', () => {
     });
 
     it('should poll until terminal status', async () => {
-      // Mock three calls: pending -> verifying -> verified
       const responses = [
         { success: true, status: 'pending', data: { status: 'pending' } },
         { success: true, status: 'verifying', data: { status: 'processing_verifiers' } },
@@ -381,6 +375,67 @@ describe('NeusClient', () => {
       fetch.mockRejectedValueOnce(error);
 
       await expect(client.isHealthy()).resolves.toBe(false);
+    });
+  });
+
+  const EVM_A = '0x1234567890123456789012345678901234567890';
+  const EVM_B = '0xabcdefabcdefabcdefabcdefabcdefabcdefabcd';
+
+  describe('gateCheck()', () => {
+    it('should require a valid address', async () => {
+      await expect(
+        client.gateCheck({ address: '!!!' })
+      ).rejects.toThrow(ValidationError);
+    });
+
+    it('should call proofs/check with query params', async () => {
+      const addr = EVM_A;
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: { eligible: true, matches: [] }
+          })
+      });
+
+      const out = await client.gateCheck({
+        address: addr,
+        verifierIds: ['ownership-basic', 'nft-ownership'],
+        requireAll: true
+      });
+
+      expect(out.success).toBe(true);
+      const calledUrl = fetch.mock.calls[0][0];
+      expect(calledUrl).toContain('/api/v1/proofs/check?');
+      expect(calledUrl).toContain(encodeURIComponent(addr));
+      expect(calledUrl).toContain('verifierIds=');
+    });
+  });
+
+  describe('checkGate()', () => {
+    it('satisfies requirements when preloaded proofs match', async () => {
+      const walletAddress = EVM_B;
+      const result = await client.checkGate({
+        walletAddress,
+        requirements: [{ verifierId: 'ownership-basic' }],
+        proofs: [
+          {
+            createdAt: Date.now(),
+            verifiedVerifiers: [
+              { verifierId: 'ownership-basic', verified: true, data: {} }
+            ]
+          }
+        ]
+      });
+      expect(result.satisfied).toBe(true);
+      expect(result.missing).toEqual([]);
+    });
+
+    it('should validate requirements', async () => {
+      await expect(
+        client.checkGate({ walletAddress: EVM_A, requirements: [] })
+      ).rejects.toThrow(ValidationError);
     });
   });
 });

@@ -2,16 +2,12 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    // Test environment
     environment: 'node',
 
-    // Global test timeout
     testTimeout: 10000,
 
-    // Hook timeout
     hookTimeout: 10000,
 
-    // Coverage configuration
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -22,19 +18,15 @@ export default defineConfig({
       ]
     },
 
-    // Test file patterns
     include: ['test/**/*.test.js'],
 
-    // Files to exclude
     exclude: [
       'node_modules/**',
       'dist/**'
     ],
 
-    // Global setup
     globals: true,
 
-    // Mock configuration
     mockReset: true,
     clearMocks: true,
     restoreMocks: true

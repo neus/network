@@ -15,9 +15,9 @@ export default function GatedContent() {
         },
       }}
     >
-      <div style={{ padding: 20, border: '1px solid #ddd', borderRadius: 8 }}>
-        <h2 style={{ marginTop: 0 }}>Exclusive content</h2>
-        <p style={{ marginBottom: 0 }}>Visible when the gate passes.</p>
+      <div className="neus-sdk-gated">
+        <h2>Exclusive content</h2>
+        <p>Visible when the gate passes.</p>
       </div>
     </VerifyGate>
   );

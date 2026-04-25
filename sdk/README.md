@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/%40neus%2Fsdk?logo=npm&label=%40neus%2Fsdk&color=98C0EF)](https://www.npmjs.com/package/@neus/sdk)
 
-**Portable trust, shipped as APIs and widgets.** The JavaScript SDK runs NEUS verification, polling, and **`gateCheck`**. Store **`proofId`** (your **proof ID**) once, then reuse. NEUS runs the checks; you do not fork verifier logic into your repo.
+**Portable trust, shipped as APIs and widgets.** The JavaScript SDK runs NEUS verification, polling, and **`gateCheck`**. Store **`proofId`**, then reuse it. NEUS runs the checks; you do not fork verifier logic into your repo.
 
 ## Install
 
@@ -95,8 +95,9 @@ const client = new NeusClient({
 ## Docs
 
 - [Quickstart](https://docs.neus.network/quickstart)
+- [Examples](https://docs.neus.network/examples) — start with the [trust receipts showcase](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) locally; [live demo](https://neus.network/demo) on the product site
 - [SDK](https://docs.neus.network/sdks/javascript)
-- [MCP](https://docs.neus.network/mcp/overview) (IDEs and assistants)
+- [MCP](https://docs.neus.network/mcp/overview) for IDEs and assistants
 - [Widgets](https://docs.neus.network/widgets/overview)
 - [API](https://docs.neus.network/api/overview)
 - [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify)
