@@ -51,3 +51,4 @@ docs/.mintlify-home*/
 !.cursor/rules/
 !.cursor/rules/**
 .cursorrules
+AGENTS.md
