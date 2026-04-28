@@ -141,8 +141,7 @@ export default function App() {
               Trust Marketplace
             </h1>
             <p className="max-w-xl text-[0.9375rem] leading-relaxed" style={{ color: 'var(--neus-text-secondary)' }}>
-              One receipt model for access, rewards, and agents. Works in the browser, on the server, and in hosted
-              verify when you do not have a signer in-page.
+              One receipt for access, rewards, and agents. Works in the browser, on the server, and anywhere you need to show trust.
             </p>
           </div>
           <div className="min-w-0 max-w-full">

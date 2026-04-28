@@ -1,6 +1,11 @@
 <p align="center">
  <a href="https://neus.network">
- <img src="sdk/neus-logo.svg" width="84" alt="NEUS" />
+ <img
+   src="https://neus.network/images/neus-brand-pack/og-default-1200x630-neus.png"
+   width="600"
+   height="315"
+   alt="NEUS"
+ />
  </a>
 </p>
 

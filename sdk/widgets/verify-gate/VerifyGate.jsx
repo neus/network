@@ -1,5 +1,5 @@
 "use client";
-import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import { NeusClient } from '@neus/sdk/client';
 import NEUS_LOGO_DATA_URL from '../../neus-logo.svg';
 import { mergeVerifyGateCreateProofOptions } from './mergeCreateProofOptions.js';
@@ -70,6 +70,29 @@ const HOSTED_WHEN_INCOMPLETE = new Set(['wallet-link']);
 
 const DEFAULT_HOSTED_CHECKOUT_URL = 'https://neus.network/verify';
 const HOSTED_CHECKOUT_MESSAGE_TYPE = 'neus_checkout_done';
+const VERIFY_GATE_DEFAULT_ERROR = 'Something went wrong. Please try again.';
+
+/**
+ * @param {unknown} err
+ * @returns {string | null} User-safe copy, or null to use caller default.
+ */
+function getVerifyGateUserError(err) {
+  const c = err && err.code;
+  const msg = String((err && err.message) || '');
+  if (c === 'INVALID_WALLET_ADDRESS' || c === 'CONFIGURATION_ERROR') {
+    return 'Connect a wallet and try again.';
+  }
+  if (msg === 'walletAddress is required and must be a string') {
+    return 'Connect a wallet and try again.';
+  }
+  if (/^User rejected\b/i.test(msg) || /rejected the signature|User rejected the wallet-link/i.test(msg)) {
+    return 'The request was cancelled.';
+  }
+  if (c === 'VALIDATION_ERROR' && /wallet|connect|No wallet|No Web3|accounts available|walletAddress/i.test(msg)) {
+    return 'Connect a wallet and try again.';
+  }
+  return null;
+}
 
 function dispatchNeusProofCreatedForHost({ qHash, proofId, walletAddress }) {
   try {
@@ -94,68 +117,6 @@ function dispatchNeusProofCreatedForHost({ qHash, proofId, walletAddress }) {
   } catch (_err) {
   }
 }
-
-const NeusLogo = ({ size = 16, onPrimaryFill = false }) => {
-  const img = (
-    <img
-      src={NEUS_LOGO_DATA_URL}
-      alt=""
-      aria-hidden="true"
-      width={size}
-      height={size}
-      style={{
-        width: size,
-        height: size,
-        verticalAlign: 'middle',
-        borderRadius: 3,
-        flexShrink: 0,
-        objectFit: 'contain',
-        display: 'block',
-        ...(onPrimaryFill
-          ? { filter: 'brightness(0)', opacity: 0.88 }
-          : {})
-      }}
-    />
-  );
-
-  if (onPrimaryFill) {
-    return (
-      <span
-        className="neus-vg__mark"
-        style={{ marginRight: 8, display: 'inline-flex', lineHeight: 0, flexShrink: 0, alignItems: 'center' }}
-      >
-        {img}
-      </span>
-    );
-  }
-
-  return <span style={{ marginRight: 8, display: 'inline-flex', lineHeight: 0, flexShrink: 0 }}>{img}</span>;
-};
-
-const Spinner = ({ size = 16 }) => (
-  <svg 
-    className="animate-spin" 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none"
-    style={{ marginRight: 8 }}
-  >
-    <circle 
-      className="opacity-25" 
-      cx="12" 
-      cy="12" 
-      r="10" 
-      stroke="currentColor" 
-      strokeWidth="3"
-    />
-    <path 
-      className="opacity-75" 
-      fill="currentColor" 
-      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-    />
-  </svg>
-);
 
 export function VerifyGate({
   requiredVerifiers = ['ownership-basic'],
@@ -428,14 +389,15 @@ export function VerifyGate({
     }
 
     return await new Promise((resolve, reject) => {
+      const url = checkoutUrl.toString();
       const popup = window.open(
-        checkoutUrl.toString(),
+        url,
         'neus_checkout',
         'width=600,height=700,scrollbars=yes,resizable=yes'
       );
 
       if (!popup) {
-        reject(new Error('Popup blocked. Please allow popups for this site.'));
+        window.location.assign(url);
         return;
       }
 
@@ -755,8 +717,9 @@ export function VerifyGate({
       }
 
     } catch (err) {
-      const errorMessage = err?.message || (mode === 'access' ? 'Access failed' : 'Verification failed');
-      setError(errorMessage);
+      const userMsg = getVerifyGateUserError(err);
+      const fallback = mode === 'access' ? 'Access failed' : VERIFY_GATE_DEFAULT_ERROR;
+      setError(userMsg != null ? userMsg : fallback);
       setState('error');
       onError?.(err);
     } finally {
@@ -809,8 +772,8 @@ export function VerifyGate({
       setState('idle');
       setNotice('No matching proof was found. Verify to create a proof.');
     } catch (err) {
-      const errorMessage = err?.message || 'Unable to access private proofs';
-      setError(errorMessage);
+      const userMsg = getVerifyGateUserError(err);
+      setError(userMsg != null ? userMsg : 'Unable to access private proofs');
       setState('error');
       onError?.(err);
     } finally {

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { NeusClient } from '../client.js';
-import { ValidationError, NetworkError, ApiError } from '../errors.js';
+import { ValidationError, NetworkError, ApiError, ConfigurationError } from '../errors.js';
 
 global.fetch = vi.fn();
 
@@ -62,6 +62,16 @@ describe('NeusClient', () => {
         verifier: 'ownership-basic',
         content: 123
       })).rejects.toThrow(ValidationError);
+    });
+  });
+
+  describe('getPrivateProof() / wallet resolution', () => {
+    it('throws ConfigurationError when getAddress is non-string and there is no usable account', async () => {
+      const w = {
+        getAddress: async () => 123,
+        request: async ({ method }) => (method === 'eth_accounts' ? [] : null)
+      };
+      await expect(client.getPrivateProof('0x' + 'ab'.repeat(32), w)).rejects.toThrow(ConfigurationError);
     });
   });
 

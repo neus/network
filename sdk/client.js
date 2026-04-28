@@ -33,6 +33,21 @@ function normalizeWalletLinkRelationshipType(value) {
   return WALLET_LINK_RELATIONSHIP_TYPES.has(normalized) ? normalized : 'linked';
 }
 
+/**
+ * @param {unknown} raw
+ * @returns {string | null} Non-empty trimmed string, or null if the provider value is not a valid string identity.
+ */
+function normalizeBrowserSignerString(raw) {
+  if (raw == null) {
+    return null;
+  }
+  if (typeof raw === 'string') {
+    const t = raw.trim();
+    return t.length > 0 ? t : null;
+  }
+  return null;
+}
+
 const validateVerifierData = (verifierId, data) => {
   if (!data || typeof data !== 'object') {
     return { valid: false, error: 'Data object is required' };
@@ -385,26 +400,49 @@ export class NeusClient {
       throw new ConfigurationError('No wallet provider available');
     }
 
-    if (wallet.address) {
-      return { signerWalletAddress: wallet.address, provider: wallet };
+    if (wallet.address != null) {
+      const s = normalizeBrowserSignerString(
+        typeof wallet.address === 'string' ? wallet.address : null
+      );
+      if (s) {
+        return { signerWalletAddress: s, provider: wallet };
+      }
     }
     if (wallet.publicKey && typeof wallet.publicKey.toBase58 === 'function') {
-      return { signerWalletAddress: wallet.publicKey.toBase58(), provider: wallet };
+      const b58 = wallet.publicKey.toBase58();
+      const s = normalizeBrowserSignerString(typeof b58 === 'string' ? b58 : null);
+      if (s) {
+        return { signerWalletAddress: s, provider: wallet };
+      }
     }
     if (typeof wallet.getAddress === 'function') {
-      const signerWalletAddress = await wallet.getAddress().catch(() => null);
-      return { signerWalletAddress, provider: wallet };
+      const got = await wallet.getAddress().catch(() => null);
+      const s = normalizeBrowserSignerString(
+        got == null ? null : (typeof got === 'string' ? got : null)
+      );
+      if (s) {
+        return { signerWalletAddress: s, provider: wallet };
+      }
     }
     if (wallet.selectedAddress || wallet.request) {
       const provider = wallet;
       if (wallet.selectedAddress) {
-        return { signerWalletAddress: wallet.selectedAddress, provider };
+        const s = normalizeBrowserSignerString(
+          typeof wallet.selectedAddress === 'string' ? wallet.selectedAddress : null
+        );
+        if (s) {
+          return { signerWalletAddress: s, provider };
+        }
       }
       const accounts = await provider.request({ method: 'eth_accounts' });
       if (!accounts || accounts.length === 0) {
         throw new ConfigurationError('No wallet accounts available');
       }
-      return { signerWalletAddress: accounts[0], provider };
+      const s = normalizeBrowserSignerString(accounts[0]);
+      if (!s) {
+        throw new ConfigurationError('No wallet accounts available');
+      }
+      return { signerWalletAddress: s, provider };
     }
 
     throw new ConfigurationError('Invalid wallet provider');
@@ -626,8 +664,14 @@ export class NeusClient {
         walletAddress = accounts[0];
       }
 
-      if (!walletAddress || typeof walletAddress !== 'string') {
-        throw new ConfigurationError('No wallet accounts available. Connect a wallet to continue.');
+      {
+        const normalized = normalizeBrowserSignerString(
+          typeof walletAddress === 'string' ? walletAddress : null
+        );
+        if (!normalized) {
+          throw new ConfigurationError('No wallet accounts available. Connect a wallet to continue.');
+        }
+        walletAddress = normalized;
       }
 
       let verificationData;
