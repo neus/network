@@ -1,14 +1,16 @@
 ---
 title: API Overview
-description: NEUS HTTP API - verify, proofs, checks.
+description: REST endpoints for proof checks, reads, and advanced HTTP verification.
 icon: terminal
 ---
 
-**Base:** `https://api.neus.network`
+Use the HTTP API when a server or tool needs **eligibility checks**, **proof reads**, or **verification without the JavaScript SDK**. Responses use the same proof ids as the SDK; usage bills to the NEUS profile linked to your app.
 
-**Billing.** [Get started](../get-started), [Billing](../platform/billing).
+**Base URL:** `https://api.neus.network`
 
-**Create proofs.** [Hosted Verify](../cookbook/auth-hosted-verify) at `https://neus.network/verify`, [Quickstart](../quickstart), or widgets. Use **HTTP** for checks and reads. Use `POST /api/v1/verification` only when you need raw HTTP ([Authentication](./authentication)).
+### Creating proofs
+
+Use **GET** endpoints below for checks and reads.
 
 ## Endpoints
 

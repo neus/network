@@ -4,12 +4,11 @@ description: Check, verify, save, reuse across Hosted Verify, SDK, API, and MCP.
 icon: compass
 ---
 
-Same loop on every surface: **Check, verify, save, reuse**.
-
-- **Integrations:** [Choose an integration path](./choose-an-integration-path).
-- **Also see:** [Billing](./platform/billing), [Verification results](./platform/receipts-and-results), [Security and trust](./platform/security-and-trust), [LLM docs](./platform/llm-docs)
+Every NEUS surface follows one flow: **check** for an existing valid proof, **verify** only when needed, **save** the proof id, **reuse** it for gates and decisions.
 
 **Check** for a valid result (saved **proof ID** or server eligibility) before a new verify. **Save** the **proof ID** from the response ([Verification results](./platform/receipts-and-results)). API field **`proofId`**.
+
+Pick hosted checkout, SDK, HTTP, or MCP in [Choose an integration path](./choose-an-integration-path).
 
 ## Loop
 
@@ -43,7 +42,7 @@ SDK `client.verify()` defaults **private**. `VerifyGate` create also defaults **
  <Item>Check before showing verify</Item>
  <Item>Store verification IDs - not only raw signatures</Item>
  <Item>Test: verify, save, check, reuse</Item>
- <Item>[Get started](./get-started), [Billing](./platform/billing)</Item>
+ <Item>Link your app and credits in Platform ([Get started](./get-started))</Item>
 </Checklist>
 
 ## Strategies (SDK / API)
@@ -63,6 +62,12 @@ More filters: [SDK verifications](./sdks/verifications).
 | Hosted Verify | `https://neus.network/verify` |
 | API | `https://api.neus.network` |
 | MCP | `https://mcp.neus.network/mcp` |
+
+## Related reading
+
+- [Billing](./platform/billing)
+- [Security and trust](./platform/security-and-trust)
+- [LLM docs](./platform/llm-docs)
 
 ## Next
 
