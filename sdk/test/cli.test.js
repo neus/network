@@ -92,9 +92,18 @@ process.exit(0);
 
 async function createCommand(binDir, name, body) {
   const scriptPath = path.join(binDir, `${name}.js`);
-  const cmdPath = path.join(binDir, `${name}.cmd`);
   await fs.writeFile(scriptPath, body, 'utf8');
-  await fs.writeFile(cmdPath, `@echo off\r\nnode "${scriptPath}" %*\r\n`, 'utf8');
+  if (process.platform === 'win32') {
+    const cmdPath = path.join(binDir, `${name}.cmd`);
+    await fs.writeFile(cmdPath, `@echo off\r\nnode "${scriptPath}" %*\r\n`, 'utf8');
+    return;
+  }
+  const shimPath = path.join(binDir, name);
+  const launcher = `#!/bin/sh
+exec node "${scriptPath}" "$@"
+`;
+  await fs.writeFile(shimPath, launcher, 'utf8');
+  await fs.chmod(shimPath, 0o755);
 }
 
 async function makeCliContext() {
@@ -114,6 +123,7 @@ async function makeCliContext() {
   await fs.mkdir(workspaceDir, { recursive: true });
   await fs.mkdir(binDir, { recursive: true });
   await fs.mkdir(path.join(appDataDir, 'Cursor'), { recursive: true });
+  await fs.mkdir(path.join(appDataDir, 'Code'), { recursive: true });
 
   await createCommand(binDir, 'claude', buildFakeClaudeScript());
   await createCommand(binDir, 'code', 'process.exit(0);\n');

@@ -44,7 +44,7 @@
   },
   "sideEffects": false,
   "scripts": {
-    "test": "vitest run",
+    "test": "npm run build:cjs && vitest run",
     "test:coverage": "vitest run --coverage",
     "lint": "eslint . --ignore-pattern widgets/verify-gate/dist/**",
     "format": "prettier --write \"**/*.js\"",
