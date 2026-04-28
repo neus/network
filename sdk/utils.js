@@ -459,6 +459,7 @@ export async function signMessage({ provider, message, walletAddress, chain } = 
           const sig = await resolvedProvider.request({ method: 'personal_sign', params: [hexMsg, address] });
           if (typeof sig === 'string' && sig) return sig;
         } catch {
+          void 0;
         }
       }
     }

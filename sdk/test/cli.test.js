@@ -125,7 +125,7 @@ async function makeCliContext() {
     APPDATA: appDataDir,
     LOCALAPPDATA: localAppDataDir,
     PATH: `${binDir}${path.delimiter}${process.env.PATH || ''}`,
-    NEUS_TEST_CLAUDE_STATE: claudeStatePath,
+    NEUS_TEST_CLAUDE_STATE: claudeStatePath
   };
 
   return {
@@ -133,7 +133,7 @@ async function makeCliContext() {
     homeDir,
     appDataDir,
     workspaceDir,
-    claudeStatePath,
+    claudeStatePath
   };
 }
 
@@ -141,7 +141,7 @@ async function runCli(args, context) {
   return execFileAsync(process.execPath, [cliPath, ...args], {
     encoding: 'utf8',
     cwd: context.workspaceDir,
-    env: context.env,
+    env: context.env
   });
 }
 
@@ -169,7 +169,7 @@ describe('neus CLI', () => {
     );
     expect(cursorConfig.mcpServers.neus).toEqual({
       type: 'streamableHttp',
-      url: 'https://mcp.neus.network/mcp',
+      url: 'https://mcp.neus.network/mcp'
     });
 
     const vscodeConfig = JSON.parse(
@@ -177,7 +177,7 @@ describe('neus CLI', () => {
     );
     expect(vscodeConfig.servers.neus).toEqual({
       type: 'http',
-      url: 'https://mcp.neus.network/mcp',
+      url: 'https://mcp.neus.network/mcp'
     });
 
     const claudeState = JSON.parse(await fs.readFile(context.claudeStatePath, 'utf8'));

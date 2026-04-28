@@ -38,7 +38,7 @@ function normalizeWalletLinkRelationshipType(value) {
  * @returns {string | null} Non-empty trimmed string, or null if the provider value is not a valid string identity.
  */
 function normalizeBrowserSignerString(raw) {
-  if (raw == null) {
+  if (raw === null || raw === undefined) {
     return null;
   }
   if (typeof raw === 'string') {
@@ -284,6 +284,7 @@ const validateVerifierData = (verifierId, data) => {
             };
           }
         } catch {
+          void 0;
         }
       }
     }
@@ -330,9 +331,9 @@ export class NeusClient {
       }
       this.baseUrl = url.toString().replace(/\/$/, '');
     } catch {
+      void 0;
     }
     this.config.apiUrl = this.baseUrl;
-
 
     this.defaultHeaders = {
       'Content-Type': 'application/json',
@@ -363,6 +364,7 @@ export class NeusClient {
         this.defaultHeaders['X-Client-Origin'] = window.location.origin;
       }
     } catch {
+      void 0;
     }
   }
 
@@ -400,7 +402,7 @@ export class NeusClient {
       throw new ConfigurationError('No wallet provider available');
     }
 
-    if (wallet.address != null) {
+    if (wallet.address !== null && wallet.address !== undefined) {
       const s = normalizeBrowserSignerString(
         typeof wallet.address === 'string' ? wallet.address : null
       );
@@ -418,7 +420,7 @@ export class NeusClient {
     if (typeof wallet.getAddress === 'function') {
       const got = await wallet.getAddress().catch(() => null);
       const s = normalizeBrowserSignerString(
-        got == null ? null : (typeof got === 'string' ? got : null)
+        got === null || got === undefined ? null : (typeof got === 'string' ? got : null)
       );
       if (s) {
         return { signerWalletAddress: s, provider: wallet };
@@ -608,6 +610,7 @@ export class NeusClient {
           verifierCatalog = discovered.metadata;
         }
       } catch {
+        void 0;
       }
       const validVerifiers = Object.keys(verifierCatalog);
       if (!validVerifiers.includes(verifier)) {
@@ -876,6 +879,7 @@ export class NeusClient {
             if (w.mini && w.mini.wallet === provider && fc && fc.context) return true;
             if (w.ethereum === provider && fc && fc.context) return true;
           } catch {
+            void 0;
           }
           return false;
         })();
@@ -885,6 +889,7 @@ export class NeusClient {
             const hexMsg = toHexUtf8(message);
             signature = await provider.request({ method: 'personal_sign', params: [hexMsg, walletAddress] });
           } catch (e) {
+            void e;
           }
         }
 
@@ -920,17 +925,20 @@ export class NeusClient {
                 try {
                   if (typeof window !== 'undefined') window.__NEUS_ALLOW_ETH_SIGN__ = true;
                 } catch {
+                  void 0;
                 }
                 signature = await provider.request({ method: 'eth_sign', params: [walletAddress, payloadHex], neusAllowEthSign: true });
                 try {
                   if (typeof window !== 'undefined') delete window.__NEUS_ALLOW_ETH_SIGN__;
                 } catch {
+                  void 0;
                 }
               } catch (fallbackErr) {
                 this._log('eth_sign fallback failed', { message: fallbackErr?.message || String(fallbackErr) });
                 try {
                   if (typeof window !== 'undefined') delete window.__NEUS_ALLOW_ETH_SIGN__;
                 } catch {
+                  void 0;
                 }
                 throw e;
               }
@@ -1484,8 +1492,7 @@ export class NeusClient {
           });
         }
       }
-      if (!auth) {
-      } else {
+      if (auth) {
         const normalizedAuthWallet = this._normalizeIdentity(auth.walletAddress);
         const normalizedAddress = this._normalizeIdentity(address);
         if (!normalizedAuthWallet || normalizedAuthWallet !== normalizedAddress) {
@@ -1814,11 +1821,14 @@ export class NeusClient {
       try {
         const prefix = '[neus/sdk]';
         if (data && Object.keys(data).length > 0) {
+          // eslint-disable-next-line no-console -- gated debug logging
           console.log(prefix, message, data);
         } else {
+          // eslint-disable-next-line no-console -- gated debug logging
           console.log(prefix, message);
         }
       } catch {
+        void 0;
       }
     }
   }

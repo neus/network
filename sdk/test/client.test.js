@@ -71,7 +71,7 @@ describe('NeusClient', () => {
         getAddress: async () => 123,
         request: async ({ method }) => (method === 'eth_accounts' ? [] : null)
       };
-      await expect(client.getPrivateProof('0x' + 'ab'.repeat(32), w)).rejects.toThrow(ConfigurationError);
+      await expect(client.getPrivateProof(`0x${'ab'.repeat(32)}`, w)).rejects.toThrow(ConfigurationError);
     });
   });
 
