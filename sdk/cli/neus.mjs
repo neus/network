@@ -24,7 +24,8 @@ function jsonStringify(value) {
 
 function readJsonFile(targetPath, fallback) {
   if (!fileExists(targetPath)) return fallback;
-  const raw = fs.readFileSync(targetPath, 'utf8');
+  const raw = fs.readFileSync(targetPath, 'utf8').trim();
+  if (!raw) return fallback;
   const parsed = JSON.parse(raw);
   return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : fallback;
 }
