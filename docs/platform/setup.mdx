@@ -4,13 +4,13 @@ description: Domains, caps, and app identity in Platform.
 icon: building
 ---
 
-In [Platform](https://neus.network/hub), link your product so requests carry **`appId`** and bill the right profile.
+Link your product so requests carry **`appId`** and bill the right profile.
 
 ## Steps
 
-1. **Apps** → create or link an app
+1. **Apps** - create or link an app
 2. Set **domain** and **daily credit cap**
-3. Pass **`appId`** from the SDK or widgets (public, not a secret)
+3. Pass **`appId`** from the SDK or widgets
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -18,20 +18,4 @@ import { NeusClient } from '@neus/sdk';
 const client = new NeusClient({ appId: 'your-app-id' });
 ```
 
-## Hosted checkout
-
-<CardGroup cols={2}>
-  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-  </Card>
-  <Card title="Integration" icon="compass" href="../integration">
-  </Card>
-</CardGroup>
-
-## Next
-
-<CardGroup cols={2}>
-  <Card title="Billing" icon="credit-card" href="./billing">
-  </Card>
-  <Card title="Security and trust" icon="user-shield" href="./security-and-trust">
-  </Card>
-</CardGroup>
+**Next:** [Hosted Verify](../cookbook/auth-hosted-verify)

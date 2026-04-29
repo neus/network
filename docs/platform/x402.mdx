@@ -1,10 +1,10 @@
 ---
-title: x402 overflow
-description: Pay per call when credits are exhausted. Retry with the receipt header.
+title: x402
+description: Retry a billable request after payment.
 icon: coins
 ---
 
-When **credits** cannot cover a billable call, the API returns **402** with a quote. Pay. **Retry** with `PAYMENT-SIGNATURE`. [Billing](./billing).
+When credits cannot cover a billable call, the API returns **402** with a quote. Pay, then retry with the receipt header.
 
 ## Flow
 
@@ -18,12 +18,3 @@ When **credits** cannot cover a billable call, the API returns **402** with a qu
 ```text
 PAYMENT-SIGNATURE: <receipt>
 ```
-
-## Next
-
-<CardGroup cols={2}>
-  <Card title="Billing" icon="credit-card" href="./billing">
-  </Card>
-  <Card title="JavaScript SDK" icon="code" href="../sdks/javascript">
-  </Card>
-</CardGroup>

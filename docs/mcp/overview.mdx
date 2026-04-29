@@ -15,46 +15,24 @@ icon: plug
   </Card>
 </CardGroup>
 
-## URLs
-
-| URL | Role |
-|-----|------|
-| `https://mcp.neus.network/mcp` | MCP transport for **`neus_*`** tools |
-| **`hostedVerifyUrl`**| Browser verification—open from the response |
-
 ## Playbook
 
 | Step | Action |
 |------|--------|
-| 1 | Connect — [Setup](./setup) |
-| 2 | **`neus_context`** — live verifiers, **`requiredFields`**, defaults (no key) |
-| 3 | If using Bearer — **`neus_me`** → **`status: ok`** ([Auth](./auth)); skip if you only use public tools |
-| 4 | Verify — **`neus_proofs_check`**; **`neus_verify`** (instant + matching profile wallet) or **`neus_verify_or_guide`** → **`hostedVerifyUrl`** |
-| 5 | Agents — **`neus_agent_create`**, hosted steps, **`neus_agent_link`** |
-| 6 | **`neus_proofs_get`** — proofs, profile summary, optional **`tags=`**, **`qHash`** |
-
-Use **`neus_context`** for current **`requiredFields`**.
+| 1 | Connect with the hosted endpoint |
+| 2 | Call **`neus_context`** for live verifiers and required fields |
+| 3 | If using Bearer, confirm **`neus_me`** returns **`status: ok`** |
+| 4 | Check or create proofs with **`neus_proofs_check`**, **`neus_verify`**, or **`neus_verify_or_guide`** |
+| 5 | Open returned **`hostedVerifyUrl`** values for browser-only steps |
+| 6 | Read proof state with **`neus_proofs_get`** |
 
 ## Headless signing
 
 | Step | What to send |
-|------|----------------|
-| Prepare | **`neus_verify`** without **`signature`** → sign **`signerString`** |
-| Finish | **`neus_verify`** again with the **same** `walletAddress`, `verifierIds`, `data`, `signedTimestamp`, `chain`, plus **`signature`** |
+|------|--------------|
+| Prepare | **`neus_verify`** without **`signature`**; sign **`signerString`** |
+| Finish | **`neus_verify`** again with the same request fields plus **`signature`** |
 
 Do not repeat prepare.
 
-Field names and tools: [Tools](./tools). **`ownership-basic`:** [Ownership](../verification/ownership-basic). **402:** [x402](../platform/x402).
-
-**Apps:**
-
-<CardGroup cols={2}>
-  <Card title="Quickstart" icon="rocket" href="../quickstart">
-  </Card>
-  <Card title="JavaScript SDK" icon="code" href="../sdks/javascript">
-  </Card>
-  <Card title="Get started" icon="book" href="../get-started">
-  </Card>
-  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-  </Card>
-</CardGroup>
+Field names and tools: [Tools](./tools).

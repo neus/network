@@ -6,9 +6,7 @@ icon: compass
 
 Every NEUS surface follows one flow: **check** for an existing valid proof, **verify** only when needed, **save** the proof id, **reuse** it for gates and decisions.
 
-**Check** for a valid result (saved **proof ID** or server eligibility) before a new verify. **Save** the **proof ID** from the response ([Verification results](./platform/receipts-and-results)). API field **`proofId`**.
-
-Pick hosted checkout, SDK, HTTP, or MCP in [Choose an integration path](./choose-an-integration-path).
+**Check** for a valid result before a new verify. **Save** the **proof ID** from the response. API field: **`proofId`**.
 
 ## Loop
 
@@ -20,12 +18,10 @@ Pick hosted checkout, SDK, HTTP, or MCP in [Choose an integration path](./choose
 | Situation | Approach |
 |-----------|----------|
 | Repeat visits | Run an eligibility check or use a stored proof ID before a new verify |
-| Balance / NFT gates | Narrow `since` or `fresh` strategy - [SDK verifications](./sdks/verifications) |
-| Org and domain | [Platform setup](./platform/setup), then the same loop |
+| Balance / NFT gates | Narrow `since` or `fresh` strategy |
+| Org and domain | Link the app, then use the same loop |
 
 ## Visibility
-
-[Security and trust](./platform/security-and-trust) has the full matrix.
 
 | Mode | Use |
 |------|-----|
@@ -42,7 +38,7 @@ SDK `client.verify()` defaults **private**. `VerifyGate` create also defaults **
  <Item>Check before showing verify</Item>
  <Item>Store verification IDs - not only raw signatures</Item>
  <Item>Test: verify, save, check, reuse</Item>
- <Item>Link your app and credits in Platform ([Get started](./get-started))</Item>
+ <Item>Link your app and credits in Platform</Item>
 </Checklist>
 
 ## Strategies (SDK / API)
@@ -55,29 +51,4 @@ SDK `client.verify()` defaults **private**. `VerifyGate` create also defaults **
 
 More filters: [SDK verifications](./sdks/verifications).
 
-## URLs
-
-| | |
-|--|--|
-| Hosted Verify | `https://neus.network/verify` |
-| API | `https://api.neus.network` |
-| MCP | `https://mcp.neus.network/mcp` |
-
-## Related reading
-
-- [Billing](./platform/billing)
-- [Security and trust](./platform/security-and-trust)
-- [LLM docs](./platform/llm-docs)
-
-## Next
-
-<CardGroup cols={2}>
-  <Card title="Get started" icon="book" href="./get-started">
-  </Card>
-  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-  </Card>
-  <Card title="Billing" icon="credit-card" href="./platform/billing">
-  </Card>
-  <Card title="Payment gates" icon="lock" href="./platform/payment-gates">
-  </Card>
-</CardGroup>
+**Next:** [Hosted Verify](./cookbook/auth-hosted-verify)

@@ -89,7 +89,6 @@
               "integration",
               "quickstart",
               "cookbook/auth-hosted-verify",
-              "choose-an-integration-path",
               "examples",
               "platform/llm-docs"
             ]
@@ -252,6 +251,10 @@
   },
   "redirects": [
     {
+      "source": "/choose-an-integration-path",
+      "destination": "/integration"
+    },
+    {
       "source": "/onboarding",
       "destination": "/get-started"
     },
@@ -309,7 +312,7 @@
     },
     {
       "source": "/content/get-started/choose-an-integration-path",
-      "destination": "/choose-an-integration-path"
+      "destination": "/integration"
     },
     {
       "source": "/content/get-started/integration",
@@ -329,7 +332,7 @@
     },
     {
       "source": "/get-started/choose-an-integration-path",
-      "destination": "/choose-an-integration-path"
+      "destination": "/integration"
     },
     {
       "source": "/get-started/integration",
@@ -493,11 +496,11 @@
     },
     {
       "source": "/content/ecosystems/overview",
-      "destination": "/choose-an-integration-path"
+      "destination": "/integration"
     },
     {
       "source": "/ecosystems/overview",
-      "destination": "/choose-an-integration-path"
+      "destination": "/integration"
     },
     {
       "source": "/ecosystems/verifiers",

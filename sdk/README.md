@@ -31,7 +31,7 @@ npx -y -p @neus/sdk neus auth --access-key <npk_...>
 npx -y -p @neus/sdk neus status --json
 ```
 
-Use `neus init --project` when you want shared repo config instead of personal user-scope setup. Access keys stay user-scope only so secrets do not land in checked-in config.
+Use `neus init --project` when you want shared repo config instead of personal user-scope setup. Access keys stay user-scope only so secrets do not land in checked-in config. Use `--client claude`, `--client cursor`, or `--client vscode` when you want to target one editor directly.
 
 ## Minimal working example
 

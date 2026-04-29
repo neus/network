@@ -13,7 +13,7 @@ This site (`docs.neus.network`) is the standard integration reference. Follow th
 3. [Integration](../integration)
 4. [JavaScript SDK](../sdks/javascript)
 5. [MCP tools](../mcp/tools)
-6. [Choose an integration path](../choose-an-integration-path)
+6. [Integration](../integration)
 
 ## MCP tool order
 
@@ -23,14 +23,14 @@ This site (`docs.neus.network`) is the standard integration reference. Follow th
 4. **`neus_proofs_check`**, **`neus_verify`**, **`neus_verify_or_guide`**, agents. [Overview](../mcp/overview)
 5. **`neus_proofs_get`**. [Proofs get](../mcp/proofs-get)
 
-`npx -y -p @neus/sdk neus init` installs the hosted NEUS MCP server into supported clients automatically. Use `neus auth --access-key <npk_...>` when you want account-scoped tools such as `neus_me` and private reads.
+`npx -y -p @neus/sdk neus init` installs the hosted NEUS MCP server into supported clients automatically. Use `neus auth --access-key <npk_...>` when you want account-scoped tools such as `neus_me` and private reads, then `neus status --json` to confirm the final client state or surface any malformed local config.
 
 ## Rules
 
-- Account, `appId`, and billing: [Get started](../get-started); detailed pricing in [Billing](../platform/billing)
+- Account, `appId`, and billing: [Get started](../get-started)
 - No in-app wallet: [Hosted Verify](../cookbook/auth-hosted-verify)
 - No wallet **private keys** in MCP; **Access keys** only for Bearer account tools
-- **402:** [x402](../platform/x402)
+- **402:** use the x402 retry pattern
 - Agents: [Agents](../agents/overview)
 - Reuse **`proofId`**
 

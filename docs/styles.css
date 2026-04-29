@@ -22,6 +22,24 @@ body {
   background-color: transparent;
 }
 
+html,
+body,
+main,
+article,
+#content-area,
+#content-container,
+#body-content,
+#body-content * {
+  user-select: text !important;
+}
+
+button,
+[role="button"],
+#search-input,
+#page-context-menu-button {
+  user-select: none !important;
+}
+
 /* Structural elements: fully transparent so gradient shows through */
 #header,
 #header-content,

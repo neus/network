@@ -12,11 +12,19 @@ These steps connect your editor or agent to the hosted NEUS MCP endpoint.
 npx -y -p @neus/sdk neus init
 ```
 
-That command configures NEUS MCP in supported clients automatically. Add `--project` when you want shared repo config. Add personal auth later with:
+That command configures NEUS MCP in supported clients automatically. Add `--project` when you want shared repo config. Add `--client claude`, `--client cursor`, or `--client vscode` when you want to target one client directly. Add personal auth later with:
 
 ```bash
 npx -y -p @neus/sdk neus auth --access-key <npk_...>
 ```
+
+Confirm the final state with:
+
+```bash
+npx -y -p @neus/sdk neus status --json
+```
+
+Empty MCP config files are treated as unconfigured. If one client has malformed JSON, `status --json` reports the exact path without blocking healthy clients.
 
 ## Config
 

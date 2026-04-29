@@ -8,7 +8,7 @@ icon: code
 npm install @neus/sdk
 ```
 
-The JavaScript SDK wraps verify, polling, gate checks, and hosted checkout URLs. Link your app and `appId` through [Get started](../get-started). Editors and assistants use the same APIs via [MCP](../mcp/overview); reading order for models is in [LLM docs](../platform/llm-docs).
+The JavaScript SDK wraps verify, polling, gate checks, and hosted checkout URLs. Link your app and `appId` through Get started. Editors and assistants use the same APIs via MCP.
 
 ## One flow
 
@@ -45,10 +45,6 @@ const url = getHostedCheckoutUrl({
 
 Optional: `timeout` on `NeusClient`.
 
-## Who pays
-
-Usage bills the **profile linked to your app** in Platform. [Billing](../platform/billing). Server-side API calls: [Authentication](./authentication).
-
 ## Defaults
 
 `client.verify()` defaults **private**. [Security](./security). `VerifyGate` create also defaults **private**. [Security and trust](../platform/security-and-trust)
@@ -61,11 +57,5 @@ Usage bills the **profile linked to your app** in Platform. [Billing](../platfor
   <Card title="Verifications" icon="list-check" href="./verifications">
   </Card>
   <Card title="Authentication" icon="key" href="./authentication">
-  </Card>
-  <Card title="Billing" icon="credit-card" href="../platform/billing">
-  </Card>
-  <Card title="MCP" icon="plug" href="../mcp/overview">
-  </Card>
-  <Card title="LLM docs" icon="sparkles" href="../platform/llm-docs">
   </Card>
 </CardGroup>

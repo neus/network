@@ -1,32 +1,21 @@
 ---
-title: Billing and credits
-description: Usage bills your linked profile. Credits then x402.
+title: Billing
+description: Credits, app attribution, and payment fallback.
 icon: credit-card
 ---
 
-NEUS bills **metered usage** (API, verification, related calls) to the **profile linked to your app**. **Credits** spend first. If a call is not covered, use **x402** ([x402](./x402)).
+NEUS bills metered usage to the profile linked to your app. Credits spend first.
 
 ## What `appId` does
 
-`appId` identifies your app on each request. It is **public** (not a secret). Create the app in [Platform setup](./setup). Pass the same value from the SDK or widgets.
+`appId` identifies which product made the request. It is public metadata, not a secret.
 
 ## When credits run out
 
-Billable calls return **402** with a quote. Complete **x402**. **Retry** with `PAYMENT-SIGNATURE`. Steps: [x402](./x402).
+Billable calls return **402** with a quote. Complete payment and retry with `PAYMENT-SIGNATURE`.
 
 ## Payment gates
 
-Optional visitor charges. [Payment gates](./payment-gates).
+Payment gates charge visitors. NEUS usage still bills through the linked profile.
 
-## Next
-
-<CardGroup cols={2}>
-  <Card title="Link your app" icon="building" href="./setup">
-  </Card>
-  <Card title="x402" icon="coins" href="./x402">
-  </Card>
-  <Card title="Payment gates" icon="lock" href="./payment-gates">
-  </Card>
-  <Card title="SDK" icon="code" href="../sdks/overview">
-  </Card>
-</CardGroup>
+**Next:** [x402](./x402)

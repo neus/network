@@ -26,8 +26,15 @@ function readJsonFile(targetPath, fallback) {
   if (!fileExists(targetPath)) return fallback;
   const raw = fs.readFileSync(targetPath, 'utf8').trim();
   if (!raw) return fallback;
-  const parsed = JSON.parse(raw);
-  return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : fallback;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : fallback;
+  } catch (error) {
+    if (error instanceof SyntaxError) {
+      throw new Error(`Invalid JSON in ${targetPath}`);
+    }
+    throw error;
+  }
 }
 
 function writeJsonFile(targetPath, nextValue, dryRun) {
@@ -307,6 +314,7 @@ function installCursor(scope, accessKey, dryRun, cwd) {
     targetPath,
     backupPath: writeResult.backupPath,
     dryRun,
+    error: null,
   };
 }
 
@@ -330,6 +338,7 @@ function installVsCode(scope, accessKey, dryRun, cwd) {
     targetPath,
     backupPath: writeResult.backupPath,
     dryRun,
+    error: null,
   };
 }
 
@@ -353,6 +362,7 @@ function installClaudeProject(scope, accessKey, dryRun, cwd) {
     targetPath,
     backupPath: writeResult.backupPath,
     dryRun,
+    error: null,
   };
 }
 
@@ -388,6 +398,7 @@ function installClaudeUser(scope, accessKey, dryRun, cwd) {
     targetPath: '~/.claude.json',
     backupPath: null,
     dryRun,
+    error: null,
   };
 }
 
@@ -408,7 +419,7 @@ function installClient(client, scope, accessKey, dryRun, cwd) {
 function inspectCursor(scope, cwd) {
   const targetPath = cursorConfigPath(scope, cwd);
   if (!fileExists(targetPath)) {
-    return { client: 'cursor', scope, configured: false, authConfigured: false, targetPath };
+    return { client: 'cursor', scope, configured: false, authConfigured: false, targetPath, error: null };
   }
   const doc = readJsonFile(targetPath, {});
   const server = doc.mcpServers?.[NEUS_SERVER_NAME];
@@ -418,13 +429,14 @@ function inspectCursor(scope, cwd) {
     configured: Boolean(server && server.url === NEUS_MCP_URL),
     authConfigured: Boolean(server?.headers?.Authorization),
     targetPath,
+    error: null,
   };
 }
 
 function inspectVsCode(scope, cwd) {
   const targetPath = vscodeConfigPath(scope, cwd);
   if (!fileExists(targetPath)) {
-    return { client: 'vscode', scope, configured: false, authConfigured: false, targetPath };
+    return { client: 'vscode', scope, configured: false, authConfigured: false, targetPath, error: null };
   }
   const doc = readJsonFile(targetPath, {});
   const server = doc.servers?.[NEUS_SERVER_NAME];
@@ -434,6 +446,7 @@ function inspectVsCode(scope, cwd) {
     configured: Boolean(server && server.url === NEUS_MCP_URL),
     authConfigured: Boolean(server?.headers?.Authorization),
     targetPath,
+    error: null,
   };
 }
 
@@ -441,7 +454,7 @@ function inspectClaude(scope, cwd) {
   if (scope === 'project') {
     const targetPath = claudeProjectConfigPath(cwd);
     if (!fileExists(targetPath)) {
-      return { client: 'claude', scope, configured: false, authConfigured: false, targetPath };
+      return { client: 'claude', scope, configured: false, authConfigured: false, targetPath, error: null };
     }
     const doc = readJsonFile(targetPath, {});
     const server = doc.mcpServers?.[NEUS_SERVER_NAME];
@@ -451,11 +464,12 @@ function inspectClaude(scope, cwd) {
       configured: Boolean(server && server.url === NEUS_MCP_URL),
       authConfigured: Boolean(server?.headers?.Authorization),
       targetPath,
+      error: null,
     };
   }
 
   if (!commandExists('claude')) {
-    return { client: 'claude', scope, configured: false, authConfigured: null, targetPath: '~/.claude.json' };
+    return { client: 'claude', scope, configured: false, authConfigured: null, targetPath: '~/.claude.json', error: null };
   }
 
   const result = runCommand('claude', ['mcp', 'list'], cwd, true);
@@ -466,6 +480,7 @@ function inspectClaude(scope, cwd) {
     configured,
     authConfigured: null,
     targetPath: '~/.claude.json',
+    error: null,
   };
 }
 
@@ -480,9 +495,47 @@ function printJson(payload) {
   process.stdout.write(jsonStringify(payload));
 }
 
+function clientTargetPath(client, scope, cwd) {
+  if (client === 'cursor') return cursorConfigPath(scope, cwd);
+  if (client === 'vscode') return vscodeConfigPath(scope, cwd);
+  if (client === 'claude') {
+    return scope === 'project' ? claudeProjectConfigPath(cwd) : '~/.claude.json';
+  }
+  return null;
+}
+
+function errorMessage(error) {
+  return error instanceof Error ? error.message : String(error || 'Unknown error');
+}
+
+function buildClientFailure(client, scope, cwd, dryRun, error) {
+  return {
+    client,
+    scope,
+    configured: false,
+    authConfigured: false,
+    changed: false,
+    targetPath: clientTargetPath(client, scope, cwd),
+    backupPath: null,
+    dryRun,
+    error: errorMessage(error),
+  };
+}
+
+function runClientOperations(clients, scope, cwd, dryRun, runner) {
+  return clients.map((client) => {
+    try {
+      return runner(client);
+    } catch (error) {
+      return buildClientFailure(client, scope, cwd, dryRun, error);
+    }
+  });
+}
+
 function printResultSummary(command, scope, results, accessKey) {
   const changedCount = results.filter((result) => result.changed).length;
-  const configuredClients = results.map((result) => result.client).join(', ');
+  const configuredClients = results.filter((result) => result.configured).map((result) => result.client).join(', ');
+  const failures = results.filter((result) => result.error);
   const lines = [
     `NEUS ${command} completed for ${results.length} client${results.length === 1 ? '' : 's'} in ${scope} scope.`,
     `Configured: ${configuredClients || 'none'}.`,
@@ -502,6 +555,9 @@ function printResultSummary(command, scope, results, accessKey) {
     const enabled = results.filter((result) => result.configured).map((result) => result.client);
     lines.push(`Active: ${enabled.length > 0 ? enabled.join(', ') : 'none'}.`);
   }
+  if (failures.length > 0) {
+    lines.push(`Issues: ${failures.map((result) => `${result.client}: ${result.error}`).join(' | ')}`);
+  }
 
   process.stdout.write(`${lines.join('\n')}\n`);
 }
@@ -509,11 +565,18 @@ function printResultSummary(command, scope, results, accessKey) {
 function runInit(options) {
   const scope = resolveScope(options);
   ensureSafeAuth('init', scope, options.accessKey);
+  const cwd = process.cwd();
 
   const clients = resolveClients(scope, options.clients);
   ensureClientSelection(scope, clients);
 
-  const results = clients.map((client) => installClient(client, scope, options.accessKey, options.dryRun, process.cwd()));
+  const results = runClientOperations(
+    clients,
+    scope,
+    cwd,
+    options.dryRun,
+    (client) => installClient(client, scope, options.accessKey, options.dryRun, cwd),
+  );
   const payload = {
     command: 'init',
     scope,
@@ -521,18 +584,24 @@ function runInit(options) {
     clients,
     accessKeyConfigured: Boolean(options.accessKey),
     results,
+    hasErrors: results.some((result) => result.error),
   };
 
   if (options.json) {
     printJson(payload);
-    return;
+  } else {
+    printResultSummary('init', scope, results, options.accessKey);
   }
-  printResultSummary('init', scope, results, options.accessKey);
+
+  if (payload.hasErrors) {
+    process.exitCode = 1;
+  }
 }
 
 function runAuth(options) {
   const scope = resolveScope(options);
   ensureSafeAuth('auth', scope, options.accessKey);
+  const cwd = process.cwd();
   if (!options.accessKey) {
     throw new Error(`Missing access key. Create one at ${NEUS_ACCESS_KEYS_URL} and rerun neus auth --access-key <npk_...>.`);
   }
@@ -540,32 +609,47 @@ function runAuth(options) {
   const clients = resolveClients(scope, options.clients);
   ensureClientSelection(scope, clients);
 
-  const results = clients.map((client) => installClient(client, scope, options.accessKey, options.dryRun, process.cwd()));
+  const results = runClientOperations(
+    clients,
+    scope,
+    cwd,
+    options.dryRun,
+    (client) => installClient(client, scope, options.accessKey, options.dryRun, cwd),
+  );
   const payload = {
     command: 'auth',
     scope,
     clients,
     accessKeyConfigured: true,
     results,
+    hasErrors: results.some((result) => result.error),
   };
 
   if (options.json) {
     printJson(payload);
-    return;
+  } else {
+    printResultSummary('auth', scope, results, options.accessKey);
   }
-  printResultSummary('auth', scope, results, options.accessKey);
+
+  if (payload.hasErrors) {
+    process.exitCode = 1;
+  }
 }
 
 function runStatus(options) {
   const scope = resolveScope(options);
+  const cwd = process.cwd();
   const clients = resolveClients(scope, options.clients);
   ensureClientSelection(scope, clients);
 
-  const inspected = clients.map((client) => inspectClient(client, scope, process.cwd()));
+  const inspected = runClientOperations(clients, scope, cwd, options.dryRun, (client) =>
+    inspectClient(client, scope, cwd),
+  );
   const payload = {
     command: 'status',
     scope,
     clients: inspected,
+    hasErrors: inspected.some((result) => result.error),
   };
 
   if (options.json) {

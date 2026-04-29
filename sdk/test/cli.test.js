@@ -240,6 +240,58 @@ describe('neus CLI', () => {
     expect(byClient.claude.configured).toBe(true);
   });
 
+  it('treats empty MCP config files as unconfigured instead of crashing', async () => {
+    const context = await makeCliContext();
+    const vscodeConfigPath = path.join(context.appDataDir, 'Code', 'User', 'mcp.json');
+
+    await fs.mkdir(path.dirname(vscodeConfigPath), { recursive: true });
+    await fs.writeFile(vscodeConfigPath, '', 'utf8');
+
+    const { stdout, stderr } = await runCli(['status', '--json'], context);
+    const payload = JSON.parse(stdout);
+    const byClient = Object.fromEntries(payload.clients.map((client) => [client.client, client]));
+
+    expect(stderr).toBe('');
+    expect(byClient.vscode.configured).toBe(false);
+    expect(byClient.vscode.error).toBe(null);
+  });
+
+  it('reports malformed MCP config files without blocking other clients', async () => {
+    const context = await makeCliContext();
+    const vscodeConfigPath = path.join(context.appDataDir, 'Code', 'User', 'mcp.json');
+
+    await fs.mkdir(path.dirname(vscodeConfigPath), { recursive: true });
+    await fs.writeFile(vscodeConfigPath, '{"servers":', 'utf8');
+
+    const { stdout, stderr } = await runCli(['status', '--json'], context);
+    const payload = JSON.parse(stdout);
+    const byClient = Object.fromEntries(payload.clients.map((client) => [client.client, client]));
+
+    expect(stderr).toBe('');
+    expect(byClient.cursor.configured).toBe(false);
+    expect(byClient.cursor.error).toBe(null);
+    expect(byClient.vscode.configured).toBe(false);
+    expect(byClient.vscode.error).toContain(vscodeConfigPath);
+    expect(byClient.vscode.error).toContain('Invalid JSON');
+  });
+
+  it('continues configuring healthy clients when one config file is malformed', async () => {
+    const context = await makeCliContext();
+    const vscodeConfigPath = path.join(context.appDataDir, 'Code', 'User', 'mcp.json');
+
+    await fs.mkdir(path.dirname(vscodeConfigPath), { recursive: true });
+    await fs.writeFile(vscodeConfigPath, '{"servers":', 'utf8');
+
+    await expect(runCli(['init', '--json'], context)).rejects.toMatchObject({
+      code: 1
+    });
+
+    const cursorConfig = JSON.parse(
+      await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
+    );
+    expect(cursorConfig.mcpServers.neus.url).toBe('https://mcp.neus.network/mcp');
+  });
+
   it('exits non-zero for unknown subcommand', async () => {
     const context = await makeCliContext();
 
