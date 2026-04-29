@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
- <strong>NEUS is the trust layer for apps, agents, and the next internet.</strong><br />
-Most systems stop at the check. NEUS turns the result into portable trust. That means users carry their identity, context, memory, and proof forward instead of starting over, while apps and agents can verify, gate, personalize, and act without repeatedly asking for the same raw data.
+ <strong>NEUS makes trust portable</strong>, so users carry their identity, context, memory, and proof forward instead of starting over.<br />
+ Apps and agents can verify, gate, personalize, and act without repeatedly asking for the same raw data.
 </p>
 
 <p align="center">
