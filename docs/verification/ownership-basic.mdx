@@ -1,34 +1,36 @@
 ---
 title: Ownership and Provenance
-description: Wallet-signed content, hash, or reference. Storage and retrieval.
+description: Ownership of content, hash, or reference.
 icon: wallet
 ---
 
 **Verifier ID:** `ownership-basic`
 
-Instant proof: SDK, API, or `VerifyGate` with a wallet. Visibility: [Security and trust](../platform/security-and-trust).
-
 ## Best for
 
 - Content and file provenance
 - Authorship and licensing claims
-- Portable verification IDs (listings, bounties, submissions)
+- Portable proof IDs (listings, bounties, submissions)
 
 ## Payload
 
 | Field | Required | Notes |
 |------|----------|-------|
 | `owner` | Yes | Must match signer |
-| `content` | No | **Include to persist text** in `proof.publicContent` (same object on standardize + submit; max 50k chars). Omit only if you want hash/reference-only. |
+| `content` | No | Text body to prove and optionally store with the proof. Use this for plain text, release notes, claims, descriptions, or other human-readable content. When stored and visible, NEUS exposes it on the proof as `proof.publicContent.content`. Max 50k chars. |
 | `contentHash` | No | Pre-hashed body; verifier can integrity-check against `content` if both sent |
 | `reference` | No | Pointer (URL, IPFS, tx, file id, …). Server does not fetch it. Send `content` if you need bytes stored. |
 | `provenance` | No | Human / AI / mixed (advisory) |
 
-## Persisting text (`publicContent`)
+## Stored proof content
 
-- If you send `content`, NEUS can store it with the proof.
-- Most builders should keep the default private visibility and only change storage behavior for advanced cases.
-- Public proof behavior depends on the visibility options you choose. Start with [Security and trust](../platform/security-and-trust).
+Send `content` when you want NEUS to store a readable text body with the proof.
+
+NEUS keeps `content` as the ownership-basic verifier input and maps stored readable content onto the normalized proof response as `proof.publicContent.content` when visibility allows it.
+
+Use `contentHash` or `reference` when you only want to prove a hash or external pointer without storing the text body.
+
+For visibility defaults and when stored text appears on public proofs, see [Security and trust](../platform/security-and-trust).
 
 ## Example
 
@@ -45,4 +47,4 @@ Instant proof: SDK, API, or `VerifyGate` with a wallet. Visibility: [Security an
 
 ## Retrieval
 
-For proofs that expose content, responses can return stored `publicContent.content` or rely on a stable `reference`. Responses may include `contentResolutionStatus`: `resolved` or `hash_only_not_recoverable`.
+When reading proofs back, stored text appears on the normalized proof as `proof.publicContent.content` when visibility allows it; otherwise rely on a stable `reference`. Responses may include `contentResolutionStatus`: `resolved` or `hash_only_not_recoverable`.

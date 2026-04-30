@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 320" fill="none" role="img" aria-labelledby="agentsFlowTitle agentsFlowDesc">
   <title id="agentsFlowTitle">Agent registration and delegation</title>
-  <desc id="agentsFlowDesc">Register agent identity, delegate scope from controller, then act with stored verification IDs.</desc>
+  <desc id="agentsFlowDesc">Register agent identity, delegate scope from controller, then act with stored proof IDs.</desc>
   <defs>
     <linearGradient id="ag-canvas" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#121418"/>
