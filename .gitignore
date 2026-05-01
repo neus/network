@@ -45,10 +45,5 @@ docs/.mintlify-home*/
 # Local editor and assistant folders (do not commit)
 .CLAUDE/
 .claude/*
-!.claude/rules/
-!.claude/rules/**
 .cursor/*
-!.cursor/rules/
-!.cursor/rules/**
 .cursorrules
-AGENTS.md
