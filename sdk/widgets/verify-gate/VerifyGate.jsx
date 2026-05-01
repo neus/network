@@ -1,7 +1,11 @@
 "use client";
 import { useCallback, useMemo, useState, useEffect } from 'react';
 import { NeusClient } from '@neus/sdk/client';
-import NEUS_LOGO_DATA_URL from '../../neus-logo.svg';
+import {
+  HOSTED_CHECKOUT_MESSAGE_TYPE,
+  buildHostedCheckoutRedirectUrl,
+  buildHostedCheckoutUrl
+} from './hostedCheckout.js';
 import { mergeVerifyGateCreateProofOptions } from './mergeCreateProofOptions.js';
 
 const THEME = {
@@ -26,6 +30,7 @@ if (typeof document !== 'undefined') {
     const el = document.createElement('style');
     el.id = sid;
     el.textContent =
+      '@keyframes neus-vg-spin{to{transform:rotate(360deg)}}' +
       'button.neus-vg__primary{ color: #0a0a0a !important; -webkit-text-fill-color: #0a0a0a; }' +
       'button.neus-vg__primary .neus-vg__label,button.neus-vg__primary span.neus-vg__label{ color: inherit !important; -webkit-text-fill-color: inherit; }';
     document.head.appendChild(el);
@@ -69,7 +74,6 @@ const INTERACTIVE_VERIFIERS = new Set([
 const HOSTED_WHEN_INCOMPLETE = new Set(['wallet-link']);
 
 const DEFAULT_HOSTED_CHECKOUT_URL = 'https://neus.network/verify';
-const HOSTED_CHECKOUT_MESSAGE_TYPE = 'neus_checkout_done';
 const VERIFY_GATE_DEFAULT_ERROR = 'Something went wrong. Please try again.';
 
 /**
@@ -116,6 +120,44 @@ function dispatchNeusProofCreatedForHost({ qHash, proofId, walletAddress }) {
     );
   } catch (_err) {
   }
+}
+
+function Spinner({ size = 16 }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+      style={{ animation: 'neus-vg-spin 0.8s linear infinite' }}
+    >
+      <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="3" opacity="0.25" />
+      <path d="M21 12a9 9 0 0 0-9-9" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function NeusLogo({ size = 16, onPrimaryFill = false }) {
+  return (
+    <span
+      aria-hidden="true"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: `${size}px`,
+        height: `${size}px`,
+        borderRadius: '4px',
+        border: `1px solid ${onPrimaryFill ? 'rgba(10, 10, 10, 0.35)' : 'currentColor'}`,
+        color: onPrimaryFill ? '#0a0a0a' : 'currentColor',
+        fontSize: `${Math.max(9, Math.round(size * 0.55))}px`,
+        fontWeight: 700,
+        lineHeight: 1
+      }}
+    >
+      N
+    </span>
+  );
 }
 
 export function VerifyGate({
@@ -366,20 +408,15 @@ export function VerifyGate({
 
     const origin = window.location.origin;
     const returnUrl = window.location.href;
-    const checkoutUrl = new URL(resolvedHostedCheckoutUrl);
-    checkoutUrl.searchParams.set('verifiers', verifierList.join(','));
-    checkoutUrl.searchParams.set('mode', 'popup');
-    checkoutUrl.searchParams.set('returnUrl', returnUrl);
-    checkoutUrl.searchParams.set('origin', origin);
-    if (typeof oauthProvider === 'string' && oauthProvider.trim()) {
-      checkoutUrl.searchParams.set('oauthProvider', oauthProvider.trim());
-    }
-    if (typeof campaignTitle === 'string' && campaignTitle.trim()) {
-      checkoutUrl.searchParams.set('presetLabel', campaignTitle.trim().slice(0, 200));
-    }
-    if (typeof campaignMessage === 'string' && campaignMessage.trim()) {
-      checkoutUrl.searchParams.set('message', campaignMessage.trim().slice(0, 200));
-    }
+    const checkoutUrl = buildHostedCheckoutUrl({
+      hostedCheckoutUrl: resolvedHostedCheckoutUrl,
+      verifierList,
+      returnUrl,
+      origin,
+      oauthProvider,
+      campaignTitle,
+      campaignMessage
+    });
 
     let expectedOrigin = '*';
     try {
@@ -389,7 +426,7 @@ export function VerifyGate({
     }
 
     return await new Promise((resolve, reject) => {
-      const url = checkoutUrl.toString();
+      const url = checkoutUrl;
       const popup = window.open(
         url,
         'neus_checkout',
@@ -397,7 +434,7 @@ export function VerifyGate({
       );
 
       if (!popup) {
-        window.location.assign(url);
+        window.location.assign(buildHostedCheckoutRedirectUrl(url));
         return;
       }
 
@@ -443,7 +480,7 @@ export function VerifyGate({
 
       window.addEventListener('message', onMessage);
     });
-  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider]);
+  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider, campaignTitle, campaignMessage]);
 
   useEffect(() => {
     onStateChange?.(state);
@@ -565,6 +602,7 @@ export function VerifyGate({
           setOperation('verify');
           setIsProcessing(true);
           setState('interactive-checkout');
+          onStateChange?.('interactive-checkout');
 
           const checkoutResult = await launchHostedCheckout();
           const checkoutProofId = checkoutResult?.proofId || checkoutResult?.qHash || null;
@@ -740,6 +778,7 @@ export function VerifyGate({
     launchHostedCheckout,
     onVerified,
     onError,
+    onStateChange,
     shouldCheckExisting,
     walletAddress,
     existingProofs,

@@ -10,29 +10,6 @@
 npm install @neus/sdk
 ```
 
-## One-command onboarding
-
-```bash
-npx -y -p @neus/sdk neus init
-```
-
-Configures supported MCP clients automatically. By default the command installs NEUS into user-level Claude Code, Cursor, and VS Code MCP config when those clients are detected.
-
-## CLI
-
-```bash
-# Autopilot setup for detected clients
-npx -y -p @neus/sdk neus init
-
-# Enable personal account tools such as neus_me and private reads
-npx -y -p @neus/sdk neus auth --access-key <npk_...>
-
-# Inspect current NEUS MCP setup
-npx -y -p @neus/sdk neus status --json
-```
-
-Use `neus init --project` when you want shared repo config instead of personal user-scope setup. Access keys stay user-scope only so secrets do not land in checked-in config. Use `--client claude`, `--client cursor`, or `--client vscode` when you want to target one editor directly.
-
 ## Minimal working example
 
 ```javascript

@@ -9,7 +9,7 @@ import { ReceiptPreview } from './ReceiptPreview.jsx';
 
 const surface = { background: 'var(--neus-bg-elevated)' };
 
-export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl, proofId, onVerified }) {
+export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl, proofId, onVerified, onStateChange }) {
   const [mode, setMode] = useState('preview');
   const [localProof, setLocalProof] = useState(null);
   const [eligBusy, setEligBusy] = useState(false);
@@ -279,6 +279,7 @@ export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl,
                         qHash={effectiveProof || undefined}
                         proofId={effectiveProof || undefined}
                         onVerified={handleVerified}
+                        onStateChange={onStateChange}
                         style={{ width: '100%' }}
                       />
                     </div>

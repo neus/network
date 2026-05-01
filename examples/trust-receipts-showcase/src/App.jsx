@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { LayoutGrid, ShieldCheck, Search, ExternalLink, Globe, BookOpen, Github } from 'lucide-react';
 import neusMark from '../../../sdk/neus-logo.svg?url';
@@ -6,6 +6,8 @@ import { claimById, claims, FILTER_CATEGORIES, filterByUiCategory, getInitialDem
 import { applyListScope, filterByQuery } from './viewModel.js';
 import { DetailDrawer } from './components/DetailDrawer.jsx';
 import { OpportunityCard } from './components/OpportunityCard.jsx';
+
+const PENDING_CHECKOUT_KEY = 'neus.trustReceiptsShowcase.pendingCheckout';
 
 function withEnvUrl(v, d) {
   if (typeof v === 'string' && v.trim()) return v.trim();
@@ -19,6 +21,53 @@ function withEnvUrl(v, d) {
   return 'https://api.neus.network';
 }
 
+function readHostedCheckoutResult() {
+  if (typeof window === 'undefined') return null;
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('qHash') || params.get('proofId');
+  if (!id) return null;
+  return { proofId: id };
+}
+
+function removeHostedCheckoutParams() {
+  if (typeof window === 'undefined') return;
+  const url = new URL(window.location.href);
+  let changed = false;
+  for (const key of ['qHash', 'proofId']) {
+    if (url.searchParams.has(key)) {
+      url.searchParams.delete(key);
+      changed = true;
+    }
+  }
+  if (changed) {
+    window.history.replaceState({}, '', url.toString());
+  }
+}
+
+function readPendingCheckoutClaimId() {
+  if (typeof window === 'undefined') return null;
+  try {
+    const raw = window.sessionStorage.getItem(PENDING_CHECKOUT_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return typeof parsed?.claimId === 'string' ? parsed.claimId : null;
+  } catch (_err) {
+    return null;
+  }
+}
+
+function setPendingCheckoutClaimId(claimId) {
+  if (typeof window === 'undefined') return;
+  try {
+    if (claimId) {
+      window.sessionStorage.setItem(PENDING_CHECKOUT_KEY, JSON.stringify({ claimId }));
+    } else {
+      window.sessionStorage.removeItem(PENDING_CHECKOUT_KEY);
+    }
+  } catch (_err) {
+  }
+}
+
 export default function App() {
   const appId = import.meta.env.VITE_NEUS_APP_ID || 'local-demo';
   const apiUrl = withEnvUrl(import.meta.env.VITE_NEUS_API_URL, 'api');
@@ -28,6 +77,19 @@ export default function App() {
   const [search, setSearch] = useState('');
   const [selectedId, setSelectedId] = useState(null);
   const [proofs, setProofs] = useState(() => ({ ...getInitialDemoProofs() }));
+
+  useEffect(() => {
+    const result = readHostedCheckoutResult();
+    if (!result?.proofId) return;
+
+    const claimId = readPendingCheckoutClaimId();
+    setPendingCheckoutClaimId(null);
+    removeHostedCheckoutParams();
+
+    if (!claimId || !claimById(claimId)) return;
+    setProofs((s) => ({ ...s, [claimId]: { proofId: result.proofId } }));
+    setSelectedId(claimId);
+  }, []);
 
   const activeCategory = cat === 'all' ? 'All' : cat;
 
@@ -45,7 +107,14 @@ export default function App() {
 
   const handleVerifiedFromDrawer = useCallback((claimId, id) => {
     if (!id) return;
+    setPendingCheckoutClaimId(null);
     setProofs((s) => ({ ...s, [claimId]: { proofId: id } }));
+  }, []);
+
+  const handleDrawerStateChange = useCallback((claimId, state) => {
+    if (state === 'interactive-checkout') {
+      setPendingCheckoutClaimId(claimId);
+    }
   }, []);
 
   const onDrawerVerified = useCallback(
@@ -214,6 +283,7 @@ export default function App() {
           hostedCheckoutUrl={hostedCheckoutUrl}
           proofId={proofs[selected.id]?.proofId || null}
           onVerified={(id) => onDrawerVerified(id)}
+          onStateChange={(state) => handleDrawerStateChange(selected.id, state)}
         />
       )}
     </div>

@@ -92,16 +92,49 @@
       (function () {
         const params = new URLSearchParams(window.location.search);
         const ver = params.get('verifiers') || '';
+        const returnUrl = params.get('returnUrl') || '';
+        const origin = params.get('origin') || window.location.origin;
         document.getElementById('v').textContent = 'Verifiers: ' + (ver || '—');
         const proof = '0x' + Array.from(crypto.getRandomValues(new Uint8Array(32)), (b) => b.toString(16).padStart(2, '0')).join('');
 
+        function getReturnTarget() {
+          if (!returnUrl) return null;
+          try {
+            const target = new URL(returnUrl, window.location.origin);
+            target.searchParams.set('qHash', proof);
+            target.searchParams.set('proofId', proof);
+            return target.toString();
+          } catch (_err) {
+            return null;
+          }
+        }
+
         function done() {
+          const payload = {
+            type: 'neus_checkout_done',
+            success: true,
+            proofId: proof,
+            qHash: proof,
+            eligible: true,
+            verifierIds: ver ? ver.split(',').map((x) => x.trim()).filter(Boolean) : [],
+            proofUrl: null
+          };
+
           if (window.opener && !window.opener.closed) {
             window.opener.postMessage(
-              { type: 'neus_checkout_done', proofId: proof, qHash: proof, eligible: true, proofUrl: null },
-              window.location.origin
+              payload,
+              origin && origin.startsWith('http') ? origin : window.location.origin
             );
+            window.close();
+            return;
           }
+
+          const target = getReturnTarget();
+          if (target) {
+            window.location.assign(target);
+            return;
+          }
+
           window.close();
         }
 

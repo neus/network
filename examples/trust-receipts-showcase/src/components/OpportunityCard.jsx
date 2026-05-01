@@ -1,9 +1,12 @@
-import React, { useMemo } from 'react';
+import React, { forwardRef, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { ClaimCardIcon } from '../claimCardIcon.jsx';
 import { buildClaimRow } from '../viewModel.js';
 
-export function OpportunityCard({ claim, proofId, listScope = 'all-opp', onSelect, demoHighlight = false }) {
+export const OpportunityCard = forwardRef(function OpportunityCard(
+  { claim, proofId, listScope = 'all-opp', onSelect, demoHighlight = false },
+  ref
+) {
   const row = useMemo(() => buildClaimRow(claim, { proofId }), [claim, proofId]);
   const { readinessState, isReady, isLocked, explanation, claim: c } = row;
 
@@ -17,6 +20,7 @@ export function OpportunityCard({ claim, proofId, listScope = 'all-opp', onSelec
 
   return (
     <motion.div
+      ref={ref}
       layout
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
@@ -145,4 +149,4 @@ export function OpportunityCard({ claim, proofId, listScope = 'all-opp', onSelec
       </div>
     </motion.div>
   );
-}
+});
