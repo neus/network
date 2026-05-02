@@ -1,38 +1,60 @@
 ---
 title: Ownership and Provenance
-description: Ownership of content, hash, or reference.
+description: Prove you own your words, files, or releases—and turn them into a reusable NEUS trust receipt.
 icon: wallet
 ---
 
 **Verifier ID:** `ownership-basic`
 
-## Best for
+## What this is for
 
-- Content and file provenance
-- Authorship and licensing claims
-- Portable proof IDs (listings, bounties, submissions)
+**Turn “I wrote this” or “we shipped this” into a portable proof.**  
+Use it for release notes, policy text, agent outputs, licensing claims, bounty submissions, marketplace listings—anything where **who said it** and **what the exact text was** should be verifiable later.
 
-## Payload
+- **Provenance without guesswork** — One receipt ties a wallet to specific content or a stable pointer.
+- **Reuse everywhere** — Same proof id backs listings, gates, compliance, and portfolio views.
+- **You choose visibility** — Private vault, link-only public, or discoverable public. [Security and trust](../platform/security-and-trust) shows the matrix.
 
-| Field | Required | Notes |
-|------|----------|-------|
-| `owner` | Yes | Must match signer |
-| `content` | No | Text body to prove and optionally store with the proof. Use this for plain text, release notes, claims, descriptions, or other human-readable content. When stored and visible, NEUS exposes it on the proof as `proof.publicContent.content`. Max 50k chars. |
-| `contentHash` | No | Pre-hashed body; verifier can integrity-check against `content` if both sent |
-| `reference` | No | Pointer (URL, IPFS, tx, file id, …). Server does not fetch it. Send `content` if you need bytes stored. |
-| `provenance` | No | Human / AI / mixed (advisory) |
+## How it feels to use
 
-## Stored proof content
+1. **You (or your user) sign** with the owning wallet.
+2. **You attach what you are proving** — usually the **full text** (`content`) and/or a **reference** (URL, repo path, tx id—NEUS does not fetch it for you).
+3. **NEUS issues a durable proof** — You get a stable id you can link, check, and stack with other verifiers.
 
-Send `content` when you want NEUS to store a readable text body with the proof.
+Inline text is capped at **50,000 characters**. Bigger artifacts → chunk or point to storage with `reference` (see multipart patterns in integrations you already use).
 
-NEUS keeps `content` as the ownership-basic verifier input and maps stored readable content onto the normalized proof response as `proof.publicContent.content` when visibility allows it.
+---
 
-Use `contentHash` or `reference` when you only want to prove a hash or external pointer without storing the text body.
+## Saving the actual words
 
-For visibility defaults and when stored text appears on public proofs, see [Security and trust](../platform/security-and-trust).
+**Sending:** Put your text in **`data.content`**. That is the verifier’s “here is what I own” field. Simple.
 
-## Example
+**Keeping a copy on the receipt:** If you want NEUS to **store the exact string** so you (or allowed viewers) can read it back later, turn on **`storeOriginalContent: true`** in options when you need to override defaults. Most **private** setups default toward keeping text; **listed public** feeds often default toward **not** inlining full copy unless you opt in—so you stay intentional about what sits on a wide surface. Details: [Security and trust](../platform/security-and-trust).
+
+**Reading it back from the API:** Stored plain text comes back on **`proof.publicContent.content`**. Yes, the word *public* in that name is unfortunate—**private proofs use the same slot**; **who can read it is your privacy setting plus auth**, not the field label. The ownership-basic block on the receipt keeps **fingerprints and pointers** (`verifierContentHash`, `reference`, etc.)—**not** the long body. For the story you’re telling builders: *“Your saved copy lives next to the proof; the verifier row is the anchor.”*
+
+---
+
+## Pre-hashing? Read this once
+
+**Do not paste a random SHA256 file hash as `contentHash`.**  
+NEUS expects the **ownership-basic verifier hash** (a `0x…` 64-hex value) that matches your content. If you are not sure how to compute that ahead of time: **skip pre-hash, send `content`, run verify,** and use the **returned proof / verifier hash** from NEUS. That is the happy path.
+
+---
+
+## Request shape (for implementers)
+
+Everything below lives in the verify request’s **`data`** object alongside `walletAddress`, signature, etc.
+
+| You send | Required? | In plain English |
+|----------|-----------|------------------|
+| `owner` | Yes | The wallet that owns the claim (must match the signer). |
+| `content` | No | The text you are proving—up to ~50k characters. |
+| `reference` | No | Stable pointer as `{ type, id }`. Never a bare string. |
+| `contentHash` | No | Only if you already have the **correct NEUS verifier hash** for this content. Otherwise omit. |
+| `provenance` | Optional | Human / AI / mixed—advisory metadata. |
+
+### Example payload
 
 ```json
 {
@@ -45,6 +67,10 @@ For visibility defaults and when stored text appears on public proofs, see [Secu
 }
 ```
 
-## Retrieval
+---
 
-When reading proofs back, stored text appears on the normalized proof as `proof.publicContent.content` when visibility allows it; otherwise rely on a stable `reference`. Responses may include `contentResolutionStatus`: `resolved` or `hash_only_not_recoverable`.
+## When the text is not there
+
+If storage was off or the proof was only anchored by hash/pointer, callers may see a **resolution status** (for example `hash_only_not_recoverable`) instead of full prose—by design, so you never pretend a hash is full text.
+
+For deeper schema and types, see the [verifier catalog entry](../verifiers/ownership-basic).

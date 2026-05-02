@@ -1,13 +1,11 @@
 ---
 title: Context (`neus_context`)
-description: Live verifier catalog, constraints, billing hints.
+description: NEUS MCP session home card—modes, URLs, verifier summaries, workflow.
 icon: database
 ---
 
-Call **`neus_context`** first on each **new MCP connection**. **No access key.**
+Call **`neus_context`** first on every MCP session—even when **no Profile access key** is wired in.
 
-| Provides | Use before |
-|------------|------------|
-| **`requiredFields`**, chain hints, live verifier constraints | **`neus_proofs_check`**, **`neus_verify`**, **`neus_verifiers_catalog`** (avoids stale verifier IDs) |
+You receive a structured card with **`product`**, **`setup`** (hosted URLs + CLI snippets), **`mode`**, **`goldenPath`**, **`jobs`**, per-tool narration, **`proofModel`**, **`agentModel`**, **`safetyRules`**, and a compact **`verifierSummary`** (supplement with **`neus_verifiers_catalog`** when you truly need schemas).
 
-Playbook: [Overview](./overview).
+Golden path recap: **[Overview](./overview)** (Decision tree).

@@ -1,10 +1,12 @@
 ---
 title: MCP Overview
-description: Hosted NEUS MCP, optional Bearer, verification and proof tools.
+description: Hosted NEUS MCP, optional Profile access key, proof receipts and workflows.
 icon: plug
 ---
 
 **Endpoint:** `https://mcp.neus.network/mcp`
+
+NEUS exposes **hosted NEUS MCP** — the default surface for proof receipts, Profile-aware flows, eligibility checks, verification, proof reads, agents, and delegated context ([setup](./setup)).
 
 <CardGroup cols={3}>
   <Card title="Setup" icon="code" href="./setup">
@@ -15,16 +17,18 @@ icon: plug
   </Card>
 </CardGroup>
 
-## Playbook
+## Decision tree (call `neus_context` first every session)
 
 | Step | Action |
 |------|--------|
-| 1 | Connect with the hosted endpoint |
-| 2 | Call **`neus_context`** for live verifiers and required fields |
-| 3 | If using Bearer, confirm **`neus_me`** returns **`status: ok`** |
-| 4 | Check or create proofs with **`neus_proofs_check`**, **`neus_verify`**, or **`neus_verify_or_guide`** |
-| 5 | Open returned **`hostedVerifyUrl`** values for browser-only steps |
-| 6 | Read proof state with **`neus_proofs_get`** |
+| 1 | **`neus_context`** — session home for profile and context |
+| 2 | **`neus_proofs_check`** — check access **without creating** proof records |
+| 3 | **`neus_verify_or_guide`** — hosted or guided path when proof state must be established in browser or provider |
+| 4 | **`neus_verify`** — only when your Profile personal access key and signing path already satisfy NEUS for this verifier |
+| 5 | **`neus_proofs_get`** — proof state, proof inventory, tags, optional delegated **`agentWallet`** reads |
+| 6 | **`neus_agent_create`** → **`neus_agent_link`** — agent identity & delegation |
+
+**Also:** **`neus_verifiers_catalog`** when **`neus_context`** is insufficient for schemas. **`neus_me`** once a Profile personal access key is configured on this MCP session (expect **`status: ok`**).
 
 ## Headless signing
 

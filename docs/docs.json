@@ -459,6 +459,14 @@
       "destination": "/agents/agent-verification-flow"
     },
     {
+      "source": "/agents/proof-backed-artifacts",
+      "destination": "/cookbook/verifiable-agents"
+    },
+    {
+      "source": "/agents/runtime-standard",
+      "destination": "/mcp/overview"
+    },
+    {
       "source": "/content/cookbook/overview",
       "destination": "/cookbook/overview"
     },

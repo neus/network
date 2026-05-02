@@ -533,12 +533,12 @@
           "content": {
             "type": "string",
             "maxLength": 50000,
-            "description": "Content being claimed (max 50KB inline)"
+            "description": "Inline text at verify time (max 50KB). Request field: data.content. When persisted, readable body appears on proof.publicContent.content—legacy field name; access is gated by privacyLevel."
           },
           "contentHash": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{64}$",
-            "description": "Pre-computed verifier content hash (32-byte hex). Treated as the standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match."
+            "description": "Verifier hash for ownership-basic (0x+64 hex), not arbitrary SHA256. Omit if unsure; submit content and use returned verifier/hash. Must match computed hash from content when both are supplied."
           },
           "contentType": {
             "type": "string",

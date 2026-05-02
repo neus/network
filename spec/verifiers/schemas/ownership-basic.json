@@ -11,12 +11,12 @@
     "content": {
       "type": "string",
       "maxLength": 50000,
-      "description": "Content being claimed (max 50KB inline)"
+      "description": "Inline text proved at verify time (max 50KB). Send in verify request data.content. When storeOriginalContent is enabled, persisted body is exposed on proof.publicContent.content."
     },
     "contentHash": {
       "type": "string",
       "pattern": "^0x[a-fA-F0-9]{64}$",
-      "description": "Pre-computed verifier content hash (32-byte hex). Treated as the standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match."
+      "description": "Ownership-basic verifier hash only: 0x + 64 hex. Not an arbitrary SHA256 file digest. Omit if unknown; submit content instead and use verifierContentHash from the receipt. When both content and contentHash are sent, they must match."
     },
     "contentType": {
       "type": "string",

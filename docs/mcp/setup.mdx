@@ -68,10 +68,10 @@ Keep **`/mcp`** in the URL.
 | # | Step |
 |---|------|
 | 1 | Connect (config above) |
-| 2 | **`neus_context`** |
+| 2 | **`neus_context`** first |
 | 3 | If Bearer → **`neus_me`**; else skip |
-| 4 | Verify, check, agents — [Tools](./tools) |
-| 5 | **`neus_proofs_get`** when you need proofs or **`qHash`** |
+| 4 | Check with **`neus_proofs_check`**, guide with **`neus_verify_or_guide`**, verify with **`neus_verify`** only when signing is ready — see [Tools](./tools) |
+| 5 | **`neus_proofs_get`** when you need proof state, inventory, or tags |
 
 Other clients: same URL, same optional **`Authorization`** header.
 

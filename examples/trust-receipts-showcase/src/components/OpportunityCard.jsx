@@ -25,7 +25,6 @@ export const OpportunityCard = forwardRef(function OpportunityCard(
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
-      whileHover={{ borderColor: 'var(--neus-border-hover)' }}
       onClick={open}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -37,111 +36,105 @@ export const OpportunityCard = forwardRef(function OpportunityCard(
       tabIndex={0}
       aria-label={readinessRedundantWithFilter ? `${c.title}. ${readinessState}.` : undefined}
       className={
-        'cm-card group flex h-full min-h-0 cursor-pointer flex-col rounded-[var(--neus-radius-lg)] p-4 sm:p-5 ' +
-        (isLocked ? 'opacity-60' : '') +
-        (demoHighlight
-          ? ' border-[var(--neus-border)] ring-1 ring-inset ring-[rgba(var(--neus-rgb-accent-primary)/0.2)] [background:linear-gradient(180deg,rgba(var(--neus-rgb-accent-primary)/0.11)_0%,rgb(var(--neus-rgb-surface-elevated)/0.5)_100%)]'
-          : '')
+        'group relative flex h-full min-h-[22rem] cursor-pointer flex-col overflow-hidden rounded-[var(--neus-radius-xl)] p-5 text-left transition-all duration-300 ' +
+        (isLocked ? 'opacity-50 grayscale ' : 'hover:-translate-y-1 hover:bg-[var(--neus-bg-card-hover)] ') +
+        (demoHighlight && !isLocked
+          ? 'border border-[rgba(var(--neus-rgb-accent-primary)/0.3)] shadow-[0_0_24px_rgba(var(--neus-rgb-accent-primary)/0.08)] bg-[linear-gradient(180deg,rgba(var(--neus-rgb-accent-primary)/0.05)_0%,var(--neus-bg-card)_100%)]'
+          : 'border border-[var(--neus-border-subtle)] bg-[var(--neus-bg-card)] shadow-[var(--neus-shadow-card)] hover:shadow-[var(--neus-shadow-card-hover)] hover:border-[var(--neus-border-hover)]')
       }
-      style={demoHighlight && !isLocked ? { boxShadow: '0 0 0 1px rgba(var(--neus-rgb-accent-primary)/0.12)' } : undefined}
     >
-      <div
-        className="mb-2 flex min-h-[1.625rem] flex-shrink-0 items-center"
-        aria-hidden={!(demoHighlight && isReady && !isLocked)}
-      >
+      {/* Top row: Icon & Live Receipt Badge */}
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--neus-radius-md)] border border-[var(--neus-border-faint)] transition-transform duration-300 group-hover:scale-105"
+          style={{ background: 'rgb(var(--neus-rgb-surface-rail) / 0.5)' }}
+        >
+          <ClaimCardIcon verifierId={c.verifierId} label={c.title} className="text-primary" size={24} />
+        </div>
+
         {demoHighlight && isReady && !isLocked && (
           <div
-            className="inline-flex w-fit items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wide"
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.6875rem] font-bold uppercase tracking-wider transition-colors"
             style={{
-              borderColor: 'rgba(var(--neus-rgb-accent-primary) / 0.32)',
+              borderColor: 'rgba(var(--neus-rgb-accent-primary) / 0.3)',
               color: 'var(--neus-primary)',
-              background: 'rgba(var(--neus-rgb-accent-primary) / 0.1)'
+              background: 'rgba(var(--neus-rgb-accent-primary) / 0.1)',
             }}
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-[var(--neus-success)]" aria-hidden="true" />
+            <span className="h-1.5 w-1.5 rounded-full bg-[var(--neus-success)] shadow-[0_0_8px_var(--neus-success)]" aria-hidden="true" />
             Live receipt
           </div>
         )}
       </div>
 
-      <div className="flex min-h-0 flex-1 cursor-pointer flex-col">
-        <div className="flex min-h-0 flex-1 gap-3.5 sm:gap-4">
-          <div
-            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--neus-radius-md)] border transition-colors group-hover:[border-color:rgba(var(--neus-rgb-accent-primary)/0.32)]"
-            style={{
-              borderColor: 'var(--neus-border-subtle)',
-              background: 'rgb(var(--neus-rgb-surface-card) / 0.55)'
-            }}
-          >
-            <ClaimCardIcon verifierId={c.verifierId} label={c.title} className="text-primary" size={24} />
+      {/* Main Content */}
+      <div className="flex flex-1 flex-col">
+        <h3 className="mb-1.5 text-lg font-semibold leading-tight tracking-tight text-[var(--neus-text-primary)]">
+          {c.title}
+        </h3>
+        <p className="mb-5 text-[0.875rem] leading-relaxed text-[var(--neus-text-secondary)] line-clamp-2">
+          {explanation}
+        </p>
+
+        {/* Requires & Unlocks Structured Data */}
+        <div
+          className="mt-auto flex flex-col gap-3 rounded-[var(--neus-radius-md)] border border-[var(--neus-border-faint)] p-3.5"
+          style={{ background: 'rgb(var(--neus-rgb-surface-rail) / 0.4)' }}
+        >
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 w-16 shrink-0 text-[0.625rem] font-bold uppercase tracking-wider text-[var(--neus-text-muted)]">
+              Requires
+            </div>
+            <div className="text-[0.8125rem] font-medium leading-snug text-[var(--neus-text-primary)]">
+              {c.cardRequires}
+            </div>
           </div>
-          <div className="flex min-h-0 min-w-0 flex-1 flex-col">
-            <h3 className="mb-1.5 min-h-[2.75rem] text-[0.9375rem] font-semibold leading-snug text-[var(--neus-text-primary)] sm:min-h-[2.875rem] sm:text-base line-clamp-2">
-              {c.title}
-            </h3>
-            <p className="mb-3 min-h-[2.625rem] text-[0.8125rem] leading-relaxed text-[var(--neus-text-secondary)] sm:min-h-[2.75rem] line-clamp-2">
-              {explanation}
-            </p>
-            <div
-              className="mt-auto min-h-[4.5rem] rounded-[var(--neus-radius-md)] border px-3 py-2.5"
-              style={{ borderColor: 'var(--neus-border-faint)', background: 'rgb(var(--neus-rgb-surface-card) / 0.35)' }}
-            >
-              <div className="grid h-full min-h-0 grid-cols-2 gap-x-3 gap-y-1 text-[0.75rem] leading-snug">
-                <div className="min-w-0">
-                  <div className="mb-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-[var(--neus-text-muted)]">
-                    Requires
-                  </div>
-                  <div className="line-clamp-2 font-medium text-[var(--neus-text-primary)]">{c.cardRequires}</div>
-                </div>
-                <div className="min-w-0">
-                  <div className="mb-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-[var(--neus-text-muted)]">
-                    Unlocks
-                  </div>
-                  <div className="line-clamp-2 font-medium text-[var(--neus-text-primary)]">{c.cardUnlocks}</div>
-                </div>
-              </div>
+          <div className="h-px w-full bg-[var(--neus-border-faint)]" />
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 w-16 shrink-0 text-[0.625rem] font-bold uppercase tracking-wider text-[var(--neus-text-muted)]">
+              Unlocks
+            </div>
+            <div className="text-[0.8125rem] font-medium leading-snug text-[var(--neus-primary)]">
+              {c.cardUnlocks}
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-4 flex min-h-[3.25rem] flex-shrink-0 items-end justify-between gap-3 border-t border-[var(--neus-border-faint)] pt-3.5">
-        <div className="flex min-h-[2.5rem] min-w-0 flex-1 flex-col justify-end">
+      {/* Footer CTA & Status */}
+      <div className="mt-5 flex items-center justify-between pt-1">
+        <div className="flex items-center gap-2">
           {!readinessRedundantWithFilter && (
             <>
-              <div className="mb-0.5 text-[0.6rem] font-bold uppercase tracking-wider text-[var(--neus-text-muted)]">
-                Status
-              </div>
-              <div className="flex min-h-[1.25rem] min-w-0 items-center gap-2">
-                {isReady && !isLocked && (
-                  <div className="h-2 w-2 flex-shrink-0 rounded-full bg-[var(--neus-success)]" aria-hidden="true" />
-                )}
-                {c.trustStatusWhenPending && !isReady && !isLocked && (
-                  <div className="h-2 w-2 flex-shrink-0 rounded-full bg-[var(--neus-text-muted)]" aria-hidden="true" />
-                )}
-                <span
-                  className={
-                    'text-[0.8125rem] font-medium ' +
-                    (isReady
-                      ? 'text-primary'
-                      : isLocked
-                        ? 'text-[var(--neus-text-muted)]'
-                        : 'text-[var(--neus-text-secondary)]')
-                  }
-                >
-                  {readinessState}
-                </span>
-              </div>
+              {isReady && !isLocked && (
+                <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--neus-success)] shadow-[0_0_6px_rgba(var(--neus-rgb-state-success)/0.4)]" aria-hidden="true" />
+              )}
+              {c.trustStatusWhenPending && !isReady && !isLocked && (
+                <div className="h-2 w-2 shrink-0 rounded-full bg-[var(--neus-warning)] shadow-[0_0_6px_rgba(var(--neus-rgb-state-warning)/0.4)]" aria-hidden="true" />
+              )}
+              <span
+                className={
+                  'text-[0.75rem] font-bold uppercase tracking-wider ' +
+                  (isReady
+                    ? 'text-[var(--neus-success)]'
+                    : isLocked
+                      ? 'text-[var(--neus-text-muted)]'
+                      : 'text-[var(--neus-warning)]')
+                }
+              >
+                {readinessState}
+              </span>
             </>
           )}
         </div>
+
         <button
           type="button"
           onClick={open}
           className={
             isLocked
-              ? 'neus-card-cta neus-card-cta--disabled self-end'
-              : 'btn-primary self-end px-4 py-2.5 text-[0.8125rem] font-semibold'
+              ? 'inline-flex h-9 items-center justify-center rounded-full border border-[var(--neus-border-faint)] bg-[var(--neus-bg-rail)] px-4 text-[0.8125rem] font-semibold text-[var(--neus-text-muted)] cursor-not-allowed'
+              : 'inline-flex h-9 items-center justify-center rounded-full bg-[var(--neus-primary)] px-5 text-[0.8125rem] font-bold text-[#000] transition-all hover:bg-[var(--neus-primary-hover)] hover:shadow-[0_0_12px_rgba(var(--neus-rgb-accent-primary)/0.3)]'
           }
         >
           {isReady ? 'View receipt' : isLocked ? 'Unavailable' : 'Open claim'}

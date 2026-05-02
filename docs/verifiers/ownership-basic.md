@@ -1,6 +1,7 @@
 # ownership-basic
 
-Content ownership verification with origin lock and optional provenance
+**Prove ownership of words, artifacts, or pointers—and lock them to a wallet.**  
+Instant verifier: sign, attach inline text and/or a reference, optional provenance. For the product story and “where does my saved text live?”, read **[Ownership and Provenance](../verification/ownership-basic)** first; this page is the technical catalog entry.
 
 - **Access:** `public`
 - **Category:** `ownership`
@@ -18,13 +19,21 @@ _Fields in the `data` object for the completed verification request (after signa
 
 ### Optional fields
 
-- `content` (`string max 50000`): Content being claimed (max 50KB inline)
-- `contentHash` (`string pattern ^0x[a-fA-F0-9]{64}$`): Pre-computed verifier content hash (32-byte hex). Treated as the standardized verifierContentHash for ownership-basic; if content is also provided, the verifier integrity-checks that they match.
-- `contentType` (`string max 100`): MIME type hint
-- `reference` (`object`)
-- `provenance` (`object`)
+| Field | What it is |
+|-------|------------|
+| `content` | The text you’re proving (up to ~50 KB). |
+| `reference` | Stable link to the thing (`type` + `id`). Not fetched by NEUS. |
+| `contentHash` | NEUS verifier hash only (`0x` + 64 hex). Skip it unless you already have it; otherwise send `content` and use the hash NEUS returns—not a generic file SHA256. |
+| `contentType` | MIME hint. |
+| `provenance` | Optional human/AI note. |
 
-- **Compatible with:** `ownership-basic`, `agent-identity`, `proof-of-human`, `ai-content-moderation`
+### After verify
+
+To keep the exact `content` on the receipt, use **`storeOriginalContent: true`** when you need it (defaults vary by public vs private—[Security and trust](../platform/security-and-trust)).
+
+Read back saved text from **`proof.publicContent.content`**. The receipt’s verifier row holds hashes and `reference`, not the long body.
+
+Full walkthrough: **[Ownership and Provenance](../verification/ownership-basic)**.
 
 ## Example
 
