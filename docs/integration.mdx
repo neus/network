@@ -8,6 +8,15 @@ Every NEUS surface follows one flow: **check** for an existing valid proof, **ve
 
 **Check** for a valid result before a new verify. **Save** the **proof ID** from the response. API field: **`proofId`**.
 
+## Where your code runs (default)
+
+| In the browser | On your server |
+|----------------|----------------|
+| `NeusClient` verify, polling, widgets, **Hosted Verify** | **`gateCheck`**, allow/deny, secrets, payment or app-only headers, raw HTTP |
+| Same-origin to your app only | Call `https://api.neus.network` from Node or your API route |
+
+Use the **SDK** (or hosted links) in the browser so NEUS sees supported headers and paths. Do **not** hand-roll cross-origin `fetch` to the API from frontend code with extra headers; CORS allowlists differ by route and tooling will mis-implement it. Anything that needs headers the SDK does not set in the browser belongs behind **your backend** (proxy). See [JavaScript SDK](./sdks/javascript) and [API overview](./api/overview).
+
 ## Loop
 
 1. **Check** - saved id or proofs/check

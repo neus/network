@@ -6,6 +6,14 @@ icon: code
 
 Proof creation, hosted URLs, polling. Use instead of ad-hoc HTTP when you can.
 
+## Default: browser vs server
+
+**Browser:** proof creation (`verify`), polling, hosted checkout URLs, and widgets. The SDK sets the headers and paths the API expects for those flows.
+
+**Your server:** **Allow/deny and eligibility** (`gateCheck` → `GET /api/v1/proofs/check`), anything with **secrets**, and any check that must not be spoofable from DevTools. Use the SDK on Node or proxy HTTP from your own API.
+
+**Do not** implement `fetch('https://api.neus.network/...')` by hand in frontend code. Custom headers trigger CORS preflight, and only specific headers are allowed per route. If you need behavior the browser SDK does not expose, **proxy through your backend**—[API overview](../api/overview).
+
 ## Install
 
 ```bash

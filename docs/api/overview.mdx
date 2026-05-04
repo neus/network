@@ -8,6 +8,10 @@ Use the HTTP API when a server or tool needs **eligibility checks**, **proof rea
 
 **Base URL:** `https://api.neus.network`
 
+### Browsers
+
+Treat this API as **server-to-server** (your backend, workers, CLI, MCP). In end-user browsers, use the **[JavaScript SDK](../sdks/javascript)** or **[Hosted Verify](../cookbook/auth-hosted-verify)**. If a web UI needs headers or methods outside those flows, **your app’s backend** should call NEUS—not `fetch` from the page—so you avoid CORS mistakes and keep secrets off the client.
+
 ### Creating proofs
 
 Use **GET** endpoints below for checks and reads.

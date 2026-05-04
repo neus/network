@@ -58,6 +58,8 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 ## 5. Check from your server
 
+Use **`gateCheck` in trusted server code** (Node, serverless route, backend worker), not in a public browser bundle, for security-sensitive allow/deny.
+
 ```javascript
 const result = await client.gateCheck({
   address: '0x...',

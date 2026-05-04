@@ -13,7 +13,7 @@ This site (`docs.neus.network`) is the standard integration reference. Follow th
 3. [Integration](../integration)
 4. [JavaScript SDK](../sdks/javascript)
 5. [MCP tools](../mcp/tools)
-6. [Integration](../integration)
+6. [API overview](../api/overview) (server and raw HTTP)
 
 ## MCP tool order
 
@@ -27,6 +27,8 @@ This site (`docs.neus.network`) is the standard integration reference. Follow th
 
 ## Rules
 
+- **Browser → NEUS:** SDK (`NeusClient`, widgets) or **Hosted Verify** only. Do not generate frontend `fetch` to `api.neus.network` with custom headers; use a **server proxy** for those.
+- **Server → NEUS:** `gateCheck`, eligibility, secrets, raw HTTP—[API overview](../api/overview)
 - Account, `appId`, and billing: [Get started](../get-started)
 - No in-app wallet: [Hosted Verify](../cookbook/auth-hosted-verify)
 - No wallet **private keys** in MCP; **Access keys** only for Bearer account tools

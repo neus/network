@@ -17,6 +17,7 @@ icon: lock
 <Warning>
 - Do not treat proof signatures as bearer tokens (they are request-bound)
 - Do not embed **secrets** in browser bundles
+- Do not call the NEUS API from browser JavaScript with hand-written `fetch` and custom headers; use SDK or Hosted Verify, or **proxy** through your server
 - Do not log or persist:
  - proof signatures
  - API keys

@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
- <strong>NEUS makes trust portable</strong>, so users carry their identity, context, memory, and proof forward instead of starting over.<br />
- Apps and agents can verify, gate, personalize, and act without repeatedly asking for the same raw data.
+ <strong>NEUS turns verification into reusable trust receipts</strong> for apps, agents, wallets, APIs, gates, payments, and audits.<br />
+ It issues a proof receipt after a verification or trusted action, reuse that receipt across surfaces without rebuilding the same trust flow from scratch.
 </p>
 
 <p align="center">

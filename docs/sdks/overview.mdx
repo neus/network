@@ -10,7 +10,16 @@ npm install @neus/sdk
 
 The JavaScript SDK wraps verify, polling, gate checks, and hosted checkout URLs. Link your app and `appId` through Get started. Editors and assistants use the same APIs via MCP.
 
-## One flow
+## Default placement
+
+| Use case | Where |
+|----------|--------|
+| Verify, poll, hosted URL | **Browser** (or WebView) with `NeusClient` |
+| **gateCheck** / allow-deny | **Your server** (Node, API route, worker)—not a substitute for in-browser verify |
+
+Avoid cross-origin `fetch` to `api.neus.network` from frontend code; use these SDK entry points or proxy on your backend.
+
+## One flow (browser)
 
 ```javascript
 import { NeusClient, getHostedCheckoutUrl } from '@neus/sdk';
@@ -26,11 +35,20 @@ const proof = await client.verify({
   wallet: window.ethereum,
 });
 await client.pollProofStatus(proof.proofId, { interval: 3000, timeout: 60000 });
-await client.gateCheck({ address: '0x...', verifierIds: ['ownership-basic'] });
 
 const url = getHostedCheckoutUrl({
   verifiers: ['ownership-basic'],
   returnUrl: 'https://myapp.com/callback',
+});
+```
+
+## Eligibility on your server
+
+```javascript
+// Trusted server context only (Node, API route, worker)
+const gate = await client.gateCheck({
+  address: '0x...',
+  verifierIds: ['ownership-basic'],
 });
 ```
 
@@ -40,7 +58,7 @@ const url = getHostedCheckoutUrl({
 |------|--------|
 | Create | `verify()` |
 | Wait | `pollProofStatus()` |
-| Eligible? | `gateCheck()` |
+| Eligible? | `gateCheck()` (server) |
 | Hosted URL | `getHostedCheckoutUrl()` |
 
 Optional: `timeout` on `NeusClient`.
