@@ -46,25 +46,10 @@ export const OpportunityCard = forwardRef(function OpportunityCard(
       {/* Top row: Icon & Live Receipt Badge */}
       <div className="mb-4 flex items-start justify-between gap-3">
         <div
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--neus-radius-md)] border border-[var(--neus-border-faint)] transition-transform duration-300 group-hover:scale-105"
-          style={{ background: 'rgb(var(--neus-rgb-surface-rail) / 0.5)' }}
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--neus-radius-md)] transition-transform duration-300 group-hover:scale-105"
         >
           <ClaimCardIcon verifierId={c.verifierId} label={c.title} className="text-primary" size={24} />
         </div>
-
-        {demoHighlight && isReady && !isLocked && (
-          <div
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.6875rem] font-bold uppercase tracking-wider transition-colors"
-            style={{
-              borderColor: 'rgba(var(--neus-rgb-accent-primary) / 0.3)',
-              color: 'var(--neus-primary)',
-              background: 'rgba(var(--neus-rgb-accent-primary) / 0.1)',
-            }}
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-[var(--neus-success)] shadow-[0_0_8px_var(--neus-success)]" aria-hidden="true" />
-            Live receipt
-          </div>
-        )}
       </div>
 
       {/* Main Content */}
