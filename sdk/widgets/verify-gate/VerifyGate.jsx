@@ -122,7 +122,7 @@ function dispatchNeusProofCreatedForHost({ qHash, proofId, walletAddress }) {
   }
 }
 
-function Spinner({ size = 16 }) {
+function VerifyGateInlineSpinner({ size = 16 }) {
   return (
     <svg
       width={size}
@@ -920,7 +920,7 @@ export function VerifyGate({
           style={getButtonStyle()}
         >
           {(state === 'signing' || state === 'verifying' || state === 'interactive-checkout') && (
-            <Spinner size={16} />
+            <VerifyGateInlineSpinner size={16} />
           )}
           {showBrand && state === 'idle' && <NeusLogo size={16} onPrimaryFill />}
           {state === 'verified' && (
@@ -990,7 +990,7 @@ export function VerifyGate({
       disabled={disabled || isProcessing}
     >
       {(state === 'signing' || state === 'verifying' || state === 'interactive-checkout') && (
-        <Spinner size={16} />
+        <VerifyGateInlineSpinner size={16} />
       )}
       {showBrand && state === 'idle' && <NeusLogo size={16} onPrimaryFill />}
       {state === 'verified' && (

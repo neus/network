@@ -1,6 +1,6 @@
 {
   "name": "@neus/sdk",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Portable trust receipts for people, apps, and agents. Verify once, check gates across surfaces.",
   "bin": {
     "neus": "cli/neus.mjs"

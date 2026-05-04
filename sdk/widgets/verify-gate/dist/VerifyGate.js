@@ -1,0 +1,884 @@
+"use client";
+
+// widgets/verify-gate/VerifyGate.jsx
+import { useCallback, useMemo, useState, useEffect } from "react";
+import { NeusClient } from "@neus/sdk/client";
+
+// widgets/verify-gate/hostedCheckout.js
+var HOSTED_CHECKOUT_MESSAGE_TYPE = "neus_checkout_done";
+function buildHostedCheckoutUrl({
+  hostedCheckoutUrl,
+  verifierList,
+  returnUrl,
+  origin,
+  oauthProvider,
+  campaignTitle,
+  campaignMessage
+}) {
+  const checkoutUrl = new URL(hostedCheckoutUrl);
+  checkoutUrl.searchParams.set("verifiers", verifierList.join(","));
+  checkoutUrl.searchParams.set("mode", "popup");
+  checkoutUrl.searchParams.set("returnUrl", returnUrl);
+  checkoutUrl.searchParams.set("origin", origin);
+  if (typeof oauthProvider === "string" && oauthProvider.trim()) {
+    checkoutUrl.searchParams.set("oauthProvider", oauthProvider.trim());
+  }
+  if (typeof campaignTitle === "string" && campaignTitle.trim()) {
+    checkoutUrl.searchParams.set("presetLabel", campaignTitle.trim().slice(0, 200));
+  }
+  if (typeof campaignMessage === "string" && campaignMessage.trim()) {
+    checkoutUrl.searchParams.set("message", campaignMessage.trim().slice(0, 200));
+  }
+  return checkoutUrl.toString();
+}
+function buildHostedCheckoutRedirectUrl(popupCheckoutUrl) {
+  const checkoutUrl = new URL(popupCheckoutUrl);
+  checkoutUrl.searchParams.delete("mode");
+  return checkoutUrl.toString();
+}
+
+// widgets/verify-gate/mergeCreateProofOptions.js
+function mergeVerifyGateCreateProofOptions(proofOptions, verifierOptions) {
+  return {
+    privacyLevel: "private",
+    publicDisplay: false,
+    storeOriginalContent: true,
+    ...proofOptions && typeof proofOptions === "object" ? proofOptions : {},
+    ...verifierOptions ? { verifierOptions } : {}
+  };
+}
+
+// widgets/verify-gate/VerifyGate.jsx
+import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+var THEME = {
+  primary: "var(--neus-primary, #98C0EF)",
+  primaryHover: "var(--neus-primary-hover, rgb(61, 114, 201))",
+  onAccent: "#0a0a0a",
+  success: "var(--neus-trust, var(--neus-primary, #98C0EF))",
+  error: "var(--neus-error, #ef4444)",
+  warning: "var(--neus-warning, #f59e0b)",
+  bgDark: "var(--neus-bg-dark, rgba(2, 6, 23, 0.95))",
+  bgCard: "var(--neus-bg-card, rgba(15, 23, 42, 0.8))",
+  textPrimary: "var(--neus-text-primary, rgba(255, 255, 255, 0.93))",
+  textSecondary: "var(--neus-text-secondary, #94a3b8)",
+  textMuted: "var(--neus-text-muted, #64748b)",
+  border: "var(--neus-border, rgba(148, 163, 184, 0.2))",
+  borderHover: "var(--neus-border-hover, rgba(61, 114, 201, 0.4))"
+};
+if (typeof document !== "undefined") {
+  const sid = "neus-vg-primary-cta";
+  if (!document.getElementById(sid)) {
+    const el = document.createElement("style");
+    el.id = sid;
+    el.textContent = "@keyframes neus-vg-spin{to{transform:rotate(360deg)}}button.neus-vg__primary{ color: #0a0a0a !important; -webkit-text-fill-color: #0a0a0a; }button.neus-vg__primary .neus-vg__label,button.neus-vg__primary span.neus-vg__label{ color: inherit !important; -webkit-text-fill-color: inherit; }";
+    document.head.appendChild(el);
+  }
+}
+var DEFAULT_MAX_AGE_MS_BY_VERIFIER = {
+  "ownership-dns-txt": 60 * 60 * 1e3,
+  "contract-ownership": 60 * 60 * 1e3,
+  "nft-ownership": 60 * 60 * 1e3,
+  "token-holding": 60 * 60 * 1e3,
+  "wallet-risk": 60 * 60 * 1e3,
+  "agent-delegation": 7 * 24 * 60 * 60 * 1e3
+};
+var maxAgeMsForVerifier = (verifierId, overrideMs) => {
+  if (typeof overrideMs === "number") return overrideMs;
+  return DEFAULT_MAX_AGE_MS_BY_VERIFIER[verifierId];
+};
+var CREATABLE_VERIFIERS = /* @__PURE__ */ new Set([
+  "ownership-basic",
+  "ownership-pseudonym",
+  "ownership-dns-txt",
+  "contract-ownership",
+  "nft-ownership",
+  "token-holding",
+  "wallet-link",
+  "wallet-risk",
+  "agent-identity",
+  "agent-delegation",
+  "ai-content-moderation"
+]);
+var INTERACTIVE_VERIFIERS = /* @__PURE__ */ new Set([
+  "ownership-social",
+  "ownership-org-oauth",
+  "proof-of-human"
+]);
+var HOSTED_WHEN_INCOMPLETE = /* @__PURE__ */ new Set(["wallet-link"]);
+var DEFAULT_HOSTED_CHECKOUT_URL = "https://neus.network/verify";
+var VERIFY_GATE_DEFAULT_ERROR = "Something went wrong. Please try again.";
+function getVerifyGateUserError(err) {
+  const c = err && err.code;
+  const msg = String(err && err.message || "");
+  if (c === "INVALID_WALLET_ADDRESS" || c === "CONFIGURATION_ERROR") {
+    return "Connect a wallet and try again.";
+  }
+  if (msg === "walletAddress is required and must be a string") {
+    return "Connect a wallet and try again.";
+  }
+  if (/^User rejected\b/i.test(msg) || /rejected the signature|User rejected the wallet-link/i.test(msg)) {
+    return "The request was cancelled.";
+  }
+  if (c === "VALIDATION_ERROR" && /wallet|connect|No wallet|No Web3|accounts available|walletAddress/i.test(msg)) {
+    return "Connect a wallet and try again.";
+  }
+  return null;
+}
+function dispatchNeusProofCreatedForHost({ qHash, proofId, walletAddress }) {
+  try {
+    if (typeof window === "undefined") return;
+    const raw = typeof qHash === "string" && qHash.trim() || typeof proofId === "string" && proofId.trim() || "";
+    if (!raw) return;
+    const w = typeof walletAddress === "string" ? walletAddress.trim() : "";
+    const normalizedWallet = w && /^0x[a-fA-F0-9]{40}$/.test(w) ? w.toLowerCase() : w;
+    window.dispatchEvent(
+      new CustomEvent("neusAccessUpdated", {
+        detail: {
+          proofCreated: true,
+          qHash: raw,
+          ...normalizedWallet ? { walletAddress: normalizedWallet } : {}
+        }
+      })
+    );
+  } catch (_err) {
+  }
+}
+function VerifyGateInlineSpinner({ size = 16 }) {
+  return /* @__PURE__ */ jsxs(
+    "svg",
+    {
+      width: size,
+      height: size,
+      viewBox: "0 0 24 24",
+      "aria-hidden": "true",
+      style: { animation: "neus-vg-spin 0.8s linear infinite" },
+      children: [
+        /* @__PURE__ */ jsx("circle", { cx: "12", cy: "12", r: "9", fill: "none", stroke: "currentColor", strokeWidth: "3", opacity: "0.25" }),
+        /* @__PURE__ */ jsx("path", { d: "M21 12a9 9 0 0 0-9-9", fill: "none", stroke: "currentColor", strokeWidth: "3", strokeLinecap: "round" })
+      ]
+    }
+  );
+}
+function NeusLogo({ size = 16, onPrimaryFill = false }) {
+  return /* @__PURE__ */ jsx(
+    "span",
+    {
+      "aria-hidden": "true",
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: `${size}px`,
+        height: `${size}px`,
+        borderRadius: "4px",
+        border: `1px solid ${onPrimaryFill ? "rgba(10, 10, 10, 0.35)" : "currentColor"}`,
+        color: onPrimaryFill ? "#0a0a0a" : "currentColor",
+        fontSize: `${Math.max(9, Math.round(size * 0.55))}px`,
+        fontWeight: 700,
+        lineHeight: 1
+      },
+      children: "N"
+    }
+  );
+}
+function VerifyGate({
+  requiredVerifiers = ["ownership-basic"],
+  onVerified = void 0,
+  apiUrl = void 0,
+  appId = void 0,
+  paymentSignature = void 0,
+  extraHeaders = void 0,
+  hostedCheckoutUrl = void 0,
+  oauthProvider = void 0,
+  style = void 0,
+  children = void 0,
+  verifierOptions = void 0,
+  verifierData = void 0,
+  proofOptions = void 0,
+  showBrand = false,
+  disabled = false,
+  buttonText = void 0,
+  mode = "create",
+  proofId = null,
+  qHash = null,
+  strategy = "reuse-or-create",
+  checkExisting = true,
+  maxProofAgeMs = void 0,
+  allowPrivateReuse = true,
+  campaignTitle = void 0,
+  campaignMessage = void 0,
+  onStateChange = void 0,
+  onError = void 0,
+  wallet = void 0,
+  chain = void 0,
+  signatureMethod = void 0
+}) {
+  const [state, setState] = useState("idle");
+  const [error, setError] = useState(null);
+  const [notice, setNotice] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [walletAddress, setWalletAddress] = useState(null);
+  const [existingProofs, setExistingProofs] = useState(null);
+  const [operation, setOperation] = useState("verify");
+  const client = useMemo(
+    () => new NeusClient({ apiUrl, appId, paymentSignature, extraHeaders }),
+    [apiUrl, appId, paymentSignature, extraHeaders]
+  );
+  const verifierList = useMemo(() => {
+    return Array.isArray(requiredVerifiers) && requiredVerifiers.length > 0 ? requiredVerifiers : ["ownership-basic"];
+  }, [requiredVerifiers]);
+  const primaryVerifier = verifierList[0];
+  const resolvedProofId = proofId || qHash || null;
+  const hasInteractiveVerifier = useMemo(
+    () => verifierList.some((verifierId) => {
+      if (INTERACTIVE_VERIFIERS.has(verifierId)) return true;
+      if (HOSTED_WHEN_INCOMPLETE.has(verifierId)) {
+        const data = verifierData && verifierData[verifierId];
+        if (!data || !data.secondaryWalletAddress || !data.signature) return true;
+      }
+      return false;
+    }),
+    [verifierList, verifierData]
+  );
+  const resolvedHostedCheckoutUrl = useMemo(() => {
+    if (typeof hostedCheckoutUrl === "string" && hostedCheckoutUrl.trim()) {
+      return hostedCheckoutUrl.trim();
+    }
+    if (typeof apiUrl === "string" && apiUrl.trim()) {
+      try {
+        return new URL("/verify", apiUrl.trim()).toString();
+      } catch (_err) {
+        return DEFAULT_HOSTED_CHECKOUT_URL;
+      }
+    }
+    return DEFAULT_HOSTED_CHECKOUT_URL;
+  }, [apiUrl, hostedCheckoutUrl]);
+  const shouldCheckExisting = checkExisting && strategy !== "fresh";
+  const inferChainFromAddress = useCallback((address) => {
+    const raw = String(address || "").trim();
+    if (!raw) return void 0;
+    if (/^0x[a-fA-F0-9]{40}$/.test(raw)) return void 0;
+    if (typeof chain === "string" && chain.includes(":")) return chain.trim();
+    return "solana:mainnet";
+  }, [chain]);
+  const buildGateRequirements = useCallback(() => {
+    return verifierList.map((verifierId) => ({
+      verifierId,
+      ...maxAgeMsForVerifier(verifierId, maxProofAgeMs) && { maxAgeMs: maxAgeMsForVerifier(verifierId, maxProofAgeMs) }
+    }));
+  }, [verifierList, maxProofAgeMs]);
+  const applySatisfiedGateResult = useCallback((gateResult, address) => {
+    if (!gateResult?.satisfied) return false;
+    setNotice(null);
+    setError(null);
+    setState("verified");
+    setExistingProofs(gateResult);
+    const existingProof = gateResult.existing?.[primaryVerifier];
+    if (existingProof && onVerified) {
+      const proofId2 = existingProof.proofId || existingProof.qHash || null;
+      onVerified({
+        proofId: proofId2,
+        qHash: proofId2,
+        address: existingProof.walletAddress || address,
+        verifierIds: verifierList,
+        verifiedVerifiers: existingProof.verifiedVerifiers || [],
+        existing: true,
+        proofsByVerifierId: gateResult.existing || {},
+        proofUrl: proofId2 ? `${apiUrl || "https://api.neus.network"}/api/v1/proofs/${proofId2}` : null
+      });
+    }
+    return true;
+  }, [apiUrl, onVerified, primaryVerifier, verifierList]);
+  const getOrRequestWalletAddress = useCallback(async () => {
+    const provider = wallet || (typeof window !== "undefined" ? window.ethereum : null);
+    if (!provider) {
+      throw new Error("No wallet provider available");
+    }
+    if (provider.publicKey && typeof provider.publicKey.toBase58 === "function") {
+      const pk = provider.publicKey.toBase58();
+      if (pk) return pk;
+    }
+    if (typeof provider.getAddress === "function") {
+      const addr = await provider.getAddress().catch(() => null);
+      if (addr) return addr;
+    }
+    if (typeof provider.address === "string" && provider.address) {
+      return provider.address;
+    }
+    if (typeof provider.request !== "function") {
+      throw new Error("No wallet provider available");
+    }
+    let accounts = await provider.request({ method: "eth_accounts" });
+    if (!accounts || accounts.length === 0) {
+      await provider.request({ method: "eth_requestAccounts" });
+      accounts = await provider.request({ method: "eth_accounts" });
+    }
+    if (!accounts || accounts.length === 0) {
+      throw new Error("No wallet accounts available");
+    }
+    return accounts[0];
+  }, [wallet]);
+  const tryPrivateReuse = useCallback(async (address) => {
+    setOperation("reuse");
+    setState("signing");
+    const provider = wallet || (typeof window !== "undefined" ? window.ethereum : null);
+    const requirements = buildGateRequirements();
+    const resolvedChain = inferChainFromAddress(address);
+    const resolvedSignatureMethod = typeof signatureMethod === "string" && signatureMethod.trim() ? signatureMethod.trim() : resolvedChain && !resolvedChain.startsWith("eip155:") ? "ed25519" : void 0;
+    const privateAuth = provider ? await client.createGatePrivateAuth({
+      address,
+      wallet: provider,
+      ...resolvedChain ? { chain: resolvedChain } : {},
+      ...resolvedSignatureMethod ? { signatureMethod: resolvedSignatureMethod } : {}
+    }) : null;
+    const gateResults = await Promise.all(
+      requirements.map(async (requirement) => {
+        const verifierId = requirement?.verifierId;
+        if (!verifierId) {
+          return { verifierId: null, eligible: false, qHash: null };
+        }
+        const maxAgeMs = requirement?.maxAgeMs;
+        const gateParams = {
+          address,
+          verifierIds: [verifierId],
+          includePrivate: true,
+          includeQHashes: true,
+          ...privateAuth ? { privateAuth } : { wallet: provider },
+          ...resolvedChain ? { chain: resolvedChain } : {},
+          ...resolvedSignatureMethod ? { signatureMethod: resolvedSignatureMethod } : {}
+        };
+        if (typeof maxAgeMs === "number" && maxAgeMs > 0) {
+          gateParams.since = Date.now() - maxAgeMs;
+        }
+        const apiResult = await client.gateCheck(gateParams);
+        const data = apiResult?.data || {};
+        const matchedQHashes = Array.isArray(data.matchedQHashes) ? data.matchedQHashes : Array.isArray(data.matchedProofIds) ? data.matchedProofIds : [];
+        return {
+          verifierId,
+          eligible: data.eligible === true,
+          qHash: matchedQHashes[0] || null
+        };
+      })
+    );
+    const existing = {};
+    const missing = [];
+    for (const result of gateResults) {
+      if (!result.verifierId) continue;
+      if (!result.eligible) {
+        missing.push({ verifierId: result.verifierId });
+        continue;
+      }
+      if (result.qHash) {
+        existing[result.verifierId] = {
+          proofId: result.qHash,
+          qHash: result.qHash,
+          walletAddress: address,
+          verifiedVerifiers: [{ verifierId: result.verifierId, verified: true }]
+        };
+      }
+    }
+    const adaptedGateResult = {
+      satisfied: missing.length === 0,
+      missing,
+      existing,
+      allProofs: []
+    };
+    setExistingProofs(adaptedGateResult);
+    return adaptedGateResult;
+  }, [client, buildGateRequirements, wallet, inferChainFromAddress, signatureMethod]);
+  const launchHostedCheckout = useCallback(async () => {
+    if (typeof window === "undefined") {
+      throw new Error("Hosted checkout is only available in browser environments");
+    }
+    const origin = window.location.origin;
+    const returnUrl = window.location.href;
+    const checkoutUrl = buildHostedCheckoutUrl({
+      hostedCheckoutUrl: resolvedHostedCheckoutUrl,
+      verifierList,
+      returnUrl,
+      origin,
+      oauthProvider,
+      campaignTitle,
+      campaignMessage
+    });
+    let expectedOrigin = "*";
+    try {
+      expectedOrigin = new URL(resolvedHostedCheckoutUrl).origin;
+    } catch (_err) {
+      expectedOrigin = "*";
+    }
+    return await new Promise((resolve, reject) => {
+      const url = checkoutUrl;
+      const popup = window.open(
+        url,
+        "neus_checkout",
+        "width=600,height=700,scrollbars=yes,resizable=yes"
+      );
+      if (!popup) {
+        window.location.assign(buildHostedCheckoutRedirectUrl(url));
+        return;
+      }
+      let completed = false;
+      const timeoutId = window.setTimeout(() => {
+        cleanup();
+        reject(new Error("Hosted checkout timed out. Please try again."));
+      }, 10 * 60 * 1e3);
+      const pollId = window.setInterval(() => {
+        if (!popup.closed) return;
+        if (!completed) {
+          cleanup();
+          reject(new Error("Hosted checkout was closed before completion."));
+        }
+      }, 500);
+      const cleanup = () => {
+        window.removeEventListener("message", onMessage);
+        window.clearTimeout(timeoutId);
+        window.clearInterval(pollId);
+        try {
+          if (!popup.closed) popup.close();
+        } catch (_err) {
+        }
+      };
+      const onMessage = (event) => {
+        if (expectedOrigin !== "*" && event.origin !== expectedOrigin) return;
+        const payload = event?.data;
+        if (!payload || payload.type !== HOSTED_CHECKOUT_MESSAGE_TYPE) return;
+        completed = true;
+        cleanup();
+        if (payload?.eligible === false) {
+          reject(new Error("Hosted checkout completed but eligibility was not satisfied."));
+          return;
+        }
+        resolve(payload);
+      };
+      window.addEventListener("message", onMessage);
+    });
+  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider, campaignTitle, campaignMessage]);
+  useEffect(() => {
+    onStateChange?.(state);
+  }, [state, onStateChange]);
+  useEffect(() => {
+    if (!shouldCheckExisting || mode === "access") return;
+    const checkExistingProofs = async () => {
+      try {
+        const provider2 = wallet || (typeof window !== "undefined" ? window.ethereum : null);
+        if (!provider2 || typeof provider2.request !== "function") return;
+        const accounts = await provider2.request({ method: "eth_accounts" });
+        if (!accounts || accounts.length === 0) return;
+        const address = accounts[0];
+        setWalletAddress(address);
+        const gateResult = await client.checkGate({
+          walletAddress: address,
+          requirements: buildGateRequirements()
+        });
+        setExistingProofs(gateResult);
+        applySatisfiedGateResult(gateResult, address);
+      } catch (err) {
+      }
+    };
+    checkExistingProofs();
+    const provider = wallet || (typeof window !== "undefined" ? window.ethereum : null);
+    if (provider && typeof provider.on === "function" && typeof provider.removeListener === "function") {
+      const handleAccountsChanged = () => {
+        setWalletAddress(null);
+        setExistingProofs(null);
+        if (state === "verified") setState("idle");
+        checkExistingProofs();
+      };
+      provider.on("accountsChanged", handleAccountsChanged);
+      return () => provider.removeListener("accountsChanged", handleAccountsChanged);
+    }
+  }, [shouldCheckExisting, mode, client, buildGateRequirements, applySatisfiedGateResult, state, wallet]);
+  const handleClick = useCallback(async () => {
+    if (disabled || isProcessing) return;
+    if (state === "verified" && existingProofs?.satisfied) {
+      return;
+    }
+    setError(null);
+    setNotice(null);
+    if (shouldCheckExisting && walletAddress) {
+      try {
+        const gateResult = await client.checkGate({
+          walletAddress,
+          requirements: buildGateRequirements()
+        });
+        if (applySatisfiedGateResult(gateResult, walletAddress)) return;
+      } catch (err) {
+      }
+    }
+    try {
+      if (mode === "access") {
+        setOperation("access");
+        setIsProcessing(true);
+        setState("signing");
+        if (!resolvedProofId) {
+          throw new Error("proofId is required for access mode");
+        }
+        setState("verifying");
+        const privateData = await client.getPrivateProof(
+          resolvedProofId,
+          wallet || (typeof window !== "undefined" ? window.ethereum : null)
+        );
+        setState("verified");
+        onVerified?.({
+          proofId: resolvedProofId,
+          qHash: resolvedProofId,
+          data: privateData.data,
+          mode: "access",
+          proofUrl: privateData.proofUrl
+        });
+      } else if (strategy === "reuse") {
+        setOperation("reuse");
+        if (!allowPrivateReuse) {
+          setNotice("No existing proof was found.");
+          return;
+        }
+        setIsProcessing(true);
+        const address = walletAddress || await getOrRequestWalletAddress();
+        setWalletAddress(address);
+        const gateResult = await tryPrivateReuse(address);
+        if (applySatisfiedGateResult(gateResult, address)) return;
+        setState("idle");
+        setNotice("No matching proof was found. Create a proof to continue.");
+      } else {
+        if (hasInteractiveVerifier) {
+          setOperation("verify");
+          setIsProcessing(true);
+          setState("interactive-checkout");
+          onStateChange?.("interactive-checkout");
+          const checkoutResult = await launchHostedCheckout();
+          const checkoutProofId = checkoutResult?.proofId || checkoutResult?.qHash || null;
+          const handoffWallet = typeof checkoutResult?.walletAddress === "string" && checkoutResult.walletAddress.trim() || walletAddress && String(walletAddress).trim() || "";
+          setState("verified");
+          dispatchNeusProofCreatedForHost({
+            qHash: checkoutProofId,
+            proofId: checkoutProofId,
+            walletAddress: handoffWallet
+          });
+          onVerified?.({
+            proofId: checkoutProofId,
+            qHash: checkoutProofId,
+            verifierIds: verifierList,
+            existing: false,
+            mode: "create",
+            eligible: checkoutResult?.eligible !== false,
+            proofUrl: checkoutResult?.proofUrl || (checkoutProofId ? `${apiUrl || "https://api.neus.network"}/api/v1/proofs/${checkoutProofId}` : null)
+          });
+          return;
+        }
+        setOperation("verify");
+        setIsProcessing(true);
+        setState("signing");
+        const resolvedProofOptions = mergeVerifyGateCreateProofOptions(
+          proofOptions,
+          verifierOptions
+        );
+        const buildDataForVerifier = (verifierId) => {
+          if (!CREATABLE_VERIFIERS.has(verifierId)) {
+            throw new Error(`${verifierId} cannot be created via the wallet flow. It requires hosted checkout or a server integration.`);
+          }
+          const explicit = verifierData && verifierData[verifierId];
+          if (explicit && typeof explicit === "object") return explicit;
+          if (verifierId === "ownership-basic") {
+            return null;
+          }
+          if (verifierId === "wallet-risk") {
+            return {};
+          }
+          if (verifierId === "wallet-link") {
+            if (!explicit?.secondaryWalletAddress || !explicit?.signature || !explicit?.chain || !explicit?.signatureMethod) {
+              throw new Error(
+                "wallet-link direct mode requires verifierData: { secondaryWalletAddress, signature, chain, signatureMethod }. For user-facing flows, prefer hosted checkout."
+              );
+            }
+            return explicit;
+          }
+          throw new Error(`${verifierId} requires explicit verifierData`);
+        };
+        const verifyOne = async (verifierId) => {
+          const dataForVerifier = buildDataForVerifier(verifierId);
+          const params = verifierId === "ownership-basic" && dataForVerifier === null ? {
+            verifier: "ownership-basic",
+            content: (typeof verifierData?.["ownership-basic"] === "string" ? verifierData["ownership-basic"] : verifierData?.["ownership-basic"]?.content) || `NEUS verification (${verifierId})`,
+            options: resolvedProofOptions
+          } : {
+            verifier: verifierId,
+            data: dataForVerifier,
+            options: resolvedProofOptions
+          };
+          setState("signing");
+          const created = await client.verify({
+            ...params,
+            wallet: wallet || (typeof window !== "undefined" ? window.ethereum : void 0)
+          });
+          setState("verifying");
+          const proofIdToCheck = created.proofId || created.qHash || created?.data?.proofId || created?.data?.qHash;
+          const final = await client.pollProofStatus(proofIdToCheck, { interval: 3e3, timeout: 6e4 });
+          const verifiedVerifiers = final?.data?.verifiedVerifiers || [];
+          const verifierResult = verifiedVerifiers.find((v) => v.verifierId === verifierId);
+          if (!verifierResult || verifierResult.verified !== true) {
+            throw new Error(`Verification failed for ${verifierId}`);
+          }
+          const hubTx = final?.data?.hubTransaction || {};
+          const crosschain = final?.data?.crosschain || {};
+          const txHash = hubTx?.txHash || crosschain?.hubTxHash || null;
+          const finalProofId = final?.proofId || final?.qHash || proofIdToCheck;
+          return {
+            verifierId,
+            proofId: finalProofId,
+            qHash: finalProofId,
+            address: final?.data?.walletAddress,
+            txHash,
+            verifiedVerifiers,
+            proofUrl: final?.proofUrl
+          };
+        };
+        const results = [];
+        for (const verifierId of verifierList) {
+          results.push(await verifyOne(verifierId));
+        }
+        setState("verified");
+        const last = results[results.length - 1];
+        const lastProofId = last?.proofId || last?.qHash || null;
+        const handoffAddr = last?.address && String(last.address).trim() || walletAddress && String(walletAddress).trim() || "";
+        dispatchNeusProofCreatedForHost({
+          qHash: lastProofId,
+          proofId: lastProofId,
+          walletAddress: handoffAddr
+        });
+        onVerified?.({
+          proofId: lastProofId,
+          qHash: lastProofId,
+          proofIds: results.map((r) => r.proofId || r.qHash).filter(Boolean),
+          qHashes: results.map((r) => r.proofId || r.qHash).filter(Boolean),
+          address: last?.address,
+          txHash: last?.txHash,
+          verifierIds: verifierList,
+          verifiedVerifiers: last?.verifiedVerifiers,
+          proofUrl: last?.proofUrl,
+          results
+        });
+      }
+    } catch (err) {
+      const userMsg = getVerifyGateUserError(err);
+      const fallback = mode === "access" ? "Access failed" : VERIFY_GATE_DEFAULT_ERROR;
+      setError(userMsg != null ? userMsg : fallback);
+      setState("error");
+      onError?.(err);
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [
+    disabled,
+    isProcessing,
+    mode,
+    resolvedProofId,
+    verifierList,
+    hasInteractiveVerifier,
+    client,
+    apiUrl,
+    verifierOptions,
+    verifierData,
+    proofOptions,
+    launchHostedCheckout,
+    onVerified,
+    onError,
+    onStateChange,
+    shouldCheckExisting,
+    walletAddress,
+    existingProofs,
+    strategy,
+    allowPrivateReuse,
+    buildGateRequirements,
+    applySatisfiedGateResult,
+    getOrRequestWalletAddress,
+    tryPrivateReuse,
+    state,
+    wallet
+  ]);
+  const handleReuseExisting = useCallback(async () => {
+    if (disabled || isProcessing) return;
+    if (mode === "access") return;
+    if (!allowPrivateReuse) return;
+    setError(null);
+    setNotice(null);
+    try {
+      setIsProcessing(true);
+      const address = walletAddress || await getOrRequestWalletAddress();
+      setWalletAddress(address);
+      const gateResult = await tryPrivateReuse(address);
+      if (applySatisfiedGateResult(gateResult, address)) return;
+      setState("idle");
+      setNotice("No matching proof was found. Verify to create a proof.");
+    } catch (err) {
+      const userMsg = getVerifyGateUserError(err);
+      setError(userMsg != null ? userMsg : "Unable to access private proofs");
+      setState("error");
+      onError?.(err);
+    } finally {
+      setIsProcessing(false);
+    }
+  }, [disabled, isProcessing, mode, allowPrivateReuse, walletAddress, getOrRequestWalletAddress, tryPrivateReuse, applySatisfiedGateResult, onError]);
+  const primaryCtaClass = state === "idle" || state === "interactive-checkout" ? "neus-vg__primary" : "";
+  const getLabel = () => {
+    if (buttonText && state === "idle") return buttonText;
+    if (mode === "access") {
+      return {
+        idle: "Sign to view",
+        signing: "Waiting for signature...",
+        verifying: "Accessing...",
+        verified: "Access granted",
+        error: "Retry"
+      }[state];
+    }
+    if (strategy === "reuse") {
+      return {
+        idle: "Check proofs",
+        signing: "Waiting for signature...",
+        verifying: "Checking...",
+        verified: "Verified",
+        error: "Retry"
+      }[state];
+    }
+    return {
+      idle: "Verify with NEUS",
+      signing: "Waiting for signature...",
+      verifying: operation === "reuse" ? "Checking..." : "Verifying...",
+      verified: "Verified",
+      error: "Retry"
+    }[state];
+  };
+  const buttonBaseStyle = {
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: "8px",
+    padding: "12px 24px",
+    borderRadius: "8px",
+    border: "none",
+    fontWeight: 500,
+    fontSize: "14px",
+    cursor: disabled || isProcessing ? "not-allowed" : "pointer",
+    transition: "all 0.2s ease",
+    opacity: disabled || isProcessing ? 0.6 : 1,
+    fontFamily: "inherit"
+  };
+  const getButtonStyle = () => {
+    if (state === "verified") {
+      return {
+        ...buttonBaseStyle,
+        background: "var(--neus-verified-bg, rgba(152, 192, 239, 0.12))",
+        color: THEME.success,
+        border: "1px solid var(--neus-verified-border, rgba(61, 114, 201, 0.28))"
+      };
+    }
+    if (state === "error") {
+      return {
+        ...buttonBaseStyle,
+        background: `rgba(239, 68, 68, 0.15)`,
+        color: THEME.error,
+        border: `1px solid rgba(239, 68, 68, 0.3)`
+      };
+    }
+    if (state === "signing" || state === "verifying") {
+      return {
+        ...buttonBaseStyle,
+        background: `rgba(61, 114, 201, 0.15)`,
+        color: "var(--neus-accent, #98C0EF)",
+        border: `1px solid rgba(61, 114, 201, 0.3)`
+      };
+    }
+    return {
+      ...buttonBaseStyle,
+      background: THEME.primary,
+      color: THEME.onAccent,
+      border: "none",
+      boxShadow: "0 10px 26px rgba(0, 0, 0, 0.34)"
+    };
+  };
+  if (children) {
+    if (state === "verified") {
+      return /* @__PURE__ */ jsx(Fragment, { children });
+    }
+    return /* @__PURE__ */ jsxs("div", { style: { textAlign: "center", padding: "20px", ...style }, children: [
+      /* @__PURE__ */ jsxs(
+        "button",
+        {
+          type: "button",
+          onClick: handleClick,
+          disabled: disabled || isProcessing,
+          className: primaryCtaClass,
+          style: getButtonStyle(),
+          children: [
+            (state === "signing" || state === "verifying" || state === "interactive-checkout") && /* @__PURE__ */ jsx(VerifyGateInlineSpinner, { size: 16 }),
+            showBrand && state === "idle" && /* @__PURE__ */ jsx(NeusLogo, { size: 16, onPrimaryFill: true }),
+            state === "verified" && /* @__PURE__ */ jsx("svg", { width: "16", height: "16", viewBox: "0 0 20 20", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { fillRule: "evenodd", d: "M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z", clipRule: "evenodd" }) }),
+            /* @__PURE__ */ jsx("span", { className: "neus-vg__label", style: { color: "inherit" }, children: getLabel() })
+          ]
+        }
+      ),
+      notice && /* @__PURE__ */ jsx("div", { style: {
+        color: THEME.textSecondary,
+        marginTop: "10px",
+        fontSize: "13px",
+        padding: "8px 12px",
+        background: "rgba(148, 163, 184, 0.08)",
+        borderRadius: "6px",
+        border: "1px solid rgba(148, 163, 184, 0.14)"
+      }, children: notice }),
+      mode !== "access" && allowPrivateReuse && shouldCheckExisting && strategy !== "reuse" && state === "idle" && /* @__PURE__ */ jsx(
+        "button",
+        {
+          type: "button",
+          onClick: handleReuseExisting,
+          disabled: disabled || isProcessing,
+          style: {
+            marginTop: notice ? "10px" : "12px",
+            background: "transparent",
+            border: "none",
+            padding: 0,
+            color: THEME.textSecondary,
+            fontSize: "12px",
+            cursor: disabled || isProcessing ? "not-allowed" : "pointer",
+            textDecoration: "underline",
+            textUnderlineOffset: "2px",
+            opacity: disabled || isProcessing ? 0.6 : 0.9
+          },
+          children: "Already verified? Sign to reuse existing proofs."
+        }
+      ),
+      error && /* @__PURE__ */ jsx("div", { style: {
+        color: THEME.error,
+        marginTop: "8px",
+        fontSize: "13px",
+        padding: "8px 12px",
+        background: "rgba(239, 68, 68, 0.1)",
+        borderRadius: "6px",
+        border: "1px solid rgba(239, 68, 68, 0.2)"
+      }, children: error })
+    ] });
+  }
+  return /* @__PURE__ */ jsxs(
+    "button",
+    {
+      type: "button",
+      onClick: handleClick,
+      className: primaryCtaClass,
+      style: { ...getButtonStyle(), ...style },
+      disabled: disabled || isProcessing,
+      children: [
+        (state === "signing" || state === "verifying" || state === "interactive-checkout") && /* @__PURE__ */ jsx(VerifyGateInlineSpinner, { size: 16 }),
+        showBrand && state === "idle" && /* @__PURE__ */ jsx(NeusLogo, { size: 16, onPrimaryFill: true }),
+        state === "verified" && /* @__PURE__ */ jsx("svg", { width: "16", height: "16", viewBox: "0 0 20 20", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { fillRule: "evenodd", d: "M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z", clipRule: "evenodd" }) }),
+        /* @__PURE__ */ jsx("span", { className: "neus-vg__label", style: { color: "inherit" }, children: getLabel() }),
+        error && /* @__PURE__ */ jsxs("span", { style: { opacity: 0.8, marginLeft: "8px" }, children: [
+          ": ",
+          error
+        ] })
+      ]
+    }
+  );
+}
+export {
+  VerifyGate
+};

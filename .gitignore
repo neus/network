@@ -26,6 +26,10 @@ AGENTS.md
 
 # Build artifacts
 dist/
+# Widget bundles are consumed via `widgets/verify-gate/index.js` → `./dist/*.js`; keep
+# rebuilt output in Git so clones and publishes cannot ship stale JSX (e.g. undefined Spinner).
+!sdk/widgets/verify-gate/dist/
+!sdk/widgets/verify-gate/dist/**
 build/
 coverage/
 **/coverage/
