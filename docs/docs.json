@@ -41,17 +41,17 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "Portable trust for people, apps, and agents.",
-      "og:title": "NEUS Docs | The Portable Trust Layer",
-      "og:description": "Portable trust for people, apps, and agents.",
+      "description": "NEUS gives apps and agents programmable trust infrastructure for verification, policy gates, delegation, payments, and audit trails.",
+      "og:title": "NEUS Docs | Trust Infrastructure for Apps, Agents, and Ecosystems",
+      "og:description": "NEUS gives apps and agents programmable trust infrastructure for verification, policy gates, delegation, payments, and audit trails.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
       "og:type": "website",
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
-      "twitter:title": "NEUS Docs | The Portable Trust Layer",
-      "twitter:description": "Portable trust for people, apps, and agents. Proof earned in one place unlocks access, claims, payouts, and trusted actions everywhere else.",
+      "twitter:title": "NEUS Docs | Trust Infrastructure for Apps, Agents, and Ecosystems",
+      "twitter:description": "Programmable trust infrastructure: verify, enforce, delegate, pay, audit. Hosted Verify, API, SDK, gates, and MCP.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },

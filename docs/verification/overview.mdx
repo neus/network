@@ -4,7 +4,7 @@ description: Verifier types, terms, and verification responses.
 icon: file-signature
 ---
 
-Verification is how NEUS checks a claim against verifier rules and returns a durable proof id. Read [How it works](./how-it-works) for mechanics and [Integration](../integration) for where verification sits in your app.
+Verification is how NEUS checks a claim against verifier rules and returns a durable **proof ID**. Read [How it works](./how-it-works) for mechanics and [Integration](../integration) for where verification sits in your app.
 
 ## Outcomes
 
@@ -28,18 +28,16 @@ Verification is how NEUS checks a claim against verifier rules and returns a dur
 
 | Term | Meaning |
 |------|---------|
-| Proof id | Stable id after verify - [Results](../platform/receipts-and-results) |
+| Proof ID | Stable identifier after verification — [Results](../platform/receipts-and-results) |
 | Verifier | Capability checked |
 | Signing string | Wallet message |
 | Hosted Verify | NEUS-hosted browser flow at `/verify` - [guide](../cookbook/auth-hosted-verify) |
 
-**ownership-basic:** prove you control specific **text or a stable pointer**; inline copy is sent as **`data.content`** and—when stored—comes back from **`proof.publicContent.content`** (the “public” in that name does **not** mean private proofs skip it—[**Ownership and Provenance**](./ownership-basic)).
-
-Direct-sign or hosted. Visibility: [Security and trust](../platform/security-and-trust)
+Visibility: [Security and trust](../platform/security-and-trust)
 
 ## Response
 
-- `proofId`
+- `proofId` (proof ID)
 - `status`: verified, processing, failed
 - Page: `https://neus.network/proof/[proof-id]`
 
