@@ -41,9 +41,9 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "NEUS gives apps and agents programmable trust infrastructure for verification, policy gates, delegation, payments, and audit trails.",
+      "description": "NEUS is trust infrastructure for creating and reusing verified receipts to access gates, delegation, payments, and audit.",
       "og:title": "NEUS Docs | Trust Infrastructure for Apps, Agents, and Ecosystems",
-      "og:description": "NEUS gives apps and agents programmable trust infrastructure for verification, policy gates, delegation, payments, and audit trails.",
+      "og:description": "NEUS is trust infrastructure for apps, agents, and ecosystems. Trust that travels. Reusable trust receipts for gates, delegation, payments, and audit.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
@@ -51,7 +51,7 @@
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
       "twitter:title": "NEUS Docs | Trust Infrastructure for Apps, Agents, and Ecosystems",
-      "twitter:description": "Programmable trust infrastructure: verify, enforce, delegate, pay, audit. Hosted Verify, API, SDK, gates, and MCP.",
+      "twitter:description": "Trust that travels. Trust that clears every gate in product: receipts, policy, delegation, payments, audit. Hosted Verify, API, SDK, gates, MCP.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
