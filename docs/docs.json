@@ -84,7 +84,6 @@
               "get-started",
               "platform/setup",
               "platform/billing",
-              "platform/payment-gates",
               "platform/x402",
               "integration",
               "quickstart",
