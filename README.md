@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
- <strong>NEUS turns verification into reusable trust receipts</strong> for apps, agents, wallets, APIs, gates, payments, and audits.<br />
+ <strong>NEUS turns verification into reusable proof receipts</strong> for apps, agents, wallets, APIs, gates, audit, and payments.<br />
  It issues a proof receipt after a verification or trusted action, reuse that receipt across surfaces without rebuilding the same trust flow from scratch.
 </p>
 

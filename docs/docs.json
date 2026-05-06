@@ -41,9 +41,9 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "NEUS is trust infrastructure for creating and reusing verified receipts to access gates, delegation, payments, and audit.",
+      "description": "NEUS is trust infrastructure for verifying claims and creating reusable receipts for access gates, delegation, audit, and payments.",
       "og:title": "NEUS Docs | Trust Infrastructure for Apps, Agents, and Ecosystems",
-      "og:description": "NEUS is trust infrastructure for apps, agents, and ecosystems. Trust that travels. Reusable trust receipts for gates, delegation, payments, and audit.",
+      "og:description": "NEUS is trust infrastructure for apps, agents, and ecosystems. Trust that travels. Reusable trust receipts for gates, delegation, audit, and payments.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
