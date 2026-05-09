@@ -84,16 +84,16 @@ async function main() {
     throw new Error(`Verification failed (${verifyResponse.status}): ${msg}`);
   }
 
-  const proofId = result.data?.proofId;
-  console.log('Proof ID:', proofId);
-  if (!proofId) {
-    throw new Error('Missing proofId in verification response');
+  const qHash = result.data?.qHash;
+  console.log('qHash:', qHash);
+  if (!qHash) {
+    throw new Error('Missing qHash in verification response');
   }
-  
+
   // Poll status
   console.log('Polling status...');
   const client = new NeusClient({ apiUrl: API_BASE });
-  const final = await client.pollProofStatus(proofId, {
+  const final = await client.pollProofStatus(qHash, {
     interval: 3000,
     timeout: 120000,
     onProgress: (s) => {

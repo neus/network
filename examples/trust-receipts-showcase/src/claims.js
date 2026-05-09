@@ -262,7 +262,7 @@ export const claims = [
 export function getInitialDemoProofs() {
   const s = {};
   for (const row of claims) {
-    if (row.seedDemoProofId) s[row.id] = { proofId: row.seedDemoProofId };
+    if (row.seedDemoProofId) s[row.id] = { qHash: row.seedDemoProofId };
   }
   return s;
 }

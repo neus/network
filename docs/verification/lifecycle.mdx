@@ -11,7 +11,7 @@ icon: rotate
 | Start | Hosted, SDK, or API |
 | Accepted | Request in flight |
 | Processing | Async verifier |
-| Complete | Proof id ready |
+| Complete | qHash ready |
 | Reused | Checks / gates / MCP |
 | Stale / revoked | Policy or user revoke |
 
@@ -34,10 +34,8 @@ icon: rotate
 POST /api/v1/proofs/revoke-self/{qHash}
 ```
 
-`qHash` = same value as SDK `proofId`.
-
 ```javascript
-await client.revokeOwnProof(proofId, wallet);
+await client.revokeOwnProof(qHash, wallet);
 ```
 
 ## Related
@@ -47,7 +45,7 @@ await client.revokeOwnProof(proofId, wallet);
  Flow.
  </Card>
  <Card title="Verification results" icon="file-check" href="../platform/receipts-and-results">
- proofId / qHash.
+ qHash.
  </Card>
  <Card title="Signing" icon="file-signature" href="./signing-format">
  Messages.

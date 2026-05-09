@@ -4,7 +4,7 @@ description: REST endpoints for proof checks, reads, and advanced HTTP verificat
 icon: terminal
 ---
 
-Use the HTTP API when a server or tool needs **eligibility checks**, **proof reads**, or **verification without the JavaScript SDK**. Responses use the same proof ids as the SDK; usage bills to the NEUS profile linked to your app.
+Use the HTTP API when a server or tool needs **eligibility checks**, **proof reads**, or **verification without the JavaScript SDK**. Responses use the same qHash as the SDK; usage bills to the NEUS profile linked to your app.
 
 **Base URL:** `https://api.neus.network`
 
@@ -22,7 +22,7 @@ Use **GET** endpoints below for checks and reads.
 |------|--------|---------|
 | `/api/v1/proofs/check` | GET | Eligibility (server gates) |
 | `/api/v1/proofs/by-wallet/{address}` | GET | List by wallet |
-| `/api/v1/proofs/{qHash}` | GET | Fetch by id (`qHash` same as SDK `proofId`) |
+| `/api/v1/proofs/{qHash}` | GET | Fetch by id (`qHash`) |
 | `/api/v1/verification` | POST | Create proof (**advanced** - see [Authentication](./authentication)) |
 | `/api/v1/verification/standardize` | POST | **Mandatory phase 1** for raw HTTP: exact `signerString` for the body you will submit |
 | `/api/v1/verification/verifiers` | GET | Catalog |

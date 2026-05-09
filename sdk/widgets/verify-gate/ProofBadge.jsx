@@ -1,5 +1,5 @@
-"use client";
-import React, { useEffect, useState } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 import NEUS_LOGO_DATA_URL from '../../neus-logo.svg';
 
 const DEFAULT_API_BASE = 'https://api.neus.network';
@@ -23,9 +23,8 @@ const NeusLogo = ({ size = 12, logoUrl }) => (
 );
 
 export function ProofBadge({
-  proofId,
-  qHash,
-  proofUrlPattern = '/proof/:proofId',
+  qHash: qHashProp,
+  proofUrlPattern = '/proof/:qHash',
   size = 'sm',
   uiLinkBase = 'https://neus.network',
   apiUrl = DEFAULT_API_BASE,
@@ -34,18 +33,20 @@ export function ProofBadge({
   showLabel = true,
   logoUrl = undefined,
   onClick = undefined,
-  className = ''
+  className = '',
+  ...legacyProps
 }) {
-  const resolvedProofId = proofId || qHash;
+  const qHash = qHashProp ?? legacyProps.proofId; // Legacy input compatibility only. Do not expose or store proofId.
+  const resolvedQHash = qHash;
   const [status, setStatus] = useState(() => {
     if (proof) {
       const proofStatus = proof.status || '';
-      return proofStatus.includes('verified') ? 'verified' : 
-             proofStatus.includes('pending') || proofStatus.includes('processing') ? 'pending' : 'failed';
+      return proofStatus.includes('verified') ? 'verified' :
+        proofStatus.includes('pending') || proofStatus.includes('processing') ? 'pending' : 'failed';
     }
-    return resolvedProofId ? 'pending' : 'unknown';
+    return resolvedQHash ? 'pending' : 'unknown';
   });
-  
+
   const [chainCount, setChainCount] = useState(() => {
     if (proof?.crosschain) {
       const total = proof.crosschain.totalChains || 0;
@@ -56,31 +57,31 @@ export function ProofBadge({
   });
 
   useEffect(() => {
-    if (!resolvedProofId || proof) return;
-    
+    if (!resolvedQHash || proof) return;
+
     let cancelled = false;
-    
+
     async function checkStatus() {
       try {
-        const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedProofId}`, {
+        const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedQHash}`, {
           headers: { Accept: 'application/json' }
         });
-        
+
         if (!res.ok) {
           if (!cancelled) setStatus('failed');
           return;
         }
-        
+
         const json = await res.json();
         if (cancelled) return;
-        
+
         const proofStatus = json?.data?.status || '';
         const isVerified = proofStatus.toLowerCase().includes('verified');
-        const isPending = proofStatus.toLowerCase().includes('processing') || 
+        const isPending = proofStatus.toLowerCase().includes('processing') ||
                           proofStatus.toLowerCase().includes('pending');
-        
+
         setStatus(isVerified ? 'verified' : isPending ? 'pending' : 'failed');
-        
+
         if (showChains && json?.data?.crosschain) {
           const cc = json.data.crosschain;
           const total = cc.totalChains || 0;
@@ -88,22 +89,22 @@ export function ProofBadge({
           const count = total > 0 ? total : Object.keys(relayResults).length + (cc.hubTxHash ? 1 : 0);
           setChainCount(count);
         }
-        
+
       } catch (_) {
         if (!cancelled) setStatus('failed');
       }
     }
-    
+
     checkStatus();
-    
+
     return () => { cancelled = true; };
-  }, [resolvedProofId, proof, apiUrl, showChains]);
+  }, [resolvedQHash, proof, apiUrl, showChains]);
 
   const base = String(uiLinkBase).replace(/\/$/, '');
-  const href = resolvedProofId
-    ? `${base}${String(proofUrlPattern).replace(':proofId', resolvedProofId).replace(':qHash', resolvedProofId)}`
+  const href = resolvedQHash
+    ? `${base}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}`
     : base;
-  
+
   const isSm = size === 'sm';
   const logoSize = isSm ? 12 : 14;
   const fontSize = isSm ? 10 : 11;
@@ -111,8 +112,8 @@ export function ProofBadge({
   const padY = isSm ? 2 : 3;
   const padX = isSm ? 6 : 8;
 
-  const label = status === 'verified' ? 'Verified' : 
-                status === 'pending' ? 'Pending' : status === 'unknown' ? 'Unknown' : 'Unverified';
+  const label = status === 'verified' ? 'Verified' :
+    status === 'pending' ? 'Pending' : status === 'unknown' ? 'Unknown' : 'Unverified';
 
   const style = {
     display: 'inline-flex',
@@ -130,28 +131,28 @@ export function ProofBadge({
     whiteSpace: 'nowrap',
     lineHeight: 1,
     cursor: 'pointer',
-    transition: 'opacity 0.15s ease',
+    transition: 'opacity 0.15s ease'
   };
 
   const handleClick = (e) => {
     if (onClick) {
       e.preventDefault();
-      onClick({ proofId: resolvedProofId, qHash: resolvedProofId, status, chainCount });
+      onClick({ qHash: resolvedQHash, status, chainCount });
     }
   };
 
-  const title = showChains && chainCount > 0 
-    ? `${label} on ${chainCount} chain${chainCount === 1 ? '' : 's'}` 
+  const title = showChains && chainCount > 0
+    ? `${label} on ${chainCount} chain${chainCount === 1 ? '' : 's'}`
     : label;
 
   return (
-    <a 
-      href={href} 
-      target="_blank" 
-      rel="noreferrer" 
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
       style={style}
       className={className}
-      aria-label={title} 
+      aria-label={title}
       title={title}
       onClick={handleClick}
     >
@@ -167,9 +168,8 @@ export function ProofBadge({
 }
 
 export function SimpleProofBadge({
-  proofId,
-  qHash,
-  proofUrlPattern = '/proof/:proofId',
+  qHash: qHashProp,
+  proofUrlPattern = '/proof/:qHash',
   uiLinkBase = 'https://neus.network',
   apiUrl = DEFAULT_API_BASE,
   size = 'sm',
@@ -177,52 +177,54 @@ export function SimpleProofBadge({
   logoUrl = undefined,
   proof = undefined,
   onClick = undefined,
-  className = ''
+  className = '',
+  ...legacyProps
 }) {
-  const resolvedProofId = proofId || qHash;
+  const qHash = qHashProp ?? legacyProps.proofId; // Legacy input compatibility only. Do not expose or store proofId.
+  const resolvedQHash = qHash;
   const [status, setStatus] = useState(() => {
     if (proof) {
       const proofStatus = proof.status || '';
       return proofStatus.includes('verified') ? 'verified' : 'failed';
     }
-    return resolvedProofId ? 'pending' : 'unknown';
+    return resolvedQHash ? 'pending' : 'unknown';
   });
 
   useEffect(() => {
-    if (!resolvedProofId || proof) return;
-    
+    if (!resolvedQHash || proof) return;
+
     let cancelled = false;
-    
+
     async function checkStatus() {
       try {
-        const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedProofId}`, {
+        const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedQHash}`, {
           headers: { Accept: 'application/json' }
         });
-        
+
         if (!res.ok) {
           if (!cancelled) setStatus('failed');
           return;
         }
-        
+
         const json = await res.json();
         if (cancelled) return;
-        
-        const isVerified = json?.success === true || 
+
+        const isVerified = json?.success === true ||
                           json?.data?.status?.toLowerCase()?.includes('verified');
         setStatus(isVerified ? 'verified' : 'failed');
-        
+
       } catch (_) {
         if (!cancelled) setStatus('failed');
       }
     }
-    
+
     checkStatus();
     return () => { cancelled = true; };
-  }, [resolvedProofId, proof, apiUrl]);
+  }, [resolvedQHash, proof, apiUrl]);
 
   const base = String(uiLinkBase).replace(/\/$/, '');
-  const href = resolvedProofId
-    ? `${base}${String(proofUrlPattern).replace(':proofId', resolvedProofId).replace(':qHash', resolvedProofId)}`
+  const href = resolvedQHash
+    ? `${base}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}`
     : base;
   const isSm = size === 'sm';
   const logoSize = isSm ? 12 : 14;
@@ -244,26 +246,26 @@ export function SimpleProofBadge({
     whiteSpace: 'nowrap',
     lineHeight: 1,
     cursor: 'pointer',
-    transition: 'opacity 0.15s ease',
+    transition: 'opacity 0.15s ease'
   };
 
   const handleClick = (e) => {
     if (onClick) {
       e.preventDefault();
-      onClick({ proofId: resolvedProofId, qHash: resolvedProofId, status });
+      onClick({ qHash: resolvedQHash, status });
     }
   };
 
   const displayLabel = status === 'verified' ? label : status === 'pending' ? 'Pending' : status === 'unknown' ? 'Unknown' : 'Unverified';
 
   return (
-    <a 
-      href={href} 
-      target="_blank" 
-      rel="noreferrer" 
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
       style={style}
       className={className}
-      aria-label={displayLabel} 
+      aria-label={displayLabel}
       title={displayLabel}
       onClick={handleClick}
     >
@@ -274,19 +276,20 @@ export function SimpleProofBadge({
 }
 
 export function NeusPillLink({
-  proofId,
-  qHash,
-  proofUrlPattern = '/proof/:proofId',
+  qHash: qHashProp,
+  proofUrlPattern = '/proof/:qHash',
   uiLinkBase = 'https://neus.network',
   label = 'View',
   size = 'sm',
   logoUrl = undefined,
   onClick = undefined,
-  className = ''
+  className = '',
+  ...legacyProps
 }) {
-  const resolvedProofId = proofId || qHash;
+  const qHash = qHashProp ?? legacyProps.proofId; // Legacy input compatibility only. Do not expose or store proofId.
+  const resolvedQHash = qHash;
   const base = String(uiLinkBase).replace(/\/$/, '');
-  const href = resolvedProofId ? `${base}${String(proofUrlPattern).replace(':proofId', resolvedProofId).replace(':qHash', resolvedProofId)}` : base;
+  const href = resolvedQHash ? `${base}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}` : base;
 
   const isSm = size === 'sm';
   const logoSize = isSm ? 12 : 14;
@@ -308,24 +311,24 @@ export function NeusPillLink({
     whiteSpace: 'nowrap',
     lineHeight: 1,
     cursor: 'pointer',
-    transition: 'opacity 0.15s ease',
+    transition: 'opacity 0.15s ease'
   };
 
   const handleClick = (e) => {
     if (onClick) {
       e.preventDefault();
-      onClick({ proofId: resolvedProofId, qHash: resolvedProofId });
+      onClick({ qHash: resolvedQHash });
     }
   };
 
   return (
-    <a 
-      href={href} 
-      target="_blank" 
-      rel="noreferrer" 
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
       style={style}
       className={className}
-      aria-label={label} 
+      aria-label={label}
       title={label}
       onClick={handleClick}
     >
@@ -336,25 +339,26 @@ export function NeusPillLink({
 }
 
 export function VerifiedIcon({
-  proofId,
-  qHash,
-  proofUrlPattern = '/proof/:proofId',
+  qHash: qHashProp,
+  proofUrlPattern = '/proof/:qHash',
   uiLinkBase = 'https://neus.network',
   size = 14,
   logoUrl = undefined,
   tooltip = 'Proof',
   onClick = undefined,
-  className = ''
+  className = '',
+  ...legacyProps
 }) {
-  const resolvedProofId = proofId || qHash;
-  const href = resolvedProofId
-    ? `${String(uiLinkBase).replace(/\/$/, '')}${String(proofUrlPattern).replace(':proofId', resolvedProofId).replace(':qHash', resolvedProofId)}`
+  const qHash = qHashProp ?? legacyProps.proofId; // Legacy input compatibility only. Do not expose or store proofId.
+  const resolvedQHash = qHash;
+  const href = resolvedQHash
+    ? `${String(uiLinkBase).replace(/\/$/, '')}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}`
     : undefined;
 
   const handleClick = (e) => {
     if (onClick) {
       e.preventDefault();
-      onClick({ proofId: resolvedProofId, qHash: resolvedProofId });
+      onClick({ qHash: resolvedQHash });
     }
   };
 
@@ -375,7 +379,7 @@ export function VerifiedIcon({
 
   if (href) {
     return (
-      <a 
+      <a
         href={href}
         target="_blank"
         rel="noreferrer"

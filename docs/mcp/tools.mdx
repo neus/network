@@ -6,8 +6,8 @@ icon: wrench
 
 | Topic | Detail |
 |-------|--------|
-| Bearer | Optional ([Auth](./auth)). With Bearer, set **`walletAddress`** to your **profile wallet** for signatureless **`neus_verify`** on **instant** verifiers when the key profile matches. |
-| Interactive | **`neus_verify_or_guide`** → **`hostedVerifyUrl`** |
+| Bearer | Optional ([Auth](./auth)). With Bearer, call **`neus_me`**, then reuse existing proof receipts before creating anything. |
+| Interactive | **`neus_verify_or_guide`** only after reuse checks show proof, profile, payment, provider, wallet, or delegation setup is missing. |
 
 ## Field names
 
@@ -23,7 +23,9 @@ EVM `0x…`, Solana base58, or `did:pkh:…`. Delegated reads: **`agentWallet`**
 
 | Phase | Calls |
 |-------|--------|
-| Default | Connect → **`neus_context`** → **`neus_me`** if Bearer → work → **`neus_proofs_get`** |
+| Default | Connect → **`neus_context`** → **`neus_me`** if Bearer → **`neus_agent_link`** for agents → **`neus_proofs_check`** → continue if satisfied |
+| Details | **`neus_proofs_get`** for proof records, tags, delegated context, and qHash values |
+| Fallback | **`neus_verify_or_guide`** only when something is missing |
 | Catalog | **`neus_verifiers_catalog`** only when you need raw schemas beyond context |
 
 Same flow as [Overview](./overview). **Headless prepare/sign:** [Overview](./overview#headless-signing).

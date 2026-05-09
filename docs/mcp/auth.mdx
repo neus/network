@@ -23,6 +23,8 @@ Authorization: Bearer <npk_...>
 
 Use **`npk_*`** when a tool needs **your account**. Do not use an end user's browser session for MCP authentication.
 
+Authenticated MCP sessions should try reuse before browser handoff: **`neus_context`** → **`neus_me`** → **`neus_agent_link`** when agents are involved → **`neus_proofs_check`** → **`neus_proofs_get`** when proof details are needed. Use **`neus_verify_or_guide`** only when setup is missing.
+
 ## What Bearer unlocks
 
 * `neus_me`

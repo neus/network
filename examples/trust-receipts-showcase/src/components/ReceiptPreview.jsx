@@ -9,7 +9,7 @@ function shortId(id) {
   return `${id.slice(0, 6)}…${id.slice(-4)}`;
 }
 
-export function ReceiptPreview({ claim, proofId }) {
+export function ReceiptPreview({ claim, qHash }) {
   if (!claim) {
     return (
       <div
@@ -21,8 +21,8 @@ export function ReceiptPreview({ claim, proofId }) {
     );
   }
 
-  const isLive = Boolean(proofId);
-  const id = proofId || PLACEHOLDER;
+  const isLive = Boolean(qHash);
+  const id = qHash || PLACEHOLDER;
   const d = isLive ? getReceiptLineDetails(claim) : null;
   const showRich = Boolean(d);
 
@@ -78,7 +78,7 @@ export function ReceiptPreview({ claim, proofId }) {
       )}
 
       <p className="mb-0.5 text-[0.65rem] font-medium uppercase tracking-wide" style={{ color: 'var(--neus-text-muted)' }}>
-        Proof ID
+        qHash
       </p>
       <p
         className="m-0 font-mono text-[0.85rem] leading-tight"

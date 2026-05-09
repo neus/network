@@ -15,8 +15,28 @@ icon: user-check
 
 | Field | Required | Notes |
 |------|----------|-------|
-| `provider` | No | Optional: pin a supported provider |
+| `provider` | Yes | Pin a supported provider (e.g. `zkpassport`) |
+| `scope` | No | Scope for the personhood identifier (defaults to `neus-v1`) |
+
+## Response Fields
+
+| Field | Visibility | Description |
+|-------|-----------|-------------|
+| `provider` | Public | Provider that verified (e.g. `zkpassport`) |
+| `assuranceLevel` | Public | Confidence level: `low`, `medium`, or `high` |
+| `claims` | Public | Privacy-preserving booleans (e.g. `personhood_verified`, `sanctions_passed`) |
+| `traits` | Public | Provider metadata (scope, domain, verifiedAt) |
+| `expiresAt` | Public | Expiry timestamp |
+| `neusPersonhoodId` | Internal | Salted personhood ID for sybil detection (never exposed in API responses) |
+
+## Assurance Levels
+
+| Level | Criteria |
+|-------|----------|
+| `high` | Strict facematch verified |
+| `medium` | Facematch (non-strict) or KYC bundle verified |
+| `low` | Age/sanctions/personhood only |
 
 ## Flow
 
-Hosted - user completes the step in NEUS, then returns to your app with a proof id.
+Hosted - user completes the step in NEUS, then returns to your app with a `qHash`.

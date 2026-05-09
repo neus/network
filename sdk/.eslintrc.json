@@ -9,8 +9,16 @@
     "fetch": "readonly"
   },
   "extends": [
-    "eslint:recommended"
+    "eslint:recommended",
+    "plugin:react/recommended"
   ],
+  "settings": {
+    "react": {
+      "version": "detect",
+      "pragma": "React",
+      "createClass": "createReactClass"
+    }
+  },
   "parserOptions": {
     "ecmaVersion": 2022,
     "sourceType": "module",
@@ -38,7 +46,10 @@
     "prefer-template": "warn",
     "no-throw-literal": "error",
     "require-await": "off",
-    "no-return-await": "warn"
+    "no-return-await": "warn",
+    "react/prop-types": "off",
+    "react/display-name": "off",
+    "react/react-in-jsx-scope": "off"
   },
   "overrides": [],
   "ignorePatterns": [

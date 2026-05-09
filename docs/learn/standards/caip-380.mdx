@@ -8,14 +8,14 @@ NEUS tracks the [CAIP-380](https://github.com/ChainAgnostic/CAIPs/pull/380) prop
 
 ## Scope of the proposal
 
-One wallet-signed envelope; apps validate off-chain; stable **proof ID**.
+One wallet-signed envelope; apps validate off-chain; stable **qHash**.
 
-- Identities: CAIP-10 style (`did:pkh:…`) where used 
-- Chains: CAIP-2 (`eip155:1`, `solana:mainnet`, …) 
+- Identities: CAIP-10 style (`did:pkh:…`) where used
+- Chains: CAIP-2 (`eip155:1`, `solana:mainnet`, …)
 
 ## NEUS anchor
 
-**`qHash`** (0x…) is SHAKE-256 (256-bit) **of the standardized proof request fields** (fixed encoding and field order). SDK responses use **`proofId`** for the same value. [Verification results](../../platform/receipts-and-results)
+**`qHash`** (0x…) is SHAKE-256 (256-bit) **of the standardized proof request fields** (fixed encoding and field order). [Verification results](../../platform/receipts-and-results)
 
 ## Inputs (conceptual)
 

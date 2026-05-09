@@ -17,7 +17,7 @@ icon: triangle-exclamation
 ## Polling Example
 
 ```javascript
-const final = await client.pollProofStatus(proofId, {
+const final = await client.pollProofStatus(qHash, {
   interval: 3000,
   timeout: 60000
 });
@@ -26,8 +26,8 @@ const final = await client.pollProofStatus(proofId, {
 ## Private Proof Read Example
 
 ```javascript
-const privateData = await client.getPrivateProof(proofId, window.ethereum);
+const privateData = await client.getPrivateProof(qHash, window.ethereum);
 ```
 
-- Don’t loop-create on ambiguous errors - keep stored ids for resume. 
+- Don’t loop-create on ambiguous errors - keep stored qHashes for resume.
 - Say when a hosted step is required - avoid generic “error” only. 

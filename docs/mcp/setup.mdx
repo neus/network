@@ -4,7 +4,7 @@ description: Connect to hosted NEUS MCP.
 icon: code
 ---
 
-These steps connect your editor or agent to the hosted NEUS MCP endpoint.
+These steps connect your editor or agent to the hosted NEUS MCP endpoint. Normal use should reuse existing receipts silently; hosted URLs are fallback steps when setup, consent, payment, or proof state is missing.
 
 ## Fastest setup
 
@@ -69,9 +69,12 @@ Keep **`/mcp`** in the URL.
 |---|------|
 | 1 | Connect (config above) |
 | 2 | **`neus_context`** first |
-| 3 | If Bearer → **`neus_me`**; else skip |
-| 4 | Check with **`neus_proofs_check`**, guide with **`neus_verify_or_guide`**, verify with **`neus_verify`** only when signing is ready — see [Tools](./tools) |
-| 5 | **`neus_proofs_get`** when you need proof state, inventory, or tags |
+| 3 | If Bearer exists, **`neus_me`** |
+| 4 | For agents, **`neus_agent_link`** |
+| 5 | Check with **`neus_proofs_check`** |
+| 6 | If satisfied, continue without hosted verify |
+| 7 | Use **`neus_proofs_get`** when you need proof state, inventory, tags, or qHash values |
+| 8 | Use **`neus_verify_or_guide`** only when something is missing |
 
 Other clients: same URL, same optional **`Authorization`** header.
 

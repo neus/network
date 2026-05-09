@@ -1,10 +1,14 @@
 ---
 title: Verify or Guide (`neus_verify_or_guide`)
-description: Already verified, or open a hosted NEUS verify link.
+description: Fallback setup when reuse checks cannot satisfy the request.
 icon: signs-post
 ---
 
-Returns **`already_verified`** or **`hostedVerifyUrl`**. User completes in the browser. Then **`neus_proofs_get`** on the same identifier to read proof state (proof ID / proof records) ([Overview](./overview)).
+Use after **`neus_context`**, **`neus_me`** when Bearer exists, **`neus_agent_link`** for agents, and **`neus_proofs_check`** for the required verifier IDs.
+
+If existing receipts satisfy the request, continue without this tool. Use **`neus_verify_or_guide`** only when proof, profile, payment, provider, wallet, or delegation setup is missing.
+
+Returns **`already_verified`** or **`hostedVerifyUrl`**. After hosted completion, call **`neus_proofs_get`** on the same identifier to read proof state and qHash values ([Overview](./overview)).
 
 ## Input
 
@@ -22,7 +26,7 @@ Returns **`already_verified`** or **`hostedVerifyUrl`**. User completes in the b
 
 | Result | Meaning |
 |--------|---------|
-| **`already_verified`** | Policy satisfied |
+| **`already_verified`** | Policy satisfied; no browser step needed |
 | **`verification_required`** | Open **`hostedVerifyUrl`**; honor **`requiredVerifiers`** |
 
 Schemas load from the server. Bearer / **`neus_me`**: [Auth](./auth).

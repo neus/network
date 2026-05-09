@@ -1,14 +1,14 @@
 ---
 title: How Verification Works
-description: From request to saved proof ID.
+description: From request to saved trust receipt.
 icon: shield-check
 ---
 
-<Frame caption="Save the proof ID | reuse checks and gates without repeat friction.">
+<Frame caption="Save the trust receipt | reuse checks and gates without repeat friction.">
   <img
     className="neus-how-it-works-diagram"
     src="/images/how-it-works.png"
-    alt="Flow: one proof ID | reused across apps and APIs"
+    alt="Flow: one trust receipt | reused across apps and APIs"
   />
 </Frame>
 
@@ -21,8 +21,8 @@ icon: shield-check
   <Step title="Finish">
     Per verifier: sign, hosted step, lookup, etc.
   </Step>
-  <Step title="Save id">
-    Store **`proofId`** / **`qHash`** - [Verification results](../platform/receipts-and-results).
+  <Step title="Save receipt">
+    Store **`qHash`** - [Verification results](../platform/receipts-and-results).
   </Step>
 </Steps>
 
@@ -40,7 +40,7 @@ icon: shield-check
 - Response + status
 - **`hostedVerifyUrl`** when a browser step is required
 - Poll when async
-- **Proof id** to store
+- **`qHash`** to store
 
 ## Related
 
@@ -49,7 +49,7 @@ icon: shield-check
     Check, verify, save, reuse.
   </Card>
   <Card title="Verification results" icon="receipt" href="../platform/receipts-and-results">
-    proofId / qHash.
+    The trust receipt reference.
   </Card>
   <Card title="Lifecycle" icon="rotate" href="./lifecycle">
     Poll, reuse, revoke.

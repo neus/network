@@ -2,7 +2,7 @@
 
 **Default demo (recommended):** [trust-receipts-showcase](./trust-receipts-showcase) — the front-facing open-source showcase for the SDK. Run it locally, then try the same ideas in the live product at [neus.network/demo](https://neus.network/demo).
 
-**Pick the path that matches how you build.** Each example shows how to obtain **`proofId`** (your **proof ID**) and run **`gateCheck`** when your environment is set up.
+**Pick the path that matches how you build.** Each example shows how to obtain **`qHash`** and run **`gateCheck`** when your environment is set up.
 
 | Example | Best when you… |
 | --- | --- |

@@ -2,7 +2,7 @@
 
 [![npm](https://img.shields.io/npm/v/%40neus%2Fsdk?logo=npm&label=%40neus%2Fsdk&color=98C0EF)](https://www.npmjs.com/package/@neus/sdk)
 
-**Portable trust, shipped as APIs and widgets.** The JavaScript SDK runs NEUS verification, polling, and **`gateCheck`**. Store **`proofId`**, then reuse it. NEUS runs the checks; you do not fork verifier logic into your repo.
+**Portable trust, shipped as APIs and widgets.** For **Web2-style apps**, prefer **Hosted Verify** (`getHostedCheckoutUrl` or `VerifyGate`) so users never touch `window.ethereum` in your UI. Use **`npk_*` + `gateCheck`** on your server for allow/deny. Store **`qHash`**, then reuse it.
 
 ## Install
 
@@ -10,20 +10,25 @@
 npm install @neus/sdk
 ```
 
-## Minimal working example
+## Minimal working example (hosted, no wallet in your page)
+
+```javascript
+import { getHostedCheckoutUrl } from '@neus/sdk';
+
+window.location.href = getHostedCheckoutUrl({
+  verifiers: ['ownership-basic'],
+  returnUrl: 'https://myapp.com/neus/callback',
+});
+```
+
+After Hosted Verify, NEUS redirects to `returnUrl` with **`qHash`** in the query string — persist it on your server next to your user id.
+
+## Server check (use your access key, not in the browser)
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient();
-
-const proof = await client.verify({
-  verifier: 'ownership-basic',
-  content: 'Hello NEUS',
-  wallet: window.ethereum,
-});
-
-const proofId = proof.proofId;
+const client = new NeusClient({ appId: 'your-app-id' });
 
 const check = await client.gateCheck({
   address: '0x...',
@@ -31,14 +36,29 @@ const check = await client.gateCheck({
 });
 ```
 
-> [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) | [Get started](https://docs.neus.network/get-started)
+## Advanced: sign inside your app
+
+Only when you intentionally need a browser wallet:
+
+```javascript
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient({ appId: 'your-app-id' });
+
+const proof = await client.verify({
+  verifier: 'ownership-basic',
+  content: 'Hello NEUS',
+  wallet: window.ethereum,
+});
+const qHash = proof.qHash;
+```
 
 ## Core methods
 
 | Method | Purpose |
 | --- | --- |
 | `client.verify()` | Create proof |
-| `client.getProof()` | Fetch by `proofId` |
+| `client.getProof()` | Fetch by `qHash` |
 | `client.pollProofStatus()` | Wait for async completion |
 | `client.gateCheck()` | **Server eligibility** (use for real gates) |
 | `client.checkGate()` | Local preview only |

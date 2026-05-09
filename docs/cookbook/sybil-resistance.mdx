@@ -32,7 +32,7 @@ const layered = await client.gateCheck({
 <VerifyGate
   requiredVerifiers={['ownership-social']}
   onVerified={(result) => {
-    // persist proof id for replay protection
+    // persist qHash for replay protection
   }}
 >
   <button>Verify to continue</button>
@@ -40,5 +40,5 @@ const layered = await client.gateCheck({
 ```
 
 <Warning>
-Use **`since`** on point-in-time checks. Store proof ids where replay matters.
+Use **`since`** on point-in-time checks. Store qHashes where replay matters.
 </Warning>

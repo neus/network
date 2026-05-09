@@ -51,7 +51,7 @@ body:
     id: logs
     attributes:
       label: Logs / screenshots
-      description: "Sanitize anything sensitive. Include proof IDs only if the proof was created as public."
+      description: "Sanitize anything sensitive. Include qHash values only if the proof was created as public."
       render: text
 
   - type: checkboxes

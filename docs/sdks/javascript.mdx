@@ -1,6 +1,6 @@
 ---
 title: JavaScript SDK
-description: Create verifications, poll for proofId, gateCheck eligibility, and hosted checkout URLs from TypeScript or JavaScript.
+description: Create verifications, poll for qHash, gateCheck eligibility, and hosted checkout URLs from TypeScript or JavaScript.
 icon: code
 ---
 
@@ -34,8 +34,8 @@ const res = await client.verify({
   content: 'Hello NEUS',
 });
 
-const proofId = res.proofId;
-const record = await client.getProof(proofId);
+const qHash = res.qHash;
+const record = await client.getProof(qHash);
 ```
 
 ## Client Configuration
@@ -55,7 +55,7 @@ const client = new NeusClient({
 
 | Option | When to Use |
 |--------|-------------|
-| `persist: true` | Persist a reusable **proof ID** |
+| `persist: true` | Persist a reusable **qHash** |
 | `ipfs: true` / `pin: true` | Use when you need IPFS-backed storage |
 | `strategy: 'reuse-or-create'` | Check eligible proof first, create if missing. Default. |
 | `strategy: 'fresh'` | Always create new proof. Use for high-stakes checks. |
@@ -190,8 +190,8 @@ if (!res.data?.eligible) {
 ## Advanced: Private Proof Operations
 
 ```javascript
-// Private proof by proofId
-const privateData = await client.getPrivateProof(proofId, window.ethereum);
+// Private proof by qHash
+const privateData = await client.getPrivateProof(qHash, window.ethereum);
 
 // Private proofs by wallet/DID (requires owner signature)
 const privateProofs = await client.getPrivateProofsByWallet(
@@ -201,7 +201,7 @@ const privateProofs = await client.getPrivateProofsByWallet(
 );
 
 // Revoke your proof
-await client.revokeOwnProof(proofId, window.ethereum);
+await client.revokeOwnProof(qHash, window.ethereum);
 ```
 
 ## React Widgets

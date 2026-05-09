@@ -124,10 +124,11 @@ function getVerifyGateUserError(err) {
   }
   return null;
 }
-function dispatchNeusProofCreatedForHost({ qHash, proofId, walletAddress }) {
+function dispatchNeusProofCreatedForHost({ qHash, walletAddress, ...legacyInput }) {
   try {
     if (typeof window === "undefined") return;
-    const raw = typeof qHash === "string" && qHash.trim() || typeof proofId === "string" && proofId.trim() || "";
+    const raw = typeof qHash === "string" && qHash.trim() || typeof legacyInput.proofId === "string" && legacyInput.proofId.trim() || // Legacy input compatibility only. Do not expose or store proofId.
+    "";
     if (!raw) return;
     const w = typeof walletAddress === "string" ? walletAddress.trim() : "";
     const normalizedWallet = w && /^0x[a-fA-F0-9]{40}$/.test(w) ? w.toLowerCase() : w;
@@ -199,8 +200,7 @@ function VerifyGate({
   disabled = false,
   buttonText = void 0,
   mode = "create",
-  proofId = null,
-  qHash = null,
+  qHash: qHashProp = null,
   strategy = "reuse-or-create",
   checkExisting = true,
   maxProofAgeMs = void 0,
@@ -211,7 +211,8 @@ function VerifyGate({
   onError = void 0,
   wallet = void 0,
   chain = void 0,
-  signatureMethod = void 0
+  signatureMethod = void 0,
+  ...legacyProps
 }) {
   const [state, setState] = useState("idle");
   const [error, setError] = useState(null);
@@ -228,7 +229,8 @@ function VerifyGate({
     return Array.isArray(requiredVerifiers) && requiredVerifiers.length > 0 ? requiredVerifiers : ["ownership-basic"];
   }, [requiredVerifiers]);
   const primaryVerifier = verifierList[0];
-  const resolvedProofId = proofId || qHash || null;
+  const qHash = qHashProp || legacyProps.proofId || null;
+  const resolvedQHash = qHash;
   const hasInteractiveVerifier = useMemo(
     () => verifierList.some((verifierId) => {
       if (INTERACTIVE_VERIFIERS.has(verifierId)) return true;
@@ -275,16 +277,15 @@ function VerifyGate({
     setExistingProofs(gateResult);
     const existingProof = gateResult.existing?.[primaryVerifier];
     if (existingProof && onVerified) {
-      const proofId2 = existingProof.proofId || existingProof.qHash || null;
+      const existingQHash = existingProof.qHash || existingProof.proofId || null;
       onVerified({
-        proofId: proofId2,
-        qHash: proofId2,
+        qHash: existingQHash,
         address: existingProof.walletAddress || address,
         verifierIds: verifierList,
         verifiedVerifiers: existingProof.verifiedVerifiers || [],
         existing: true,
         proofsByVerifierId: gateResult.existing || {},
-        proofUrl: proofId2 ? `${apiUrl || "https://api.neus.network"}/api/v1/proofs/${proofId2}` : null
+        proofUrl: existingQHash ? `${apiUrl || "https://api.neus.network"}/api/v1/proofs/${existingQHash}` : null
       });
     }
     return true;
@@ -370,7 +371,6 @@ function VerifyGate({
       }
       if (result.qHash) {
         existing[result.verifierId] = {
-          proofId: result.qHash,
           qHash: result.qHash,
           walletAddress: address,
           verifiedVerifiers: [{ verifierId: result.verifierId, verified: true }]
@@ -407,7 +407,7 @@ function VerifyGate({
     } catch (_err) {
       expectedOrigin = "*";
     }
-    return await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const url = checkoutUrl;
       const popup = window.open(
         url,
@@ -473,7 +473,7 @@ function VerifyGate({
         });
         setExistingProofs(gateResult);
         applySatisfiedGateResult(gateResult, address);
-      } catch (err) {
+      } catch (_err) {
       }
     };
     checkExistingProofs();
@@ -503,7 +503,7 @@ function VerifyGate({
           requirements: buildGateRequirements()
         });
         if (applySatisfiedGateResult(gateResult, walletAddress)) return;
-      } catch (err) {
+      } catch (_err) {
       }
     }
     try {
@@ -511,18 +511,17 @@ function VerifyGate({
         setOperation("access");
         setIsProcessing(true);
         setState("signing");
-        if (!resolvedProofId) {
-          throw new Error("proofId is required for access mode");
+        if (!resolvedQHash) {
+          throw new Error("qHash is required for access mode");
         }
         setState("verifying");
         const privateData = await client.getPrivateProof(
-          resolvedProofId,
+          resolvedQHash,
           wallet || (typeof window !== "undefined" ? window.ethereum : null)
         );
         setState("verified");
         onVerified?.({
-          proofId: resolvedProofId,
-          qHash: resolvedProofId,
+          qHash: resolvedQHash,
           data: privateData.data,
           mode: "access",
           proofUrl: privateData.proofUrl
@@ -547,22 +546,20 @@ function VerifyGate({
           setState("interactive-checkout");
           onStateChange?.("interactive-checkout");
           const checkoutResult = await launchHostedCheckout();
-          const checkoutProofId = checkoutResult?.proofId || checkoutResult?.qHash || null;
+          const checkoutQHash = checkoutResult?.qHash || checkoutResult?.proofId || null;
           const handoffWallet = typeof checkoutResult?.walletAddress === "string" && checkoutResult.walletAddress.trim() || walletAddress && String(walletAddress).trim() || "";
           setState("verified");
           dispatchNeusProofCreatedForHost({
-            qHash: checkoutProofId,
-            proofId: checkoutProofId,
+            qHash: checkoutQHash,
             walletAddress: handoffWallet
           });
           onVerified?.({
-            proofId: checkoutProofId,
-            qHash: checkoutProofId,
+            qHash: checkoutQHash,
             verifierIds: verifierList,
             existing: false,
             mode: "create",
             eligible: checkoutResult?.eligible !== false,
-            proofUrl: checkoutResult?.proofUrl || (checkoutProofId ? `${apiUrl || "https://api.neus.network"}/api/v1/proofs/${checkoutProofId}` : null)
+            proofUrl: checkoutResult?.proofUrl || (checkoutQHash ? `${apiUrl || "https://api.neus.network"}/api/v1/proofs/${checkoutQHash}` : null)
           });
           return;
         }
@@ -575,7 +572,9 @@ function VerifyGate({
         );
         const buildDataForVerifier = (verifierId) => {
           if (!CREATABLE_VERIFIERS.has(verifierId)) {
-            throw new Error(`${verifierId} cannot be created via the wallet flow. It requires hosted checkout or a server integration.`);
+            throw new Error(
+              `${verifierId} cannot be created via the wallet flow. It requires hosted checkout or a server integration.`
+            );
           }
           const explicit = verifierData && verifierData[verifierId];
           if (explicit && typeof explicit === "object") return explicit;
@@ -612,8 +611,8 @@ function VerifyGate({
             wallet: wallet || (typeof window !== "undefined" ? window.ethereum : void 0)
           });
           setState("verifying");
-          const proofIdToCheck = created.proofId || created.qHash || created?.data?.proofId || created?.data?.qHash;
-          const final = await client.pollProofStatus(proofIdToCheck, { interval: 3e3, timeout: 6e4 });
+          const qHashToCheck = created.qHash || created.proofId || created?.data?.qHash || created?.data?.proofId;
+          const final = await client.pollProofStatus(qHashToCheck, { interval: 3e3, timeout: 6e4 });
           const verifiedVerifiers = final?.data?.verifiedVerifiers || [];
           const verifierResult = verifiedVerifiers.find((v) => v.verifierId === verifierId);
           if (!verifierResult || verifierResult.verified !== true) {
@@ -622,11 +621,10 @@ function VerifyGate({
           const hubTx = final?.data?.hubTransaction || {};
           const crosschain = final?.data?.crosschain || {};
           const txHash = hubTx?.txHash || crosschain?.hubTxHash || null;
-          const finalProofId = final?.proofId || final?.qHash || proofIdToCheck;
+          const finalQHash = final?.qHash || final?.proofId || qHashToCheck;
           return {
             verifierId,
-            proofId: finalProofId,
-            qHash: finalProofId,
+            qHash: finalQHash,
             address: final?.data?.walletAddress,
             txHash,
             verifiedVerifiers,
@@ -639,18 +637,15 @@ function VerifyGate({
         }
         setState("verified");
         const last = results[results.length - 1];
-        const lastProofId = last?.proofId || last?.qHash || null;
+        const lastQHash = last?.qHash || null;
         const handoffAddr = last?.address && String(last.address).trim() || walletAddress && String(walletAddress).trim() || "";
         dispatchNeusProofCreatedForHost({
-          qHash: lastProofId,
-          proofId: lastProofId,
+          qHash: lastQHash,
           walletAddress: handoffAddr
         });
         onVerified?.({
-          proofId: lastProofId,
-          qHash: lastProofId,
-          proofIds: results.map((r) => r.proofId || r.qHash).filter(Boolean),
-          qHashes: results.map((r) => r.proofId || r.qHash).filter(Boolean),
+          qHash: lastQHash,
+          qHashes: results.map((r) => r.qHash).filter(Boolean),
           address: last?.address,
           txHash: last?.txHash,
           verifierIds: verifierList,
@@ -662,7 +657,7 @@ function VerifyGate({
     } catch (err) {
       const userMsg = getVerifyGateUserError(err);
       const fallback = mode === "access" ? "Access failed" : VERIFY_GATE_DEFAULT_ERROR;
-      setError(userMsg != null ? userMsg : fallback);
+      setError(userMsg !== null ? userMsg : fallback);
       setState("error");
       onError?.(err);
     } finally {
@@ -672,7 +667,7 @@ function VerifyGate({
     disabled,
     isProcessing,
     mode,
-    resolvedProofId,
+    resolvedQHash,
     verifierList,
     hasInteractiveVerifier,
     client,
@@ -712,13 +707,23 @@ function VerifyGate({
       setNotice("No matching proof was found. Verify to create a proof.");
     } catch (err) {
       const userMsg = getVerifyGateUserError(err);
-      setError(userMsg != null ? userMsg : "Unable to access private proofs");
+      setError(userMsg !== null ? userMsg : "Unable to access private proofs");
       setState("error");
       onError?.(err);
     } finally {
       setIsProcessing(false);
     }
-  }, [disabled, isProcessing, mode, allowPrivateReuse, walletAddress, getOrRequestWalletAddress, tryPrivateReuse, applySatisfiedGateResult, onError]);
+  }, [
+    disabled,
+    isProcessing,
+    mode,
+    allowPrivateReuse,
+    walletAddress,
+    getOrRequestWalletAddress,
+    tryPrivateReuse,
+    applySatisfiedGateResult,
+    onError
+  ]);
   const primaryCtaClass = state === "idle" || state === "interactive-checkout" ? "neus-vg__primary" : "";
   const getLabel = () => {
     if (buttonText && state === "idle") return buttonText;
@@ -775,17 +780,17 @@ function VerifyGate({
     if (state === "error") {
       return {
         ...buttonBaseStyle,
-        background: `rgba(239, 68, 68, 0.15)`,
+        background: "rgba(239, 68, 68, 0.15)",
         color: THEME.error,
-        border: `1px solid rgba(239, 68, 68, 0.3)`
+        border: "1px solid rgba(239, 68, 68, 0.3)"
       };
     }
     if (state === "signing" || state === "verifying") {
       return {
         ...buttonBaseStyle,
-        background: `rgba(61, 114, 201, 0.15)`,
+        background: "rgba(61, 114, 201, 0.15)",
         color: "var(--neus-accent, #98C0EF)",
-        border: `1px solid rgba(61, 114, 201, 0.3)`
+        border: "1px solid rgba(61, 114, 201, 0.3)"
       };
     }
     return {

@@ -73,8 +73,8 @@ describe('NEUS SDK Integration', () => {
     });
 
     it('should validate inputs before API calls', async () => {
-      await expect(client.getProof('')).rejects.toThrow('proofId is required');
-      await expect(client.getProof(123)).rejects.toThrow('proofId is required');
+      await expect(client.getProof('')).rejects.toThrow('qHash is required');
+      await expect(client.getProof(123)).rejects.toThrow('qHash is required');
       await expect(client.verify({ content: 123 })).rejects.toThrow('content is required and must be a string');
     });
   });
@@ -100,7 +100,7 @@ describe('NEUS SDK Integration', () => {
 
   describe('Basic Workflow Simulation', () => {
     it('should demonstrate typical usage pattern', async () => {
-      const healthy = await client.isHealthy().catch(() => false);
+      const healthy = LIVE ? await client.isHealthy().catch(() => false) : false;
       expect(typeof healthy).toBe('boolean');
 
       if (healthy && LIVE) {
@@ -109,7 +109,7 @@ describe('NEUS SDK Integration', () => {
         expect(verifiers.length).toBeGreaterThan(0);
       }
 
-      expect(() => client.isHealthy()).not.toThrow();
+      expect(typeof client.isHealthy).toBe('function');
     });
   });
 });

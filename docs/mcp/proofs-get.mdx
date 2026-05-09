@@ -4,7 +4,7 @@ description: Proofs and profile summary for a wallet or DID.
 icon: receipt
 ---
 
-Use when you have an **`identifier`**. If the user still needs to verify, run **`neus_verify_or_guide`** first.
+Use when you have an **`identifier`** and need authoritative proof records, qHash values, tags, profile summary, or delegated proof context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility.
 
 | Auth | Visibility |
 |------|------------|
@@ -15,23 +15,23 @@ Use when you have an **`identifier`**. If the user still needs to verify, run **
 
 ```json
 {
-  "identifier": "0x…",
+  "identifier": "0x...",
   "limit": 25,
   "offset": 0,
   "tags": "memory,skill,job",
-  "agentWallet": "0x…"
+  "agentWallet": "0x..."
 }
 ```
 
 | Field | Notes |
 |-------|-------|
-| `identifier` | EVM, Solana base58, **`did:pkh:…`** |
+| `identifier` | EVM, Solana base58, **`did:pkh:...`** |
 | `tags` | Comma-separated filter on **`proof.meta.tags`** |
 | `agentWallet` | Delegation (**`x-agent-wallet`**) |
 
 ## Response
 
-Proofs, **`profileSummary`**, pagination—follow the live tool response. Tags and proof bodies come from this call.
+Proofs, qHashes, **`profileSummary`**, and pagination. Follow the live tool response. Tags and proof bodies come from this call.
 
 ## Next
 

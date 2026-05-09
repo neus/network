@@ -34,7 +34,7 @@ const proof = await client.verify({
   content: 'Hello NEUS',
   wallet: window.ethereum,
 });
-await client.pollProofStatus(proof.proofId, { interval: 3000, timeout: 60000 });
+await client.pollProofStatus(proof.qHash, { interval: 3000, timeout: 60000 });
 
 const url = getHostedCheckoutUrl({
   verifiers: ['ownership-basic'],

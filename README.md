@@ -35,10 +35,10 @@
 
 | Outcome | How NEUS delivers it |
 | --- | --- |
-| Ship faster with less “prove it again” | One flow, a **receipt ID**, **lookup** before you re-run verification |
+| Ship faster with less “prove it again” | One flow, a **qHash**, **lookup** before you re-run verification |
 | Reuse trust across web, API, and agents | Resolvable URLs and handles. Not screenshots that go stale |
 | Safe agent identity and delegation | **`agent-identity`** and **`agent-delegation`** with scoped permissions |
-| Tools that see live truth | **Remote MCP** over HTTPS so assistants read current results, not pasted text |
+| Tools that see live truth | **Remote MCP** over HTTPS so assistants check verify and use existing receipts before asking for another flow |
 
 ## Who this is for
 
@@ -63,7 +63,7 @@ const proof = await client.verify({
   wallet: window.ethereum,
 });
 
-const { proofId } = proof;
+const { qHash } = proof;
 const signerAddress = '0x...';
 
 const check = await client.gateCheck({
@@ -83,7 +83,7 @@ Next: [SDK README](./sdk/README.md) | [docs.neus.network](https://docs.neus.netw
 | Core flows | `agent-identity`, optional `agent-delegation` |
 | Resolvable handles | `https://neus.network/agent/<agentId>`, result URLs, wallet, DID |
 | Tooling manifest | Optional JSON from the agent profile. See [Agents](https://docs.neus.network/agents/overview). |
-| Live checks | NEUS MCP: `neus_context`, `neus_proofs_get` ([MCP docs](https://docs.neus.network/mcp/overview)) |
+| Live checks | NEUS MCP: `neus_context`, `neus_me`, `neus_agent_link`, `neus_proofs_check`, `neus_proofs_get` ([MCP docs](https://docs.neus.network/mcp/overview)) |
 | Linked accounts | Ownership verifiers + `wallet-link` with the same result model ([verifier table](#verifiers)) |
 
 **Fast path:** [Hosted Verify](https://neus.network/verify) | billing and caps in [app setup](https://docs.neus.network/get-started) | paid flows: [x402](https://docs.neus.network/platform/x402)
@@ -132,11 +132,13 @@ import { VerifyGate } from '@neus/sdk/widgets';
 }
 ```
 
+Runtime order: `neus_context` -> `neus_me` when Bearer exists -> `neus_agent_link` for agents -> `neus_proofs_check` -> reuse existing qHash/receipt -> `neus_proofs_get` for proof state -> `neus_verify_or_guide` only when setup is missing.
+
 [docs.neus.network/mcp](https://docs.neus.network/mcp/overview) | [MCP package](./mcp/README.md)
 
 ## Hosted Verify
 
-**Hosted Verify** is the browser flow at `https://neus.network/verify`: a parameterized checkout on NEUS. Your app keeps the **proof ID** and **checks** before you prompt again.
+**Hosted Verify** is the browser flow at `https://neus.network/verify`: a parameterized checkout on NEUS. Your app keeps the **qHash** and **checks** before you prompt again.
 
 Examples:
 

@@ -87,7 +87,7 @@ Proof responses may include CAIP-10 `controllerAccountId` and `agentAccountId`. 
 
 ## What you get
 
-Proof id for policy checks and delegated actions.
+A qHash for policy checks and delegated actions.
 
 ## Checking access
 
@@ -102,5 +102,5 @@ Set `expiresAt` and `maxSpend` when money or high-risk actions are in scope. Rev
 ## Revocation
 
 ```javascript
-await client.revokeOwnProof(proofId, wallet);
+await client.revokeOwnProof(qHash, wallet);
 ```

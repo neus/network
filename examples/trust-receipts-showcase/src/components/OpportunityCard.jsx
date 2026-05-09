@@ -4,10 +4,10 @@ import { ClaimCardIcon } from '../claimCardIcon.jsx';
 import { buildClaimRow } from '../viewModel.js';
 
 export const OpportunityCard = forwardRef(function OpportunityCard(
-  { claim, proofId, listScope = 'all-opp', onSelect, demoHighlight = false },
+  { claim, qHash, listScope = 'all-opp', onSelect, demoHighlight = false },
   ref
 ) {
-  const row = useMemo(() => buildClaimRow(claim, { proofId }), [claim, proofId]);
+  const row = useMemo(() => buildClaimRow(claim, { qHash }), [claim, qHash]);
   const { readinessState, isReady, isLocked, explanation, claim: c } = row;
 
   const readinessRedundantWithFilter =

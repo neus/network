@@ -6,9 +6,9 @@ icon: plug
 
 **Endpoint:** `https://mcp.neus.network/mcp`
 
-NEUS exposes **hosted NEUS MCP** — the default surface for proof receipts, Profile-aware flows, eligibility checks, verification, proof reads, agents, and delegated context ([setup](./setup)).
+NEUS exposes **hosted NEUS MCP** for proof receipts, Profile-aware flows, eligibility checks, proof reads, agents, and delegated context ([setup](./setup)).
 
-**Trust layer for MCP tools:** NEUS helps clients show **which agent** is acting, **what it is allowed to do**, and **what happened** after a tool run — identity, scoped authority, and audit-friendly outcomes alongside the tool catalog.
+Golden path: check existing trust, reuse it, delegate it, gate against it, and open a hosted URL only when proof, payment, provider, wallet, profile, or delegation setup is missing.
 
 <CardGroup cols={3}>
   <Card title="Setup" icon="code" href="./setup">
@@ -24,11 +24,13 @@ NEUS exposes **hosted NEUS MCP** — the default surface for proof receipts, Pro
 | Step | Action |
 |------|--------|
 | 1 | **`neus_context`** — session home for profile and context |
-| 2 | **`neus_proofs_check`** — check access **without creating** proof records |
-| 3 | **`neus_verify_or_guide`** — hosted or guided path when proof state must be established in browser or provider |
-| 4 | **`neus_verify`** — only when your Profile personal access key and signing path already satisfy NEUS for this verifier |
-| 5 | **`neus_proofs_get`** — proof state, proof inventory, tags, optional delegated **`agentWallet`** reads |
-| 6 | **`neus_agent_create`** → **`neus_agent_link`** — agent identity & delegation |
+| 2 | If Bearer exists, **`neus_me`** |
+| 3 | For agents, **`neus_agent_link`** |
+| 4 | **`neus_proofs_check`** — check access **without creating** proof records |
+| 5 | If satisfied, continue without hosted verify |
+| 6 | **`neus_proofs_get`** — proof state, proof inventory, qHash values, tags, optional delegated **`agentWallet`** reads |
+| 7 | **`neus_verify`** only when Profile, wallet, and signing already match |
+| 8 | **`neus_verify_or_guide`** only when proof, profile, payment, provider, wallet, or delegation setup is missing |
 
 **Also:** **`neus_verifiers_catalog`** when **`neus_context`** is insufficient for schemas. **`neus_me`** once a Profile personal access key is configured on this MCP session (expect **`status: ok`**).
 

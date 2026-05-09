@@ -283,9 +283,6 @@
                 "type": "string",
                 "pattern": "^0x[a-fA-F0-9]{64}$"
               },
-              "proofId": {
-                "type": "string"
-              },
               "proofUrl": {
                 "type": "string",
                 "description": "Canonical URL to fetch the proof record (GET /api/v1/proofs/{qHash})"
@@ -441,6 +438,26 @@
                 "nullable": true,
                 "type": "number"
               },
+              "nextCursor": {
+                "nullable": true,
+                "type": "string"
+              },
+              "pageInfo": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "limit": {
+                    "type": "integer"
+                  },
+                  "hasNextPage": {
+                    "type": "boolean"
+                  },
+                  "nextCursor": {
+                    "nullable": true,
+                    "type": "string"
+                  }
+                }
+              },
               "resolved": {
                 "type": "object",
                 "additionalProperties": true
@@ -533,12 +550,12 @@
           "content": {
             "type": "string",
             "maxLength": 50000,
-            "description": "Inline text at verify time (max 50KB). Request field: data.content. When persisted, readable body appears on proof.publicContent.content—legacy field name; access is gated by privacyLevel."
+            "description": "Content being claimed (max 50KB inline)"
           },
           "contentHash": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{64}$",
-            "description": "Verifier hash for ownership-basic (0x+64 hex), not arbitrary SHA256. Omit if unsure; submit content and use returned verifier/hash. Must match computed hash from content when both are supplied."
+            "description": "Pre-computed content hash (32-byte hex). If content is also provided, the verifier integrity-checks that they match."
           },
           "contentType": {
             "type": "string",
@@ -663,13 +680,16 @@
               "linkedin",
               "telegram",
               "coinbase"
-            ]
+            ],
+            "description": "OAuth provider to verify against."
           },
           "internalSocialToken": {
-            "type": "string"
+            "type": "string",
+            "description": "Opaque token from the hosted link session after the user authorizes; not your app API key."
           },
           "walletAddress": {
             "type": "string",
+            "description": "Wallet bound to the social account when applicable.",
             "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           }
         }
@@ -684,21 +704,25 @@
             "type": "string",
             "pattern": "^[a-z0-9][a-z0-9._-]{1,30}[a-z0-9]$",
             "minLength": 3,
-            "maxLength": 32
+            "maxLength": 32,
+            "description": "Stable handle for this identity within `namespace` (lowercase alphanumeric, dots, hyphens, underscores; 3–32 chars)."
           },
           "namespace": {
             "type": "string",
             "pattern": "^[a-z0-9]([a-z0-9._-]*[a-z0-9])?$",
             "minLength": 1,
             "maxLength": 64,
-            "default": "neus"
+            "default": "neus",
+            "description": "Logical partition so the same `pseudonymId` can exist in different apps or communities. Omit to use the default namespace."
           },
           "displayName": {
             "type": "string",
-            "maxLength": 64
+            "maxLength": 64,
+            "description": "Optional display label for UX; omit or minimize PII if you do not need it."
           },
           "metadata": {
-            "type": "object"
+            "type": "object",
+            "description": "Optional app-defined structured fields (keep small; avoid secrets)."
           }
         }
       },
@@ -731,18 +755,22 @@
             "enum": [
               "google",
               "microsoft"
-            ]
+            ],
+            "description": "Identity provider for workspace or org sign-in."
           },
           "internalSocialToken": {
-            "type": "string"
+            "type": "string",
+            "description": "Opaque token from the hosted org sign-in session; not your app API key."
           },
           "walletAddress": {
             "type": "string",
+            "description": "Wallet to associate with the verified org identity.",
             "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           },
           "expectedOrgDomain": {
             "type": "string",
-            "format": "hostname"
+            "format": "hostname",
+            "description": "Optional DNS hostname for the organization (e.g. company.com) to match against the IdP directory."
           }
         }
       },
@@ -799,6 +827,50 @@
           "scope": {
             "type": "string",
             "pattern": "^[a-zA-Z0-9_-]{1,64}$"
+          },
+          "neusPersonhoodId": {
+            "type": "string",
+            "description": "Salted SHA-256 personhood ID for sybil resistance. Always stripped from API responses (internal use only).",
+            "pattern": "^0x[a-fA-F0-9]{64}$"
+          },
+          "assuranceLevel": {
+            "type": "string",
+            "description": "Verification confidence level derived from proof claims.",
+            "enum": ["low", "medium", "high"]
+          },
+          "claims": {
+            "type": "object",
+            "description": "Privacy-preserving boolean/numeric verification claims (no PII stored).",
+            "properties": {
+              "personhood_verified": { "type": "boolean" },
+              "age_verified": { "type": "boolean" },
+              "age_min": { "type": "number" },
+              "age_max": { "type": "number" },
+              "nationality_group_verified": { "type": "boolean" },
+              "nationality_checked": { "type": "boolean" },
+              "not_sanctioned": { "type": "boolean" },
+              "sanctions_checked": { "type": "boolean" },
+              "sanctions_passed": { "type": "boolean" },
+              "nationality_disclosed": { "type": "boolean" },
+              "nationality_verified": { "type": "boolean" },
+              "residency_verified": { "type": "boolean" },
+              "document_type_verified": { "type": "boolean" },
+              "residency_country_verified": { "type": "boolean" },
+              "residency_group_verified": { "type": "boolean" },
+              "residency_checked": { "type": "boolean" },
+              "birthdate_verified": { "type": "boolean" },
+              "fullname_verified": { "type": "boolean" },
+              "firstname_verified": { "type": "boolean" },
+              "lastname_verified": { "type": "boolean" },
+              "expiry_date_verified": { "type": "boolean" },
+              "document_number_verified": { "type": "boolean" },
+              "facematch_verified": { "type": "boolean" },
+              "liveness_verified": { "type": "boolean" },
+              "facematch_strict_mode": { "type": "boolean" },
+              "kyc_verified": { "type": "boolean" },
+              "kyc_components": { "type": "array", "items": { "type": "string" } },
+              "kyc_component_count": { "type": "number" }
+            }
           }
         }
       },
@@ -1150,7 +1222,7 @@
           },
           "instructions": {
             "type": "string",
-            "maxLength": 4000
+            "maxLength": 16000
           },
           "skills": {
             "type": "array",
@@ -1310,7 +1382,7 @@
           },
           "instructions": {
             "type": "string",
-            "maxLength": 4000
+            "maxLength": 16000
           },
           "skills": {
             "type": "array",
@@ -1738,6 +1810,15 @@
             "schema": {
               "type": "integer",
               "minimum": 0
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 2048
             }
           },
           {

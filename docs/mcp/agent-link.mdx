@@ -4,11 +4,11 @@ description: Check whether an agent wallet has identity and required proofs.
 icon: robot
 ---
 
-Checks **`agentWallet`**: identity (and delegation if required) is present.
+Checks **`agentWallet`** before agent work. If identity and delegation are already present, continue without browser setup.
 
 | State | Meaning |
 |-------|---------|
-| **`linked: true`** | Ready |
+| **`linked: true`** | Ready; no browser step needed |
 | **`link_required`** | Open **`hostedVerifyUrl`** or follow **`nextSteps`** |
 
 Optional **`principal`** hints the **approver** account (not the agent wallet). [Agent concepts](../agents/concepts)

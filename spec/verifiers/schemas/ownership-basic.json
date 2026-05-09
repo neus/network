@@ -16,7 +16,7 @@
     "contentHash": {
       "type": "string",
       "pattern": "^0x[a-fA-F0-9]{64}$",
-      "description": "Ownership-basic verifier hash only: 0x + 64 hex. Not an arbitrary SHA256 file digest. Omit if unknown; submit content instead and use verifierContentHash from the receipt. When both content and contentHash are sent, they must match."
+      "description": "Ownership-basic verifier hash only: 0x + 64 hex. Not an arbitrary SHA256 file digest. Omit if unknown; submit content instead and use contentHash from the receipt. When both content and contentHash are sent, they must match."
     },
     "contentType": {
       "type": "string",

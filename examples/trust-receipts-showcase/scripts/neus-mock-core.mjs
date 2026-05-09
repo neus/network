@@ -68,7 +68,6 @@ export function createNeusMockCore(options = {}) {
           success: true,
           data: {
             status: 'verified',
-            proofId: id,
             qHash: id,
             walletAddress: rec.walletAddress,
             verifiedVerifiers
@@ -95,10 +94,9 @@ export function createNeusMockCore(options = {}) {
         json: {
           success: true,
           data: {
-            proofId: id,
             qHash: id,
             status: 'verifying',
-            resource: { proofId: id, qHash: id, status: 'verifying' }
+            resource: { qHash: id, status: 'verifying' }
           }
         }
       };

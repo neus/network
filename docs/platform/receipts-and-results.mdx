@@ -4,18 +4,17 @@ description: Save the receipt, reuse it for access, provenance, and policy gates
 icon: receipt
 ---
 
-**Terminology:** docs say **proof ID**; the SDK returns **`proofId`**; some URLs and API paths use **`qHash`**. Same value.
-
-**Save that id.** A raw signature is not your long-term record.
+After verification, NEUS returns a **trust receipt** identified by its `qHash`. Save the `qHash` — it is how you reference, retrieve, and reuse the proof across your app.
 
 Details in one place: [Integration](../integration).
 
-## `proofId` and `qHash`
+## `qHash`
 
 | | Role |
 |--|--|
-| `proofId` | SDK response |
-| `qHash` | Paths / some API fields |
+| `qHash` | Trust receipt reference in SDK responses, API paths, and URLs |
+
+`contentHash` identifies the proven content or artifact and is not the receipt reference.
 
 Visibility: [Security and trust](./security-and-trust)
 
@@ -23,7 +22,7 @@ Visibility: [Security and trust](./security-and-trust)
 
 | Save | Skip as sole record |
 |------|---------------------|
-| Proof id | Signature string only |
+| qHash | Signature string only |
 | Status | Private payloads in public caches |
 | Verifier ids used | User secrets |
 
@@ -31,7 +30,7 @@ Visibility: [Security and trust](./security-and-trust)
 
 | Goal | How |
 |------|-----|
-| Show | `/proof/[id]` |
+| Show | `/proof/[qHash]` |
 | Gate | VerifyGate |
 | Check | `GET /api/v1/proofs/check` |
 | Policy | Your server |
@@ -39,20 +38,20 @@ Visibility: [Security and trust](./security-and-trust)
 ## Proof URL
 
 ```
-https://neus.network/proof/[proof-id]
+https://neus.network/proof/[qHash]
 ```
 
 ## SDK
 
 ```javascript
 const proof = await client.verify({ ... });
-const proofId = proof.proofId;
+const qHash = proof.qHash;
 
-const record = await client.getProof(proofId);
+const record = await client.getProof(qHash);
 
 const eligible = await client.gateCheck({
-  address: '0x...', // signer from verify()
-  verifierIds: ['ownership-basic'],
+  address: ‘0x...’, // signer from verify()
+  verifierIds: [‘ownership-basic’],
 });
 ```
 

@@ -56,3 +56,4 @@ docs/.mintlify-home*/
 .cursor/*
 .cursorrules
 .vscode/settings.json
+.neus/

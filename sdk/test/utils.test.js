@@ -285,7 +285,7 @@ describe('Utils', () => {
   });
 
   describe('validateQHash()', () => {
-    it('should validate correct proof receipt ID format', () => {
+    it('should validate correct qHash format', () => {
       expect(validateQHash('0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef')).toBe(true);
     });
 

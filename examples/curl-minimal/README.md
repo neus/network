@@ -4,7 +4,7 @@
 
 **Use this sample when** you want zero SDK dependency, you are prototyping in curl, or you need to see the exact signing string the API expects before porting to another language.
 
-You get the same outcome as the SDK: a **`proofId`** you can store, look up, and reuse in gate checks.
+You get the same outcome as the SDK: a **`qHash`** you can store, look up, and reuse in gate checks.
 
 ## Create a proof
 
@@ -53,7 +53,7 @@ curl -X POST https://api.neus.network/api/v1/verification \
   }'
 ```
 
-Omit `options` to use defaults (**private**, unlisted, **original content stored**). For reusable gates without owner-authenticated access, add `options` with `privacyLevel: "public"` and `publicDisplay: false` (public unlisted; still public to anyone with the proof id). Set `storeOriginalContent: false` only for hash-only retention.
+Omit `options` to use defaults (**private**, unlisted, **original content stored**). For reusable gates without owner-authenticated access, add `options` with `privacyLevel: "public"` and `publicDisplay: false` (public unlisted; still public to anyone with the `qHash`). Set `storeOriginalContent: false` only for hash-only retention.
 
 **Response:**
 
@@ -61,7 +61,6 @@ Omit `options` to use defaults (**private**, unlisted, **original content stored
 {
   "success": true,
   "data": {
-    "proofId": "0x57ef6af456233537b63a9afe43dedd02b17d00e0...",
     "qHash": "0x57ef6af456233537b63a9afe43dedd02b17d00e0...",
     "status": "verified"
   }
@@ -71,8 +70,8 @@ Omit `options` to use defaults (**private**, unlisted, **original content stored
 ### 4. Check status
 
 ```bash
-# proof ID (`proofId`) returned by NEUS
-curl https://api.neus.network/api/v1/proofs/0x{proofId}
+# qHash returned by NEUS
+curl https://api.neus.network/api/v1/proofs/0x{qHash}
 ```
 
 ## Troubleshooting

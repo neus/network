@@ -2,17 +2,11 @@
 
 A small **trust marketplace** where every card is a real-world outcome, each backed by a NEUS verifier. This is the **default** runnable app in the [neus/network](https://github.com/neus/network) `examples` folder. The **live** product walkthrough is at [neus.network/demo](https://neus.network/demo).
 
-Copy is **outcome-first** (access, roles, rewards, agents). Verifier details stay in the drawer. One receipt model in the browser, on the server, and through **hosted verify** when you have no in-page signer.
-
-## Why this example exists
-
-Most verification products stop at a check.
-
-NEUS turns that check into a reusable **trust receipt** you can hold, look up, and attach to a claim. A marketplace makes the pattern obvious because you already think in “claims”:
+NEUS turns verification into a reusable **trust receipt** you can hold, look up, and attach to a claim. A marketplace makes the pattern obvious because you already think in “claims”:
 
 - access, rewards, roles, payouts, listings, delegated action
 
-Each card maps one story to one verifier. The UI wires **VerifyGate**; this demo keeps `proofId` in memory only. Persist `onVerified` in a real app.
+Each card maps one story to one verifier. The UI wires **VerifyGate**; this demo keeps `qHash` in memory only. Persist `onVerified` in a real app.
 
 ## Run it
 
@@ -65,6 +59,6 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 ## What to store
 
-Store the returned `proofId` with your claim record. Before prompting again, check whether a valid proof already exists.
+Store the returned `qHash` with your claim record. Before prompting again, check whether a valid proof already exists.
 
-A proof ID is a reusable **receipt handle**, not a session token. In production, validate server-side (for example with `gateCheck`).
+A qHash is a reusable **receipt handle**, not a session token. In production, validate server-side (for example with `gateCheck`).

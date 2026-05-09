@@ -1,5 +1,5 @@
-export function buildClaimRow(claim, { proofId = null } = {}) {
-  const verified = Boolean(proofId && String(proofId).length > 0);
+export function buildClaimRow(claim, { qHash = null } = {}) {
+  const verified = Boolean(qHash && String(qHash).length > 0);
   const requirements = [
     {
       id: `req-${claim.id}`,
@@ -52,18 +52,18 @@ export function filterByQuery(list, q) {
 export function applyListScope(list, scope, proofs) {
   if (scope === 'all' || scope === 'all-opp' || !scope) return list;
   if (scope === 'ready') {
-    return list.filter((c) => proofs[c.id]?.proofId);
+    return list.filter((c) => proofs[c.id]?.qHash);
   }
   if (scope === 'near') {
-    return list.filter((c) => !proofs[c.id]?.proofId);
+    return list.filter((c) => !proofs[c.id]?.qHash);
   }
   return list;
 }
 
 export function nextContinueTarget(visible, prefer, proofs) {
-  if (prefer && visible.some((c) => c.id === prefer.id) && !proofs[prefer.id]?.proofId) {
+  if (prefer && visible.some((c) => c.id === prefer.id) && !proofs[prefer.id]?.qHash) {
     return prefer;
   }
-  const p = visible.find((c) => !proofs[c.id]?.proofId) || null;
+  const p = visible.find((c) => !proofs[c.id]?.qHash) || null;
   return p;
 }

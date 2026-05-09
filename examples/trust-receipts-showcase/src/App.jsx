@@ -24,16 +24,16 @@ function withEnvUrl(v, d) {
 function readHostedCheckoutResult() {
   if (typeof window === 'undefined') return null;
   const params = new URLSearchParams(window.location.search);
-  const id = params.get('qHash') || params.get('proofId');
+  const id = params.get('qHash');
   if (!id) return null;
-  return { proofId: id };
+  return { qHash: id };
 }
 
 function removeHostedCheckoutParams() {
   if (typeof window === 'undefined') return;
   const url = new URL(window.location.href);
   let changed = false;
-  for (const key of ['qHash', 'proofId']) {
+  for (const key of ['qHash']) {
     if (url.searchParams.has(key)) {
       url.searchParams.delete(key);
       changed = true;
@@ -80,14 +80,14 @@ export default function App() {
 
   useEffect(() => {
     const result = readHostedCheckoutResult();
-    if (!result?.proofId) return;
+    if (!result?.qHash) return;
 
     const claimId = readPendingCheckoutClaimId();
     setPendingCheckoutClaimId(null);
     removeHostedCheckoutParams();
 
     if (!claimId || !claimById(claimId)) return;
-    setProofs((s) => ({ ...s, [claimId]: { proofId: result.proofId } }));
+    setProofs((s) => ({ ...s, [claimId]: { qHash: result.qHash } }));
     setSelectedId(claimId);
   }, []);
 
@@ -108,7 +108,7 @@ export default function App() {
   const handleVerifiedFromDrawer = useCallback((claimId, id) => {
     if (!id) return;
     setPendingCheckoutClaimId(null);
-    setProofs((s) => ({ ...s, [claimId]: { proofId: id } }));
+    setProofs((s) => ({ ...s, [claimId]: { qHash: id } }));
   }, []);
 
   const handleDrawerStateChange = useCallback((claimId, state) => {
@@ -263,7 +263,7 @@ export default function App() {
               <OpportunityCard
                 key={c.id}
                 claim={c}
-                proofId={proofs[c.id]?.proofId || null}
+                qHash={proofs[c.id]?.qHash || null}
                 listScope={listScope}
                 demoHighlight={Boolean(c.demoHighlight)}
                 onSelect={setSelectedId}
@@ -281,7 +281,7 @@ export default function App() {
           appId={appId}
           apiUrl={apiUrl}
           hostedCheckoutUrl={hostedCheckoutUrl}
-          proofId={proofs[selected.id]?.proofId || null}
+          qHash={proofs[selected.id]?.qHash || null}
           onVerified={(id) => onDrawerVerified(id)}
           onStateChange={(state) => handleDrawerStateChange(selected.id, state)}
         />

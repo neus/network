@@ -76,7 +76,7 @@ describe('NeusClient', () => {
   });
 
   describe('getProof()', () => {
-    it('should validate proofId parameter', async () => {
+    it('should validate qHash parameter', async () => {
       await expect(client.getProof()).rejects.toThrow(ValidationError);
       await expect(client.getProof('')).rejects.toThrow(ValidationError);
       await expect(client.getProof(123)).rejects.toThrow(ValidationError);
@@ -104,11 +104,10 @@ describe('NeusClient', () => {
       );
 
       expect(result.success).toBe(true);
-      expect(result.proofId).toBe('0xtest123');
       expect(result.qHash).toBe('0xtest123');
     });
 
-    it('should normalize proofId when API only returns qHash', async () => {
+    it('should normalize qHash when API returns qHash', async () => {
       fetch.mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve({
@@ -119,7 +118,6 @@ describe('NeusClient', () => {
       });
 
       const result = await client.getProof('0xonlyqhash');
-      expect(result.proofId).toBe('0xonlyqhash');
       expect(result.qHash).toBe('0xonlyqhash');
     });
 
@@ -281,7 +279,7 @@ describe('NeusClient', () => {
   });
 
   describe('pollProofStatus()', () => {
-    it('should validate proofId parameter', async () => {
+    it('should validate qHash parameter', async () => {
       await expect(client.pollProofStatus()).rejects.toThrow(ValidationError);
       await expect(client.pollProofStatus('')).rejects.toThrow(ValidationError);
     });

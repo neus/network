@@ -9,14 +9,14 @@ import { ReceiptPreview } from './ReceiptPreview.jsx';
 
 const surface = { background: 'var(--neus-bg-elevated)' };
 
-export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl, proofId, onVerified, onStateChange }) {
+export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl, qHash, onVerified, onStateChange }) {
   const [mode, setMode] = useState('preview');
   const [localProof, setLocalProof] = useState(null);
   const [eligBusy, setEligBusy] = useState(false);
   const [eligLine, setEligLine] = useState(null);
 
-  const effectiveProof = localProof || proofId || null;
-  const row = buildClaimRow(claim, { proofId: effectiveProof });
+  const effectiveProof = localProof || qHash || null;
+  const row = buildClaimRow(claim, { qHash: effectiveProof });
 
   useEffect(() => {
     setLocalProof(null);
@@ -26,7 +26,7 @@ export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl,
 
   const handleVerified = useCallback(
     (res) => {
-      const id = (typeof res?.qHash === 'string' && res.qHash) || (typeof res?.proofId === 'string' && res.proofId) || null;
+      const id = (typeof res?.qHash === 'string' && res.qHash) || null;
       setLocalProof(id);
       onVerified(id);
     },
@@ -251,7 +251,7 @@ export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl,
                       ))}
                     </div>
                   </section>
-                  <ReceiptPreview claim={claim} proofId={effectiveProof} />
+                  <ReceiptPreview claim={claim} qHash={effectiveProof} />
                 </div>
                 <div className="mt-auto border-t pt-5" style={{ borderColor: 'var(--neus-border-subtle)' }}>
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
@@ -277,7 +277,6 @@ export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl,
                         allowPrivateReuse
                         strategy="reuse-or-create"
                         qHash={effectiveProof || undefined}
-                        proofId={effectiveProof || undefined}
                         onVerified={handleVerified}
                         onStateChange={onStateChange}
                         style={{ width: '100%' }}

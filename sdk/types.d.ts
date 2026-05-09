@@ -10,9 +10,9 @@ declare module '@neus/sdk' {
     
     verify(params: VerifyParams): Promise<VerificationResult>;
     
-    getProof(proofId: string): Promise<StatusResult>;
-    
-    getPrivateProof(proofId: string, wallet?: WalletLike | GatePrivateAuth): Promise<StatusResult>;
+    getProof(qHash: string): Promise<StatusResult>;
+
+    getPrivateProof(qHash: string, wallet?: WalletLike | GatePrivateAuth): Promise<StatusResult>;
     
     isHealthy(): Promise<boolean>;
     
@@ -30,9 +30,9 @@ declare module '@neus/sdk' {
       label?: string;
     }): Promise<WalletLinkData>;
 
-    pollProofStatus(proofId: string, options?: PollOptions): Promise<StatusResult>;
+    pollProofStatus(qHash: string, options?: PollOptions): Promise<StatusResult>;
 
-    revokeOwnProof(proofId: string, wallet?: { address: string }): Promise<boolean>;
+    revokeOwnProof(qHash: string, wallet?: { address: string }): Promise<boolean>;
 
     getProofsByWallet(walletAddress: string, options?: GetProofsOptions): Promise<ProofsResult>;
 
@@ -109,16 +109,14 @@ declare module '@neus/sdk' {
   }
     
   export interface ProofResult {
-    proofId: string;
     qHash: string;
     status: string;
     walletAddress?: string;
     proofUrl?: string;
     crossChain?: boolean;
   }
-  
+
   export interface VerificationResult {
-    proofId: string;
     qHash: string;
     status: VerificationStatus;
     success: boolean;
@@ -126,13 +124,11 @@ declare module '@neus/sdk' {
   }
   
   export interface StatusResult {
-    proofId?: string;
     qHash?: string;
     proofUrl?: string | null;
     success: boolean;
     status: VerificationStatus;
     data?: {
-      proofId?: string;
       qHash?: string;
       status: string;
       walletAddress: string;
@@ -341,7 +337,7 @@ declare module '@neus/sdk' {
   };
   
   export class StatusPoller {
-    constructor(client: NeusClient, proofId: string, options?: { interval?: number; maxAttempts?: number; exponentialBackoff?: boolean; maxInterval?: number });
+    constructor(client: NeusClient, qHash: string, options?: { interval?: number; maxAttempts?: number; exponentialBackoff?: boolean; maxInterval?: number });
     poll(): Promise<StatusResult>;
   }
   
@@ -505,6 +501,8 @@ declare module '@neus/sdk' {
     primaryWalletAddress?: string;
     secondaryWalletAddress?: string;
     verificationMethod?: string;
+    /** Personhood ID for proof-of-human sybil resistance matching (0x-prefixed 64-hex-char SHA-256 digest) */
+    neusPersonhoodId?: string;
   }
 
   export interface GatePrivateAuth {
@@ -521,7 +519,6 @@ declare module '@neus/sdk' {
       eligible: boolean;
       matchedCount?: number;
       matchedQHashes?: string[];
-      matchedProofIds?: string[];
       matchedTags?: string[];
       projections?: Array<Record<string, any>> | null;
       criteria?: Record<string, any>;
@@ -790,9 +787,7 @@ declare module '@neus/sdk/widgets' {
   export interface VerifyGateProps {
     requiredVerifiers?: string[];
     onVerified?: (result: {
-      proofId: string;
       qHash: string;
-      proofIds?: string[];
       qHashes?: string[];
       address?: string;
       txHash?: string | null;
@@ -805,7 +800,6 @@ declare module '@neus/sdk/widgets' {
       data?: any;
       results?: Array<{
         verifierId: string;
-        proofId: string;
         qHash: string;
         address?: string;
         txHash?: string | null;
@@ -833,7 +827,6 @@ declare module '@neus/sdk/widgets' {
     disabled?: boolean;
     buttonText?: string;
     mode?: 'create' | 'access';
-    proofId?: string | null;
     qHash?: string | null;
     wallet?: WalletLike | any;
     chain?: string;
@@ -845,7 +838,6 @@ declare module '@neus/sdk/widgets' {
   export function VerifyGate(props: VerifyGateProps): any;
 
   export interface ProofBadgeProps {
-    proofId?: string;
     qHash?: string;
     proofUrlPattern?: string;
     size?: 'sm' | 'md';
@@ -855,14 +847,13 @@ declare module '@neus/sdk/widgets' {
     showChains?: boolean;
     showLabel?: boolean;
     logoUrl?: string;
-    onClick?: (data: { proofId: string; qHash: string; status: string; chainCount?: number }) => void;
+    onClick?: (data: { qHash: string; status: string; chainCount?: number }) => void;
     className?: string;
   }
 
   export function ProofBadge(props: ProofBadgeProps): any;
 
   export interface SimpleProofBadgeProps {
-    proofId?: string;
     qHash?: string;
     proofUrlPattern?: string;
     uiLinkBase?: string;
@@ -871,35 +862,33 @@ declare module '@neus/sdk/widgets' {
     label?: string;
     logoUrl?: string;
     proof?: any;
-    onClick?: (data: { proofId: string; qHash: string; status: string }) => void;
+    onClick?: (data: { qHash: string; status: string }) => void;
     className?: string;
   }
 
   export function SimpleProofBadge(props: SimpleProofBadgeProps): any;
 
   export interface NeusPillLinkProps {
-    proofId?: string;
     qHash?: string;
     proofUrlPattern?: string;
     uiLinkBase?: string;
     label?: string;
     size?: 'sm' | 'md';
     logoUrl?: string;
-    onClick?: (data: { proofId?: string; qHash?: string }) => void;
+    onClick?: (data: { qHash?: string }) => void;
     className?: string;
   }
 
   export function NeusPillLink(props: NeusPillLinkProps): any;
 
   export interface VerifiedIconProps {
-    proofId?: string;
     qHash?: string;
     proofUrlPattern?: string;
     uiLinkBase?: string;
     size?: number;
     logoUrl?: string;
     tooltip?: string;
-    onClick?: (data: { proofId?: string; qHash?: string }) => void;
+    onClick?: (data: { qHash?: string }) => void;
     className?: string;
   }
 

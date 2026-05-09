@@ -4,16 +4,16 @@ description: Check, verify, save, reuse across Hosted Verify, SDK, API, and MCP.
 icon: compass
 ---
 
-Every NEUS surface follows one flow: **check** for an existing valid proof, **verify** only when needed, **save** the proof id, **reuse** it for gates and decisions.
+Every NEUS surface follows one flow: **check** for an existing valid proof, **verify** only when needed, **save** the trust receipt, **reuse** it for gates and decisions.
 
-**Check** for a valid result before a new verify. **Save** the **proof ID** from the response. API field: **`proofId`**.
+**Check** for a valid result before a new verify. **Save** the **`qHash`** from the response.
 
 ## Where your code runs (default)
 
 | In the browser | On your server |
 |----------------|----------------|
-| `NeusClient` verify, polling, widgets, **Hosted Verify** | **`gateCheck`**, allow/deny, secrets, payment or app-only headers, raw HTTP |
-| Same-origin to your app only | Call `https://api.neus.network` from Node or your API route |
+| **Hosted Verify** (redirect or popup), `VerifyGate`, optional SDK polling | **`gateCheck`**, secrets, `npk_*`, raw HTTP |
+| Prefer hosted links so users avoid wallet extensions in your UI | Call `https://api.neus.network` from Node or your API route |
 
 Use the **SDK** (or hosted links) in the browser so NEUS sees supported headers and paths. Do **not** hand-roll cross-origin `fetch` to the API from frontend code with extra headers; CORS allowlists differ by route and tooling will mis-implement it. Anything that needs headers the SDK does not set in the browser belongs behind **your backend** (proxy). See [JavaScript SDK](./sdks/javascript) and [API overview](./api/overview).
 
@@ -21,12 +21,12 @@ Use the **SDK** (or hosted links) in the browser so NEUS sees supported headers 
 
 1. **Check** - saved id or proofs/check
 2. **Verify** - only if needed (hosted, SDK, or API)
-3. **Save** - proof ID in your app (per user or device)
+3. **Save** - qHash in your app (per user or device)
 4. **Reuse** - UI, VerifyGate, server, MCP
 
 | Situation | Approach |
 |-----------|----------|
-| Repeat visits | Run an eligibility check or use a stored proof ID before a new verify |
+| Repeat visits | Run an eligibility check or use a stored qHash before a new verify |
 | Balance / NFT gates | Narrow `since` or `fresh` strategy |
 | Org and domain | Link the app, then use the same loop |
 
@@ -45,7 +45,7 @@ SDK `client.verify()` defaults **private**. `VerifyGate` create also defaults **
 <Checklist>
  <Item>Hosted browser checkout, Widgets, SDK, API, or MCP</Item>
  <Item>Check before showing verify</Item>
- <Item>Store proof IDs</Item>
+ <Item>Store qHashes</Item>
  <Item>Test: verify, save, check, reuse</Item>
  <Item>Link your app and credits in Platform</Item>
 </Checklist>

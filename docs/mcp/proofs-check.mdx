@@ -4,9 +4,11 @@ description: Yes/no eligibility without proof details or hosted links.
 icon: shield-check
 ---
 
-**Yes/no only**—no proof IDs, no verify URL. For “open this link to verify,” use **`neus_verify_or_guide`**.
+**Yes/no lookup only.** Use this before verification or hosted handoff. It never creates proofs and never opens hosted flows.
 
-Private proofs count only with that user’s **Bearer** ([Auth](./auth)).
+Private proofs count only with that user's **Bearer** ([Auth](./auth)).
+
+If **`eligible`** is true, continue silently. If false, use **`neus_proofs_get`** when you need exact proof state, or **`neus_verify_or_guide`** when setup or browser-only consent is missing.
 
 ## Input
 
@@ -14,7 +16,7 @@ Uses **`wallet`** (not `walletAddress`):
 
 ```json
 {
-  "wallet": "0x…",
+  "wallet": "0x...",
   "verifiers": ["ownership-basic"],
   "requireAll": true
 }

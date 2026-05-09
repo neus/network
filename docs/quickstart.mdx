@@ -1,10 +1,10 @@
 ---
 title: Quickstart
-description: First proof with the JavaScript SDK.
+description: First trust receipt without putting a wallet in your Web2 app.
 icon: rocket
 ---
 
-This walkthrough creates a first proof with **`ownership-basic`** and a browser wallet.
+Most apps should **not** start with `window.ethereum`. Send people to **Hosted Verify** on NEUS (passkey-first sign-in there, no wallet extension in your UI), then **save `qHash`** on your server keyed to your user. Use in-app wallet signing only when you deliberately need it.
 
 ## 1. Install
 
@@ -12,38 +12,26 @@ This walkthrough creates a first proof with **`ownership-basic`** and a browser 
 npm install @neus/sdk
 ```
 
-## 2. Create a proof
+## 2. Create a proof (default: Hosted Verify)
 
-`client.verify()` defaults private.
-
-```javascript
-import { NeusClient } from '@neus/sdk';
-
-const client = new NeusClient({
-  appId: 'your-app-id',
-});
-
-const proof = await client.verify({
-  verifier: 'ownership-basic',
-  content: 'My content or claim',
-  wallet: window.ethereum,
-});
-
-const proofId = proof.proofId;
-```
-
-Save **`proofId`**. Same value is **`qHash`** in some API paths. Check before asking the user to verify again.
-
-## 3. Poll
+Redirect the browser to NEUS. After success, NEUS sends the user back to `returnUrl` with **`qHash`** in the query string (your callback route should read it and persist it).
 
 ```javascript
-const status = await client.pollProofStatus(proofId, {
-  interval: 3000,
-  timeout: 60000,
+import { getHostedCheckoutUrl } from '@neus/sdk';
+
+const url = getHostedCheckoutUrl({
+  verifiers: ['ownership-basic'],
+  returnUrl: 'https://myapp.com/neus/callback',
 });
+
+window.location.assign(url);
 ```
 
-## 4. Gate
+Save **`qHash`** in your database next to your own `userId`. It is the portable trust receipt reference. [Hosted Verify](./cookbook/auth-hosted-verify) covers `mode=popup`, `origin`, and postMessage if you prefer a popup.
+
+### React: gate in place
+
+If you already use React, **`VerifyGate`** opens the hosted flow when needed and keeps your page free of wallet UI:
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -56,15 +44,50 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>
 ```
 
-## 5. Check from your server
+## 3. Poll (optional)
+
+If you issued a proof from your **own** backend (API + `npk_*`) and need to wait on async work, poll by `qHash`. Hosted redirect users usually already have `qHash` on the return URL.
+
+```javascript
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient({ appId: 'your-app-id' });
+
+const status = await client.pollProofStatus(qHash, {
+  interval: 3000,
+  timeout: 60000,
+});
+```
+
+## 4. Check from your server
 
 Use **`gateCheck` in trusted server code** (Node, serverless route, backend worker), not in a public browser bundle, for security-sensitive allow/deny.
 
 ```javascript
+const client = new NeusClient({ appId: 'your-app-id' });
+
 const result = await client.gateCheck({
   address: '0x...',
   verifierIds: ['ownership-basic'],
 });
 ```
+
+## 5. Advanced: wallet inside your app
+
+Only if you **intentionally** want the user to sign inside your domain with a browser wallet:
+
+```javascript
+const client = new NeusClient({ appId: 'your-app-id' });
+
+const proof = await client.verify({
+  verifier: 'ownership-basic',
+  content: 'My content or claim',
+  wallet: window.ethereum,
+});
+
+const qHash = proof.qHash;
+```
+
+`client.verify()` defaults **private**. See [SDK authentication](./sdks/authentication) and [Signing format](./verification/signing-format).
 
 **Next:** [Integration](./integration)

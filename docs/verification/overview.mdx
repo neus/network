@@ -4,7 +4,7 @@ description: Verifier types, terms, and verification responses.
 icon: file-signature
 ---
 
-Verification is how NEUS checks a claim against verifier rules and returns a durable **proof ID**. Read [How it works](./how-it-works) for mechanics and [Integration](../integration) for where verification sits in your app.
+Verification is how NEUS checks a claim against verifier rules and returns a **trust receipt** you can reuse across your app. Read [How it works](./how-it-works) for mechanics and [Integration](../integration) for where verification sits in your app.
 
 ## Outcomes
 
@@ -28,7 +28,7 @@ Verification is how NEUS checks a claim against verifier rules and returns a dur
 
 | Term | Meaning |
 |------|---------|
-| Proof ID | Stable identifier after verification — [Results](../platform/receipts-and-results) |
+| qHash | Trust receipt reference — [Results](../platform/receipts-and-results) |
 | Verifier | Capability checked |
 | Signing string | Wallet message |
 | Hosted Verify | NEUS-hosted browser flow at `/verify` - [guide](../cookbook/auth-hosted-verify) |
@@ -37,9 +37,9 @@ Visibility: [Security and trust](../platform/security-and-trust)
 
 ## Response
 
-- `proofId` (proof ID)
+- `qHash`
 - `status`: verified, processing, failed
-- Page: `https://neus.network/proof/[proof-id]`
+- Page: `https://neus.network/proof/[qHash]`
 
 ## Next
 

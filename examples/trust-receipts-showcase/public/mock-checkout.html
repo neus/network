@@ -102,7 +102,6 @@
           try {
             const target = new URL(returnUrl, window.location.origin);
             target.searchParams.set('qHash', proof);
-            target.searchParams.set('proofId', proof);
             return target.toString();
           } catch (_err) {
             return null;
@@ -113,7 +112,6 @@
           const payload = {
             type: 'neus_checkout_done',
             success: true,
-            proofId: proof,
             qHash: proof,
             eligible: true,
             verifierIds: ver ? ver.split(',').map((x) => x.trim()).filter(Boolean) : [],
