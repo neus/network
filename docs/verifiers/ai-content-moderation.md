@@ -2,7 +2,7 @@
 
 Verifies content safety via AI
 
-- **Access:** `public`
+- **Access:** `pro`
 - **Category:** `ai`
 - **Flow:** `external_lookup`
 - **Expiry:** `permanent`

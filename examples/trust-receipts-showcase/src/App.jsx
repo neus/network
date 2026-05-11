@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { LayoutGrid, ShieldCheck, Search, ExternalLink, Globe, BookOpen, Github } from 'lucide-react';
-import neusMark from '../../../sdk/neus-logo.svg?url';
+import neusMark from './neus-logo.svg?url';
 import { claimById, claims, FILTER_CATEGORIES, filterByUiCategory, getInitialDemoProofs } from './claims.js';
 import { applyListScope, filterByQuery } from './viewModel.js';
 import { DetailDrawer } from './components/DetailDrawer.jsx';

@@ -5,7 +5,7 @@
  */
 
 import { ethers } from 'ethers';
-import { NeusClient } from '../../sdk/client.js';
+import { NeusClient } from '@neus/sdk/client';
 
 const API_BASE = 'https://api.neus.network';
 const WALLET_PRIVATE_KEY = process.env.TEST_WALLET_PRIVATE_KEY;

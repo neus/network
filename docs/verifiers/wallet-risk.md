@@ -2,7 +2,7 @@
 
 Wallet risk assessment
 
-- **Access:** `public`
+- **Access:** `pro`
 - **Category:** `wallet`
 - **Flow:** `external_lookup`
 - **Expiry:** `point_in_time`

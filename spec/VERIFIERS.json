@@ -156,7 +156,7 @@
         "autoVerify": true,
         "verifyGateWidget": true
       },
-      "tier": "public"
+      "tier": "pro"
     },
     {
       "api": {
@@ -208,7 +208,7 @@
         "autoVerify": true,
         "verifyGateWidget": true
       },
-      "tier": "public"
+      "tier": "pro"
     },
     {
       "api": {
