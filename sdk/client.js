@@ -1270,15 +1270,11 @@ export class NeusClient {
       throw new ValidationError(`Failed to sign revocation: ${error.message}`);
     }
 
-    const res = await fetch(`${this.config.apiUrl}/api/v1/proofs/revoke-self/${resolvedQHash}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        walletAddress: address,
-        signature,
-        signedTimestamp,
-        ...(signerIsEvm ? {} : { chain, signatureMethod })
-      })
+    const res = await this._makeRequest('POST', `/api/v1/proofs/revoke-self/${resolvedQHash}`, {
+      walletAddress: address,
+      signature,
+      signedTimestamp,
+      ...(signerIsEvm ? {} : { chain, signatureMethod })
     });
     const json = await res.json();
     if (!json.success) {
