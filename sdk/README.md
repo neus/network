@@ -1,6 +1,6 @@
 # @neus/sdk
 
-Create, check, and reuse NEUS trust receipts from JavaScript apps.
+Create, check, and reuse NEUS trust receipts from apps.
 
 NEUS turns signed claims, ownership checks, account links, access rules, and verification results into portable receipts your app can store, display, and check later.
 
