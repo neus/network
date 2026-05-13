@@ -1,22 +1,28 @@
 ---
 title: Domain Verification
-description: DNS TXT at _neus - prove domain control with ownership-dns-txt.
+description: DNS TXT at _neus — prove domain control with ownership-dns-txt.
 icon: globe
 ---
 
-Verifier: [`ownership-dns-txt`](../verification/ownership-dns-txt). Full platform notes: [Platform setup](../platform/setup#dns-domain).
+Verifier: [`ownership-dns-txt`](../verification/ownership-dns-txt). Platform context: [DNS domain](../platform/setup#dns-domain).
 
 ## Steps
 
-1. **TXT** at `_neus.<yourdomain>`:
+1. **TXT** at `_neus.<yourdomain>` (DNS host/name is often `_neus` when the zone is your apex or subdomain).
 
    ```text
-   neus=<your-wallet-address>
+   wallet=<your-wallet-or-account-address>
    ```
 
- Example: `_neus.example.com` to `neus=0x1234…5678`
+   Example for Ethereum (use **lowercase** hex so it matches what NEUS expects):
 
-2. **Proof** (browser or server signing as for other direct-sign verifiers):
+   ```text
+   wallet=0x1234567890123456789012345678901234567890
+   ```
+
+   The verifier reads **`wallet=`** only (not `neus=` or other prefixes).
+
+2. **Proof** — include at least `domain` in `data`. You may omit `data.walletAddress` when the same request carries a verified **top-level** `walletAddress` (typical signed proof); the service fills in that signer address before the DNS check. The TXT line must use the same wallet or account address NEUS uses for the proof.
 
    ```javascript
    const proof = await client.verify({
@@ -26,7 +32,7 @@ Verifier: [`ownership-dns-txt`](../verification/ownership-dns-txt). Full platfor
    });
    ```
 
-3. **Check:**
+3. **Check**
 
    ```bash
    GET /api/v1/proofs/check?verifierIds=ownership-dns-txt&address=0x...

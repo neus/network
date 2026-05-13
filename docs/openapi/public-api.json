@@ -728,6 +728,7 @@
       },
       "VerifierData_ownership_dns_txt": {
         "type": "object",
+        "description": "Domain ownership via DNS TXT at _neus.<domain>. Only `domain` is required in this object: `walletAddress` may be omitted when the proof request includes a verified signer wallet (filled in server-side). The TXT record must still use `wallet=` with the same wallet or account address NEUS uses for this check.",
         "required": [
           "domain"
         ],
@@ -735,10 +736,12 @@
           "domain": {
             "type": "string",
             "format": "hostname",
-            "minLength": 1
+            "minLength": 1,
+            "description": "Hostname to verify; NEUS looks up TXT at _neus.<domain>."
           },
           "walletAddress": {
             "type": "string",
+            "description": "Optional in `data` when the request already includes the signer wallet at the top level. If you set this field, it must follow signer and delegation rules. The DNS TXT value must be `wallet=` followed by the same wallet or account address NEUS uses for this verification.",
             "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           }
         }

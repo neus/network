@@ -19,3 +19,7 @@ const client = new NeusClient({ appId: 'your-app-id' });
 ```
 
 **Next:** [Hosted Verify](../cookbook/auth-hosted-verify)
+
+## DNS domain
+
+If you use [`ownership-dns-txt`](../verification/ownership-dns-txt) to prove control of a hostname, publish a **TXT** record on `_neus.<your-domain>` with value **`wallet=<your-wallet-or-account-address>`** (see the verifier page for Ethereum vs other networks, casing, and the optional `wallet=eip155:…` line). Other key prefixes are not used by the verifier. Cookbook: [Domain verification](../cookbook/domain-verification).

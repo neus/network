@@ -1,6 +1,6 @@
 ---
 title: Domain Verification
-description: Prove domain control by publishing a DNS TXT record.
+description: Prove domain control by publishing a DNS TXT record tied to the verifying account.
 icon: globe
 ---
 
@@ -14,16 +14,36 @@ icon: globe
 
 ## Flow Type
 
-Lookup. NEUS checks the DNS TXT record after it is published.
+Lookup. NEUS resolves DNS TXT at `_neus.<domain>` and compares it to the **account address** used for this verification (see below).
 
-## Required Fields
+## DNS record (what builders publish)
 
-| Field | Required | Notes |
-|------|----------|-------|
-| `domain` | Yes | Hostname to verify |
-| `walletAddress` | No | Optional override |
+Create a **TXT** record:
+
+- **Name / host:** `_neus` (effective lookup: `_neus.<your-domain>`, e.g. `_neus.example.com` if the apex is `example.com`).
+- **Value:** a single line starting with `wallet=` followed by the **same wallet or account address** NEUS uses when it runs this check.
+
+Supported shapes today:
+
+| Format | When it matches |
+|--------|------------------|
+| `wallet=<address>` | Default. `<address>` must match the wallet or account address NEUS uses for this proof. For **Ethereum**, use **lowercase** `0x` plus 40 hex digits in DNS. |
+| `wallet=eip155:<chainId>:<address>` | Only if the verification run supplies a numeric **`chainId`** in verifier options so this form is generated for the check. |
+
+Other prefixes (for example `neus=`) are **not** read by this verifier—use **`wallet=`** only.
+
+**Other networks:** Use the address format for that network (for example Ethereum, Solana, or NEAR). For **Solana**, the string is **case-sensitive**—copy the value exactly as NEUS shows it for the proof; do not retype it with different capitalization.
+
+## Request `data` (API / SDK)
+
+| Field | In JSON Schema | What integrators should know |
+|------|------------------|------------------------------|
+| `domain` | **Required** | Hostname to verify (apex or eTLD+1 style you control in DNS). |
+| `walletAddress` | **Optional** in `data` | **Still needed for a passing check:** the TXT line must match the **wallet or account address NEUS uses for this proof**. You may **omit** `walletAddress` inside `data` when the proof request already includes a verified **`walletAddress` at the request level** (signed flow); the service fills in the signer wallet before the DNS check. If you omit it **and** the request has no signer wallet, verification fails. If you **set** `walletAddress` in `data`, it must match the wallet that signs the proof (or follow your product’s allowed delegation rules)—do not use someone else’s address. |
 
 ## Example
+
+Minimal `data` when the proof request carries the signer wallet (typical browser / server signing):
 
 ```json
 {
@@ -31,3 +51,13 @@ Lookup. NEUS checks the DNS TXT record after it is published.
 }
 ```
 
+Explicit `data` (custom clients, tests, or when you want the payload self-describing):
+
+```json
+{
+  "domain": "example.com",
+  "walletAddress": "0x3333333333333333333333333333333333333333"
+}
+```
+
+See also: [Domain verification cookbook](../cookbook/domain-verification), [Verifier reference](../verifiers/ownership-dns-txt).

@@ -2,7 +2,7 @@
   "$id": "https://neus.network/schemas/ownership-dns-txt.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "ownership-dns-txt",
-  "description": "Domain ownership verification via DNS TXT records",
+  "description": "Verifier input for domain ownership via DNS TXT at _neus.<domain>. Only `domain` is required in this object: `walletAddress` may be omitted when the proof request supplies a verified signer wallet, which the service fills in before the verifier runs. The TXT record must still use `wallet=` with the same wallet or account address NEUS uses for this check.",
   "type": "object",
   "required": [
     "domain"
@@ -11,11 +11,13 @@
     "domain": {
       "type": "string",
       "format": "hostname",
-      "minLength": 1
+      "minLength": 1,
+      "description": "Hostname to verify (DNS control is proven via TXT at _neus.<domain>)."
     },
     "walletAddress": {
       "type": "string",
-      "format": "universal-address"
+      "format": "universal-address",
+      "description": "Optional inside `data` when the proof request already includes a verified signer walletAddress (filled in by the service when omitted). If you set this field, it must follow signer and delegation rules. The DNS TXT value must be `wallet=` followed by the same wallet or account address NEUS uses when it runs this check."
     }
   }
 }
