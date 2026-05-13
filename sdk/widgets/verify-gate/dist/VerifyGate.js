@@ -401,11 +401,11 @@ function VerifyGate({
       campaignTitle,
       campaignMessage
     });
-    let expectedOrigin = "*";
+    let expectedOrigin = null;
     try {
       expectedOrigin = new URL(resolvedHostedCheckoutUrl).origin;
     } catch (_err) {
-      expectedOrigin = "*";
+      expectedOrigin = null;
     }
     return new Promise((resolve, reject) => {
       const url = checkoutUrl;
@@ -440,7 +440,7 @@ function VerifyGate({
         }
       };
       const onMessage = (event) => {
-        if (expectedOrigin !== "*" && event.origin !== expectedOrigin) return;
+        if (!expectedOrigin || event.origin !== expectedOrigin) return;
         const payload = event?.data;
         if (!payload || payload.type !== HOSTED_CHECKOUT_MESSAGE_TYPE) return;
         completed = true;
