@@ -1,31 +1,72 @@
 ---
 title: SDK Authentication
-description: Hosted flows, personal access keys for server calls, signatures.
+description: App Link, Hosted Verify, server keys, and wallet signing.
 icon: key
 ---
 
-## Calling the REST API from your backend
+NEUS supports both product styles:
 
-Use **`Authorization: Bearer`** with a personal access key **`npk_*`** from [Access keys](https://neus.network/profile?tab=account) for servers, scripts, and **MCP** ([MCP Auth](../mcp/auth)). That is how non-browser clients authenticate to the same HTTP API the SDK uses under the hood.
+- **Bring your own login:** your users stay in your app, and your server calls NEUS through App Link.
+- **Hosted NEUS flow:** send users to NEUS when they need hosted login, passkeys, wallet connection, OAuth, human checks, or gate checkout.
 
-End-user browsers normally do **not** need this—use hosted checkout and **`NeusClient`** instead.
+## App Link
 
-## Hosted
-
-1. `getHostedCheckoutUrl` + `returnUrl` - [Hosted Verify](../cookbook/auth-hosted-verify)
-2. User finishes on **neus.network**
-3. Continue in your app with the proof result; for **server-to-API** calls, use **`npk_*`** as in [API authentication](../api/authentication).
-
-[Access keys](https://neus.network/profile?tab=account) → `Authorization: Bearer` on API/MCP. MCP: [Auth](../mcp/auth) (`neus_me`).
-
-## In-app verify (default)
-
-Use **`NeusClient.verify()`** so the SDK prepares the signing payload and submits - see [Quickstart](../quickstart).
+Use this when your backend already knows the user. Your app keeps its normal login and uses NEUS only when it needs to issue or check a receipt.
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
+const client = new NeusClient({
+  appId: process.env.NEUS_APP_ID,
+  apiKey: process.env.NEUS_ACCESS_KEY,
+});
+
+const receipt = await client.verifyFromApp({
+  user: { walletAddress: user.walletAddress },
+  verifier: 'ownership-basic',
+  content: {
+    claim: 'User completed onboarding',
+    source: 'your-app',
+  },
+});
+```
+
+Use App Link for server-side receipt creation without a wallet prompt on every request.
+
+## Hosted Verify
+
+Use Hosted Verify when NEUS should handle the browser step:
+
+- passkey-first NEUS login
+- wallet connection when required
+- OAuth or org verification
+- human checks
+- gate checkout and return handling
+
+```javascript
+import { getHostedCheckoutUrl } from '@neus/sdk';
+
+const url = getHostedCheckoutUrl({
+  verifiers: ['ownership-basic'],
+  returnUrl: 'https://yourapp.com/neus/callback',
+});
+```
+
+See [Hosted Verify](../cookbook/auth-hosted-verify).
+
+## Personal Access Keys
+
+Use **`Authorization: Bearer <npk_...>`** from [Access keys](https://neus.network/profile?tab=account) for server-side API calls, jobs, CLI tools, and MCP clients.
+
+Never ship an access key in browser code.
+
+## In-App Wallet Signing
+
+Use direct SDK signing only when your product asks the user to sign with a wallet inside your UI.
+
+```javascript
 const client = new NeusClient({ appId: 'your-app-id' });
+
 await client.verify({
   verifier: 'ownership-basic',
   content: 'Hello NEUS',
@@ -33,21 +74,6 @@ await client.verify({
 });
 ```
 
-## Advanced: manual standardize + sign
+## Raw HTTP Signing
 
-Only when you need full control over the request body (custom `verifierIds` / `data`) before submit:
-
-```javascript
-import { standardizeVerificationRequest, signMessage } from '@neus/sdk';
-
-const standardized = await standardizeVerificationRequest(body, {
-  apiUrl: 'https://api.neus.network',
-});
-const signature = await signMessage({
-  provider: window.ethereum,
-  walletAddress: body.walletAddress,
-  message: standardized.signerString,
-});
-```
-
-Use SDK helpers instead of crafting signing strings by hand. See [Signing format](../verification/signing-format) and server-side rules in [API authentication](../api/authentication).
+Most teams should not need this. If you implement `POST /api/v1/verification` without the SDK, use [API authentication](../api/authentication) and [Signing format](../verification/signing-format).

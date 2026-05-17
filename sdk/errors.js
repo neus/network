@@ -79,7 +79,7 @@ export class NetworkError extends SDKError {
     super(message, code);
     this.name = 'NetworkError';
     this.originalError = originalError;
-    this.isRetryable = true; // Network errors are typically retryable
+    this.isRetryable = true; // Network errors are retryable
   }
 
   static isNetworkError(error) {

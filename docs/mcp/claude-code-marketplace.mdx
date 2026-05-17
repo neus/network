@@ -1,0 +1,72 @@
+---
+title: NEUS for Claude Code
+description: "Install hosted NEUS MCP from the git marketplace: neus-mcp plugin, trust-workflow skill, npm @neus/sdk, and neus setup for keys."
+icon: store
+---
+
+The **`neus`** marketplace in [`github.com/neus/network`](https://github.com/neus/network) lists one plugin, **`neus-mcp`**, so Claude Code users can add MCP plus a small skill in one step. **Keys and account tools still use the same public CLI as every other editor** (`@neus/sdk` on npm) — no second installer.
+
+## What you get
+
+The **`neus-mcp`** plugin ([`plugins/neus-mcp`](https://github.com/neus/network/tree/main/plugins/neus-mcp)) includes:
+
+- **Default MCP config** for `https://mcp.neus.network/mcp`
+- **`neus-trust-workflow`** skill — tool order, receipt reuse, and access-key hygiene
+
+## Install in Claude Code
+
+1. Add the marketplace (catalog file: `.claude-plugin/marketplace.json` at the repo root):
+
+   ```text
+   /plugin marketplace add https://github.com/neus/network
+   ```
+
+2. Install the plugin. The part after `@` must match the marketplace **`name`** in that file (currently **`neus`**):
+
+   ```text
+   /plugin install neus-mcp@neus
+   ```
+
+3. Add your Profile access key (optional for public tools; required for `neus_me` and related flows):
+
+   ```bash
+   npx -y -p @neus/sdk neus setup --access-key <npk_...>
+   ```
+
+   Keys are created in the NEUS app: [Account → Access keys](https://neus.network/profile?tab=account). Omit `--access-key` if you only need public catalog and proof reads.
+
+## Skill command
+
+Plugin skills are namespaced:
+
+```text
+/neus-mcp:neus-trust-workflow
+```
+
+## Cursor, VS Code, OpenClaw, Codex (no duplicate path)
+
+| Surface | MCP | Skills / rules |
+| --- | --- | --- |
+| **Cursor** | Same **`npx -y -p @neus/sdk neus setup`** — writes `~/.cursor/mcp.json` when detected ([Setup](./setup)). | Project rules in `.cursor/rules/`. |
+| **VS Code** | Same **`neus setup`** — merges into VS Code’s user MCP file when Code is detected ([Setup](./setup)). | Optional; no NEUS VS Code extension is required for MCP. |
+| **Claude Code** | Optional **`neus-mcp@neus`** plugin (this page) **or** `neus setup` when the `claude` CLI is on `PATH`. Prefer **one**: if you use the plugin for the skill, still run **`neus setup`** for your Bearer key so configs stay aligned. | Plugin skill under `/neus-mcp:…`; native packs use `~/.claude/skills/`. |
+| **OpenClaw / CLAW** | Runtime **`NEUS_MCP_URL`** + access profile in container env. See your deployment docs; product behavior matches [MCP overview](./overview). | Skills via your runtime environment, not this git marketplace. |
+| **Codex / `~/.agents`** | Use **`neus setup`** if your Codex host reads the same MCP config as VS Code/Cursor; otherwise paste the [Setup](./setup) URL block. | Optional; no NEUS-specific extension required. |
+
+**Golden rule:** one npm entrypoint (**`@neus/sdk`**, command **`neus`**) for MCP files and keys; the Claude plugin is an **optional** bundle for Claude Code discovery and the trust-workflow skill only.
+
+## Health check and first tool
+
+- **Check:** `npx -y -p @neus/sdk neus doctor`
+- **First tool each session:** `neus_context`
+
+## Contributors: repo layout
+
+- Marketplace catalog: `.claude-plugin/marketplace.json` (`name` = install suffix, e.g. `neus-mcp@neus`)
+- Plugin root: `plugins/neus-mcp/` — `.claude-plugin/plugin.json`, `.mcp.json`, `skills/…`
+
+Schema and versioning: [Anthropic plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces).
+
+## Visibility outside this repo (what is not automated here)
+
+Publishing this marketplace makes NEUS installable from any clone of **`neus/network`**. **Separate listings** (each with its own submission process) include: npm (**`@neus/sdk`** — already the canonical package), a future VS Code Extension Marketplace entry if you ship an extension, Cursor’s directory/extensions ecosystem if you list a dedicated extension, and Anthropic’s curated plugin directory if you apply there. **Do not duplicate** another MCP config story: link to **`neus setup`** and this page instead of forking new installers.

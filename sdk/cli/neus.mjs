@@ -203,9 +203,11 @@ function printUsage(exitCode = 0) {
     'Usage: neus <command> [options]',
     '',
     'Commands:',
+    '  setup         One-command: run init, then auth if --access-key is provided',
     '  init          Configure supported MCP clients automatically',
     '  auth          Add or update a personal access key for NEUS MCP',
     '  status        Show current NEUS MCP setup',
+    '  doctor        Deep check: config status, profile connection, agent verification',
     '  help          Show this message',
     '',
     'Options:',
@@ -246,8 +248,8 @@ function ensureClientSelection(scope, clients) {
 }
 
 function ensureSafeAuth(command, scope, accessKey) {
-  if (command === 'auth' && scope !== 'user') {
-    throw new Error('`neus auth` only supports user scope so access keys never land in shared project config.');
+  if ((command === 'auth' || command === 'setup') && scope !== 'user') {
+    throw new Error('`neus ${command}` only supports user scope so access keys never land in shared project config.');
   }
   if (scope === 'project' && accessKey) {
     throw new Error('Access keys are only supported in user scope. Remove --project or omit --access-key.');
@@ -256,7 +258,7 @@ function ensureSafeAuth(command, scope, accessKey) {
 
 function buildCursorServer(accessKey) {
   return {
-    type: 'streamableHttp',
+    type: 'http',
     url: NEUS_MCP_URL,
     ...(accessKey ? { headers: { Authorization: `Bearer ${accessKey}` } } : {}),
   };
@@ -548,6 +550,14 @@ function printResultSummary(command, scope, results, accessKey) {
   if (command === 'init' && !accessKey) {
     lines.push(`Account tools stay optional. Add personal auth later with: neus auth --access-key <npk_...>`);
   }
+  if (command === 'init' || command === 'setup') {
+    lines.push(
+      'Claude Code (optional): plugin neus-mcp@neus + docs — https://docs.neus.network/mcp/claude-code-marketplace',
+    );
+    lines.push(
+      'Cursor / VS Code: same command when those apps are detected (local MCP config) — https://docs.neus.network/mcp/setup',
+    );
+  }
   if ((command === 'init' || command === 'auth') && accessKey) {
     lines.push('Personal account tools are enabled where the client supports user-scope auth setup.');
   }
@@ -659,6 +669,97 @@ function runStatus(options) {
   printResultSummary('status', scope, inspected, '');
 }
 
+function runSetup(options) {
+  const scope = resolveScope(options);
+  ensureSafeAuth('setup', scope, options.accessKey);
+  const cwd = process.cwd();
+  if (options.project && options.accessKey) {
+    throw new Error('Access keys are only supported in user scope. Remove --project or omit --access-key.');
+  }
+
+  const clients = resolveClients(scope, options.clients);
+  ensureClientSelection(scope, clients);
+
+  const initResults = runClientOperations(
+    clients,
+    scope,
+    cwd,
+    options.dryRun,
+    (client) => installClient(client, scope, options.accessKey, options.dryRun, cwd),
+  );
+
+  const payload = {
+    command: 'setup',
+    scope,
+    detectedClients: defaultUserClients(),
+    clients,
+    accessKeyConfigured: Boolean(options.accessKey),
+    results: initResults,
+    hasErrors: initResults.some((result) => result.error),
+  };
+
+  if (options.json) {
+    printJson(payload);
+  } else {
+    printResultSummary('setup', scope, initResults, options.accessKey);
+  }
+
+  if (payload.hasErrors) {
+    process.exitCode = 1;
+  }
+}
+
+function runDoctor(options) {
+  const scope = resolveScope(options);
+  const cwd = process.cwd();
+  const clients = resolveClients(scope, options.clients);
+  ensureClientSelection(scope, clients);
+
+  const inspected = runClientOperations(clients, scope, cwd, options.dryRun, (client) =>
+    inspectClient(client, scope, cwd),
+  );
+  const configuredClients = inspected.filter((r) => r.configured);
+  const payload = {
+    command: 'doctor',
+    scope,
+    clients: inspected,
+    configuredCount: configuredClients.length,
+    accessKeyPresent: Boolean(options.accessKey),
+    profileConnectable: false,
+    agentVerified: false,
+    summary: '',
+    hasErrors: inspected.some((result) => result.error),
+  };
+
+  if (options.json) {
+    printJson(payload);
+    return;
+  }
+
+  printResultSummary('doctor', scope, inspected, '');
+
+  const lines = [];
+  if (configuredClients.length > 0) {
+    lines.push(`MCP reachable: ${configuredClients.map((r) => r.client).join(', ')} ready at ${NEUS_MCP_URL}.`);
+  } else {
+    lines.push('MCP reachable: No clients configured. Run `neus setup` or `neus init` first.');
+    process.stdout.write(`\n${lines.join('\n')}\n`);
+    process.exit(1);
+  }
+
+  if (options.accessKey) {
+    lines.push('Profile connection: auth header present. Connect to the MCP endpoint and run `neus_me` to confirm.');
+  } else {
+    lines.push(`Profile connection: No access key found. Run \`neus auth --access-key <npk_...>\` (create one at ${NEUS_ACCESS_KEYS_URL}) and reconnect.`);
+  }
+
+  lines.push('Agent verification: Run `neus_agent_link` and `neus_proofs_check` inside the MCP-connected client to verify agent identity and delegation proofs.');
+  lines.push('');
+  lines.push('Next: Open your editor/IDE, connect to the NEUS MCP endpoint, and run `neus_context`.');
+
+  process.stdout.write(`\n${lines.join('\n')}\n`);
+}
+
 function main() {
   try {
     const { command, options } = parseArgs(process.argv.slice(2));
@@ -677,6 +778,14 @@ function main() {
     }
     if (command === 'status') {
       runStatus(options);
+      return;
+    }
+    if (command === 'setup') {
+      runSetup(options);
+      return;
+    }
+    if (command === 'doctor') {
+      runDoctor(options);
       return;
     }
 

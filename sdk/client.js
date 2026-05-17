@@ -48,6 +48,13 @@ function normalizeBrowserSignerString(raw) {
   return null;
 }
 
+/** Treats SDK placeholder signatures as absent so the protocol can use session or app-link delegation. */
+function isPlaceholderNeusSignature(signature) {
+  const s = typeof signature === 'string' ? signature.trim() : '';
+  if (!s) return true;
+  return /^0x0+$/i.test(s);
+}
+
 const validateVerifierData = (verifierId, data) => {
   if (!data || typeof data !== 'object') {
     return { valid: false, error: 'Data object is required' };
@@ -595,8 +602,74 @@ export class NeusClient {
     };
   }
 
+  async verifyFromApp(params) {
+    if (!params || typeof params !== 'object') {
+      throw new ValidationError('verifyFromApp requires a params object');
+    }
+
+    const {
+      user,
+      verifier = 'ownership-basic',
+      content,
+      data: explicitData = null,
+      options = {}
+    } = params;
+
+    if (!user || typeof user !== 'object') {
+      throw new ValidationError('verifyFromApp requires user object');
+    }
+
+    const walletAddress =
+      user.walletAddress ||
+      user.address ||
+      user.identity;
+    if (!walletAddress || typeof walletAddress !== 'string') {
+      throw new ValidationError('verifyFromApp requires user.walletAddress');
+    }
+
+    const delegationQHash =
+      this.config.appLinkQHash ||
+      (typeof process !== 'undefined' && process.env && process.env.NEUS_APP_LINK_QHASH) ||
+      null;
+
+    let data;
+    if (explicitData && typeof explicitData === 'object') {
+      data = { owner: walletAddress, ...explicitData };
+    } else if (content && typeof content === 'object') {
+      data = {
+        owner: walletAddress,
+        content: JSON.stringify(content),
+        contentType: typeof content.contentType === 'string' ? content.contentType : 'application/json',
+        reference: content.reference || { type: 'other' }
+      };
+    } else if (typeof content === 'string') {
+      data = {
+        owner: walletAddress,
+        content,
+        reference: { type: 'other' }
+      };
+    } else {
+      data = { owner: walletAddress, reference: { type: 'other' } };
+    }
+
+    const signedTimestamp = Date.now();
+    const verifierIds = [verifier];
+
+    return this.verify({
+      verifierIds,
+      data,
+      walletAddress,
+      signedTimestamp,
+      ...(delegationQHash ? { delegationQHash } : {}),
+      options
+    });
+  }
+
   async verify(params) {
-    if ((!params?.signature || !params?.walletAddress) && (params?.verifier || params?.content || params?.data)) {
+    if (
+      (isPlaceholderNeusSignature(params?.signature) || !params?.signature || !params?.walletAddress) &&
+      (params?.verifier || params?.content || params?.data)
+    ) {
       const { content, verifier = 'ownership-basic', data = null, wallet = null, options = {} } = params;
 
       if (verifier === 'ownership-basic' && !data && (!content || typeof content !== 'string')) {
@@ -962,13 +1035,16 @@ export class NeusClient {
       verifierIds,
       data,
       walletAddress,
-      signature,
+      signature: rawSignature,
       signedTimestamp,
       chainId,
       chain,
       signatureMethod,
+      delegationQHash,
       options = {}
     } = params;
+
+    const signature = isPlaceholderNeusSignature(rawSignature) ? undefined : rawSignature;
 
     const resolvedChainId = chainId || (chain ? null : NEUS_CONSTANTS.HUB_CHAIN_ID);
 
@@ -988,8 +1064,12 @@ export class NeusClient {
     if (!walletAddress || typeof walletAddress !== 'string') {
       throw new ValidationError('walletAddress is required');
     }
-    if (!signature) {
-      throw new ValidationError('signature is required');
+    const hasAppAttribution =
+      typeof this.config.appId === 'string' && this.config.appId.trim().length > 0;
+    if (!signature && !delegationQHash && !hasAppAttribution) {
+      throw new ValidationError(
+        'signature, delegationQHash, or NeusClient config appId (sent as X-Neus-App) is required'
+      );
     }
     if (!signedTimestamp || typeof signedTimestamp !== 'number') {
       throw new ValidationError('signedTimestamp is required');
@@ -1019,11 +1099,12 @@ export class NeusClient {
       verifierIds: normalizedVerifierIds,
       data,
       walletAddress,
-      signature,
+      ...(signature ? { signature } : {}),
       signedTimestamp,
       ...(resolvedChainId !== null && { chainId: resolvedChainId }),
       ...(chain && { chain }),
       ...(signatureMethod && { signatureMethod }),
+      ...(delegationQHash && { delegationQHash }),
       options: optionsPayload
     };
 

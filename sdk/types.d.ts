@@ -7,7 +7,9 @@ declare module '@neus/sdk' {
 
   export class NeusClient {
     constructor(config?: NeusClientConfig);
-    
+
+    verifyFromApp(params: VerifyFromAppParams): Promise<VerificationResult>;
+
     verify(params: VerifyParams): Promise<VerificationResult>;
     
     getProof(qHash: string): Promise<StatusResult>;
@@ -57,6 +59,8 @@ declare module '@neus/sdk' {
     apiUrl?: string;
     apiKey?: string;
     appId?: string;
+    /** Optional: only when using legacy `delegationQHash` on verify requests. App-linked servers rely on `appId` + Origin + stored delegation. */
+    appLinkQHash?: string;
     paymentSignature?: string;
     extraHeaders?: Record<string, string>;
     timeout?: number;
@@ -92,6 +96,18 @@ declare module '@neus/sdk' {
     meta?: Record<string, any>;
   }
   
+  export interface VerifyFromAppParams {
+    user: {
+      walletAddress?: string;
+      address?: string;
+      identity?: string;
+    };
+    verifier?: VerifierId;
+    content?: string | Record<string, any>;
+    data?: VerificationData;
+    options?: VerifyOptions;
+  }
+
   export interface VerifyParams {
     verifier?: VerifierId;
     content?: string;
@@ -105,6 +121,7 @@ declare module '@neus/sdk' {
     chainId?: number;
     chain?: string;
     signatureMethod?: string;
+    delegationQHash?: string;
     wallet?: WalletLike;
   }
     

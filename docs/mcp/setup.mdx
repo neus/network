@@ -4,9 +4,44 @@ description: Connect to hosted NEUS MCP.
 icon: code
 ---
 
-These steps connect your editor or agent to the hosted NEUS MCP endpoint. Normal use should reuse existing receipts silently; hosted URLs are fallback steps when setup, consent, payment, or proof state is missing.
+Connect your editor or agent to the hosted NEUS MCP endpoint. Reuse existing receipts when possible. Use hosted URLs when setup or proof state is missing.
 
-## Fastest setup
+## Universal install (any IDE or agent host)
+
+Use **`@neus/sdk`** as the single npm entrypoint for every desktop editor. Same URL, same optional Profile key, same **`neus doctor`** check. **Do not fork** parallel installers per IDE — that creates drift.
+
+| Concern | Golden path |
+| --- | --- |
+| MCP wiring | `npx -y -p @neus/sdk neus setup` (or `neus init` without keys) |
+| Trust / “is it working?” | `npx -y -p @neus/sdk neus doctor` |
+| Claude-only discoverability | Optional [NEUS for Claude Code](./claude-code-marketplace) plugin (skill + default MCP); still run **`neus setup`** for keys |
+| OpenClaw / containers | Env + `NEUS_MCP_URL` in your runtime — same MCP endpoint and tool contract |
+
+## One-command setup
+
+```bash
+npx -y -p @neus/sdk neus setup --access-key <npk_...>
+```
+
+`setup` runs `init` and `auth` in one pass on every detected client (Claude, Cursor, VS Code). Omit `--access-key` when you only want the base MCP config without personal account tools.
+
+## Where config is written
+
+After `neus setup` or `neus init`, the CLI merges NEUS into each detected client:
+
+| Client | User scope (default) |
+| --- | --- |
+| Cursor | `~/.cursor/mcp.json` (`mcpServers.neus`) |
+| VS Code | VS Code **User** `mcp.json` (path varies by OS) |
+| Claude Code | User scope via `claude mcp add`, or project `.mcp.json` with `neus init --project` |
+
+There is **no separate NEUS Cursor plugin** in this repo: Cursor uses the same command and URL as everyone else.
+
+## Claude Code marketplace (optional)
+
+To install hosted MCP plus the bundled trust-workflow skill from the git catalog, see [NEUS for Claude Code](./claude-code-marketplace). Run `neus setup` afterward for your access key so Cursor/VS Code/Claude stay consistent.
+
+## Step-by-step alternative
 
 ```bash
 npx -y -p @neus/sdk neus init
@@ -24,7 +59,6 @@ Confirm the final state with:
 npx -y -p @neus/sdk neus status --json
 ```
 
-Empty MCP config files are treated as unconfigured. If one client has malformed JSON, `status --json` reports the exact path without blocking healthy clients.
 
 ## Config
 
@@ -34,7 +68,7 @@ Keep **`/mcp`** in the URL.
 {
   "mcpServers": {
     "neus": {
-      "type": "streamableHttp",
+      "type": "http",
       "url": "https://mcp.neus.network/mcp"
     }
   }
@@ -43,13 +77,13 @@ Keep **`/mcp`** in the URL.
 
 ## Optional Bearer
 
-`Authorization: Bearer` with **`npk_*`** matches REST. Enables **`neus_me`**, private reads, credits, and signatureless **`neus_verify`** when the profile wallet matches ([Auth](./auth)).
+`Authorization: Bearer` with **`npk_*`** enables **`neus_me`**, private reads, and signatureless **`neus_verify`** when the profile wallet matches. See [Auth](./auth).
 
 ```json
 {
   "mcpServers": {
     "neus": {
-      "type": "streamableHttp",
+      "type": "http",
       "url": "https://mcp.neus.network/mcp",
       "headers": { "Authorization": "Bearer <key>" }
     }
@@ -77,6 +111,14 @@ Keep **`/mcp`** in the URL.
 | 8 | Use **`neus_verify_or_guide`** only when something is missing |
 
 Other clients: same URL, same optional **`Authorization`** header.
+
+## Doctor check
+
+```bash
+npx -y -p @neus/sdk neus doctor --access-key <npk_...>
+```
+
+`doctor` confirms config health, profile connection, and agent verification readiness across every configured client. Run `doctor --json` for machine-readable output. Omit `--access-key` when you want config-only status.
 
 <CardGroup cols={2}>
   <Card title="MCP overview" icon="plug" href="./overview">

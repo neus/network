@@ -4,11 +4,11 @@ description: Start with the trust receipts showcase, then Node, React, and curl.
 icon: code
 ---
 
-These samples implement the same flow: check for an existing proof, verify if needed, save the qHash, reuse it on return visits. For production API usage, link your app and billing ([Get started](./get-started)).
+These samples implement the same flow: check for an existing receipt, verify if needed, save the `qHash`, reuse it on return visits. For production API usage, link your app and billing ([Get started](./get-started)).
 
 **Default showcase:** [trust receipts showcase](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) (clone and `npm run dev`) maps real-world outcomes to verifiers. **Live product demo:** [neus.network/demo](https://neus.network/demo) — try flows in the browser, then use the same patterns from the open-source app.
 
-For SDK setup, [Quickstart](./quickstart) and [Hosted Verify](./cookbook/auth-hosted-verify) come first. Raw HTTP samples at the bottom of this page are **advanced**.
+For SDK setup, start with [Quickstart](./quickstart). Use [Hosted Verify](./cookbook/auth-hosted-verify) when NEUS should handle login, passkeys, wallets, OAuth, or gate checkout. Raw HTTP samples at the bottom of this page are **advanced**.
 
 | Example | Use it for |
 |------------|----------|
@@ -26,14 +26,7 @@ export default function ProtectedPage() {
   return (
     <VerifyGate
       appId="your-app-id"
-      requiredVerifiers={['nft-ownership']}
-      verifierData={{
-        'nft-ownership': {
-          contractAddress: '0x...',
-          tokenId: '1',
-          chainId: 8453,
-        },
-      }}
+      requiredVerifiers={['ownership-basic']}
     >
       <ProtectedContent />
     </VerifyGate>
@@ -41,9 +34,9 @@ export default function ProtectedPage() {
 }
 ```
 
-## Node: proof
+## Node: receipt
 
-**Server-held keys** or **HTTP-only:** [SDK](./sdks/javascript) or [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) (`standardize` to sign to submit). Most apps should use **Hosted Verify** at `https://neus.network/verify` or **`client.verify()`** instead.
+Use [Quickstart](./quickstart) for the normal server path: your app keeps login, the SDK calls NEUS from your backend. Use [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) only when you need the lower-level SDK flow.
 
 ## HTTP (advanced)
 
@@ -51,7 +44,7 @@ export default function ProtectedPage() {
 curl -X POST https://api.neus.network/api/v1/verification/standardize \
   -H "Content-Type: application/json" \
   -d '{"walletAddress":"0x...","verifierIds":["ownership-basic"],"data":{"content":"Hello NEUS","owner":"0x..."},"signedTimestamp":1713312000000}'
-# phase 1 is mandatory for raw HTTP: sign signerString, then POST /api/v1/verification with the same body + signature
+# Advanced raw HTTP only: sign signerString, then POST /api/v1/verification with the same body + signature
 ```
 
 ## Docs

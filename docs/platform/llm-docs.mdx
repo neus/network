@@ -45,13 +45,13 @@ curl https://neus.network/llms.txt
 
 ## MCP JSON
 
-**`type`** is client-specific; many accept **`streamableHttp`** for this URL.
+**`type`** is client-specific; use **`http`** for URL-based hosted MCP.
 
 ```json
 {
   "mcpServers": {
     "neus": {
-      "type": "streamableHttp",
+      "type": "http",
       "url": "https://mcp.neus.network/mcp"
     }
   }

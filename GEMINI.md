@@ -1,7 +1,7 @@
 # GEMINI.md
 
-Classify before acting. Read `ACTIVE_GOAL.md` for the current objective, then read `.neus/context/COMPILED_CONTEXT.md` for policy gate, hard rules, and source routing.
+Read `AGENTS.md` for public-facing rules and boundaries for this repo.
 
-Canonical source: `_workspace`. Repo-local `.neus/context` is generated.
-
-Rules: use existing production paths, no parallel systems, in-place edits, verify before claiming success.
+- Public content only.
+- Use existing production paths; in-place edits; verify before claiming success.
+- Do not invent qHashes, wallets, receipts, or API outcomes.

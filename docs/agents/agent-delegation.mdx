@@ -29,6 +29,43 @@ const proof = await client.verify({
 });
 ```
 
+## App-link happy path (Web2, no per-request signatures)
+
+Use `scope: 'app-link'` when your app needs to **create proofs on behalf of a user without asking them to sign every request**. The user delegates once, then your app acts with that authority.
+
+**Typical flow:**
+1. User connects (passkey or wallet) on NEUS
+2. Your app asks them to approve delegation once
+3. Your app stores the resulting `qHash`
+4. On future proof requests, your backend calls `POST /api/v1/verification` with `walletAddress` and the `x-neus-app` header — no user signature required
+
+```javascript
+await client.verify({
+  verifier: 'agent-delegation',
+  data: {
+    controllerWallet: userWallet,   // The user (approving account)
+    controllerChainRef: 'eip155:8453',
+    agentWallet: userWallet,        // Can be the same wallet for app-link
+    agentChainRef: 'eip155:8453',
+    scope: 'app-link',
+    permissions: [
+      'app:your-app-id',           // Required: which app is authorized
+      'origin:https://yourapp.com' // Optional: restrict to your origin
+    ],
+    expiresAt: Date.now() + 90 * 24 * 60 * 60 * 1000,
+  },
+  walletAddress: userWallet,
+});
+```
+
+**Permission format:**
+- `app:<appId>` — required; matches your `x-neus-app` header
+- `origin:<exact-origin>` — optional; restricts to your domain
+- `origin:*` — optional wildcard; allows any origin (least restrictive)
+
+**On the verification request:**
+Send `x-neus-app: your-app-id` and `Origin: https://yourapp.com`. The API looks up the user's active `app-link` delegation and accepts the request if the app and origin match. If there is no matching delegation, the API falls back to the normal signature requirement.
+
 ## Advanced delegation
 
 Use this section for payment-scoped delegation, spend caps, or extra policy fields.
@@ -91,7 +128,7 @@ A qHash for policy checks and delegated actions.
 
 ## Checking access
 
-Use proof checks or MCP **`neus_agent_link`** (readiness check) from your app - you typically do not need raw REST from the default integration path.
+Use proof checks or MCP **`neus_agent_link`** from your app — you do not need raw REST for the default path.
 
 ## Security
 

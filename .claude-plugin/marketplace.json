@@ -1,0 +1,31 @@
+{
+  "name": "neus",
+  "owner": {
+    "name": "NEUS"
+  },
+  "description": "NEUS for Claude Code: hosted MCP (mcp.neus.network) plus a trust-workflow skill. Use npm package @neus/sdk (neus setup) for your Profile access key.",
+  "plugins": [
+    {
+      "name": "neus-mcp",
+      "source": "./plugins/neus-mcp",
+      "description": "Hosted NEUS MCP (HTTPS) and a trust-workflow skill for proofs, agents, and verification.",
+      "homepage": "https://docs.neus.network/mcp/claude-code-marketplace",
+      "repository": "https://github.com/neus/network",
+      "license": "Apache-2.0",
+      "keywords": [
+        "neus",
+        "mcp",
+        "model-context-protocol",
+        "trust",
+        "proofs",
+        "verification",
+        "agents",
+        "receipts",
+        "identity"
+      ],
+      "category": "Developer tools",
+      "tags": ["neus", "mcp", "trust", "agents", "receipts", "proofs"],
+      "version": "1.0.0"
+    }
+  ]
+}

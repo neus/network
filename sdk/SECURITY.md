@@ -20,7 +20,7 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 
 **`VerifyGate`** create mode also defaults to **private**.
 
-Use public visibility only when you intentionally need proof reuse without owner-authenticated access:
+Use public visibility only when you need proof reuse without owner-authenticated access:
 
 - unlisted public: `privacyLevel: 'public'`, `publicDisplay: false`
 - listed public: `privacyLevel: 'public'`, `publicDisplay: true`

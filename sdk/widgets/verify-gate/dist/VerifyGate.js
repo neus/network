@@ -307,7 +307,7 @@ function VerifyGate({
       return provider.address;
     }
     if (typeof provider.request !== "function") {
-      throw new Error("No wallet provider available");
+      throw new Error("Connect a wallet and try again.");
     }
     let accounts = await provider.request({ method: "eth_accounts" });
     if (!accounts || accounts.length === 0) {
@@ -315,7 +315,7 @@ function VerifyGate({
       accounts = await provider.request({ method: "eth_accounts" });
     }
     if (!accounts || accounts.length === 0) {
-      throw new Error("No wallet accounts available");
+      throw new Error("Connect a wallet and try again.");
     }
     return accounts[0];
   }, [wallet]);
@@ -388,7 +388,7 @@ function VerifyGate({
   }, [client, buildGateRequirements, wallet, inferChainFromAddress, signatureMethod]);
   const launchHostedCheckout = useCallback(async () => {
     if (typeof window === "undefined") {
-      throw new Error("Hosted checkout is only available in browser environments");
+      throw new Error("Open this in a browser to verify.");
     }
     const origin = window.location.origin;
     const returnUrl = window.location.href;
@@ -446,7 +446,7 @@ function VerifyGate({
         completed = true;
         cleanup();
         if (payload?.eligible === false) {
-          reject(new Error("Hosted checkout completed but eligibility was not satisfied."));
+          reject(new Error("Verification could not be completed."));
           return;
         }
         resolve(payload);
@@ -573,7 +573,7 @@ function VerifyGate({
         const buildDataForVerifier = (verifierId) => {
           if (!CREATABLE_VERIFIERS.has(verifierId)) {
             throw new Error(
-              `${verifierId} cannot be created via the wallet flow. It requires hosted checkout or a server integration.`
+              "This check requires the hosted verifier."
             );
           }
           const explicit = verifierData && verifierData[verifierId];
@@ -587,12 +587,12 @@ function VerifyGate({
           if (verifierId === "wallet-link") {
             if (!explicit?.secondaryWalletAddress || !explicit?.signature || !explicit?.chain || !explicit?.signatureMethod) {
               throw new Error(
-                "wallet-link direct mode requires verifierData: { secondaryWalletAddress, signature, chain, signatureMethod }. For user-facing flows, prefer hosted checkout."
+                "Missing required wallet details."
               );
             }
             return explicit;
           }
-          throw new Error(`${verifierId} requires explicit verifierData`);
+          throw new Error("Missing required verification details.");
         };
         const verifyOne = async (verifierId) => {
           const dataForVerifier = buildDataForVerifier(verifierId);
@@ -616,7 +616,7 @@ function VerifyGate({
           const verifiedVerifiers = final?.data?.verifiedVerifiers || [];
           const verifierResult = verifiedVerifiers.find((v) => v.verifierId === verifierId);
           if (!verifierResult || verifierResult.verified !== true) {
-            throw new Error(`Verification failed for ${verifierId}`);
+            throw new Error("Verification could not be completed.");
           }
           const hubTx = final?.data?.hubTransaction || {};
           const crosschain = final?.data?.crosschain || {};
@@ -849,7 +849,7 @@ function VerifyGate({
             textUnderlineOffset: "2px",
             opacity: disabled || isProcessing ? 0.6 : 0.9
           },
-          children: "Already verified? Sign to reuse existing proofs."
+          children: "Already verified? Reuse your proof."
         }
       ),
       error && /* @__PURE__ */ jsx("div", { style: {

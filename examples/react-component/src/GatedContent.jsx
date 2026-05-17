@@ -17,7 +17,7 @@ export default function GatedContent() {
     >
       <div className="neus-sdk-gated">
         <h2>Exclusive content</h2>
-        <p>Visible when the gate passes.</p>
+        <p>Unlocked after verification.</p>
       </div>
     </VerifyGate>
   );

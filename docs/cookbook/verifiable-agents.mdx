@@ -1,10 +1,12 @@
 ---
 title: Verifiable Agents
-description: Register agents, delegate authority, consume proofs (MCP or SDK).
+description: Register agents, connect apps via App Link, consume proofs (MCP or SDK).
 icon: robot
 ---
 
-`agent-identity` (agent wallet signs) and `agent-delegation` (approving account signs) are **separate** proofs. One person can do both, or roles can split. [Agent concepts](../agents/concepts)
+`agent-identity` (agent wallet signs) and `agent-delegation` (approving account signs) are **separate** proofs. One person can do both, or roles can split.
+
+For apps creating trust receipts server-side for existing users, use **App Link** (`agent-delegation` with `scope: 'app-link'`). See the [Quickstart](../quickstart). [Agent concepts](../agents/concepts)
 
 ## MCP
 
@@ -25,7 +27,7 @@ icon: robot
 | Step | Page |
 |------|------|
 | Register | [Agent identity](../agents/agent-identity) |
-| Delegate | [Agent delegation](../agents/agent-delegation) |
+| App Link (delegation) | [Agent delegation](../agents/agent-delegation) |
 | Check | [Integration](../integration) loop and MCP tools |
 
 Payload shapes are documented on each verifier page under **Verification**; matching JSON Schemas ship in this project under **`docs/verifiers/schemas/`**.

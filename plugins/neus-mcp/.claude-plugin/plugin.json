@@ -1,0 +1,11 @@
+{
+  "name": "neus-mcp",
+  "description": "Hosted NEUS MCP for Claude Code plus a trust-workflow skill. Add your Profile access key with: npx -y -p @neus/sdk neus setup",
+  "version": "1.0.0",
+  "author": {
+    "name": "NEUS"
+  },
+  "homepage": "https://docs.neus.network/mcp/claude-code-marketplace",
+  "repository": "https://github.com/neus/network",
+  "license": "Apache-2.0"
+}

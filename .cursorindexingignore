@@ -1,0 +1,29 @@
+# NEUS — Cursor indexing-only exclusions
+# Keep indexable: .neus/context/
+
+node_modules/
+**/node_modules/
+.pnpm-store/
+**/.pnpm-store/
+
+.next/
+**/.next/
+dist/
+!sdk/widgets/verify-gate/dist/
+sdk/cjs/
+
+build/
+**/build/
+coverage/
+**/coverage/
+
+.mintlify-home*/
+**/.mintlify-home*/
+.tmp-docs-manifest.json
+
+*.tsbuildinfo
+.eslintcache
+**/.eslintcache/
+
+.DS_Store
+Thumbs.db

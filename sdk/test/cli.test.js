@@ -178,7 +178,7 @@ describe('neus CLI', () => {
       await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
     );
     expect(cursorConfig.mcpServers.neus).toEqual({
-      type: 'streamableHttp',
+      type: 'http',
       url: 'https://mcp.neus.network/mcp'
     });
 

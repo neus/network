@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
- <strong>NEUS turns verification into reusable proof receipts</strong> for apps, agents, wallets, APIs, gates, audit, and payments.<br />
- It issues a proof receipt after a verification or trusted action, reuse that receipt across surfaces without rebuilding the same trust flow from scratch.
+ <strong>NEUS makes trust portable across the internet</strong> — so people, apps, and AI agents can prove what is real before access, payout, or execution.<br />
+ Create receipts once, show them on profiles, check them at gates, and let apps or agents reuse trust without starting from zero.
 </p>
 
 <p align="center">
@@ -38,7 +38,7 @@
 | Ship faster with less “prove it again” | One flow, a **qHash**, **lookup** before you re-run verification |
 | Reuse trust across web, API, and agents | Resolvable URLs and handles. Not screenshots that go stale |
 | Safe agent identity and delegation | **`agent-identity`** and **`agent-delegation`** with scoped permissions |
-| Tools that see live truth | **Remote MCP** over HTTPS so assistants check verify and use existing receipts before asking for another flow |
+| Tools that see live truth | **Remote MCP** over HTTPS so assistants check proofs and reuse receipts before starting a new flow |
 
 ## Who this is for
 
@@ -82,7 +82,7 @@ Next: [SDK README](./sdk/README.md) | [docs.neus.network](https://docs.neus.netw
 | --- | --- |
 | Core flows | `agent-identity`, optional `agent-delegation` |
 | Resolvable handles | `https://neus.network/agent/<agentId>`, result URLs, wallet, DID |
-| Tooling manifest | Optional JSON from the agent profile. See [Agents](https://docs.neus.network/agents/overview). |
+| Tooling manifest | Agent profile JSON. See [Agents](https://docs.neus.network/agents/overview). |
 | Live checks | NEUS MCP: `neus_context`, `neus_me`, `neus_agent_link`, `neus_proofs_check`, `neus_proofs_get` ([MCP docs](https://docs.neus.network/mcp/overview)) |
 | Linked accounts | Ownership verifiers + `wallet-link` with the same result model ([verifier table](#verifiers)) |
 
@@ -91,9 +91,9 @@ Next: [SDK README](./sdk/README.md) | [docs.neus.network](https://docs.neus.netw
 ### Setup (any chat or IDE)
 
 1. [Get started](https://docs.neus.network/get-started)
-2. Register agents via SDK, [Hosted Verify](https://neus.network/verify), or MCP [`neus_agent_create`](https://docs.neus.network/mcp/agent-create), then [`neus_agent_link`](https://docs.neus.network/mcp/agent-link). [Agents](https://docs.neus.network/agents/overview) | [Cookbook](https://docs.neus.network/cookbook/verifiable-agents).
-3. Share a **resolvable handle** (agent URL, result URL, wallet, DID) and use **NEUS MCP** for live state.
-4. Optional: export config JSON for hosts that load tool manifests from a URL.
+2. Register agents via SDK, [Hosted Verify](https://neus.network/verify), or MCP. [Agents](https://docs.neus.network/agents/overview) | [Cookbook](https://docs.neus.network/cookbook/verifiable-agents).
+3. Share a **resolvable handle** and use **NEUS MCP** for live state.
+4. Export agent config JSON for tool-manifest hosts.
 
 More: [Agents](https://docs.neus.network/agents/overview).
 
@@ -125,7 +125,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 {
   "mcpServers": {
     "neus": {
-      "type": "streamableHttp",
+      "type": "http",
       "url": "https://mcp.neus.network/mcp"
     }
   }
@@ -135,6 +135,8 @@ import { VerifyGate } from '@neus/sdk/widgets';
 Runtime order: `neus_context` -> `neus_me` when Bearer exists -> `neus_agent_link` for agents -> `neus_proofs_check` -> reuse existing qHash/receipt -> `neus_proofs_get` for proof state -> `neus_verify_or_guide` only when setup is missing.
 
 [docs.neus.network/mcp](https://docs.neus.network/mcp/overview) | [MCP package](./mcp/README.md)
+
+**Claude Code:** add the NEUS marketplace from [`github.com/neus/network`](https://github.com/neus/network), install **`neus-mcp@neus`**, then run `npx -y -p @neus/sdk neus setup` for your access key — [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
 
 ## Hosted Verify
 

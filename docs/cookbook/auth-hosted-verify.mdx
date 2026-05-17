@@ -1,56 +1,63 @@
 ---
 title: Hosted Verify
-description: Hosted verification flow for login, social checks, human checks, org checks, and gated access.
+description: NEUS-hosted login, verification, and gated-access handoff.
 icon: key
 ---
 
-## When to use Hosted Verify
+Hosted Verify is the browser flow at `https://neus.network/verify`. Use it when you want NEUS to handle the user-facing step instead of building verification UI yourself.
 
-| Need | Why |
+## What it handles
+
+| Need | Hosted behavior |
 | --- | --- |
-| Login | Guided wallet and session flow |
-| Social verification | OAuth completes on NEUS |
-| Human or org verification | Interactive provider flow |
-| Gate access | User completes requirements before unlock |
+| Login | Passkey-first NEUS session, wallet supported when needed |
+| Social or org checks | OAuth completes on NEUS |
+| Human checks | User completes the provider flow on NEUS |
+| Wallet-required proofs | User connects and signs only when that proof needs it |
+| Gate access | User completes requirements, then returns to your app |
+
+Hosted Verify is the handoff for trust receipts, provider steps, and gated access.
 
 ## URL
-
-Base URL:
 
 ```txt
 https://neus.network/verify
 ```
 
-Supported parameters:
+Common parameters:
 
-| Param | Role |
+| Param | Use |
 | --- | --- |
-| `intent` | Flow type, such as login |
+| `intent=login` | Open hosted login |
 | `verifiers` | Comma-separated verifier IDs |
 | `preset` | Bundled verifier set |
 | `gateId` | Gate requirements |
-| `returnUrl` | Where to send the user after completion |
-| `mode=popup` | Popup flow |
-| `origin` | Popup opener origin |
+| `returnUrl` | Redirect target after completion |
+| `mode=popup` | Popup handoff |
+| `origin` | Expected opener origin for popup messages |
 
-## SDK
+## Redirect
 
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
 window.location.href = getHostedCheckoutUrl({
   verifiers: ['ownership-basic'],
-  returnUrl: 'https://myapp.com/callback',
+  returnUrl: 'https://myapp.com/neus/callback',
 });
 ```
 
-## Popup flow
+After completion, read the returned `qHash`, save it with your user or record, and check it before asking the user to verify again.
 
-Use `mode: 'popup'`, pass `origin: window.location.origin`, open the Hosted Verify URL, and listen for:
+## Popup
+
+For embedded flows, open Hosted Verify with `mode: 'popup'` and `origin: window.location.origin`. Listen for:
 
 - `neus_checkout_done`
 - `neus_login_complete`
 
-## Result handling
+The popup response includes the receipt result when verification completes.
 
-After redirect or popup completion, read the result with the SDK, store the qHash, and reuse that proof before asking the user to verify again.
+## When to use App Link instead
+
+If your backend already has the user and you want no browser handoff, use [App Link](../quickstart) with `verifyFromApp`.

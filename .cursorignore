@@ -1,0 +1,14 @@
+﻿# NEUS — Cursor access blocklist (https://cursor.com/docs/reference/ignore-file)
+
+.env
+.env.*
+!.env.example
+!**/.env.example
+!.env*.example
+**/.env
+**/.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+.npmrc

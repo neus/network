@@ -1,7 +1,7 @@
 {
   "name": "@neus/sdk",
-  "version": "1.0.10",
-  "description": "Issue and check NEUS trust receipts across apps, agents, gates, payments, and workflows.",
+  "version": "1.0.11",
+  "description": "NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.",
   "bin": {
     "neus": "cli/neus.mjs"
   },

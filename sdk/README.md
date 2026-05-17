@@ -2,7 +2,7 @@
 
 Create, check, and reuse NEUS trust receipts from apps.
 
-NEUS turns signed claims, ownership checks, account links, access rules, and verification results into portable receipts your app can store, display, and check later.
+NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.
 
 ## Install
 
@@ -35,11 +35,11 @@ window.location.assign(url);
 
 After completion, NEUS redirects back with a `qHash`.
 
-Store that `qHash` in your database next to your user, workspace, project, claim, listing, or record.
+Store that `qHash` with your user record.
 
 ## Create a signed receipt directly
 
-Use this when your app already controls the signing flow.
+When your app handles signing.
 
 ```js
 import { NeusClient } from '@neus/sdk';
@@ -126,7 +126,7 @@ if (!result.data?.eligible) {
 }
 ```
 
-Access keys are only for trusted server, IDE, or agent environments. Never ship access keys in browser code.
+Never ship access keys in browser code.
 
 ## Core methods
 
@@ -155,7 +155,7 @@ const client = new NeusClient({
 
 ## Optional MCP setup
 
-Use MCP when you want IDEs, assistants, or agents to inspect receipts, check proof state, or work with NEUS tools.
+Connect NEUS MCP to IDEs and agents.
 
 ```bash
 npx -y -p @neus/sdk neus init
@@ -166,6 +166,8 @@ Add account-aware/private access only when needed:
 ```bash
 npx -y -p @neus/sdk neus auth --access-key <npk_...>
 ```
+
+Claude Code: add marketplace `https://github.com/neus/network`, install **`neus-mcp@neus`**, then use the same `neus setup` line above for your key — https://docs.neus.network/mcp/claude-code-marketplace
 
 ## Docs
 

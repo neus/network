@@ -2,7 +2,7 @@
 
 A small **trust marketplace** where every card is a real-world outcome, each backed by a NEUS verifier. This is the **default** runnable app in the [neus/network](https://github.com/neus/network) `examples` folder. The **live** product walkthrough is at [neus.network/demo](https://neus.network/demo).
 
-NEUS turns verification into a reusable **trust receipt** you can hold, look up, and attach to a claim. A marketplace makes the pattern obvious because you already think in “claims”:
+NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution. Verification becomes a reusable **trust receipt** you can hold, look up, and attach to a claim. A marketplace makes the pattern obvious because you already think in “claims”:
 
 - access, rewards, roles, payouts, listings, delegated action
 

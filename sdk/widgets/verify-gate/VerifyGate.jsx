@@ -305,7 +305,7 @@ export function VerifyGate({
       return provider.address;
     }
     if (typeof provider.request !== 'function') {
-      throw new Error('No wallet provider available');
+      throw new Error('Connect a wallet and try again.');
     }
 
     let accounts = await provider.request({ method: 'eth_accounts' });
@@ -314,7 +314,7 @@ export function VerifyGate({
       accounts = await provider.request({ method: 'eth_accounts' });
     }
     if (!accounts || accounts.length === 0) {
-      throw new Error('No wallet accounts available');
+      throw new Error('Connect a wallet and try again.');
     }
     return accounts[0];
   }, [wallet]);
@@ -404,7 +404,7 @@ export function VerifyGate({
 
   const launchHostedCheckout = useCallback(async () => {
     if (typeof window === 'undefined') {
-      throw new Error('Hosted checkout is only available in browser environments');
+      throw new Error('Open this in a browser to verify.');
     }
 
     const origin = window.location.origin;
@@ -473,7 +473,7 @@ export function VerifyGate({
         cleanup();
 
         if (payload?.eligible === false) {
-          reject(new Error('Hosted checkout completed but eligibility was not satisfied.'));
+          reject(new Error('Verification could not be completed.'));
           return;
         }
 
@@ -646,8 +646,7 @@ export function VerifyGate({
         const buildDataForVerifier = (verifierId) => {
           if (!CREATABLE_VERIFIERS.has(verifierId)) {
             throw new Error(
-              `${verifierId} cannot be created via the wallet flow. ` +
-              'It requires hosted checkout or a server integration.'
+              'This check requires the hosted verifier.'
             );
           }
 
@@ -668,13 +667,13 @@ export function VerifyGate({
               !explicit?.signatureMethod
             ) {
               throw new Error(
-                'wallet-link direct mode requires verifierData: { secondaryWalletAddress, signature, chain, signatureMethod }. For user-facing flows, prefer hosted checkout.'
+                'Missing required wallet details.'
               );
             }
             return explicit;
           }
 
-          throw new Error(`${verifierId} requires explicit verifierData`);
+          throw new Error('Missing required verification details.');
         };
 
         const verifyOne = async (verifierId) => {
@@ -701,20 +700,20 @@ export function VerifyGate({
             wallet: wallet || (typeof window !== 'undefined' ? window.ethereum : undefined)
           });
           setState('verifying');
-          const qHashToCheck = created.qHash || created.proofId || created?.data?.qHash || created?.data?.proofId; // Legacy input compatibility only. Do not expose or store proofId.
+          const qHashToCheck = created.qHash || created.proofId || created?.data?.qHash || created?.data?.proofId; // Backward compat for legacy proofId.
           const final = await client.pollProofStatus(qHashToCheck, { interval: 3000, timeout: 60000 });
 
           const verifiedVerifiers = final?.data?.verifiedVerifiers || [];
           const verifierResult = verifiedVerifiers.find(v => v.verifierId === verifierId);
           if (!verifierResult || verifierResult.verified !== true) {
-            throw new Error(`Verification failed for ${verifierId}`);
+            throw new Error('Verification could not be completed.');
           }
 
           const hubTx = final?.data?.hubTransaction || {};
           const crosschain = final?.data?.crosschain || {};
           const txHash = hubTx?.txHash || crosschain?.hubTxHash || null;
 
-          const finalQHash = final?.qHash || final?.proofId || qHashToCheck; // Legacy input compatibility only. Do not expose or store proofId.
+          const finalQHash = final?.qHash || final?.proofId || qHashToCheck; // Backward compat for legacy proofId.
           return {
             verifierId,
             qHash: finalQHash,
@@ -965,7 +964,7 @@ export function VerifyGate({
               opacity: disabled || isProcessing ? 0.6 : 0.9
             }}
           >
-            Already verified? Sign to reuse existing proofs.
+            Already verified? Reuse your proof.
           </button>
         )}
         {error && (

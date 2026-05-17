@@ -36,7 +36,7 @@ export function ProofBadge({
   className = '',
   ...legacyProps
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId; // Legacy input compatibility only. Do not expose or store proofId.
+  const qHash = qHashProp ?? legacyProps.proofId; // Accepts legacy proofId for backward compatibility.
   const resolvedQHash = qHash;
   const [status, setStatus] = useState(() => {
     if (proof) {
@@ -180,7 +180,7 @@ export function SimpleProofBadge({
   className = '',
   ...legacyProps
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId; // Legacy input compatibility only. Do not expose or store proofId.
+  const qHash = qHashProp ?? legacyProps.proofId; // Accepts legacy proofId for backward compatibility.
   const resolvedQHash = qHash;
   const [status, setStatus] = useState(() => {
     if (proof) {
@@ -286,7 +286,7 @@ export function NeusPillLink({
   className = '',
   ...legacyProps
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId; // Legacy input compatibility only. Do not expose or store proofId.
+  const qHash = qHashProp ?? legacyProps.proofId; // Accepts legacy proofId for backward compatibility.
   const resolvedQHash = qHash;
   const base = String(uiLinkBase).replace(/\/$/, '');
   const href = resolvedQHash ? `${base}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}` : base;
@@ -349,7 +349,7 @@ export function VerifiedIcon({
   className = '',
   ...legacyProps
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId; // Legacy input compatibility only. Do not expose or store proofId.
+  const qHash = qHashProp ?? legacyProps.proofId; // Accepts legacy proofId for backward compatibility.
   const resolvedQHash = qHash;
   const href = resolvedQHash
     ? `${String(uiLinkBase).replace(/\/$/, '')}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}`
