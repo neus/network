@@ -82,11 +82,11 @@
             "pages": [
               "index",
               "get-started",
+              "quickstart",
+              "integration",
               "platform/setup",
               "platform/billing",
               "platform/x402",
-              "integration",
-              "quickstart",
               "cookbook/auth-hosted-verify",
               "examples",
               "platform/llm-docs"
@@ -588,10 +588,6 @@
     },
     {
       "source": "/how-to-prove-whats-real",
-      "destination": "/integration"
-    },
-    {
-      "source": "/neus/how-to-prove-whats-real",
       "destination": "/integration"
     }
   ],

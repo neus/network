@@ -1,17 +1,19 @@
 ---
 title: Agent readiness (`neus_agent_link`)
-description: Check whether an agent wallet has identity and required proofs.
+description: Check whether an agent wallet has identity and delegation proofs on file.
 icon: robot
 ---
 
-Checks **`agentWallet`** before agent work. If identity and delegation are already present, continue without browser setup.
+Checks **`agentWallet`** before agent work. **`linked: true`** means both **`agent-identity`** and **`agent-delegation`** proofs were found for the default delegated-agent path. If either is missing, you get **`link_required`** with a hosted URL that can finish the remaining steps.
 
 | State | Meaning |
 |-------|---------|
-| **`linked: true`** | Ready; no browser step needed |
+| **`linked: true`** | Identity + delegation receipts are on file; continue without browser setup |
 | **`link_required`** | Open **`hostedVerifyUrl`** or follow **`nextSteps`** |
 
 Optional **`principal`** hints the **approver** account (not the agent wallet). [Agent concepts](../agents/concepts)
+
+When you need prepared signing payloads first, see [Agent create](./agent-create).
 
 ## Input
 
@@ -21,4 +23,4 @@ Optional **`principal`** hints the **approver** account (not the agent wallet). 
 
 ## Related
 
-[Agent create](./agent-create)
+[Agent create](./agent-create) · [Agent verification flow](../agents/agent-verification-flow)

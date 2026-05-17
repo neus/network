@@ -1,31 +1,34 @@
 ---
 title: API Overview
-description: REST endpoints for proof checks, reads, and advanced HTTP verification.
+description: REST proof checks, reads, and HTTP verification for servers and tools.
 icon: terminal
 ---
 
-Use the HTTP API when a server or tool needs **eligibility checks**, **proof reads**, or **verification without the JavaScript SDK**. Responses use the same qHash as the SDK; usage bills to the NEUS profile linked to your app.
+Use the HTTP API from **servers, workers, CLIs, and MCP**—not from end-user browsers. Responses use the same **`qHash`** as the SDK; usage is attributed to the NEUS profile linked to your app.
 
 **Base URL:** `https://api.neus.network`
 
-### Browsers
+## Browsers
 
-Treat this API as **server-to-server** (your backend, workers, CLI, MCP). In end-user browsers, use the **[JavaScript SDK](../sdks/javascript)** or **[Hosted Verify](../cookbook/auth-hosted-verify)**. If a web UI needs headers or methods outside those flows, **your app’s backend** should call NEUS—not `fetch` from the page—so you avoid CORS mistakes and keep secrets off the client.
+Send end users through the **[JavaScript SDK](../sdks/javascript)** or **[Hosted Verify](../cookbook/auth-hosted-verify)**. If a web client needs behavior outside those paths, **your backend** should call NEUS so secrets stay off the client and CORS stays predictable.
 
-### Creating proofs
+## Reads vs writes
 
-Use **GET** endpoints below for checks and reads.
+| Operation | Typical use |
+|-----------|-------------|
+| **GET** (below) | Eligibility and proof reads |
+| **POST `/api/v1/verification`** | Create a proof ([Authentication](./authentication)); prefer the SDK or Hosted Verify unless you need raw HTTP |
 
 ## Endpoints
 
 | Path | Method | Purpose |
 |------|--------|---------|
-| `/api/v1/proofs/check` | GET | Eligibility (server gates) |
+| `/api/v1/proofs/check` | GET | Eligibility (gates) |
 | `/api/v1/proofs/by-wallet/{address}` | GET | List by wallet |
-| `/api/v1/proofs/{qHash}` | GET | Fetch by id (`qHash`) |
-| `/api/v1/verification` | POST | Create proof (**advanced** - see [Authentication](./authentication)) |
-| `/api/v1/verification/standardize` | POST | **Mandatory phase 1** for raw HTTP: exact `signerString` for the body you will submit |
-| `/api/v1/verification/verifiers` | GET | Catalog |
+| `/api/v1/proofs/{qHash}` | GET | Fetch by `qHash` |
+| `/api/v1/verification` | POST | Create proof (advanced) |
+| `/api/v1/verification/standardize` | POST | Phase 1 of raw HTTP: returns `signerString` for the exact body you will submit |
+| `/api/v1/verification/verifiers` | GET | Verifier catalog |
 
 ## Examples
 
@@ -35,7 +38,7 @@ Use **GET** endpoints below for checks and reads.
 curl "https://api.neus.network/api/v1/proofs/by-wallet/0x...?limit=50"
 ```
 
-Public / unlisted: anonymous ok. **Private:** requires access as the proof owner ([Authentication](./authentication)).
+Public and unlisted proofs: often callable without auth. **Private** proofs: only with allowed access ([Authentication](./authentication)).
 
 **Check**
 
@@ -43,16 +46,16 @@ Public / unlisted: anonymous ok. **Private:** requires access as the proof owner
 curl "https://api.neus.network/api/v1/proofs/check?address=0x...&verifierIds=ownership-basic"
 ```
 
-**Create a proof**
+**Create a proof (raw HTTP, advanced)**
 
-For most apps, create proofs via the SDK or the hosted browser flow at `https://neus.network/verify` (**Hosted Verify**). Raw HTTP is a **strict two-phase handshake**, not a single-step request:
+Most products use the SDK or **`https://neus.network/verify`**. Raw HTTP is a **fixed two-phase** flow:
 
-1. Build the exact JSON body you will submit.
-2. **`POST /api/v1/verification/standardize`** with that body.
+1. Build the final JSON body.
+2. `POST /api/v1/verification/standardize` with that body.
 3. Sign the returned **`signerString`**.
-4. **`POST /api/v1/verification`** with the **same JSON body** plus `signature`.
+4. `POST /api/v1/verification` with the **same body** plus **`signature`**.
 
-If phase 2 fails with a signature error, re-run phase 1 on the same payload and compare the signer string. Shapes: **API reference** on the documentation site.
+If step 4 rejects the signature, repeat step 2 on the **same** payload and compare `signerString` before retrying step 4.
 
 **Catalog**
 
@@ -62,19 +65,19 @@ curl https://api.neus.network/api/v1/verification/verifiers
 
 ## Auth
 
-- **Reads:** public and unlisted proofs without a caller; private proofs only with allowed access.
-- **Writes:** wallet signature, or authenticated caller when the API accepts it—[Authentication](./authentication)
+- **Reads:** public and unlisted proofs are often open; private proofs require permitted access.
+- **Writes:** follow [Authentication](./authentication) (signature, session, or app-attributed rules).
 
 ## Next
 
 <CardGroup cols={2}>
  <Card title="Get started" icon="book" href="../get-started">
- Onboarding.
+   Account, app, billing.
  </Card>
  <Card title="Authentication" icon="key" href="./authentication">
- Signing.
+   Keys, delegation, signing.
  </Card>
  <Card title="Errors" icon="triangle-exclamation" href="./errors">
- Codes.
+   HTTP error codes.
  </Card>
 </CardGroup>

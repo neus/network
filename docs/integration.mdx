@@ -1,63 +1,35 @@
 ---
 title: Integration
-description: Check, verify, save, reuse across Hosted Verify, SDK, API, and MCP.
+description: One loop: check, verify if needed, save qHash, reuse.
 icon: compass
 ---
 
-Every NEUS surface follows one flow: **check** for an existing valid proof, **verify** only when needed, **save** the trust receipt, **reuse** it for gates and decisions.
-
-**Check** for a valid result before a new verify. **Save** the **`qHash`** from the response.
-
-## Where your code runs (default)
-
-| In the browser | On your server |
-|----------------|----------------|
-| **Hosted Verify** (redirect or popup), `VerifyGate`, optional SDK polling | **`gateCheck`**, secrets, `npk_*`, raw HTTP |
-| Prefer hosted links so users avoid wallet extensions in your UI | Call `https://api.neus.network` from Node or your API route |
-
-Use the **SDK** (or hosted links) in the browser so NEUS sees supported headers and paths. Do **not** hand-roll cross-origin `fetch` to the API from frontend code with extra headers; CORS allowlists differ by route and tooling will mis-implement it. Anything that needs headers the SDK does not set in the browser belongs behind **your backend** (proxy). See [JavaScript SDK](./sdks/javascript) and [API overview](./api/overview).
-
 ## Loop
 
-1. **Check** - saved id or proofs/check
-2. **Verify** - only if needed (hosted, SDK, or API)
-3. **Save** - qHash in your app (per user or device)
-4. **Reuse** - UI, VerifyGate, server, MCP
+| Step | Do this |
+|------|---------|
+| 1 | Check a saved **`qHash`** or run eligibility (`gateCheck`, proofs check) |
+| 2 | Run verify **only** if missing or you need a fresh receipt |
+| 3 | Persist **`qHash`** on your user or record |
+| 4 | Reuse on return visits and for access rules |
 
-| Situation | Approach |
-|-----------|----------|
-| Repeat visits | Run an eligibility check or use a stored qHash before a new verify |
-| Balance / NFT gates | Narrow `since` or `fresh` strategy |
-| Org and domain | Link the app, then use the same loop |
+## Where code runs
 
-## Visibility
+| Layer | Use |
+|-------|-----|
+| Browser | `VerifyGate`, `getHostedCheckoutUrl` → `https://neus.network/verify`, SDK polling |
+| Server | `NEUS_ACCESS_KEY`, `verifyFromApp`, `gateCheck`, raw HTTP behind your API |
 
-| Mode | Use |
-|------|-----|
-| Private | Default for most products |
-| Unlisted public | Public reuse without listing |
-| Listed public | Discoverable attribution |
+Passkey, wallet, and OAuth for **default** flows: **NEUS hosted page**, not your UI.
 
-SDK `client.verify()` defaults **private**. `VerifyGate` create also defaults **private**.
+Use the SDK from the browser. Do not ship **`npk_*`** or credentialed `fetch` to `api.neus.network` from client bundles; proxy through your backend if you need custom headers. [JavaScript SDK](./sdks/javascript) · [API overview](./api/overview).
 
-## Checklist
+Identity and chain terms are centralized in [CAIP-380 Portable Proof](./learn/standards/caip-380): CAIP-2 is network context, CAIP-10 is account-id shape, and `did:pkh` is the stable DID representation.
 
-<Checklist>
- <Item>Hosted browser checkout, Widgets, SDK, API, or MCP</Item>
- <Item>Check before showing verify</Item>
- <Item>Store qHashes</Item>
- <Item>Test: verify, save, check, reuse</Item>
- <Item>Link your app and credits in Platform</Item>
-</Checklist>
+**MCP and agent wallets** (not the same as app `VerifyGate` flows): [MCP overview](./mcp/overview) and [Agent verification flow](./agents/agent-verification-flow).
 
-## Strategies (SDK / API)
+## After Quickstart
 
-| Strategy | When |
-|----------|------|
-| `reuse-or-create` | Default: reuse if valid, else verify |
-| `fresh` | Always new verification |
-| `reuse` | Existing verification only |
-
-More filters: [SDK verifications](./sdks/verifications).
+Reuse modes, filters, visibility: [SDK verifications](./sdks/verifications).
 
 **Next:** [Hosted Verify](./cookbook/auth-hosted-verify)

@@ -6,24 +6,40 @@ icon: code
 
 Connect your editor or agent to the hosted NEUS MCP endpoint. Reuse existing receipts when possible. Use hosted URLs when setup or proof state is missing.
 
+Identity input follows the same public standard as the API: CAIP-2 for chain context, CAIP-10 for account-id fields, and `did:pkh` for stable DID identifiers. See [CAIP-380 Portable Proof](../learn/standards/caip-380).
+
+## Copy-paste setup (recommended)
+
+```bash
+npx -y -p @neus/sdk neus setup
+```
+
+With a NEUS Profile access key (enables tools such as `neus_me`):
+
+```bash
+npx -y -p @neus/sdk neus setup --access-key <npk_...>
+```
+
+Check the result:
+
+```bash
+npx -y -p @neus/sdk neus doctor
+```
+
+Create keys under **Profile → Account** on [neus.network](https://neus.network/profile?tab=account).
+
+`neus setup` runs **`init`** and **`auth`** together when you pass **`--access-key`**. Without that flag, you still get hosted MCP wiring for every detected client; add a key later with **`neus auth`** if you need account-aware tools.
+
 ## Universal install (any IDE or agent host)
 
-Use **`@neus/sdk`** as the single npm entrypoint for every desktop editor. Same URL, same optional Profile key, same **`neus doctor`** check. **Do not fork** parallel installers per IDE — that creates drift.
+Use **`@neus/sdk`** as the single npm entrypoint for every desktop editor. Same URL, same optional Profile key, same **`neus doctor`** check. Use this path everywhere so your team stays aligned.
 
 | Concern | Golden path |
 | --- | --- |
 | MCP wiring | `npx -y -p @neus/sdk neus setup` (or `neus init` without keys) |
 | Trust / “is it working?” | `npx -y -p @neus/sdk neus doctor` |
 | Claude-only discoverability | Optional [NEUS for Claude Code](./claude-code-marketplace) plugin (skill + default MCP); still run **`neus setup`** for keys |
-| OpenClaw / containers | Env + `NEUS_MCP_URL` in your runtime — same MCP endpoint and tool contract |
-
-## One-command setup
-
-```bash
-npx -y -p @neus/sdk neus setup --access-key <npk_...>
-```
-
-`setup` runs `init` and `auth` in one pass on every detected client (Claude, Cursor, VS Code). Omit `--access-key` when you only want the base MCP config without personal account tools.
+| Custom runtimes / containers | Env + `NEUS_MCP_URL` in your runtime — same MCP endpoint and tool contract |
 
 ## Where config is written
 
@@ -99,16 +115,7 @@ Keep **`/mcp`** in the URL.
 
 ## First run
 
-| # | Step |
-|---|------|
-| 1 | Connect (config above) |
-| 2 | **`neus_context`** first |
-| 3 | If Bearer exists, **`neus_me`** |
-| 4 | For agents, **`neus_agent_link`** |
-| 5 | Check with **`neus_proofs_check`** |
-| 6 | If satisfied, continue without hosted verify |
-| 7 | Use **`neus_proofs_get`** when you need proof state, inventory, tags, or qHash values |
-| 8 | Use **`neus_verify_or_guide`** only when something is missing |
+Use the same session order as the decision tree on [MCP overview](./overview). Field names for each tool: [Tools](./tools). Proof reads: **`neus_proofs_get`**.
 
 Other clients: same URL, same optional **`Authorization`** header.
 
@@ -118,7 +125,7 @@ Other clients: same URL, same optional **`Authorization`** header.
 npx -y -p @neus/sdk neus doctor --access-key <npk_...>
 ```
 
-`doctor` confirms config health, profile connection, and agent verification readiness across every configured client. Run `doctor --json` for machine-readable output. Omit `--access-key` when you want config-only status.
+`doctor` confirms config health, profile connection, and agent verification readiness across every configured client. Run `doctor --json` for JSON output. Omit `--access-key` when you want config-only status.
 
 <CardGroup cols={2}>
   <Card title="MCP overview" icon="plug" href="./overview">

@@ -1,14 +1,45 @@
 # @neus/sdk
 
-Create, check, and reuse NEUS trust receipts from apps.
+Create, check, and reuse NEUS trust receipts from apps and backends. The same package ships the **`neus`** CLI for wiring **hosted NEUS MCP** into editors and agents.
 
-NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.
+NEUS makes trust portable across the internet so people, apps, and AI agents can prove what is real before access, payout, or execution.
 
-## Install
+## Install (library)
 
 ```bash
 npm install @neus/sdk
 ```
+
+## Connect editors and assistants (MCP)
+
+Use one command to merge NEUS into Cursor, VS Code, and Claude Code when those tools are detected. No separate NEUS editor extension is required.
+
+```bash
+npx -y -p @neus/sdk neus setup
+```
+
+Add your NEUS Profile access key in the same step (needed for account-aware tools such as `neus_me`):
+
+```bash
+npx -y -p @neus/sdk neus setup --access-key <npk_...>
+```
+
+Check configuration and connectivity:
+
+```bash
+npx -y -p @neus/sdk neus doctor
+```
+
+Create keys under **Profile → Account → Access keys** on [neus.network](https://neus.network/profile?tab=account). Never put access keys in browser bundles or public repos.
+
+| Topic | Link |
+| --- | --- |
+| Setup, JSON snippets, and headers | [MCP setup](https://docs.neus.network/mcp/setup) |
+| Tools and session order | [MCP overview](https://docs.neus.network/mcp/overview) |
+| Discovery URLs | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints) |
+| Optional Claude Code plugin + skill | [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace) |
+
+Prefer `neus setup` over hand-editing config files so every host stays on **`https://mcp.neus.network/mcp`**.
 
 ## What you can build
 
@@ -27,7 +58,7 @@ import { getHostedCheckoutUrl } from '@neus/sdk';
 
 const url = getHostedCheckoutUrl({
   verifiers: ['ownership-basic'],
-  returnUrl: 'https://yourapp.com/neus/callback'
+  returnUrl: 'https://yourapp.com/auth/callback'
 });
 
 window.location.assign(url);
@@ -39,7 +70,7 @@ Store that `qHash` with your user record.
 
 ## Create a signed receipt directly
 
-When your app handles signing.
+When your app handles signing. This example is EVM. For non-EVM wallets, pass the provider explicitly and include `chain` as a CAIP-2 value; see the CAIP-380 standards page in the docs.
 
 ```js
 import { NeusClient } from '@neus/sdk';
@@ -64,7 +95,7 @@ const proof = await client.verify({
       title: 'Source record'
     }
   },
-  wallet: window.ethereum
+  wallet: window.ethereum // EVM provider
 });
 
 console.log(proof.qHash);
@@ -153,21 +184,19 @@ const client = new NeusClient({
 `appId` is public attribution for your app.
 `apiKey` / `npk_*` is optional and server-side only.
 
-## Optional MCP setup
-
-Connect NEUS MCP to IDEs and agents.
+## MCP: step-by-step (alternative to `setup`)
 
 ```bash
 npx -y -p @neus/sdk neus init
 ```
 
-Add account-aware/private access only when needed:
+Add or rotate a Profile access key on an existing install:
 
 ```bash
 npx -y -p @neus/sdk neus auth --access-key <npk_...>
 ```
 
-Claude Code: add marketplace `https://github.com/neus/network`, install **`neus-mcp@neus`**, then use the same `neus setup` line above for your key — https://docs.neus.network/mcp/claude-code-marketplace
+Claude Code (optional): add marketplace `https://github.com/neus/network`, install **`neus-mcp@neus`**, then run **`neus setup`** so your key matches every editor. See [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
 
 ## Docs
 

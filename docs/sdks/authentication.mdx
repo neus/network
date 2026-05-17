@@ -1,17 +1,18 @@
 ---
 title: SDK Authentication
-description: App Link, Hosted Verify, server keys, and wallet signing.
+description: Server, hosted browser on NEUS, keys; optional in-app signing.
 icon: key
 ---
 
-NEUS supports both product styles:
+**Default:** no wallet or passkey code in **your** app — ceremony on **`neus.network/verify`** or server-only `verifyFromApp`.
 
-- **Bring your own login:** your users stay in your app, and your server calls NEUS through App Link.
-- **Hosted NEUS flow:** send users to NEUS when they need hosted login, passkeys, wallet connection, OAuth, human checks, or gate checkout.
+| Where | What | Wallet code in your app |
+|-------|------|---------------------------|
+| Server | `NeusClient` + `verifyFromApp` / `gateCheck` | No |
+| Browser | `VerifyGate` or `getHostedCheckoutUrl` → `/verify` | No |
+| Browser (exception) | `client.verify({ wallet })` | Yes — [Signing format](../verification/signing-format) |
 
-## App Link
-
-Use this when your backend already knows the user. Your app keeps its normal login and uses NEUS only when it needs to issue or check a receipt.
+## App Link (server)
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -24,56 +25,27 @@ const client = new NeusClient({
 const receipt = await client.verifyFromApp({
   user: { walletAddress: user.walletAddress },
   verifier: 'ownership-basic',
-  content: {
-    claim: 'User completed onboarding',
-    source: 'your-app',
-  },
+  content: { claim: 'User completed onboarding', source: 'your-app' },
 });
 ```
 
-Use App Link for server-side receipt creation without a wallet prompt on every request.
+## Hosted Verify (browser)
 
-## Hosted Verify
-
-Use Hosted Verify when NEUS should handle the browser step:
-
-- passkey-first NEUS login
-- wallet connection when required
-- OAuth or org verification
-- human checks
-- gate checkout and return handling
+[Hosted Verify](../cookbook/auth-hosted-verify).
 
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
 const url = getHostedCheckoutUrl({
   verifiers: ['ownership-basic'],
-  returnUrl: 'https://yourapp.com/neus/callback',
+  returnUrl: 'https://yourapp.com/auth/callback',
 });
 ```
 
-See [Hosted Verify](../cookbook/auth-hosted-verify).
+## Personal access keys
 
-## Personal Access Keys
+`Authorization: Bearer <npk_...>` from [Access keys](https://neus.network/profile?tab=account). Server / MCP only — never in browser bundles.
 
-Use **`Authorization: Bearer <npk_...>`** from [Access keys](https://neus.network/profile?tab=account) for server-side API calls, jobs, CLI tools, and MCP clients.
+## Raw HTTP
 
-Never ship an access key in browser code.
-
-## In-App Wallet Signing
-
-Use direct SDK signing only when your product asks the user to sign with a wallet inside your UI.
-
-```javascript
-const client = new NeusClient({ appId: 'your-app-id' });
-
-await client.verify({
-  verifier: 'ownership-basic',
-  content: 'Hello NEUS',
-  wallet: window.ethereum,
-});
-```
-
-## Raw HTTP Signing
-
-Most teams should not need this. If you implement `POST /api/v1/verification` without the SDK, use [API authentication](../api/authentication) and [Signing format](../verification/signing-format).
+[API authentication](../api/authentication) · [Signing format](../verification/signing-format)

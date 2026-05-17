@@ -4,11 +4,29 @@ description: Hosted NEUS MCP, optional Profile access key, proof receipts and wo
 icon: plug
 ---
 
-**Endpoint:** `https://mcp.neus.network/mcp`
+NEUS MCP is hosted at **`https://mcp.neus.network/mcp`**. It covers receipts, profile-aware flows, eligibility, proof reads, agents, and delegated context ([setup](./setup)).
 
-NEUS exposes **hosted NEUS MCP** for proof receipts, Profile-aware flows, eligibility checks, proof reads, agents, and delegated context ([setup](./setup)).
+## Install (editors and assistants)
 
-Golden path: check existing trust, reuse it, delegate it, gate against it, and open a hosted URL only when proof, payment, provider, wallet, profile, or delegation setup is missing.
+```bash
+npx -y -p @neus/sdk neus setup
+```
+
+Optional Profile access key in one step:
+
+```bash
+npx -y -p @neus/sdk neus setup --access-key <npk_...>
+```
+
+Verify:
+
+```bash
+npx -y -p @neus/sdk neus doctor
+```
+
+Per-client paths, manual JSON, and headers: [Setup](./setup).
+
+Recommended flow: reuse existing receipts when possible; open a hosted NEUS URL only when a browser step is required (proof, payment, provider, wallet, profile, or delegation).
 
 <CardGroup cols={3}>
   <Card title="Setup" icon="code" href="./setup">
@@ -32,7 +50,20 @@ Golden path: check existing trust, reuse it, delegate it, gate against it, and o
 | 7 | **`neus_verify`** only when Profile, wallet, and signing already match |
 | 8 | **`neus_verify_or_guide`** only when proof, profile, payment, provider, wallet, or delegation setup is missing |
 
-**Also:** **`neus_verifiers_catalog`** when **`neus_context`** is insufficient for schemas. **`neus_me`** once a Profile personal access key is configured on this MCP session (expect **`status: ok`**).
+## Delegated agents (MCP)
+
+For an **agent wallet** (automation that signs as its own address), reuse proofs before minting new ones:
+
+1. After **`neus_context`** (and **`neus_me`** when Bearer is configured), call **`neus_agent_link`** with that **`agentWallet`**.
+2. If anything is missing, use **`neus_agent_create`** to prepare signing material and a hosted URL, then finish in the browser or with **`neus_verify`** as returned.
+3. Call **`neus_agent_link`** again until **`linked: true`**.
+
+Details: [Agent link](./agent-link), [Agent create](./agent-create), and the product-level sequence in [Agent verification flow](../agents/agent-verification-flow).
+
+## Reference calls
+
+- **`neus_verifiers_catalog`:** verifier schemas when **`neus_context`** is not enough.
+- **`neus_me`:** after configuring a Profile access key, call once per session (expect **`status: ok`**).
 
 ## Headless signing
 

@@ -10,10 +10,11 @@ This site (`docs.neus.network`) is the standard integration reference. Follow th
 
 1. [Home](../index)
 2. [Get started](../get-started)
-3. [Integration](../integration)
-4. [JavaScript SDK](../sdks/javascript)
-5. [MCP tools](../mcp/tools)
-6. [API overview](../api/overview) (server and raw HTTP)
+3. [Quickstart](../quickstart)
+4. [Integration](../integration)
+5. [JavaScript SDK](../sdks/javascript)
+6. [MCP tools](../mcp/tools)
+7. [API overview](../api/overview) (server and raw HTTP)
 
 ## MCP tool order
 
@@ -27,19 +28,19 @@ This site (`docs.neus.network`) is the standard integration reference. Follow th
 
 ## Rules
 
-- **Browser → NEUS:** SDK (`NeusClient`, widgets) or **Hosted Verify** only. Do not generate frontend `fetch` to `api.neus.network` with custom headers; use a **server proxy** for those.
-- **Server → NEUS:** `gateCheck`, eligibility, secrets, raw HTTP—[API overview](../api/overview)
+- **Browser → NEUS:** SDK (`NeusClient`, widgets) or **Hosted Verify**. Do not call `api.neus.network` from the browser with secrets or ad-hoc headers; use a **server proxy** when you need custom server-side calls.
+- **Server → NEUS:** `gateCheck`, eligibility, secrets, raw HTTP — [API overview](../api/overview)
 - Account, `appId`, and billing: [Get started](../get-started)
-- No in-app wallet: [Hosted Verify](../cookbook/auth-hosted-verify)
-- No wallet **private keys** in MCP; **Access keys** only for Bearer account tools
+- Default browser ceremony: [Hosted Verify](../cookbook/auth-hosted-verify). Optional in-app signing: [Signing format](../verification/signing-format)
+- Do not use wallet **private keys** as MCP credentials; use **personal access keys** (`npk_*`) for Bearer. Agent signing keys stay in your runtime ([Agent create](../mcp/agent-create) may return a generated key for integrators only).
 - **402:** use the x402 retry pattern
-- Agents: [Agents](../agents/overview)
+- Agents: [Overview](../agents/overview) · [Verification flow](../agents/agent-verification-flow)
 - Reuse **`qHash`**
 
 ## Exports
 
 ```bash
-# Canonical machine summary (source: `neus` repo `public/llms.txt`)
+# Plain text summary (same content as https://neus.network/llms.txt)
 curl https://neus.network/llms.txt
 ```
 

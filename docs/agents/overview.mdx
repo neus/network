@@ -28,9 +28,11 @@ Universal agent identity ties a stable wallet-backed identity, optional delegati
  Share card URL, proof URL, wallet, or DID; wire NEUS MCP so clients fetch state.
  </Step>
  <Step title="Hosted handoff">
- When the tool returns `hostedVerifyUrl`, open it - same links as other integrations.
+ When the tool returns `hostedVerifyUrl`, open it — same links as other integrations.
  </Step>
 </Steps>
+
+On **NEUS MCP**, **`neus_agent_link`** reports **`linked: true`** only when **both** receipts exist (`agent-identity` and `agent-delegation`) for the default delegated-agent path.
 
 ## At a glance
 
@@ -88,7 +90,7 @@ await client.verify({
     agentId: 'my-agent',
     controllerWallet: controllerWallet,
     agentWallet: agentWallet,
-    permissions: ['read', 'write'],
+    permissions: ['read-proofs', 'write-proofs'],
   },
   walletAddress: controllerWallet,
 });

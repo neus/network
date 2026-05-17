@@ -285,7 +285,7 @@
               },
               "proofUrl": {
                 "type": "string",
-                "description": "Canonical URL to fetch the proof record (GET /api/v1/proofs/{qHash})"
+                "description": "URL to fetch the proof record (GET /api/v1/proofs/{qHash})"
               }
             },
             "additionalProperties": true

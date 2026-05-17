@@ -23,6 +23,7 @@ _Fields in the `data` object for the completed verification request (after signa
 - `agentAccountId` (`string format caip10-account`): Optional CAIP-10 account identifier for agentWallet. May be injected when inputs are normalized from wallet + chain context.
 - `agentLabel` (`string max 128`)
 - `agentType` (`string enum: ai, bot, service, automation, agent`)
+- `avatar` (`string max 512`): Public agent avatar/logo URL or ipfs:// URI.
 - `description` (`string max 500`)
 - `capabilities` (`object`): Agent capabilities as boolean flags
 - `instructions` (`string max 16000`)

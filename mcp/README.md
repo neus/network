@@ -1,17 +1,42 @@
-# NEUS MCP
+# NEUS MCP (hosted)
 
-Integrators connect to **`https://mcp.neus.network/mcp`**.
+Assistants and editors connect to **hosted NEUS MCP** at:
+
+**`https://mcp.neus.network/mcp`**
+
+## Fastest setup (recommended)
+
+```bash
+npx -y -p @neus/sdk neus setup
+```
+
+With a NEUS Profile access key (for account-aware tools):
+
+```bash
+npx -y -p @neus/sdk neus setup --access-key <npk_...>
+```
+
+Health check:
+
+```bash
+npx -y -p @neus/sdk neus doctor
+```
+
+Create access keys under **Profile → Account** on [neus.network](https://neus.network/profile?tab=account). Treat keys like passwords: keep them in MCP or server config only, not in client-side code or public repos.
+
+## After you connect
+
+Start each session with tool **`neus_context`**. If you configured a Profile key, call **`neus_me`** once, then reuse receipts with **`neus_proofs_check`** before starting new verification.
 
 ## Docs
 
 | Topic | Link |
 |-------|------|
-| Setup | [docs.neus.network/mcp/setup](https://docs.neus.network/mcp/setup) |
-| Claude Code marketplace | [docs.neus.network/mcp/claude-code-marketplace](https://docs.neus.network/mcp/claude-code-marketplace) |
-| Auth (`npk_*`) | [docs.neus.network/mcp/auth](https://docs.neus.network/mcp/auth) |
-| Playbook | [docs.neus.network/mcp/overview](https://docs.neus.network/mcp/overview) |
-
-Treat access keys like secrets: MCP or server config only—not public repos or chat logs.
+| Full setup (Cursor, VS Code, Claude Code, JSON) | [docs.neus.network/mcp/setup](https://docs.neus.network/mcp/setup) |
+| Tools and recommended order | [docs.neus.network/mcp/overview](https://docs.neus.network/mcp/overview) |
+| Discovery (`.well-known`, server card) | [docs.neus.network/mcp/endpoints](https://docs.neus.network/mcp/endpoints) |
+| Auth and headers | [docs.neus.network/mcp/auth](https://docs.neus.network/mcp/auth) |
+| Optional Claude Code plugin + skill | [docs.neus.network/mcp/claude-code-marketplace](https://docs.neus.network/mcp/claude-code-marketplace) |
 
 ## License
 

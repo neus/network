@@ -459,7 +459,9 @@ export class NeusClient {
 
   _getDefaultBrowserWallet() {
     if (typeof window === 'undefined') return null;
-    return window.ethereum || window.solana || (window.phantom && window.phantom.solana) || null;
+    // Legacy convenience fallback only. Non-EVM wallets must be passed explicitly
+    // with CAIP-2 chain context so the SDK does not route them through EVM RPC.
+    return window.ethereum || null;
   }
 
   async _buildPrivateGateAuth({ address, wallet, chain, signatureMethod } = {}) {
@@ -732,7 +734,7 @@ export class NeusClient {
         }
       } else {
         if (typeof window === 'undefined' || !window.ethereum) {
-          throw new ConfigurationError('No Web3 wallet detected. Please install MetaMask or provide wallet parameter.');
+          throw new ConfigurationError('No EVM browser wallet detected. Provide wallet explicitly for non-EVM flows and include chain as a CAIP-2 value.');
         }
         await window.ethereum.request({ method: 'eth_requestAccounts' });
         provider = window.ethereum;

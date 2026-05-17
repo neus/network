@@ -10,8 +10,8 @@
 </p>
 
 <p align="center">
- <strong>NEUS makes trust portable across the internet</strong> — so people, apps, and AI agents can prove what is real before access, payout, or execution.<br />
- Create receipts once, show them on profiles, check them at gates, and let apps or agents reuse trust without starting from zero.
+ <strong>Trust infrastructure for apps, agents, and ecosystems.</strong><br />
+ NEUS makes trust portable across the internet so people, apps, and AI agents can prove what is real before access, payout, or execution.
 </p>
 
 <p align="center">
@@ -21,208 +21,169 @@
 </p>
 
 <p align="center">
- <a href="https://docs.neus.network/get-started"><strong>Get started</strong></a>
- | <a href="https://neus.network/verify"><strong>Hosted Verify</strong></a>
- | <a href="https://docs.neus.network/quickstart"><strong>Quickstart</strong></a>
- | <a href="https://docs.neus.network"><strong>Docs</strong></a>
- | <a href="./examples"><strong>Examples</strong></a>
- | <a href="https://neus.network/demo"><strong>Live demo</strong></a>
+ <a href="#why-neus"><strong>Why NEUS</strong></a>
+ | <a href="#build-with-neus"><strong>Build with NEUS</strong></a>
+ | <a href="#agents-and-mcp"><strong>Agents and MCP</strong></a>
+ | <a href="#connect-assistants-mcp"><strong>Assistants (MCP)</strong></a>
 </p>
 
 ---
 
-## Why teams pick NEUS
+## What NEUS is today
 
-| Outcome | How NEUS delivers it |
+NEUS turns verification into reusable trust receipts. Apps can issue a receipt once, check it before a gate or action, and reuse it later instead of asking trusted users or agents to start from zero.
+
+- **Hosted Verify** drop in a live browser flow at [neus.network/verify](https://neus.network/verify).
+- **Trust receipts** give apps a reusable result for gates, proof pages, profiles, and audits.
+- **SDK, widgets, and API** let builders add verification and eligibility checks without owning every verifier flow.
+- **Agent identity and delegation** give automated workflows attributable identity, scoped authority, and audit-ready receipts.
+- **MCP** gives assistants and tools access to live trust context, proof reads, verifier metadata, and guided verification.
+
+## Why NEUS
+
+Trust keeps getting rebuilt inside each app, marketplace, workflow, and agent stack. That creates repeated onboarding, brittle access checks, manual reviews, and weak audit trails.
+
+NEUS gives teams one trust layer for the moments that matter:
+
+| Business outcome | What NEUS provides |
 | --- | --- |
-| Ship faster with less “prove it again” | One flow, a **qHash**, **lookup** before you re-run verification |
-| Reuse trust across web, API, and agents | Resolvable URLs and handles. Not screenshots that go stale |
-| Safe agent identity and delegation | **`agent-identity`** and **`agent-delegation`** with scoped permissions |
-| Tools that see live truth | **Remote MCP** over HTTPS so assistants check proofs and reuse receipts before starting a new flow |
+| Stop re-verifying from zero | Reuse trust receipts before prompting another verification |
+| Gate access and rewards | Check receipts before content, communities, drops, bounties, tiers, or payouts |
+| Trust agents before they act | Bind identity, controller, scope, and delegation to agent activity |
+| Keep decisions auditable | Use receipts as durable evidence for who or what passed a trust decision |
+| Ship faster | Use hosted flows, SDK helpers, widgets, API checks, and MCP instead of rebuilding the full trust stack |
 
-## Who this is for
+## Three ways to use it
 
-- **Product and GTM teams** turning wallet, token, NFT, or human checks into gates for drops, bounties, or paid tiers
-- **Platforms** standardizing one trust model across web, API, and automation
-- **Agent builders** shipping identity, delegation, and optional **x402** payment unlock ([docs](https://docs.neus.network/platform/x402))
+### Product and hosted flows
 
-## Quickstart
+Use Hosted Verify when you want NEUS to own the browser verification flow and return users to your product. Your app stores the resulting receipt and checks it before allowing trusted actions.
+
+- Start with [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify).
+- Explore the live product at [neus.network/verify](https://neus.network/verify).
+- See proof and profile surfaces at [neus.network](https://neus.network).
+
+### Build with NEUS
+
+Use the JavaScript SDK, React widgets, and HTTP API when you want trust checks inside your product, backend, or workflow.
+
+- Follow the main build flow: [check -> verify -> save -> reuse](https://docs.neus.network/integration).
+- Install the SDK: [@neus/sdk](https://www.npmjs.com/package/@neus/sdk) and [SDK docs](https://docs.neus.network/sdks/overview).
+- Use server-side checks and reads through the [API overview](https://docs.neus.network/api/overview).
+- Gate React experiences with [VerifyGate](https://docs.neus.network/widgets/verifygate).
+
+### Agents and MCP
+
+Use NEUS for agents that need identity, scoped authority, and receipts for trusted actions. MCP gives assistants and tools the same live trust context that apps use.
+
+- Start with [Agents](https://docs.neus.network/agents/overview).
+- Add identity and delegation with [`agent-identity`](https://docs.neus.network/agents/agent-identity) and [`agent-delegation`](https://docs.neus.network/agents/agent-delegation).
+- Connect tools through [NEUS MCP](https://docs.neus.network/mcp/overview).
+- Install the Claude Code marketplace package with [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
+
+## Connect assistants (MCP)
+
+Wire Cursor, VS Code, Claude Code, and other MCP hosts to the **same** hosted endpoint. One CLI, no extra plugins required for editors.
 
 ```bash
-npm install @neus/sdk
+npx -y -p @neus/sdk neus setup
 ```
 
-```ts
-import { NeusClient } from '@neus/sdk';
+Optional: add your NEUS Profile access key in one step (enables account-aware tools such as `neus_me`):
 
-const client = new NeusClient({ appId: 'your-app-id' });
-
-const proof = await client.verify({
-  verifier: 'ownership-basic',
-  content: 'Verified bounty submission',
-  wallet: window.ethereum,
-});
-
-const { qHash } = proof;
-const signerAddress = '0x...';
-
-const check = await client.gateCheck({
-  address: signerAddress,
-  verifierIds: ['ownership-basic'],
-});
-
-console.log(check.data?.eligible);
+```bash
+npx -y -p @neus/sdk neus setup --access-key <npk_...>
 ```
 
-Next: [SDK README](./sdk/README.md) | [docs.neus.network](https://docs.neus.network)
+Confirm the install, then start each session with tool **`neus_context`**:
 
-## Linked profiles, agents, and automation
+```bash
+npx -y -p @neus/sdk neus doctor
+```
 
-| Layer | What |
+| Topic | Link |
 | --- | --- |
-| Core flows | `agent-identity`, optional `agent-delegation` |
-| Resolvable handles | `https://neus.network/agent/<agentId>`, result URLs, wallet, DID |
-| Tooling manifest | Agent profile JSON. See [Agents](https://docs.neus.network/agents/overview). |
-| Live checks | NEUS MCP: `neus_context`, `neus_me`, `neus_agent_link`, `neus_proofs_check`, `neus_proofs_get` ([MCP docs](https://docs.neus.network/mcp/overview)) |
-| Linked accounts | Ownership verifiers + `wallet-link` with the same result model ([verifier table](#verifiers)) |
+| Full setup, manual JSON, and headers | [MCP setup](https://docs.neus.network/mcp/setup) |
+| Tools and recommended order | [MCP overview](https://docs.neus.network/mcp/overview) |
+| Discovery URLs (server card, `.well-known`) | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints) |
+| Claude Code plugin (optional skill bundle) | [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace) |
 
-**Fast path:** [Hosted Verify](https://neus.network/verify) | billing and caps in [app setup](https://docs.neus.network/get-started) | paid flows: [x402](https://docs.neus.network/platform/x402)
+Hosted MCP URL: **`https://mcp.neus.network/mcp`**
 
-### Setup (any chat or IDE)
+---
 
-1. [Get started](https://docs.neus.network/get-started)
-2. Register agents via SDK, [Hosted Verify](https://neus.network/verify), or MCP. [Agents](https://docs.neus.network/agents/overview) | [Cookbook](https://docs.neus.network/cookbook/verifiable-agents).
-3. Share a **resolvable handle** and use **NEUS MCP** for live state.
-4. Export agent config JSON for tool-manifest hosts.
+## What is live now
 
-More: [Agents](https://docs.neus.network/agents/overview).
-
-## React gate
-
-```jsx
-import { VerifyGate } from '@neus/sdk/widgets';
-
-<VerifyGate
-  appId="your-app-id"
-  requiredVerifiers={['token-holding']}
-  verifierData={{
-    'token-holding': {
-      contractAddress: '0x...',
-      minBalance: '100.0',
-      chainId: 1,
-    },
-  }}
->
-  <RewardClaimForm />
-</VerifyGate>
-```
-
-[Widgets](./sdk/widgets/README.md)
-
-## MCP (agents / tools)
-
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "type": "http",
-      "url": "https://mcp.neus.network/mcp"
-    }
-  }
-}
-```
-
-Runtime order: `neus_context` -> `neus_me` when Bearer exists -> `neus_agent_link` for agents -> `neus_proofs_check` -> reuse existing qHash/receipt -> `neus_proofs_get` for proof state -> `neus_verify_or_guide` only when setup is missing.
-
-[docs.neus.network/mcp](https://docs.neus.network/mcp/overview) | [MCP package](./mcp/README.md)
-
-**Claude Code:** add the NEUS marketplace from [`github.com/neus/network`](https://github.com/neus/network), install **`neus-mcp@neus`**, then run `npx -y -p @neus/sdk neus setup` for your access key — [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
-
-## Hosted Verify
-
-**Hosted Verify** is the browser flow at `https://neus.network/verify`: a parameterized checkout on NEUS. Your app keeps the **qHash** and **checks** before you prompt again.
-
-Examples:
-
-`https://neus.network/verify?verifiers=proof-of-human&returnUrl=https://myapp.com/callback`
-
-Agent onboarding: `https://neus.network/verify?preset=agent-pack`
-
-## Verifiers
-
-**Live catalog:** [Verifier catalog](https://docs.neus.network/verification/verifiers). Machine-readable lists and schemas ship in [`spec/`](./spec/VERIFIERS.json) for reference and validation tooling.
-
-| Use case | ID |
+| Surface | Live capability |
 | --- | --- |
-| Social ownership | `ownership-social` |
-| Domain | `ownership-dns-txt` |
-| Org OAuth | `ownership-org-oauth` |
-| Pseudonym | `ownership-pseudonym` |
-| Content / provenance | `ownership-basic` |
-| Human verification | `proof-of-human` |
-| Token balance | `token-holding` |
-| NFT | `nft-ownership` |
-| Contract | `contract-ownership` |
-| Wallet risk | `wallet-risk` |
-| Linked wallets | `wallet-link` |
-| Content moderation | `ai-content-moderation` |
-| Agent identity | `agent-identity` |
-| Agent delegation | `agent-delegation` |
+| Hosted Verify | Browser verification flow for supported verifiers |
+| Trust receipts | Reusable receipt identifiers, proof pages, profile surfaces, and eligibility checks |
+| SDK | `verify`, polling, hosted checkout URLs, and gate checks |
+| API | Proof checks, proof reads, verifier catalog, and advanced verification endpoints |
+| Widgets | `VerifyGate` and `ProofBadge` for React products |
+| Agents | Agent identity, delegation, stable agent URLs, and cookbook flows |
+| MCP | Hosted MCP endpoint for context, catalog, proof checks, proof reads, agent linking, and guided verification |
 
-## Agents (SDK)
+## Start here
 
-```ts
-await client.verify({
-  verifier: 'agent-identity',
-  data: {
-    agentId: 'my-bot',
-    agentWallet: '0x...',
-    agentChainRef: 'eip155:8453',
-    agentType: 'ai',
-  },
-  walletAddress: agentWallet,
-});
-
-await client.verify({
-  verifier: 'agent-delegation',
-  data: {
-    controllerWallet: '0x...',
-    controllerChainRef: 'eip155:8453',
-    agentWallet: '0x...',
-    agentChainRef: 'eip155:8453',
-    scope: 'payments:x402',
-    permissions: ['execute', 'read'],
-    maxSpend: '25000000',
-    expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
-  },
-  walletAddress: controllerWallet,
-});
-```
-
-[Agent identity](https://docs.neus.network/agents/agent-identity) | [Delegation](https://docs.neus.network/agents/agent-delegation)
-
-## Visibility
-
-| Mode | Role |
+| Path | Best next step |
 | --- | --- |
-| Vaulted | Owner-only reads |
-| Unlisted | Reuse links, not discoverable |
-| Public | Discoverable |
+| Understand the product | [Why NEUS](#why-neus) and [docs overview](https://docs.neus.network) |
+| Build a trust flow | [Integration](https://docs.neus.network/integration) |
+| Add the SDK | [SDK overview](https://docs.neus.network/sdks/overview) |
+| Gate UI or access | [VerifyGate](https://docs.neus.network/widgets/verifygate) |
+| Use the API | [API overview](https://docs.neus.network/api/overview) |
+| Add agent trust | [Agents overview](https://docs.neus.network/agents/overview) |
+| Connect assistants (fastest) | [`npx -y -p @neus/sdk neus setup`](#connect-assistants-mcp) then [MCP setup](https://docs.neus.network/mcp/setup) |
 
-[Security and trust](https://docs.neus.network/platform/security-and-trust)
+## Capability snapshot
+
+The live verifier catalog is documented at [docs.neus.network/verification/verifiers](https://docs.neus.network/verification/verifiers). Verifier lists and schemas are also available in [`spec/`](./spec/VERIFIERS.json).
+
+| Capability | Verifiers |
+| --- | --- |
+| Ownership and identity | `ownership-basic`, `ownership-social`, `ownership-dns-txt`, `ownership-org-oauth`, `ownership-pseudonym` |
+| Human and wallet trust | `proof-of-human`, `wallet-risk`, `wallet-link` |
+| Assets and contracts | `token-holding`, `nft-ownership`, `contract-ownership` |
+| Content and safety | `ai-content-moderation` |
+| Agent trust | `agent-identity`, `agent-delegation` |
+
+## System map
+
+| Repo | What builders use it for |
+| --- | --- |
+| `neus` | Hosted product: verify, profiles, proof pages, gates, and end-user experience |
+| `protocol` | Hosted HTTP API and verification behavior your app and MCP clients call |
+| `network` | This repository: docs, SDK (`@neus/sdk`), widgets, examples, specs, and Claude marketplace metadata |
+
+## Where to go next
+
+- [docs.neus.network](https://docs.neus.network) is the starting point for setup and product docs.
+- [Integration](https://docs.neus.network/integration) walks through the flow: check, verify, save, reuse.
+
+## Proof of reality
+
+| Surface | Link |
+| --- | --- |
+| Product | [neus.network](https://neus.network) |
+| Hosted Verify | [neus.network/verify](https://neus.network/verify) |
+| Docs | [docs.neus.network](https://docs.neus.network) |
+| SDK | [npm: @neus/sdk](https://www.npmjs.com/package/@neus/sdk) |
+| Examples | [`examples/`](./examples) |
+| Verifier catalog | [Verifier docs](https://docs.neus.network/verification/verifiers) |
 
 ## Support
 
 | Channel | Use for |
 | --- | --- |
-| [Docs](https://docs.neus.network) | Reference and integration |
-| [Discussions](https://github.com/neus/network/discussions) | Questions and patterns |
+| [Docs](https://docs.neus.network) | Product and integration guidance |
+| [Discussions](https://github.com/neus/network/discussions) | Questions and implementation patterns |
 | [Issues](https://github.com/neus/network/issues) | Bugs and requests |
 | [dev@neus.network](mailto:dev@neus.network) | Security |
 
-[CONTRIBUTING.md](./CONTRIBUTING.md)
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution guidance.
 
 ## License
 
-- **SDK & tools:** Apache-2.0
-- **Smart contracts:** BUSL-1.1 to Apache-2.0 (Aug 2028)
+- **SDK and tools:** Apache-2.0
+- **Smart contracts:** BUSL-1.1 to Apache-2.0 in August 2028

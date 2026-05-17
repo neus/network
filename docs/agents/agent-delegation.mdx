@@ -29,7 +29,7 @@ const proof = await client.verify({
 });
 ```
 
-## App-link happy path (Web2, no per-request signatures)
+## App-link happy path
 
 Use `scope: 'app-link'` when your app needs to **create proofs on behalf of a user without asking them to sign every request**. The user delegates once, then your app acts with that authority.
 

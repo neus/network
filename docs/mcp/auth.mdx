@@ -19,11 +19,13 @@ NEUS MCP uses the same **`Authorization: Bearer`** pattern as [API authenticatio
 
 ```http
 Authorization: Bearer <npk_...>
-````
+```
 
 Use **`npk_*`** when a tool needs **your account**. Do not use an end user's browser session for MCP authentication.
 
-Authenticated MCP sessions should try reuse before browser handoff: **`neus_context`** → **`neus_me`** → **`neus_agent_link`** when agents are involved → **`neus_proofs_check`** → **`neus_proofs_get`** when proof details are needed. Use **`neus_verify_or_guide`** only when setup is missing.
+Authenticated MCP sessions should reuse receipts before any browser step: **`neus_context`** → **`neus_me`** → **`neus_agent_link`** (when an agent wallet is in play) → **`neus_proofs_check`** → **`neus_proofs_get`** when you need proof details. Use **`neus_verify_or_guide`** only when something required is still missing.
+
+For **agent wallets**, follow [Agent verification flow](../agents/agent-verification-flow): call **`neus_agent_link`** first when that address already exists; use **`neus_agent_create`** only when the link response shows gaps.
 
 ## What Bearer unlocks
 
@@ -36,31 +38,24 @@ Authenticated MCP sessions should try reuse before browser handoff: **`neus_cont
 
 ## Interactive verification flows
 
-Use [Hosted Verify](../cookbook/auth-hosted-verify) when the user needs to complete an interactive step, including:
-
-* wallet connection or signing
-* passkey authentication
-* OAuth login
-* social verification
-
-When a tool returns **`hostedVerifyUrl`**, send the user to that URL to complete the flow on NEUS.
+[Hosted Verify](../cookbook/auth-hosted-verify): passkey, wallet, OAuth, and social **proof** steps run **on NEUS**. If a tool returns **`hostedVerifyUrl`**, open it once, then continue in MCP.
 
 ## Common situations
 
-| Situation                                         | What to do                                                                                                                         |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| User needs passkey, OAuth, or social verification | Open the returned **`hostedVerifyUrl`**                                                                                            |
-| User has a connected wallet                       | Use **`neus_verify`** with signature, or use the hosted URL when returned                                                          |
-| IDE or server automation                          | Use **`Authorization: Bearer <npk_...>`** on MCP; direct HTTP uses the same pattern in [API authentication](../api/authentication) |
+| Situation | What to do |
+| --- | --- |
+| User needs passkey, OAuth, or social verification | Open the returned **`hostedVerifyUrl`**. |
+| User has a connected wallet | Use **`neus_verify`** with a signature, or the hosted URL when the tool returns one. |
+| IDE or server automation | Set **`Authorization: Bearer <npk_...>`** on MCP. Raw HTTP uses the same pattern: [API authentication](../api/authentication). |
 
 ## Security
 
-| Topic             | Rule                                                                                           |
-| ----------------- | ---------------------------------------------------------------------------------------------- |
-| Store keys        | Server or IDE MCP configuration only                                                           |
-| Browser exposure  | Never expose personal access keys in browser code                                              |
-| Rotation          | Re-issue the key from [Access Keys](https://neus.network/profile?tab=account) if it is exposed |
-| `hostedVerifyUrl` | Send the user to the returned NEUS hosted flow                                                 |
+| Topic | Rule |
+| --- | --- |
+| Store keys | Server or IDE MCP configuration only. |
+| Browser exposure | Never expose personal access keys in browser code. |
+| Rotation | Re-issue the key from [Access Keys](https://neus.network/profile?tab=account) if it is exposed. |
+| `hostedVerifyUrl` | Send the user to the returned NEUS hosted flow. |
 
 <CardGroup cols={3}>
   <Card title="MCP overview" icon="plug" href="./overview" />

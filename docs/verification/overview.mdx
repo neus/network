@@ -4,7 +4,7 @@ description: Verifier types, terms, and verification responses.
 icon: file-signature
 ---
 
-Verification is how NEUS checks a claim against verifier rules and returns a **trust receipt** you can reuse across your app. Read [How it works](./how-it-works) for mechanics and [Integration](../integration) for where verification sits in your app.
+Verification is how NEUS evaluates a claim and returns a **trust receipt** (`qHash`) you can reuse. Mechanics: [How it works](./how-it-works). Placement in your product: [Integration](../integration).
 
 ## Outcomes
 
@@ -29,9 +29,9 @@ Verification is how NEUS checks a claim against verifier rules and returns a **t
 | Term | Meaning |
 |------|---------|
 | qHash | Trust receipt reference — [Results](../platform/receipts-and-results) |
-| Verifier | Capability checked |
+| Verifier | Rule set applied to the claim |
 | Signing string | Wallet message |
-| Hosted Verify | NEUS-hosted browser flow at `/verify` - [guide](../cookbook/auth-hosted-verify) |
+| Hosted Verify | Browser flow at `neus.network/verify` — [Hosted Verify](../cookbook/auth-hosted-verify) |
 
 Visibility: [Security and trust](../platform/security-and-trust)
 
@@ -45,7 +45,7 @@ Visibility: [Security and trust](../platform/security-and-trust)
 
 <CardGroup cols={2}>
   <Card title="Verifiers" icon="list-tree" href="./verifiers">
-    Capability catalog.
+    Catalog of checks.
   </Card>
   <Card title="How it works" icon="shield-check" href="./how-it-works">
     End-to-end flow.

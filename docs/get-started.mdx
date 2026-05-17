@@ -1,21 +1,27 @@
 ---
 title: Get started
-description: Account, app, first proof.
+description: Account, app, first receipt.
 icon: book
 ---
 
-Set up the account that owns your app, then ship one proof flow.
+## Docs path (pick one lane)
 
-## 1. Connect to NEUS
+| Lane | Start here | Then |
+|------|------------|------|
+| **Ship checks in your app** | This page (account + `appId`) | [Quickstart](./quickstart) → [Integration](./integration) → [Hosted Verify](./cookbook/auth-hosted-verify) when you need redirect/popup detail |
+| **Wire editors / assistants (MCP)** | [MCP setup](./mcp/setup) | [MCP overview](./mcp/overview) → [Agent verification flow](./agents/agent-verification-flow) when you use an **agent wallet** |
+| **Hub / DNS / org settings** | [Platform setup](./platform/setup) | [Billing](./platform/billing) as needed |
 
-[Open NEUS](https://neus.network/hub) with passkey or wallet.
+Avoid parallel “first setup” threads: use **Quickstart** for SDK code, **MCP setup** for hosted MCP install only, and **Agent verification flow** for `neus_agent_link` / `neus_agent_create` together.
 
-## 2. Link your app
+## 1. NEUS account
 
-Create the app in Platform and copy the **`appId`**. Requests from that app bill the linked profile.
+[Hub](https://neus.network/hub): sign in to NEUS (passkey or wallet on **NEUS** only).
 
-## 3. Run your first loop
+## 2. App in Platform
 
-Use Hosted Verify for the browser handoff, or start with the SDK quickstart.
+Create the app, copy **`appId`**. Usage bills the linked profile.
 
-**Next:** [Quickstart](./quickstart)
+## 3. First receipt
+
+[Quickstart](./quickstart): **browser** (`VerifyGate` or hosted URL → `/verify`) and **server** (`verifyFromApp`) on one page.

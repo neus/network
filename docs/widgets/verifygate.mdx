@@ -4,7 +4,7 @@ description: Gate React UI behind verification with hosted verify built in.
 icon: object-group
 ---
 
-`VerifyGate` checks eligibility, sends users through hosted verification when needed, then renders children. New proofs default to **private**, matching `client.verify()`. See [Security and trust](../platform/security-and-trust) for visibility; use [Get started](../get-started) for production `appId` and linking.
+`VerifyGate` checks eligibility, runs **Hosted Verify** when a new proof is needed, then renders children. New proofs default to **private** (same default as `client.verify()`). Visibility: [Security and trust](../platform/security-and-trust). Production **`appId`**: [Get started](../get-started).
 
 ## Default create behavior
 
@@ -54,13 +54,14 @@ export function Page() {
 | `appId` | Sends public app attribution; usage bills the linked app owner profile |
 | `hostedCheckoutUrl` | Overrides the hosted verify URL when needed |
 | `oauthProvider` | Pre-selects the OAuth provider when the user already chose one in your app |
+| `wallet` | Explicit provider for direct signing. Use this for non-EVM wallets and pass CAIP-2 `chain` context. |
 
-## Best use cases
+## Typical uses
 
-- gating paid or premium content
-- checking NFT or token access
-- launching hosted social or org verification
-- requiring fresh proof creation for high-stakes actions
+- Paid or premium content behind a check
+- NFT or token access
+- Hosted social or organization verification
+- Fresh proof for high-stakes actions
 
 ## Hosted OAuth
 
@@ -89,7 +90,7 @@ Allowed values:
 
 ## Direct-sign vs hosted
 
-- **`ownership-basic`** and other wallet-creatable verifiers can run in-widget with a connected wallet.
+- **`ownership-basic`** and other wallet-creatable verifiers can run in-widget with a connected EVM wallet. For non-EVM direct signing, pass `wallet` and CAIP-2 `chain` explicitly.
 - Social, org, and human flows route through hosted verify. Start from **[Hosted Verify](../cookbook/auth-hosted-verify)** when you are unsure.
 
 ## Next

@@ -1,37 +1,25 @@
 ---
 title: Authentication
-description: Login, App Link, Hosted Verify, server keys, and direct signing.
+description: Server App Link, hosted browser on NEUS, keys; optional in-app signing.
 icon: fingerprint
 ---
 
-NEUS does not replace your login system. Most apps keep their own login and use NEUS for trust receipts.
+**Default:** ceremony on **`neus.network/verify`** or on the server. **Exception:** you explicitly sign inside your own page ([Signing format](../verification/signing-format)).
 
-## Choose a path
-
-| Need | Use | What users see |
-| --- | --- | --- |
-| Keep your existing login | **App Link** + server SDK | No wallet popup for each request |
-| Let NEUS host the account step | **Hosted Verify** | Passkey-first sign-in, wallet when needed |
-| Gate a React surface | **VerifyGate** | Inline check, hosted handoff only when needed |
-| Direct wallet proof in your UI | **SDK verify** | Wallet signature in your app |
-| Backend reads and checks | **Personal access key** | No user-facing flow |
-
-Use raw HTTP signing only without the SDK.
+| Need | Mechanism | Wallet code in your app |
+|------|-----------|---------------------------|
+| Receipts with your existing login | App Link + `verifyFromApp` | No |
+| Browser ceremony | Hosted Verify / `VerifyGate` | No |
+| Keys / MCP / raw HTTP | Bearer `npk_*` | No |
+| Sign inside your page | SDK `verify` + `wallet` | Yes — rare |
 
 ## App Link
 
-This is the default server path. Your backend calls NEUS with your app ID and access key, and NEUS checks the user's App Link before creating the receipt.
-
-Requirements:
-
-- `Authorization: Bearer <npk_...>` from [Access keys](https://neus.network/profile?tab=account)
-- `x-neus-app` matching the linked app
-- A user wallet or account address in the request body
-- An active App Link for that user and app
-
-The SDK handles this with `verifyFromApp`:
+`Authorization: Bearer <npk_...>`, `x-neus-app`, linked user address, active App Link. [Quickstart](../quickstart).
 
 ```javascript
+import { NeusClient } from '@neus/sdk';
+
 const client = new NeusClient({
   appId: process.env.NEUS_APP_ID,
   apiKey: process.env.NEUS_ACCESS_KEY,
@@ -40,55 +28,24 @@ const client = new NeusClient({
 const receipt = await client.verifyFromApp({
   user: { walletAddress: user.walletAddress },
   verifier: 'ownership-basic',
-  content: 'User completed onboarding',
+  content: { claim: 'User completed onboarding', source: 'your-app' },
 });
 ```
 
-See [Quickstart](../quickstart) for the full flow.
+## Hosted Verify
 
-## Hosted Login and Verify
+`https://neus.network/verify` — [Hosted Verify](../cookbook/auth-hosted-verify).
 
-Hosted Verify is the NEUS browser flow at `https://neus.network/verify`. Use it when the user needs to sign in on NEUS, complete OAuth, pass a human check, connect a wallet, or finish a gate.
+## Personal access keys
 
-The hosted login path is passkey-first.
+[Access keys](https://neus.network/profile?tab=account). Servers only.
 
-```javascript
-const url = getHostedCheckoutUrl({
-  verifiers: ['ownership-basic'],
-  returnUrl: 'https://yourapp.com/neus/callback',
-});
-```
+[MCP Auth](../mcp/auth) · [SDK Authentication](../sdks/authentication)
 
-After completion, store the returned `qHash` with your own user or record. See [Hosted Verify](../cookbook/auth-hosted-verify).
+## Signing inside your app
 
-## Personal Access Keys
+[Signing format](../verification/signing-format) · `signMessage` from `@neus/sdk`
 
-Use **`Authorization: Bearer`** with a key from **[Access keys](https://neus.network/profile?tab=account)** for server-side API calls.
+## Raw HTTP
 
-Keep access keys on servers only. Do not put `npk_*` keys in browser bundles.
-
-[MCP Auth](../mcp/auth) | [SDK Authentication](../sdks/authentication)
-
-## Direct Signing
-
-Use SDK signing when the user is already in your app and you want a wallet signature there:
-
-```javascript
-await client.verify({
-  verifier: 'ownership-basic',
-  content: 'Hello NEUS',
-  wallet: window.ethereum,
-});
-```
-
-
-## Raw HTTP Signing
-
-Only without Hosted Verify or the SDK:
-
-1. Build the JSON body.
-2. `POST /api/v1/verification/standardize`.
-3. Sign the returned `signerString`.
-4. `POST /api/v1/verification` with the same body and `signature`.
-
-Use `signMessage` from `@neus/sdk` when possible. Details: [Signing format](../verification/signing-format).
+`POST /api/v1/verification/standardize` → sign `signerString` → `POST /api/v1/verification`. [Signing format](../verification/signing-format).

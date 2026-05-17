@@ -8,44 +8,43 @@ icon: code
 npm install @neus/sdk
 ```
 
-The JavaScript SDK wraps verify, polling, gate checks, and hosted checkout URLs. Link your app and `appId` through Get started. Editors and assistants use the same APIs via MCP.
+The JavaScript SDK builds hosted URLs, runs gate checks, polls status, and optional in-app signing. Link **`appId`** in [Get started](../get-started). MCP calls the same APIs: [MCP](../mcp/overview).
 
 ## Default placement
 
 | Use case | Where |
 |----------|--------|
-| Verify, poll, hosted URL | **Browser** (or WebView) with `NeusClient` |
-| **gateCheck** / allow-deny | **Your server** (Node, API route, worker)—not a substitute for in-browser verify |
+| Hosted verify URL, `VerifyGate` | **Browser** (or WebView) |
+| **`gateCheck`**, `verifyFromApp`, `npk_*`** | **Server** |
 
-Avoid cross-origin `fetch` to `api.neus.network` from frontend code; use these SDK entry points or proxy on your backend.
+Avoid credentialed `fetch` to `api.neus.network` from the browser; use SDK helpers or your backend.
 
-## One flow (browser)
+## Browser (default)
+
+Ceremony on **NEUS**:
 
 ```javascript
-import { NeusClient, getHostedCheckoutUrl } from '@neus/sdk';
+import { getHostedCheckoutUrl } from '@neus/sdk';
 
-const client = new NeusClient({
-  apiUrl: 'https://api.neus.network',
-  appId: 'my-app',
-});
-
-const proof = await client.verify({
-  verifier: 'ownership-basic',
-  content: 'Hello NEUS',
-  wallet: window.ethereum,
-});
-await client.pollProofStatus(proof.qHash, { interval: 3000, timeout: 60000 });
-
-const url = getHostedCheckoutUrl({
-  verifiers: ['ownership-basic'],
-  returnUrl: 'https://myapp.com/callback',
-});
+window.location.assign(
+  getHostedCheckoutUrl({
+    verifiers: ['ownership-basic'],
+    returnUrl: 'https://myapp.com/callback',
+  }),
+);
 ```
+
+React: `VerifyGate` from `@neus/sdk/widgets` — [Quickstart](../quickstart).
+
+After you have **`qHash`**, optional wait: `NeusClient` + `pollProofStatus` — [Verifications](./verifications).
+
+## In-app signing (optional)
+
+`client.verify({ wallet: ... })` only if signing stays in **your** page. Pass the wallet/provider explicitly. Non-EVM signing also needs `chain` as CAIP-2. [CAIP-380 Portable Proof](../learn/standards/caip-380) Â· [Signing format](../verification/signing-format).
 
 ## Eligibility on your server
 
 ```javascript
-// Trusted server context only (Node, API route, worker)
 const gate = await client.gateCheck({
   address: '0x...',
   verifierIds: ['ownership-basic'],
@@ -56,10 +55,10 @@ const gate = await client.gateCheck({
 
 | Need | Method |
 |------|--------|
-| Create | `verify()` |
+| Hosted handoff | `getHostedCheckoutUrl()`, `VerifyGate` |
+| Sign inside your app | `verify()` |
 | Wait | `pollProofStatus()` |
-| Eligible? | `gateCheck()` (server) |
-| Hosted URL | `getHostedCheckoutUrl()` |
+| Allow / deny | `gateCheck()` (server) |
 
 Optional: `timeout` on `NeusClient`.
 

@@ -1,7 +1,7 @@
 # GEMINI.md
 
-Read `AGENTS.md` for public-facing rules and boundaries for this repo.
+This repository is **public** (`network`): docs, SDK, widgets, and examples.
 
-- Public content only.
-- Use existing production paths; in-place edits; verify before claiming success.
-- Do not invent qHashes, wallets, receipts, or API outcomes.
+- Keep everything vendor-safe and aligned with **`docs/`** and **`protocol`** behavior.
+- Do not reference private workspace clones, internal policy files, or non-public runbooks.
+- Verify changes with the smallest relevant check (for example `npm run docs:validate` or `npm run test:sdk` from repo root).

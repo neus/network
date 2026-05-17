@@ -73,6 +73,22 @@ describe('NeusClient', () => {
       };
       await expect(client.getPrivateProof(`0x${'ab'.repeat(32)}`, w)).rejects.toThrow(ConfigurationError);
     });
+
+    it('does not silently use Solana globals as the implicit browser wallet', () => {
+      const previousWindow = global.window;
+      global.window = {
+        solana: { publicKey: { toBase58: () => '11111111111111111111111111111111' } },
+        phantom: {
+          solana: { publicKey: { toBase58: () => '22222222222222222222222222222222' } }
+        }
+      };
+
+      try {
+        expect(client._getDefaultBrowserWallet()).toBeNull();
+      } finally {
+        global.window = previousWindow;
+      }
+    });
   });
 
   describe('getProof()', () => {

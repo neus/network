@@ -4,11 +4,11 @@ description: Start with the trust receipts showcase, then Node, React, and curl.
 icon: code
 ---
 
-These samples implement the same flow: check for an existing receipt, verify if needed, save the `qHash`, reuse it on return visits. For production API usage, link your app and billing ([Get started](./get-started)).
+Same flow everywhere: check → verify if needed → save **`qHash`** → reuse. Link app + billing: [Get started](./get-started).
 
-**Default showcase:** [trust receipts showcase](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) (clone and `npm run dev`) maps real-world outcomes to verifiers. **Live product demo:** [neus.network/demo](https://neus.network/demo) — try flows in the browser, then use the same patterns from the open-source app.
+**Showcase:** [trust-receipts-showcase](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) · **Demo:** [neus.network/demo](https://neus.network/demo).
 
-For SDK setup, start with [Quickstart](./quickstart). Use [Hosted Verify](./cookbook/auth-hosted-verify) when NEUS should handle login, passkeys, wallets, OAuth, or gate checkout. Raw HTTP samples at the bottom of this page are **advanced**.
+[Quickstart](./quickstart) · [Hosted Verify](./cookbook/auth-hosted-verify) (ceremony on NEUS). Raw HTTP here = **advanced**.
 
 | Example | Use it for |
 |------------|----------|
@@ -34,9 +34,9 @@ export default function ProtectedPage() {
 }
 ```
 
-## Node: receipt
+## Node
 
-Use [Quickstart](./quickstart) for the normal server path: your app keeps login, the SDK calls NEUS from your backend. Use [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) only when you need the lower-level SDK flow.
+[Quickstart](./quickstart) for `verifyFromApp`. [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) for lower-level SDK only.
 
 ## HTTP (advanced)
 
@@ -47,12 +47,12 @@ curl -X POST https://api.neus.network/api/v1/verification/standardize \
 # Advanced raw HTTP only: sign signerString, then POST /api/v1/verification with the same body + signature
 ```
 
-## Docs
+## Doc map
 
-| | |
-|--|--|
-| [Get started](./get-started) | App + billing |
-| [Hosted Verify](./cookbook/auth-hosted-verify) | Hosted UX |
-| [MCP](./mcp/overview) | Assistants |
-| [Quickstart](./quickstart) | First SDK proof |
-| [API](./api/overview) | HTTP |
+| Doc | Purpose |
+|-----|---------|
+| [Get started](./get-started) | Account and billing |
+| [Hosted Verify](./cookbook/auth-hosted-verify) | Browser ceremony on NEUS |
+| [MCP](./mcp/overview) | Assistants and automation |
+| [Quickstart](./quickstart) | SDK first receipt |
+| [API](./api/overview) | HTTP reference |

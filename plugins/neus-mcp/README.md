@@ -3,7 +3,19 @@
 This folder is the **`neus-mcp`** plugin shipped inside the [`neus/network`](https://github.com/neus/network) Claude Code marketplace. It bundles:
 
 - **Hosted NEUS MCP** (`.mcp.json`) — streamable HTTP to `https://mcp.neus.network/mcp`
-- **`neus-trust-workflow` skill** — recommended tool order and BYOA access-key setup
+- **`neus-trust-workflow` skill** — recommended tool order and Profile access key hygiene
+
+**All editors:** use the same CLI so configs stay aligned:
+
+```bash
+npx -y -p @neus/sdk neus setup
+```
+
+Optional key in one step:
+
+```bash
+npx -y -p @neus/sdk neus setup --access-key <npk_...>
+```
 
 ## Install (Claude Code)
 

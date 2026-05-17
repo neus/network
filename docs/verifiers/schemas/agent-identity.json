@@ -37,6 +37,11 @@
       "format": "universal-address",
       "type": "string"
     },
+    "avatar": {
+      "description": "Public agent avatar/logo URL or ipfs:// URI.",
+      "maxLength": 512,
+      "type": "string"
+    },
     "capabilities": {
       "additionalProperties": false,
       "description": "Agent capabilities as boolean flags",

@@ -22,11 +22,20 @@ Terms: [Agent concepts](./concepts).
 
 ## MCP handoff
 
-`neus_agent_link` to `status: "link_required"`: open **`hostedVerifyUrl`**, finish browser flow, call **`neus_agent_link`** again. Readiness for identity + permissions - not a generic wallet-link tool.
+Canonical order (matches server guidance):
+
+1. **`neus_context`**, then **`neus_me`** when your MCP session uses a Profile access key (**Bearer**).
+2. **`neus_agent_link`** with **`agentWallet`** — if **`linked: true`**, you are done for assistants that require both proofs on file.
+3. If the tool returns **`link_required`** and you still need prepared payloads (signing strings or a combined hosted URL), call **`neus_agent_create`**, then complete the steps it returns (hosted **`hostedVerifyUrl`** and/or **`neus_verify`** with the provided **`signatures`**).
+4. **`neus_agent_link`** again until **`linked: true`**.
+
+`neus_agent_link` with **`link_required`**: open **`hostedVerifyUrl`** when returned, finish the browser flow, then call **`neus_agent_link`** again. Readiness covers **agent-identity** plus **agent-delegation** for the default delegated-agent path — not the generic [wallet-link](../verification/wallet-link) verifier.
+
+Tool reference: [Agent link](../mcp/agent-link) · [Agent create](../mcp/agent-create) · [MCP overview](../mcp/overview).
 
 ## Related
 
-<CardGroup cols={3}>
+<CardGroup cols={2}>
  <Card title="Concepts" icon="book-open" href="./concepts">
  Roles and field names.
  </Card>

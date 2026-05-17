@@ -1,63 +1,83 @@
 ---
 title: Hosted Verify
-description: NEUS-hosted login, verification, and gated-access handoff.
+description: `neus.network/verify` — login, checks, gates; ceremony on NEUS.
 icon: key
 ---
 
-Hosted Verify is the browser flow at `https://neus.network/verify`. Use it when you want NEUS to handle the user-facing step instead of building verification UI yourself.
+**Hosted Verify** is `https://neus.network/verify`. Use it when a step needs a **browser ceremony** (passkey, wallet, OAuth, human check, or gate checkout). For the default path, your app does **not** embed wallet or passkey UI.
 
-## What it handles
+## What runs here
 
-| Need | Hosted behavior |
-| --- | --- |
-| Login | Passkey-first NEUS session, wallet supported when needed |
-| Social or org checks | OAuth completes on NEUS |
-| Human checks | User completes the provider flow on NEUS |
-| Wallet-required proofs | User connects and signs only when that proof needs it |
-| Gate access | User completes requirements, then returns to your app |
+| Query intent | User completes on NEUS |
+|--------------|-------------------------|
+| `intent=login` | NEUS session: passkey sign-in, wallet sign-in, optional passkey registration |
+| `verifiers` / `preset` / `gateId` | Verification or gate checkout; wallet steps **only** if a selected check requires them |
+| Social / org **proof** | OAuth inside a verifier — [ownership-social](../verification/ownership-social), [ownership-org-oauth](../verification/ownership-org-oauth) |
 
-Hosted Verify is the handoff for trust receipts, provider steps, and gated access.
+## Login vs verification
 
-## URL
+| Topic | `intent=login` | Verification (`verifiers` / `preset` / `gateId`, no login-only intent) |
+|--|----------------|---------------------------------------------------------------------|
+| Purpose | NEUS **session** (Hub, profile, later checks) | **Receipt** / gate outcome |
+| Screen | Dedicated login shell | Composer |
 
-```txt
-https://neus.network/verify
-```
-
-Common parameters:
+## Parameters
 
 | Param | Use |
 | --- | --- |
-| `intent=login` | Open hosted login |
+| `intent=login` | Hosted **login** only |
+| `returnUrl` | Absolute `https://…` back to **your** app after completion (integrators). Validated before redirect. |
+| `returnTo` | **neus.network** path only (e.g. `/profile`). Not for third-party domains. `@neus/sdk` `getHostedCheckoutUrl` does not set this; append manually if needed. |
+| `connect=1` | With `intent=login`, auto-start wallet connect on load |
 | `verifiers` | Comma-separated verifier IDs |
 | `preset` | Bundled verifier set |
-| `gateId` | Gate requirements |
-| `returnUrl` | Redirect target after completion |
-| `mode=popup` | Popup handoff |
-| `origin` | Expected opener origin for popup messages |
+| `gateId` | Gate definition |
+| `mode=popup` | Popup; requires `origin` |
+| `origin` | Opener origin for postMessage |
 
-## Redirect
+## Redirect examples
+
+**Checkout / proof (integrator):**
 
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
 window.location.href = getHostedCheckoutUrl({
   verifiers: ['ownership-basic'],
-  returnUrl: 'https://myapp.com/neus/callback',
+  returnUrl: 'https://myapp.com/auth/callback',
 });
 ```
 
-After completion, read the returned `qHash`, save it with your user or record, and check it before asking the user to verify again.
+After redirect, read **`qHash`** (and related fields) from your callback URL.
+
+**Login then return to your app:**
+
+```javascript
+import { getHostedCheckoutUrl } from '@neus/sdk';
+
+window.location.href = getHostedCheckoutUrl({
+  intent: 'login',
+  returnUrl: 'https://myapp.com/auth/after-login',
+});
+```
+
+**First-party only** (stay on `neus.network`):
+
+```txt
+https://neus.network/verify?intent=login&returnTo=/profile
+```
+
+`/login` on `neus.network` redirects to `/verify?intent=login&…` with a validated `returnTo`.
 
 ## Popup
 
-For embedded flows, open Hosted Verify with `mode: 'popup'` and `origin: window.location.origin`. Listen for:
+Open with `mode: 'popup'` and `origin: window.location.origin`.
 
-- `neus_checkout_done`
-- `neus_login_complete`
+| Flow | Opener listens for |
+|------|-------------------|
+| Verification / gate | `neus_checkout_done` (includes `qHash` when applicable) |
+| `intent=login` | `neus_login_complete` |
 
-The popup response includes the receipt result when verification completes.
+## No browser handoff
 
-## When to use App Link instead
-
-If your backend already has the user and you want no browser handoff, use [App Link](../quickstart) with `verifyFromApp`.
+Server-only receipts: [Quickstart](../quickstart) (`verifyFromApp`).

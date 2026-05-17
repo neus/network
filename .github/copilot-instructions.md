@@ -1,7 +1,7 @@
-# NEUS Copilot Instructions
+# GitHub Copilot instructions
 
-This is the public NEUS Network repository. Follow `AGENTS.md` for boundaries and public-safe rules only.
+This repository is the **public** NEUS surface: documentation, SDK, widgets, and examples.
 
-- Public-facing content only. No internal instructions or private infrastructure details.
-- Verify with tests, source, or documentation before claiming completion.
-- Do not invent qHashes, verifier IDs, wallets, receipts, or API outcomes.
+- Keep contributions vendor-safe: no private operator playbooks, secrets, or internal-only infrastructure.
+- Match behavior described in **`docs/`** and implemented in **`protocol`** / **`neus`**; do not invent API fields or verifier outcomes.
+- Prefer the smallest change that stays consistent with existing patterns in **`sdk/`** and **`docs/`**.

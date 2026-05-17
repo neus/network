@@ -10,8 +10,20 @@ NEUS tracks the [CAIP-380](https://github.com/ChainAgnostic/CAIPs/pull/380) prop
 
 One wallet-signed envelope; apps validate off-chain; stable **qHash**.
 
-- Identities: CAIP-10 style (`did:pkh:…`) where used
-- Chains: CAIP-2 (`eip155:1`, `solana:mainnet`, …)
+- Networks use CAIP-2 (`eip155:1`, `solana:mainnet`, ...)
+- Account ids use CAIP-10 (`eip155:1:0x...`, `solana:mainnet:...`) where an `*AccountId` field is emitted
+- Stable profile and proof URLs use W3C `did:pkh` (`did:pkh:eip155:1:0x...`)
+
+## Identity and chain glossary
+
+| Term | Shape | NEUS usage |
+|------|-------|------------|
+| CAIP-2 | `namespace:reference` | Network context. Use `chain` for non-EVM signing and account identity, for example `solana:mainnet`. |
+| CAIP-10 | `namespace:reference:account` | Account id fields such as `agentAccountId` and `controllerAccountId`. |
+| `did:pkh` | `did:pkh:namespace:reference:account` | Stable DID for profiles, proof subjects, and `/u/[did]` URLs. It is derived from the same chain and account context, but is not a bare CAIP-10 string. |
+| `chainId` | number | EVM-only compatibility field. For signer context it can be omitted by standard EVM integrations because NEUS resolves the hub chain. For asset verifiers, set the verifier-specific `chainId` inside `data`. |
+
+Rule of thumb: EVM browser flows can rely on hosted verify or pass an explicit EVM provider. Non-EVM flows pass the wallet/provider explicitly and include `chain` as a CAIP-2 value.
 
 ## NEUS anchor
 
@@ -19,7 +31,7 @@ One wallet-signed envelope; apps validate off-chain; stable **qHash**.
 
 ## Inputs (conceptual)
 
-Account + chain, `verifierIds`, `data` (JSON; **use `/standardize` so field order matches what was signed**), `signedTimestamp`, EVM `chainId` or non-EVM `chain`.
+Account + chain, `verifierIds`, `data` (JSON; **use `/standardize` so field order matches what was signed**), `signedTimestamp`, EVM `chainId` or non-EVM `chain` (CAIP-2).
 
 ## Signer string
 

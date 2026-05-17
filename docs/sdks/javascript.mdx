@@ -1,18 +1,19 @@
 ---
 title: JavaScript SDK
-description: Create verifications, poll for qHash, gateCheck eligibility, and hosted checkout URLs from TypeScript or JavaScript.
+description: Hosted URLs, gates, polling, and optional in-browser signing.
 icon: code
 ---
 
-Proof creation, hosted URLs, polling. Use instead of ad-hoc HTTP when you can.
+Use `@neus/sdk` instead of ad-hoc `fetch` to `api.neus.network` so headers and paths stay correct.
 
-## Default: browser vs server
+## Browser vs server
 
-**Browser:** proof creation (`verify`), polling, hosted checkout URLs, and widgets. The SDK sets the headers and paths the API expects for those flows.
+| Layer | Use |
+|-------|-----|
+| Browser | **`getHostedCheckoutUrl`**, **`VerifyGate`**, polling — default user ceremony on **NEUS** ([Quickstart](../quickstart)) |
+| Server | **`gateCheck`**, **`verifyFromApp`**, secrets, raw HTTP |
 
-**Your server:** **Allow/deny and eligibility** (`gateCheck` → `GET /api/v1/proofs/check`), anything with **secrets**, and any check that must not be spoofable from DevTools. Use the SDK on Node or proxy HTTP from your own API.
-
-**Do not** implement `fetch('https://api.neus.network/...')` by hand in frontend code. Custom headers trigger CORS preflight, and only specific headers are allowed per route. If you need behavior the browser SDK does not expose, **proxy through your backend**—[API overview](../api/overview).
+Do not put **`npk_*`** or other secrets in browser bundles. If you need calls the SDK does not expose from the client, **proxy through your backend** — [API overview](../api/overview).
 
 ## Install
 
@@ -20,9 +21,62 @@ Proof creation, hosted URLs, polling. Use instead of ad-hoc HTTP when you can.
 npm install @neus/sdk
 ```
 
-## Create a Proof (Browser Wallet Flow)
+## Hosted URL (browser default)
 
-This path requests a wallet signature in the browser and submits the verification request:
+```javascript
+import { getHostedCheckoutUrl } from '@neus/sdk';
+
+window.location.assign(
+  getHostedCheckoutUrl({
+    verifiers: ['ownership-basic'],
+    returnUrl: 'https://myapp.com/callback',
+  }),
+);
+```
+
+`getHostedCheckoutUrl` supports `gateId`, `returnUrl`, `verifiers`, `preset`, `mode`, `intent`, `origin`, `oauthProvider`. The hosted page also accepts `returnTo` and `connect=1` (append manually). [Hosted Verify](../cookbook/auth-hosted-verify).
+
+React: [Widgets](../widgets/overview).
+
+## Client configuration
+
+```javascript
+const client = new NeusClient({
+  // Optional: API base URL (default: https://api.neus.network)
+  apiUrl: 'https://api.neus.network',
+  // Optional: public app attribution ID (non-secret)
+  appId: 'neus-network',
+  // Optional: request timeout (ms)
+  timeout: 30000,
+});
+```
+
+## App attribution (`appId`)
+
+Set `appId` on the client for usage attribution. It is public, not a secret.
+
+```javascript
+const client = new NeusClient({
+  apiUrl: 'https://api.neus.network',
+  appId: 'acme-web',
+});
+```
+
+## Verification options
+
+| Option | When to Use |
+|--------|-------------|
+| `persist: true` | Persist a reusable **qHash** |
+| `ipfs: true` / `pin: true` | IPFS-backed storage |
+| `strategy: 'reuse-or-create'` | Eligible proof first, else create (default) |
+| `strategy: 'fresh'` | Always create a new proof |
+| `strategy: 'reuse'` | Eligible proofs only; never create |
+
+[Verification patterns](./verifications) for privacy and widget options.
+
+## Optional: `client.verify()` (signs in the browser)
+
+Use only when you intentionally keep signing in **your** page (wallet extension or injected provider):
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -38,39 +92,14 @@ const qHash = res.qHash;
 const record = await client.getProof(qHash);
 ```
 
-## Client Configuration
-
-```javascript
-const client = new NeusClient({
-  // Optional: API base URL (default: https://api.neus.network)
-  apiUrl: 'https://api.neus.network',
-  // Optional: public app attribution ID (non-secret)
-  appId: 'neus-network',
-  // Optional: request timeout (ms)
-  timeout: 30000,
-});
-```
-
-## Verification Options
-
-| Option | When to Use |
-|--------|-------------|
-| `persist: true` | Persist a reusable **qHash** |
-| `ipfs: true` / `pin: true` | Use when you need IPFS-backed storage |
-| `strategy: 'reuse-or-create'` | Check eligible proof first, create if missing. Default. |
-| `strategy: 'fresh'` | Always create new proof. Use for high-stakes checks. |
-| `strategy: 'reuse'` | Only check eligible proofs; never create. |
-
-See [Verification Patterns](./verifications) for privacy levels and widget options.
-
 ## Advanced: manual signing (full control)
 
-Prefer **`client.verify()`** above when a browser wallet is available. Use this path only when you must assemble `verifierIds` / `data` yourself, then sign the API-standardized string:
+When you assemble `verifierIds` / `data` yourself, then sign the standardized string. The example below is EVM. For non-EVM, pass the provider explicitly and include `chain` as a CAIP-2 value. See [CAIP-380 Portable Proof](../learn/standards/caip-380).
 
 ```javascript
 import { standardizeVerificationRequest, signMessage } from '@neus/sdk';
 
-const provider = window.ethereum;
+const provider = window.ethereum; // EVM injected provider
 const walletAddress = '0x1111111111111111111111111111111111111111';
 const signedTimestamp = Date.now();
 const body = {
@@ -101,24 +130,24 @@ const res = await client.verify({
 });
 ```
 
-Catalog: `GET /api/v1/verification/verifiers` - treat the response as authoritative (SDK examples are non-normative).
+Live verifier list: `GET /api/v1/verification/verifiers`.
 
 ## Gate checks: `gateCheck` vs `checkGate`
 
 | Method | Use when |
 |--------|----------|
 | **`gateCheck()`** | **Allow/deny** via `GET /api/v1/proofs/check` (server-enforced). |
-| **`checkGate()`** | Preview against proofs you already loaded. Not for security-sensitive allow/deny vs **`gateCheck()`**. |
+| **`checkGate()`** | Preview against proofs you already loaded. Not a substitute for **`gateCheck()`** where trust matters. |
 
-## Wallet-link: hosted first, direct when needed
+## Wallet-link: hosted first
 
-For normal browser UX, route users to Hosted Verify so wallet selection, secondary-wallet signing, and proof creation stay guided. Use direct mode only when your integration already controls the secondary wallet/provider.
+For typical UX, use Hosted Verify so wallet selection and secondary signing stay on NEUS. Direct mode is for integrations that already control the secondary wallet and provider.
 
 ```javascript
 const walletLinkData = await client.createWalletLinkData({
   primaryWalletAddress: '0xprimary...',
   secondaryWalletAddress: '0xsecondary...',
-  wallet: window.ethereum,
+  wallet: window.ethereum, // EVM provider; pass explicit provider + chain for non-EVM
   relationshipType: 'linked',
   label: 'my-wallet'
 });
@@ -129,40 +158,7 @@ const res = await client.verify({
 });
 ```
 
-## App Attribution (`appId`)
-
-Set `appId` on the client to attribute usage and analytics to your app. `appId` is a public identifier, not a secret.
-
-```javascript
-const client = new NeusClient({
-  apiUrl: 'https://api.neus.network',
-  appId: 'acme-web',
-});
-```
-
-## Hosted Checkout URL Builder
-
-Use `getHostedCheckoutUrl` for a single typed entry point:
-
-Supported query keys: `gateId`, `returnUrl`, `verifiers`, `preset`, `mode`, `intent`, and `origin`.
-
-```javascript
-import { getHostedCheckoutUrl } from '@neus/sdk';
-
-const url = getHostedCheckoutUrl({
-  gateId: 'my-gate',
-  returnUrl: 'https://myapp.com/callback',
-  verifiers: ['ownership-social'],
-  mode: 'popup',
-  origin: window.location.origin,
-  intent: 'login',
-});
-// => https://neus.network/verify?gateId=my-gate&returnUrl=...&verifiers=...&mode=popup&origin=...
-```
-
 ## Gate checks from your servers
-
-Use **`gateCheck`** for allow/deny without loading full proof payloads:
 
 ```javascript
 const res = await client.gateCheck({
@@ -180,16 +176,18 @@ if (!res.data?.eligible) {
 ```
 
 <Warning>
-**`gateCheck`** uses **public** and **unlisted** proofs by default. **Private** proofs count only when that user is **signed in**. For the strictest live checks, create a fresh proof and wait for **verified** status.
+**`gateCheck`** uses **public** and **unlisted** proofs by default. **Private** proofs count when that user is **signed in**. For strict live checks, create a fresh proof and wait for **verified** status.
 </Warning>
 
 ## Polling
 
 `pollProofStatus()` backs off on `429` and transient errors.
 
-## Advanced: Private Proof Operations
+## Advanced: private proof operations
 
 ```javascript
+// EVM examples. For non-EVM, pass an explicit wallet/provider and CAIP-2 chain options.
+
 // Private proof by qHash
 const privateData = await client.getPrivateProof(qHash, window.ethereum);
 
@@ -204,9 +202,9 @@ const privateProofs = await client.getPrivateProofsByWallet(
 await client.revokeOwnProof(qHash, window.ethereum);
 ```
 
-## React Widgets
+## React widgets
 
-For UI gating, see **[Widgets](../widgets/overview)**.
+[Widgets overview](../widgets/overview).
 
 ```javascript
 import { VerifyGate, ProofBadge } from '@neus/sdk/widgets';

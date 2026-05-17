@@ -43,6 +43,11 @@
         "agent"
       ]
     },
+    "avatar": {
+      "type": "string",
+      "maxLength": 512,
+      "description": "Public agent avatar/logo URL or ipfs:// URI."
+    },
     "description": {
       "type": "string",
       "maxLength": 500

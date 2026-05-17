@@ -56,4 +56,6 @@ docs/.mintlify-home*/
 .cursor/*
 .cursorrules
 .vscode/settings.json
+
+# Never commit compiled _workspace kernel or MANIFEST (context-sync must not target this public repo).
 .neus/

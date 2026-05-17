@@ -4,7 +4,7 @@ description: Proofs and profile summary for a wallet or DID.
 icon: receipt
 ---
 
-Use when you have an **`identifier`** and need authoritative proof records, qHash values, tags, profile summary, or delegated proof context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility.
+Use when you have an **`identifier`** and need proof records, qHash values, tags, profile summary, or delegated proof context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility.
 
 | Auth | Visibility |
 |------|------------|
@@ -28,6 +28,8 @@ Use when you have an **`identifier`** and need authoritative proof records, qHas
 | `identifier` | EVM, Solana base58, **`did:pkh:...`** |
 | `tags` | Comma-separated filter on **`proof.meta.tags`** |
 | `agentWallet` | Delegation (**`x-agent-wallet`**) |
+
+When `identifier` is a DID, NEUS resolves the DID to its native account. Non-EVM signing and account context still use CAIP-2 `chain`; see [CAIP-380 Portable Proof](../learn/standards/caip-380).
 
 ## Response
 

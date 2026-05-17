@@ -214,7 +214,7 @@ function printUsage(exitCode = 0) {
     '  --client <name[,name]>   Limit setup to claude, cursor, or vscode',
     '  --project                Write shared project config instead of user config',
     '  --access-key <npk_...>   Configure Bearer auth for personal account tools',
-    '  --json                   Emit machine-readable output',
+    '  --json                   Print JSON output',
     '  --dry-run                Preview changes without writing files',
   ];
   const stream = exitCode === 0 ? process.stdout : process.stderr;
