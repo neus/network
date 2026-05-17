@@ -1,23 +1,57 @@
 {
   "$id": "https://neus.network/schemas/proof-of-human.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Select the human-verification provider to complete in hosted verify.",
+  "description": "Unique human verification for sybil resistance",
   "properties": {
+    "assuranceLevel": {
+      "description": "Verification confidence level derived from proof claims",
+      "enum": [
+        "low",
+        "medium",
+        "high"
+      ],
+      "type": "string"
+    },
+    "claims": {
+      "description": "Privacy-preserving boolean/numeric verification claims",
+      "type": "object"
+    },
+    "expiresAt": {
+      "description": "Unix timestamp (ms) when the proof expires",
+      "type": "number"
+    },
+    "neusPersonhoodId": {
+      "description": "Salted SHA-256 personhood ID for sybil resistance (internal, never exposed in API responses)",
+      "pattern": "^0x[a-fA-F0-9]{64}$",
+      "type": "string"
+    },
+    "proofs": {
+      "maxItems": 10,
+      "minItems": 1,
+      "type": "array"
+    },
     "provider": {
       "enum": [
         "zkpassport"
       ],
       "type": "string"
     },
+    "queryResult": {
+      "type": "object"
+    },
     "scope": {
       "pattern": "^[a-zA-Z0-9_-]{1,64}$",
       "type": "string"
+    },
+    "traits": {
+      "description": "Provider-specific verification metadata",
+      "type": "object"
     }
   },
   "required": [
-    "provider"
+    "proofs",
+    "queryResult"
   ],
   "title": "proof-of-human",
-  "type": "object",
-  "additionalProperties": false
+  "type": "object"
 }
