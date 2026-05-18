@@ -1,52 +1,53 @@
 ---
 title: NEUS for Claude Code
-description: "Install hosted NEUS MCP from the git marketplace: neus-mcp plugin, trust-workflow skill, npm @neus/sdk, and neus setup for keys."
+description: "Install NEUS MCP and the Claude Code trust-workflow skill."
 icon: store
 ---
 
-The **`neus`** marketplace in [`github.com/neus/network`](https://github.com/neus/network) lists one plugin, **`neus-mcp`**, so Claude Code users can add MCP plus a small skill in one step. **Keys and account tools still use the same public CLI as every other editor** (`@neus/sdk` on npm) — no second installer.
+NEUS for Claude Code connects Claude Code to hosted NEUS MCP and adds a small trust-workflow skill for proof receipts, agent identity, delegation, and access-key hygiene.
+
+For Cursor, VS Code, and most local assistants, use [MCP setup](./setup). Claude Code users can use the plugin below when they want the bundled skill.
 
 ## What you get
 
-The **`neus-mcp`** plugin ([`plugins/neus-mcp`](https://github.com/neus/network/tree/main/plugins/neus-mcp)) includes:
+The **`neus-mcp`** plugin includes:
 
-- **Default MCP config** for `https://mcp.neus.network/mcp`
-- **`neus-trust-workflow`** skill — tool order, receipt reuse, and access-key hygiene
+- Hosted NEUS MCP at **`https://mcp.neus.network/mcp`**
+- The **`neus-trust-workflow`** skill for receipt reuse, agent flows, and safe account setup
 
 ## Install in Claude Code
 
-Prefer **`npx -y -p @neus/sdk neus setup`** (with or without `--access-key`) on the same machine **before** or **after** the plugin so Cursor, VS Code, and Claude Code stay on the same hosted MCP URL.
-
-1. Add the marketplace (catalog file: `.claude-plugin/marketplace.json` at the repo root):
+1. Add the NEUS plugin source:
 
    ```text
    /plugin marketplace add https://github.com/neus/network
    ```
 
-2. Install the plugin. The part after `@` must match the marketplace **`name`** in that file (currently **`neus`**):
+2. Install NEUS:
 
    ```text
    /plugin install neus-mcp@neus
    ```
 
-3. Add your Profile access key (optional for public tools; required for `neus_me` and related flows):
+3. Add your NEUS Profile access key when you need account-aware tools such as **`neus_me`**:
 
    ```bash
    npx -y -p @neus/sdk neus setup --access-key <npk_...>
    ```
 
-   Keys are created in the NEUS app: [Account → Access keys](https://neus.network/profile?tab=account). Omit `--access-key` if you only need public catalog and proof reads.
+Create access keys in the NEUS app: [Account → Access keys](https://neus.network/profile?tab=account). Omit **`--access-key`** when you only need public tools.
 
-## Optional: Anthropic curated marketplace
+Check the install:
 
-Listing in Anthropic’s **curated** plugin directory is separate from this Git catalog. When you want that extra discovery, use Anthropic’s in-app submission forms ([Discover plugins](https://code.claude.com/docs/en/discover-plugins)):
+```bash
+npx -y -p @neus/sdk neus doctor
+```
 
-- [claude.ai/settings/plugins/submit](https://claude.ai/settings/plugins/submit)
-- [platform.claude.com/plugins/submit](https://platform.claude.com/plugins/submit)
+Start each session with **`neus_context`**.
 
-## Skill command
+## Use the skill
 
-Plugin skills are namespaced:
+After install, call the skill from Claude Code:
 
 ```text
 /neus-mcp:neus-trust-workflow
@@ -56,26 +57,7 @@ Plugin skills are namespaced:
 
 | Surface | MCP | Skills / rules |
 | --- | --- | --- |
-| **Cursor** | Same **`npx -y -p @neus/sdk neus setup`** — writes `~/.cursor/mcp.json` when detected ([Setup](./setup)). | Project rules in `.cursor/rules/`. |
-| **VS Code** | Same **`neus setup`** — merges into VS Code’s user MCP file when Code is detected ([Setup](./setup)). | Optional; no NEUS VS Code extension is required for MCP. |
-| **Claude Code** | Optional **`neus-mcp@neus`** plugin (this page) **or** `neus setup` when the `claude` CLI is on `PATH`. Prefer **one**: if you use the plugin for the skill, still run **`neus setup`** for your Bearer key so configs stay aligned. | Plugin skill under `/neus-mcp:…`; native packs use `~/.claude/skills/`. |
-| **Codex / `~/.agents`** | Use **`neus setup`** if your Codex host reads the same MCP config as VS Code/Cursor; otherwise paste the [Setup](./setup) URL block. | Optional; no NEUS-specific extension required. |
-| **Custom runtime** | Runtime **`NEUS_MCP_URL`** + optional Profile access key in your environment. Product behavior matches [MCP overview](./overview). | Runtime-specific; not managed by this git marketplace. |
-
-**Golden rule:** one npm entrypoint (**`@neus/sdk`**, command **`neus`**) for MCP files and keys; the Claude plugin is an **optional** bundle for Claude Code discovery and the trust-workflow skill only.
-
-## Health check and first tool
-
-- **Check:** `npx -y -p @neus/sdk neus doctor`
-- **First tool each session:** `neus_context`
-
-## Repository layout (this repo)
-
-- Marketplace catalog: `.claude-plugin/marketplace.json` (`name` = install suffix, e.g. `neus-mcp@neus`)
-- Plugin root: `plugins/neus-mcp/` — `.claude-plugin/plugin.json`, `.mcp.json`, `skills/…`
-
-Schema and versioning: [Anthropic plugin marketplaces](https://code.claude.com/docs/en/plugin-marketplaces).
-
-## Listings outside this repository
-
-Publishing the **`neus`** marketplace in [`github.com/neus/network`](https://github.com/neus/network) lets Claude Code users install **`neus-mcp@neus`** from Git. Other channels have their own forms: npm is **[`@neus/sdk`](https://www.npmjs.com/package/@neus/sdk)** (always run **`neus setup`** for editor config), the **[official MCP Registry](https://modelcontextprotocol.io/registry/about)** lists metadata you publish with the MCP publisher tooling, and optional editor marketplaces follow each vendor’s process. Keep one installer story: **`neus setup`** plus the links on this page.
+| **Cursor** | Run **`npx -y -p @neus/sdk neus setup`** ([Setup](./setup)). | Project rules stay in your Cursor workspace. |
+| **VS Code** | Run **`neus setup`** ([Setup](./setup)). | No NEUS VS Code extension is required. |
+| **Claude Code** | Use **`neus-mcp@neus`** for the skill bundle, then run **`neus setup --access-key`** when you need account-aware tools. | **`/neus-mcp:neus-trust-workflow`** |
+| **Codex / custom hosts** | Use the hosted MCP URL from [Setup](./setup). | Host-specific. |

@@ -36,7 +36,7 @@ Start each session with tool **`neus_context`**. If you configured a Profile key
 | Tools and recommended order | [docs.neus.network/mcp/overview](https://docs.neus.network/mcp/overview) |
 | Discovery (`.well-known`, server card) | [docs.neus.network/mcp/endpoints](https://docs.neus.network/mcp/endpoints) |
 | Auth and headers | [docs.neus.network/mcp/auth](https://docs.neus.network/mcp/auth) |
-| Optional Claude Code plugin + skill | [docs.neus.network/mcp/claude-code-marketplace](https://docs.neus.network/mcp/claude-code-marketplace) |
+| Claude Code skill bundle | [docs.neus.network/mcp/claude-code-marketplace](https://docs.neus.network/mcp/claude-code-marketplace) |
 
 ## License
 

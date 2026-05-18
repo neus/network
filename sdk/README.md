@@ -37,7 +37,7 @@ Create keys under **Profile → Account → Access keys** on [neus.network](http
 | Setup, JSON snippets, and headers | [MCP setup](https://docs.neus.network/mcp/setup) |
 | Tools and session order | [MCP overview](https://docs.neus.network/mcp/overview) |
 | Discovery URLs | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints) |
-| Optional Claude Code plugin + skill | [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace) |
+| Claude Code skill bundle | [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace) |
 
 Prefer `neus setup` over hand-editing config files so every host stays on **`https://mcp.neus.network/mcp`**.
 
@@ -196,7 +196,7 @@ Add or rotate a Profile access key on an existing install:
 npx -y -p @neus/sdk neus auth --access-key <npk_...>
 ```
 
-Claude Code (optional): add marketplace `https://github.com/neus/network`, install **`neus-mcp@neus`**, then run **`neus setup`** so your key matches every editor. See [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
+Claude Code users can add the optional **`neus-mcp@neus`** skill bundle, then run **`neus setup --access-key <npk_...>`** when account-aware tools are needed. See [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
 
 ## Docs
 

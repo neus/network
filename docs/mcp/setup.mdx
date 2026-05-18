@@ -34,11 +34,11 @@ Create keys under **Profile → Account** on [neus.network](https://neus.network
 
 Use **`@neus/sdk`** as the single npm entrypoint for every desktop editor. Same URL, same optional Profile key, same **`neus doctor`** check. Use this path everywhere so your team stays aligned.
 
-| Concern | Golden path |
+| Concern | Recommended path |
 | --- | --- |
 | MCP wiring | `npx -y -p @neus/sdk neus setup` (or `neus init` without keys) |
 | Trust / “is it working?” | `npx -y -p @neus/sdk neus doctor` |
-| Claude-only discoverability | Optional [NEUS for Claude Code](./claude-code-marketplace) plugin (skill + default MCP); still run **`neus setup`** for keys |
+| Claude Code skill | Optional [NEUS for Claude Code](./claude-code-marketplace) bundle; still run **`neus setup`** for keys |
 | Custom runtimes / containers | Env + `NEUS_MCP_URL` in your runtime — same MCP endpoint and tool contract |
 
 ## Where config is written
@@ -53,9 +53,9 @@ After `neus setup` or `neus init`, the CLI merges NEUS into each detected client
 
 There is **no separate NEUS Cursor plugin** in this repo: Cursor uses the same command and URL as everyone else.
 
-## Claude Code marketplace (optional)
+## Claude Code skill bundle
 
-To install hosted MCP plus the bundled trust-workflow skill from the git catalog, see [NEUS for Claude Code](./claude-code-marketplace). Run `neus setup` afterward for your access key so Cursor/VS Code/Claude stay consistent.
+To add hosted MCP plus the bundled trust-workflow skill, see [NEUS for Claude Code](./claude-code-marketplace). Run **`neus setup --access-key <npk_...>`** when you need account-aware tools.
 
 ## Step-by-step alternative
 

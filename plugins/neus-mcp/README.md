@@ -1,11 +1,11 @@
 # NEUS MCP (Claude Code plugin)
 
-This folder is the **`neus-mcp`** plugin shipped inside the [`neus/network`](https://github.com/neus/network) Claude Code marketplace. It bundles:
+This is the **`neus-mcp`** Claude Code plugin. It bundles:
 
 - **Hosted NEUS MCP** (`.mcp.json`) — streamable HTTP to `https://mcp.neus.network/mcp`
 - **`neus-trust-workflow` skill** — recommended tool order and Profile access key hygiene
 
-**All editors:** use the same CLI so configs stay aligned:
+For Cursor, VS Code, and most local assistants, use the CLI setup:
 
 ```bash
 npx -y -p @neus/sdk neus setup
@@ -17,31 +17,31 @@ Optional key in one step:
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
 ```
 
-## Install (Claude Code)
+## Install in Claude Code
 
-1. Add the marketplace (published repo root contains `.claude-plugin/marketplace.json`):
+1. Add NEUS:
 
    ```text
    /plugin marketplace add https://github.com/neus/network
    ```
 
-2. Install the plugin:
+2. Install NEUS:
 
    ```text
    /plugin install neus-mcp@neus
    ```
 
-3. Add your Profile access key on the machine (same flow as other editors):
+3. Add your NEUS Profile access key when you need account-aware tools:
 
    ```bash
    npx -y -p @neus/sdk neus setup --access-key <npk_...>
    ```
 
-   Docs: [MCP setup](https://docs.neus.network/mcp/setup) · [Claude Code marketplace](https://docs.neus.network/mcp/claude-code-marketplace)
+   Docs: [MCP setup](https://docs.neus.network/mcp/setup) · [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace)
 
-## Skill command
+## Use the skill
 
-Namespaced skill (plugin + skill id):
+After install, call the skill from Claude Code:
 
 ```text
 /neus-mcp:neus-trust-workflow

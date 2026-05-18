@@ -551,9 +551,7 @@ function printResultSummary(command, scope, results, accessKey) {
     lines.push(`Account tools stay optional. Add personal auth later with: neus auth --access-key <npk_...>`);
   }
   if (command === 'init' || command === 'setup') {
-    lines.push(
-      'Claude Code (optional): plugin neus-mcp@neus + docs — https://docs.neus.network/mcp/claude-code-marketplace',
-    );
+    lines.push('Claude Code skill bundle: https://docs.neus.network/mcp/claude-code-marketplace');
     lines.push(
       'Cursor / VS Code: same command when those apps are detected (local MCP config) — https://docs.neus.network/mcp/setup',
     );

@@ -79,7 +79,7 @@ Use NEUS for agents that need identity, scoped authority, and receipts for trust
 - Start with [Agents](https://docs.neus.network/agents/overview).
 - Add identity and delegation with [`agent-identity`](https://docs.neus.network/agents/agent-identity) and [`agent-delegation`](https://docs.neus.network/agents/agent-delegation).
 - Connect tools through [NEUS MCP](https://docs.neus.network/mcp/overview).
-- Install the Claude Code marketplace package with [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
+- Add the Claude Code skill bundle with [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
 
 ## Connect assistants (MCP)
 
@@ -106,7 +106,7 @@ npx -y -p @neus/sdk neus doctor
 | Full setup, manual JSON, and headers | [MCP setup](https://docs.neus.network/mcp/setup) |
 | Tools and recommended order | [MCP overview](https://docs.neus.network/mcp/overview) |
 | Discovery URLs (server card, `.well-known`) | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints) |
-| Claude Code plugin (optional skill bundle) | [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace) |
+| Claude Code skill bundle | [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace) |
 
 Hosted MCP URL: **`https://mcp.neus.network/mcp`**
 
@@ -154,7 +154,7 @@ The live verifier catalog is documented at [docs.neus.network/verification/verif
 | --- | --- |
 | `neus` | Hosted product: verify, profiles, proof pages, gates, and end-user experience |
 | `protocol` | Hosted HTTP API and verification behavior your app and MCP clients call |
-| `network` | This repository: docs, SDK (`@neus/sdk`), widgets, examples, specs, and Claude marketplace metadata |
+| `network` | This repository: docs, SDK (`@neus/sdk`), widgets, examples, specs, and Claude Code skill metadata |
 
 ## Where to go next
 

@@ -31,7 +31,7 @@ Inline text is capped at **50,000 characters**. Bigger artifacts → chunk or po
 
 **Keeping a copy on the receipt:** If you want NEUS to **store the exact string** so you (or allowed viewers) can read it back later, turn on **`storeOriginalContent: true`** in options when you need to override defaults. Most **private** setups default toward keeping text; **listed public** feeds often default toward **not** inlining full copy unless you opt in—so you stay intentional about what sits on a wide surface. Details: [Security and trust](../platform/security-and-trust).
 
-**Reading it back from the API:** The **only** stored prose SSOT on the receipt is **`proof.publicContent.content`**. (`meta.contentText` and similar fields may mirror that for search/UI but are not a second body source of truth.) The word *public* in that name is unfortunate—**private proofs use the same slot**; **who can read it is your privacy setting plus auth**, not the field label. The ownership-basic row keeps **fingerprints and pointers** (`contentHash`, `reference`, …)—use **`publicContent.content`** for the actual words.
+**Reading it back from the API:** Use **`proof.publicContent.content`** for the stored text. Other fields can help search or display the receipt, but they are not the full text body. Private receipts use the same content field; access is controlled by your privacy setting and auth. The ownership-basic row also keeps fingerprints and pointers such as **`contentHash`** and **`reference`**.
 
 ---
 
