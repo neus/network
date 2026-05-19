@@ -1005,16 +1005,9 @@
             "enum": [
               "eth",
               "base",
-              "bsc",
               "pol",
               "opt",
-              "arb",
-              "sol",
-              "ton",
-              "sei",
-              "sui",
-              "btc",
-              "stellar"
+              "arb"
             ]
           },
           "chainId": {

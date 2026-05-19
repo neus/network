@@ -22,21 +22,30 @@ body {
   background-color: transparent;
 }
 
-html,
-body,
-main,
-article,
-#content-area,
-#content-container,
-#body-content,
-#body-content * {
+/*
+  Enable text selection everywhere.
+  Mintlify ships -webkit-user-select: none in its base styles, so we must
+  override the prefixed form explicitly or WebKit-based browsers remain locked.
+*/
+*,
+*::before,
+*::after {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  -ms-user-select: text !important;
   user-select: text !important;
 }
 
+/* Disable selection only for true interactive controls. */
 button,
 [role="button"],
-#search-input,
+[type="button"],
+[type="submit"],
+[type="reset"],
 #page-context-menu-button {
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
   user-select: none !important;
 }
 

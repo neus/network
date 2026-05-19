@@ -19,7 +19,7 @@ _Fields in the `data` object for the completed verification request (after signa
 ### Optional fields
 
 - `provider` (`string enum: webacy`)
-- `chain` (`string enum: eth, base, bsc, pol, opt, arb, sol, ton, sei, sui, btc, stellar`)
+- `chain` (`string enum: eth, base, pol, opt, arb`)
 - `chainId` (`integer`)
 
 - **Compatible with:** `ownership-basic`, `proof-of-human`, `agent-identity`
@@ -34,8 +34,7 @@ await client.verify({
   data: {
     "walletAddress": "0xdddddddddddddddddddddddddddddddddddddddd",
     "provider": "webacy",
-    "chainId": 8453,
-    "includeDetails": true
+    "chainId": 8453
   }
 });
 
@@ -47,8 +46,7 @@ await client.verify({
   "data": {
     "walletAddress": "0xdddddddddddddddddddddddddddddddddddddddd",
     "provider": "webacy",
-    "chainId": 8453,
-    "includeDetails": true
+    "chainId": 8453
   },
   "walletAddress": "0x1234567890abcdef1234567890abcdef12345678",
   "signature": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",

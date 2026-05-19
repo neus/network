@@ -664,7 +664,7 @@ declare module '@neus/sdk' {
     provider?: string;
     walletAddress?: string;
     chainId?: number;
-    includeDetails?: boolean;
+    chain?: string;
     [key: string]: any;
   };
 
