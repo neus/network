@@ -25,6 +25,8 @@ AGENTS.md
 # Env
 .env
 .env.*
+!.env.example
+!**/.env.example
 
 # Build artifacts
 dist/

@@ -1,5 +1,4 @@
 # NEUS — Cursor indexing-only exclusions
-# Keep indexable: .neus/context/
 
 node_modules/
 **/node_modules/

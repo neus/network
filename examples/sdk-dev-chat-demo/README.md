@@ -1,7 +1,5 @@
 # SDK dev chat demo
 
-Small **Vite + React** shell: stub chat UI, **`VerifyGate`** on the composer, **`ProofBadge`** in a side column. Use it to iterate on `@neus/sdk` widgets and dev API behavior **outside** the main NEUS app.
-
 ## Why this exists
 
 - **Fast loop:** `package.json` pins `@neus/sdk` to `file:../../sdk` so you can change the SDK, rebuild widgets if needed, and refresh the browser.

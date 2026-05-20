@@ -148,13 +148,9 @@ The live verifier catalog is documented at [docs.neus.network/verification/verif
 | Content and safety | `ai-content-moderation` |
 | Agent trust | `agent-identity`, `agent-delegation` |
 
-## System map
+## This repository
 
-| Repo | What builders use it for |
-| --- | --- |
-| `neus` | Hosted product: verify, profiles, proof pages, gates, and end-user experience |
-| `protocol` | Hosted HTTP API and verification behavior your app and MCP clients call |
-| `network` | This repository: docs, SDK (`@neus/sdk`), widgets, examples, specs, and Claude Code skill metadata |
+Docs, SDK (`@neus/sdk`), widgets, examples, specs, and Claude Code skill metadata.
 
 ## Where to go next
 

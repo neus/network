@@ -6,16 +6,6 @@
       "headers": {
         "Authorization": "Bearer ${env:NEUS_ACCESS_KEY}"
       }
-    },
-    "github": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-github"
-      ],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${env:GITHUB_PERSONAL_ACCESS_TOKEN}"
-      }
     }
   }
 }
