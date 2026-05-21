@@ -1,15 +1,32 @@
 {
   "$id": "https://neus.network/schemas/ownership-basic.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Content ownership verification with origin lock and optional provenance",
+  "anyOf": [
+    {
+      "required": [
+        "content"
+      ]
+    },
+    {
+      "required": [
+        "contentHash"
+      ]
+    },
+    {
+      "required": [
+        "reference"
+      ]
+    }
+  ],
+  "description": "Ownership proofs require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep proof receipts linkable and explain origin without storing unnecessary raw content.",
   "properties": {
     "content": {
-      "description": "Content being claimed (max 50KB inline)",
+      "description": "Exact text/content being claimed (max 50KB inline). Use when you want NEUS to derive the ownership anchor from the submitted content.",
       "maxLength": 50000,
       "type": "string"
     },
     "contentHash": {
-      "description": "Pre-computed content hash (32-byte hex). If content is also provided, the verifier integrity-checks that they match.",
+      "description": "Pre-computed ownership-basic verifier hash (32-byte hex). If content is also provided, the verifier integrity-checks that they match.",
       "pattern": "^0x[a-fA-F0-9]{64}$",
       "type": "string"
     },
@@ -25,10 +42,13 @@
       "type": "string"
     },
     "provenance": {
+      "description": "Origin metadata for the claim. Use declaredKind and aiContext to make AI-assisted or agent-created work understandable without changing proof identity.",
       "properties": {
         "aiContext": {
+          "description": "AI or agent generation context when declaredKind is ai or mixed.",
           "properties": {
             "generatorType": {
+              "description": "Where generation happened.",
               "enum": [
                 "local",
                 "saas",
@@ -37,14 +57,17 @@
               "type": "string"
             },
             "model": {
+              "description": "Model or agent version when available.",
               "maxLength": 128,
               "type": "string"
             },
             "provider": {
+              "description": "AI provider, runtime, or agent system.",
               "maxLength": 64,
               "type": "string"
             },
             "runId": {
+              "description": "Non-secret run or job reference for traceability.",
               "maxLength": 128,
               "type": "string"
             }
@@ -52,6 +75,7 @@
           "type": "object"
         },
         "declaredKind": {
+          "description": "Declared origin of the claimed content.",
           "enum": [
             "human",
             "ai",
@@ -64,29 +88,35 @@
       "type": "object"
     },
     "reference": {
+      "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proof receipts, or external records.",
       "properties": {
         "description": {
+          "description": "Short explanation of what the reference points to.",
           "maxLength": 500,
           "type": "string"
         },
         "id": {
-          "description": "Reference identifier",
+          "description": "Stable reference identifier such as a URL, CID, transaction hash, repository path, file key, or prior receipt qHash.",
           "maxLength": 2048,
           "type": "string"
         },
         "mime": {
+          "description": "MIME type when the reference points to a file or media artifact.",
           "maxLength": 100,
           "type": "string"
         },
         "name": {
+          "description": "File, artifact, or object name when available.",
           "maxLength": 255,
           "type": "string"
         },
         "size": {
+          "description": "Referenced object size in bytes when available.",
           "minimum": 0,
           "type": "integer"
         },
         "title": {
+          "description": "Human-readable title for proof pages, inventory, and agent/tool summaries.",
           "maxLength": 200,
           "type": "string"
         },
@@ -112,7 +142,8 @@
         }
       },
       "required": [
-        "type"
+        "type",
+        "id"
       ],
       "type": "object"
     }

@@ -285,7 +285,7 @@
               },
               "proofUrl": {
                 "type": "string",
-                "description": "URL to fetch the proof record (GET /api/v1/proofs/{qHash})"
+                "description": "Standardized URL to fetch the proof record (GET /api/v1/proofs/{qHash})"
               }
             },
             "additionalProperties": true
@@ -543,19 +543,37 @@
       },
       "VerifierData_ownership_basic": {
         "type": "object",
+        "description": "Ownership proofs require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep proof receipts linkable and explain origin without storing unnecessary raw content.",
         "required": [
           "owner"
+        ],
+        "anyOf": [
+          {
+            "required": [
+              "content"
+            ]
+          },
+          {
+            "required": [
+              "contentHash"
+            ]
+          },
+          {
+            "required": [
+              "reference"
+            ]
+          }
         ],
         "properties": {
           "content": {
             "type": "string",
             "maxLength": 50000,
-            "description": "Content being claimed (max 50KB inline)"
+            "description": "Exact text/content being claimed (max 50KB inline). Use when you want NEUS to derive the ownership anchor from the submitted content."
           },
           "contentHash": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{64}$",
-            "description": "Pre-computed content hash (32-byte hex). If content is also provided, the verifier integrity-checks that they match."
+            "description": "Pre-computed ownership-basic verifier hash (32-byte hex). If content is also provided, the verifier integrity-checks that they match."
           },
           "contentType": {
             "type": "string",
@@ -571,8 +589,10 @@
           "reference": {
             "type": "object",
             "required": [
-              "type"
+              "type",
+              "id"
             ],
+            "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proof receipts, or external records.",
             "properties": {
               "type": {
                 "type": "string",
@@ -597,32 +617,38 @@
               "id": {
                 "type": "string",
                 "maxLength": 2048,
-                "description": "Reference identifier"
+                "description": "Stable reference identifier such as a URL, CID, transaction hash, repository path, file key, or prior receipt qHash."
               },
               "title": {
                 "type": "string",
-                "maxLength": 200
+                "maxLength": 200,
+                "description": "Human-readable title for proof pages, inventory, and agent/tool summaries."
               },
               "description": {
                 "type": "string",
-                "maxLength": 500
+                "maxLength": 500,
+                "description": "Short explanation of what the reference points to."
               },
               "mime": {
                 "type": "string",
-                "maxLength": 100
+                "maxLength": 100,
+                "description": "MIME type when the reference points to a file or media artifact."
               },
               "name": {
                 "type": "string",
-                "maxLength": 255
+                "maxLength": 255,
+                "description": "File, artifact, or object name when available."
               },
               "size": {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0,
+                "description": "Referenced object size in bytes when available."
               }
             }
           },
           "provenance": {
             "type": "object",
+            "description": "Origin metadata for the claim. Use declaredKind and aiContext to make AI-assisted or agent-created work understandable without changing proof identity.",
             "properties": {
               "declaredKind": {
                 "type": "string",
@@ -631,10 +657,12 @@
                   "ai",
                   "mixed",
                   "unknown"
-                ]
+                ],
+                "description": "Declared origin of the claimed content."
               },
               "aiContext": {
                 "type": "object",
+                "description": "AI or agent generation context when declaredKind is ai or mixed.",
                 "properties": {
                   "generatorType": {
                     "type": "string",
@@ -642,19 +670,23 @@
                       "local",
                       "saas",
                       "agent"
-                    ]
+                    ],
+                    "description": "Where generation happened."
                   },
                   "provider": {
                     "type": "string",
-                    "maxLength": 64
+                    "maxLength": 64,
+                    "description": "AI provider, runtime, or agent system."
                   },
                   "model": {
                     "type": "string",
-                    "maxLength": 128
+                    "maxLength": 128,
+                    "description": "Model or agent version when available."
                   },
                   "runId": {
                     "type": "string",
-                    "maxLength": 128
+                    "maxLength": 128,
+                    "description": "Non-secret run or job reference for traceability."
                   }
                 }
               }
@@ -728,7 +760,6 @@
       },
       "VerifierData_ownership_dns_txt": {
         "type": "object",
-        "description": "Domain ownership via DNS TXT at _neus.<domain>. Only `domain` is required in this object: `walletAddress` may be omitted when the proof request includes a verified signer wallet (filled in server-side). The TXT record must still use `wallet=` with the same wallet or account address NEUS uses for this check.",
         "required": [
           "domain"
         ],
@@ -737,11 +768,11 @@
             "type": "string",
             "format": "hostname",
             "minLength": 1,
-            "description": "Hostname to verify; NEUS looks up TXT at _neus.<domain>."
+            "description": "Hostname to verify (TXT lookup at _neus.<domain>)."
           },
           "walletAddress": {
             "type": "string",
-            "description": "Optional in `data` when the request already includes the signer wallet at the top level. If you set this field, it must follow signer and delegation rules. The DNS TXT value must be `wallet=` followed by the same wallet or account address NEUS uses for this verification.",
+            "description": "Optional in data when options.walletAddress supplies the signer; filled in if omitted. If present, it must match the signing wallet and any allowed delegation rules. The TXT record must use wallet= with the same address NEUS checks.",
             "pattern": "^(0x[a-fA-F0-9]{40}|[1-9A-HJ-NP-Za-km-z]{32,44}|[a-z0-9._-]{2,64})$"
           }
         }
@@ -833,47 +864,29 @@
           },
           "neusPersonhoodId": {
             "type": "string",
-            "description": "Salted SHA-256 personhood ID for sybil resistance. Always stripped from API responses (internal use only).",
-            "pattern": "^0x[a-fA-F0-9]{64}$"
+            "pattern": "^0x[a-fA-F0-9]{64}$",
+            "description": "Salted SHA-256 personhood ID for sybil resistance (internal, never exposed in API responses)"
           },
           "assuranceLevel": {
             "type": "string",
-            "description": "Verification confidence level derived from proof claims.",
-            "enum": ["low", "medium", "high"]
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "description": "Verification confidence level derived from proof claims"
           },
           "claims": {
             "type": "object",
-            "description": "Privacy-preserving boolean/numeric verification claims (no PII stored).",
-            "properties": {
-              "personhood_verified": { "type": "boolean" },
-              "age_verified": { "type": "boolean" },
-              "age_min": { "type": "number" },
-              "age_max": { "type": "number" },
-              "nationality_group_verified": { "type": "boolean" },
-              "nationality_checked": { "type": "boolean" },
-              "not_sanctioned": { "type": "boolean" },
-              "sanctions_checked": { "type": "boolean" },
-              "sanctions_passed": { "type": "boolean" },
-              "nationality_disclosed": { "type": "boolean" },
-              "nationality_verified": { "type": "boolean" },
-              "residency_verified": { "type": "boolean" },
-              "document_type_verified": { "type": "boolean" },
-              "residency_country_verified": { "type": "boolean" },
-              "residency_group_verified": { "type": "boolean" },
-              "residency_checked": { "type": "boolean" },
-              "birthdate_verified": { "type": "boolean" },
-              "fullname_verified": { "type": "boolean" },
-              "firstname_verified": { "type": "boolean" },
-              "lastname_verified": { "type": "boolean" },
-              "expiry_date_verified": { "type": "boolean" },
-              "document_number_verified": { "type": "boolean" },
-              "facematch_verified": { "type": "boolean" },
-              "liveness_verified": { "type": "boolean" },
-              "facematch_strict_mode": { "type": "boolean" },
-              "kyc_verified": { "type": "boolean" },
-              "kyc_components": { "type": "array", "items": { "type": "string" } },
-              "kyc_component_count": { "type": "number" }
-            }
+            "description": "Privacy-preserving boolean/numeric verification claims"
+          },
+          "traits": {
+            "type": "object",
+            "description": "Provider-specific verification metadata"
+          },
+          "expiresAt": {
+            "type": "number",
+            "description": "Unix timestamp (ms) when the proof expires"
           }
         }
       },
@@ -997,6 +1010,26 @@
               {
                 "type": "string",
                 "pattern": "^[1-9A-HJ-NP-Za-km-z]{32,44}$"
+              },
+              {
+                "type": "string",
+                "format": "ton-address"
+              },
+              {
+                "type": "string",
+                "format": "sui-address"
+              },
+              {
+                "type": "string",
+                "format": "sei-address"
+              },
+              {
+                "type": "string",
+                "format": "bitcoin-address"
+              },
+              {
+                "type": "string",
+                "format": "stellar-address"
               }
             ]
           },
@@ -1005,9 +1038,16 @@
             "enum": [
               "eth",
               "base",
+              "bsc",
               "pol",
               "opt",
-              "arb"
+              "arb",
+              "sol",
+              "ton",
+              "sei",
+              "sui",
+              "btc",
+              "stellar"
             ]
           },
           "chainId": {
@@ -1171,6 +1211,11 @@
               "automation",
               "agent"
             ]
+          },
+          "avatar": {
+            "type": "string",
+            "maxLength": 512,
+            "description": "Public agent avatar/logo URL or ipfs:// URI."
           },
           "description": {
             "type": "string",

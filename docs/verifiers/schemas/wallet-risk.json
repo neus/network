@@ -7,9 +7,16 @@
       "enum": [
         "eth",
         "base",
+        "bsc",
         "pol",
         "opt",
-        "arb"
+        "arb",
+        "sol",
+        "ton",
+        "sei",
+        "sui",
+        "btc",
+        "stellar"
       ],
       "type": "string"
     },
@@ -32,6 +39,26 @@
         },
         {
           "format": "solana-address",
+          "type": "string"
+        },
+        {
+          "format": "ton-address",
+          "type": "string"
+        },
+        {
+          "format": "sui-address",
+          "type": "string"
+        },
+        {
+          "format": "sei-address",
+          "type": "string"
+        },
+        {
+          "format": "bitcoin-address",
+          "type": "string"
+        },
+        {
+          "format": "stellar-address",
           "type": "string"
         }
       ]

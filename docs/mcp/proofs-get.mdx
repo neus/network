@@ -4,7 +4,7 @@ description: Proofs and profile summary for a wallet or DID.
 icon: receipt
 ---
 
-Use when you have an **`identifier`** and need proof records, qHash values, tags, profile summary, or delegated proof context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility.
+Use when you have an **`identifier`** and need proof records, receipt fields, tags, profile summary, or delegated proof context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility.
 
 | Auth | Visibility |
 |------|------------|
@@ -33,7 +33,7 @@ When `identifier` is a DID, NEUS resolves the DID to its native account. Non-EVM
 
 ## Response
 
-Proofs, qHashes, **`profileSummary`**, and pagination. Follow the live tool response. Tags and proof bodies come from this call.
+Proof records, receipt fields, **`profileSummary`**, and pagination. Follow the live tool response. Tags and proof bodies come from this call.
 
 ## Next
 

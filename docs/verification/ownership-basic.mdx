@@ -12,14 +12,14 @@ icon: wallet
 Use it for release notes, policy text, agent outputs, licensing claims, bounty submissions, marketplace listings—anything where **who said it** and **what the exact text was** should be verifiable later.
 
 - **Provenance without guesswork** — One receipt ties a wallet to specific content or a stable pointer.
-- **Reuse everywhere** — The same `qHash` backs listings, gates, compliance, and portfolio views.
+- **Reuse everywhere** — The same proof receipt backs listings, gates, compliance, and portfolio views.
 - **You choose visibility** — Private vault, link-only public, or discoverable public. [Security and trust](../platform/security-and-trust) shows the matrix.
 
 ## How it feels to use
 
 1. **You (or your user) sign** with the owning wallet.
 2. **You attach what you are proving** — the **full text** (`content`) and/or a **reference** (URL, repo path, tx id—NEUS does not fetch it for you).
-3. **NEUS issues a durable proof** — You get a stable `qHash` you can link, check, and stack with other verifiers.
+3. **NEUS issues a durable proof** — You get a stable proof receipt you can link, check, and stack with other verifiers.
 
 Inline text is capped at **50,000 characters**. Bigger artifacts → chunk or point to storage with `reference` (see multipart patterns in integrations you already use).
 
@@ -54,6 +54,8 @@ Everything below lives in the verify request’s **`data`** object alongside `wa
 | `contentHash` | No | Only if you already have the **correct NEUS verifier hash** for this content. Otherwise omit. |
 | `provenance` | Optional | Human / AI / mixed—advisory metadata. |
 
+Send at least one durable anchor: `content`, `contentHash`, or `reference.id`. For agent work and launch assets, prefer `reference` plus provenance so the proof stays linkable without forcing large raw content into every public surface.
+
 ### Example payload
 
 ```json
@@ -62,7 +64,17 @@ Everything below lives in the verify request’s **`data`** object alongside `wa
   "content": "Release notes for v1.2",
   "reference": {
     "type": "url",
-    "id": "https://example.com/releases/v1-2"
+    "id": "https://example.com/releases/v1-2",
+    "title": "Release notes v1.2"
+  },
+  "provenance": {
+    "declaredKind": "mixed",
+    "aiContext": {
+      "generatorType": "agent",
+      "provider": "NEUS",
+      "model": "release-workflow",
+      "runId": "release-v1-2"
+    }
   }
 }
 ```

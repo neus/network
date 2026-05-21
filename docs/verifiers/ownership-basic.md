@@ -18,11 +18,11 @@ _Fields in the `data` object for the completed verification request (after signa
 
 ### Optional fields
 
-- `content` (`string max 50000`): Content being claimed (max 50KB inline)
-- `contentHash` (`string pattern ^0x[a-fA-F0-9]{64}$`): Pre-computed content hash (32-byte hex). If content is also provided, the verifier integrity-checks that they match.
+- `content` (`string max 50000`): Exact text/content being claimed (max 50KB inline). Use when you want NEUS to derive the ownership anchor from the submitted content.
+- `contentHash` (`string pattern ^0x[a-fA-F0-9]{64}$`): Pre-computed ownership-basic verifier hash (32-byte hex). If content is also provided, the verifier integrity-checks that they match.
 - `contentType` (`string max 100`): MIME type hint
-- `reference` (`object`)
-- `provenance` (`object`)
+- `reference` (`object`): Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proof receipts, or external records.
+- `provenance` (`object`): Origin metadata for the claim. Use declaredKind and aiContext to make AI-assisted or agent-created work understandable without changing proof identity.
 
 - **Compatible with:** `ownership-basic`, `agent-identity`, `proof-of-human`, `ai-content-moderation`
 

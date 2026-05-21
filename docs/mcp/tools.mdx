@@ -24,7 +24,7 @@ EVM `0x…`, Solana base58, or `did:pkh:…`. Delegated reads: **`agentWallet`**
 | Phase | Calls |
 |-------|--------|
 | Default | Connect → **`neus_context`** → **`neus_me`** if Bearer → **`neus_agent_link`** for agents → **`neus_proofs_check`** → continue if satisfied |
-| Details | **`neus_proofs_get`** for proof records, tags, delegated context, and qHash values |
+| Details | **`neus_proofs_get`** for proof records, tags, delegated context, and receipt fields |
 | Fallback | **`neus_verify_or_guide`** only when something is missing |
 | Catalog | **`neus_verifiers_catalog`** only when you need raw schemas beyond context |
 
