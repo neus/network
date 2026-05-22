@@ -23,6 +23,15 @@
       "format": "universal-address",
       "type": "string"
     },
+    "allowedActions": {
+      "description": "Explicit allowlist of action types the agent may perform (e.g., [\"read-proofs\", \"execute-jobs\", \"publish-approved-content\"]).",
+      "items": {
+        "maxLength": 128,
+        "type": "string"
+      },
+      "maxItems": 32,
+      "type": "array"
+    },
     "allowedPaymentTypes": {
       "items": {
         "maxLength": 32,
@@ -30,6 +39,21 @@
       },
       "maxItems": 8,
       "type": "array"
+    },
+    "approvalPolicy": {
+      "additionalProperties": false,
+      "description": "Approval requirements for the delegated agent.",
+      "properties": {
+        "humanApprovalRequiredForNewClaims": {
+          "description": "Whether the agent must get human approval before creating new proof claims on behalf of the controller.",
+          "type": "boolean"
+        },
+        "preApprovedContentOnly": {
+          "description": "Whether the agent may only publish content pre-approved by the controller.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
     },
     "controllerAccountId": {
       "description": "Optional CAIP-10 account identifier for controllerWallet. May be injected when inputs are normalized from wallet + chain context.",
@@ -45,6 +69,15 @@
       "format": "universal-address",
       "type": "string"
     },
+    "deniedActions": {
+      "description": "Explicit denylist of action types the agent may NOT perform. Takes precedence over allowedActions and permissions.",
+      "items": {
+        "maxLength": 128,
+        "type": "string"
+      },
+      "maxItems": 32,
+      "type": "array"
+    },
     "expiresAt": {
       "minimum": 0,
       "type": "integer"
@@ -58,6 +91,11 @@
       "pattern": "^[0-9]{1,78}$",
       "type": "string"
     },
+    "model": {
+      "description": "Preferred inference model label (backward compat; prefer runtimePolicy.allowedModelClasses for structured policy).",
+      "maxLength": 128,
+      "type": "string"
+    },
     "permissions": {
       "items": {
         "maxLength": 64,
@@ -66,6 +104,11 @@
       "maxItems": 32,
       "type": "array"
     },
+    "provider": {
+      "description": "Preferred inference provider label (backward compat; prefer runtimePolicy.allowedProviders for structured policy).",
+      "maxLength": 64,
+      "type": "string"
+    },
     "receiptDisclosure": {
       "enum": [
         "none",
@@ -73,6 +116,39 @@
         "full"
       ],
       "type": "string"
+    },
+    "runtimePolicy": {
+      "additionalProperties": false,
+      "description": "Runtime execution policy — security-authoritative, overrides identity defaultRuntime. Only include when model/provider constraints affect the permission boundary.",
+      "properties": {
+        "allowedModelClasses": {
+          "description": "Allowed model class patterns (e.g., [\"gpt-4.1-*\", \"approved-public-content-models\"]).",
+          "items": {
+            "maxLength": 128,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "type": "array"
+        },
+        "allowedProviders": {
+          "description": "Allowed inference provider labels (e.g., [\"openrouter\", \"openai\"]).",
+          "items": {
+            "maxLength": 64,
+            "type": "string"
+          },
+          "maxItems": 8,
+          "type": "array"
+        },
+        "requiresHumanApproval": {
+          "description": "Whether the agent must pause for explicit human approval before irreversible actions.",
+          "type": "boolean"
+        },
+        "secretsExposedToReceipt": {
+          "description": "Whether the delegation policy allows secrets to appear in action receipts (default false).",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
     },
     "scope": {
       "maxLength": 128,

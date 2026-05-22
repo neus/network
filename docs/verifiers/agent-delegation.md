@@ -32,6 +32,12 @@ _Fields in the `data` object for the completed verification request (after signa
 - `expiresAt` (`integer`)
 - `instructions` (`string max 16000`)
 - `skills` (`array`): Agent skills as structured objects
+- `model` (`string max 128`): Preferred inference model label (backward compat; prefer runtimePolicy.allowedModelClasses for structured policy).
+- `provider` (`string max 64`): Preferred inference provider label (backward compat; prefer runtimePolicy.allowedProviders for structured policy).
+- `runtimePolicy` (`object`): Runtime execution policy — security-authoritative, overrides identity defaultRuntime. Only include when model/provider constraints affect the permission boundary.
+- `allowedActions` (`array`): Explicit allowlist of action types the agent may perform (e.g., \["read-proofs", "execute-jobs", "publish-approved-content"\]).
+- `deniedActions` (`array`): Explicit denylist of action types the agent may NOT perform. Takes precedence over allowedActions and permissions.
+- `approvalPolicy` (`object`): Approval requirements for the delegated agent.
 
 - **Compatible with:** `agent-identity`, `ownership-org-oauth`, `wallet-risk`, `wallet-link`
 

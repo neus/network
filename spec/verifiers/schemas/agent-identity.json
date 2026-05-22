@@ -168,6 +168,33 @@
           }
         }
       }
+    },
+    "purpose": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Agent role or purpose — what this agent IS for, not what it is allowed to do. Distinct from description: purpose captures mission and scope, description is a brief human-readable summary."
+    },
+    "defaultRuntime": {
+      "type": "object",
+      "description": "Default runtime display hints — NOT security-authoritative; delegation runtimePolicy overrides these. These are convenience metadata for UI and tooling, not proof of which model/provider the agent actually uses.",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Default inference provider label (e.g., \"openrouter\", \"openai\")."
+        },
+        "model": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Default inference model label (e.g., \"gpt-4.1-mini\", \"deepseek-v4-pro:cloud\")."
+        },
+        "mode": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Default inference mode (e.g., \"openai-chat\", \"openai-responses\")."
+        }
+      },
+      "additionalProperties": false
     }
   },
   "additionalProperties": false
