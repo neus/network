@@ -7,7 +7,8 @@ import path from 'node:path';
 
 const NEUS_SERVER_NAME = 'neus';
 const NEUS_MCP_URL = 'https://mcp.neus.network/mcp';
-const NEUS_ACCESS_KEYS_URL = 'https://neus.network/profile?tab=account';
+const NEUS_APP_URL = 'https://neus.network';
+const NEUS_TOKEN_ENDPOINT = 'https://neus.network/api/v1/auth/mcp/token';
 const SUPPORTED_CLIENTS = ['claude', 'cursor', 'vscode'];
 const IMPORT_SCHEMA = 'neus.portable-agent.v1';
 const SUPPORTED_IMPORT_SOURCES = [
@@ -398,7 +399,7 @@ function printUsage(exitCode = 0) {
     'Commands:',
     '  setup         One-command: run init, then auth if --access-key is provided',
     '  init          Configure supported MCP clients automatically',
-    '  auth          Add or update a personal access key for NEUS MCP',
+    '  auth          Sign in via browser (recommended) or add an access key for NEUS MCP',
     '  status        Show current NEUS MCP setup',
     '  doctor        Deep check: config status, profile connection, agent verification',
     '  import        Detect and package an existing agent runtime for NEUS proof-backed portability',
@@ -408,7 +409,7 @@ function printUsage(exitCode = 0) {
     'Options:',
     '  --client <name[,name]>   Limit setup to claude, cursor, or vscode',
     '  --project                Write shared project config instead of user config',
-    '  --access-key <npk_...>   Configure Bearer auth for personal account tools',
+    '  --access-key <npk_...>   Use manual access key instead of browser sign-in',
     '  --from <source>          Import source: auto, openclaw, hermes, cursor, claude-code, claude-desktop',
     '  --to <format>            Export format: manifest or json',
     '  --output <path>          Write exported manifest to a specific path',
@@ -1247,7 +1248,7 @@ function printResultSummary(command, scope, results, accessKey) {
 
   if (command === 'init' && !accessKey) {
     lines.push(
-      `Account tools stay optional. Add personal auth later with: neus auth --access-key <npk_...>`
+      `Sign in with: neus auth (opens browser) or neus auth --access-key <npk_...>`
     );
   }
   if (command === 'init' || command === 'setup') {
@@ -1348,16 +1349,128 @@ function runInit(options) {
   }
 }
 
+async function runAuthBrowser(options) {
+  const scope = resolveScope(options);
+  if (scope !== 'user') {
+    throw new Error('Browser auth only supports user scope. Remove --project flag.');
+  }
+  const clients = resolveClients(scope, options.clients);
+  ensureClientSelection(scope, clients);
+  const cwd = process.cwd();
+
+  const { createServer } = await import('node:http');
+
+  return new Promise((resolve, reject) => {
+    const server = createServer((req, res) => {
+      const url = new URL(req.url, `http://127.0.0.1:${server.address().port}`);
+      if (url.pathname === '/callback') {
+        const code = url.searchParams.get('code');
+        const error = url.searchParams.get('error');
+
+        if (error) {
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end('<html><body><h2>Authentication failed</h2><p>You can close this tab and try again.</p></body></html>');
+          server.close();
+          reject(new Error(`Authentication failed: ${error}`));
+          return;
+        }
+
+        if (!code) {
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end('<html><body><h2>Missing auth code</h2><p>You can close this tab and try again.</p></body></html>');
+          server.close();
+          reject(new Error('No auth code received from callback'));
+          return;
+        }
+
+        // Exchange the one-time code for an attestation JWT
+        const tokenUrl = NEUS_TOKEN_ENDPOINT;
+        fetch(tokenUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ code }),
+          signal: AbortSignal.timeout(15_000),
+        })
+          .then(tokenResp => tokenResp.json())
+          .then(tokenJson => {
+            if (!tokenJson.access_token) {
+              res.writeHead(200, { 'Content-Type': 'text/html' });
+              res.end('<html><body><h2>Token exchange failed</h2><p>Please try again.</p></body></html>');
+              server.close();
+              reject(new Error(tokenJson.error_description || tokenJson.error || 'Token exchange failed'));
+              return;
+            }
+
+            const accessToken = tokenJson.access_token;
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end('<html><body><h2>Authenticated</h2><p>You can close this tab and return to your terminal.</p></body></html>');
+            server.close();
+
+            const results = runClientOperations(clients, scope, cwd, options.dryRun, client =>
+              installClient(client, scope, accessToken, options.dryRun, cwd)
+            );
+            const payload = {
+              command: 'auth',
+              scope,
+              clients,
+              accessKeyConfigured: true,
+              authMethod: 'browser',
+              results,
+              hasErrors: results.some(result => result.error)
+            };
+            resolve(payload);
+          })
+          .catch(err => {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end('<html><body><h2>Connection error</h2><p>Please try again.</p></body></html>');
+            server.close();
+            reject(err);
+          });
+      } else {
+        res.writeHead(404);
+        res.end();
+      }
+    });
+
+    server.listen(0, '127.0.0.1', () => {
+      const port = server.address().port;
+      const redirectUri = `http://127.0.0.1:${port}/callback`;
+      const authUrl = `${NEUS_APP_URL}/verify?intent=mcp&redirectUri=${encodeURIComponent(redirectUri)}`;
+
+      console.log('');
+      console.log('  Opening browser for NEUS authentication...');
+      console.log(`  If the browser doesn't open, visit:`);
+      console.log(`  ${authUrl}`);
+      console.log('');
+
+      const { exec } = require('node:child_process');
+      const openCmd = process.platform === 'win32' ? 'start' : process.platform === 'darwin' ? 'open' : 'xdg-open';
+      exec(`${openCmd} "${authUrl}"`, (err) => {
+        if (err) {
+          console.log('  Could not open browser automatically. Copy the URL above and open it manually.');
+        }
+      });
+    });
+
+    // Timeout after 5 minutes
+    setTimeout(() => {
+      server.close();
+      reject(new Error('Authentication timed out after 5 minutes. Try again.'));
+    }, 5 * 60 * 1000);
+  });
+}
+
 function runAuth(options) {
   const scope = resolveScope(options);
   ensureSafeAuth('auth', scope, options.accessKey);
   const cwd = process.cwd();
+
+  // Browser flow: when no --access-key is provided, open browser
   if (!options.accessKey) {
-    throw new Error(
-      `Missing access key. Create one at ${NEUS_ACCESS_KEYS_URL} and rerun neus auth --access-key <npk_...>.`
-    );
+    return runAuthBrowser(options);
   }
 
+  // Manual key flow: --access-key provided
   const clients = resolveClients(scope, options.clients);
   ensureClientSelection(scope, clients);
 
@@ -1369,19 +1482,12 @@ function runAuth(options) {
     scope,
     clients,
     accessKeyConfigured: true,
+    authMethod: 'access-key',
     results,
     hasErrors: results.some(result => result.error)
   };
 
-  if (options.json) {
-    printJson(payload);
-  } else {
-    printResultSummary('auth', scope, results, options.accessKey);
-  }
-
-  if (payload.hasErrors) {
-    process.exitCode = 1;
-  }
+  return payload;
 }
 
 function runStatus(options) {
@@ -1577,7 +1683,7 @@ async function runDoctor(options) {
     }
   } else {
     lines.push(
-      `Profile connection: No access key found. Run \`neus auth --access-key <npk_...>\` (create one at ${NEUS_ACCESS_KEYS_URL}) and reconnect.`
+      `Profile connection: No access key found. Run \`neus auth\` (browser sign-in) or \`neus auth --access-key <npk_...>\` and reconnect.`
     );
   }
 
@@ -1605,7 +1711,22 @@ async function main() {
       return;
     }
     if (command === 'auth') {
-      runAuth(options);
+      const result = await runAuth(options);
+      if (result) {
+        if (options.json) {
+          printJson(result);
+        } else {
+          const displayKey = result.authMethod === 'browser' ? '<browser-auth>' : options.accessKey;
+          printResultSummary('auth', result.scope, result.results, displayKey);
+          if (result.authMethod === 'browser') {
+            console.log('');
+            console.log('  Authenticated via browser. Your MCP clients are now configured.');
+          }
+        }
+        if (result.hasErrors) {
+          process.exitCode = 1;
+        }
+      }
       return;
     }
     if (command === 'status') {
