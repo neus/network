@@ -8,6 +8,16 @@ Use a **personal access key** from [Access Keys](https://neus.network/profile?ta
 
 NEUS MCP uses the same **`Authorization: Bearer`** pattern as [API authentication](../api/authentication). Apply the header on the MCP HTTP connection during [setup](./setup).
 
+## Browser sign-in (recommended)
+
+```bash
+npx -y -p @neus/sdk neus auth
+```
+
+The CLI opens your browser to a hosted sign-in page. After you authenticate (passkey or wallet), the CLI receives an attestation token and configures your MCP clients automatically — no manual key copy-paste needed.
+
+Use browser sign-in for personal setups. The `--access-key` variant below is for servers and automation where a browser is not available.
+
 ## Quick answer
 
 | Mode | Use it for |

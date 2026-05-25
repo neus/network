@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
-import { createHash } from 'node:crypto';
+import { createHash, randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -1259,7 +1259,7 @@ function printResultSummary(command, scope, results, accessKey) {
   }
   if ((command === 'init' || command === 'auth') && accessKey) {
     lines.push(
-      'Personal account tools are enabled where the client supports user-scope auth setup.'
+      'Personal account tools are enabled.'
     );
   }
   if (command === 'status') {
@@ -1360,10 +1360,21 @@ async function runAuthBrowser(options) {
 
   const { createServer } = await import('node:http');
 
+  const csrfState = randomBytes(16).toString('hex');
+
   return new Promise((resolve, reject) => {
     const server = createServer((req, res) => {
       const url = new URL(req.url, `http://127.0.0.1:${server.address().port}`);
       if (url.pathname === '/callback') {
+        const returnedState = url.searchParams.get('state');
+        if (!returnedState || returnedState !== csrfState) {
+          res.writeHead(403, { 'Content-Type': 'text/html' });
+          res.end('<html><body><h2>Security check failed</h2><p>Invalid request. Try again.</p></body></html>');
+          server.close();
+          reject(new Error('CSRF state mismatch'));
+          return;
+        }
+
         const code = url.searchParams.get('code');
         const error = url.searchParams.get('error');
 
@@ -1435,7 +1446,7 @@ async function runAuthBrowser(options) {
     server.listen(0, '127.0.0.1', () => {
       const port = server.address().port;
       const redirectUri = `http://127.0.0.1:${port}/callback`;
-      const authUrl = `${NEUS_APP_URL}/verify?intent=mcp&redirectUri=${encodeURIComponent(redirectUri)}`;
+      const authUrl = `${NEUS_APP_URL}/verify?intent=mcp&redirectUri=${encodeURIComponent(redirectUri)}&state=${csrfState}`;
 
       console.log('');
       console.log('  Opening browser for NEUS authentication...');

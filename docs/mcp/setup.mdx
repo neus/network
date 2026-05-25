@@ -12,7 +12,13 @@ Hosted NEUS MCP runs at **`https://mcp.neus.network/mcp`**.
 npx -y -p @neus/sdk neus setup
 ```
 
-Add your NEUS Profile access key when you need account-aware tools such as `neus_me`, private reads, or profile-linked verification:
+Then sign in to enable account-aware tools:
+
+```bash
+npx -y -p @neus/sdk neus auth
+```
+
+For servers and automation, add your key directly:
 
 ```bash
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
