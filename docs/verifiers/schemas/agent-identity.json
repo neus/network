@@ -92,12 +92,12 @@
           "type": "string"
         },
         "model": {
-          "description": "Default inference model label (e.g., \"gpt-4.1-mini\", \"deepseek-v4-pro:cloud\").",
+          "description": "Default inference model label (e.g., \"kimi-k2.6\", \"gpt-5.4\").",
           "maxLength": 128,
           "type": "string"
         },
         "provider": {
-          "description": "Default inference provider label (e.g., \"openrouter\", \"openai\").",
+          "description": "Default inference provider label (e.g., \"ollama\", \"openai\").",
           "maxLength": 64,
           "type": "string"
         }
@@ -110,11 +110,6 @@
     },
     "instructions": {
       "maxLength": 16000,
-      "type": "string"
-    },
-    "purpose": {
-      "description": "Agent role or purpose — what this agent IS for, not what it is allowed to do. Distinct from description: purpose captures mission and scope, description is a brief human-readable summary.",
-      "maxLength": 500,
       "type": "string"
     },
     "services": {

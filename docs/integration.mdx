@@ -1,35 +1,49 @@
 ---
 title: Integration
-description: One loop: check, verify if needed, save qHash, reuse.
+description: Check, verify, save, reuse.
 icon: compass
 ---
 
-## Loop
+Every NEUS integration follows the same loop.
 
-| Step | Do this |
-|------|---------|
-| 1 | Check a saved **`qHash`** or run eligibility (`gateCheck`, proofs check) |
-| 2 | Run verify **only** if missing or you need a fresh receipt |
-| 3 | Persist **`qHash`** on your user or record |
-| 4 | Reuse on return visits and for access rules |
+| Step | Do this                                                                       |
+| ---- | ----------------------------------------------------------------------------- |
+| 1    | Check whether you already have a valid receipt                                |
+| 2    | Verify only when the receipt is missing, stale, or needs a new trust decision |
+| 3    | Save the returned receipt ID on your user, account, agent, or record          |
+| 4    | Reuse the receipt before access, payment, delegation, or action               |
 
 ## Where code runs
 
-| Layer | Use |
-|-------|-----|
-| Browser | `VerifyGate`, `getHostedCheckoutUrl` → `https://neus.network/verify`, SDK polling |
-| Server | `NEUS_ACCESS_KEY`, `verifyFromApp`, `gateCheck`, raw HTTP behind your API |
+| Layer     | Use                                                                       |
+| --------- | ------------------------------------------------------------------------- |
+| Browser   | `VerifyGate`, `getHostedCheckoutUrl`, hosted `/verify`, SDK polling       |
+| Server    | `NEUS_ACCESS_KEY`, `verifyFromApp`, `gateCheck`, private reads, API calls |
+| Assistant | Hosted NEUS MCP, `neus_context`, `neus_proofs_check`, `neus_agent_link`   |
 
-Passkey, wallet, and OAuth for **default** flows: **NEUS hosted page**, not your UI.
+Passkey, wallet, and OAuth flows should run on NEUS hosted pages by default. Do not ship `npk_*` keys or credentialed `fetch` calls in browser bundles.
 
-Use the SDK from the browser. Do not ship **`npk_*`** or credentialed `fetch` to `api.neus.network` from client bundles; proxy through your backend if you need custom headers. [JavaScript SDK](./sdks/javascript) · [API overview](./api/overview).
+## Recommended paths
 
-Identity and chain terms are centralized in [CAIP-380 Portable Proof](./learn/standards/caip-380): CAIP-2 is network context, CAIP-10 is account-id shape, and `did:pkh` is the stable DID representation.
+<CardGroup cols={2}>
+  <Card
+    title="Hosted Verify"
+    icon="shield-check"
+    href="./cookbook/auth-hosted-verify"
+  >
+    Browser flow owned by NEUS.
+  </Card>
+  <Card title="SDK" icon="code" href="./sdks/javascript">
+    JavaScript helpers for app and server flows.
+  </Card>
+  <Card title="VerifyGate" icon="square-check" href="./widgets/verifygate">
+    React access gates.
+  </Card>
+  <Card title="Agents" icon="robot" href="./agents/agent-verification-flow">
+    Agent identity and delegation.
+  </Card>
+</CardGroup>
 
-**MCP and agent wallets** (not the same as app `VerifyGate` flows): [MCP overview](./mcp/overview) and [Agent verification flow](./agents/agent-verification-flow).
-
-## After Quickstart
-
-Reuse modes, filters, visibility: [SDK verifications](./sdks/verifications).
+Identity and chain terms: [CAIP-380 Portable Proof](./learn/standards/caip-380). Receipt fields and URLs: [Receipts and results](./platform/receipts-and-results).
 
 **Next:** [Hosted Verify](./cookbook/auth-hosted-verify)

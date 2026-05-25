@@ -1,99 +1,77 @@
 ---
 title: Agents Overview
-description: Agent identity, delegation, stable URLs, MCP.
+description: Identity, authority, and receipts for agents that act.
 icon: robot
 ---
 
-Universal agent identity ties a stable wallet-backed identity, optional delegation, shareable URLs, and MCP tools so people and automation reference the same proofs.
+Trust infrastructure for agents that act.
 
+NEUS gives agents verifiable identity, scoped authority, and receipts for trusted actions. Use it to prove who controls an agent, what it is allowed to do, and what happened after it acted.
 
-| Building block | Role |
-|-----------|------|
-| `agent-identity` | **Agent wallet signs** the identity proof; stable **wallet / DID** |
-| `agent-delegation` | Approver binds scope, spend cap, expiry |
-| URLs | Agent profile, proof pages, optional downloadable config for tools |
-| MCP | `neus_context` first, then work tools, then `neus_proofs_get` for reads |
-| Linked surface | Add ownership + [wallet-link](../verification/wallet-link) so automation shares proofs with people/org flows |
+## What NEUS adds
 
-## Flow
+| Need                   | Mechanism                                       |
+| ---------------------- | ----------------------------------------------- |
+| Identify the agent     | `agent-identity` signed by the agent wallet     |
+| Control what it can do | `agent-delegation` with scope, caps, and expiry |
+| Check readiness        | `neus_agent_link` in MCP                        |
+| Reuse trust in tools   | Stored receipt IDs, proof URLs, wallet, or DID  |
+| Audit actions later    | Receipts, tags, and proof reads                 |
+
+## Recommended flow
 
 <Steps>
- <Step title="Register">
- `agent-identity` - agent wallet signs.
- </Step>
- <Step title="Delegate (optional)">
- `agent-delegation` - approver signs (can be a different wallet). [Concepts](./concepts)
- </Step>
- <Step title="Resolve">
- Share card URL, proof URL, wallet, or DID; wire NEUS MCP so clients fetch state.
- </Step>
- <Step title="Hosted handoff">
- When the tool returns `hostedVerifyUrl`, open it — same links as other integrations.
- </Step>
+  <Step title="Register identity">
+    Create `agent-identity` for the agent wallet.
+  </Step>
+  <Step title="Delegate authority">
+    Add `agent-delegation` when another user, wallet, or organization controls
+    what the agent may do.
+  </Step>
+  <Step title="Link before creating">
+    Call `neus_agent_link` first. If it returns `linked: true`, reuse the
+    existing receipts.
+  </Step>
+  <Step title="Act with receipts">
+    Check receipts before tool use, payments, data movement, or other trusted
+    actions.
+  </Step>
 </Steps>
 
-On **NEUS MCP**, **`neus_agent_link`** reports **`linked: true`** only when **both** receipts exist (`agent-identity` and `agent-delegation`) for the default delegated-agent path.
-
-## At a glance
-
-| Need | Mechanism |
-|------|-----------|
-| Attributable automation | `agent-identity` metadata + wallet binding |
-| Scoped capability | `agent-delegation` permissions / spend / TTL |
-| Any chat / API / server | Stored ids + MCP + public proof URLs |
-| Org / site / social linkage | Verifiers from [catalog](../verification/verifiers) |
-
-## Reference
+## Start here
 
 <CardGroup cols={2}>
- <Card title="Concepts" icon="book-open" href="./concepts">
- Roles, fields.
- </Card>
- <Card title="A2A Cards" icon="cards" href="./a2a">
- A2A discovery and cross-chain agent cards.
- </Card>
- <Card title="Registration" icon="badge-check" href="./agent-identity">
- agent-identity
- </Card>
- <Card title="Delegation" icon="key" href="./agent-delegation">
- agent-delegation
- </Card>
- <Card title="Flow" icon="route" href="./agent-verification-flow">
- Sequence.
- </Card>
- <Card title="Cookbook" icon="book-open" href="../cookbook/verifiable-agents">
- End-to-end.
- </Card>
+  <Card
+    title="Agent verification flow"
+    icon="route"
+    href="./agent-verification-flow"
+  >
+    The end-to-end setup order.
+  </Card>
+  <Card title="Agent identity" icon="badge-check" href="./agent-identity">
+    Register an agent wallet.
+  </Card>
+  <Card title="Agent delegation" icon="key" href="./agent-delegation">
+    Add scoped authority.
+  </Card>
+  <Card title="MCP setup" icon="plug" href="../mcp/setup">
+    Connect assistants and tools.
+  </Card>
 </CardGroup>
 
-## Register
+## SDK example
 
 ```javascript
 await client.verify({
-  verifier: 'agent-identity',
+  verifier: "agent-identity",
   data: {
-    agentId: 'my-agent',
-    agentWallet: agentWallet,
-    agentLabel: 'My AI Agent',
-    agentType: 'ai',
+    agentId: "my-agent",
+    agentWallet,
+    agentLabel: "My AI Agent",
+    agentType: "ai",
   },
   walletAddress: agentWallet,
 });
 ```
 
-## Delegate
-
-```javascript
-await client.verify({
-  verifier: 'agent-delegation',
-  data: {
-    agentId: 'my-agent',
-    controllerWallet: controllerWallet,
-    agentWallet: agentWallet,
-    permissions: ['read-proofs', 'write-proofs'],
-  },
-  walletAddress: controllerWallet,
-});
-```
-
-Details: [agent-identity](./agent-identity), [agent-delegation](./agent-delegation), [MCP](../mcp/overview).
+Add scoped authority with [`agent-delegation`](./agent-delegation).

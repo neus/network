@@ -1,27 +1,41 @@
 ---
 title: Get started
-description: Account, app, first receipt.
+description: Choose the fastest path for your app, agent, or assistant.
 icon: book
 ---
 
-## Docs path (pick one lane)
+Pick the lane that matches what you are shipping.
 
-| Lane | Start here | Then |
-|------|------------|------|
-| **Ship checks in your app** | This page (account + `appId`) | [Quickstart](./quickstart) → [Integration](./integration) → [Hosted Verify](./cookbook/auth-hosted-verify) when you need redirect/popup detail |
-| **Wire editors / assistants (MCP)** | [MCP setup](./mcp/setup) | [MCP overview](./mcp/overview) → [Agent verification flow](./agents/agent-verification-flow) when you use an **agent wallet** |
-| **Hub / DNS / org settings** | [Platform setup](./platform/setup) | [Billing](./platform/billing) as needed |
+| Lane                 | Use this when                                                                 | Start                       |
+| -------------------- | ----------------------------------------------------------------------------- | --------------------------- |
+| **App verification** | Your product needs reusable trust receipts before access, rewards, or payment | [Quickstart](./quickstart)  |
+| **Agent trust**      | An agent needs identity, scoped authority, and receipts for trusted actions   | [Agents](./agents/overview) |
+| **Assistant setup**  | Cursor, VS Code, Claude Code, or another MCP host needs live NEUS context     | [MCP setup](./mcp/setup)    |
 
-Avoid parallel “first setup” threads: use **Quickstart** for SDK code, **MCP setup** for hosted MCP install only, and **Agent verification flow** for `neus_agent_link` / `neus_agent_create` together.
+## App verification
 
-## 1. NEUS account
+1. Sign in at [neus.network/hub](https://neus.network/hub).
+2. Create an app and copy your `appId`.
+3. Add `VerifyGate`, a hosted verify URL, or a server-side receipt call.
+4. Save the receipt ID and check it before trusted actions.
 
-[Hub](https://neus.network/hub): sign in to NEUS (passkey or wallet on **NEUS** only).
+## Agent trust
 
-## 2. App in Platform
+1. Register an agent identity.
+2. Add delegation only when another wallet, user, or organization controls what the agent may do.
+3. Reuse `neus_agent_link` before creating new receipts.
 
-Create the app, copy **`appId`**. Usage bills the linked profile.
+## Assistant setup
 
-## 3. First receipt
+```bash
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus doctor
+```
 
-[Quickstart](./quickstart): **browser** (`VerifyGate` or hosted URL → `/verify`) and **server** (`verifyFromApp`) on one page.
+Import an existing agent setup:
+
+```bash
+npx -y -p @neus/sdk neus import --dry-run
+```
+
+**Next:** [Quickstart](./quickstart)

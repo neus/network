@@ -11,7 +11,7 @@
 
 <p align="center">
  <strong>Trust infrastructure for apps, agents, and ecosystems.</strong><br />
- NEUS makes trust portable across the internet so people, apps, and AI agents can prove what is real before access, payout, or execution.
+ Trust that travels. Add reusable trust receipts before access, payment, or agent action.
 </p>
 
 <p align="center">
@@ -22,68 +22,51 @@
 
 <p align="center">
  <a href="#why-neus"><strong>Why NEUS</strong></a>
- | <a href="#build-with-neus"><strong>Build with NEUS</strong></a>
- | <a href="#agents-and-mcp"><strong>Agents and MCP</strong></a>
- | <a href="#connect-assistants-mcp"><strong>Assistants (MCP)</strong></a>
+ | <a href="#start-building"><strong>Start building</strong></a>
+ | <a href="#live-surfaces"><strong>Live surfaces</strong></a>
 </p>
 
 ---
 
-## What NEUS is today
+## What NEUS is
 
-NEUS turns verification into reusable trust receipts. Apps can issue a receipt once, check it before a gate or action, and reuse it later instead of asking trusted users or agents to start from zero.
+NEUS turns identity, ownership, authority, risk, content, and actions into reusable trust receipts. Your app or agent can check a receipt before allowing access, payment, tool use, delegation, or audit-sensitive work.
 
-- **Hosted Verify** drop in a live browser flow at [neus.network/verify](https://neus.network/verify).
-- **Trust receipts** give apps a reusable result for gates, proof pages, profiles, and audits.
-- **SDK, widgets, and API** let builders add verification and eligibility checks without owning every verifier flow.
-- **Agent identity and delegation** give automated workflows attributable identity, scoped authority, and audit-ready receipts.
-- **MCP** gives assistants and tools access to live trust context, proof reads, verifier metadata, and guided verification.
+Use the hosted product when you want NEUS to own the browser ceremony. Use the SDK, widgets, API, or MCP when you want the receipt inside your product, backend, or agent workflow.
 
 ## Why NEUS
 
-Trust keeps getting rebuilt inside each app, marketplace, workflow, and agent stack. That creates repeated onboarding, brittle access checks, manual reviews, and weak audit trails.
+Trust keeps getting rebuilt inside each app, marketplace, workflow, and agent stack. NEUS gives teams one trust layer for the moments that matter:
 
-NEUS gives teams one trust layer for the moments that matter:
+| Need                         | NEUS gives you                                                          |
+| ---------------------------- | ----------------------------------------------------------------------- |
+| Stop re-building trust from zero  | A receipt your product can save, check, and reuse                       |
+| Gate access or rewards       | Hosted flows, widgets, and server checks for trusted access             |
+| Trust agents before they act | Agent identity, scoped delegation, and receipts for trusted actions     |
+| Audit what happened          | Proof pages, receipt reads, tags, and durable references                |
+| Ship without owning ceremony | Hosted Verify, SDK helpers, API checks, and MCP on the same trust model |
 
-| Business outcome | What NEUS provides |
-| --- | --- |
-| Stop re-verifying from zero | Reuse trust receipts before prompting another verification |
-| Gate access and rewards | Check receipts before content, communities, drops, bounties, tiers, or payouts |
-| Trust agents before they act | Bind identity, controller, scope, and delegation to agent activity |
-| Keep decisions auditable | Use receipts as durable evidence for who or what passed a trust decision |
-| Ship faster | Use hosted flows, SDK helpers, widgets, API checks, and MCP instead of rebuilding the full trust stack |
+## Start building
 
-## Three ways to use it
+### 1. Add trust to an app
 
-### Product and hosted flows
+Use Hosted Verify, `VerifyGate`, or the SDK when your app needs a reusable trust receipt.
 
-Use Hosted Verify when you want NEUS to own the browser verification flow and return users to your product. Your app stores the resulting receipt and checks it before allowing trusted actions.
+- Start with [Quickstart](https://docs.neus.network/quickstart).
+- Follow the integration loop: [check -> verify -> save -> reuse](https://docs.neus.network/integration).
+- Use [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) when you want NEUS to own the browser step.
 
-- Start with [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify).
-- Explore the live product at [neus.network/verify](https://neus.network/verify).
-- See proof and profile surfaces at [neus.network](https://neus.network).
+### 2. Add trust to an agent
 
-### Build with NEUS
-
-Use the JavaScript SDK, React widgets, and HTTP API when you want trust checks inside your product, backend, or workflow.
-
-- Follow the main build flow: [check -> verify -> save -> reuse](https://docs.neus.network/integration).
-- Install the SDK: [@neus/sdk](https://www.npmjs.com/package/@neus/sdk) and [SDK docs](https://docs.neus.network/sdks/overview).
-- Use server-side checks and reads through the [API overview](https://docs.neus.network/api/overview).
-- Gate React experiences with [VerifyGate](https://docs.neus.network/widgets/verifygate).
-
-### Agents and MCP
-
-Use NEUS for agents that need identity, scoped authority, and receipts for trusted actions. MCP gives assistants and tools the same live trust context that apps use.
+Use NEUS when an agent needs identity, scoped authority, and receipts for trusted actions.
 
 - Start with [Agents](https://docs.neus.network/agents/overview).
-- Add identity and delegation with [`agent-identity`](https://docs.neus.network/agents/agent-identity) and [`agent-delegation`](https://docs.neus.network/agents/agent-delegation).
-- Connect tools through [NEUS MCP](https://docs.neus.network/mcp/overview).
-- Add the Claude Code skill bundle with [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
+- Register identity with [`agent-identity`](https://docs.neus.network/agents/agent-identity).
+- Add scoped authority with [`agent-delegation`](https://docs.neus.network/agents/agent-delegation).
 
-## Connect assistants (MCP)
+### 3. Connect assistants and tools
 
-Wire Cursor, VS Code, Claude Code, and other MCP hosts to the **same** hosted endpoint. One CLI, no extra plugins required for editors.
+Wire Cursor, VS Code, Claude Code, and other MCP hosts to the same hosted NEUS endpoint.
 
 ```bash
 npx -y -p @neus/sdk neus setup
@@ -101,52 +84,59 @@ Confirm the install, then start each session with tool **`neus_context`**:
 npx -y -p @neus/sdk neus doctor
 ```
 
-| Topic | Link |
-| --- | --- |
-| Full setup, manual JSON, and headers | [MCP setup](https://docs.neus.network/mcp/setup) |
-| Tools and recommended order | [MCP overview](https://docs.neus.network/mcp/overview) |
-| Discovery URLs (server card, `.well-known`) | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints) |
-| Claude Code skill bundle | [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace) |
+Bring an existing agent setup:
+
+```bash
+npx -y -p @neus/sdk neus import --dry-run
+npx -y -p @neus/sdk neus import --from openclaw
+npx -y -p @neus/sdk neus export --to manifest
+```
+
+| Topic                                       | Link                                                                          |
+| ------------------------------------------- | ----------------------------------------------------------------------------- |
+| Full setup, manual JSON, and headers        | [MCP setup](https://docs.neus.network/mcp/setup)                              |
+| Tools and recommended order                 | [MCP overview](https://docs.neus.network/mcp/overview)                        |
+| Discovery URLs (server card, `.well-known`) | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints)            |
+| Claude Code skill bundle                    | [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace) |
 
 Hosted MCP URL: **`https://mcp.neus.network/mcp`**
 
 ---
 
-## What is live now
+## Live surfaces
 
-| Surface | Live capability |
-| --- | --- |
-| Hosted Verify | Browser verification flow for supported verifiers |
-| Trust receipts | Reusable receipt identifiers, proof pages, profile surfaces, and eligibility checks |
-| SDK | `verify`, polling, hosted checkout URLs, and gate checks |
-| API | Proof checks, proof reads, verifier catalog, and advanced verification endpoints |
-| Widgets | `VerifyGate` and `ProofBadge` for React products |
-| Agents | Agent identity, delegation, stable agent URLs, and cookbook flows |
-| MCP | Hosted MCP endpoint for context, catalog, proof checks, proof reads, agent linking, and guided verification |
+| Surface        | Use it for                                                           |
+| -------------- | -------------------------------------------------------------------- |
+| Hosted Verify  | Browser verification at `neus.network/verify`                        |
+| Trust receipts | Reusable receipt IDs, proof pages, profile surfaces, and eligibility |
+| SDK            | Verification, polling, hosted URLs, and server-side gate checks      |
+| Widgets        | `VerifyGate` and `ProofBadge` for React products                     |
+| API            | Server reads, checks, verifier catalog, and verification endpoints   |
+| Agents         | Agent identity, delegation, stable URLs, and action receipts         |
+| MCP            | Live trust context for assistants, tools, and agent workflows        |
 
 ## Start here
 
-| Path | Best next step |
-| --- | --- |
-| Understand the product | [Why NEUS](#why-neus) and [docs overview](https://docs.neus.network) |
-| Build a trust flow | [Integration](https://docs.neus.network/integration) |
-| Add the SDK | [SDK overview](https://docs.neus.network/sdks/overview) |
-| Gate UI or access | [VerifyGate](https://docs.neus.network/widgets/verifygate) |
-| Use the API | [API overview](https://docs.neus.network/api/overview) |
-| Add agent trust | [Agents overview](https://docs.neus.network/agents/overview) |
-| Connect assistants (fastest) | [`npx -y -p @neus/sdk neus setup`](#connect-assistants-mcp) then [MCP setup](https://docs.neus.network/mcp/setup) |
+| Path                  | Best next step                                               |
+| --------------------- | ------------------------------------------------------------ |
+| First app integration | [Quickstart](https://docs.neus.network/quickstart)           |
+| Build a flow       | [Integration](https://docs.neus.network/integration)         |
+| React gate            | [VerifyGate](https://docs.neus.network/widgets/verifygate)   |
+| Server/API            | [API overview](https://docs.neus.network/api/overview)       |
+| Agent trust           | [Agents overview](https://docs.neus.network/agents/overview) |
+| Assistants/MCP        | [MCP setup](https://docs.neus.network/mcp/setup)             |
 
 ## Capability snapshot
 
 The live verifier catalog is documented at [docs.neus.network/verification/verifiers](https://docs.neus.network/verification/verifiers). Verifier lists and schemas are also available in [`spec/`](./spec/VERIFIERS.json).
 
-| Capability | Verifiers |
-| --- | --- |
+| Capability             | Verifiers                                                                                                |
+| ---------------------- | -------------------------------------------------------------------------------------------------------- |
 | Ownership and identity | `ownership-basic`, `ownership-social`, `ownership-dns-txt`, `ownership-org-oauth`, `ownership-pseudonym` |
-| Human and wallet trust | `proof-of-human`, `wallet-risk`, `wallet-link` |
-| Assets and contracts | `token-holding`, `nft-ownership`, `contract-ownership` |
-| Content and safety | `ai-content-moderation` |
-| Agent trust | `agent-identity`, `agent-delegation` |
+| Human and wallet trust | `proof-of-human`, `wallet-risk`, `wallet-link`                                                           |
+| Assets and contracts   | `token-holding`, `nft-ownership`, `contract-ownership`                                                   |
+| Content and safety     | `ai-content-moderation`                                                                                  |
+| Agent trust            | `agent-identity`, `agent-delegation`                                                                     |
 
 ## This repository
 
@@ -159,23 +149,23 @@ Docs, SDK (`@neus/sdk`), widgets, examples, specs, and Claude Code skill metadat
 
 ## Proof of reality
 
-| Surface | Link |
-| --- | --- |
-| Product | [neus.network](https://neus.network) |
-| Hosted Verify | [neus.network/verify](https://neus.network/verify) |
-| Docs | [docs.neus.network](https://docs.neus.network) |
-| SDK | [npm: @neus/sdk](https://www.npmjs.com/package/@neus/sdk) |
-| Examples | [`examples/`](./examples) |
+| Surface          | Link                                                              |
+| ---------------- | ----------------------------------------------------------------- |
+| Product          | [neus.network](https://neus.network)                              |
+| Hosted Verify    | [neus.network/verify](https://neus.network/verify)                |
+| Docs             | [docs.neus.network](https://docs.neus.network)                    |
+| SDK              | [npm: @neus/sdk](https://www.npmjs.com/package/@neus/sdk)         |
+| Examples         | [`examples/`](./examples)                                         |
 | Verifier catalog | [Verifier docs](https://docs.neus.network/verification/verifiers) |
 
 ## Support
 
-| Channel | Use for |
-| --- | --- |
-| [Docs](https://docs.neus.network) | Product and integration guidance |
+| Channel                                                    | Use for                               |
+| ---------------------------------------------------------- | ------------------------------------- |
+| [Docs](https://docs.neus.network)                          | Product and integration guidance      |
 | [Discussions](https://github.com/neus/network/discussions) | Questions and implementation patterns |
-| [Issues](https://github.com/neus/network/issues) | Bugs and requests |
-| [dev@neus.network](mailto:dev@neus.network) | Security |
+| [Issues](https://github.com/neus/network/issues)           | Bugs and requests                     |
+| [dev@neus.network](mailto:dev@neus.network)                | Security                              |
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution guidance.
 

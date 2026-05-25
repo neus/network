@@ -1337,6 +1337,28 @@
                 }
               }
             }
+          },
+          "defaultRuntime": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Default runtime display hints — NOT security-authoritative; delegation runtimePolicy overrides these.",
+            "properties": {
+              "provider": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "Default inference provider label."
+              },
+              "model": {
+                "type": "string",
+                "maxLength": 128,
+                "description": "Default inference model label."
+              },
+              "mode": {
+                "type": "string",
+                "maxLength": 64,
+                "description": "Default inference mode."
+              }
+            }
           }
         },
         "additionalProperties": false
@@ -1469,6 +1491,82 @@
                 "enabled": {
                   "type": "boolean"
                 }
+              }
+            }
+          },
+          "model": {
+            "type": "string",
+            "maxLength": 128,
+            "description": "Preferred inference model label (backward compat; prefer runtimePolicy.allowedModelClasses for structured policy)."
+          },
+          "provider": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Preferred inference provider label (backward compat; prefer runtimePolicy.allowedProviders for structured policy)."
+          },
+          "runtimePolicy": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Runtime execution policy — security-authoritative, overrides identity defaultRuntime. Only include when model/provider constraints affect the permission boundary.",
+            "properties": {
+              "allowedProviders": {
+                "type": "array",
+                "maxItems": 8,
+                "items": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "description": "Allowed inference provider labels."
+              },
+              "allowedModelClasses": {
+                "type": "array",
+                "maxItems": 8,
+                "items": {
+                  "type": "string",
+                  "maxLength": 128
+                },
+                "description": "Allowed model class patterns."
+              },
+              "requiresHumanApproval": {
+                "type": "boolean",
+                "description": "Whether the agent must pause for explicit human approval before irreversible actions."
+              },
+              "secretsExposedToReceipt": {
+                "type": "boolean",
+                "description": "Whether the delegation policy allows secrets to appear in action receipts (default false)."
+              }
+            }
+          },
+          "allowedActions": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "maxLength": 128
+            },
+            "description": "Explicit allowlist of action types the agent may perform."
+          },
+          "deniedActions": {
+            "type": "array",
+            "maxItems": 32,
+            "items": {
+              "type": "string",
+              "maxLength": 128
+            },
+            "description": "Explicit denylist of action types the agent may NOT perform. Takes precedence over allowedActions and permissions."
+          },
+          "approvalPolicy": {
+            "type": "object",
+            "additionalProperties": false,
+            "description": "Approval requirements for the delegated agent.",
+            "properties": {
+              "humanApprovalRequiredForNewClaims": {
+                "type": "boolean",
+                "description": "Whether the agent must get human approval before creating new proof claims on behalf of the controller."
+              },
+              "preApprovedContentOnly": {
+                "type": "boolean",
+                "description": "Whether the agent may only publish content pre-approved by the controller."
               }
             }
           }

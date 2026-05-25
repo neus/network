@@ -41,17 +41,17 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.",
-      "og:title": "NEUS Docs | Trust Infrastructure for Apps, Agents, and Ecosystems",
-      "og:description": "NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.",
+      "description": "Trust infrastructure enabling reusable trust receipts for apps, agents, and ecosystems before access, payment, delegation, or action.",
+      "og:title": "NEUS Docs | Trust Infrastructure for Apps and Agents",
+      "og:description": "Add reusable trust receipts to apps, agents, and ecosystems before access, payment, delegation, or action.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
       "og:type": "website",
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
-      "twitter:title": "NEUS Docs | Trust Infrastructure for Apps, Agents, and Ecosystems",
-      "twitter:description": "NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.",
+      "twitter:title": "NEUS Docs | Trust Infrastructure for Apps and Agents",
+      "twitter:description": "Add reusable trust receipts to apps, agents, and ecosystems before access, payment, delegation, or action.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
@@ -84,9 +84,11 @@
               "get-started",
               "quickstart",
               "integration",
-              "platform/setup",
-              "platform/billing",
-              "platform/x402",
+              "agents/overview",
+              "mcp/setup",
+              "sdks/overview",
+              "widgets/verifygate",
+              "api/overview",
               "cookbook/auth-hosted-verify",
               "examples",
               "platform/llm-docs"
@@ -96,7 +98,10 @@
             "group": "Platform",
             "pages": [
               "platform/overview",
+              "platform/setup",
               "platform/receipts-and-results",
+              "platform/billing",
+              "platform/x402",
               "platform/presets"
             ]
           },

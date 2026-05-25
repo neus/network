@@ -1,84 +1,60 @@
 ---
 title: Setup
-description: Connect to hosted NEUS MCP.
+description: Connect editors, assistants, and agent tools to hosted NEUS MCP.
 icon: code
 ---
 
-Connect your editor or agent to the hosted NEUS MCP endpoint. Reuse existing receipts when possible. Use hosted URLs when setup or proof state is missing.
+Hosted NEUS MCP runs at **`https://mcp.neus.network/mcp`**.
 
-Identity input follows the same public standard as the API: CAIP-2 for chain context, CAIP-10 for account-id fields, and `did:pkh` for stable DID identifiers. See [CAIP-380 Portable Proof](../learn/standards/caip-380).
-
-## Copy-paste setup (recommended)
+## One-command setup
 
 ```bash
 npx -y -p @neus/sdk neus setup
 ```
 
-With a NEUS Profile access key (enables tools such as `neus_me`):
+Add your NEUS Profile access key when you need account-aware tools such as `neus_me`, private reads, or profile-linked verification:
 
 ```bash
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
 ```
 
-Check the result:
+Check the install:
 
 ```bash
 npx -y -p @neus/sdk neus doctor
 ```
 
-Create keys under **Profile → Account** on [neus.network](https://neus.network/profile?tab=account).
+Run a live hosted MCP check:
 
-`neus setup` runs **`init`** and **`auth`** together when you pass **`--access-key`**. Without that flag, you still get hosted MCP wiring for every detected client; add a key later with **`neus auth`** if you need account-aware tools.
+```bash
+npx -y -p @neus/sdk neus doctor --live --access-key <npk_...>
+```
 
-## Universal install (any IDE or agent host)
+Create keys under **Profile -> Account** on [neus.network](https://neus.network/profile?tab=account). Treat access keys like passwords. Keep them in MCP or server config only.
 
-Use **`@neus/sdk`** as the single npm entrypoint for every desktop editor. Same URL, same optional Profile key, same **`neus doctor`** check. Use this path everywhere so your team stays aligned.
+## Import an existing agent setup
 
-| Concern | Recommended path |
-| --- | --- |
-| MCP wiring | `npx -y -p @neus/sdk neus setup` (or `neus init` without keys) |
-| Trust / “is it working?” | `npx -y -p @neus/sdk neus doctor` |
-| Claude Code skill | Optional [NEUS for Claude Code](./claude-code-marketplace) bundle; still run **`neus setup`** for keys |
-| Custom runtimes / containers | Env + `NEUS_MCP_URL` in your runtime — same MCP endpoint and tool contract |
+```bash
+npx -y -p @neus/sdk neus import --dry-run
+npx -y -p @neus/sdk neus import --from auto
+npx -y -p @neus/sdk neus export --to manifest
+```
+
+`neus import` detects OpenClaw, HERMES, Cursor rules, Claude Code skills/settings, and Claude Desktop MCP config. It writes portable metadata to `.neus/imported/` when not in dry-run mode. Secret-like env names are recorded as references only; values are not written.
 
 ## Where config is written
 
-After `neus setup` or `neus init`, the CLI merges NEUS into each detected client:
+| Client      | User scope                                                                          |
+| ----------- | ----------------------------------------------------------------------------------- |
+| Cursor      | `~/.cursor/mcp.json`                                                                |
+| VS Code     | VS Code User `mcp.json`                                                             |
+| Claude Code | User scope through `claude mcp add`; project `.mcp.json` with `neus init --project` |
 
-| Client | User scope (default) |
-| --- | --- |
-| Cursor | `~/.cursor/mcp.json` (`mcpServers.neus`) |
-| VS Code | VS Code **User** `mcp.json` (path varies by OS) |
-| Claude Code | User scope via `claude mcp add`, or project `.mcp.json` with `neus init --project` |
+There is no separate NEUS editor plugin required for Cursor or VS Code.
 
-There is **no separate NEUS Cursor plugin** in this repo: Cursor uses the same command and URL as everyone else.
+## Manual config
 
-## Claude Code skill bundle
-
-To add hosted MCP plus the bundled trust-workflow skill, see [NEUS for Claude Code](./claude-code-marketplace). Run **`neus setup --access-key <npk_...>`** when you need account-aware tools.
-
-## Step-by-step alternative
-
-```bash
-npx -y -p @neus/sdk neus init
-```
-
-That command configures NEUS MCP in supported clients automatically. Add `--project` when you want shared repo config. Add `--client claude`, `--client cursor`, or `--client vscode` when you want to target one client directly. Add personal auth later with:
-
-```bash
-npx -y -p @neus/sdk neus auth --access-key <npk_...>
-```
-
-Confirm the final state with:
-
-```bash
-npx -y -p @neus/sdk neus status --json
-```
-
-
-## Config
-
-Keep **`/mcp`** in the URL.
+Keep `/mcp` in the URL.
 
 ```json
 {
@@ -91,9 +67,7 @@ Keep **`/mcp`** in the URL.
 }
 ```
 
-## Optional Bearer
-
-`Authorization: Bearer` with **`npk_*`** enables **`neus_me`**, private reads, and signatureless **`neus_verify`** when the profile wallet matches. See [Auth](./auth).
+With a Profile access key:
 
 ```json
 {
@@ -107,29 +81,15 @@ Keep **`/mcp`** in the URL.
 }
 ```
 
-| Check | |
-|-------|--|
-| Keys | [Access keys](https://neus.network/profile?tab=account) |
-| Confirm | **`neus_me`** → **`status: ok`** |
-| Never | Ship keys to the browser |
+## First session
 
-## First run
-
-Use the same session order as the decision tree on [MCP overview](./overview). Field names for each tool: [Tools](./tools). Proof reads: **`neus_proofs_get`**.
-
-Other clients: same URL, same optional **`Authorization`** header.
-
-## Doctor check
-
-```bash
-npx -y -p @neus/sdk neus doctor --access-key <npk_...>
-```
-
-`doctor` confirms config health, profile connection, and agent verification readiness across every configured client. Run `doctor --json` for JSON output. Omit `--access-key` when you want config-only status.
+Start with `neus_context`. If Bearer auth is configured, call `neus_me` once, then reuse receipts with `neus_proofs_check` and read exact receipt records with `neus_proofs_get` before starting new verification.
 
 <CardGroup cols={2}>
   <Card title="MCP overview" icon="plug" href="./overview">
+    Tool order and agent handoff.
   </Card>
-  <Card title="Endpoints" icon="globe" href="./endpoints">
+  <Card title="Auth" icon="lock" href="./auth">
+    Keys and headers.
   </Card>
 </CardGroup>

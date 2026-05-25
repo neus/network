@@ -1,48 +1,45 @@
 ---
 title: Quickstart
-description: Browser ceremony on NEUS; server receipts without wallet code in your app.
+description: Add a reusable trust receipt to your app.
 icon: rocket
 ---
 
-**Default:** NEUS issues receipts. Passkey, wallet, and OAuth for standard browser flows run on **`https://neus.network/verify`**, not inside your application bundle.
+NEUS owns the standard browser ceremony. Your product saves the resulting receipt and checks it before trusted actions.
 
-| Outcome | You ship | Wallet or passkey code in your app |
-|---------|----------|-------------------------------------|
-| User proves something in the browser | `VerifyGate` **or** `getHostedCheckoutUrl` → `/verify`, then store **`qHash`** from callback or popup | No |
-| Your backend creates a receipt for a user already linked in NEUS | `verifyFromApp`, then `gateCheck` | No |
+| Path         | Use it when                                    | Your app owns                                   |
+| ------------ | ---------------------------------------------- | ----------------------------------------------- |
+| `VerifyGate` | You want a React gate with a hosted fallback   | `appId`, required verifiers, protected UI       |
+| Hosted URL   | You want redirect or popup control             | Return URL or popup listener                    |
+| Server call  | Your backend creates receipts for linked users | `NEUS_ACCESS_KEY`, `verifyFromApp`, `gateCheck` |
 
 ## Browser
 
-| Your responsibility | NEUS |
-|--------------------|------|
-| `appId`, `returnUrl` (redirect) **or** `origin` + popup listener | Ceremony UI and signing |
-
-**VerifyGate** (React):
-
 ```jsx
-import { VerifyGate } from '@neus/sdk/widgets';
+import { VerifyGate } from "@neus/sdk/widgets";
 
-<VerifyGate appId="your-app-id" requiredVerifiers={['ownership-basic']}>
+<VerifyGate appId="your-app-id" requiredVerifiers={["ownership-basic"]}>
   <ProtectedContent />
-</VerifyGate>
+</VerifyGate>;
 ```
 
-**Hosted URL** (any framework):
+Or send the user to Hosted Verify:
 
 ```javascript
-import { getHostedCheckoutUrl } from '@neus/sdk';
+import { getHostedCheckoutUrl } from "@neus/sdk";
 
 window.location.assign(
   getHostedCheckoutUrl({
-    verifiers: ['ownership-basic'],
-    returnUrl: 'https://myapp.com/auth/callback',
+    verifiers: ["ownership-basic"],
+    returnUrl: "https://myapp.com/auth/callback",
   }),
 );
 ```
 
-Parameters, `returnTo`, `intent=login`, popups (`neus_checkout_done` / `neus_login_complete`): [Hosted Verify](./cookbook/auth-hosted-verify).
+Hosted flow details: [Hosted Verify](./cookbook/auth-hosted-verify).
 
 ## Server
+
+Keep access keys server-side only.
 
 ```env
 NEUS_APP_ID=app_...
@@ -50,7 +47,7 @@ NEUS_ACCESS_KEY=npk_...
 ```
 
 ```javascript
-import { NeusClient } from '@neus/sdk';
+import { NeusClient } from "@neus/sdk";
 
 const client = new NeusClient({
   appId: process.env.NEUS_APP_ID,
@@ -59,44 +56,31 @@ const client = new NeusClient({
 
 await client.verifyFromApp({
   user: { walletAddress: user.walletAddress },
-  verifier: 'ownership-basic',
-  content: { claim: 'User completed onboarding', source: 'your-app' },
-});
+  verifier: "ownership-basic",
+  content: "User completed onboarding"
+);
 
 const result = await client.gateCheck({
   address: user.walletAddress,
-  verifierIds: ['ownership-basic'],
+  verifierIds: ["ownership-basic"],
 });
 ```
 
-## Assistants (MCP)
+## Assistants and agents
 
-Connect editors and agents to hosted NEUS MCP with one command (then start each session with tool **`neus_context`**):
+Connect MCP hosts:
 
 ```bash
 npx -y -p @neus/sdk neus setup
-```
-
-Optional Profile access key (for tools such as `neus_me`):
-
-```bash
-npx -y -p @neus/sdk neus setup --access-key <npk_...>
-```
-
-Health check:
-
-```bash
 npx -y -p @neus/sdk neus doctor
 ```
 
-Install, JSON, headers, and per-client paths: [MCP setup](./mcp/setup) · Discovery URLs: [MCP endpoints](./mcp/endpoints) · Session tool order: [MCP overview](./mcp/overview).
+Bring an existing agent setup:
 
-**Delegated agent wallet (identity + access proofs):** follow the [Agent verification flow](./agents/agent-verification-flow). Reuse **`neus_agent_link`** before **`neus_agent_create`** when a wallet already exists.
+```bash
+npx -y -p @neus/sdk neus import --dry-run
+```
 
-## Optional
-
-- Polling: [SDK verifications](./sdks/verifications)
-- Signing inside **your** page (not default): [Signing format](./verification/signing-format)
-- Identity and chain terms: [CAIP-380 Portable Proof](./learn/standards/caip-380)
+For agent wallets, follow [Agent verification flow](./agents/agent-verification-flow). Reuse `neus_agent_link` before `neus_agent_create`.
 
 **Next:** [Integration](./integration)

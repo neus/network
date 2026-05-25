@@ -1,41 +1,48 @@
-# NEUS MCP (hosted)
+# NEUS MCP
 
-Assistants and editors connect to **hosted NEUS MCP** at:
+Hosted NEUS MCP gives assistants and agent tools live trust context.
 
-**`https://mcp.neus.network/mcp`**
+**Endpoint:** `https://mcp.neus.network/mcp`
 
-## Fastest setup (recommended)
+## Setup
 
 ```bash
 npx -y -p @neus/sdk neus setup
 ```
 
-With a NEUS Profile access key (for account-aware tools):
+With a NEUS Profile access key:
 
 ```bash
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
 ```
 
-Health check:
+Check the install:
 
 ```bash
 npx -y -p @neus/sdk neus doctor
 ```
 
-Create access keys under **Profile → Account** on [neus.network](https://neus.network/profile?tab=account). Treat keys like passwords: keep them in MCP or server config only, not in client-side code or public repos.
+## Import an agent setup
 
-## After you connect
+```bash
+npx -y -p @neus/sdk neus import --dry-run
+npx -y -p @neus/sdk neus import --from auto
+```
 
-Start each session with tool **`neus_context`**. If you configured a Profile key, call **`neus_me`** once, then reuse receipts with **`neus_proofs_check`** before starting new verification.
+## First session
+
+Start with `neus_context`. If you configured a Profile key, call `neus_me` once, then reuse receipts with `neus_proofs_check` before creating new verification.
+
+Create access keys under **Profile -> Account** on [neus.network](https://neus.network/profile?tab=account). Keep keys in MCP or server config only.
 
 ## Docs
 
-| Topic | Link |
-|-------|------|
-| Full setup (Cursor, VS Code, Claude Code, JSON) | [docs.neus.network/mcp/setup](https://docs.neus.network/mcp/setup) |
-| Tools and recommended order | [docs.neus.network/mcp/overview](https://docs.neus.network/mcp/overview) |
-| Discovery (`.well-known`, server card) | [docs.neus.network/mcp/endpoints](https://docs.neus.network/mcp/endpoints) |
-| Auth and headers | [docs.neus.network/mcp/auth](https://docs.neus.network/mcp/auth) |
+| Topic                    | Link                                                                                                   |
+| ------------------------ | ------------------------------------------------------------------------------------------------------ |
+| Full setup               | [docs.neus.network/mcp/setup](https://docs.neus.network/mcp/setup)                                     |
+| Tool order               | [docs.neus.network/mcp/overview](https://docs.neus.network/mcp/overview)                               |
+| Discovery                | [docs.neus.network/mcp/endpoints](https://docs.neus.network/mcp/endpoints)                             |
+| Auth and headers         | [docs.neus.network/mcp/auth](https://docs.neus.network/mcp/auth)                                       |
 | Claude Code skill bundle | [docs.neus.network/mcp/claude-code-marketplace](https://docs.neus.network/mcp/claude-code-marketplace) |
 
 ## License

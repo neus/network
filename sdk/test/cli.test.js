@@ -135,7 +135,8 @@ async function makeCliContext() {
     APPDATA: appDataDir,
     LOCALAPPDATA: localAppDataDir,
     PATH: `${binDir}${path.delimiter}${process.env.PATH || ''}`,
-    NEUS_TEST_CLAUDE_STATE: claudeStatePath
+    NEUS_TEST_CLAUDE_STATE: claudeStatePath,
+    NEUS_ACCESS_KEY: ''
   };
 
   return {
@@ -153,6 +154,11 @@ async function runCli(args, context) {
     cwd: context.workspaceDir,
     env: context.env
   });
+}
+
+async function writeJson(targetPath, value) {
+  await fs.mkdir(path.dirname(targetPath), { recursive: true });
+  await fs.writeFile(targetPath, JSON.stringify(value, null, 2), 'utf8');
 }
 
 afterEach(async () => {
@@ -196,7 +202,9 @@ describe('neus CLI', () => {
     expect(claudeState.servers.neus.commandOrUrl).toBe('https://mcp.neus.network/mcp');
     expect(claudeState.servers.neus.headers).toEqual([]);
 
-    await expect(fs.readFile(path.join(context.workspaceDir, '.mcp.json'), 'utf8')).rejects.toThrow();
+    await expect(
+      fs.readFile(path.join(context.workspaceDir, '.mcp.json'), 'utf8')
+    ).rejects.toThrow();
   });
 
   it('adds Authorization headers when an access key is supplied', async () => {
@@ -232,7 +240,7 @@ describe('neus CLI', () => {
     expect(payload.command).toBe('status');
     expect(payload.scope).toBe('user');
 
-    const byClient = Object.fromEntries(payload.clients.map((client) => [client.client, client]));
+    const byClient = Object.fromEntries(payload.clients.map(client => [client.client, client]));
     expect(byClient.cursor.configured).toBe(true);
     expect(byClient.cursor.authConfigured).toBe(true);
     expect(byClient.vscode.configured).toBe(true);
@@ -249,7 +257,7 @@ describe('neus CLI', () => {
 
     const { stdout, stderr } = await runCli(['status', '--json'], context);
     const payload = JSON.parse(stdout);
-    const byClient = Object.fromEntries(payload.clients.map((client) => [client.client, client]));
+    const byClient = Object.fromEntries(payload.clients.map(client => [client.client, client]));
 
     expect(stderr).toBe('');
     expect(byClient.vscode.configured).toBe(false);
@@ -265,7 +273,7 @@ describe('neus CLI', () => {
 
     const { stdout, stderr } = await runCli(['status', '--json'], context);
     const payload = JSON.parse(stdout);
-    const byClient = Object.fromEntries(payload.clients.map((client) => [client.client, client]));
+    const byClient = Object.fromEntries(payload.clients.map(client => [client.client, client]));
 
     expect(stderr).toBe('');
     expect(byClient.cursor.configured).toBe(false);
@@ -290,6 +298,115 @@ describe('neus CLI', () => {
       await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
     );
     expect(cursorConfig.mcpServers.neus.url).toBe('https://mcp.neus.network/mcp');
+  });
+
+  it('imports an OpenClaw workspace in dry-run mode without writing secrets', async () => {
+    const context = await makeCliContext();
+    const openclawDir = path.join(context.homeDir, '.openclaw', 'workspace');
+    const agentConfigDir = path.join(context.homeDir, '.openclaw', 'agents', 'main', 'agent');
+
+    await fs.mkdir(path.join(openclawDir, 'skills', 'research'), { recursive: true });
+    await fs.mkdir(agentConfigDir, { recursive: true });
+    await fs.writeFile(
+      path.join(openclawDir, 'SOUL.md'),
+      '# Builder Agent\n\nProof-aware operator.',
+      'utf8'
+    );
+    await fs.writeFile(path.join(openclawDir, 'MEMORY.md'), 'Durable preference.', 'utf8');
+    await fs.writeFile(
+      path.join(openclawDir, 'skills', 'research', 'SKILL.md'),
+      '# Research\n',
+      'utf8'
+    );
+    await fs.writeFile(
+      path.join(openclawDir, '.env'),
+      'OPENAI_API_KEY=sk-secret\nPUBLIC_FLAG=true\n',
+      'utf8'
+    );
+    await writeJson(path.join(agentConfigDir, 'claude-mcp.json'), {
+      mcpServers: {
+        filesystem: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-filesystem'] }
+      }
+    });
+
+    const { stdout, stderr } = await runCli(
+      ['import', '--from', 'openclaw', '--dry-run', '--json'],
+      context
+    );
+    const payload = JSON.parse(stdout);
+
+    expect(stderr).toBe('');
+    expect(payload.command).toBe('import');
+    expect(payload.source).toBe('openclaw');
+    expect(payload.dryRun).toBe(true);
+    expect(payload.manifest.instructions.length).toBe(1);
+    expect(payload.manifest.skills.map(skill => skill.name)).toContain('research');
+    expect(payload.manifest.secretRefs).toEqual([
+      { name: 'OPENAI_API_KEY', source: 'openclaw', handling: 'detected-only' }
+    ]);
+    expect(stdout).not.toContain('sk-secret');
+    await expect(
+      fs.readFile(path.join(context.workspaceDir, '.neus', 'imported', 'openclaw.json'), 'utf8')
+    ).rejects.toThrow();
+  });
+
+  it('auto-detects portable agent sources when import --from auto is used', async () => {
+    const context = await makeCliContext();
+
+    await fs.mkdir(path.join(context.workspaceDir, '.cursor', 'rules'), { recursive: true });
+    await fs.writeFile(
+      path.join(context.workspaceDir, '.cursor', 'rules', 'neus.mdc'),
+      'alwaysApply: true\n',
+      'utf8'
+    );
+    await fs.mkdir(path.join(context.homeDir, '.hermes', 'skills', 'ops'), { recursive: true });
+    await fs.writeFile(
+      path.join(context.homeDir, '.hermes', 'SOUL.md'),
+      '# Hermes Agent\n',
+      'utf8'
+    );
+    await fs.writeFile(
+      path.join(context.homeDir, '.hermes', 'skills', 'ops', 'SKILL.md'),
+      '# Ops\n',
+      'utf8'
+    );
+
+    const { stdout } = await runCli(['import', '--dry-run', '--json'], context);
+    const payload = JSON.parse(stdout);
+
+    expect(payload.source).toBe('auto');
+    expect(payload.detectedSources.map(source => source.source).sort()).toEqual([
+      'cursor',
+      'hermes'
+    ]);
+    expect(payload.manifest.source).toBe('hermes');
+    expect(payload.manifest.skills.map(skill => skill.name)).toContain('ops');
+  });
+
+  it('exports the local imported manifest as a portable NEUS manifest', async () => {
+    const context = await makeCliContext();
+    const importedPath = path.join(context.workspaceDir, '.neus', 'imported', 'openclaw.json');
+
+    await writeJson(importedPath, {
+      schema: 'neus.portable-agent.v1',
+      source: 'openclaw',
+      generatedAt: '2026-05-22T00:00:00.000Z',
+      instructions: [{ name: 'SOUL.md', path: '/tmp/SOUL.md', bytes: 12 }],
+      skills: [{ name: 'research', path: '/tmp/skills/research', kind: 'skill' }],
+      mcpServers: [{ name: 'neus', source: 'openclaw' }],
+      secretRefs: [{ name: 'OPENAI_API_KEY', source: 'openclaw', handling: 'detected-only' }],
+      proofHints: { status: 'not-issued', qHashes: [] }
+    });
+
+    const { stdout, stderr } = await runCli(['export', '--to', 'manifest', '--json'], context);
+    const payload = JSON.parse(stdout);
+
+    expect(stderr).toBe('');
+    expect(payload.command).toBe('export');
+    expect(payload.format).toBe('manifest');
+    expect(payload.manifest.source).toBe('openclaw');
+    expect(payload.manifest.proofHints.qHashes).toEqual([]);
+    expect(payload.manifest.secretRefs[0].handling).toBe('detected-only');
   });
 
   it('exits non-zero for unknown subcommand', async () => {

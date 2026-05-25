@@ -1,51 +1,55 @@
 ---
 title: Agent Verification Flow
-description: Register agent, optional delegation, consume via API or MCP.
+description: Register identity, add delegation, then reuse receipts.
 icon: arrow-progress
 ---
 
-Terms: [Agent concepts](./concepts).
+Agents need identity and authority before they act. NEUS keeps those receipts reusable across apps, assistants, and APIs.
 
-## Sequence
+## Setup order
 
 <Steps>
- <Step title="Register">
- `agent-identity` - agent wallet signs; one **qHash** for public metadata.
- </Step>
- <Step title="Delegate (if needed)">
- `agent-delegation` - approving account (`controllerWallet`) signs scope, caps, expiry.
- </Step>
- <Step title="Use in apps & assistants">
- MCP or API for checks, catalogs, hosted verify when browsers are required.
- </Step>
+  <Step title="Check existing receipts">
+    In MCP, call `neus_context`, then `neus_agent_link` with the agent wallet.
+  </Step>
+  <Step title="Register identity">
+    If identity is missing, create `agent-identity`. The agent wallet signs.
+  </Step>
+  <Step title="Delegate authority">
+    If another account controls the agent, create `agent-delegation` with scope,
+    caps, and expiry.
+  </Step>
+  <Step title="Check again">
+    Call `neus_agent_link` until it returns `linked: true`.
+  </Step>
 </Steps>
 
-## MCP handoff
+## MCP sequence
 
-Canonical order (matches server guidance):
+1. Call **`neus_context`** at the start of the session.
+2. If your MCP client has a Profile access key, call **`neus_me`**.
+3. Call **`neus_agent_link`** with **`agentWallet`**.
+4. If it returns **`linked: true`**, reuse the receipts.
+5. If setup is missing, call **`neus_agent_create`** and complete the returned hosted or signing steps.
+6. Call **`neus_agent_link`** again.
 
-1. **`neus_context`**, then **`neus_me`** when your MCP session uses a Profile access key (**Bearer**).
-2. **`neus_agent_link`** with **`agentWallet`** — if **`linked: true`**, you are done for assistants that require both proofs on file.
-3. If the tool returns **`link_required`** and you still need prepared payloads (signing strings or a combined hosted URL), call **`neus_agent_create`**, then complete the steps it returns (hosted **`hostedVerifyUrl`** and/or **`neus_verify`** with the provided **`signatures`**).
-4. **`neus_agent_link`** again until **`linked: true`**.
+Readiness for the default delegated-agent path means both `agent-identity` and `agent-delegation` are present. This is separate from generic [wallet-link](../verification/wallet-link).
 
-`neus_agent_link` with **`link_required`**: open **`hostedVerifyUrl`** when returned, finish the browser flow, then call **`neus_agent_link`** again. Readiness covers **agent-identity** plus **agent-delegation** for the default delegated-agent path — not the generic [wallet-link](../verification/wallet-link) verifier.
-
-Tool reference: [Agent link](../mcp/agent-link) · [Agent create](../mcp/agent-create) · [MCP overview](../mcp/overview).
+Tool reference: [Agent link](../mcp/agent-link) | [Agent create](../mcp/agent-create) | [MCP overview](../mcp/overview).
 
 ## Related
 
 <CardGroup cols={2}>
- <Card title="Concepts" icon="book-open" href="./concepts">
- Roles and field names.
- </Card>
- <Card title="Agent identity" icon="robot" href="./agent-identity">
- Registration.
- </Card>
- <Card title="Delegation" icon="key" href="./agent-delegation">
- Scoped authority.
- </Card>
- <Card title="MCP" icon="plug" href="../mcp/overview">
- Integrate NEUS MCP in assistants.
- </Card>
+  <Card title="Agent identity" icon="robot" href="./agent-identity">
+    Register the agent.
+  </Card>
+  <Card title="Delegation" icon="key" href="./agent-delegation">
+    Scope what it can do.
+  </Card>
+  <Card title="MCP setup" icon="plug" href="../mcp/setup">
+    Connect assistants and tools.
+  </Card>
+  <Card title="Concepts" icon="book-open" href="./concepts">
+    Roles and fields.
+  </Card>
 </CardGroup>

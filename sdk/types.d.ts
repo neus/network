@@ -696,36 +696,70 @@ declare module '@neus/sdk' {
     [key: string]: any;
   };
 
+  type AgentSkillRef = {
+    id: string;
+    label?: string;
+    version?: string;
+    provider?: string;
+    kind?: 'native' | 'integration' | 'plugin' | 'mcp' | 'toolkit';
+    configId?: string;
+    enabled?: boolean;
+  };
+
   type AgentIdentityData = {
     agentId: string;
     agentWallet: string;
+    agentChainRef: string;
+    agentAccountId?: string;
     agentLabel?: string;
     agentType?: 'ai' | 'bot' | 'service' | 'automation' | 'agent';
+    avatar?: string;
     description?: string;
-    capabilities?: any[];
+    defaultRuntime?: {
+      provider?: string;
+      model?: string;
+      mode?: string;
+    };
+    capabilities?: Record<string, boolean>;
     instructions?: string;
-    skills?: string[];
+    skills?: AgentSkillRef[];
     services?: Array<{
       name: string;
       endpoint: string;
       version?: string;
     }>;
-    [key: string]: any;
   };
 
   type AgentDelegationData = {
     controllerWallet: string;
+    controllerChainRef: string;
     agentWallet: string;
+    agentChainRef: string;
+    controllerAccountId?: string;
+    agentAccountId?: string;
     agentId?: string;
     scope?: string;
-    permissions?: any[];
+    permissions?: string[];
     maxSpend?: string;
     allowedPaymentTypes?: string[];
     receiptDisclosure?: 'none' | 'summary' | 'full';
     expiresAt?: number;
     instructions?: string;
-    skills?: string[];
-    [key: string]: any;
+    skills?: AgentSkillRef[];
+    model?: string;
+    provider?: string;
+    runtimePolicy?: {
+      allowedProviders?: string[];
+      allowedModelClasses?: string[];
+      requiresHumanApproval?: boolean;
+      secretsExposedToReceipt?: boolean;
+    };
+    allowedActions?: string[];
+    deniedActions?: string[];
+    approvalPolicy?: {
+      humanApprovalRequiredForNewClaims?: boolean;
+      preApprovedContentOnly?: boolean;
+    };
   };
 
   type CoreVerificationData =

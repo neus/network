@@ -239,6 +239,17 @@ const validateVerifierData = (verifierId, data) => {
     if (data.agentType && !['ai', 'bot', 'service', 'automation', 'agent'].includes(data.agentType)) {
       return { valid: false, error: 'agentType must be one of: ai, bot, service, automation, agent' };
     }
+    if (data.defaultRuntime && typeof data.defaultRuntime === 'object') {
+      if (data.defaultRuntime.provider && typeof data.defaultRuntime.provider === 'string' && data.defaultRuntime.provider.length > 64) {
+        return { valid: false, error: 'defaultRuntime.provider must be 64 chars or less' };
+      }
+      if (data.defaultRuntime.model && typeof data.defaultRuntime.model === 'string' && data.defaultRuntime.model.length > 128) {
+        return { valid: false, error: 'defaultRuntime.model must be 128 chars or less' };
+      }
+      if (data.defaultRuntime.mode && typeof data.defaultRuntime.mode === 'string' && data.defaultRuntime.mode.length > 64) {
+        return { valid: false, error: 'defaultRuntime.mode must be 64 chars or less' };
+      }
+    }
     break;
   case 'agent-delegation':
     if (!data.controllerWallet || !validateWalletAddress(data.controllerWallet)) {
@@ -252,6 +263,18 @@ const validateVerifierData = (verifierId, data) => {
     }
     if (data.expiresAt && (typeof data.expiresAt !== 'number' || data.expiresAt < Date.now())) {
       return { valid: false, error: 'expiresAt must be a future timestamp' };
+    }
+    if (data.model && typeof data.model === 'string' && data.model.length > 128) {
+      return { valid: false, error: 'model must be 128 chars or less' };
+    }
+    if (data.provider && typeof data.provider === 'string' && data.provider.length > 64) {
+      return { valid: false, error: 'provider must be 64 chars or less' };
+    }
+    if (data.allowedActions && Array.isArray(data.allowedActions) && data.allowedActions.length > 32) {
+      return { valid: false, error: 'allowedActions must have 32 items or less' };
+    }
+    if (data.deniedActions && Array.isArray(data.deniedActions) && data.deniedActions.length > 32) {
+      return { valid: false, error: 'deniedActions must have 32 items or less' };
     }
     break;
   case 'ai-content-moderation':
@@ -852,9 +875,13 @@ export class NeusClient {
         verificationData = {
           agentId: data.agentId,
           agentWallet: data?.agentWallet || walletAddress,
+          ...(data?.agentChainRef && { agentChainRef: data.agentChainRef }),
+          ...(data?.agentAccountId && { agentAccountId: data.agentAccountId }),
           ...(data?.agentLabel && { agentLabel: data.agentLabel }),
           ...(data?.agentType && { agentType: data.agentType }),
+          ...(data?.avatar && { avatar: data.avatar }),
           ...(data?.description && { description: data.description }),
+          ...(data?.defaultRuntime && { defaultRuntime: data.defaultRuntime }),
           ...(data?.capabilities && { capabilities: data.capabilities }),
           ...(data?.instructions && { instructions: data.instructions }),
           ...(data?.skills && { skills: data.skills }),
@@ -866,7 +893,11 @@ export class NeusClient {
         }
         verificationData = {
           controllerWallet: data?.controllerWallet || walletAddress,
+          ...(data?.controllerChainRef && { controllerChainRef: data.controllerChainRef }),
           agentWallet: data.agentWallet,
+          ...(data?.agentChainRef && { agentChainRef: data.agentChainRef }),
+          ...(data?.controllerAccountId && { controllerAccountId: data.controllerAccountId }),
+          ...(data?.agentAccountId && { agentAccountId: data.agentAccountId }),
           ...(data?.agentId && { agentId: data.agentId }),
           ...(data?.scope && { scope: data.scope }),
           ...(data?.permissions && { permissions: data.permissions }),
@@ -875,7 +906,13 @@ export class NeusClient {
           ...(data?.receiptDisclosure && { receiptDisclosure: data.receiptDisclosure }),
           ...(data?.expiresAt && { expiresAt: data.expiresAt }),
           ...(data?.instructions && { instructions: data.instructions }),
-          ...(data?.skills && { skills: data.skills })
+          ...(data?.skills && { skills: data.skills }),
+          ...(data?.model && { model: data.model }),
+          ...(data?.provider && { provider: data.provider }),
+          ...(data?.runtimePolicy && { runtimePolicy: data.runtimePolicy }),
+          ...(data?.allowedActions && { allowedActions: data.allowedActions }),
+          ...(data?.deniedActions && { deniedActions: data.deniedActions }),
+          ...(data?.approvalPolicy && { approvalPolicy: data.approvalPolicy })
         };
       } else if (verifier === 'ai-content-moderation') {
         if (!data?.content) {

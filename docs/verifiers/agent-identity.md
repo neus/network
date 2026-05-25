@@ -29,7 +29,6 @@ _Fields in the `data` object for the completed verification request (after signa
 - `instructions` (`string max 16000`)
 - `skills` (`array`): Agent skills as structured objects
 - `services` (`array`)
-- `purpose` (`string max 500`): Agent role or purpose — what this agent IS for, not what it is allowed to do. Distinct from description: purpose captures mission and scope, description is a brief human-readable summary.
 - `defaultRuntime` (`object`): Default runtime display hints — NOT security-authoritative; delegation runtimePolicy overrides these. These are convenience metadata for UI and tooling, not proof of which model/provider the agent actually uses.
 
 - **Compatible with:** `agent-delegation`, `ai-content-moderation`, `ownership-dns-txt`, `contract-ownership`, `wallet-link`
