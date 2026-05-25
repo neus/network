@@ -136,6 +136,8 @@
             "doc",
             "media",
             "username-claim",
+            "job",
+            "job-status",
             "other"
           ],
           "type": "string"

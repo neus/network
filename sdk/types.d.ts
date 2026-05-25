@@ -81,8 +81,12 @@ declare module '@neus/sdk' {
   export interface VerifierCatalogMetadataEntry {
     category?: string;
     description?: string;
+    accessLevel?: 'public' | 'pro' | 'custom' | 'admin' | string;
     flowType?: 'instant' | 'interactive' | 'external_lookup' | string;
     expiryType?: 'permanent' | 'point_in_time' | 'expiring' | string;
+    allowsDelegatedSubject?: boolean;
+    compatibleWith?: string[];
+    conflictsWith?: string[];
     supportsDirectApi?: boolean;
     supportsHostedVerify?: boolean;
     dataSchema?: Record<string, any>;
@@ -599,6 +603,8 @@ declare module '@neus/sdk' {
         | 'doc'
         | 'media'
         | 'username-claim'
+        | 'job'
+        | 'job-status'
         | 'other';
       id?: string;
       title?: string;
@@ -646,7 +652,8 @@ declare module '@neus/sdk' {
     contractAddress: string;
     tokenId: string;
     tokenType?: 'erc721' | 'erc1155';
-    chainId: number;
+    chainId?: number;
+    chain?: string;
     blockNumber?: number;
     [key: string]: any;
   };
@@ -655,24 +662,29 @@ declare module '@neus/sdk' {
     ownerAddress?: string;
     contractAddress: string;
     minBalance: string;
-    chainId: number;
+    chainId?: number;
+    chain?: string;
     blockNumber?: number;
     [key: string]: any;
   };
 
   type WalletRiskData = {
+    walletAddress: string;
     provider?: string;
-    walletAddress?: string;
     chainId?: number;
     chain?: string;
     [key: string]: any;
   };
 
   type WalletLinkData = {
-    primaryWalletAddress: string;
-    secondaryWalletAddress: string;
+    primaryWalletAddress?: string;
+    secondaryWalletAddress?: string;
+    primaryAccountId?: string;
+    secondaryAccountId?: string;
+    primaryChainRef?: string;
+    secondaryChainRef?: string;
     signature: string;
-    chain: string;
+    chain?: string;
     signatureMethod: string;
     signedTimestamp: number;
     relationshipType?: 'primary' | 'personal' | 'org' | 'affiliate' | 'agent' | 'linked';
@@ -819,6 +831,8 @@ declare module '@neus/sdk' {
         | 'doc'
         | 'media'
         | 'username-claim'
+        | 'job'
+        | 'job-status'
         | 'other';
       id?: string;
       title?: string;

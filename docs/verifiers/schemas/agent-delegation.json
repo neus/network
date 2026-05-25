@@ -24,7 +24,7 @@
       "type": "string"
     },
     "allowedActions": {
-      "description": "Explicit allowlist of action types the agent may perform (e.g., [\"read-proofs\", \"execute-jobs\", \"publish-approved-content\"]).",
+      "description": "Explicit allowlist of action types the agent may perform (e.g., [\"read-proofs\", \"execute-jobs\", \"publish-approved-content\"]). Owner-view-only: not included in public proof responses.",
       "items": {
         "maxLength": 128,
         "type": "string"
@@ -42,7 +42,7 @@
     },
     "approvalPolicy": {
       "additionalProperties": false,
-      "description": "Approval requirements for the delegated agent.",
+      "description": "Approval requirements for the delegated agent. Owner-view-only: not included in public proof responses.",
       "properties": {
         "humanApprovalRequiredForNewClaims": {
           "description": "Whether the agent must get human approval before creating new proof claims on behalf of the controller.",
@@ -70,7 +70,7 @@
       "type": "string"
     },
     "deniedActions": {
-      "description": "Explicit denylist of action types the agent may NOT perform. Takes precedence over allowedActions and permissions.",
+      "description": "Explicit denylist of action types the agent may NOT perform. Takes precedence over allowedActions and permissions. Owner-view-only: not included in public proof responses.",
       "items": {
         "maxLength": 128,
         "type": "string"
@@ -92,7 +92,7 @@
       "type": "string"
     },
     "model": {
-      "description": "Preferred inference model label (backward compat; prefer runtimePolicy.allowedModelClasses for structured policy).",
+      "description": "Preferred inference model label (backward compat; prefer runtimePolicy.allowedModelClasses for structured policy). Owner-view-only: not included in public proof responses.",
       "maxLength": 128,
       "type": "string"
     },
@@ -105,7 +105,7 @@
       "type": "array"
     },
     "provider": {
-      "description": "Preferred inference provider label (backward compat; prefer runtimePolicy.allowedProviders for structured policy).",
+      "description": "Preferred inference provider label (backward compat; prefer runtimePolicy.allowedProviders for structured policy). Owner-view-only: not included in public proof responses.",
       "maxLength": 64,
       "type": "string"
     },
@@ -119,7 +119,7 @@
     },
     "runtimePolicy": {
       "additionalProperties": false,
-      "description": "Runtime execution policy — security-authoritative, overrides identity defaultRuntime. Only include when model/provider constraints affect the permission boundary.",
+      "description": "Runtime execution policy — security-authoritative, overrides identity defaultRuntime. Owner-view-only: not included in public proof responses. Only include when model/provider constraints affect the permission boundary.",
       "properties": {
         "allowedModelClasses": {
           "description": "Allowed model class patterns (e.g., [\"gpt-4.1-*\", \"approved-public-content-models\"]).",
@@ -151,6 +151,8 @@
       "type": "object"
     },
     "scope": {
+      "default": "global",
+      "description": "Delegation scope. Defaults to \"global\" (all permissions) when omitted.",
       "maxLength": 128,
       "type": "string"
     },

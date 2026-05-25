@@ -70,6 +70,8 @@
             "doc",
             "media",
             "username-claim",
+            "job",
+            "job-status",
             "other"
           ],
           "description": "Reference type"

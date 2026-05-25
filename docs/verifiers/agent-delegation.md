@@ -24,7 +24,7 @@ _Fields in the `data` object for the completed verification request (after signa
 - `controllerAccountId` (`string format caip10-account`): Optional CAIP-10 account identifier for controllerWallet. May be injected when inputs are normalized from wallet + chain context.
 - `agentAccountId` (`string format caip10-account`): Optional CAIP-10 account identifier for agentWallet. May be injected when inputs are normalized from wallet + chain context.
 - `agentId` (`string max 128 min 1`)
-- `scope` (`string max 128`)
+- `scope` (`string max 128`): Delegation scope. Defaults to "global" (all permissions) when omitted.
 - `permissions` (`array`)
 - `maxSpend` (`string pattern ^[0-9]{1,78}$`): Spend cap as a whole-number string in token base units (no decimal point). USDC (common x402): six decimal places; native ETH-style assets: eighteen.
 - `allowedPaymentTypes` (`array`)
@@ -32,12 +32,12 @@ _Fields in the `data` object for the completed verification request (after signa
 - `expiresAt` (`integer`)
 - `instructions` (`string max 16000`)
 - `skills` (`array`): Agent skills as structured objects
-- `model` (`string max 128`): Preferred inference model label (backward compat; prefer runtimePolicy.allowedModelClasses for structured policy).
-- `provider` (`string max 64`): Preferred inference provider label (backward compat; prefer runtimePolicy.allowedProviders for structured policy).
-- `runtimePolicy` (`object`): Runtime execution policy — security-authoritative, overrides identity defaultRuntime. Only include when model/provider constraints affect the permission boundary.
-- `allowedActions` (`array`): Explicit allowlist of action types the agent may perform (e.g., \["read-proofs", "execute-jobs", "publish-approved-content"\]).
-- `deniedActions` (`array`): Explicit denylist of action types the agent may NOT perform. Takes precedence over allowedActions and permissions.
-- `approvalPolicy` (`object`): Approval requirements for the delegated agent.
+- `model` (`string max 128`): Preferred inference model label (backward compat; prefer runtimePolicy.allowedModelClasses for structured policy). Owner-view-only: not included in public proof responses.
+- `provider` (`string max 64`): Preferred inference provider label (backward compat; prefer runtimePolicy.allowedProviders for structured policy). Owner-view-only: not included in public proof responses.
+- `runtimePolicy` (`object`): Runtime execution policy — security-authoritative, overrides identity defaultRuntime. Owner-view-only: not included in public proof responses. Only include when model/provider constraints affect the permission boundary.
+- `allowedActions` (`array`): Explicit allowlist of action types the agent may perform (e.g., \["read-proofs", "execute-jobs", "publish-approved-content"\]). Owner-view-only: not included in public proof responses.
+- `deniedActions` (`array`): Explicit denylist of action types the agent may NOT perform. Takes precedence over allowedActions and permissions. Owner-view-only: not included in public proof responses.
+- `approvalPolicy` (`object`): Approval requirements for the delegated agent. Owner-view-only: not included in public proof responses.
 
 - **Compatible with:** `agent-identity`, `ownership-org-oauth`, `wallet-risk`, `wallet-link`
 
