@@ -8,23 +8,24 @@ Organizational OAuth verification
 - **Expiry:** `permanent`
 - **Schema:** [./schemas/ownership-org-oauth.json](./schemas/ownership-org-oauth.json) — JSON Schema for the `data` field
 
-## Full payload (required and optional)
+## How to use
 
-_Fields in the `data` object for the completed verification request (after signatures or hosted steps as required)._
+This is a **hosted-only** verifier. Your app redirects the user to hosted verify; you never call the API directly with `ownership-org-oauth`.
 
-### Required fields
+```javascript
+import { getHostedCheckoutUrl } from '@neus/sdk';
 
-- `provider` (`string enum: google, microsoft`): Identity provider for workspace or org sign-in.
-- `internalSocialToken` (`string`): Opaque token from the hosted org sign-in session; not your app API key.
+window.location.href = getHostedCheckoutUrl({
+  verifiers: ['ownership-org-oauth'],
+  returnUrl: 'https://myapp.com/auth/callback',
+});
+```
 
-### Optional fields
-
-- `walletAddress` (`string format universal-address`): Wallet to associate with the verified org identity.
-- `expectedOrgDomain` (`string format hostname`): Optional DNS hostname for the organization (e.g. company.com) to match against the IdP directory.
+The hosted flow handles OAuth with the organization provider and populates all required fields automatically.
 
 ## Hosted verification (initial input)
 
-_What you pass to start the flow. The hosted step supplies tokens and proofs; the full payload above is what is validated on submit._
+_What you pass to start the flow._
 
 ### Required fields
 
@@ -36,38 +37,34 @@ _What you pass to start the flow. The hosted step supplies tokens and proofs; th
 
 - **Compatible with:** `agent-delegation`
 
+## Complete payload (validated on submit)
+
+_Fields in the `data` object after the hosted step completes. The `internalSocialToken` is populated by the hosted flow — do not supply it in API calls._
+
+### Required fields
+
+- `provider` (`string enum: google, microsoft`): Identity provider for workspace or org sign-in.
+- `internalSocialToken` (`string`): Opaque token from the hosted org sign-in session. **Populated by the hosted flow; do not supply.**
+
+### Optional fields
+
+- `walletAddress` (`string format universal-address`): Wallet to associate with the verified org identity.
+- `expectedOrgDomain` (`string format hostname`): Optional DNS hostname for the organization (e.g. company.com) to match against the IdP directory.
+
 ## Example
 
-_Illustrative values only. Use real addresses and tokens from your integration._
+_Redirect to hosted verify (recommended):_
 
 ```javascript
-await client.verify({
-  verifier: 'ownership-org-oauth',
-  data: {
-    "provider": "google",
-    "internalSocialToken": "opaque-oauth-token",
-    "walletAddress": "0x4444444444444444444444444444444444444444",
-    "expectedOrgDomain": "example.com"
-  }
-});
+import { getHostedCheckoutUrl } from '@neus/sdk';
 
-// Request shape (illustrative)
-{
-  "verifierIds": [
-    "ownership-org-oauth"
-  ],
-  "data": {
-    "provider": "google",
-    "internalSocialToken": "opaque-oauth-token",
-    "walletAddress": "0x4444444444444444444444444444444444444444",
-    "expectedOrgDomain": "example.com"
-  },
-  "walletAddress": "0x1234567890abcdef1234567890abcdef12345678",
-  "signature": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
-  "signedTimestamp": 1700000000000,
-  "chainId": 84532
-}
+window.location.href = getHostedCheckoutUrl({
+  verifiers: ['ownership-org-oauth'],
+  returnUrl: 'https://myapp.com/auth/callback',
+});
 ```
+
+_After redirect, read `qHash` from your callback URL._
 
 ## Next steps
 

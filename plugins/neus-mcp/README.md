@@ -31,7 +31,15 @@ npx -y -p @neus/sdk neus setup --access-key <npk_...>
    /plugin install neus-mcp@neus
    ```
 
-3. Add your NEUS Profile access key when you need account-aware tools:
+3. Authenticate with hosted NEUS login:
+
+   ```bash
+   npx -y -p @neus/sdk neus auth
+   ```
+
+   This opens your browser to a hosted sign-in page. After authentication, the CLI configures your MCP clients automatically.
+
+4. If hosted login is unavailable, use a Profile access key as fallback:
 
    ```bash
    npx -y -p @neus/sdk neus setup --access-key <npk_...>

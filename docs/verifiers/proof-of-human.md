@@ -21,7 +21,7 @@ _Fields in the `data` object for the completed verification request (after signa
 
 - `provider` (`string enum: zkpassport`)
 - `scope` (`string pattern ^[a-zA-Z0-9_-]{1,64}$`)
-- `neusPersonhoodId` (`string pattern ^0x[a-fA-F0-9]{64}$`): Salted SHA-256 personhood ID for sybil resistance (internal, never exposed in API responses)
+- `neusPersonhoodId` (`string pattern ^0x[a-fA-F0-9]{64}$`): Salted SHA-256 personhood ID for sybil resistance (system-generated; not supplied by integrators)
 - `assuranceLevel` (`string enum: low, medium, high`): Verification confidence level derived from proof claims
 - `claims` (`object`): Privacy-preserving boolean/numeric verification claims
 - `traits` (`object`): Provider-specific verification metadata

@@ -8,22 +8,24 @@ Social media account ownership via OAuth
 - **Expiry:** `permanent`
 - **Schema:** [./schemas/ownership-social.json](./schemas/ownership-social.json) — JSON Schema for the `data` field
 
-## Full payload (required and optional)
+## How to use
 
-_Fields in the `data` object for the completed verification request (after signatures or hosted steps as required)._
+This is a **hosted-only** verifier. Your app redirects the user to hosted verify; you never call the API directly with `ownership-social`.
 
-### Required fields
+```javascript
+import { getHostedCheckoutUrl } from '@neus/sdk';
 
-- `provider` (`string enum: discord, github, facebook, x, farcaster, linkedin, telegram, coinbase`): OAuth provider to verify against.
-- `internalSocialToken` (`string`): Opaque token from the hosted link session after the user authorizes; not your app API key.
+window.location.href = getHostedCheckoutUrl({
+  verifiers: ['ownership-social'],
+  returnUrl: 'https://myapp.com/auth/callback',
+});
+```
 
-### Optional fields
-
-- `walletAddress` (`string format universal-address`): Wallet bound to the social account when applicable.
+The hosted flow handles OAuth with the social provider and populates all required fields automatically.
 
 ## Hosted verification (initial input)
 
-_What you pass to start the flow. The hosted step supplies tokens and proofs; the full payload above is what is validated on submit._
+_What you pass to start the flow._
 
 ### Required fields
 
@@ -35,36 +37,33 @@ _What you pass to start the flow. The hosted step supplies tokens and proofs; th
 
 - **Compatible with:** `ownership-basic`
 
+## Complete payload (validated on submit)
+
+_Fields in the `data` object after the hosted step completes. The `internalSocialToken` is populated by the hosted flow — do not supply it in API calls._
+
+### Required fields
+
+- `provider` (`string enum: discord, github, facebook, x, farcaster, linkedin, telegram, coinbase`): OAuth provider to verify against.
+- `internalSocialToken` (`string`): Opaque token from the hosted link session after the user authorizes. **Populated by the hosted flow; do not supply.**
+
+### Optional fields
+
+- `walletAddress` (`string format universal-address`): Wallet bound to the social account when applicable.
+
 ## Example
 
-_Illustrative values only. Use real addresses and tokens from your integration._
+_Redirect to hosted verify (recommended):_
 
 ```javascript
-await client.verify({
-  verifier: 'ownership-social',
-  data: {
-    "provider": "discord",
-    "internalSocialToken": "opaque-oauth-token",
-    "walletAddress": "0x2222222222222222222222222222222222222222"
-  }
-});
+import { getHostedCheckoutUrl } from '@neus/sdk';
 
-// Request shape (illustrative)
-{
-  "verifierIds": [
-    "ownership-social"
-  ],
-  "data": {
-    "provider": "discord",
-    "internalSocialToken": "opaque-oauth-token",
-    "walletAddress": "0x2222222222222222222222222222222222222222"
-  },
-  "walletAddress": "0x1234567890abcdef1234567890abcdef12345678",
-  "signature": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001",
-  "signedTimestamp": 1700000000000,
-  "chainId": 84532
-}
+window.location.href = getHostedCheckoutUrl({
+  verifiers: ['ownership-social'],
+  returnUrl: 'https://myapp.com/auth/callback',
+});
 ```
+
+_After redirect, read `qHash` from your callback URL._
 
 ## Next steps
 

@@ -21,7 +21,7 @@
       "type": "number"
     },
     "neusPersonhoodId": {
-      "description": "Salted SHA-256 personhood ID for sybil resistance (internal, never exposed in API responses)",
+      "description": "Salted SHA-256 personhood ID for sybil resistance (system-generated; not supplied by integrators)",
       "pattern": "^0x[a-fA-F0-9]{64}$",
       "type": "string"
     },

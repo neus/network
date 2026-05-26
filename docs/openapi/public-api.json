@@ -3,7 +3,7 @@
   "info": {
     "title": "NEUS API — Public Integrator API",
     "version": "1.0.0",
-    "description": "Public HTTP API for NEUS integrators.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).\n\nSome verifiers require pro access. Administrative endpoints are not included in this specification.",
+    "description": "Public HTTP API for NEUS integrators.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).\n\nSome verifiers require pro access.",
     "license": {
       "name": "Business Source License 1.1",
       "url": "https://mariadb.com/bsl11/"
@@ -717,7 +717,7 @@
           },
           "internalSocialToken": {
             "type": "string",
-            "description": "Opaque token from the hosted link session after the user authorizes; not your app API key."
+            "description": "Opaque token from the hosted link session after the user authorizes. Populated by the hosted flow; do not supply in API calls."
           },
           "walletAddress": {
             "type": "string",
@@ -794,7 +794,7 @@
           },
           "internalSocialToken": {
             "type": "string",
-            "description": "Opaque token from the hosted org sign-in session; not your app API key."
+            "description": "Opaque token from the hosted org sign-in session. Populated by the hosted flow; do not supply in API calls."
           },
           "walletAddress": {
             "type": "string",
@@ -865,7 +865,7 @@
           "neusPersonhoodId": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{64}$",
-            "description": "Salted SHA-256 personhood ID for sybil resistance (internal, never exposed in API responses)"
+            "description": "Salted SHA-256 personhood ID for sybil resistance (system-generated; not supplied by integrators)"
           },
           "assuranceLevel": {
             "type": "string",
@@ -1341,7 +1341,7 @@
           "defaultRuntime": {
             "type": "object",
             "additionalProperties": false,
-            "description": "Default runtime display hints — NOT security-authoritative; delegation runtimePolicy overrides these.",
+            "description": "Default runtime display hints — not security-authoritative; delegation runtimePolicy overrides these.",
             "properties": {
               "provider": {
                 "type": "string",
@@ -1696,7 +1696,7 @@
       "get": {
         "operationId": "getVerifierCatalog",
         "summary": "Get supported verifiers and configuration",
-        "description": "Returns the public verifier catalog: supported verifier IDs, sanitized public metadata (input schemas + direct-vs-hosted capabilities), and backend chain configuration (hub chain, asset allowlists). Internal transport/provider fields are not exposed here.",
+        "description": "Returns the verifier catalog: supported IDs, public input schemas, hosted vs. direct capabilities, and chain configuration.",
         "tags": [
           "Verification"
         ],

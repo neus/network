@@ -4,7 +4,7 @@
   "description": "Social media account ownership via OAuth",
   "properties": {
     "internalSocialToken": {
-      "description": "Opaque token from the hosted link session after the user authorizes; not your app API key.",
+      "description": "Opaque token from the hosted link session after the user authorizes. Populated by the hosted flow; do not supply in API calls.",
       "type": "string"
     },
     "provider": {
