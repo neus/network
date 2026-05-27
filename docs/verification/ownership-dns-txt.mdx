@@ -36,7 +36,7 @@ Other prefixes (for example `neus=`) are **not** read by this verifier—use **`
 
 ## Request `data` (API / SDK)
 
-| Field | In JSON Schema | What integrators should know |
+| Field | In JSON Schema | What to know |
 |------|------------------|------------------------------|
 | `domain` | **Required** | Hostname to verify (apex or eTLD+1 style you control in DNS). |
 | `walletAddress` | **Optional** in `data` | **Still needed for a passing check:** the TXT line must match the **wallet or account address NEUS uses for this proof**. You may **omit** `walletAddress` inside `data` when the proof request already includes a verified **`walletAddress` at the request level** (signed flow); the service fills in the signer wallet before the DNS check. If you omit it **and** the request has no signer wallet, verification fails. If you **set** `walletAddress` in `data`, it must match the wallet that signs the proof (or follow your product’s allowed delegation rules)—do not use someone else’s address. |

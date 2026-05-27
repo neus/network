@@ -9,9 +9,11 @@ For Cursor, VS Code, and most local assistants, use the CLI setup:
 
 ```bash
 npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
+npx -y -p @neus/sdk neus doctor --live
 ```
 
-Optional key in one step:
+For servers and CI only:
 
 ```bash
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
@@ -31,15 +33,14 @@ npx -y -p @neus/sdk neus setup --access-key <npk_...>
    /plugin install neus-mcp@neus
    ```
 
-3. Authenticate with hosted NEUS login:
+3. Sign in (recommended):
 
    ```bash
+   npx -y -p @neus/sdk neus setup
    npx -y -p @neus/sdk neus auth
    ```
 
-   This opens your browser to a hosted sign-in page. After authentication, the CLI configures your MCP clients automatically.
-
-4. If hosted login is unavailable, use a Profile access key as fallback:
+4. For servers and CI only, use a Profile access key:
 
    ```bash
    npx -y -p @neus/sdk neus setup --access-key <npk_...>

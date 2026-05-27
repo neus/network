@@ -23,7 +23,7 @@ const NeusLogo = ({ size = 12, logoUrl }) => (
 );
 
 export function ProofBadge({
-  qHash: qHashProp,
+  qHash,
   proofUrlPattern = '/proof/:qHash',
   size = 'sm',
   uiLinkBase = 'https://neus.network',
@@ -33,10 +33,8 @@ export function ProofBadge({
   showLabel = true,
   logoUrl = undefined,
   onClick = undefined,
-  className = '',
-  ...legacyProps
+  className = ''
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId; // Accepts legacy proofId for backward compatibility.
   const resolvedQHash = qHash;
   const [status, setStatus] = useState(() => {
     if (proof) {
@@ -168,7 +166,7 @@ export function ProofBadge({
 }
 
 export function SimpleProofBadge({
-  qHash: qHashProp,
+  qHash,
   proofUrlPattern = '/proof/:qHash',
   uiLinkBase = 'https://neus.network',
   apiUrl = DEFAULT_API_BASE,
@@ -177,10 +175,8 @@ export function SimpleProofBadge({
   logoUrl = undefined,
   proof = undefined,
   onClick = undefined,
-  className = '',
-  ...legacyProps
+  className = ''
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId; // Accepts legacy proofId for backward compatibility.
   const resolvedQHash = qHash;
   const [status, setStatus] = useState(() => {
     if (proof) {
@@ -276,17 +272,15 @@ export function SimpleProofBadge({
 }
 
 export function NeusPillLink({
-  qHash: qHashProp,
+  qHash,
   proofUrlPattern = '/proof/:qHash',
   uiLinkBase = 'https://neus.network',
   label = 'View',
   size = 'sm',
   logoUrl = undefined,
   onClick = undefined,
-  className = '',
-  ...legacyProps
+  className = ''
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId; // Accepts legacy proofId for backward compatibility.
   const resolvedQHash = qHash;
   const base = String(uiLinkBase).replace(/\/$/, '');
   const href = resolvedQHash ? `${base}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}` : base;
@@ -339,17 +333,15 @@ export function NeusPillLink({
 }
 
 export function VerifiedIcon({
-  qHash: qHashProp,
+  qHash,
   proofUrlPattern = '/proof/:qHash',
   uiLinkBase = 'https://neus.network',
   size = 14,
   logoUrl = undefined,
   tooltip = 'Proof',
   onClick = undefined,
-  className = '',
-  ...legacyProps
+  className = ''
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId; // Accepts legacy proofId for backward compatibility.
   const resolvedQHash = qHash;
   const href = resolvedQHash
     ? `${String(uiLinkBase).replace(/\/$/, '')}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}`

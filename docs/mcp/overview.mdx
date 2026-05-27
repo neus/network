@@ -12,9 +12,11 @@ Use it to check existing receipts, read proof state, link agents, and guide user
 
 ```bash
 npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
+npx -y -p @neus/sdk neus doctor --live
 ```
 
-Add a Profile access key for account-aware tools:
+For servers and automation, add a Profile access key:
 
 ```bash
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
@@ -26,7 +28,7 @@ Check setup:
 npx -y -p @neus/sdk neus doctor
 ```
 
-Full setup: [MCP setup](./setup).
+Full setup: [MCP setup](./setup). OAuth reference: [MCP OAuth](./oauth).
 
 ## Session order
 
@@ -39,6 +41,8 @@ Full setup: [MCP setup](./setup).
 | 5    | `neus_proofs_get`      | Read receipt details when needed                                     |
 | 6    | `neus_verify`          | Verify only when signing and profile prerequisites already match     |
 | 7    | `neus_verify_or_guide` | Guide the user when setup, payment, wallet, or delegation is missing |
+
+Public tools also include **`neus_secret_create`**, **`neus_secret_list`**, and **`neus_secret_revoke`** when signed in ([Secrets](./secrets)).
 
 ## Agent setup
 
@@ -58,11 +62,12 @@ npx -y -p @neus/sdk neus import --dry-run
 npx -y -p @neus/sdk neus import --from auto
 ```
 
-`neus import` packages portable metadata from OpenClaw, HERMES, Cursor, Claude Code, or Claude Desktop. Secret values are not written.
-
 ## Reference
 
-<CardGroup cols={3}>
+<CardGroup cols={4}>
+  <Card title="OAuth" icon="shield-check" href="./oauth">
+    OAuth flow and tokens.
+  </Card>
   <Card title="Setup" icon="code" href="./setup">
     Install and auth.
   </Card>
@@ -70,6 +75,6 @@ npx -y -p @neus/sdk neus import --from auto
     Tool reference.
   </Card>
   <Card title="Auth" icon="lock" href="./auth">
-    Profile keys and headers.
+    Keys and headers.
   </Card>
 </CardGroup>

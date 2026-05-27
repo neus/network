@@ -8,32 +8,24 @@ Hosted NEUS MCP gives assistants and agent tools live trust context.
 
 ```bash
 npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
+npx -y -p @neus/sdk neus doctor --live
 ```
 
-With a NEUS Profile access key:
+**OAuth** (`neus auth`) is the default for editors and assistants. For servers and CI, add a Profile access key:
 
 ```bash
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
 ```
 
-Check the install:
+## npm packages
 
-```bash
-npx -y -p @neus/sdk neus doctor
-```
+| Package | Path | Role |
+| ------- | ---- | ---- |
+| [`@neus/sdk`](https://www.npmjs.com/package/@neus/sdk) | [`sdk/`](../sdk) | JavaScript SDK + `neus` CLI |
+| [`@neus/mcp-server`](https://www.npmjs.com/package/@neus/mcp-server) | [`mcp/npm-dist/`](./npm-dist) | MCP registry discovery metadata only |
 
-## Import an agent setup
-
-```bash
-npx -y -p @neus/sdk neus import --dry-run
-npx -y -p @neus/sdk neus import --from auto
-```
-
-## First session
-
-Start with `neus_context`. If you configured a Profile key, call `neus_me` once, then reuse receipts with `neus_proofs_check` before creating new verification.
-
-Create access keys under **Profile -> Account** on [neus.network](https://neus.network/profile?tab=account). Keep keys in MCP or server config only.
+Install with `npm install @neus/sdk` or `npm install @neus/mcp-server`. Release notes: [CHANGELOG.md](../CHANGELOG.md).
 
 ## Docs
 
@@ -41,8 +33,8 @@ Create access keys under **Profile -> Account** on [neus.network](https://neus.n
 | ------------------------ | ------------------------------------------------------------------------------------------------------ |
 | Full setup               | [docs.neus.network/mcp/setup](https://docs.neus.network/mcp/setup)                                     |
 | Tool order               | [docs.neus.network/mcp/overview](https://docs.neus.network/mcp/overview)                               |
+| OAuth                    | [docs.neus.network/mcp/oauth](https://docs.neus.network/mcp/oauth)                                   |
 | Discovery                | [docs.neus.network/mcp/endpoints](https://docs.neus.network/mcp/endpoints)                             |
-| Auth and headers         | [docs.neus.network/mcp/auth](https://docs.neus.network/mcp/auth)                                       |
 | Claude Code skill bundle | [docs.neus.network/mcp/claude-code-marketplace](https://docs.neus.network/mcp/claude-code-marketplace) |
 
 ## License

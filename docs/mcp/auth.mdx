@@ -1,74 +1,97 @@
 ---
 title: MCP Auth & Security
-description: Authenticate NEUS MCP with a personal access key when tools need your account or private data.
+description: OAuth 2.0 with PKCE for MCP clients, access key fallback, and token security.
 icon: lock
 ---
 
-Use a **personal access key** from [Access Keys](https://neus.network/profile?tab=account) when your MCP client needs access to your NEUS account or private data.
+NEUS MCP uses **OAuth 2.0 Authorization Code with PKCE** as the primary authentication flow. MCP clients that support OAuth (Claude Code, OpenAI, VS Code, Cursor) authenticate through a standard browser-based flow. Access keys are the fallback for servers and automation.
 
-NEUS MCP uses the same **`Authorization: Bearer`** pattern as [API authentication](../api/authentication). Apply the header on the MCP HTTP connection during [setup](./setup).
-
-## Browser sign-in (recommended)
+## OAuth (recommended)
 
 ```bash
 npx -y -p @neus/sdk neus auth
 ```
 
-The CLI opens your browser to a hosted sign-in page. After you authenticate (passkey or wallet), the CLI receives an attestation token and configures your MCP clients automatically — no manual key copy-paste needed.
+The CLI opens your browser to the NEUS hosted sign-in page. After you authenticate (passkey or wallet), the CLI receives an MCP access token via the standard OAuth code exchange with PKCE.
 
-Use browser sign-in for personal setups. The `--access-key` variant below is for servers and automation where a browser is not available.
+MCP clients that support OAuth discovery read metadata from the hosted MCP server:
+
+```text
+GET https://mcp.neus.network/.well-known/mcp.json
+  → authorization.resource_metadata_url
+GET /.well-known/oauth-protected-resource
+GET https://neus.network/.well-known/oauth-authorization-server
+→ /oauth/authorize (HostedLoginFlow)
+→ Token exchange
+→ Authenticated MCP session (Bearer on MCP requests)
+```
+
+Some clients also follow a `401` + `WWW-Authenticate` challenge when a protected resource requires auth. Hosted NEUS MCP is open for public tools; sign in when you need account-aware tools such as **`neus_me`** or encrypted secrets.
+
+Full OAuth reference: [MCP OAuth](./oauth).
+
+## Access key (fallback)
+
+Use a **personal access key** from [Access Keys](https://neus.network/profile?tab=account) when browser OAuth is not available — servers, CI, and automation.
+
+```bash
+npx -y -p @neus/sdk neus setup --access-key <npk_...>
+```
 
 ## Quick answer
 
 | Mode | Use it for |
 |------|------------|
 | **No authentication** | `neus_context`, `neus_proofs_check`, public `neus_proofs_get`, and verifier catalog reads |
-| **Bearer (`npk_*`)** | `neus_me`, authenticated `neus_proofs_get`, profile reads, and account-aware MCP flows |
+| **OAuth** | Cursor, VS Code, Claude Code, OpenAI — browser sign-in, no manual keys |
+| **Bearer (`npk_*` or OAuth JWT)** | Same header shape — `neus_me`, private reads, secrets tools |
 
 ## Authorization header
 
 ```http
-Authorization: Bearer <npk_...>
+Authorization: Bearer <token>
 ```
 
-Use **`npk_*`** when a tool needs **your account**. Do not use an end user's browser session for MCP authentication.
+OAuth tokens and access keys both use the `Bearer` scheme.
 
 Authenticated MCP sessions should reuse receipts before any browser step: **`neus_context`** → **`neus_me`** → **`neus_agent_link`** (when an agent wallet is in play) → **`neus_proofs_check`** → **`neus_proofs_get`** when you need proof details. Use **`neus_verify_or_guide`** only when something required is still missing.
 
-For **agent wallets**, follow [Agent verification flow](../agents/agent-verification-flow): call **`neus_agent_link`** first when that address already exists; use **`neus_agent_create`** only when the link response shows gaps.
+## Disconnect
 
-## What Bearer unlocks
+```bash
+npx -y -p @neus/sdk neus disconnect --access-key <token>
+```
 
-* `neus_me`
-* authenticated `neus_proofs_get`
-* profile reads
-* account-aware MCP flows
+Disconnect revokes OAuth MCP tokens through the OAuth revocation endpoint. For `npk_*` credentials, it revokes the Profile access key through the protocol API, then removes the local MCP header from configured clients.
 
-`neus_verify` can complete without an additional signature when your authenticated profile wallet already matches the request **`walletAddress`**. See [Overview](./overview).
+## MCP server auth challenge
+
+When a client requests a protected resource without credentials, some hosts return:
+
+```http
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer resource_metadata="https://mcp.neus.network/.well-known/oauth-protected-resource"
+```
+
+Clients that support MCP OAuth follow that metadata to start browser sign-in. You can also connect with URL-only config and sign in through your host, or run **`neus auth`** from the CLI.
 
 ## Interactive verification flows
 
 [Hosted Verify](../cookbook/auth-hosted-verify): passkey, wallet, OAuth, and social **proof** steps run **on NEUS**. If a tool returns **`hostedVerifyUrl`**, open it once, then continue in MCP.
 
-## Common situations
-
-| Situation | What to do |
-| --- | --- |
-| User needs passkey, OAuth, or social verification | Open the returned **`hostedVerifyUrl`**. |
-| User has a connected wallet | Use **`neus_verify`** with a signature, or the hosted URL when the tool returns one. |
-| IDE or server automation | Set **`Authorization: Bearer <npk_...>`** on MCP. Raw HTTP uses the same pattern: [API authentication](../api/authentication). |
-
 ## Security
 
 | Topic | Rule |
 | --- | --- |
-| Store keys | Server or IDE MCP configuration only. |
-| Browser exposure | Never expose personal access keys in browser code. |
-| Rotation | Re-issue the key from [Access Keys](https://neus.network/profile?tab=account) if it is exposed. |
-| `hostedVerifyUrl` | Send the user to the returned NEUS hosted flow. |
+| OAuth tokens | Stored by MCP client — never in query strings |
+| Access keys | Server or IDE MCP configuration only |
+| Browser exposure | Never expose tokens or access keys in browser code |
+| Rotation | Re-issue access keys from [Access Keys](https://neus.network/profile?tab=account) if exposed |
+| Refresh tokens | Rotated on each use — old token invalidated |
+| `hostedVerifyUrl` | Send the user to the returned NEUS hosted flow |
 
 <CardGroup cols={3}>
-  <Card title="MCP overview" icon="plug" href="./overview" />
+  <Card title="MCP OAuth" icon="shield-check" href="./oauth" />
   <Card title="Setup" icon="code" href="./setup" />
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify" />
 </CardGroup>

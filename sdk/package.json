@@ -1,6 +1,6 @@
 {
   "name": "@neus/sdk",
-  "version": "1.0.12",
+  "version": "1.1.0",
   "description": "NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.",
   "bin": {
     "neus": "cli/neus.mjs"
@@ -67,7 +67,10 @@
     "universal-protocol",
     "proof",
     "ownership",
-    "sdk"
+    "sdk",
+    "mcp",
+    "model-context-protocol",
+    "oauth"
   ],
   "author": "NEUS Network",
   "license": "Apache-2.0",
@@ -124,6 +127,7 @@
     "widgets.cjs",
     "types.d.ts",
     "README.md",
+    "CHANGELOG.md",
     "SECURITY.md",
     "LICENSE",
     "neus-logo.svg",

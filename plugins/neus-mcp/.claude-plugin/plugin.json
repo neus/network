@@ -1,7 +1,7 @@
 {
   "name": "neus-mcp",
-  "description": "Hosted NEUS MCP for Claude Code plus a trust-workflow skill. Add your Profile access key with: npx -y -p @neus/sdk neus setup",
-  "version": "1.0.0",
+  "description": "Portable trust plugin. The hosted NEUS MCP connects your universal Profile, proofs, encrypted secrets, and agent workflows through one OAuth-first setup: npx -y -p @neus/sdk neus setup",
+  "version": "1.0.2",
   "author": {
     "name": "NEUS"
   },

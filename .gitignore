@@ -59,5 +59,8 @@ docs/.mintlify-home*/
 .cursorrules
 .vscode/settings.json
 
-# Never commit compiled _workspace kernel or MANIFEST (context-sync must not target this public repo).
+# Local compiled context (do not commit)
 .neus/
+GEMINI.md
+CLAUDE.md
+GEMINI.md

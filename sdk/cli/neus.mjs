@@ -9,6 +9,8 @@ const NEUS_SERVER_NAME = 'neus';
 const NEUS_MCP_URL = 'https://mcp.neus.network/mcp';
 const NEUS_APP_URL = 'https://neus.network';
 const NEUS_TOKEN_ENDPOINT = 'https://neus.network/api/v1/auth/mcp/token';
+const NEUS_DISCONNECT_ENDPOINT = 'https://neus.network/api/v1/auth/mcp/revoke';
+const NEUS_PROFILE_KEY_ENDPOINT = 'https://api.neus.network/api/v1/auth/profile-key';
 const SUPPORTED_CLIENTS = ['claude', 'cursor', 'vscode'];
 const IMPORT_SCHEMA = 'neus.portable-agent.v1';
 const SUPPORTED_IMPORT_SOURCES = [
@@ -400,6 +402,7 @@ function printUsage(exitCode = 0) {
     '  setup         One-command: run init, then auth if --access-key is provided',
     '  init          Configure supported MCP clients automatically',
     '  auth          Sign in via browser (recommended) or add an access key for NEUS MCP',
+    '  disconnect    Disconnect NEUS MCP (revoke the stored OAuth token or access key)',
     '  status        Show current NEUS MCP setup',
     '  doctor        Deep check: config status, profile connection, agent verification',
     '  import        Detect and package an existing agent runtime for NEUS proof-backed portability',
@@ -1246,9 +1249,9 @@ function printResultSummary(command, scope, results, accessKey) {
     lines.push(`Updated: ${changedCount} target${changedCount === 1 ? '' : 's'}.`);
   }
 
-  if (command === 'init' && !accessKey) {
+  if ((command === 'init' || command === 'setup') && !accessKey) {
     lines.push(
-      `Sign in with: neus auth (opens browser) or neus auth --access-key <npk_...>`
+      `Sign in with: neus auth (opens browser) or neus auth --access-key <npk_...> (servers and CI only)`
     );
   }
   if (command === 'init' || command === 'setup') {
@@ -1349,6 +1352,25 @@ function runInit(options) {
   }
 }
 
+const NEUS_OAUTH_CLIENT_ID = 'neus-cli';
+const NEUS_MCP_RESOURCE = 'https://mcp.neus.network/mcp';
+
+function base64url(buffer) {
+  return Buffer.from(buffer)
+    .toString('base64')
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
+function generateCodeVerifier() {
+  return base64url(randomBytes(32));
+}
+
+function deriveCodeChallenge(verifier) {
+  return base64url(createHash('sha256').update(verifier).digest());
+}
+
 async function runAuthBrowser(options) {
   const scope = resolveScope(options);
   if (scope !== 'user') {
@@ -1361,6 +1383,8 @@ async function runAuthBrowser(options) {
   const { createServer } = await import('node:http');
 
   const csrfState = randomBytes(16).toString('hex');
+  const codeVerifier = generateCodeVerifier();
+  const codeChallenge = deriveCodeChallenge(codeVerifier);
 
   return new Promise((resolve, reject) => {
     const server = createServer((req, res) => {
@@ -1394,12 +1418,19 @@ async function runAuthBrowser(options) {
           return;
         }
 
-        // Exchange the one-time code for an attestation JWT
-        const tokenUrl = NEUS_TOKEN_ENDPOINT;
-        fetch(tokenUrl, {
+        const redirectUri = `http://127.0.0.1:${server.address().port}/callback`;
+        const params = new URLSearchParams();
+        params.set('grant_type', 'authorization_code');
+        params.set('code', code);
+        params.set('redirect_uri', redirectUri);
+        params.set('client_id', NEUS_OAUTH_CLIENT_ID);
+        params.set('code_verifier', codeVerifier);
+        params.set('resource', NEUS_MCP_RESOURCE);
+
+        fetch(NEUS_TOKEN_ENDPOINT, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify({ code }),
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
+          body: params.toString(),
           signal: AbortSignal.timeout(15_000),
         })
           .then(tokenResp => tokenResp.json())
@@ -1446,7 +1477,17 @@ async function runAuthBrowser(options) {
     server.listen(0, '127.0.0.1', () => {
       const port = server.address().port;
       const redirectUri = `http://127.0.0.1:${port}/callback`;
-      const authUrl = `${NEUS_APP_URL}/verify?intent=mcp&redirectUri=${encodeURIComponent(redirectUri)}&state=${csrfState}`;
+      const authParams = new URLSearchParams({
+        response_type: 'code',
+        client_id: NEUS_OAUTH_CLIENT_ID,
+        redirect_uri: redirectUri,
+        code_challenge: codeChallenge,
+        code_challenge_method: 'S256',
+        state: csrfState,
+        scope: 'neus:core neus:profile neus:secrets offline_access',
+        resource: NEUS_MCP_RESOURCE
+      });
+      const authUrl = `${NEUS_APP_URL}/oauth/authorize?${authParams.toString()}`;
 
       console.log('');
       console.log('  Opening browser for NEUS authentication...');
@@ -1676,7 +1717,7 @@ async function runDoctor(options) {
       `MCP reachable: ${configuredClients.map(r => r.client).join(', ')} ready at ${NEUS_MCP_URL}.`
     );
   } else {
-    lines.push('MCP reachable: No clients configured. Run `neus setup` or `neus init` first.');
+    lines.push('MCP reachable: No clients configured. Run `neus setup` first.');
     process.stdout.write(`\n${lines.join('\n')}\n`);
     process.exit(1);
   }
@@ -1707,6 +1748,76 @@ async function runDoctor(options) {
   );
 
   process.stdout.write(`\n${lines.join('\n')}\n`);
+}
+
+async function runDisconnect(options) {
+  const scope = resolveScope(options);
+  if (scope !== 'user') {
+    throw new Error('Disconnect only supports user scope. Remove --project flag.');
+  }
+
+  if (!options.accessKey) {
+    throw new Error('Credential required. Run `neus disconnect --access-key <token>` or set NEUS_ACCESS_KEY.');
+  }
+
+  try {
+    const token = String(options.accessKey || '').trim();
+    const isProfileKey = token.startsWith('npk_');
+    const resp = isProfileKey
+      ? await fetch(NEUS_PROFILE_KEY_ENDPOINT, {
+          method: 'DELETE',
+          headers: {
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          signal: AbortSignal.timeout(10_000),
+        })
+      : await fetch(NEUS_DISCONNECT_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({
+            token,
+            token_type_hint: 'access_token',
+            client_id: NEUS_OAUTH_CLIENT_ID
+          }).toString(),
+          signal: AbortSignal.timeout(10_000),
+        });
+
+    if (!resp.ok) {
+      const body = await resp.json().catch(() => ({}));
+      throw new Error(body?.error?.message || `Disconnect failed with status ${resp.status}`);
+    }
+  } catch (error) {
+    if (error.message && !error.message.includes('Disconnect failed')) {
+      throw new Error(`Disconnect request failed: ${error.message}`);
+    }
+    throw error;
+  }
+
+  const cwd = process.cwd();
+  const clients = resolveClients(scope, options.clients);
+  ensureClientSelection(scope, clients);
+
+  const results = runClientOperations(clients, scope, cwd, options.dryRun, client =>
+    installClient(client, scope, '', options.dryRun, cwd)
+  );
+
+  const payload = {
+    command: 'disconnect',
+    scope,
+    clients,
+    disconnected: true,
+    results,
+    hasErrors: results.some(result => result.error)
+  };
+
+  if (options.json) {
+    printJson(payload);
+  } else {
+    printBrandHeader('disconnect');
+    console.log('  NEUS MCP credential disconnected. Your client configurations have been updated to remove the token.');
+    console.log('  Re-authenticate with: neus auth');
+  }
 }
 
 async function main() {
@@ -1758,6 +1869,10 @@ async function main() {
     }
     if (command === 'export') {
       runExport(options);
+      return;
+    }
+    if (command === 'disconnect' || command === 'revoke') {
+      await runDisconnect(options);
       return;
     }
 

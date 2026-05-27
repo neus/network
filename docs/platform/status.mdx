@@ -1,0 +1,41 @@
+---
+title: Platform status
+description: Production-grade trust infrastructure. Active and operated for live integrations.
+icon: signal
+---
+
+NEUS is live, fully supported, and built to scale for high-value integrations.
+
+## Where we are today
+
+| Area | Status | Capability |
+| ---- | ------ | ---------- |
+| **Hosted Verify, Hub, Proof Pages** | **Production-Stable** | Renders in <100ms, fully supported for production apps |
+| **API, SDK, Widgets** | **Production-Stable** | Semver-versioned on npm (`@neus/sdk`) |
+| **Hosted MCP (`mcp.neus.network`)** | **Production-Stable** | OAuth-first onboarding for Cursor, VS Code, and Claude Code |
+| **On-chain Settlement** | **Operational** | Built-in anchors and DIDs fully linked on-chain |
+| **Security Architecture** | **Production-Grade** | End-to-end encryption, private-by-default proofs, and robust auth gates |
+
+**Bottom line:** NEUS is fully operational. You can integrate, build, and deploy trust receipts inside your products and agentic workflows today with complete confidence.
+
+## Stable Production Releases
+
+- **Zero-Brittle Upgrades:** APIs are designed additively. Any structural updates follow strict SemVer major bumps.
+- **Hosted Resilience:** Our distributed verification engine operates with high availability and redundant databases to ensure zero latency impact on your gates.
+- **Private by Default:** Follow our [Security and trust](./security-and-trust) defaults to keep proof content localized and secure.
+
+## Recommended for new projects
+
+1. **Start with one path** — [Quickstart](../quickstart), [Agents](../agents/overview), or [MCP setup](../mcp/setup).
+2. **Pin dependencies** — e.g. `"@neus/sdk": "^1.1.0"` and test upgrades before rolling to production.
+3. **Prefer OAuth for editors** — `neus auth` for Cursor, VS Code, and Claude Code; Profile access keys for servers and CI only.
+4. **Check receipts before trusted actions** — use gate checks and `neus_proofs_check` in agent workflows.
+
+## Release notes
+
+See the public [CHANGELOG](https://github.com/neus/network/blob/main/CHANGELOG.md).
+
+## Questions
+
+- [GitHub Discussions](https://github.com/neus/network/discussions) — integration patterns and questions
+- [Security reports](mailto:dev@neus.network) — do not post secrets publicly

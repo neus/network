@@ -4,12 +4,14 @@ on:
   pull_request:
     paths:
       - "sdk/**"
+      - "mcp/npm-dist/**"
       - ".github/workflows/ci.yml"
       - ".github/workflows/release.yml"
   push:
     branches: [main]
     paths:
       - "sdk/**"
+      - "mcp/npm-dist/**"
       - ".github/workflows/ci.yml"
       - ".github/workflows/release.yml"
   workflow_dispatch:
@@ -71,3 +73,7 @@ jobs:
       - name: Package check
         run: npm pack --dry-run
         working-directory: sdk
+
+      - name: Package check (@neus/mcp-server)
+        run: npm pack --dry-run
+        working-directory: mcp/npm-dist

@@ -10,6 +10,7 @@ Thank you for helping improve NEUS materials in this open project.
 | Possible bugs | [Issues](https://github.com/neus/network/issues) |
 | Ideas and questions | [Discussions](https://github.com/neus/network/discussions) |
 | Security reports | [dev@neus.network](mailto:dev@neus.network) (do not post publicly) |
+| Release notes | [CHANGELOG.md](./CHANGELOG.md) |
 
 ## What helps
 

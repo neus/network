@@ -1,0 +1,127 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.neus/neus-mcp",
+  "title": "NEUS MCP",
+  "description": "NEUS hosted MCP: verifiers, proofs, verify flows, agents. Always call neus_context first.",
+  "version": "1.1.0",
+  "repository": {
+    "url": "https://github.com/neus/network",
+    "source": "github"
+  },
+  "websiteUrl": "https://docs.neus.network/mcp/overview",
+  "icons": [
+    {
+      "src": "https://neus.network/images/neus-brand-pack/apple-touch-icon.png",
+      "sizes": ["128x128"],
+      "mimeType": "image/png"
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.neus.network/mcp"
+    }
+  ],
+  "authorization": {
+    "type": "oauth2",
+    "resourceMetadataUrl": "https://mcp.neus.network/.well-known/oauth-protected-resource"
+  },
+  "capabilities": {
+    "tools": {
+      "supported": true,
+      "listChanged": false
+    },
+    "elicitation": {
+      "supported": true
+    }
+  },
+  "tools": [
+    {
+      "name": "neus_context",
+      "description": "NEUS MCP session home: setup, OAuth sign-in, verifier summaries, reuse-first workflow, tools, and safety rules. Always call first."
+    },
+    {
+      "name": "neus_verifiers_catalog",
+      "description": "Full verifier directory with JSON schemas. Use after neus_context when payloads need exact fields beyond the summary."
+    },
+    {
+      "name": "neus_proofs_check",
+      "description": "Checks whether existing proofs satisfy verifier IDs. Eligibility only; never creates proofs."
+    },
+    {
+      "name": "neus_verify",
+      "description": "Creates or continues verification only when Profile access, wallet, and signing already satisfy NEUS for this verifier. Check existing receipts first."
+    },
+    {
+      "name": "neus_verify_or_guide",
+      "description": "Fallback orchestration after reuse checks: use only when proof, profile, payment, provider, wallet, or delegation setup is missing."
+    },
+    {
+      "name": "neus_proofs_get",
+      "description": "Reads proof records, tags, delegated agent reads, Profile summary fields, and live proof state. Use returned proof records as receipt references."
+    },
+    {
+      "name": "neus_me",
+      "description": "Returns the signed-in NEUS Profile when OAuth or a Profile access key is configured on this MCP session."
+    },
+    {
+      "name": "neus_agent_link",
+      "description": "Readiness check for an agent wallet: returns linked when agent-identity and agent-delegation proofs exist; otherwise link_required with hostedVerifyUrl."
+    },
+    {
+      "name": "neus_agent_create",
+      "description": "Prepares agent-identity and agent-delegation payloads (signatures and/or hostedVerifyUrl). Confirm with neus_agent_link after signing."
+    },
+    {
+      "name": "neus_secret_create",
+      "description": "Store an env-style secret as an encrypted proof. Values are AES-256-GCM sealed and never returned in plaintext via MCP."
+    },
+    {
+      "name": "neus_secret_list",
+      "description": "List secret proof metadata for a wallet (qHash, alias, type, updatedAt). Values are never exposed."
+    },
+    {
+      "name": "neus_secret_revoke",
+      "description": "Revoke a stored secret proof by qHash. Requires authenticated ownership."
+    }
+  ],
+  "license": "Apache-2.0",
+  "author": {
+    "name": "NEUS",
+    "email": "info@neus.network",
+    "url": "https://neus.network"
+  },
+  "keywords": [
+    "neus",
+    "mcp",
+    "model-context-protocol",
+    "oauth",
+    "verification",
+    "trust-receipts",
+    "proofs",
+    "agents"
+  ],
+  "examples": [
+    {
+      "title": "Bootstrap a session",
+      "description": "Load the MCP session home plus verifier summaries.",
+      "prompt": "Call neus_context first, then follow the returned recommendedFlow. If Bearer is configured (OAuth or Profile key), call neus_me before any account-aware work."
+    },
+    {
+      "title": "Register an AI agent",
+      "description": "Identity and delegation proofs for an agent wallet; confirm readiness before use.",
+      "prompt": "Use neus_agent_link first when an agent wallet already exists. Use neus_agent_create only when setup is missing. If a hosted URL is returned, share it exactly, then call neus_agent_link after completion."
+    },
+    {
+      "title": "Reuse first, guide only when missing",
+      "description": "Check existing trust before any browser handoff.",
+      "prompt": "Call neus_proofs_check for wallet 0x... and verifier IDs [\"ownership-basic\"]. If eligible, continue without hosted verify. If not eligible, call neus_verify_or_guide, share any returned hosted URL exactly, then call neus_proofs_get after completion."
+    }
+  ],
+  "compatibility": {
+    "claudeDesktop": true,
+    "claudeCode": true,
+    "cursor": true,
+    "vscode": true
+  }
+}

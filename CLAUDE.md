@@ -1,17 +1,7 @@
-# CLAUDE.md
+# GitHub Copilot instructions
 
-This repo is **public**: documentation, SDK, examples, and integration-facing specs.
+This repository is the **public** NEUS surface: documentation, SDK, widgets, and examples.
 
-## Rules
-
-- Public-facing content only. Do not include private operations, infrastructure paths, or company-only policy material.
-- Treat the hosted API and **`docs/`** as the behavior reference; keep **`docs/`** and **`sdk/`** aligned when integrator-visible behavior changes.
-- Use the existing production path; make the smallest correct change.
-- Verify with tests, source, or documentation before claiming completion.
-- Do not invent qHashes, verifier IDs, wallets, receipts, schema fields, or API outcomes.
-
-## Where to look
-
-- Contributor contract: **`README.md`**
-- Public docs site sources: **`docs/`**
-- SDK: **`sdk/`**
+- Keep contributions appropriate for public developers; do not include secrets or non-public infrastructure details.
+- Match behavior described in **`docs/`** and the hosted API; do not invent API fields or verifier outcomes.
+- Prefer the smallest change that stays consistent with existing patterns in **`sdk/`** and **`docs/`**.

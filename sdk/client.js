@@ -1157,11 +1157,10 @@ export class NeusClient {
   }
 
   async getProof(qHash) {
-    const resolvedQHash = qHash; // Legacy input compatibility only. Do not expose or store proofId.
-    if (!resolvedQHash || typeof resolvedQHash !== 'string') {
+    if (!qHash || typeof qHash !== 'string') {
       throw new ValidationError('qHash is required');
     }
-    const response = await this._makeRequest('GET', `/api/v1/proofs/${resolvedQHash}`);
+    const response = await this._makeRequest('GET', `/api/v1/proofs/${qHash}`);
 
     if (!response.success) {
       throw new ApiError(`Failed to get proof: ${response.error?.message || 'Unknown error'}`, response.error);
@@ -1171,8 +1170,7 @@ export class NeusClient {
   }
 
   async getPrivateProof(qHash, wallet = null) {
-    const resolvedQHash = qHash; // Legacy input compatibility only. Do not expose or store proofId.
-    if (!resolvedQHash || typeof resolvedQHash !== 'string') {
+    if (!qHash || typeof qHash !== 'string') {
       throw new ValidationError('qHash is required');
     }
 
@@ -1190,7 +1188,7 @@ export class NeusClient {
         ...(typeof auth.chain === 'string' && auth.chain.trim() ? { 'x-chain': auth.chain.trim() } : {}),
         ...(typeof auth.signatureMethod === 'string' && auth.signatureMethod.trim() ? { 'x-signature-method': auth.signatureMethod.trim() } : {})
       };
-      const response = await this._makeRequest('GET', `/api/v1/proofs/${resolvedQHash}`, null, headers);
+      const response = await this._makeRequest('GET', `/api/v1/proofs/${qHash}`, null, headers);
       if (!response.success) {
         throw new ApiError(
           `Failed to access private proof: ${response.error?.message || 'Unauthorized'}`,
@@ -1214,7 +1212,7 @@ export class NeusClient {
     const message = constructVerificationMessage({
       walletAddress,
       signedTimestamp,
-      data: { action: 'access_private_proof', qHash: resolvedQHash },
+      data: { action: 'access_private_proof', qHash: qHash },
       verifierIds: ['ownership-basic'],
       ...(signerIsEvm ? { chainId: this._getHubChainId() } : { chain })
     });
@@ -1234,7 +1232,7 @@ export class NeusClient {
       throw new ValidationError(`Failed to sign message: ${error.message}`);
     }
 
-    const response = await this._makeRequest('GET', `/api/v1/proofs/${resolvedQHash}`, null, {
+    const response = await this._makeRequest('GET', `/api/v1/proofs/${qHash}`, null, {
       'x-wallet-address': walletAddress,
       'x-signature': signature,
       'x-signed-timestamp': signedTimestamp.toString(),
@@ -1284,14 +1282,13 @@ export class NeusClient {
   }
 
   async pollProofStatus(qHash, options = {}) {
-    const resolvedQHash = qHash; // Legacy input compatibility only. Do not expose or store proofId.
     const {
       interval = 5000,
       timeout = 120000,
       onProgress
     } = options;
 
-    if (!resolvedQHash || typeof resolvedQHash !== 'string') {
+    if (!qHash || typeof qHash !== 'string') {
       throw new ValidationError('qHash is required');
     }
 
@@ -1300,7 +1297,7 @@ export class NeusClient {
 
     while (Date.now() - startTime < timeout) {
       try {
-        const status = await this.getProof(resolvedQHash);
+        const status = await this.getProof(qHash);
         consecutiveRateLimits = 0;
 
         if (onProgress && typeof onProgress === 'function') {
@@ -1353,8 +1350,7 @@ export class NeusClient {
   }
 
   async revokeOwnProof(qHash, wallet) {
-    const resolvedQHash = qHash; // Legacy input compatibility only. Do not expose or store proofId.
-    if (!resolvedQHash || typeof resolvedQHash !== 'string') {
+    if (!qHash || typeof qHash !== 'string') {
       throw new ValidationError('qHash is required');
     }
     const providerWallet = wallet || this._getDefaultBrowserWallet();
@@ -1370,7 +1366,7 @@ export class NeusClient {
     const message = constructVerificationMessage({
       walletAddress: address,
       signedTimestamp,
-      data: { action: 'revoke_proof', qHash: resolvedQHash },
+      data: { action: 'revoke_proof', qHash: qHash },
       verifierIds: ['ownership-basic'],
       ...(signerIsEvm ? { chainId: this._getHubChainId() } : { chain })
     });
@@ -1390,7 +1386,7 @@ export class NeusClient {
       throw new ValidationError(`Failed to sign revocation: ${error.message}`);
     }
 
-    const res = await this._makeRequest('POST', `/api/v1/proofs/revoke-self/${resolvedQHash}`, {
+    const res = await this._makeRequest('POST', `/api/v1/proofs/revoke-self/${qHash}`, {
       walletAddress: address,
       signature,
       signedTimestamp,
@@ -1885,9 +1881,6 @@ export class NeusClient {
     const qHash = response?.data?.qHash ||
                   response?.qHash ||
                   response?.data?.resource?.qHash ||
-                  response?.data?.proofId || // Legacy input compatibility only. Do not expose or store proofId.
-                  response?.proofId || // Legacy input compatibility only. Do not expose or store proofId.
-                  response?.data?.resource?.proofId || // Legacy input compatibility only. Do not expose or store proofId.
                   response?.data?.id;
 
     const status = response?.data?.status ||

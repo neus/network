@@ -9,7 +9,7 @@
       "type": "string"
     },
     "internalSocialToken": {
-      "description": "Opaque token from the hosted org sign-in session. Populated by the hosted flow; do not supply in API calls.",
+      "description": "Opaque token from the hosted org sign-in session; not your app API key.",
       "type": "string"
     },
     "provider": {

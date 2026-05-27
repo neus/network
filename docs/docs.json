@@ -37,6 +37,10 @@
       "weight": 600
     }
   },
+  "banner": {
+    "content": "Deploy trust that travels. Use the 'neus import' CLI to bring your own agent in 30 seconds. [Get started](/get-started)",
+    "dismissible": true
+  },
   "seo": {
     "metatags": {
       "theme-color": "#101113",
@@ -98,6 +102,7 @@
             "group": "Platform",
             "pages": [
               "platform/overview",
+              "platform/status",
               "platform/setup",
               "platform/receipts-and-results",
               "platform/billing",
@@ -213,6 +218,7 @@
               "mcp/overview",
               "mcp/setup",
               "mcp/claude-code-marketplace",
+              "mcp/oauth",
               "mcp/auth",
               "mcp/endpoints"
             ]
@@ -228,7 +234,8 @@
               "mcp/proofs-get",
               "mcp/me",
               "mcp/agent-link",
-              "mcp/agent-create"
+              "mcp/agent-create",
+              "mcp/secrets"
             ]
           }
         ]

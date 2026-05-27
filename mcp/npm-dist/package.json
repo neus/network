@@ -1,0 +1,39 @@
+{
+  "name": "@neus/mcp-server",
+  "version": "1.1.0",
+  "description": "Public discovery metadata for the hosted NEUS MCP (streamable HTTP). Runtime is not shipped in this package.",
+  "type": "module",
+  "main": "./index.mjs",
+  "exports": {
+    ".": "./index.mjs"
+  },
+  "license": "Apache-2.0",
+  "author": "NEUS Network <info@neus.network>",
+  "homepage": "https://docs.neus.network/mcp/overview",
+  "bugs": {
+    "url": "https://github.com/neus/network/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neus/network.git",
+    "directory": "mcp/npm-dist"
+  },
+  "keywords": [
+    "neus",
+    "mcp",
+    "model-context-protocol",
+    "oauth",
+    "verification",
+    "trust-receipts",
+    "proofs",
+    "agents"
+  ],
+  "files": [
+    "index.mjs",
+    "README.md",
+    "server.json"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

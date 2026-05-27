@@ -1,15 +1,15 @@
 ---
 title: Current user (`neus_me`)
-description: Current account via MCP when you send a personal access key.
+description: Current account via MCP when you send OAuth or a Profile access key.
 icon: user-circle
 ---
 
-Call after **`neus_context`** when the connection sends **`Authorization: Bearer`** with a personal access key from [Access keys](https://neus.network/profile?tab=account) ([Auth](./auth), [Overview](./overview)). Same header as [API authentication](../api/authentication).
+Call after **`neus_context`** when the connection sends **`Authorization: Bearer`** — from **OAuth sign-in** or a **Profile access key** ([Access keys](https://neus.network/profile?tab=account)) ([Auth](./auth), [Overview](./overview)).
 
 | Topic | Detail |
 |-------|--------|
 | **`neus_me` + Bearer** | End-user browser login is **not** passed through MCP |
-| URL-only MCP | Returns **`auth_required`** |
+| URL-only MCP | Returns **`auth_required`** — run **`neus auth`** or sign in through your host |
 | No key, user must verify | **`neus_verify_or_guide`** |
 | Public identifier lookup | **`neus_proofs_get`** (visibility rules apply) |
 

@@ -1,6 +1,6 @@
 ---
 title: Authentication
-description: Server App Link, hosted browser on NEUS, keys; optional in-app signing.
+description: MCP OAuth, App Link, hosted browser on NEUS, keys; optional in-app signing.
 icon: fingerprint
 ---
 
@@ -8,10 +8,32 @@ icon: fingerprint
 
 | Need | Mechanism | Wallet code in your app |
 |------|-----------|---------------------------|
+| MCP client auth | OAuth 2.0 + PKCE | No |
 | Receipts with your existing login | App Link + `verifyFromApp` | No |
 | Browser ceremony | Hosted Verify / `VerifyGate` | No |
-| Keys / MCP / raw HTTP | Bearer `npk_*` | No |
+| Keys / raw HTTP | Bearer `npk_*` | No |
 | Sign inside your page | SDK `verify` + `wallet` | Yes — rare |
+
+## MCP OAuth
+
+MCP clients (Claude Code, OpenAI, VS Code, Cursor) authenticate via **OAuth 2.0 Authorization Code with PKCE**. The flow wraps the existing NEUS hosted login:
+
+```text
+/oauth/authorize (validates OAuth params, renders HostedLoginFlow)
+→ user signs in on NEUS
+→ backend issues one-time auth code
+→ client exchanges code for MCP access token
+→ MCP requests use Bearer token
+```
+
+The MCP access token is a JWT with `aud=https://mcp.neus.network/mcp` and `token_use=mcp_access`. It cannot be used for general API access.
+
+See [MCP OAuth](../mcp/oauth) for the full reference. Quick setup:
+
+```bash
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
+```
 
 ## App Link
 

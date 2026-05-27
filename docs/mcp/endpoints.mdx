@@ -1,23 +1,48 @@
 ---
 title: Discovery & Endpoints
-description: MCP transport, hosted verify, discovery URLs.
+description: MCP transport, OAuth discovery, hosted verify, and well-known URLs.
 icon: globe
 ---
 
 The **MCP URL** and the **HTTP API** use different transports and base paths. Discovery and the [agent card](https://neus.network/.well-known/agent-card.json) list what your integration needs.
 
+## MCP endpoint
+
 | URL | Role |
 |-----|------|
 | `https://mcp.neus.network/mcp` | MCP — [Setup](./setup) |
-| `https://neus.network/verify` | Hosted verify |
+
+## OAuth discovery
+
+| URL | Role |
+|-----|------|
+| `https://mcp.neus.network/.well-known/oauth-protected-resource` | Protected resource metadata (RFC 9728) |
+| `https://neus.network/.well-known/oauth-authorization-server` | Authorization server metadata (RFC 8414) |
+
+## OAuth endpoints
+
+| URL | Role |
+|-----|------|
+| `https://neus.network/oauth/authorize` | Authorization endpoint (browser login) |
+| `https://neus.network/api/v1/auth/mcp/token` | Token endpoint (code exchange + refresh) |
+| `https://neus.network/api/v1/auth/mcp/revoke` | Token revocation |
+
+Full OAuth reference: [MCP OAuth](./oauth).
+
+## Other discovery
+
+| URL | Role |
+|-----|------|
 | `https://mcp.neus.network/.well-known/mcp.json` | MCP discovery |
 | `https://mcp.neus.network/.well-known/mcp/server-card.json` | MCP server card |
 | `https://neus.network/.well-known/a2a/agent-card.json` | A2A agent card — [Docs](../agents/a2a) |
 | `https://neus.network/.well-known/agent-card.json` | EIP-8004 agent registration |
 
 <CardGroup cols={2}>
-  <Card title="Setup" icon="code" href="./setup">
+  <Card title="MCP OAuth" icon="shield-check" href="./oauth">
+    OAuth flow reference.
   </Card>
-  <Card title="MCP overview" icon="plug" href="./overview">
+  <Card title="Setup" icon="code" href="./setup">
+    Install and configure.
   </Card>
 </CardGroup>

@@ -41,7 +41,7 @@ When `VITE_NEUS_API_URL` is non-empty, the **browser mock is not installed**; al
 
 ### Use published SDK instead of the repo copy
 
-In `package.json`, replace the `@neus/sdk` line with a semver range, for example `"@neus/sdk": "^1.0.12"`, then `npm install`.
+In `package.json`, replace the `@neus/sdk` line with a semver range, for example `"@neus/sdk": "^1.1.0"`, then `npm install`.
 
 ## What to edit first
 

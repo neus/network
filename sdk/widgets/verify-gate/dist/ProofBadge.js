@@ -28,7 +28,7 @@ var NeusLogo = ({ size = 12, logoUrl }) => /* @__PURE__ */ jsx(
   }
 );
 function ProofBadge({
-  qHash: qHashProp,
+  qHash,
   proofUrlPattern = "/proof/:qHash",
   size = "sm",
   uiLinkBase = "https://neus.network",
@@ -38,10 +38,8 @@ function ProofBadge({
   showLabel = true,
   logoUrl = void 0,
   onClick = void 0,
-  className = "",
-  ...legacyProps
+  className = ""
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId;
   const resolvedQHash = qHash;
   const [status, setStatus] = useState(() => {
     if (proof) {
@@ -149,7 +147,7 @@ function ProofBadge({
   );
 }
 function SimpleProofBadge({
-  qHash: qHashProp,
+  qHash,
   proofUrlPattern = "/proof/:qHash",
   uiLinkBase = "https://neus.network",
   apiUrl = DEFAULT_API_BASE,
@@ -158,10 +156,8 @@ function SimpleProofBadge({
   logoUrl = void 0,
   proof = void 0,
   onClick = void 0,
-  className = "",
-  ...legacyProps
+  className = ""
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId;
   const resolvedQHash = qHash;
   const [status, setStatus] = useState(() => {
     if (proof) {
@@ -244,17 +240,15 @@ function SimpleProofBadge({
   );
 }
 function NeusPillLink({
-  qHash: qHashProp,
+  qHash,
   proofUrlPattern = "/proof/:qHash",
   uiLinkBase = "https://neus.network",
   label = "View",
   size = "sm",
   logoUrl = void 0,
   onClick = void 0,
-  className = "",
-  ...legacyProps
+  className = ""
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId;
   const resolvedQHash = qHash;
   const base = String(uiLinkBase).replace(/\/$/, "");
   const href = resolvedQHash ? `${base}${String(proofUrlPattern).replace(":qHash", resolvedQHash)}` : base;
@@ -304,17 +298,15 @@ function NeusPillLink({
   );
 }
 function VerifiedIcon({
-  qHash: qHashProp,
+  qHash,
   proofUrlPattern = "/proof/:qHash",
   uiLinkBase = "https://neus.network",
   size = 14,
   logoUrl = void 0,
   tooltip = "Proof",
   onClick = void 0,
-  className = "",
-  ...legacyProps
+  className = ""
 }) {
-  const qHash = qHashProp ?? legacyProps.proofId;
   const resolvedQHash = qHash;
   const href = resolvedQHash ? `${String(uiLinkBase).replace(/\/$/, "")}${String(proofUrlPattern).replace(":qHash", resolvedQHash)}` : void 0;
   const handleClick = (e) => {

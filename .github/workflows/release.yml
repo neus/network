@@ -101,3 +101,26 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Verify @neus/mcp-server version matches tag
+        run: |
+          node -e "const v=require('./mcp/npm-dist/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(`mcp/npm-dist ${v} != tag ${t}`);process.exit(1)}"
+
+      - name: Package check (@neus/mcp-server)
+        run: npm pack --dry-run
+        working-directory: mcp/npm-dist
+
+      - name: Publish @neus/mcp-server
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NPM_CONFIG_USERCONFIG="$(pwd)/sdk/.npmrc"
+          if [ "${{ github.event.repository.private }}" = "false" ]; then
+            npm publish --access public --provenance
+          else
+            npm publish --access public
+          fi
+        working-directory: mcp/npm-dist
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

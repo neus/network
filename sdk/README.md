@@ -4,43 +4,30 @@ Create, check, and reuse NEUS trust receipts from apps and backends. The same pa
 
 NEUS makes trust portable across apps, agents, and ecosystems before access, payment, or action.
 
+**Status:** [Live and Operational for Production Apps](https://docs.neus.network/platform/status).
+
 ## Install (library)
 
 ```bash
 npm install @neus/sdk
 ```
 
-## Connect editors and assistants
+## Bring Your Own Agent (BYOA) in 30 Seconds
 
-Use one command to add hosted NEUS MCP to Cursor, VS Code, and Claude Code when those tools are detected.
-
-```bash
-npx -y -p @neus/sdk neus setup
-```
-
-Add your NEUS Profile access key in the same step (needed for account-aware tools such as `neus_me`):
+Already have an agent setup? Use the CLI to instantly scan and import your local agent setups—including instructions, memories, rules, skills, and MCP servers from **OpenClaw, Cursor, Claude Code, and Claude Desktop**—straight into the NEUS trust network:
 
 ```bash
-npx -y -p @neus/sdk neus setup --access-key <npk_...>
+npx -y -p @neus/sdk neus import
 ```
 
-Check configuration:
+This automatically prepares your portable NEUS agent manifest, maps your credentials, and secures a reusable trust receipt for your workflows.
 
-```bash
-npx -y -p @neus/sdk neus doctor
-```
-
-Create keys under **Profile → Account → Access keys** on [neus.network](https://neus.network/profile?tab=account). Never put access keys in browser bundles or public repos.
-
-Bring an existing agent setup:
-
+*To check what will be imported without writing changes:*
 ```bash
 npx -y -p @neus/sdk neus import --dry-run
-npx -y -p @neus/sdk neus import --from hermes
-npx -y -p @neus/sdk neus export --to manifest
 ```
 
-`neus import` detects OpenClaw, HERMES, Cursor, Claude Code, and Claude Desktop config. Secret-like env names are recorded as references only; values are not written.
+## Connect editors and assistants
 
 | Topic                             | Link                                                                          |
 | --------------------------------- | ----------------------------------------------------------------------------- |
@@ -195,16 +182,19 @@ const client = new NeusClient({
 ## MCP step-by-step
 
 ```bash
-npx -y -p @neus/sdk neus init
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
+npx -y -p @neus/sdk neus doctor --live
 ```
 
-Add or rotate a Profile access key on an existing install:
+Re-sign in or rotate credentials:
 
 ```bash
-npx -y -p @neus/sdk neus auth --access-key <npk_...>
+npx -y -p @neus/sdk neus auth
+npx -y -p @neus/sdk neus auth --access-key <npk_...>   # servers and CI only
 ```
 
-Claude Code users can add the optional **`neus-mcp@neus`** skill bundle, then run **`neus setup --access-key <npk_...>`** when account-aware tools are needed. See [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
+Claude Code users can add the optional **`neus-mcp@neus`** skill bundle, then run **`neus setup`** and **`neus auth`**. See [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
 
 ## Docs
 

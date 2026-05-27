@@ -1,0 +1,230 @@
+---
+title: MCP OAuth
+description: OAuth 2.0 with PKCE for MCP client authentication — discovery, authorization, token exchange, refresh, and revocation.
+icon: shield-check
+---
+
+NEUS MCP uses **OAuth 2.0 Authorization Code with PKCE** (RFC 6749 + RFC 7636) as the primary authentication flow for MCP clients.
+
+OAuth wraps the existing NEUS hosted login. The user sees the same NEUS sign-in page — OAuth provides the standard contract that MCP clients expect.
+
+## Flow overview
+
+```text
+MCP client discovers NEUS MCP
+  → GET /.well-known/oauth-protected-resource
+  → GET /.well-known/oauth-authorization-server
+  → GET /oauth/authorize (validates OAuth params, renders HostedLoginFlow)
+  → User authenticates on NEUS (passkey/wallet)
+  → /oauth/authorize continuation: backend issues auth code
+  → Redirect to client callback with code
+  → POST /api/v1/auth/mcp/token (exchange code for access token)
+  → Client uses Bearer token on MCP requests
+```
+
+## How /oauth/authorize works
+
+The `/oauth/authorize` endpoint owns all OAuth validation and orchestrates the login flow. The frontend does not manually invent or own the OAuth callback behavior.
+
+1. **Validates** all OAuth parameters: `response_type=code`, `client_id`, `redirect_uri`, `code_challenge_method=S256`, `resource=https://mcp.neus.network/mcp`.
+2. **If no NEUS session**: stores the pending OAuth request server-side, then redirects/renders the existing HostedLoginFlow (the same passkey/wallet login used everywhere on NEUS).
+3. **After login**: returns to the `/oauth/authorize` continuation, where the backend issues a one-time authorization code bound to subjectId, client_id, redirect_uri, code_challenge, resource, and scope.
+4. **Redirects** to `redirect_uri?code=...&state=...`.
+
+The auth code is single-use and expires in 10 minutes.
+
+## Discovery
+
+### Protected resource metadata
+
+```http
+GET https://mcp.neus.network/.well-known/oauth-protected-resource
+```
+
+```json
+{
+  "resource": "https://mcp.neus.network/mcp",
+  "authorization_servers": ["https://neus.network"],
+  "scopes_supported": [
+    "neus:core",
+    "neus:profile",
+    "neus:secrets"
+  ],
+  "resource_documentation": "https://docs.neus.network/mcp/overview"
+}
+```
+
+When the MCP server receives an unauthenticated request:
+
+```http
+HTTP/1.1 401 Unauthorized
+WWW-Authenticate: Bearer resource_metadata="https://mcp.neus.network/.well-known/oauth-protected-resource"
+```
+
+### Authorization server metadata
+
+```http
+GET https://neus.network/.well-known/oauth-authorization-server
+```
+
+```json
+{
+  "issuer": "https://neus.network",
+  "authorization_endpoint": "https://neus.network/oauth/authorize",
+  "token_endpoint": "https://neus.network/api/v1/auth/mcp/token",
+  "revocation_endpoint": "https://neus.network/api/v1/auth/mcp/revoke",
+  "response_types_supported": ["code"],
+  "grant_types_supported": ["authorization_code", "refresh_token"],
+  "code_challenge_methods_supported": ["S256"],
+  "token_endpoint_auth_methods_supported": ["none"],
+  "scopes_supported": [
+    "neus:core",
+    "neus:profile",
+    "neus:secrets",
+    "offline_access"
+  ]
+}
+```
+
+## Authorization
+
+```http
+GET https://neus.network/oauth/authorize
+  ?response_type=code
+  &client_id=neus-cli
+  &redirect_uri=http://127.0.0.1:PORT/callback
+  &code_challenge=BASE64URL(SHA256(code_verifier))
+  &code_challenge_method=S256
+  &state=RANDOM_CSRF_VALUE
+  &scope=neus:core neus:profile neus:secrets offline_access
+  &resource=https://mcp.neus.network/mcp
+```
+
+| Parameter | Required | Description |
+|-----------|----------|-------------|
+| `response_type` | Yes | Must be `code` |
+| `client_id` | Yes | Registered client identifier |
+| `redirect_uri` | Yes | Must exactly match a registered URI |
+| `code_challenge` | Yes | PKCE challenge (BASE64URL of SHA-256 of code_verifier) |
+| `code_challenge_method` | Yes | Must be `S256` |
+| `state` | Yes | CSRF protection — returned verbatim |
+| `scope` | No | Default: `neus:core neus:profile neus:secrets offline_access` |
+| `resource` | Yes | Must be `https://mcp.neus.network/mcp` |
+
+## Token exchange
+
+```http
+POST https://neus.network/api/v1/auth/mcp/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=authorization_code
+code=AUTH_CODE
+redirect_uri=http://127.0.0.1:PORT/callback
+client_id=neus-cli
+code_verifier=ORIGINAL_CODE_VERIFIER
+resource=https://mcp.neus.network/mcp
+```
+
+Response:
+
+```json
+{
+  "access_token": "eyJ...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "rt_...",
+  "scope": "neus:core neus:profile neus:secrets"
+}
+```
+
+## Refresh tokens
+
+```http
+POST https://neus.network/api/v1/auth/mcp/token
+Content-Type: application/x-www-form-urlencoded
+
+grant_type=refresh_token
+refresh_token=rt_...
+client_id=neus-cli
+resource=https://mcp.neus.network/mcp
+```
+
+Refresh tokens rotate on each use. Include `offline_access` in the initial scope to receive one.
+
+## Token claims
+
+The MCP access token is a JWT:
+
+| Claim | Value | Description |
+|-------|-------|-------------|
+| `iss` | `https://neus.network` | Token issuer |
+| `aud` | `https://mcp.neus.network/mcp` | Resource audience — MCP server validates this |
+| `sub` | Profile subject ID | Unique user identifier |
+| `did` | `did:pkh:...` | Decentralized identifier |
+| `azp` | Client ID | Client that requested the token |
+| `scope` | Space-separated | Granted scopes |
+| `token_use` | `mcp_access` | Token type — MCP server rejects other values |
+| `iat` | Unix seconds | Issued at |
+| `exp` | Unix seconds | Expires at |
+
+OAuth access tokens are valid only when `aud` is `https://mcp.neus.network/mcp`, `iss` is `https://neus.network`, `token_use` is `mcp_access`, and the token is not expired or revoked.
+
+## Scope model
+
+| Scope | Description | Default |
+|-------|-------------|---------|
+| `neus:core` | Public protocol tools | Yes |
+| `neus:profile` | Signed-in profile via `neus_me` | Yes |
+| `neus:secrets` | Portable encrypted secrets | Yes |
+| `offline_access` | Refresh token | Yes |
+
+## Revocation
+
+```http
+POST https://neus.network/api/v1/auth/mcp/revoke
+Content-Type: application/x-www-form-urlencoded
+
+token=eyJ...
+token_type_hint=access_token
+client_id=neus-cli
+```
+
+Revoking an access token also invalidates all associated refresh tokens.
+
+## Compatibility
+
+The existing `/verify?intent=mcp` flow remains as a compatibility alias. New integrations should use the standard OAuth endpoints.
+
+## Registered clients
+
+| `client_id` | Use |
+|-------------|-----|
+| `neus-cli` | NEUS SDK CLI (`neus auth`) — loopback redirect on `127.0.0.1` |
+
+Hosted MCP clients (Cursor, VS Code, Claude Code, OpenAI) should use **URL-only** config when possible and let the host run OAuth discovery from `/.well-known/mcp.json`.
+
+## Security properties
+
+| Property | Enforcement |
+|----------|-------------|
+| PKCE required | `code_challenge_method=S256` is mandatory |
+| Exact redirect_uri match | Prevents open redirect attacks |
+| State parameter preserved | CSRF protection |
+| Resource indicator required | Prevents token misuse across services |
+| Token audience validated | MCP tokens cannot be used for other NEUS services |
+| Refresh token rotation | Old refresh token invalidated on each use |
+| Tokens never in query strings | Bearer header only |
+| Single-use auth codes | Code invalidated after first exchange |
+| Access key fallback | For servers and automation where browser is unavailable |
+
+<CardGroup cols={3}>
+  <Card title="Auth" icon="lock" href="./auth">
+    Keys and headers.
+  </Card>
+  <Card title="Setup" icon="code" href="./setup">
+    Install and configure.
+  </Card>
+  <Card title="Endpoints" icon="globe" href="./endpoints">
+    Discovery URLs.
+  </Card>
+</CardGroup>

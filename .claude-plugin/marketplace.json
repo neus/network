@@ -3,7 +3,7 @@
   "owner": {
     "name": "NEUS"
   },
-  "description": "NEUS for Claude Code: hosted MCP (mcp.neus.network) plus a trust-workflow skill. Use npm package @neus/sdk (neus setup) for your Profile access key.",
+  "description": "NEUS for Claude Code: hosted MCP (mcp.neus.network) plus a trust-workflow skill. Run npx -y -p @neus/sdk neus setup then neus auth to sign in.",
   "plugins": [
     {
       "name": "neus-mcp",
@@ -25,7 +25,7 @@
       ],
       "category": "Developer tools",
       "tags": ["neus", "mcp", "trust", "agents", "receipts", "proofs"],
-      "version": "1.0.0"
+      "version": "1.0.2"
     }
   ]
 }

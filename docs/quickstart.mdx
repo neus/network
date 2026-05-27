@@ -72,8 +72,11 @@ Connect MCP hosts:
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor
+npx -y -p @neus/sdk neus auth
+npx -y -p @neus/sdk neus doctor --live
 ```
+
+Use **`neus auth`** for OAuth in your browser. Use **`--access-key`** only for servers and CI. Start with **`neus_context`**.
 
 Bring an existing agent setup:
 

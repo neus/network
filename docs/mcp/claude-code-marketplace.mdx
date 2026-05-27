@@ -29,13 +29,21 @@ The **`neus-mcp`** plugin includes:
    /plugin install neus-mcp@neus
    ```
 
-3. Add your NEUS Profile access key when you need account-aware tools such as **`neus_me`**:
+3. Sign in with OAuth (recommended):
+
+   ```bash
+   npx -y -p @neus/sdk neus setup
+   npx -y -p @neus/sdk neus auth
+   npx -y -p @neus/sdk neus doctor --live
+   ```
+
+   For servers and automation only:
 
    ```bash
    npx -y -p @neus/sdk neus setup --access-key <npk_...>
    ```
 
-Create access keys in the NEUS app: [Account → Access keys](https://neus.network/profile?tab=account). Omit **`--access-key`** when you only need public tools.
+Create access keys in the NEUS app: [Account -> Access keys](https://neus.network/profile?tab=account).
 
 Check the install:
 
@@ -53,11 +61,11 @@ After install, call the skill from Claude Code:
 /neus-mcp:neus-trust-workflow
 ```
 
-## Cursor, VS Code, Codex, and custom runtimes
+## Cursor, VS Code, and custom runtimes
 
 | Surface | MCP | Skills / rules |
 | --- | --- | --- |
 | **Cursor** | Run **`npx -y -p @neus/sdk neus setup`** ([Setup](./setup)). | Project rules stay in your Cursor workspace. |
 | **VS Code** | Run **`neus setup`** ([Setup](./setup)). | No NEUS VS Code extension is required. |
-| **Claude Code** | Use **`neus-mcp@neus`** for the skill bundle, then run **`neus setup --access-key`** when you need account-aware tools. | **`/neus-mcp:neus-trust-workflow`** |
-| **Codex / custom hosts** | Use the hosted MCP URL from [Setup](./setup). | Host-specific. |
+| **Claude Code** | Use **`neus-mcp@neus`** for the skill bundle, then **`neus setup`** and **`neus auth`**. | **`/neus-mcp:neus-trust-workflow`** |
+| **OpenAI / custom hosts** | Add the MCP URL — OAuth discovered automatically. | Host-specific. |

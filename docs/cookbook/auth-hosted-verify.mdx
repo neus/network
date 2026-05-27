@@ -26,7 +26,7 @@ icon: key
 | Param | Use |
 | --- | --- |
 | `intent=login` | Hosted **login** only |
-| `returnUrl` | Absolute `https://…` back to **your** app after completion (integrators). Validated before redirect. |
+| `returnUrl` | Absolute `https://…` back to **your** app after completion. Validated before redirect. |
 | `returnTo` | **neus.network** path only (e.g. `/profile`). Not for third-party domains. `@neus/sdk` `getHostedCheckoutUrl` does not set this; append manually if needed. |
 | `connect=1` | With `intent=login`, auto-start wallet connect on load |
 | `verifiers` | Comma-separated verifier IDs |
@@ -37,7 +37,7 @@ icon: key
 
 ## Redirect examples
 
-**Checkout / proof (integrator):**
+**Checkout / proof (your app):**
 
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';

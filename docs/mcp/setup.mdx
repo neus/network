@@ -6,37 +6,48 @@ icon: code
 
 Hosted NEUS MCP runs at **`https://mcp.neus.network/mcp`**.
 
+Production-stable for production apps; [public beta](../platform/status) until mainnet and planned security audits.
+
 ## One-command setup
+
+Install the hosted MCP endpoint, then sign in:
 
 ```bash
 npx -y -p @neus/sdk neus setup
-```
-
-Then sign in to enable account-aware tools:
-
-```bash
 npx -y -p @neus/sdk neus auth
+npx -y -p @neus/sdk neus doctor --live
 ```
 
-For servers and automation, add your key directly:
+For servers and automation, add your key in one step:
 
 ```bash
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
 ```
 
-Check the install:
+Check the install anytime:
 
 ```bash
 npx -y -p @neus/sdk neus doctor
 ```
 
-Run a live hosted MCP check:
+Create keys under **Profile -> Account** on [neus.network](https://neus.network/profile?tab=account) for servers and CI only. Treat access keys like passwords.
+
+## npm packages
+
+| Package | Use |
+| ------- | --- |
+| **`@neus/sdk`** | SDK, widgets, and `neus` CLI (`setup`, `auth`, import/export) |
+| **`@neus/mcp-server`** | Registry/discovery metadata (`server.json`) for MCP installers — no runtime |
 
 ```bash
-npx -y -p @neus/sdk neus doctor --live --access-key <npk_...>
+npm install @neus/mcp-server
 ```
 
-Create keys under **Profile -> Account** on [neus.network](https://neus.network/profile?tab=account). Treat access keys like passwords. Keep them in MCP or server config only.
+## Disconnect
+
+```bash
+npx -y -p @neus/sdk neus disconnect --access-key <token>
+```
 
 ## Import an existing agent setup
 
@@ -46,21 +57,29 @@ npx -y -p @neus/sdk neus import --from auto
 npx -y -p @neus/sdk neus export --to manifest
 ```
 
-`neus import` detects OpenClaw, HERMES, Cursor rules, Claude Code skills/settings, and Claude Desktop MCP config. It writes portable metadata to `.neus/imported/` when not in dry-run mode. Secret-like env names are recorded as references only; values are not written.
+## Client-specific setup
 
-## Where config is written
+### Claude Code
 
-| Client      | User scope                                                                          |
-| ----------- | ----------------------------------------------------------------------------------- |
-| Cursor      | `~/.cursor/mcp.json`                                                                |
-| VS Code     | VS Code User `mcp.json`                                                             |
-| Claude Code | User scope through `claude mcp add`; project `.mcp.json` with `neus init --project` |
+Claude Code supports MCP OAuth discovery. When you add a remote MCP server, it automatically detects the NEUS OAuth endpoints and starts a browser-based login flow.
 
-There is no separate NEUS editor plugin required for Cursor or VS Code.
+```bash
+claude mcp add --transport http neus https://mcp.neus.network/mcp
+```
 
-## Manual config
+Or use the one-command setup:
 
-Keep `/mcp` in the URL.
+```bash
+npx -y -p @neus/sdk neus setup
+```
+
+### OpenAI / ChatGPT
+
+Add NEUS as a remote MCP server app. OpenAI discovers the OAuth metadata and presents the NEUS authorization flow.
+
+### VS Code / Cursor
+
+Add the MCP URL to your configuration. VS Code and Cursor read OAuth metadata from `https://mcp.neus.network/.well-known/mcp.json` and can run browser sign-in without pasting keys.
 
 ```json
 {
@@ -73,7 +92,14 @@ Keep `/mcp` in the URL.
 }
 ```
 
-With a Profile access key:
+Or run the CLI (recommended):
+
+```bash
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
+```
+
+If OAuth is not supported by your client version, use a Profile access key as fallback:
 
 ```json
 {
@@ -81,21 +107,34 @@ With a Profile access key:
     "neus": {
       "type": "http",
       "url": "https://mcp.neus.network/mcp",
-      "headers": { "Authorization": "Bearer <key>" }
+      "headers": { "Authorization": "Bearer <npk_...>" }
     }
   }
 }
 ```
 
+## Where config is written
+
+| Client      | User scope                                                                          |
+| ----------- | ----------------------------------------------------------------------------------- |
+| Cursor      | `~/.cursor/mcp.json`                                                                |
+| VS Code     | VS Code User `mcp.json`                                                             |
+| Claude Code | User scope through `claude mcp add`; project `.mcp.json` with `neus setup --project` |
+
+There is no separate NEUS editor plugin required for Cursor or VS Code.
+
 ## First session
 
 Start with `neus_context`. If Bearer auth is configured, call `neus_me` once, then reuse receipts with `neus_proofs_check` and read exact receipt records with `neus_proofs_get` before starting new verification.
 
-<CardGroup cols={2}>
-  <Card title="MCP overview" icon="plug" href="./overview">
-    Tool order and agent handoff.
+<CardGroup cols={3}>
+  <Card title="MCP OAuth" icon="shield-check" href="./oauth">
+    OAuth flow and token security.
   </Card>
   <Card title="Auth" icon="lock" href="./auth">
-    Keys and headers.
+    Keys, headers, and disconnect.
+  </Card>
+  <Card title="MCP overview" icon="plug" href="./overview">
+    Tool order and agent handoff.
   </Card>
 </CardGroup>

@@ -32,7 +32,7 @@
 
 NEUS turns identity, ownership, authority, risk, content, and actions into reusable trust receipts. Your app or agent can check a receipt before allowing access, payment, tool use, delegation, or audit-sensitive work.
 
-Use the hosted product when you want NEUS to own the browser ceremony. Use the SDK, widgets, API, or MCP when you want the receipt inside your product, backend, or agent workflow.
+Use the hosted url when you want NEUS to own the flow. Use the SDK, widgets, API, or MCP when you want the receipt inside your product, backend, or agent workflow.
 
 ## Why NEUS
 
@@ -41,6 +41,7 @@ Trust keeps getting rebuilt inside each app, marketplace, workflow, and agent st
 | Need                         | NEUS gives you                                                          |
 | ---------------------------- | ----------------------------------------------------------------------- |
 | Stop re-building trust from zero  | A receipt your product can save, check, and reuse                       |
+| Bring Your Own Agent (BYOA)  | Plug-and-play CLI to import existing agent setups in under 30 seconds  |
 | Gate access or rewards       | Hosted flows, widgets, and server checks for trusted access             |
 | Trust agents before they act | Agent identity, scoped delegation, and receipts for trusted actions     |
 | Audit what happened          | Proof pages, receipt reads, tags, and durable references                |
@@ -48,7 +49,17 @@ Trust keeps getting rebuilt inside each app, marketplace, workflow, and agent st
 
 ## Start building
 
-### 1. Add trust to an app
+### 1. Bring Your Own Agent (BYOA) in 30 Seconds
+
+If you already have an AI agent configured locally, NEUS lets you migrate it to our unified trust network in one command. We automatically detect and import files, rules, skills, and MCP servers from **OpenClaw, Cursor, Claude Code, and Claude Desktop**:
+
+```bash
+npx -y -p @neus/sdk neus import
+```
+
+This instantly hooks your agent into NEUS and links it to a secure, reusable trust receipt.
+
+### 2. Add trust to an app
 
 Use Hosted Verify, `VerifyGate`, or the SDK when your app needs a reusable trust receipt.
 
@@ -70,19 +81,17 @@ Wire Cursor, VS Code, Claude Code, and other MCP hosts to the same hosted NEUS e
 
 ```bash
 npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
+npx -y -p @neus/sdk neus doctor --live
 ```
 
-Optional: add your NEUS Profile access key in one step (enables account-aware tools such as `neus_me`):
+Sign in with **`neus auth`** (OAuth in your browser). For servers and CI only, use a Profile access key:
 
 ```bash
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
 ```
 
-Confirm the install, then start each session with tool **`neus_context`**:
-
-```bash
-npx -y -p @neus/sdk neus doctor
-```
+Start each session with tool **`neus_context`**.
 
 Bring an existing agent setup:
 
@@ -155,6 +164,7 @@ Docs, SDK (`@neus/sdk`), widgets, examples, specs, and Claude Code skill metadat
 | Hosted Verify    | [neus.network/verify](https://neus.network/verify)                |
 | Docs             | [docs.neus.network](https://docs.neus.network)                    |
 | SDK              | [npm: @neus/sdk](https://www.npmjs.com/package/@neus/sdk)         |
+| MCP discovery    | [npm: @neus/mcp-server](https://www.npmjs.com/package/@neus/mcp-server) |
 | Examples         | [`examples/`](./examples)                                         |
 | Verifier catalog | [Verifier docs](https://docs.neus.network/verification/verifiers) |
 
@@ -163,6 +173,8 @@ Docs, SDK (`@neus/sdk`), widgets, examples, specs, and Claude Code skill metadat
 | Channel                                                    | Use for                               |
 | ---------------------------------------------------------- | ------------------------------------- |
 | [Docs](https://docs.neus.network)                          | Product and integration guidance      |
+| [Changelog](./CHANGELOG.md)                                | Release notes and upgrade paths       |
+| [Platform status](https://docs.neus.network/platform/status) | Maturity, beta scope, upgrade expectations |
 | [Discussions](https://github.com/neus/network/discussions) | Questions and implementation patterns |
 | [Issues](https://github.com/neus/network/issues)           | Bugs and requests                     |
 | [dev@neus.network](mailto:dev@neus.network)                | Security                              |

@@ -98,13 +98,10 @@ function getVerifyGateUserError(err) {
   return null;
 }
 
-function dispatchNeusProofCreatedForHost({ qHash, walletAddress, ...legacyInput }) {
+function dispatchNeusProofCreatedForHost({ qHash, walletAddress }) {
   try {
     if (typeof window === 'undefined') return;
-    const raw =
-      (typeof qHash === 'string' && qHash.trim()) ||
-      (typeof legacyInput.proofId === 'string' && legacyInput.proofId.trim()) || // Legacy input compatibility only. Do not expose or store proofId.
-      '';
+    const raw = typeof qHash === 'string' ? qHash.trim() : '';
     if (!raw) return;
     const w = typeof walletAddress === 'string' ? walletAddress.trim() : '';
     const normalizedWallet =
@@ -190,8 +187,7 @@ export function VerifyGate({
   onError = undefined,
   wallet = undefined,
   chain = undefined,
-  signatureMethod = undefined,
-  ...legacyProps
+  signatureMethod = undefined
 }) {
   const [state, setState] = useState('idle');
   const [error, setError] = useState(null);
@@ -213,7 +209,7 @@ export function VerifyGate({
   }, [requiredVerifiers]);
 
   const primaryVerifier = verifierList[0];
-  const qHash = qHashProp || legacyProps.proofId || null; // Legacy input compatibility only. Do not expose or store proofId.
+  const qHash = qHashProp || null;
   const resolvedQHash = qHash;
   const hasInteractiveVerifier = useMemo(
     () => verifierList.some(verifierId => {
@@ -268,7 +264,7 @@ export function VerifyGate({
 
     const existingProof = gateResult.existing?.[primaryVerifier];
     if (existingProof && onVerified) {
-      const existingQHash = existingProof.qHash || existingProof.proofId || null; // Legacy input compatibility only. Do not expose or store proofId.
+      const existingQHash = existingProof.qHash || null;
       onVerified({
         qHash: existingQHash,
         address: existingProof.walletAddress || address,
@@ -608,7 +604,7 @@ export function VerifyGate({
           onStateChange?.('interactive-checkout');
 
           const checkoutResult = await launchHostedCheckout();
-          const checkoutQHash = checkoutResult?.qHash || checkoutResult?.proofId || null; // Legacy input compatibility only. Do not expose or store proofId.
+          const checkoutQHash = checkoutResult?.qHash || null;
           const handoffWallet =
             (typeof checkoutResult?.walletAddress === 'string' && checkoutResult.walletAddress.trim()) ||
             (walletAddress && String(walletAddress).trim()) ||
@@ -700,7 +696,7 @@ export function VerifyGate({
             wallet: wallet || (typeof window !== 'undefined' ? window.ethereum : undefined)
           });
           setState('verifying');
-          const qHashToCheck = created.qHash || created.proofId || created?.data?.qHash || created?.data?.proofId; // Backward compat for legacy proofId.
+          const qHashToCheck = created.qHash || created?.data?.qHash;
           const final = await client.pollProofStatus(qHashToCheck, { interval: 3000, timeout: 60000 });
 
           const verifiedVerifiers = final?.data?.verifiedVerifiers || [];
@@ -713,7 +709,7 @@ export function VerifyGate({
           const crosschain = final?.data?.crosschain || {};
           const txHash = hubTx?.txHash || crosschain?.hubTxHash || null;
 
-          const finalQHash = final?.qHash || final?.proofId || qHashToCheck; // Backward compat for legacy proofId.
+          const finalQHash = final?.qHash || qHashToCheck;
           return {
             verifierId,
             qHash: finalQHash,
