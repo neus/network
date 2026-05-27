@@ -37,10 +37,6 @@
       "weight": 600
     }
   },
-  "banner": {
-    "content": "Deploy trust that travels. Use the 'neus import' CLI to bring your own agent in 30 seconds. [Get started](/get-started)",
-    "dismissible": true
-  },
   "seo": {
     "metatags": {
       "theme-color": "#101113",
@@ -72,7 +68,7 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Open Platform",
+      "label": "Open App",
       "href": "https://neus.network/hub"
     }
   },

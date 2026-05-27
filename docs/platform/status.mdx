@@ -1,41 +1,50 @@
 ---
-title: Platform status
-description: Production-grade trust infrastructure. Active and operated for live integrations.
-icon: signal
+title: Roadmap
+description: Contract, verification, and audit progress — plus what NEUS has shipped and what comes next.
+icon: map
 ---
 
-NEUS is live, fully supported, and built to scale for high-value integrations.
+## Progress
 
-## Where we are today
+| Track | Status |
+| ----- | ------ |
+| **Smart contracts** | Core protocol contracts (`NEUSVerifierRegistry`, `NEUSVoucherHub`, cross-chain spokes) deployed and verified on testnet — [deployments & explorers](https://github.com/neus/network/blob/main/contracts/VERIFICATION.md) |
+| **Verification** | Hosted Verify, Proof API, verifier catalog, gate checks, and reusable receipt reads — [How verification works](../verification/how-it-works) |
+| **Contract audit** | Third-party security audit of core smart contracts **completed** |
+| **Hosted product** | Profiles, Hub, SDK, widgets, MCP, OAuth onboarding, and agent trust paths shipped (details below) |
 
-| Area | Status | Capability |
-| ---- | ------ | ---------- |
-| **Hosted Verify, Hub, Proof Pages** | **Production-Stable** | Renders in <100ms, fully supported for production apps |
-| **API, SDK, Widgets** | **Production-Stable** | Semver-versioned on npm (`@neus/sdk`) |
-| **Hosted MCP (`mcp.neus.network`)** | **Production-Stable** | OAuth-first onboarding for Cursor, VS Code, and Claude Code |
-| **On-chain Settlement** | **Operational** | Built-in anchors and DIDs fully linked on-chain |
-| **Security Architecture** | **Production-Grade** | End-to-end encryption, private-by-default proofs, and robust auth gates |
+## Shipped
 
-**Bottom line:** NEUS is fully operational. You can integrate, build, and deploy trust receipts inside your products and agentic workflows today with complete confidence.
+| Area | What you can use today |
+| ---- | ---------------------- |
+| **Hosted Verify** | Browser verification at [neus.network/verify](https://neus.network/verify) |
+| **Profiles & Hub** | Profiles, proof pages, and discovery at [neus.network/hub](https://neus.network/hub) |
+| **API** | Verification, proof reads, gate checks, and verifier catalog — [API overview](../api/overview) |
+| **SDK, CLI & widgets** | `@neus/sdk`, `VerifyGate`, `neus import` / `neus export`, and server-side helpers — [SDK overview](../sdks/overview) |
+| **Builder onboarding** | [Get started](../get-started), [Quickstart](../quickstart), [Integration loop](../integration), and [MCP setup](../mcp/setup) |
+| **Hosted MCP** | Twelve public tools at `https://mcp.neus.network/mcp` — [MCP overview](../mcp/overview) |
+| **MCP discovery** | `@neus/mcp-server` on npm, OAuth server-card metadata, and [Claude Code marketplace](../mcp/claude-code-marketplace) plugin |
+| **OAuth MCP onboarding** | `neus setup` → `neus auth` → `neus doctor --live` |
+| **Agent trust** | Agent identity, delegation, agent cards, and portable import — [Agents](../agents/overview) |
+| **Public verifiers** | Catalog includes checks such as [proof-of-human](../verifiers/proof-of-human) and [wallet-risk](../verifiers/wallet-risk) |
+| **Billing** | Credits and pay-per-request (HTTP 402) — [Billing](./billing) |
 
-## Stable Production Releases
+Recent release notes: [CHANGELOG](https://github.com/neus/network/blob/main/CHANGELOG.md).
 
-- **Zero-Brittle Upgrades:** APIs are designed additively. Any structural updates follow strict SemVer major bumps.
-- **Hosted Resilience:** Our distributed verification engine operates with high availability and redundant databases to ensure zero latency impact on your gates.
-- **Private by Default:** Follow our [Security and trust](./security-and-trust) defaults to keep proof content localized and secure.
+## Planned
 
-## Recommended for new projects
+| Milestone | Target direction |
+| --------- | ---------------- |
+| **Mainnet anchoring** | Permanent on-chain receipt anchoring for issued proofs (hosted receipts and testnet contracts work today without waiting for this) |
+| **Audit report publication** | Public summary of the completed contract audit, linked here when released |
+| **Platform security reviews** | Additional third-party review of hosted API, MCP, and operational surfaces |
+| **MCP directory listings** | Broader registry and installer directory coverage beyond npm and the NEUS marketplace plugin |
+| **Verifier expansion** | Additional industry-specific and partner-submitted checks in the public catalog |
+| **Enterprise pilots** | SLAs, custom verifiers, and deeper partner integrations |
 
-1. **Start with one path** — [Quickstart](../quickstart), [Agents](../agents/overview), or [MCP setup](../mcp/setup).
-2. **Pin dependencies** — e.g. `"@neus/sdk": "^1.1.0"` and test upgrades before rolling to production.
-3. **Prefer OAuth for editors** — `neus auth` for Cursor, VS Code, and Claude Code; Profile access keys for servers and CI only.
-4. **Check receipts before trusted actions** — use gate checks and `neus_proofs_check` in agent workflows.
-
-## Release notes
-
-See the public [CHANGELOG](https://github.com/neus/network/blob/main/CHANGELOG.md).
+Timelines shift as gates are met. Breaking API changes use semver major bumps; additive changes ship in minors and patches.
 
 ## Questions
 
-- [GitHub Discussions](https://github.com/neus/network/discussions) — integration patterns and questions
+- [GitHub Discussions](https://github.com/neus/network/discussions) — integration patterns
 - [Security reports](mailto:dev@neus.network) — do not post secrets publicly

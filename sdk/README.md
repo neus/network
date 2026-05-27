@@ -4,7 +4,7 @@ Create, check, and reuse NEUS trust receipts from apps and backends. The same pa
 
 NEUS makes trust portable across apps, agents, and ecosystems before access, payment, or action.
 
-**Status:** [Live and Operational for Production Apps](https://docs.neus.network/platform/status).
+Roadmap: [docs.neus.network/platform/status](https://docs.neus.network/platform/status)
 
 ## Install (library)
 

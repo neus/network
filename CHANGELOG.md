@@ -8,10 +8,6 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [1.1.0] - 2026-05-26
 
-### Status
-
-Hosted Verify, API, SDK, widgets, and MCP are supported for production apps. NEUS is in **public beta** until mainnet and planned security audits. Expect additive API changes before general availability; pin semver ranges in production apps.
-
 ### Highlights
 
 - **OAuth-first MCP onboarding** — connect editors and assistants in three commands: `neus setup` → `neus auth` → `neus doctor --live`.
@@ -22,7 +18,7 @@ Hosted Verify, API, SDK, widgets, and MCP are supported for production apps. NEU
 
 - `@neus/mcp-server` npm package (discovery metadata only; runtime stays at `https://mcp.neus.network/mcp`).
 - MCP docs: [Encrypted secrets](https://docs.neus.network/mcp/secrets), OAuth client reference (`neus-cli`), npm package table in [MCP setup](https://docs.neus.network/mcp/setup).
-- [Platform status](https://docs.neus.network/platform/status) — maturity, beta scope, and upgrade expectations.
+- [Roadmap](https://docs.neus.network/platform/status) — shipped work and planned milestones.
 - CLI: `neus setup` reminds you to run `neus auth` when no credential is configured.
 - Hosted MCP server-card includes OAuth discovery (`authorization.resource_metadata_url`).
 
@@ -50,7 +46,7 @@ If you already use a Profile access key for automation, keep `neus setup --acces
 
 ### Links
 
-- [Platform status](https://docs.neus.network/platform/status)
+- [Roadmap](https://docs.neus.network/platform/status)
 - [MCP setup](https://docs.neus.network/mcp/setup)
 - [MCP OAuth](https://docs.neus.network/mcp/oauth)
 - [npm: @neus/sdk](https://www.npmjs.com/package/@neus/sdk)

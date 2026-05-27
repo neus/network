@@ -4,9 +4,7 @@ description: Choose the fastest path for your app, agent, or assistant.
 icon: book
 ---
 
-<Note>
-  New to NEUS? Read [Platform status](./platform/status) for beta scope, mainnet roadmap, and upgrade expectations.
-</Note>
+Add portable trust to your app, agent, or workflow with Hosted Verify, the NEUS API, or the SDK.
 
 Pick the lane that matches what you are shipping.
 
@@ -43,5 +41,14 @@ npx -y -p @neus/sdk neus doctor --live
 ```
 
 Sign in with **`neus auth`** (OAuth). Use **`neus setup --access-key <npk_...>`** only for servers and CI. Start each session with **`neus_context`**.
+
+## Bring Your Own Agent (BYOA) in 30 Seconds
+
+Already have an agent setup? Use our plug-and-play CLI to instantly import your existing rules, memories, and tools into the NEUS network:
+
+```bash
+npx -y -p @neus/sdk neus import
+```
+*Automatically detects and imports setups from OpenClaw, Cursor, Claude Code, and Claude Desktop, binding them to a secure, reusable trust receipt.*
 
 **Next:** [Quickstart](./quickstart)
