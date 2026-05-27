@@ -38,7 +38,7 @@
   "tools": [
     {
       "name": "neus_context",
-      "description": "NEUS MCP session home: setup, OAuth sign-in, verifier summaries, reuse-first workflow, tools, and safety rules. Always call first."
+      "description": "NEUS MCP session home: product summary, setup, OAuth sign-in, verifier summaries, reuse-first workflow, tools, and safety rules. Always call first."
     },
     {
       "name": "neus_verifiers_catalog",
@@ -62,7 +62,7 @@
     },
     {
       "name": "neus_me",
-      "description": "Returns the signed-in NEUS Profile when OAuth or a Profile access key is configured on this MCP session."
+      "description": "Returns the signed-in NEUS Profile when the MCP call has a NEUS session bearer or local Profile access key."
     },
     {
       "name": "neus_agent_link",
@@ -70,19 +70,19 @@
     },
     {
       "name": "neus_agent_create",
-      "description": "Prepares agent-identity and agent-delegation payloads (signatures and/or hostedVerifyUrl). Confirm with neus_agent_link after signing."
+      "description": "Prepares agent-identity and agent-delegation payloads (signatures and/or hostedVerifyUrl). Does not finalize receipts; confirm with neus_agent_link after signing. Skills/services fields are metadata only, not secrets."
     },
     {
       "name": "neus_secret_create",
-      "description": "Store an env-style secret as an encrypted proof. Values are AES-256-GCM sealed and never returned in plaintext via MCP."
+      "description": "Store an env-style secret as an encrypted proof. Creates an ownership-basic proof with secret-storage tags. Values are AES-256-GCM sealed and never returned in plaintext via MCP."
     },
     {
       "name": "neus_secret_list",
-      "description": "List secret proof metadata for a wallet (qHash, alias, type, updatedAt). Values are never exposed."
+      "description": "List env-style secret proofs for a wallet. Returns metadata only (qHash, alias, type, updatedAt). Values are never exposed."
     },
     {
       "name": "neus_secret_revoke",
-      "description": "Revoke a stored secret proof by qHash. Requires authenticated ownership."
+      "description": "Revoke a stored secret proof by qHash. Removes the proof and cleans up any agent bindings. Requires authenticated ownership."
     }
   ],
   "license": "Apache-2.0",

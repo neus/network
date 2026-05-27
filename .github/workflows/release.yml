@@ -73,14 +73,18 @@ jobs:
 
       - name: Configure npm authentication
         run: |
-          rm -f ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > .npmrc
-          echo "registry=${{ env.NPM_REGISTRY }}" >> .npmrc
-          echo "//registry.npmjs.org/:always-auth=true" >> .npmrc
+          rm -f ~/.npmrc sdk/.npmrc mcp/npm-dist/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > sdk/.npmrc
+          echo "registry=${{ env.NPM_REGISTRY }}" >> sdk/.npmrc
+          echo "//registry.npmjs.org/:always-auth=true" >> sdk/.npmrc
           echo "Verifying npm authentication..."
-          npm whoami --registry=${{ env.NPM_REGISTRY }} || (echo "ERROR: npm authentication failed. Configure the repository secret NPM_TOKEN for this workflow." && exit 1)
+          npm whoami --userconfig=sdk/.npmrc --registry=${{ env.NPM_REGISTRY }} || (
+            echo "ERROR: npm authentication failed."
+            echo "Use a granular npm token with Read+Write on @neus/sdk and @neus/mcp-server, and Bypass 2FA for automation enabled."
+            echo "If neus/network has a repository NPM_TOKEN secret, it overrides the organization secret — update or delete the repo secret."
+            exit 1
+          )
           echo "Authentication verified successfully"
-        working-directory: sdk
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -89,7 +93,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export NPM_CONFIG_USERCONFIG="$(pwd)/.npmrc"
+          export NPM_CONFIG_USERCONFIG="${GITHUB_WORKSPACE}/sdk/.npmrc"
           if [ "${{ github.event.repository.private }}" = "false" ]; then
             echo "Repository is public — publishing with npm provenance."
             npm publish --access public --provenance
@@ -114,7 +118,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          export NPM_CONFIG_USERCONFIG="$(pwd)/sdk/.npmrc"
+          export NPM_CONFIG_USERCONFIG="${GITHUB_WORKSPACE}/sdk/.npmrc"
           if [ "${{ github.event.repository.private }}" = "false" ]; then
             npm publish --access public --provenance
           else

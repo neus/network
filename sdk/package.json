@@ -83,6 +83,10 @@
     "url": "https://github.com/neus/network/issues"
   },
   "homepage": "https://neus.network",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
   "engines": {
     "node": ">=20.0.0"
   },
