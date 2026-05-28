@@ -1,10 +1,18 @@
 ---
-title: Trust for your assistant
-description: "Give your AI assistant reusable trust receipts, scoped agent authority, and live verification context."
+title: NEUS for AI assistants
+description: Trust infrastructure for agents that act — install NEUS in Cursor, Claude Code, Codex, and other MCP hosts.
 icon: store
 ---
 
-Your assistant should know **who is real**, **what an agent is allowed to do**, and **which trust receipts already exist** — without re-proving identity every session.
+**Trust infrastructure for agents that act.**
+
+*Trust that travels.*
+
+Verifiable identity, scoped authority, and receipts for every trusted action — so your assistant knows who is real, what agents may do, and which receipts already exist without re-proving every session.
+
+Agent frameworks handle tools and execution. NEUS handles trust before action: who the agent is, who controls it, what it may do, and what left a receipt.
+
+One OAuth sign-in. The same identity, delegation, and receipts in Cursor, Claude Code, and Codex.
 
 **Endpoint:** `https://mcp.neus.network/mcp`
 
@@ -97,6 +105,8 @@ npx -y -p @neus/sdk neus auth
 
 ## Other editors
 
+The CLI automates install for **Cursor**, **VS Code/Codex**, and **Claude Code** (tabs above). Manual JSON for additional MCP hosts:
+
 <AccordionGroup>
   <Accordion title="Claude Desktop" icon="desktop">
 
@@ -133,22 +143,20 @@ Restart Windsurf → Cascade → **MCPs**.
       "type": "http",
       "url": "https://mcp.neus.network/mcp",
       "headers": {
-        "Authorization": "Bearer ${NEUS_ACCESS_KEY}"
+        "Authorization": "Bearer <npk_...>"
       }
     }
   }
 }
 ```
 
-Set `NEUS_ACCESS_KEY` from [Profile → Account](https://neus.network/profile?tab=account).
+Set a Profile access key from [Account → Access keys](https://neus.network/profile?tab=account) as the bearer token in your runtime config.
 
-Trust workflow skill:
+Trust workflow skill (from a [network repo](https://github.com/neus/network) clone):
 
 ```bash
 cp -R plugins/neus-trust/skills/neus-trust-workflow ~/.openclaw/workspace/skills/
 ```
-
-Clone [github.com/neus/network](https://github.com/neus/network) first.
 
   </Accordion>
 

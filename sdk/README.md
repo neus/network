@@ -34,7 +34,7 @@ npx -y -p @neus/sdk neus import --dry-run
 | Setup, JSON snippets, and headers | [MCP setup](https://docs.neus.network/mcp/setup)                              |
 | Tools and session order           | [MCP overview](https://docs.neus.network/mcp/overview)                        |
 | Discovery URLs                    | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints)            |
-| Trust for your assistant          | [Trust for your assistant](https://docs.neus.network/mcp/ide-plugin)          |
+| NEUS for AI assistants          | [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin)          |
 
 Prefer `neus setup` over hand-editing config files so every host stays on **`https://mcp.neus.network/mcp`**.
 
@@ -194,7 +194,7 @@ npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus auth --access-key <npk_...>   # servers and CI only
 ```
 
-Editors with plugin marketplaces can install **`neus-trust@neus`** for the bundled session workflow. OpenClaw, Hermes, and other runtimes: see [Trust for your assistant](https://docs.neus.network/mcp/ide-plugin) for exact paths.
+Editors with plugin marketplaces can install **`neus-trust@neus`** for the bundled session workflow. OpenClaw, Hermes, and other runtimes: see [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin) for exact paths.
 
 ## Docs
 

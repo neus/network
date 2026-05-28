@@ -1,23 +1,29 @@
 ---
-title: Current user (`neus_me`)
-description: Current account via MCP when you send OAuth or a Profile access key.
+title: Profile Context (`neus_me`)
+description: Refresh signed-in profile context or look up a public wallet/DID.
 icon: user-circle
 ---
 
-Call after **`neus_context`** when the connection sends **`Authorization: Bearer`** — from **OAuth sign-in** or a **Profile access key** ([Access keys](https://neus.network/profile?tab=account)) ([Auth](./auth), [Overview](./overview)).
+Most sessions do **not** need a separate `neus_me` call. Start with **`neus_context`**; when the connection is authenticated, it already includes signed-in profile context.
+
+Use **`neus_me`** when you need to refresh profile context, confirm a changed sign-in, or look up a public Profile by wallet/DID ([Auth](./auth), [Overview](./overview)).
 
 | Topic | Detail |
 |-------|--------|
-| **`neus_me` + Bearer** | End-user browser login is **not** passed through MCP |
+| **Signed-in session** | Refreshes the current Profile context |
 | URL-only MCP | Returns **`auth_required`** — run **`neus auth`** or sign in through your host |
 | No key, user must verify | **`neus_verify_or_guide`** |
-| Public identifier lookup | **`neus_proofs_get`** (visibility rules apply) |
+| Public identifier lookup | Pass `identifier` (wallet or DID); visibility rules apply |
 
 ## Input
 
 ```json
-{}
+{
+  "identifier": "0x..."
+}
 ```
+
+Omit `identifier` to use the authenticated MCP session.
 
 ## Output
 

@@ -12,7 +12,7 @@ For apps creating trust receipts server-side for existing users, use **App Link*
 
 <Steps>
  <Step title="Check">
- Call **`neus_agent_link`** with the **`agentWallet`** after **`neus_context`** (and **`neus_me`** when Bearer is set). Stop if **`linked: true`**.
+ Call **`neus_context`**, then **`neus_agent_link`** with the **`agentWallet`**. Stop if **`linked: true`**.
  </Step>
  <Step title="Prepare (only if missing)">
  Call **`neus_agent_create`** when you need signing material or a prepared hosted URL for identity + delegation.

@@ -1,5 +1,5 @@
 ---
-description: Verify trust before your assistant acts — reuse receipts, check agent authority, and keep credentials sealed. Sign in once; trust travels with every session.
+description: Trust infrastructure for agents that act — identity, authority, and receipts before your assistant runs tools.
 ---
 
 Use this skill whenever trust, identity, agent authority, verification, or NEUS tool usage is in scope.
@@ -22,16 +22,16 @@ npx -y -p @neus/sdk neus setup --access-key <npk_...>
 
 Create access keys under **Account → Access keys** on [neus.network](https://neus.network/profile?tab=account). Never paste keys into chat.
 
-## Account tools (when signed in)
+## Account context
 
-Personal tools such as **`neus_me`**, private reads, and signatureless verify when allowed require a configured access key or completed OAuth sign-in.
+**`neus_context`** includes signed-in profile context when OAuth or an access key is configured.
 
 Omit access keys if you only need public catalog and receipt reads.
 
 ## Every session (recommended order)
 
-1. Run **`neus_context`** first for live guidance.
-2. When signed in, run **`neus_me`** before assuming account state.
+1. Run **`neus_context`** once for current mode, profile context, verifier summary, and next steps.
+2. Use **`neus_me`** only to refresh profile context or look up a wallet/DID.
 3. For agent work, use **`neus_agent_link`** (create agents only through documented flows).
 4. Prefer **`neus_proofs_check`** and existing trust receipts before starting new verification.
 5. Use **`neus_proofs_get`** when you need exact receipt records or receipt IDs from NEUS.

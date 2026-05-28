@@ -2,10 +2,7 @@
   "mcpServers": {
     "neus": {
       "type": "http",
-      "url": "https://mcp.neus.network/mcp",
-      "headers": {
-        "Authorization": "Bearer ${env:NEUS_ACCESS_KEY}"
-      }
+      "url": "https://mcp.neus.network/mcp"
     }
   }
 }

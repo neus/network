@@ -36,7 +36,7 @@ Use the hosted url when you want NEUS to own the flow. Use the SDK, widgets, API
 
 ## Why NEUS
 
-Trust keeps getting rebuilt inside each app, marketplace, workflow, and agent stack. NEUS gives teams one trust layer for the moments that matter:
+Trust keeps getting rebuilt inside each app, marketplace, workflow, and agent stack. NEUS is **trust infrastructure for apps, agents, and ecosystems** — reusable receipts instead of restarting from zero:
 
 | Need                         | NEUS gives you                                                          |
 | ---------------------------- | ----------------------------------------------------------------------- |
@@ -67,7 +67,7 @@ Use Hosted Verify, `VerifyGate`, or the SDK when your app needs a reusable trust
 - Follow the integration loop: [check -> verify -> save -> reuse](https://docs.neus.network/integration).
 - Use [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) when you want NEUS to own the browser step.
 
-### 2. Add trust to an agent
+### 3. Add trust to an agent
 
 Use NEUS when an agent needs identity, scoped authority, and receipts for trusted actions.
 
@@ -75,9 +75,9 @@ Use NEUS when an agent needs identity, scoped authority, and receipts for truste
 - Register identity with [`agent-identity`](https://docs.neus.network/agents/agent-identity).
 - Add scoped authority with [`agent-delegation`](https://docs.neus.network/agents/agent-delegation).
 
-### 3. Connect assistants and tools
+### 4. Connect AI assistants
 
-Wire Cursor, VS Code, Claude Code, and other MCP hosts to the same hosted NEUS endpoint.
+Install NEUS in Cursor, Claude Code, or Codex — same identity, delegation, and receipts as your apps. Other MCP hosts: [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin).
 
 ```bash
 npx -y -p @neus/sdk neus setup
@@ -85,28 +85,13 @@ npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Sign in with **`neus auth`** (OAuth in your browser). For servers and CI only, use a Profile access key:
-
-```bash
-npx -y -p @neus/sdk neus setup --access-key <npk_...>
-```
-
-Start each session with tool **`neus_context`**.
-
-Bring an existing agent setup:
-
-```bash
-npx -y -p @neus/sdk neus import --dry-run
-npx -y -p @neus/sdk neus import --from openclaw
-npx -y -p @neus/sdk neus export --to manifest
-```
+Sign in with **`neus auth`** (OAuth). Profile access keys are for servers and CI only — see [MCP setup](https://docs.neus.network/mcp/setup).
 
 | Topic                                       | Link                                                                          |
 | ------------------------------------------- | ----------------------------------------------------------------------------- |
-| Full setup, manual JSON, and headers        | [MCP setup](https://docs.neus.network/mcp/setup)                              |
-| Tools and recommended order                 | [MCP overview](https://docs.neus.network/mcp/overview)                        |
+| Install hub                                 | [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin)          |
+| Tools and session order                     | [MCP overview](https://docs.neus.network/mcp/overview)                        |
 | Discovery URLs (server card, `.well-known`) | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints)            |
-| Trust for your assistant | [Trust for your assistant](https://docs.neus.network/mcp/ide-plugin)          |
 
 Hosted MCP URL: **`https://mcp.neus.network/mcp`**
 

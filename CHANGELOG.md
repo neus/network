@@ -8,7 +8,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- **NEUS Trust plugin (v1.2.3)** — value-first [Trust for your assistant](https://docs.neus.network/mcp/ide-plugin) install hub for Cursor, VS Code, Codex, Claude Code, OpenClaw, Hermes, Windsurf, Gemini, and ChatGPT.
+- **NEUS Trust plugin & docs** — [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin) install hub (Cursor, VS Code/Codex, Claude Code; manual paths for other MCP hosts). Plugin version tracks **`@neus/sdk@1.1.0`** / **`@neus/mcp-server@1.1.0`**.
 
 ## [1.1.0] - 2026-05-26
 
@@ -17,6 +17,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **OAuth-first MCP onboarding** — connect editors and assistants in three commands: `neus setup` → `neus auth` → `neus doctor --live`.
 - **`@neus/mcp-server` on npm** with OAuth discovery metadata for MCP registries and installers.
 - **Twelve public MCP tools** documented end-to-end, including encrypted secrets (`neus_secret_*`).
+- **NEUS Trust plugin (v1.1.0)** — Claude Code marketplace install for hosted MCP + trust workflow skill.
 
 ### Added
 

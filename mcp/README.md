@@ -35,7 +35,7 @@ Install with `npm install @neus/sdk` or `npm install @neus/mcp-server`. Release 
 | Tool order               | [docs.neus.network/mcp/overview](https://docs.neus.network/mcp/overview)                               |
 | OAuth                    | [docs.neus.network/mcp/oauth](https://docs.neus.network/mcp/oauth)                                   |
 | Discovery                | [docs.neus.network/mcp/endpoints](https://docs.neus.network/mcp/endpoints)                             |
-| Trust for your assistant | [docs.neus.network/mcp/ide-plugin](https://docs.neus.network/mcp/ide-plugin)                             |
+| NEUS for AI assistants | [docs.neus.network/mcp/ide-plugin](https://docs.neus.network/mcp/ide-plugin)                             |
 
 ## License
 

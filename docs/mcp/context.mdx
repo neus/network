@@ -1,11 +1,13 @@
 ---
 title: Context (`neus_context`)
-description: NEUS MCP session home card—modes, URLs, verifier summaries, workflow.
+description: Session home for NEUS MCP: mode, signed-in profile context, verifier summary, and next steps.
 icon: database
 ---
 
-Call **`neus_context`** first on every MCP session—even when **no Profile access key** is wired in.
+Call **`neus_context`** once at the start of a NEUS MCP session.
 
-You receive a structured card with **`product`**, **`setup`** (endpoint + CLI snippets), **`mode`**, **`recommendedFlow`**, **`jobs`**, per-tool narration, **`proofModel`**, **`agentModel`**, **`safetyRules`**, and a compact **`verifierSummary`** (supplement with **`neus_verifiers_catalog`** when you need full schemas).
+It returns the current mode, setup links, recommended flow, safety rules, compact verifier summary, and **signed-in profile context when the MCP connection is authenticated**.
+
+Use **`neus_me`** only when you need to refresh profile context or look up a public wallet/DID.
 
 Recommended flow recap: **[Overview](./overview)**. Reuse existing receipts first; use hosted links only when the next step needs a browser.

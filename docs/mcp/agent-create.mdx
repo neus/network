@@ -13,7 +13,7 @@ Use this tool **after** **`neus_agent_link`** shows missing proofs (or when you 
 | 3 | Complete **`signatures`** (two steps: agent wallet, then approving account) **or** open **`hostedVerifyUrl`** once |
 | 4 | Call **`neus_agent_link`** again until **`linked: true`** |
 
-Optional **`controllerWallet`**: omit when your MCP session is authenticated with a NEUS Profile access key (**Bearer**) so the approving account can be inferred from **`neus_me`**.
+Optional **`controllerWallet`**: omit when the signed-in account from **`neus_context`** should approve the delegation.
 
 Vocabulary: [Agent concepts](../agents/concepts).
 
@@ -34,6 +34,6 @@ Optional **`instructions`**, **`skills`**, **`services`**, presets, spend caps, 
 
 ## Related
 
-Account tools (**`neus_me`**, private reads with Bearer): [Auth](./auth).
+Signed-in profile context and private reads: [Auth](./auth).
 
 [Agent link](./agent-link) | [Overview](./overview) | [Agent verification flow](../agents/agent-verification-flow)

@@ -1,8 +1,8 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "neus",
-  "version": "1.0.0",
-  "description": "Trust infrastructure for AI assistants — reusable receipts, scoped authority, and audit context.",
+  "version": "1.1.0",
+  "description": "Trust infrastructure for AI builders. Identity, authority, and reusable receipts in every editor.",
   "owner": {
     "name": "NEUS",
     "email": "info@neus.network"
@@ -12,11 +12,11 @@
       "name": "neus-trust",
       "displayName": "NEUS Trust",
       "source": "./plugins/neus-trust",
-      "description": "Stop re-proving trust every session. Reusable identity receipts, scoped agent authority, and encrypted secrets.",
+      "description": "Trust infrastructure for agents that act — identity, authority, and receipts before your assistant runs tools.",
       "homepage": "https://docs.neus.network/mcp/ide-plugin",
       "repository": "https://github.com/neus/network",
       "license": "Apache-2.0",
-      "version": "1.2.3",
+      "version": "1.1.0",
       "author": {
         "name": "NEUS",
         "url": "https://neus.network"

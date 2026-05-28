@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.neus/neus-mcp",
   "title": "NEUS MCP",
-  "description": "NEUS MCP: trust receipts, agent identity, scoped authority. docs.neus.network/mcp/ide-plugin",
+  "description": "Identity and authority for AI assistants. Trust receipts over MCP. docs.neus.network/mcp/ide-plugin",
   "version": "1.1.0",
   "repository": {
     "url": "https://github.com/neus/network",
@@ -38,7 +38,7 @@
   "tools": [
     {
       "name": "neus_context",
-      "description": "NEUS MCP session home: product summary, setup, OAuth sign-in, verifier summaries, reuse-first workflow, tools, and safety rules. Always call first."
+      "description": "NEUS MCP session home: current mode, signed-in profile context, verifier summary, reuse-first workflow, tools, and safety rules. Call once at session start."
     },
     {
       "name": "neus_verifiers_catalog",
@@ -62,7 +62,7 @@
     },
     {
       "name": "neus_me",
-      "description": "Returns the signed-in NEUS Profile when the MCP call has a NEUS session bearer or local Profile access key."
+      "description": "Refresh signed-in Profile context, or look up a public Profile by wallet/DID."
     },
     {
       "name": "neus_agent_link",
@@ -105,7 +105,7 @@
     {
       "title": "Bootstrap a session",
       "description": "Load the MCP session home plus verifier summaries.",
-      "prompt": "Call neus_context first, then follow the returned recommendedFlow. If Bearer is configured (OAuth or Profile key), call neus_me before any account-aware work."
+      "prompt": "Call neus_context once, then follow recommendedFlow. When signed in, use returned profile context; call neus_me only to refresh identity context or look up a wallet/DID."
     },
     {
       "title": "Register an AI agent",

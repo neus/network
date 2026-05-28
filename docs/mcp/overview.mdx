@@ -1,12 +1,14 @@
 ---
 title: MCP Overview
-description: Hosted NEUS MCP for receipts, agents, and trusted actions.
+description: Identity, authority, and trust receipts for AI assistants over hosted MCP.
 icon: plug
 ---
 
-NEUS MCP gives assistants and agent tools live trust context at **`https://mcp.neus.network/mcp`**.
+**Trust infrastructure for agents that act.**
 
-Use it to check existing receipts, read proof state, link agents, and guide users to hosted verification only when a browser step is required.
+*Trust that travels.*
+
+NEUS MCP connects assistants and agent runtimes to live identity, delegation, and receipt state at **`https://mcp.neus.network/mcp`**. Agent frameworks handle tools and execution. NEUS handles trust before action — who is trusted, what an agent may do, and which receipts already exist before access, payment, or action.
 
 ## Install
 
@@ -34,13 +36,14 @@ Full setup: [MCP setup](./setup). OAuth reference: [MCP OAuth](./oauth).
 
 | Step | Tool                   | Purpose                                                              |
 | ---- | ---------------------- | -------------------------------------------------------------------- |
-| 1    | `neus_context`         | Get session context and recommended next steps                       |
-| 2    | `neus_me`              | Confirm the Profile key when Bearer auth is configured               |
-| 3    | `neus_agent_link`      | Reuse existing agent identity and delegation receipts                |
-| 4    | `neus_proofs_check`    | Check eligibility without creating a new receipt                     |
-| 5    | `neus_proofs_get`      | Read receipt details when needed                                     |
-| 6    | `neus_verify`          | Verify only when signing and profile prerequisites already match     |
-| 7    | `neus_verify_or_guide` | Guide the user when setup, payment, wallet, or delegation is missing |
+| 1    | `neus_context`         | Load current mode, signed-in profile context, verifier summary, and next steps |
+| 2    | `neus_agent_link`      | Reuse existing agent identity and delegation receipts                |
+| 3    | `neus_proofs_check`    | Check eligibility without creating a new receipt                     |
+| 4    | `neus_proofs_get`      | Read receipt details when needed                                     |
+| 5    | `neus_verify`          | Verify only when signing and profile prerequisites already match     |
+| 6    | `neus_verify_or_guide` | Guide the user when setup, payment, wallet, or delegation is missing |
+
+Use **`neus_me`** only when you need to refresh signed-in profile context or look up a public wallet/DID.
 
 Public tools also include **`neus_secret_create`**, **`neus_secret_list`**, and **`neus_secret_revoke`** when signed in ([Secrets](./secrets)).
 
@@ -65,8 +68,8 @@ npx -y -p @neus/sdk neus import --from auto
 ## Reference
 
 <CardGroup cols={4}>
-  <Card title="Trust for your assistant" icon="store" href="./ide-plugin">
-    Connect NEUS in Cursor, VS Code, Claude Code, and more.
+  <Card title="NEUS for AI assistants" icon="store" href="./ide-plugin">
+    Install in Cursor, Claude Code, Codex, and other MCP hosts.
   </Card>
   <Card title="OAuth" icon="shield-check" href="./oauth">
     OAuth flow and tokens.

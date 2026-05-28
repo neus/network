@@ -4,7 +4,7 @@ description: Fallback setup when reuse checks cannot satisfy the request.
 icon: signs-post
 ---
 
-Use after **`neus_context`**, **`neus_me`** when Bearer exists, **`neus_agent_link`** for agents, and **`neus_proofs_check`** for the required verifier IDs.
+Use after **`neus_context`**, **`neus_agent_link`** for agents, and **`neus_proofs_check`** for the required verifier IDs.
 
 If existing receipts satisfy the request, continue without this tool. Use **`neus_verify_or_guide`** only when proof, profile, payment, provider, wallet, or delegation setup is missing.
 
@@ -29,4 +29,4 @@ Returns **`already_verified`** or **`hostedVerifyUrl`**. After hosted completion
 | **`already_verified`** | Policy satisfied; no browser step needed |
 | **`verification_required`** | Open **`hostedVerifyUrl`**; honor **`requiredVerifiers`** |
 
-Schemas load from the server. Bearer / **`neus_me`**: [Auth](./auth).
+Schemas load from the server. Auth: [Auth](./auth).

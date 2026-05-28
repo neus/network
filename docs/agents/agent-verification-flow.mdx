@@ -27,7 +27,7 @@ Agents need identity and authority before they act. NEUS keeps those receipts re
 ## MCP sequence
 
 1. Call **`neus_context`** at the start of the session.
-2. If your MCP client has a Profile access key, call **`neus_me`**.
+2. Use returned profile context when the MCP session is signed in.
 3. Call **`neus_agent_link`** with **`agentWallet`**.
 4. If it returns **`linked: true`**, reuse the receipts.
 5. If setup is missing, call **`neus_agent_create`** and complete the returned hosted or signing steps.

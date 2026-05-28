@@ -26,7 +26,7 @@ GET https://neus.network/.well-known/oauth-authorization-server
 → Authenticated MCP session (Bearer on MCP requests)
 ```
 
-Some clients also follow a `401` + `WWW-Authenticate` challenge when a protected resource requires auth. Hosted NEUS MCP is open for public tools; sign in when you need account-aware tools such as **`neus_me`** or encrypted secrets.
+Some clients also follow a `401` + `WWW-Authenticate` challenge when a protected resource requires auth. Hosted NEUS MCP is open for public tools; sign in when you need account-aware context, private reads, or encrypted secrets.
 
 Full OAuth reference: [MCP OAuth](./oauth).
 
@@ -44,7 +44,7 @@ npx -y -p @neus/sdk neus setup --access-key <npk_...>
 |------|------------|
 | **No authentication** | `neus_context`, `neus_proofs_check`, public `neus_proofs_get`, and verifier catalog reads |
 | **OAuth** | Cursor, VS Code, Claude Code, OpenAI — browser sign-in, no manual keys |
-| **Bearer (`npk_*` or OAuth JWT)** | Same header shape — `neus_me`, private reads, secrets tools |
+| **Bearer (`npk_*` or OAuth JWT)** | Same header shape — profile context in `neus_context`, private reads, secrets tools |
 
 ## Authorization header
 
@@ -54,7 +54,7 @@ Authorization: Bearer <token>
 
 OAuth tokens and access keys both use the `Bearer` scheme.
 
-Authenticated MCP sessions should reuse receipts before any browser step: **`neus_context`** → **`neus_me`** → **`neus_agent_link`** (when an agent wallet is in play) → **`neus_proofs_check`** → **`neus_proofs_get`** when you need proof details. Use **`neus_verify_or_guide`** only when something required is still missing.
+Authenticated MCP sessions should reuse receipts before any browser step: **`neus_context`** → **`neus_agent_link`** (when an agent wallet is in play) → **`neus_proofs_check`** → **`neus_proofs_get`** when you need proof details. Use **`neus_me`** only to refresh profile context or look up a wallet/DID. Use **`neus_verify_or_guide`** only when something required is still missing.
 
 ## Disconnect
 

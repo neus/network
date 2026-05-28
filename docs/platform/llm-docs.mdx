@@ -16,21 +16,13 @@ This site (`docs.neus.network`) is the standard integration reference. Follow th
 6. [MCP tools](../mcp/tools)
 7. [API overview](../api/overview) (server and raw HTTP)
 
-## MCP tool order
+## MCP for assistants
 
-1. `https://mcp.neus.network/mcp`. [Setup](../mcp/setup)
-2. **`neus_context`**
-3. Bearer, then **`neus_me`** (`status: ok`). [Auth](../mcp/auth)
-4. **`neus_proofs_check`**, **`neus_verify`**, **`neus_verify_or_guide`**, agents. [Overview](../mcp/overview)
-5. **`neus_proofs_get`**. [Proofs get](../mcp/proofs-get)
+1. Install: [MCP setup](../mcp/setup) — `neus setup` → `neus auth` → `neus doctor --live`
+2. Session flow: [MCP overview](../mcp/overview) (start with **`neus_context`** once; reuse receipts before new verification)
+3. Install hub: [NEUS for AI assistants](../mcp/ide-plugin)
 
-```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
-npx -y -p @neus/sdk neus doctor --live
-```
-
-Use **`neus auth`** for OAuth (recommended). Use **`neus auth --access-key <npk_...>`** only for servers and CI. Then run **`neus status --json`** to confirm client config.
+Use **`neus auth`** for OAuth (recommended). Profile access keys (`npk_*`) are for servers and CI only.
 
 ## Rules
 

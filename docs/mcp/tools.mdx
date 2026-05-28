@@ -6,7 +6,8 @@ icon: wrench
 
 | Topic | Detail |
 |-------|--------|
-| Bearer | Optional ([Auth](./auth)). With Bearer, call **`neus_me`**, then reuse existing proof receipts before creating anything. |
+| Session context | Start with **`neus_context`**. When signed in, it includes the current profile context. |
+| Profile refresh | Use **`neus_me`** only to refresh profile context or look up a public wallet/DID. |
 | Interactive | **`neus_verify_or_guide`** only after reuse checks show proof, profile, payment, provider, wallet, or delegation setup is missing. |
 
 ## Field names
@@ -23,11 +24,12 @@ EVM `0x…`, Solana base58, or `did:pkh:…`. Delegated reads: **`agentWallet`**
 
 | Phase | Calls |
 |-------|--------|
-| Default | Connect → **`neus_context`** → **`neus_me`** if Bearer → **`neus_agent_link`** for agents → **`neus_proofs_check`** → continue if satisfied |
+| Default | Connect → **`neus_context`** → **`neus_agent_link`** for agents → **`neus_proofs_check`** → continue if satisfied |
 | Details | **`neus_proofs_get`** for proof records, tags, delegated context, and receipt fields |
 | Secrets | **`neus_secret_list`** / **`neus_secret_create`** / **`neus_secret_revoke`** when auth is configured ([Secrets](./secrets)) |
 | Fallback | **`neus_verify_or_guide`** only when something is missing |
 | Catalog | **`neus_verifiers_catalog`** only when you need raw schemas beyond context |
+| Profile | **`neus_me`** only for refresh or explicit wallet/DID lookup |
 
 Same flow as [Overview](./overview). **Headless prepare/sign:** [Overview](./overview#headless-signing).
 
