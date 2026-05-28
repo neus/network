@@ -2,13 +2,13 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.neus/neus-mcp",
   "title": "NEUS MCP",
-  "description": "NEUS hosted MCP: verifiers, proofs, verify flows, agents. Always call neus_context first.",
+  "description": "NEUS MCP: trust receipts, agent identity, scoped authority. docs.neus.network/mcp/ide-plugin",
   "version": "1.1.0",
   "repository": {
     "url": "https://github.com/neus/network",
     "source": "github"
   },
-  "websiteUrl": "https://docs.neus.network/mcp/overview",
+  "websiteUrl": "https://docs.neus.network/mcp/ide-plugin",
   "icons": [
     {
       "src": "https://neus.network/images/neus-brand-pack/apple-touch-icon.png",

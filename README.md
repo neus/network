@@ -41,7 +41,7 @@ Trust keeps getting rebuilt inside each app, marketplace, workflow, and agent st
 | Need                         | NEUS gives you                                                          |
 | ---------------------------- | ----------------------------------------------------------------------- |
 | Stop re-building trust from zero  | A receipt your product can save, check, and reuse                       |
-| Bring Your Own Agent (BYOA)  | Plug-and-play CLI to import existing agent setups in under 30 seconds  |
+| Bring Your Own Agent (BYOA)  | CLI-assisted import for existing local agent setups                    |
 | Gate access or rewards       | Hosted flows, widgets, and server checks for trusted access             |
 | Trust agents before they act | Agent identity, scoped delegation, and receipts for trusted actions     |
 | Audit what happened          | Proof pages, receipt reads, tags, and durable references                |
@@ -49,15 +49,15 @@ Trust keeps getting rebuilt inside each app, marketplace, workflow, and agent st
 
 ## Start building
 
-### 1. Bring Your Own Agent (BYOA) in 30 Seconds
+### 1. Bring Your Own Agent (BYOA)
 
-If you already have an AI agent configured locally, NEUS lets you migrate it to our unified trust network in one command. We automatically detect and import files, rules, skills, and MCP servers from **OpenClaw, Cursor, Claude Code, and Claude Desktop**:
+If you already have an AI agent configured locally, the NEUS CLI can package supported local agent context from OpenClaw, Cursor, Claude Code, or Claude Desktop:
 
 ```bash
 npx -y -p @neus/sdk neus import
 ```
 
-This instantly hooks your agent into NEUS and links it to a secure, reusable trust receipt.
+This writes a local portable-agent manifest. Finish identity and delegation through NEUS MCP with `neus_agent_create` and `neus_agent_link`.
 
 ### 2. Add trust to an app
 
@@ -106,7 +106,7 @@ npx -y -p @neus/sdk neus export --to manifest
 | Full setup, manual JSON, and headers        | [MCP setup](https://docs.neus.network/mcp/setup)                              |
 | Tools and recommended order                 | [MCP overview](https://docs.neus.network/mcp/overview)                        |
 | Discovery URLs (server card, `.well-known`) | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints)            |
-| Claude Code skill bundle                    | [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace) |
+| Trust for your assistant | [Trust for your assistant](https://docs.neus.network/mcp/ide-plugin)          |
 
 Hosted MCP URL: **`https://mcp.neus.network/mcp`**
 
@@ -149,7 +149,7 @@ The live verifier catalog is documented at [docs.neus.network/verification/verif
 
 ## This repository
 
-Docs, SDK (`@neus/sdk`), widgets, examples, specs, and Claude Code skill metadata.
+Docs, SDK (`@neus/sdk`), widgets, examples, specs, and the NEUS Trust editor plugin.
 
 ## Where to go next
 

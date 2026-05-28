@@ -213,7 +213,7 @@
             "pages": [
               "mcp/overview",
               "mcp/setup",
-              "mcp/claude-code-marketplace",
+              "mcp/ide-plugin",
               "mcp/oauth",
               "mcp/auth",
               "mcp/endpoints"
@@ -258,6 +258,10 @@
     ]
   },
   "redirects": [
+    {
+      "source": "/mcp/claude-code-marketplace",
+      "destination": "/mcp/ide-plugin"
+    },
     {
       "source": "/choose-an-integration-path",
       "destination": "/integration"

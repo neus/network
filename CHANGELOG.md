@@ -6,6 +6,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- **NEUS Trust plugin (v1.2.3)** — value-first [Trust for your assistant](https://docs.neus.network/mcp/ide-plugin) install hub for Cursor, VS Code, Codex, Claude Code, OpenClaw, Hermes, Windsurf, Gemini, and ChatGPT.
+
 ## [1.1.0] - 2026-05-26
 
 ### Highlights

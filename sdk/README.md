@@ -12,15 +12,15 @@ Roadmap: [docs.neus.network/platform/status](https://docs.neus.network/platform/
 npm install @neus/sdk
 ```
 
-## Bring Your Own Agent (BYOA) in 30 Seconds
+## Bring Your Own Agent (BYOA)
 
-Already have an agent setup? Use the CLI to instantly scan and import your local agent setups—including instructions, memories, rules, skills, and MCP servers from **OpenClaw, Cursor, Claude Code, and Claude Desktop**—straight into the NEUS trust network:
+Already have an agent setup? Use the CLI to package supported local agent context, including instructions, rules, skills, and MCP server references from **OpenClaw, Cursor, Claude Code, and Claude Desktop**:
 
 ```bash
 npx -y -p @neus/sdk neus import
 ```
 
-This automatically prepares your portable NEUS agent manifest, maps your credentials, and secures a reusable trust receipt for your workflows.
+This prepares a local portable-agent manifest. Finish identity and delegation through NEUS MCP with `neus_agent_create` and `neus_agent_link`.
 
 *To check what will be imported without writing changes:*
 ```bash
@@ -34,7 +34,7 @@ npx -y -p @neus/sdk neus import --dry-run
 | Setup, JSON snippets, and headers | [MCP setup](https://docs.neus.network/mcp/setup)                              |
 | Tools and session order           | [MCP overview](https://docs.neus.network/mcp/overview)                        |
 | Discovery URLs                    | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints)            |
-| Claude Code skill bundle          | [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace) |
+| Trust for your assistant          | [Trust for your assistant](https://docs.neus.network/mcp/ide-plugin)          |
 
 Prefer `neus setup` over hand-editing config files so every host stays on **`https://mcp.neus.network/mcp`**.
 
@@ -61,7 +61,7 @@ const url = getHostedCheckoutUrl({
 window.location.assign(url);
 ```
 
-After completion, NEUS redirects back with a receipt ID. Store it with your user or record.
+After completion, NEUS redirects back with a `qHash`. Store it with your user or record.
 
 ## Create a receipt directly
 
@@ -194,7 +194,7 @@ npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus auth --access-key <npk_...>   # servers and CI only
 ```
 
-Claude Code users can add the optional **`neus-mcp@neus`** skill bundle, then run **`neus setup`** and **`neus auth`**. See [NEUS for Claude Code](https://docs.neus.network/mcp/claude-code-marketplace).
+Editors with plugin marketplaces can install **`neus-trust@neus`** for the bundled session workflow. OpenClaw, Hermes, and other runtimes: see [Trust for your assistant](https://docs.neus.network/mcp/ide-plugin) for exact paths.
 
 ## Docs
 

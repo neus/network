@@ -12,7 +12,7 @@ Pick the lane that matches what you are shipping.
 | -------------------- | ----------------------------------------------------------------------------- | --------------------------- |
 | **App verification** | Your product needs reusable trust receipts before access, rewards, or payment | [Quickstart](./quickstart)  |
 | **Agent trust**      | An agent needs identity, scoped authority, and receipts for trusted actions   | [Agents](./agents/overview) |
-| **Assistant setup**  | Cursor, VS Code, Claude Code, or another MCP host needs live NEUS context     | [MCP setup](./mcp/setup)    |
+| **Assistant setup**  | Any AI editor or agent runtime needs live trust context | [Trust for your assistant](./mcp/ide-plugin) · [MCP setup](./mcp/setup) |
 
 ## App verification
 
@@ -23,16 +23,16 @@ Pick the lane that matches what you are shipping.
 
 ## Agent Trust
 
-Import your existing local AI agent setups instantly, or link new agents to proof-backed receipts.
+Package existing local AI agent setup context, or link new agents to proof-backed receipts.
 
-1. **Plug and Play Import:** Run `npx -y -p @neus/sdk neus import` to scan and import setups from OpenClaw, Cursor, Claude Code, or Claude Desktop.
+1. **Portable import:** Run `npx -y -p @neus/sdk neus import` to package supported setup context from OpenClaw, Cursor, Claude Code, or Claude Desktop.
 2. **Register Identity:** Create `agent-identity` for the agent's wallet address.
 3. **Delegate Scoped Authority:** Add `agent-delegation` when a controller user or organization defines what the agent is allowed to do.
 4. **Link & Reuse:** Call `neus_agent_link` before actions to leverage pre-minted trust receipts.
 
-## Assistant & MCP Setup
+## Assistant setup
 
-Connect Cursor, VS Code, Claude Code, or other MCP hosts to our hosted endpoint for live trust context:
+Connect **Cursor**, **VS Code**, **Codex**, **Claude Code**, **OpenClaw**, **Hermes**, **Windsurf**, **Gemini**, or **ChatGPT** for live trust context:
 
 ```bash
 npx -y -p @neus/sdk neus setup
@@ -40,15 +40,17 @@ npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Sign in with **`neus auth`** (OAuth). Use **`neus setup --access-key <npk_...>`** only for servers and CI. Start each session with **`neus_context`**.
+Sign in with **`neus auth`** (OAuth). Use access keys only for servers and CI. Start each session with **`neus_context`**.
 
-## Bring Your Own Agent (BYOA) in 30 Seconds
+Editors with plugin marketplaces can install **[NEUS Trust](./mcp/ide-plugin)** (`neus-trust@neus`). OpenClaw and Hermes: copy the skill from the same guide.
 
-Already have an agent setup? Use our plug-and-play CLI to instantly import your existing rules, memories, and tools into the NEUS network:
+## Bring Your Own Agent (BYOA)
+
+Already have an agent setup? Use the CLI to package supported rules, skills, and MCP server references into a local portable-agent manifest:
 
 ```bash
 npx -y -p @neus/sdk neus import
 ```
-*Automatically detects and imports setups from OpenClaw, Cursor, Claude Code, and Claude Desktop, binding them to a secure, reusable trust receipt.*
+Finish identity and delegation through NEUS MCP with `neus_agent_create` and `neus_agent_link`.
 
 **Next:** [Quickstart](./quickstart)

@@ -1,0 +1,35 @@
+{
+  "name": "neus-trust",
+  "displayName": "NEUS Trust",
+  "description": "Stop re-proving trust every session. Reusable identity receipts, scoped agent authority, and encrypted secrets for Claude Code.",
+  "version": "1.2.3",
+  "author": {
+    "name": "NEUS",
+    "url": "https://neus.network"
+  },
+  "homepage": "https://docs.neus.network/mcp/ide-plugin",
+  "repository": "https://github.com/neus/network",
+  "license": "Apache-2.0",
+  "icon": "./assets/icon.png",
+  "skills": ["./skills/neus-trust-workflow"],
+  "keywords": [
+    "trust-receipts",
+    "agent-identity",
+    "agent-delegation",
+    "identity-verification",
+    "ai-assistant",
+    "code-assistant",
+    "cursor",
+    "vscode",
+    "codex",
+    "claude-code",
+    "openclaw",
+    "hermes",
+    "windsurf",
+    "gemini",
+    "chatgpt",
+    "oauth",
+    "secrets-management",
+    "audit-trail"
+  ]
+}

@@ -496,14 +496,21 @@ function cursorConfigPath(scope, cwd) {
 }
 
 function vscodeConfigPath(scope, cwd) {
-  return scope === 'user'
-    ? path.join(
-        process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming'),
-        'Code',
-        'User',
-        'mcp.json'
-      )
-    : path.join(cwd, '.vscode', 'mcp.json');
+  if (scope !== 'user') {
+    return path.join(cwd, '.vscode', 'mcp.json');
+  }
+  if (process.platform === 'darwin') {
+    return path.join(os.homedir(), 'Library', 'Application Support', 'Code', 'User', 'mcp.json');
+  }
+  if (process.platform === 'win32') {
+    return path.join(
+      process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming'),
+      'Code',
+      'User',
+      'mcp.json'
+    );
+  }
+  return path.join(os.homedir(), '.config', 'Code', 'User', 'mcp.json');
 }
 
 function claudeProjectConfigPath(cwd) {
@@ -1255,9 +1262,10 @@ function printResultSummary(command, scope, results, accessKey) {
     );
   }
   if (command === 'init' || command === 'setup') {
-    lines.push('Claude Code skill bundle: https://docs.neus.network/mcp/claude-code-marketplace');
+    lines.push('All hosts (Cursor, Codex, OpenClaw, Hermes, Windsurf, Gemini, …): https://docs.neus.network/mcp/ide-plugin');
+    lines.push('Claude Code plugin: neus-trust@neus — same page');
     lines.push(
-      'Cursor / VS Code: same command when those apps are detected (local MCP config) — https://docs.neus.network/mcp/setup'
+      'Auto-setup clients: claude, cursor, vscode — re-run with --client to limit scope'
     );
   }
   if ((command === 'init' || command === 'auth') && accessKey) {

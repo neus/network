@@ -1,0 +1,221 @@
+---
+title: Trust for your assistant
+description: "Give your AI assistant reusable trust receipts, scoped agent authority, and live verification context."
+icon: store
+---
+
+Your assistant should know **who is real**, **what an agent is allowed to do**, and **which trust receipts already exist** — without re-proving identity every session.
+
+**Endpoint:** `https://mcp.neus.network/mcp`
+
+Signed in on [neus.network](https://neus.network/profile?tab=account)? Use **Open in** for Cursor, Claude Code, or Codex.
+
+<Tabs sync={false}>
+  <Tab title="Quick start">
+
+```bash
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
+npx -y -p @neus/sdk neus doctor --live
+```
+
+Sign in once. Start each session with **`neus_context`**.
+
+Pick one client:
+
+```bash
+npx -y -p @neus/sdk neus setup --client cursor
+npx -y -p @neus/sdk neus setup --client vscode
+npx -y -p @neus/sdk neus setup --client claude
+```
+
+  </Tab>
+
+  <Tab title="Cursor">
+
+```bash
+npx -y -p @neus/sdk neus setup --client cursor
+npx -y -p @neus/sdk neus auth
+```
+
+Or add to `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "type": "http",
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
+}
+```
+
+  </Tab>
+
+  <Tab title="VS Code & Codex">
+
+```bash
+npx -y -p @neus/sdk neus setup --client vscode
+npx -y -p @neus/sdk neus auth
+```
+
+User config path:
+
+| OS | Path |
+| --- | --- |
+| macOS | `~/Library/Application Support/Code/User/mcp.json` |
+| Linux | `~/.config/Code/User/mcp.json` |
+| Windows | `%APPDATA%\Code\User\mcp.json` |
+
+Project scope: `./.vscode/mcp.json`
+
+  </Tab>
+
+  <Tab title="Claude Code">
+
+**MCP**
+
+```bash
+npx -y -p @neus/sdk neus setup --client claude
+npx -y -p @neus/sdk neus auth
+```
+
+**NEUS Trust plugin** — receipt reuse, agent authority, session workflow:
+
+```text
+/plugin marketplace add https://github.com/neus/network
+/plugin install neus-trust@neus
+```
+
+```text
+/neus-trust:neus-trust-workflow
+```
+
+  </Tab>
+</Tabs>
+
+## Other editors
+
+<AccordionGroup>
+  <Accordion title="Claude Desktop" icon="desktop">
+
+Add remote MCP URL **`https://mcp.neus.network/mcp`** in the app, or under `mcpServers` in `~/.claude.json`.
+
+  </Accordion>
+
+  <Accordion title="Windsurf" icon="wind">
+
+Add to `~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
+}
+```
+
+Restart Windsurf → Cascade → **MCPs**.
+
+  </Accordion>
+
+  <Accordion title="OpenClaw" icon="server">
+
+`~/.openclaw/agents/main/agent/runtime-mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "type": "http",
+      "url": "https://mcp.neus.network/mcp",
+      "headers": {
+        "Authorization": "Bearer ${NEUS_ACCESS_KEY}"
+      }
+    }
+  }
+}
+```
+
+Set `NEUS_ACCESS_KEY` from [Profile → Account](https://neus.network/profile?tab=account).
+
+Trust workflow skill:
+
+```bash
+cp -R plugins/neus-trust/skills/neus-trust-workflow ~/.openclaw/workspace/skills/
+```
+
+Clone [github.com/neus/network](https://github.com/neus/network) first.
+
+  </Accordion>
+
+  <Accordion title="Hermes" icon="bot">
+
+`~/.hermes/config.json`:
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "type": "http",
+      "url": "https://mcp.neus.network/mcp",
+      "headers": {
+        "Authorization": "Bearer <npk_...>"
+      }
+    }
+  }
+}
+```
+
+```bash
+cp -R plugins/neus-trust/skills/neus-trust-workflow ~/.hermes/skills/
+```
+
+  </Accordion>
+
+  <Accordion title="Gemini CLI" icon="sparkles">
+
+`~/.gemini/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "httpUrl": "https://mcp.neus.network/mcp"
+    }
+  }
+}
+```
+
+Or:
+
+```bash
+gemini mcp add --transport http neus https://mcp.neus.network/mcp
+```
+
+  </Accordion>
+
+  <Accordion title="ChatGPT" icon="message">
+
+Add remote MCP URL **`https://mcp.neus.network/mcp`** in ChatGPT or OpenAI client settings.
+
+  </Accordion>
+</AccordionGroup>
+
+## Servers & CI
+
+```bash
+npx -y -p @neus/sdk neus setup --access-key <npk_...>
+```
+
+Keys: [Profile → Account](https://neus.network/profile?tab=account). Never paste keys into chat.
+
+## Upgrading from `neus-mcp`
+
+```text
+/plugin uninstall neus-mcp@neus
+/plugin install neus-trust@neus
+```

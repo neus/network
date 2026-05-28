@@ -10,7 +10,7 @@ icon: map
 | ----- | ------ |
 | **Smart contracts** | Core protocol contracts (`NEUSVerifierRegistry`, `NEUSVoucherHub`, cross-chain spokes) deployed and verified on testnet — [deployments & explorers](https://github.com/neus/network/blob/main/contracts/VERIFICATION.md) |
 | **Verification** | Hosted Verify, Proof API, verifier catalog, gate checks, and reusable receipt reads — [How verification works](../verification/how-it-works) |
-| **Contract audit** | Third-party security audit of core smart contracts **completed** |
+| **Contract audit** | No public audit report is linked yet; use the verified testnet deployments as the current public contract evidence |
 | **Hosted product** | Profiles, Hub, SDK, widgets, MCP, OAuth onboarding, and agent trust paths shipped (details below) |
 
 ## Shipped
@@ -23,7 +23,7 @@ icon: map
 | **SDK, CLI & widgets** | `@neus/sdk`, `VerifyGate`, `neus import` / `neus export`, and server-side helpers — [SDK overview](../sdks/overview) |
 | **Builder onboarding** | [Get started](../get-started), [Quickstart](../quickstart), [Integration loop](../integration), and [MCP setup](../mcp/setup) |
 | **Hosted MCP** | Twelve public tools at `https://mcp.neus.network/mcp` — [MCP overview](../mcp/overview) |
-| **MCP discovery** | `@neus/mcp-server` on npm, OAuth server-card metadata, and [Claude Code marketplace](../mcp/claude-code-marketplace) plugin |
+| **MCP discovery** | `@neus/mcp-server` on npm and [Trust for your assistant](../mcp/ide-plugin) — connect NEUS in every major editor and agent runtime |
 | **OAuth MCP onboarding** | `neus setup` → `neus auth` → `neus doctor --live` |
 | **Agent trust** | Agent identity, delegation, agent cards, and portable import — [Agents](../agents/overview) |
 | **Public verifiers** | Catalog includes checks such as [proof-of-human](../verifiers/proof-of-human) and [wallet-risk](../verifiers/wallet-risk) |
@@ -36,11 +36,11 @@ Recent release notes: [CHANGELOG](https://github.com/neus/network/blob/main/CHAN
 | Milestone | Target direction |
 | --------- | ---------------- |
 | **Mainnet anchoring** | Permanent on-chain receipt anchoring for issued proofs (hosted receipts and testnet contracts work today without waiting for this) |
-| **Audit report publication** | Public summary of the completed contract audit, linked here when released |
+| **Audit report publication** | Public audit summary linked here when a report is published |
 | **Platform security reviews** | Additional third-party review of hosted API, MCP, and operational surfaces |
 | **MCP directory listings** | Broader registry and installer directory coverage beyond npm and the NEUS marketplace plugin |
 | **Verifier expansion** | Additional industry-specific and partner-submitted checks in the public catalog |
-| **Enterprise pilots** | SLAs, custom verifiers, and deeper partner integrations |
+| **Enterprise pilots** | Partner pilots, custom verifier discussions, and deeper integrations |
 
 Timelines shift as gates are met. Breaking API changes use semver major bumps; additive changes ship in minors and patches.
 
