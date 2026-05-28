@@ -122,7 +122,7 @@ Hosted MCP URL: **`https://mcp.neus.network/mcp`**
 
 ## Capability snapshot
 
-The live verifier catalog is documented at [docs.neus.network/verification/verifiers](https://docs.neus.network/verification/verifiers). Verifier lists and schemas are also available in [`spec/`](./spec/VERIFIERS.json).
+The live verifier catalog is documented at [docs.neus.network/verification/verifiers](https://docs.neus.network/verification/verifiers). JSON Schemas live in [`docs/verifiers/schemas/`](./docs/verifiers/schemas/); the machine index is [`spec/VERIFIERS.json`](./spec/VERIFIERS.json).
 
 | Capability             | Verifiers                                                                                                |
 | ---------------------- | -------------------------------------------------------------------------------------------------------- |

@@ -152,38 +152,3 @@ export class AuthenticationError extends SDKError {
     };
   }
 }
-
-export function createErrorFromGeneric(error, context = {}) {
-  if (error instanceof SDKError) {
-    return error;
-  }
-
-  if (NetworkError.isNetworkError(error)) {
-    return new NetworkError(
-      error.message || 'Network error occurred',
-      error.code || 'NETWORK_ERROR',
-      error
-    );
-  }
-
-  if (error.name === 'AbortError' || error.message.includes('timeout')) {
-    return new NetworkError('Request timeout', 'TIMEOUT', error);
-  }
-
-  return new SDKError(
-    error.message || 'Unknown error occurred',
-    error.code || 'UNKNOWN_ERROR',
-    { originalError: error, context }
-  );
-}
-
-export default {
-  SDKError,
-  ApiError,
-  ValidationError,
-  NetworkError,
-  ConfigurationError,
-  VerificationError,
-  AuthenticationError,
-  createErrorFromGeneric
-};

@@ -1,9 +1,8 @@
-# Verifier schemas
+# Verifier JSON Schemas
 
-JSON Schemas in **`schemas/`** describe the `data` object for each public verifier. Two schema sets exist:
+Integrator-facing request shapes for the public verifier catalog. The live catalog and user-facing docs live under **[Verification](../verification/verifiers)** in Mintlify.
 
-- **`spec/verifiers/schemas/`** — Integrator-facing: the fields your app or API call must supply. Hosted verifiers require only the `provider` field.
-- **`docs/verifiers/schemas/`** — Complete schemas: includes fields like `internalSocialToken` that the hosted OAuth flow populates automatically. Do not supply these fields in API calls.
+- **`schemas/`** — JSON Schema per verifier (`ownership-basic.json`, `agent-delegation.json`, …). Hosted OAuth verifiers include fields the hosted flow fills automatically; supply only the documented request fields from each **Verification** page.
+- **`../spec/VERIFIERS.json`** — Machine-readable catalog index (`inputSchemaPath` points here under `docs/verifiers/schemas/`).
 
-- [Verifier catalog](https://docs.neus.network/verification/verifiers) (overview and usage)
-- Each **`*.md`** file in this folder lists fields, hosted-flow inputs where applicable, and an illustrative example payload.
+Do not maintain parallel schema trees elsewhere in this repo.

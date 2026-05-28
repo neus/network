@@ -51,23 +51,3 @@ export function combineGates(...gates) {
 
   return combined;
 }
-
-export default {
-  HOUR,
-  DAY,
-  WEEK,
-  MONTH,
-  YEAR,
-  GATE_NFT_HOLDER,
-  GATE_TOKEN_HOLDER,
-  GATE_CONTRACT_ADMIN,
-  GATE_DOMAIN_OWNER,
-  GATE_LINKED_WALLETS,
-  GATE_AGENT_IDENTITY,
-  GATE_AGENT_DELEGATION,
-  GATE_CONTENT_MODERATION,
-  GATE_WALLET_RISK,
-  GATE_PSEUDONYM,
-  createGate,
-  combineGates
-};

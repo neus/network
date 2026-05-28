@@ -55,7 +55,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 ## `verifierData` and live checks
 
 - Replace **placeholder** contract addresses, amounts, and domains in `src/claims.js` with values your test **signer**, DNS, or org can satisfy, or the issue step will not succeed.
-- Shapes for each verifier are the JSON Schemas under `spec/verifiers/schemas/`.
+- Shapes for each verifier are the JSON Schemas under `docs/verifiers/schemas/`.
 
 ## What to store
 
