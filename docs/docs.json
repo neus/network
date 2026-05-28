@@ -18,19 +18,22 @@
     "strict": true
   },
   "background": {
-    "decoration": "gradient",
     "color": {
       "dark": "#101113"
     }
   },
   "styling": {
     "custom": "styles.css",
-    "eyebrows": "breadcrumbs"
+    "eyebrows": "breadcrumbs",
+    "codeblocks": "dark"
+  },
+  "metadata": {
+    "timestamp": true
   },
   "fonts": {
     "body": {
       "family": "Inter",
-      "weight": 400
+      "weight": 450
     },
     "heading": {
       "family": "Inter",
@@ -68,7 +71,7 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Open App",
+      "label": "Open Hub",
       "href": "https://neus.network/hub"
     }
   },
@@ -604,16 +607,8 @@
     }
   ],
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
-    ]
+    "display": "toc",
+    "options": ["view", "mcp", "cursor", "vscode"]
   },
   "footer": {
     "socials": {
