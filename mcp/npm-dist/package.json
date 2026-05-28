@@ -1,6 +1,6 @@
 {
   "name": "@neus/mcp-server",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Public discovery metadata for the hosted NEUS MCP (streamable HTTP). Runtime is not shipped in this package.",
   "type": "module",
   "main": "./index.mjs",

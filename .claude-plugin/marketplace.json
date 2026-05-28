@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "neus",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Trust infrastructure for AI builders. Identity, authority, and reusable receipts in every editor.",
   "owner": {
     "name": "NEUS",
@@ -16,7 +16,7 @@
       "homepage": "https://docs.neus.network/mcp/ide-plugin",
       "repository": "https://github.com/neus/network",
       "license": "Apache-2.0",
-      "version": "1.1.0",
+      "version": "1.1.1",
       "author": {
         "name": "NEUS",
         "url": "https://neus.network"

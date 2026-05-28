@@ -3,7 +3,7 @@
   "name": "io.github.neus/neus-mcp",
   "title": "NEUS MCP",
   "description": "Identity and authority for AI assistants. Trust receipts over MCP. docs.neus.network/mcp/ide-plugin",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "repository": {
     "url": "https://github.com/neus/network",
     "source": "github"

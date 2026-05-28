@@ -6,9 +6,38 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-05-28
+
+### Highlights
+
+- **MCP discovery + runtime alignment** — `neus_context` returns signed-in profile context; discovery metadata and docs match live hosted MCP behavior.
+- **NEUS for AI assistants** — install hub, plugin, and docs use one OAuth-first messaging stack across Cursor, VS Code/Codex, and Claude Code.
+
 ### Changed
 
-- **NEUS Trust plugin & docs** — [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin) install hub (Cursor, VS Code/Codex, Claude Code; manual paths for other MCP hosts). Plugin version tracks **`@neus/sdk@1.1.0`** / **`@neus/mcp-server@1.1.0`**.
+- **`@neus/mcp-server` `server.json`** — updated tool descriptions, session bootstrap prompt, and ide-plugin discovery URL (requires npm republish; runtime ships with protocol deploy).
+- **`neus setup` / CLI** — VS Code/Codex MCP config paths on macOS and Linux; setup hints point to [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin).
+- **NEUS Trust plugin (v1.1.1)** — marketplace version tracks **`@neus/sdk@1.1.1`** / **`@neus/mcp-server@1.1.1`**.
+- Docs, plugin skill, and public README aligned to trust-infrastructure positioning and streamlined MCP startup (`neus_context` once; `neus_me` for refresh or public lookup only).
+
+### Fixed
+
+- npm discovery metadata drift vs git and live MCP after the 1.1.0 publish window.
+
+### Upgrade
+
+```bash
+npx -y -p @neus/sdk@1.1.1 neus setup
+npx -y -p @neus/sdk@1.1.1 neus auth
+npx -y -p @neus/sdk@1.1.1 neus doctor --live
+```
+
+### Links
+
+- [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin)
+- [MCP setup](https://docs.neus.network/mcp/setup)
+- [npm: @neus/sdk](https://www.npmjs.com/package/@neus/sdk)
+- [npm: @neus/mcp-server](https://www.npmjs.com/package/@neus/mcp-server)
 
 ## [1.1.0] - 2026-05-26
 
@@ -63,6 +92,7 @@ If you already use a Profile access key for automation, keep `neus setup --acces
 
 - `@neus/sdk` with hosted MCP CLI (`neus setup`, `neus auth`, import/export) and OAuth browser flow.
 
-[Unreleased]: https://github.com/neus/network/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/neus/network/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/neus/network/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/neus/network/compare/v1.0.12...v1.1.0
 [1.0.12]: https://github.com/neus/network/releases/tag/v1.0.12
