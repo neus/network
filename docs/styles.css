@@ -1,7 +1,7 @@
-/* NEUS Mintlify skin — uses shared brand tokens, then doc-specific translucency. */
+/* NEUS Mintlify skin — tokens + page wash from examples/shared/css/neus-tokens.css (mirrors neus/app/globals.css). */
 @import url('../examples/shared/css/neus-tokens.css');
 
-/* Mintlify: structural layers stay transparent; cards keep slight translucency over the gradient. */
+/* Doc-only translucent surfaces (cards/rails over the marketing page wash). */
 :root {
   --neus-bg-rail: rgb(18 20 24 / 0.42);
   --neus-bg-card: rgb(var(--neus-rgb-surface-card) / 0.68);
@@ -18,10 +18,11 @@
 }
 
 /*
-  Page wash (SSOT: neus/app/globals.css --neus-page-bg).
-  Mintlify paints via #background-color; html is fallback. Shells stay transparent.
+  Page wash — same composite as marketing (html only; shells stay transparent).
+  docs.json background.color.dark is the grad base (#101113), not a second paint layer.
 */
-html {
+html,
+#background-color {
   background-color: var(--neus-page-grad-base) !important;
   background-image: var(--neus-page-bg) !important;
   background-repeat: no-repeat !important;
@@ -30,13 +31,11 @@ html {
   background-attachment: fixed !important;
 }
 
-#background-color {
-  background-color: var(--neus-page-grad-base) !important;
-  background-image: var(--neus-page-bg) !important;
-  background-repeat: no-repeat !important;
-  background-size: 100% 100dvh !important;
-  background-position: center top !important;
-  background-attachment: fixed !important;
+#background-color::before,
+#background-color::after {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
 body {
@@ -53,42 +52,42 @@ body {
 }
 
 /*
-  Enable text selection everywhere.
-  Mintlify ships -webkit-user-select: none in its base styles, so we must
-  override the prefixed form explicitly or WebKit-based browsers remain locked.
+  Text selection — scoped to readable content only (do not fight nav/sidebar chrome).
+  Mintlify sets -webkit-user-select: none globally; beat it inside MDX/prose only.
 */
-*,
-*::before,
-*::after {
+#body-content,
+#content-area,
+#content,
+.mdx-content,
+.mdx-content p,
+.mdx-content li,
+.mdx-content td,
+.mdx-content th,
+.mdx-content blockquote,
+.mdx-content figcaption,
+.mdx-content h1,
+.mdx-content h2,
+.mdx-content h3,
+.mdx-content h4,
+.mdx-content h5,
+.mdx-content h6,
+.mdx-content pre,
+.mdx-content pre code,
+.mdx-content :not(pre) > code,
+.mdx-content .select-none {
   -webkit-user-select: text !important;
   -moz-user-select: text !important;
   -ms-user-select: text !important;
   user-select: text !important;
 }
 
-/* Prose/content: beat Mintlify .select-none and drag guards inside readable areas. */
-#content-area,
-#content-area *,
-#body-content,
-#body-content *,
-.mdx-content,
-.mdx-content *:not(button):not([role="button"]) {
-  -webkit-user-select: text !important;
-  user-select: text !important;
-}
-
-.mdx-content .select-none:not(button):not([role="button"]) {
-  -webkit-user-select: text !important;
-  user-select: text !important;
-}
-
-/* Disable selection only for true interactive controls. */
 button,
 [role="button"],
 [type="button"],
 [type="submit"],
 [type="reset"],
-#page-context-menu-button {
+#page-context-menu-button,
+#search-input {
   -webkit-user-select: none !important;
   -moz-user-select: none !important;
   -ms-user-select: none !important;
@@ -96,40 +95,43 @@ button,
 }
 
 /*
-  Readability + contrast (Mintlify dark prose defaults to gray-400 ≈ 4.2:1 on our canvas).
-  Align prose with NEUS app tokens for AA-friendly body copy on #101113.
+  Typography — strict dark only; do not rely on Tailwind .dark (Mintlify may omit it).
+  Body copy uses primary token (marketing default), not Mintlify gray-400.
 */
-.dark .mdx-content,
-.dark .mdx-content p,
-.dark .mdx-content li,
-.dark .mdx-content td,
-.dark .mdx-content blockquote,
-.dark .mdx-content figcaption,
-.dark #content-area {
-  color: var(--neus-text-secondary) !important;
-}
-
-.dark .mdx-content h1,
-.dark .mdx-content h2,
-.dark .mdx-content h3,
-.dark .mdx-content h4,
-.dark .mdx-content h5,
-.dark .mdx-content h6,
-.dark .mdx-content th,
-.dark .mdx-content strong,
-.dark .mdx-content b {
+.mdx-content,
+.mdx-content p,
+.mdx-content li,
+.mdx-content td,
+.mdx-content blockquote,
+.mdx-content figcaption,
+#content-area,
+#content {
   color: var(--neus-text-primary) !important;
 }
 
-.dark .mdx-content a:not([class*="button"]) {
+.mdx-content h1,
+.mdx-content h2,
+.mdx-content h3,
+.mdx-content h4,
+.mdx-content h5,
+.mdx-content h6,
+.mdx-content th,
+.mdx-content strong,
+.mdx-content b,
+#page-title,
+#page-title * {
+  color: var(--neus-text-primary) !important;
+}
+
+.mdx-content a:not([class*="button"]) {
   color: var(--neus-accent) !important;
 }
 
-.dark .mdx-content a:not([class*="button"]):hover {
+.mdx-content a:not([class*="button"]):hover {
   color: var(--neus-accent-dim) !important;
 }
 
-.dark .mdx-content code:not(pre code) {
+.mdx-content code:not(pre code) {
   color: var(--neus-text-primary) !important;
   background: rgb(var(--neus-rgb-surface-card) / 0.72) !important;
   border: 1px solid var(--neus-border-faint);
@@ -137,33 +139,33 @@ button,
   padding: 0.1rem 0.35rem;
 }
 
-.dark .mdx-content table th,
-.dark .mdx-content table td {
+.mdx-content table th,
+.mdx-content table td {
   border-color: var(--neus-border-subtle) !important;
 }
 
-.dark .mdx-content hr,
-.dark .mdx-content table,
-.dark .mdx-content thead,
-.dark .mdx-content tbody tr {
+.mdx-content hr,
+.mdx-content table,
+.mdx-content thead,
+.mdx-content tbody tr {
   border-color: var(--neus-border-subtle) !important;
 }
 
-.dark .mdx-content li::marker {
+.mdx-content li::marker {
   color: var(--neus-text-muted) !important;
 }
 
-.dark .mdx-content p,
-.dark .mdx-content li,
-.dark .mdx-content td {
+.mdx-content p,
+.mdx-content li,
+.mdx-content td {
   line-height: 1.75 !important;
 }
 
-.dark .mdx-content tbody tr:nth-child(even) {
+.mdx-content tbody tr:nth-child(even) {
   background: rgb(var(--neus-rgb-surface-card) / 0.4) !important;
 }
 
-.dark .mdx-content a:not([class*="button"]):focus-visible {
+.mdx-content a:not([class*="button"]):focus-visible {
   border-radius: 0.25rem;
   outline: 2px solid rgb(var(--neus-rgb-accent-primary) / 0.55) !important;
   outline-offset: 2px;
@@ -187,13 +189,12 @@ button,
   color: var(--neus-text-primary) !important;
 }
 
-/* Contextual menu lives in TOC — keep any legacy header copy control from crowding the title. */
 #page-title ~ div [id="page-context-menu-button"],
 #page-title [id="page-context-menu-button"] {
   display: none !important;
 }
 
-/* Structural elements: fully transparent so the html page wash shows through */
+/* Shell chrome: transparent so the html page wash shows through (never flatten #background-color). */
 #header,
 #header-content,
 #navbar,
@@ -206,9 +207,7 @@ button,
 #table-of-contents,
 #table-of-contents-content,
 #table-of-contents-content .toc,
-#table-of-contents-content .toc > div,
-#background-color::before,
-#background-color::after {
+#table-of-contents-content .toc > div {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
@@ -231,7 +230,6 @@ button,
   border-right: none;
 }
 
-/* Tab bar: transparent */
 .nav-tabs {
   background: transparent !important;
 }
@@ -269,7 +267,6 @@ button,
   background: transparent;
 }
 
-/* Keep the page header clean: navigation/cards own iconography, not the title row. */
 #page-title svg,
 #page-title img,
 #page-title [class*="icon"],
@@ -292,6 +289,7 @@ button,
   background: rgb(12 14 18 / 0.72);
   border: 1px solid var(--neus-border-faint);
   box-shadow: inset 0 1px 0 rgb(90 90 90 / 0.08);
+  color: var(--neus-text-primary) !important;
 }
 
 #search-input:focus {
@@ -301,7 +299,6 @@ button,
     inset 0 1px 0 rgba(90, 90, 90, 0.08);
 }
 
-/* Primary CTA: brand color fill only, no wrapper backgrounds */
 #topbar-cta-button,
 a#topbar-cta-button,
 [data-testid="navbar-primary-button"],
@@ -333,6 +330,7 @@ a#topbar-cta-button,
   white-space: nowrap !important;
   width: auto !important;
 }
+
 #topbar-cta-button:hover,
 a#topbar-cta-button:hover,
 [data-testid="navbar-primary-button"]:hover,
@@ -348,7 +346,7 @@ a#topbar-cta-button:hover,
   transform: none !important;
   box-shadow: none !important;
 }
-/* Kill any parent wrapper backgrounds */
+
 #topbar-cta-button-wrapper,
 .navbar-primary-wrapper,
 .navbar-button-wrapper,
@@ -375,6 +373,7 @@ a#topbar-cta-button:hover,
   margin: 0 !important;
   padding: 0 !important;
 }
+
 #topbar-cta-button::before,
 #topbar-cta-button::after,
 a#topbar-cta-button::before,
@@ -398,6 +397,7 @@ a#topbar-cta-button::after,
   border: none !important;
   box-shadow: none !important;
 }
+
 #topbar-cta-button *,
 a#topbar-cta-button *,
 [data-testid="navbar-primary-button"] *,
@@ -414,6 +414,7 @@ a#topbar-cta-button *,
   box-shadow: none !important;
   color: inherit !important;
 }
+
 #topbar-cta-button:focus-visible,
 a#topbar-cta-button:focus-visible,
 [data-testid="navbar-primary-button"]:focus-visible,
@@ -439,7 +440,6 @@ a#topbar-cta-button:focus-visible,
   box-shadow: var(--neus-shadow-card-hover);
 }
 
-/* Fill conceptual gaps when a two-column card row ends with one item. */
 .card-group.cols-2 > div:only-child,
 .card-group[data-cols="2"] > div:only-child,
 .card-group.grid-cols-2 > div:only-child {
@@ -452,7 +452,7 @@ a#topbar-cta-button:focus-visible,
 }
 
 html {
-  scrollbar-color: rgb(90 90 90 / 0.35) transparent;
+  scrollbar-color: rgba(152, 192, 239, 0.16) transparent;
   scrollbar-width: thin;
 }
 
@@ -466,12 +466,20 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(90 90 90 / 0.32);
+  background: linear-gradient(
+    180deg,
+    rgba(152, 192, 239, 0.18) 0%,
+    rgba(152, 192, 239, 0.1) 100%
+  );
   border-radius: 999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(90 90 90 / 0.48);
+  background: linear-gradient(
+    180deg,
+    rgba(152, 192, 239, 0.28) 0%,
+    rgba(152, 192, 239, 0.16) 100%
+  );
 }
 
 @media (max-width: 1023px) {
@@ -480,14 +488,12 @@ html {
   }
 }
 
-/* Overview / How verification works — diagram fills the frame */
 img.neus-how-it-works-diagram {
   width: 100%;
   height: auto;
   display: block;
 }
 
-/* Branded SVG flow diagrams (platform / agents) — glass panel matches handout + Mintlify skin */
 img.neus-docs-flow-diagram {
   width: 100%;
   height: auto;

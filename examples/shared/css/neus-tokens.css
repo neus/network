@@ -34,12 +34,12 @@
   --neus-bg-elevated: rgb(var(--neus-rgb-surface-popover) / 1);
   --neus-bg-glass: rgb(var(--neus-rgb-surface-rail) / 0.72);
 
-  /* Text (aligned with neus app) */
+  /* Text — keep in sync with neus/app/globals.css */
   --neus-text-primary: rgba(255, 255, 255, 0.93);
   --neus-text-secondary: rgba(255, 255, 255, 0.84);
   --neus-text-muted: rgba(255, 255, 255, 0.68);
   --neus-text-dimmed: rgba(255, 255, 255, 0.62);
-  --neus-text-subtle: rgba(255, 255, 255, 0.62);
+  --neus-text-subtle: var(--neus-text-dimmed);
 
   /* Accent & semantic */
   --neus-accent: rgb(var(--neus-rgb-accent-primary) / 1);
