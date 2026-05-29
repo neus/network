@@ -13,13 +13,25 @@ function buildHostedCheckoutUrl({
   origin,
   oauthProvider,
   campaignTitle,
-  campaignMessage
+  campaignMessage,
+  appId,
+  billingWallet,
+  gateId
 }) {
   const checkoutUrl = new URL(hostedCheckoutUrl);
   checkoutUrl.searchParams.set("verifiers", verifierList.join(","));
   checkoutUrl.searchParams.set("mode", "popup");
   checkoutUrl.searchParams.set("returnUrl", returnUrl);
   checkoutUrl.searchParams.set("origin", origin);
+  if (typeof appId === "string" && appId.trim()) {
+    checkoutUrl.searchParams.set("appId", appId.trim());
+  }
+  if (typeof billingWallet === "string" && billingWallet.trim()) {
+    checkoutUrl.searchParams.set("billingWallet", billingWallet.trim().toLowerCase());
+  }
+  if (typeof gateId === "string" && gateId.trim()) {
+    checkoutUrl.searchParams.set("gateId", gateId.trim());
+  }
   if (typeof oauthProvider === "string" && oauthProvider.trim()) {
     checkoutUrl.searchParams.set("oauthProvider", oauthProvider.trim());
   }
@@ -186,6 +198,7 @@ function VerifyGate({
   onVerified = void 0,
   apiUrl = void 0,
   appId = void 0,
+  billingWallet = void 0,
   paymentSignature = void 0,
   extraHeaders = void 0,
   hostedCheckoutUrl = void 0,
@@ -220,8 +233,8 @@ function VerifyGate({
   const [existingProofs, setExistingProofs] = useState(null);
   const [operation, setOperation] = useState("verify");
   const client = useMemo(
-    () => new NeusClient({ apiUrl, appId, paymentSignature, extraHeaders }),
-    [apiUrl, appId, paymentSignature, extraHeaders]
+    () => new NeusClient({ apiUrl, appId, billingWallet, paymentSignature, extraHeaders }),
+    [apiUrl, appId, billingWallet, paymentSignature, extraHeaders]
   );
   const verifierList = useMemo(() => {
     return Array.isArray(requiredVerifiers) && requiredVerifiers.length > 0 ? requiredVerifiers : ["ownership-basic"];
@@ -397,7 +410,9 @@ function VerifyGate({
       origin,
       oauthProvider,
       campaignTitle,
-      campaignMessage
+      campaignMessage,
+      appId,
+      billingWallet
     });
     let expectedOrigin = null;
     try {
@@ -451,7 +466,7 @@ function VerifyGate({
       };
       window.addEventListener("message", onMessage);
     });
-  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider, campaignTitle, campaignMessage]);
+  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider, campaignTitle, campaignMessage, appId, billingWallet]);
   useEffect(() => {
     onStateChange?.(state);
   }, [state, onStateChange]);
