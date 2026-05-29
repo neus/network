@@ -227,7 +227,7 @@ export const claims = [
     verifierData: {
       agentId: 'research-agent',
       agentWallet: '0x0000000000000000000000000000000000000000',
-      agentChainRef: 'eip155:8453',
+      agentChainRef: 'eip155:84532',
       agentType: 'ai',
       agentLabel: 'Example agent'
     }
@@ -248,9 +248,9 @@ export const claims = [
     verifierId: 'agent-delegation',
     verifierData: {
       controllerWallet: '0x0000000000000000000000000000000000000000',
-      controllerChainRef: 'eip155:8453',
+      controllerChainRef: 'eip155:84532',
       agentWallet: '0x0000000000000000000000000000000000000000',
-      agentChainRef: 'eip155:8453',
+      agentChainRef: 'eip155:84532',
       scope: 'showcase:claim',
       permissions: ['read', 'execute'],
       maxSpend: '0',

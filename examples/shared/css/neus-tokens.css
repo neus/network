@@ -93,4 +93,50 @@
   --neus-radius-md: 0.5rem;
   --neus-radius-lg: 0.75rem;
   --neus-radius-xl: 1rem;
+
+  /*
+   * Marketing page wash — mirrored from neus/app/globals.css (--neus-page-bg).
+   * Docs paint this on html only; body and Mintlify shells stay transparent.
+   */
+  --neus-page-bg:
+    radial-gradient(
+      ellipse 125% 90% at 0% -18%,
+      rgb(var(--neus-rgb-accent-primary) / 0.115) 0%,
+      rgb(var(--neus-rgb-accent-primary) / 0.034) 34%,
+      rgb(var(--neus-rgb-surface-canvas) / 1) 74%
+    ),
+    radial-gradient(
+      ellipse 125% 90% at 100% -18%,
+      rgb(var(--neus-rgb-accent-primary) / 0.115) 0%,
+      rgb(var(--neus-rgb-accent-primary) / 0.034) 34%,
+      rgb(var(--neus-rgb-surface-canvas) / 1) 74%
+    ),
+    radial-gradient(
+      125% 125% at 50% 10%,
+      rgb(var(--neus-rgb-surface-canvas) / 1) 40%,
+      rgb(var(--neus-rgb-accent-primary-dark) / 0.32) 100%
+    ),
+    radial-gradient(
+      ellipse 125% 90% at 0% 118%,
+      rgb(var(--neus-rgb-accent-primary) / 0.098) 0%,
+      rgb(var(--neus-rgb-accent-primary) / 0.028) 34%,
+      rgb(var(--neus-rgb-surface-canvas) / 1) 74%
+    ),
+    radial-gradient(
+      ellipse 125% 90% at 100% 118%,
+      rgb(var(--neus-rgb-accent-primary) / 0.098) 0%,
+      rgb(var(--neus-rgb-accent-primary) / 0.028) 34%,
+      rgb(var(--neus-rgb-surface-canvas) / 1) 74%
+    ),
+    radial-gradient(
+      125% 125% at 50% 90%,
+      rgb(var(--neus-rgb-surface-canvas) / 1) 40%,
+      rgb(var(--neus-rgb-accent-primary-dark) / 0.32) 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(var(--neus-rgb-surface-canvas) / 1) 0%,
+      rgb(var(--neus-rgb-surface-canvas) / 1) 100%
+    );
+  --neus-page-grad-base: rgb(var(--neus-rgb-surface-canvas) / 1);
 }

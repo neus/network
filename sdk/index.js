@@ -55,6 +55,8 @@ export {
   combineGates
 } from './gates.js';
 
+export { fetchSponsorGrant } from './sponsor.js';
+
 export {
   SDKError,
   ApiError,

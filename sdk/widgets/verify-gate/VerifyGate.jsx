@@ -163,6 +163,7 @@ export function VerifyGate({
   onVerified = undefined,
   apiUrl = undefined,
   appId = undefined,
+  billingWallet = undefined,
   paymentSignature = undefined,
   extraHeaders = undefined,
   hostedCheckoutUrl = undefined,
@@ -198,8 +199,8 @@ export function VerifyGate({
   const [operation, setOperation] = useState('verify');
 
   const client = useMemo(
-    () => new NeusClient({ apiUrl, appId, paymentSignature, extraHeaders }),
-    [apiUrl, appId, paymentSignature, extraHeaders]
+    () => new NeusClient({ apiUrl, appId, billingWallet, paymentSignature, extraHeaders }),
+    [apiUrl, appId, billingWallet, paymentSignature, extraHeaders]
   );
 
   const verifierList = useMemo(() => {
@@ -412,7 +413,9 @@ export function VerifyGate({
       origin,
       oauthProvider,
       campaignTitle,
-      campaignMessage
+      campaignMessage,
+      appId,
+      billingWallet
     });
 
     let expectedOrigin = null;
@@ -478,7 +481,7 @@ export function VerifyGate({
 
       window.addEventListener('message', onMessage);
     });
-  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider, campaignTitle, campaignMessage]);
+  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider, campaignTitle, campaignMessage, appId, billingWallet]);
 
   useEffect(() => {
     onStateChange?.(state);

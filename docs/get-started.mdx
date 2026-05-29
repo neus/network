@@ -17,16 +17,20 @@ Pick the lane that matches what you are shipping.
 ## App verification
 
 1. Sign in at [neus.network/hub](https://neus.network/hub).
-2. Create an app and copy your `appId`.
-3. Add `VerifyGate`, a hosted verify URL, or a server-side receipt call.
-4. Save the receipt ID and check it before trusted actions.
+2. **Apps** → **Register app** — copy your app ID and billing wallet address.
+3. Add **VerifyGate** or a hosted verify link with both values.
+4. Save the receipt ID and run **`gateCheck`** on your server before trusted actions.
+
+Users complete checks on NEUS. They do not need NEUS accounts or API keys.
 
 ## Agent trust
 
-1. **Optional import:** `npx -y -p @neus/sdk neus import` packages supported local setup from Cursor, Claude Code, Claude Desktop, or OpenClaw.
-2. **Register identity:** [`agent-identity`](./agents/agent-identity) for the agent wallet.
-3. **Delegate authority:** [`agent-delegation`](./agents/agent-delegation) when a controller defines what the agent may do.
-4. **Link and reuse:** `neus_agent_link` before actions to reuse existing receipts ([flow](./agents/agent-verification-flow)).
+1. `npx -y -p @neus/sdk neus import` (optional)
+2. **`neus_context`** → **`neus_agent_link`**
+3. **`neus_agent_create`** when proofs are missing — finish on NEUS
+4. **`neus_agent_link`** until **`linked: true`**
+
+Details: [Agent identity](./agents/agent-identity) · [Agent delegation](./agents/agent-delegation)
 
 ## Assistant setup
 

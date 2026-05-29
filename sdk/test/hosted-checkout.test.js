@@ -18,6 +18,20 @@ describe('hosted checkout handoff URLs', () => {
     expect(popup.searchParams.get('returnUrl')).toBe('https://app.example/demo?claim=fair-airdrop');
     expect(popup.searchParams.get('origin')).toBe('https://app.example');
 
+    const withBilling = buildHostedCheckoutUrl({
+      hostedCheckoutUrl: 'https://neus.network/verify',
+      verifierList: ['ownership-basic'],
+      returnUrl: 'https://app.example/callback',
+      origin: 'https://app.example',
+      appId: 'my-app',
+      billingWallet: '0xAbCdEf0123456789012345678901234567890AbCd'
+    });
+    const billingUrl = new URL(withBilling);
+    expect(billingUrl.searchParams.get('appId')).toBe('my-app');
+    expect(billingUrl.searchParams.get('billingWallet')).toBe(
+      '0xabcdef0123456789012345678901234567890abcd'
+    );
+
     const redirect = new URL(buildHostedCheckoutRedirectUrl(popupUrl));
     expect(redirect.searchParams.get('mode')).toBeNull();
     expect(redirect.searchParams.get('returnUrl')).toBe('https://app.example/demo?claim=fair-airdrop');

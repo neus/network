@@ -24,7 +24,8 @@ Responses use `code`, `message`, `type`. Fix the request, retry with backoff, or
 
 | Code | Meaning | What to do |
 |------|------|-------------|
-| `INVALID_SIGNATURE` | Signature verification failed | Rebuild the signing flow and retry |
+| `SIGNATURE_VERIFICATION_FAILED` | Verification request signature failed | Re-standardize, sign the returned string, and retry |
+| `INVALID_SIGNATURE` | Signature format or context is invalid | Rebuild the signing flow and retry |
 | `EXPIRED_SIGNATURE` | Signature timestamp is too old | Generate a fresh request and sign again |
 | `INVALID_WALLET` | Wallet address format is invalid | Fix the request before retrying |
 | `VERIFIER_NOT_FOUND` | Requested verifier does not exist | Read the live verifier catalog and correct the request |
@@ -49,13 +50,27 @@ Responses use `code`, `message`, `type`. Fix the request, retry with backoff, or
 ## Handling Errors
 
 ```javascript
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient({
+  appId: process.env.NEUS_APP_ID,
+  apiKey: process.env.NEUS_ACCESS_KEY,
+});
+const subjectAddress = '0x...';
+
 try {
-  const result = await client.verify({ ... });
+  const result = await client.gateCheck({
+    address: subjectAddress,
+    verifierIds: ['ownership-basic'],
+  });
+  if (!result.data?.eligible) {
+    throw new Error('Required receipt not found');
+  }
 } catch (error) {
-  if (error.code === 'VERIFICATION_FAILED') {
-    // The check did not pass
-  } else if (error.code === 'RATE_LIMITED') {
+  if (error.code === 'RATE_LIMITED') {
     // Back off and retry later
+  } else if (error.code === 'SIGNATURE_VERIFICATION_FAILED') {
+    // Re-standardize and sign the current request
   }
   console.error(error.message);
 }

@@ -25,11 +25,11 @@ describe('NeusClient', () => {
 
     it('should accept custom config', () => {
       const customClient = new NeusClient({
-        apiUrl: 'http://localhost:3000',
+        apiUrl: 'https://dev.api.neus.network',
         timeout: 5000,
         enableLogging: true
       });
-      expect(customClient.baseUrl).toBe('http://localhost:3000');
+      expect(customClient.baseUrl).toBe('https://dev.api.neus.network');
       expect(customClient.config.timeout).toBe(5000);
       expect(customClient.config.enableLogging).toBe(true);
     });
@@ -434,6 +434,47 @@ describe('NeusClient', () => {
       expect(calledUrl).toContain('/api/v1/proofs/check?');
       expect(calledUrl).toContain(encodeURIComponent(addr));
       expect(calledUrl).toContain('verifierIds=');
+    });
+
+    it('attaches sponsor grant header when billingWallet is configured', async () => {
+      const billingClient = new NeusClient({
+        enableLogging: false,
+        appId: 'my-app',
+        billingWallet: EVM_A,
+        appOrigin: 'https://app.example'
+      });
+
+      fetch
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              data: {
+                sponsorGrant: 'grant-token',
+                exp: Math.floor(Date.now() / 1000) + 900
+              }
+            })
+        })
+        .mockResolvedValueOnce({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              success: true,
+              data: { eligible: true, matches: [] }
+            })
+        });
+
+      await billingClient.gateCheck({
+        address: EVM_B,
+        verifierIds: ['ownership-basic']
+      });
+
+      expect(fetch).toHaveBeenCalledTimes(2);
+      const grantInit = fetch.mock.calls[0][1];
+      expect(grantInit.headers['X-Neus-App']).toBe('my-app');
+      const checkInit = fetch.mock.calls[1][1];
+      expect(checkInit.headers['X-Sponsor-Grant']).toBe('grant-token');
     });
   });
 

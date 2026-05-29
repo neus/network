@@ -3,33 +3,57 @@ title: Agent Identity
 description: Register and verify AI agent identities.
 icon: id-card
 ---
-Register an agent linked to your profile. Proof `skills` are **metadata only** - they **do not** install MCP servers - [MCP overview](../mcp/overview). Prefer portable skill ids ([spec](https://agentskills.io/specification), [directory](https://skills.sh)).
 
-Default: **`neus_agent_create`** (MCP) or [hosted verify](../cookbook/auth-hosted-verify). Below = SDK detail.
+Register an agent linked to your profile.
 
 **Verifier ID:** `agent-identity`
 
-## Basic Registration
+Proof `skills` are metadata only — they do not install MCP servers. Use portable skill ids from [agentskills.io](https://agentskills.io/specification) or [skills.sh](https://skills.sh).
+
+## Setup
+
+<Steps>
+  <Step title="Check">
+    Call **`neus_context`**, then **`neus_agent_link`** with the agent address. If **`linked: true`**, you are done.
+  </Step>
+  <Step title="Create">
+    Call **`neus_agent_create`** with **`agentId`** and **`agentWallet`**. Finish on NEUS via **`hostedVerifyUrl`** or the returned signing steps.
+  </Step>
+  <Step title="Confirm">
+    Call **`neus_agent_link`** again until **`linked: true`**.
+  </Step>
+</Steps>
+
+```json
+{ "agentId": "my-assistant", "agentWallet": "0x..." }
+```
+
+Set **`agentWallet`** to **`"generate"`** when NEUS should create a new agent key. Save returned key material in your secrets manager.
+
+[Agent create](../mcp/agent-create) · [Agent verification flow](./agent-verification-flow)
+
+## SDK
+
+For server-side or custom signing:
 
 ```javascript
-const proof = await client.verify({
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient({ apiUrl: 'https://api.neus.network' });
+
+await client.verify({
   verifier: 'agent-identity',
   data: {
     agentId: 'my-assistant',
     agentWallet: '0x...',
-    agentChainRef: 'eip155:8453',
     agentType: 'ai',
     description: 'My AI assistant',
   },
-  walletAddress: agentWallet,
+  walletAddress: '0x...',
 });
 ```
 
-You can supply chain context either in `data` as **`agentChainRef`** (CAIP-2) or on the verification request as **`chain`** (CAIP-2) or **`chainId`** (EVM). Those options satisfy the same requirement.
-
-Field names and limits: **Fields** (below). JSON Schema: [`agent-identity.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/agent-identity.json).
-
-## Full Example
+With optional metadata:
 
 ```javascript
 await client.verify({
@@ -37,45 +61,43 @@ await client.verify({
   data: {
     agentId: 'my-agent',
     agentWallet: '0x...',
-    agentChainRef: 'eip155:8453',
     agentType: 'ai',
     description: 'My AI assistant',
     capabilities: { search: true, mcp: true },
-    instructions: 'System and operating instructions (max 16000 chars)',
-    skills: [
-      { id: 'web-search', kind: 'mcp' },
-      { id: 'vercel-react-best-practices', kind: 'plugin' },
-    ],
-    services: [
-      { name: 'metrics', endpoint: 'https://metrics.example.com/v1', version: '1.0' },
-    ],
+    instructions: 'Operating instructions (max 16000 chars)',
+    skills: [{ id: 'web-search', kind: 'mcp' }],
+    services: [{ name: 'metrics', endpoint: 'https://metrics.example.com/v1', version: '1.0' }],
   },
-  walletAddress: agentWallet,
+  walletAddress: '0x...',
 });
 ```
 
+Or use [hosted verify](../cookbook/auth-hosted-verify).
+
 ## Fields
 
-| Field | Required | Max Length | Description |
-|-------|----------|------------|-------------|
-| `agentId` | Yes | 1 - 128 chars | Unique identifier for the agent |
-| `agentWallet` | Yes | - | Agent wallet address (EVM or Solana) |
-| `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request | - | CAIP-2 chain reference for `agentWallet` |
-| `agentLabel` | No | 128 chars | Human-readable display name |
-| `agentType` | No | enum | `ai`, `bot`, `service`, `automation`, or `agent` |
-| `description` | No | 500 chars | Agent description |
-| `capabilities` | No | - | Boolean flags (`search`, `mcp`, `proofs`, …) - see schema |
-| `instructions` | No | 16000 chars | System prompt, tool/connector policy, output format, and safety/PII handling; portable in the signed identity |
-| `skills` | No | 48 objects | Each object requires `id`; optional `kind`, `label`, … |
-| `services` | No | 16 items | `name` + `endpoint` (+ optional `version`) |
+| Field | Required | Description |
+|-------|----------|-------------|
+| `agentId` | Yes | Unique id (1–128 chars) |
+| `agentWallet` | Yes | Agent address (EVM or Solana) |
+| `agentLabel` | No | Display name |
+| `agentType` | No | `ai`, `bot`, `service`, `automation`, or `agent` |
+| `description` | No | Short description (500 chars) |
+| `capabilities` | No | Feature flags — see schema |
+| `instructions` | No | System prompt and policy (16000 chars) |
+| `skills` | No | Up to 48 skill objects (`id` required) |
+| `services` | No | Up to 16 endpoints (`name` + `endpoint`) |
 
-## What you get
+Full schema: [`agent-identity.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/agent-identity.json).
 
-A trusted receipt 'qHash'. **Signed with the agent wallet.** **No spend or permission grants** - use [`agent-delegation`](./agent-delegation) for scoped authority.
+## Result
 
-## Verification
+You get a receipt **`qHash`**, signed by the agent address. This registers identity only. Add [`agent-delegation`](./agent-delegation) for permissions.
+
+## Check status
 
 ```bash
 GET /api/v1/proofs/check?verifierIds=agent-identity&address=0x...
 ```
 
+In MCP: **`neus_agent_link`** or **`neus_proofs_check`**.

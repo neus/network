@@ -1,32 +1,31 @@
 ---
 title: SDK Authentication
-description: Server, hosted browser on NEUS, keys; optional in-app signing.
+description: Hosted verification on NEUS by default; keys for automation only.
 icon: key
 ---
 
-**Default:** no wallet or passkey code in **your** app — ceremony on **`neus.network/verify`** or server-only `verifyFromApp`.
+**Default:** no wallet or passkey code in **your** app — users verify on **`neus.network/verify`** via `VerifyGate` or `getHostedCheckoutUrl`.
 
 | Where | What | Wallet code in your app |
 |-------|------|---------------------------|
-| Server | `NeusClient` + `verifyFromApp` / `gateCheck` | No |
-| Browser | `VerifyGate` or `getHostedCheckoutUrl` → `/verify` | No |
+| Browser | `VerifyGate` + `appId` + `billingWallet` | No |
+| Server | `NeusClient` + `gateCheck` with the same fields | No |
+| Automation | `NeusClient` + `npk_*` access key | No |
+| Advanced server | `verifyFromApp` after per-user approval | No |
 | Browser (exception) | `client.verify({ wallet })` | Yes — [Signing format](../verification/signing-format) |
 
-## App Link (server)
+## VerifyGate (browser)
 
-```javascript
-import { NeusClient } from '@neus/sdk';
+```jsx
+import { VerifyGate } from '@neus/sdk/widgets';
 
-const client = new NeusClient({
-  appId: process.env.NEUS_APP_ID,
-  apiKey: process.env.NEUS_ACCESS_KEY,
-});
-
-const receipt = await client.verifyFromApp({
-  user: { walletAddress: user.walletAddress },
-  verifier: 'ownership-basic',
-  content: { claim: 'User completed onboarding', source: 'your-app' },
-});
+<VerifyGate
+  appId="your-app-id"
+  billingWallet="0xYourHubWallet"
+  requiredVerifiers={['ownership-basic']}
+>
+  <ProtectedContent />
+</VerifyGate>;
 ```
 
 ## Hosted Verify (browser)
@@ -39,13 +38,31 @@ import { getHostedCheckoutUrl } from '@neus/sdk';
 const url = getHostedCheckoutUrl({
   verifiers: ['ownership-basic'],
   returnUrl: 'https://yourapp.com/auth/callback',
+  appId: 'your-app-id',
+  billingWallet: '0xYourHubWallet',
+});
+```
+
+## Server reuse
+
+```javascript
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient({
+  appId: process.env.NEUS_APP_ID,
+  billingWallet: process.env.NEUS_BILLING_WALLET,
+});
+
+await client.gateCheck({
+  address: user.walletAddress,
+  verifierIds: ['ownership-basic'],
 });
 ```
 
 ## Personal access keys
 
-`Authorization: Bearer <npk_...>` from [Access keys](https://neus.network/profile?tab=account). Server / MCP only — never in browser bundles.
+`Authorization: Bearer <npk_...>` from [Access keys](https://neus.network/profile?tab=account). Server / MCP only.
 
-## Raw HTTP
+## Advanced
 
-[API authentication](../api/authentication) · [Signing format](../verification/signing-format)
+[Server integrations (advanced)](../cookbook/server-advanced) · [API authentication](../api/authentication)

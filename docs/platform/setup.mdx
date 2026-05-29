@@ -1,25 +1,36 @@
 ---
-title: Link your app
-description: Domains, caps, and app identity in Platform.
+title: Register your app
+description: Connect your product to NEUS so checks bill your account.
 icon: building
 ---
 
-Link your product so requests carry **`appId`** and bill the right profile.
+Register your site in Hub before you ship **VerifyGate** or **Hosted Verify**. One setup step links your product, your domain, and your billing account.
 
 ## Steps
 
-1. **Apps** — create or select an app in Platform
-2. Set **domain** and **daily credit cap**
-3. Pass **`appId`** from the SDK or widgets
+1. Sign in at [neus.network/hub](https://neus.network/hub).
+2. Open **Apps** → **Register app**.
+3. Enter your site URL and confirm once.
+4. Copy your **app ID** (`appId`) and **billing wallet** (`billingWallet` — the wallet shown in Hub).
 
-```javascript
-import { NeusClient } from '@neus/sdk';
+Pass both values in the SDK so user verifications spend **your** credits, not theirs.
 
-const client = new NeusClient({ appId: 'your-app-id' });
+```jsx
+import { VerifyGate } from '@neus/sdk/widgets';
+
+<VerifyGate
+  appId="your-app-id"
+  billingWallet="0xYourHubWallet"
+  requiredVerifiers={['ownership-basic']}
+>
+  <ProtectedContent />
+</VerifyGate>
 ```
 
+Full walkthrough: [Quickstart](../quickstart) · Billing: [Billing](./billing).
+
+## DNS domain verification
+
+If you use [`ownership-dns-txt`](../verification/ownership-dns-txt) to prove control of a hostname, publish a **TXT** record on `_neus.<your-domain>` with value **`wallet=<your-wallet-or-account-address>`** (see the verifier page for Ethereum vs other networks, casing, and the optional `wallet=eip155:…` line). Cookbook: [Domain verification](../cookbook/domain-verification).
+
 **Next:** [Hosted Verify](../cookbook/auth-hosted-verify)
-
-## DNS domain
-
-If you use [`ownership-dns-txt`](../verification/ownership-dns-txt) to prove control of a hostname, publish a **TXT** record on `_neus.<your-domain>` with value **`wallet=<your-wallet-or-account-address>`** (see the verifier page for Ethereum vs other networks, casing, and the optional `wallet=eip155:…` line). Other key prefixes are not used by the verifier. Cookbook: [Domain verification](../cookbook/domain-verification).

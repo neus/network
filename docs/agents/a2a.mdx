@@ -10,22 +10,28 @@ NEUS publishes [A2A (Agent-to-Agent Protocol)](https://a2a.dev) agent cards so a
 
 | Endpoint | Format | Use |
 |----------|--------|-----|
-| `https://neus.network/.well-known/a2a/agent-card.json` | A2A v1.0.0 | Platform-wide card — skills, interfaces, security |
-| `https://neus.network/.well-known/agent-card.json` | EIP-8004 | Ethereum-ecosystem agent registration |
+| `https://neus.network/.well-known/a2a/agent-card.json` | A2A v1.0.0 | Platform-wide card — canonical discovery URL |
+| `https://neus.network/api/agent/config?format=a2a` | A2A v1.0.0 | Same platform card (explicit API route) |
+| `https://neus.network/.well-known/agent-card.json` | EIP-8004 | Ethereum-ecosystem platform registration (static) |
+| `https://api.neus.network/.well-known/agent-card.json?agentId={agentId}` | EIP-8004 | Per-agent registration (redirects to agent card API) |
 | `https://neus.network/api/agent/{agentId}?format=a2a` | A2A v1.0.0 | Per-agent dynamic card |
 | `https://neus.network/api/agent/{agentId}?format=json` | NEUS universal | Full identity + delegation + proofs |
+
+Per-agent EIP-8004 cards resolve to `GET https://api.neus.network/api/v1/agents/card/{agentId}`.
 
 ## Platform A2A card
 
 ```bash
-curl https://neus.network/.well-known/a2a/agent-card.json
+curl "https://neus.network/.well-known/a2a/agent-card.json"
 ```
 
-Returns:
-- **Skills** — `proofs.check`, `proofs.read`, `agent.setup`, `verification.create`, `mcp.tools`, `payments.verify`
-- **Interfaces** — MCP (`2025-11-25`), REST (`v1`), EIP-8004 bridge, x402 payments
-- **Security** — `neusAccessKey` (Bearer `npk_...`) and `proofSignature` (on-chain qHash)
-- **Networks** — Base Sepolia (`eip155:84532`), Base Mainnet (`eip155:8453`), Solana Mainnet, Solana Devnet (CAIP-2)
+The live response includes:
+- **Skills** — platform-registered skill IDs (for example `verification`, `mcp-tools`) with A2A descriptions
+- **Interfaces** — MCP (`2025-11-25`), REST (`v1`), x402 payments
+- **Security** — OAuth-first MCP setup, NEUS access keys for servers/CI, and proof receipt references (`qHash`) for trust-gated endpoints
+- **Networks** — Base Sepolia (`eip155:84532`), Base Mainnet (`eip155:8453`), Solana Mainnet, Solana Devnet
+
+Fetch the card and read the returned **`skills`** array.
 
 ## Per-agent card
 
@@ -33,7 +39,7 @@ Returns:
 curl "https://neus.network/api/agent/my-agent?format=a2a"
 ```
 
-NEUS resolves the agent's latest identity and delegation proofs, then returns a valid A2A card scoped to that agent's registered skills and capabilities.
+NEUS resolves the agent's latest identity and delegation proofs, then returns an A2A card scoped to that agent's registered skills and capabilities.
 
 ## Cross-chain identifiers
 
@@ -50,9 +56,12 @@ NEUS A2A extensions include chain IDs in [CAIP-2](https://github.com/ChainAgnost
 
 | Format | Endpoint | When to use |
 |--------|----------|-------------|
-| A2A | `/.well-known/a2a/agent-card.json` | Google A2A / multi-agent discovery |
-| EIP-8004 | `/.well-known/agent-card.json?agentId={id}` | Ethereum registry / ERC-8004 wallets |
-| NEUS universal | `/api/agent/{id}` | Full proof records, identity, delegation |
+| A2A (platform) | `/.well-known/a2a/agent-card.json` | Google A2A / multi-agent discovery |
+| A2A (platform, API) | `/api/agent/config?format=a2a` | Same card via explicit route |
+| A2A (per agent) | `/api/agent/{id}?format=a2a` | Agent-scoped A2A card |
+| EIP-8004 (platform) | `/.well-known/agent-card.json` | Ethereum registry / ERC-8004 wallets |
+| EIP-8004 (per agent) | `https://api.neus.network/.well-known/agent-card.json?agentId={id}` | Per-agent ERC-8004 bridge |
+| NEUS universal | `/api/agent/{id}?format=json` | Full proof records, identity, delegation |
 
 ## CORS and caching
 

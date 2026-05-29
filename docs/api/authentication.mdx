@@ -1,68 +1,45 @@
 ---
 title: Authentication
-description: MCP OAuth, App Link, hosted browser on NEUS, keys; optional in-app signing.
+description: Hosted verification on NEUS by default; keys for advanced server flows.
 icon: fingerprint
 ---
 
-**Default:** ceremony on **`neus.network/verify`** or on the server. **Exception:** you explicitly sign inside your own page ([Signing format](../verification/signing-format)).
+**Default:** users complete checks on **`neus.network/verify`**. Your server runs **`gateCheck`** with `appId` and `billingWallet`. No wallet code in your app, and no NEUS account required for end users.
 
 | Need | Mechanism | Wallet code in your app |
 |------|-----------|---------------------------|
+| Product verification (default) | `VerifyGate` / Hosted Verify + app registration | No |
 | MCP client auth | OAuth 2.0 + PKCE | No |
-| Receipts with your existing login | App Link + `verifyFromApp` | No |
-| Browser ceremony | Hosted Verify / `VerifyGate` | No |
-| Keys / raw HTTP | Bearer `npk_*` | No |
+| Server automation as your profile | Bearer `npk_*` access key | No |
+| Server creates receipts for an approved user | Advanced delegation + `verifyFromApp` | No |
 | Sign inside your page | SDK `verify` + `wallet` | Yes — rare |
+
+Advanced server paths: [Server integrations (advanced)](../cookbook/server-advanced).
+
+## Hosted Verify (default)
+
+`https://neus.network/verify` — [Hosted Verify](../cookbook/auth-hosted-verify).
+
+Pass `appId` and `billingWallet` so checks bill your Hub credits, not the user.
 
 ## MCP OAuth
 
-MCP clients (Claude Code, OpenAI, VS Code, Cursor) authenticate via **OAuth 2.0 Authorization Code with PKCE**. The flow wraps the existing NEUS hosted login:
-
-```text
-/oauth/authorize (validates OAuth params, renders HostedLoginFlow)
-→ user signs in on NEUS
-→ backend issues one-time auth code
-→ client exchanges code for MCP access token
-→ MCP requests use Bearer token
-```
-
-The MCP access token is a JWT with `aud=https://mcp.neus.network/mcp` and `token_use=mcp_access`. It cannot be used for general API access.
-
-See [MCP OAuth](../mcp/oauth) for the full reference. Quick setup:
+MCP clients (Claude Code, OpenAI, VS Code, Cursor) authenticate via **OAuth 2.0 Authorization Code with PKCE**:
 
 ```bash
 npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus auth
 ```
 
-## App Link
+See [MCP OAuth](../mcp/oauth).
 
-`Authorization: Bearer <npk_...>`, `x-neus-app`, linked user address, active App Link. [Quickstart](../quickstart).
+## Profile access keys
 
-```javascript
-import { NeusClient } from '@neus/sdk';
+[Access keys](https://neus.network/profile?tab=account) for servers, CI, and MCP automation. Never in browser bundles.
 
-const client = new NeusClient({
-  appId: process.env.NEUS_APP_ID,
-  apiKey: process.env.NEUS_ACCESS_KEY,
-});
+## Advanced server delegation
 
-const receipt = await client.verifyFromApp({
-  user: { walletAddress: user.walletAddress },
-  verifier: 'ownership-basic',
-  content: { claim: 'User completed onboarding', source: 'your-app' },
-});
-```
-
-## Hosted Verify
-
-`https://neus.network/verify` — [Hosted Verify](../cookbook/auth-hosted-verify).
-
-## Personal access keys
-
-[Access keys](https://neus.network/profile?tab=account). Servers only.
-
-[MCP Auth](../mcp/auth) · [SDK Authentication](../sdks/authentication)
+For backend-created receipts after a user approves your product once, see [Server integrations (advanced)](../cookbook/server-advanced). This is separate from **Register app** in Hub, which connects billing for hosted checks.
 
 ## Signing inside your app
 
@@ -71,3 +48,5 @@ const receipt = await client.verifyFromApp({
 ## Raw HTTP
 
 `POST /api/v1/verification/standardize` → sign `signerString` → `POST /api/v1/verification`. [Signing format](../verification/signing-format).
+
+[MCP Auth](../mcp/auth) · [SDK Authentication](../sdks/authentication)

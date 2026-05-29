@@ -28,12 +28,14 @@ icon: key
 | `intent=login` | Hosted **login** only |
 | `returnUrl` | Absolute `https://…` back to **your** app after completion. Validated before redirect. |
 | `returnTo` | **neus.network** path only (e.g. `/profile`). Not for third-party domains. `@neus/sdk` `getHostedCheckoutUrl` does not set this; append manually if needed. |
-| `connect=1` | With `intent=login`, auto-start wallet connect on load |
+| `connect=1` | Optional for wallet-native products. With `intent=login`, auto-starts wallet connect on load |
 | `verifiers` | Comma-separated verifier IDs |
 | `preset` | Bundled verifier set |
 | `gateId` | Gate definition |
 | `mode=popup` | Popup; requires `origin` |
 | `origin` | Opener origin for postMessage |
+| `appId` | Your app ID from Hub |
+| `billingWallet` | Wallet that pays for checks (your Hub account) |
 
 ## Redirect examples
 
@@ -45,6 +47,8 @@ import { getHostedCheckoutUrl } from '@neus/sdk';
 window.location.href = getHostedCheckoutUrl({
   verifiers: ['ownership-basic'],
   returnUrl: 'https://myapp.com/auth/callback',
+  appId: 'your-app-id',
+  billingWallet: '0xYourHubWallet',
 });
 ```
 
@@ -80,4 +84,4 @@ Open with `mode: 'popup'` and `origin: window.location.origin`.
 
 ## No browser handoff
 
-Server-only receipts: [Quickstart](../quickstart) (`verifyFromApp`).
+Server-created receipts and access keys: [Server integrations (advanced)](../cookbook/server-advanced).

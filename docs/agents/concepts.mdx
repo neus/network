@@ -4,52 +4,46 @@ description: Roles, wallets, and how NEUS agent API field names map to those con
 icon: users
 ---
 
-## Core rule
+## Two steps
 
-**Register** and **approve scopes** are separate. Different people can do each. Publisher and approver wallets need not be linked.
+**Register** the agent, then **approve** what it can do. These can be the same person or two different accounts.
 
 ## Roles
 
-| Role | Does | Signs |
-|------|------|-------|
-| **Publisher** | Publishes agent (metadata to agent wallet) | **Agent wallet** |
-| **Approver** | Grants scopes | **Approving account** |
+| Role | Action | Signs with |
+|------|--------|------------|
+| **Publisher** | Registers agent metadata | Agent address |
+| **Approver** | Grants scopes and limits | Approving account |
 
-Same person or two (marketplace / delegation).
+## Addresses
 
-## Wallets
+- **Agent address** — registers and publishes the agent.
+- **Approving account** — signs delegation. Does not need to own the agent address.
 
-- **Agent wallet:** register / publish.
-- **Approving account:** delegation signature (scopes, limits, expiry). Not “owner” of the agent wallet; no profile link required.
+## Signing
 
-## Hosted
+Use [hosted verify](../cookbook/auth-hosted-verify) or MCP. NEUS handles the ceremony.
 
-**[Hosted verify](../cookbook/auth-hosted-verify)** or MCP links.
+## Field names
 
-## API names
-
-Stable JSON / query names:
-
-| API / query name | Meaning |
-|------------------|-------------------------|
-| `agentWallet` | Agent wallet address |
-| `controllerWallet` | **Approving account** in delegation (not “product controller”) |
-| `linked` (MCP) | Readiness: identity + access approval present |
-| `principal` | Signed-in account context; not the delegation approver unless it is the same account |
-
-**Private proofs:** only with allowed access for that user. Delegation **approving account** is separate.
+| Field | Meaning |
+|-------|---------|
+| `agentWallet` | Agent address |
+| `controllerWallet` | Approving account |
+| `linked` | Identity + delegation both present |
+| `principal` | Signed-in account from MCP session |
 
 ## Next
 
 <CardGroup cols={2}>
- <Card title="Agents" icon="robot" href="./overview">
- Overview + start.
+ <Card title="Overview" icon="robot" href="./overview">
+ Start here.
  </Card>
  <Card title="Flow" icon="route" href="./agent-verification-flow">
- Sequence.
+ Setup order.
  </Card>
  <Card title="MCP create" icon="plug" href="../mcp/agent-create">
- From tools.
+ Create from MCP.
  </Card>
  <Card title="Cookbook" icon="book-open" href="../cookbook/verifiable-agents">
  Recipes.

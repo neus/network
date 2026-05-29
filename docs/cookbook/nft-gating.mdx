@@ -50,15 +50,22 @@ if (!result.data?.eligible) {
 ## Multiple token configs
 
 ```jsx
-<VerifyGate
-  requiredVerifiers={['nft-ownership']}
-  verifierData={{
-    'nft-ownership': [
-      { contractAddress: '0x...', tokenId: '1', chainId: 8453 },
-      { contractAddress: '0x...', tokenId: '2', chainId: 8453 },
-    ],
-  }}
->
-  <div>Holders of any listed NFT</div>
-</VerifyGate>
+const allowedTokens = [
+  { contractAddress: '0x...', tokenId: '1', chainId: 8453 },
+  { contractAddress: '0x...', tokenId: '2', chainId: 8453 },
+];
+
+export function NFTGatedContent({ selectedToken }) {
+  return (
+    <VerifyGate
+      requiredVerifiers={['nft-ownership']}
+      verifierData={{ 'nft-ownership': allowedTokens[selectedToken] }}
+      appId="my-nft-gate"
+    >
+      <div>Holders of the selected NFT</div>
+    </VerifyGate>
+  );
+}
 ```
+
+`VerifyGate` accepts one `nft-ownership` object per check. For “any of these tokens,” let the user choose the token to verify, or perform multiple server-side `gateCheck` calls and allow access when one is eligible.

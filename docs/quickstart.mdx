@@ -1,28 +1,39 @@
 ---
 title: Quickstart
-description: Add a reusable trust receipt to your app.
+description: Ship trust checks in four steps — users verify on NEUS, you pay from Hub credits.
 icon: rocket
 ---
 
-NEUS owns the standard browser ceremony. Your product saves the resulting receipt and checks it before trusted actions.
+NEUS runs sign-in and verification in the browser. Your app saves the receipt and checks it before payouts, access, or other trusted actions.
 
-| Path         | Use it when                                    | Your app owns                                   |
-| ------------ | ---------------------------------------------- | ----------------------------------------------- |
-| `VerifyGate` | You want a React gate with a hosted fallback   | `appId`, required verifiers, protected UI       |
-| Hosted URL   | You want redirect or popup control             | Return URL or popup listener                    |
-| Server call  | Your backend creates receipts for linked users | `NEUS_ACCESS_KEY`, `verifyFromApp`, `gateCheck` |
+**End users never need a NEUS account, an API key, or extra setup in your product.**
 
-## Browser
+## 1. Register your app
+
+1. Sign in at [neus.network/hub](https://neus.network/hub).
+2. Open **Apps** → **Register app**.
+3. Enter your site URL and confirm once.
+4. Copy your **app ID** (`appId`) and **billing wallet** (`billingWallet` — your Hub account address).
+
+Checks that run through your product bill this account. Add credits under **Usage** in Hub.
+
+## 2. Gate your UI
 
 ```jsx
 import { VerifyGate } from "@neus/sdk/widgets";
 
-<VerifyGate appId="your-app-id" requiredVerifiers={["ownership-basic"]}>
+<VerifyGate
+  appId="your-app-id"
+  billingWallet="0xYourHubWallet"
+  requiredVerifiers={["ownership-basic"]}
+>
   <ProtectedContent />
 </VerifyGate>;
 ```
 
-Or send the user to Hosted Verify:
+`VerifyGate` looks for an existing receipt, opens **Hosted Verify** when a new one is needed, then shows your content. Wallet, passkey, and OAuth all happen on NEUS — not inside your app.
+
+## 3. Or send users to Hosted Verify
 
 ```javascript
 import { getHostedCheckoutUrl } from "@neus/sdk";
@@ -31,40 +42,37 @@ window.location.assign(
   getHostedCheckoutUrl({
     verifiers: ["ownership-basic"],
     returnUrl: "https://myapp.com/auth/callback",
+    appId: "your-app-id",
+    billingWallet: "0xYourHubWallet",
   }),
 );
 ```
 
-Hosted flow details: [Hosted Verify](./cookbook/auth-hosted-verify).
+Read **`qHash`** from the callback URL or popup message. Details: [Hosted Verify](./cookbook/auth-hosted-verify).
 
-## Server
+## 4. Check before trusted actions
 
-Keep access keys server-side only.
-
-```env
-NEUS_APP_ID=app_...
-NEUS_ACCESS_KEY=npk_...
-```
+On your server, confirm the receipt still satisfies your policy before you act:
 
 ```javascript
 import { NeusClient } from "@neus/sdk";
 
 const client = new NeusClient({
   appId: process.env.NEUS_APP_ID,
-  apiKey: process.env.NEUS_ACCESS_KEY,
+  billingWallet: process.env.NEUS_BILLING_WALLET,
 });
-
-await client.verifyFromApp({
-  user: { walletAddress: user.walletAddress },
-  verifier: "ownership-basic",
-  content: "User completed onboarding"
-);
 
 const result = await client.gateCheck({
   address: user.walletAddress,
   verifierIds: ["ownership-basic"],
 });
+
+if (!result.data?.eligible) {
+  // send the user back to VerifyGate or hosted verify
+}
 ```
+
+Use the same `appId` and `billingWallet` on the server so eligibility checks stay tied to your billing account.
 
 ## Assistants and agents
 
@@ -76,14 +84,12 @@ npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Use **`neus auth`** for OAuth in your browser. Use **`--access-key`** only for servers and CI. Start with **`neus_context`**.
+Use **`neus auth`** for OAuth in your browser. Access keys are for servers, CI, and automation — never in browser code. Start with **`neus_context`**.
 
-Bring an existing agent setup:
+Agent wallets: [Agent verification flow](./agents/agent-verification-flow).
 
-```bash
-npx -y -p @neus/sdk neus import --dry-run
-```
+## Advanced server paths
 
-For agent wallets, follow [Agent verification flow](./agents/agent-verification-flow). Reuse `neus_agent_link` before `neus_agent_create`.
+Need your backend to create receipts directly, or automation with access keys? See [Server integrations (advanced)](./cookbook/server-advanced).
 
 **Next:** [Integration](./integration)

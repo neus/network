@@ -4,38 +4,34 @@ description: Register identity, add delegation, then reuse receipts.
 icon: arrow-progress
 ---
 
-Agents need identity and authority before they act. NEUS keeps those receipts reusable across apps, assistants, and APIs.
-
 ## Setup order
 
 <Steps>
-  <Step title="Check existing receipts">
-    In MCP, call `neus_context`, then `neus_agent_link` with the agent wallet.
+  <Step title="Check">
+    **`neus_context`** → **`neus_agent_link`** with the agent address.
   </Step>
-  <Step title="Register identity">
-    If identity is missing, create `agent-identity`. The agent wallet signs.
+  <Step title="Register">
+    Missing identity? Create **`agent-identity`** (agent address signs).
   </Step>
-  <Step title="Delegate authority">
-    If another account controls the agent, create `agent-delegation` with scope,
-    caps, and expiry.
+  <Step title="Delegate">
+    Missing permissions? Create **`agent-delegation`** with scope, caps, and expiry.
   </Step>
-  <Step title="Check again">
-    Call `neus_agent_link` until it returns `linked: true`.
+  <Step title="Confirm">
+    **`neus_agent_link`** until **`linked: true`**.
   </Step>
 </Steps>
 
 ## MCP sequence
 
-1. Call **`neus_context`** at the start of the session.
-2. Use returned profile context when the MCP session is signed in.
-3. Call **`neus_agent_link`** with **`agentWallet`**.
-4. If it returns **`linked: true`**, reuse the receipts.
-5. If setup is missing, call **`neus_agent_create`** and complete the returned hosted or signing steps.
-6. Call **`neus_agent_link`** again.
+1. **`neus_context`**
+2. **`neus_agent_link`** with **`agentWallet`**
+3. If **`linked: true`**, reuse receipts
+4. If not, **`neus_agent_create`** — finish on NEUS
+5. **`neus_agent_link`** again
 
-Readiness for the default delegated-agent path means both `agent-identity` and `agent-delegation` are present. This is separate from generic [wallet-link](../verification/wallet-link).
+Ready means both **`agent-identity`** and **`agent-delegation`** are present.
 
-Tool reference: [Agent link](../mcp/agent-link) | [Agent create](../mcp/agent-create) | [MCP overview](../mcp/overview).
+[Agent link](../mcp/agent-link) · [Agent create](../mcp/agent-create) · [MCP overview](../mcp/overview)
 
 ## Related
 
@@ -44,10 +40,10 @@ Tool reference: [Agent link](../mcp/agent-link) | [Agent create](../mcp/agent-cr
     Register the agent.
   </Card>
   <Card title="Delegation" icon="key" href="./agent-delegation">
-    Scope what it can do.
+    Grant permissions.
   </Card>
   <Card title="MCP setup" icon="plug" href="../mcp/setup">
-    Connect assistants and tools.
+    Connect your assistant.
   </Card>
   <Card title="Concepts" icon="book-open" href="./concepts">
     Roles and fields.

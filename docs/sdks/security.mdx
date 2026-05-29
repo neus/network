@@ -8,7 +8,7 @@ icon: lock
 
 | Operation | Auth |
 |-----------|------|
-| `POST /api/v1/verification` | Wallet signature (standard string) |
+| `POST /api/v1/verification` | Signed standard string, or advanced server path with access key + `X-Neus-App` |
 | `GET /api/v1/proofs/{qHash}` | Public metadata for public/unlisted; private needs owner rules |
 | Private payload reads | Owner signature / SDK helpers |
 
@@ -31,10 +31,10 @@ icon: lock
 If you need proof reuse without owner-authenticated access, opt into unlisted public explicitly:
 
 ```javascript
-{
+const proofOptions = {
   privacyLevel: 'public',
   publicDisplay: false,
-}
+};
 ```
 
 Do not treat unlisted public proofs as secret.

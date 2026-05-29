@@ -1,4 +1,5 @@
 import { ApiError, ValidationError, NetworkError, ConfigurationError } from './errors.js';
+import { fetchSponsorGrant } from './sponsor.js';
 import {
   PORTABLE_PROOF_SIGNER_HEADER,
   constructVerificationMessage,
@@ -396,6 +397,77 @@ export class NeusClient {
     } catch {
       void 0;
     }
+
+    /** @type {{ token: string, expMs: number, key: string } | null} */
+    this._sponsorGrantCache = null;
+  }
+
+  _getBillingWallet() {
+    const raw =
+      this.config.billingWallet ||
+      this.config.sponsorOrgWallet ||
+      this.config.orgWallet ||
+      null;
+    if (typeof raw !== 'string') return null;
+    const trimmed = raw.trim().toLowerCase();
+    return /^0x[a-f0-9]{40}$/.test(trimmed) ? trimmed : null;
+  }
+
+  _resolveIntegratorOrigin() {
+    if (typeof this.config.appOrigin === 'string' && this.config.appOrigin.trim()) {
+      return this.config.appOrigin.trim();
+    }
+    try {
+      if (typeof window !== 'undefined' && window.location?.origin) {
+        return window.location.origin;
+      }
+    } catch {
+      void 0;
+    }
+    return null;
+  }
+
+  async _resolveSponsorGrantHeaders(verifierIds = []) {
+    const appId = typeof this.config.appId === 'string' ? this.config.appId.trim() : '';
+    const orgWallet = this._getBillingWallet();
+    if (!appId || !orgWallet) {
+      return {};
+    }
+
+    const normalizedVerifierIds = Array.isArray(verifierIds)
+      ? verifierIds.map((v) => String(v || '').trim()).filter(Boolean).slice(0, 25)
+      : [];
+    const cacheKey = `${appId}:${orgWallet}:${normalizedVerifierIds.join(',')}`;
+    const now = Date.now();
+    if (
+      this._sponsorGrantCache &&
+      this._sponsorGrantCache.key === cacheKey &&
+      this._sponsorGrantCache.expMs > now + 30_000
+    ) {
+      return { 'X-Sponsor-Grant': this._sponsorGrantCache.token };
+    }
+
+    const origin = this._resolveIntegratorOrigin();
+    const grant = await fetchSponsorGrant({
+      apiUrl: this.baseUrl,
+      appId,
+      orgWallet,
+      verifierIds: normalizedVerifierIds,
+      origin
+    });
+
+    const expSeconds = Number(grant?.exp);
+    const expMs = Number.isFinite(expSeconds) && expSeconds > 0
+      ? expSeconds * 1000
+      : now + 15 * 60 * 1000;
+
+    this._sponsorGrantCache = {
+      key: cacheKey,
+      token: grant.sponsorGrant,
+      expMs
+    };
+
+    return { 'X-Sponsor-Grant': grant.sponsorGrant };
   }
 
   _getHubChainId() {
@@ -1147,7 +1219,8 @@ export class NeusClient {
       options: optionsPayload
     };
 
-    const response = await this._makeRequest('POST', '/api/v1/verification', requestData);
+    const sponsorHeaders = await this._resolveSponsorGrantHeaders(normalizedVerifierIds);
+    const response = await this._makeRequest('POST', '/api/v1/verification', requestData, sponsorHeaders);
 
     if (!response.success) {
       throw new ApiError(`Verification failed: ${response.error?.message || 'Unknown error'}`, response.error);
@@ -1619,7 +1692,23 @@ export class NeusClient {
       }
     }
 
-    const response = await this._makeRequest('GET', `/api/v1/proofs/check?${qs.toString()}`, null, headersOverride);
+    let mergedHeaders = headersOverride;
+    if (!mergedHeaders) {
+      try {
+        const sponsorHeaders = await this._resolveSponsorGrantHeaders(
+          Array.isArray(params.verifierIds)
+            ? params.verifierIds
+            : (params.verifierIds ? [params.verifierIds] : [])
+        );
+        if (sponsorHeaders && Object.keys(sponsorHeaders).length > 0) {
+          mergedHeaders = sponsorHeaders;
+        }
+      } catch (error) {
+        this._log('Sponsor grant unavailable for gateCheck (continuing without)', error?.message || String(error));
+      }
+    }
+
+    const response = await this._makeRequest('GET', `/api/v1/proofs/check?${qs.toString()}`, null, mergedHeaders);
     if (!response.success) {
       throw new ApiError(`Gate check failed: ${response.error?.message || 'Unknown error'}`, response.error);
     }

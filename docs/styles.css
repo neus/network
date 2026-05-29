@@ -17,14 +17,34 @@
     inset 0 1px 0 rgba(90, 90, 90, 0.12);
 }
 
+/*
+  Page wash (SSOT: neus/app/globals.css --neus-page-bg).
+  Mintlify paints via #background-color; html is fallback. Shells stay transparent.
+*/
 html {
-  background-color: var(--neus-bg-base) !important;
+  background-color: var(--neus-page-grad-base) !important;
+  background-image: var(--neus-page-bg) !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100dvh !important;
+  background-position: center top !important;
+  background-attachment: fixed !important;
+}
+
+#background-color {
+  background-color: var(--neus-page-grad-base) !important;
+  background-image: var(--neus-page-bg) !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100dvh !important;
+  background-position: center top !important;
+  background-attachment: fixed !important;
 }
 
 body {
   font-feature-settings: "ss01" on, "cv01" on;
   -webkit-font-smoothing: antialiased;
-  background-color: var(--neus-bg-base) !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: var(--neus-text-primary);
 }
 
 /* Mintlify auto-injects llms.txt index for agents; keep /llms.txt, hide in-page duplicate. */
@@ -173,7 +193,7 @@ button,
   display: none !important;
 }
 
-/* Structural elements: fully transparent so gradient shows through */
+/* Structural elements: fully transparent so the html page wash shows through */
 #header,
 #header-content,
 #navbar,
@@ -186,8 +206,12 @@ button,
 #table-of-contents,
 #table-of-contents-content,
 #table-of-contents-content .toc,
-#table-of-contents-content .toc > div {
+#table-of-contents-content .toc > div,
+#background-color::before,
+#background-color::after {
   background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
   backdrop-filter: none;
 }
 

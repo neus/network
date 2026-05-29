@@ -44,14 +44,26 @@ https://neus.network/proof/[qHash]
 ## SDK
 
 ```javascript
-const proof = await client.verify({ ... });
-const qHash = proof.qHash;
+import { getHostedCheckoutUrl } from '@neus/sdk';
+
+const verifyUrl = getHostedCheckoutUrl({
+  verifiers: ['ownership-basic'],
+  returnUrl: 'https://myapp.com/callback',
+});
+
+window.location.assign(verifyUrl);
+```
+
+After the redirect, read the `qHash` from your callback URL and verify it on your server:
+
+```javascript
+const qHash = new URL(request.url).searchParams.get('qHash');
 
 const record = await client.getProof(qHash);
 
 const eligible = await client.gateCheck({
-  address: ‘0x...’, // signer from verify()
-  verifierIds: [‘ownership-basic’],
+  address: '0x...',
+  verifierIds: ['ownership-basic'],
 });
 ```
 

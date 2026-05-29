@@ -1,27 +1,27 @@
 ---
 title: Verifiable Agents
-description: Register agents, connect apps via App Link, consume proofs (MCP or SDK).
+description: Register agents, connect apps, and consume proofs.
 icon: robot
 ---
 
-`agent-identity` (agent wallet signs) and `agent-delegation` (approving account signs) are **separate** proofs. One person can do both, or roles can split.
+Two proofs: **`agent-identity`** (agent signs) and **`agent-delegation`** (approving account signs). Same person or two accounts.
 
-For apps creating trust receipts server-side for existing users, use **App Link** (`agent-delegation` with `scope: 'app-link'`). See the [Quickstart](../quickstart). [Agent concepts](../agents/concepts)
+To bill hosted checks through your product, start with [Quickstart](../quickstart) (**Register app** in Hub). For backend receipt creation after user approval, see [Server integrations (advanced)](../cookbook/server-advanced). Agent concepts: [Agent concepts](../agents/concepts)
 
 ## MCP
 
 <Steps>
  <Step title="Check">
- Call **`neus_context`**, then **`neus_agent_link`** with the **`agentWallet`**. Stop if **`linked: true`**.
+ **`neus_context`** → **`neus_agent_link`**. Done if **`linked: true`**.
  </Step>
- <Step title="Prepare (only if missing)">
- Call **`neus_agent_create`** when you need signing material or a prepared hosted URL for identity + delegation.
+ <Step title="Create">
+ **`neus_agent_create`** when proofs are missing.
  </Step>
  <Step title="Finish">
- Open **`hostedVerifyUrl`** and/or submit **`neus_verify`** using the payloads from the create response.
+ Complete **`hostedVerifyUrl`** or signing steps from the response.
  </Step>
  <Step title="Confirm">
- Call **`neus_agent_link`** again until **`linked: true`**.
+ **`neus_agent_link`** until **`linked: true`**.
  </Step>
 </Steps>
 
@@ -30,18 +30,18 @@ For apps creating trust receipts server-side for existing users, use **App Link*
 | Step | Page |
 |------|------|
 | Register | [Agent identity](../agents/agent-identity) |
-| App Link (delegation) | [Agent delegation](../agents/agent-delegation) |
-| Check | [Integration](../integration) loop and MCP tools |
+| Delegate | [Agent delegation](../agents/agent-delegation) |
+| Check | [Integration](../integration) |
 
-Payload shapes are documented on each verifier page under **Verification**; matching JSON Schemas ship in this project under **`docs/verifiers/schemas/`**.
+Schemas: **`docs/verifiers/schemas/`**
 
 ## Related
 
 <CardGroup cols={2}>
  <Card title="Agents overview" icon="robot" href="../agents/overview">
- Card URL, DID, optional tool manifest.
+ Start here.
  </Card>
  <Card title="MCP overview" icon="plug" href="../mcp/overview">
- Full tool list + auth.
+ Tool list and auth.
  </Card>
 </CardGroup>

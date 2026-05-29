@@ -1,14 +1,29 @@
 ---
 title: Billing
-description: Credits, app attribution, and payment fallback.
+description: How app checks bill your NEUS account and what happens when credits run out.
 icon: credit-card
 ---
 
-NEUS bills metered usage to the profile linked to your app. Credits spend first.
+NEUS bills metered verification usage to a NEUS profile. Credits spend first.
 
-## What `appId` does
+## Default: your account pays for user checks
 
-`appId` identifies which product made the request. It is public metadata, not a secret.
+When users verify through **VerifyGate** or **Hosted Verify**, pass both:
+
+| Field | Role |
+|-------|------|
+| `appId` | Public product ID from Hub → Apps |
+| `billingWallet` | Your Hub wallet — credits on this profile pay for the check |
+
+Register the app once in Hub, then include both values in the SDK or hosted URL (`?appId=` and `?billingWallet=`). NEUS routes usage to your account so the end user is not charged for the verification step.
+
+## What `appId` alone does
+
+`appId` tells NEUS which product made the request. It is public metadata, not a secret. **To bill your account, you also need `billingWallet` and a completed app registration.**
+
+## Server checks
+
+Use the same `appId` and `billingWallet` on **`gateCheck`** so server-side eligibility reads stay aligned with your billing account.
 
 ## When credits run out
 
@@ -16,6 +31,10 @@ Billable calls return **402** with a quote. Complete payment and retry with `PAY
 
 ## Payment gates
 
-Payment gates charge visitors. NEUS usage still bills through the linked profile.
+Payment gates can charge your visitors directly. NEUS metered verification usage still bills through your registered app when `billingWallet` is set.
+
+## Advanced paths
+
+Server-side receipt creation and per-user approvals use separate flows — see [Server integrations (advanced)](../cookbook/server-advanced).
 
 **Next:** [x402](./x402)

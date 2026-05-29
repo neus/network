@@ -11,7 +11,7 @@ Use `@neus/sdk` instead of ad-hoc `fetch` to `api.neus.network` so headers and p
 | Layer | Use |
 |-------|-----|
 | Browser | **`getHostedCheckoutUrl`**, **`VerifyGate`**, polling — default user ceremony on **NEUS** ([Quickstart](../quickstart)) |
-| Server | **`gateCheck`**, **`verifyFromApp`**, secrets, raw HTTP |
+| Server | **`gateCheck`** with `appId` + `billingWallet`; advanced: **`verifyFromApp`**, access keys |
 
 Do not put **`npk_*`** or other secrets in browser bundles. If you need calls the SDK does not expose from the client, **proxy through your backend** — [API overview](../api/overview).
 
@@ -30,6 +30,8 @@ window.location.assign(
   getHostedCheckoutUrl({
     verifiers: ['ownership-basic'],
     returnUrl: 'https://myapp.com/callback',
+    appId: 'your-app-id',
+    billingWallet: '0xYourHubWallet',
   }),
 );
 ```
@@ -82,10 +84,12 @@ Use only when you intentionally keep signing in **your** page (wallet extension 
 import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient({ apiUrl: 'https://api.neus.network' });
+const provider = window.ethereum; // EVM injected provider
 
 const res = await client.verify({
   verifier: 'ownership-basic',
   content: 'Hello NEUS',
+  wallet: provider,
 });
 
 const qHash = res.qHash;
@@ -97,10 +101,11 @@ const record = await client.getProof(qHash);
 When you assemble `verifierIds` / `data` yourself, then sign the standardized string. The example below is EVM. For non-EVM, pass the provider explicitly and include `chain` as a CAIP-2 value. See [CAIP-380 Portable Proof](../learn/standards/caip-380).
 
 ```javascript
-import { standardizeVerificationRequest, signMessage } from '@neus/sdk';
+import { NeusClient, standardizeVerificationRequest, signMessage } from '@neus/sdk';
 
 const provider = window.ethereum; // EVM injected provider
-const walletAddress = '0x1111111111111111111111111111111111111111';
+const client = new NeusClient({ apiUrl: 'https://api.neus.network' });
+const [walletAddress] = await provider.request({ method: 'eth_requestAccounts' });
 const signedTimestamp = Date.now();
 const body = {
   verifierIds: ['ownership-basic'],
@@ -145,8 +150,8 @@ For typical UX, use Hosted Verify so wallet selection and secondary signing stay
 
 ```javascript
 const walletLinkData = await client.createWalletLinkData({
-  primaryWalletAddress: '0xprimary...',
-  secondaryWalletAddress: '0xsecondary...',
+  primaryWalletAddress: '0x0000000000000000000000000000000000000001',
+  secondaryWalletAddress: '0x0000000000000000000000000000000000000002',
   wallet: window.ethereum, // EVM provider; pass explicit provider + chain for non-EVM
   relationshipType: 'linked',
   label: 'my-wallet'

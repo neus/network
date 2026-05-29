@@ -1,14 +1,14 @@
 ---
 title: Examples
-description: Start with the trust receipts showcase, then Node, React, and curl.
+description: Start with the trust receipts showcase, then Node, React, and raw HTTP.
 icon: code
 ---
 
-Same flow everywhere: check → verify if needed → save **`qHash`** → reuse. Link app + billing: [Get started](./get-started).
+Same flow everywhere: check → verify if needed → save **`qHash`** → reuse. Register your app and set billing: [Get started](./get-started).
 
 **Showcase:** [trust-receipts-showcase](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) · **Demo:** [neus.network/demo](https://neus.network/demo).
 
-[Quickstart](./quickstart) · [Hosted Verify](./cookbook/auth-hosted-verify) (ceremony on NEUS). Raw HTTP here = **advanced**.
+[Quickstart](./quickstart) · [Hosted Verify](./cookbook/auth-hosted-verify) (ceremony on NEUS). Server-only paths: [Server integrations (advanced)](./cookbook/server-advanced).
 
 | Example | Use it for |
 |------------|----------|
@@ -26,6 +26,7 @@ export default function ProtectedPage() {
   return (
     <VerifyGate
       appId="your-app-id"
+      billingWallet="0xYourHubWallet"
       requiredVerifiers={['ownership-basic']}
     >
       <ProtectedContent />
@@ -36,7 +37,7 @@ export default function ProtectedPage() {
 
 ## Node
 
-[Quickstart](./quickstart) for `verifyFromApp`. [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) for lower-level SDK only.
+[Server integrations (advanced)](./cookbook/server-advanced) for backend receipt creation. [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) for lower-level SDK usage.
 
 ## HTTP (advanced)
 
@@ -51,7 +52,7 @@ curl -X POST https://api.neus.network/api/v1/verification/standardize \
 
 | Doc | Purpose |
 |-----|---------|
-| [Get started](./get-started) | Account and billing |
+| [Get started](./get-started) | Register app and billing |
 | [Hosted Verify](./cookbook/auth-hosted-verify) | Browser ceremony on NEUS |
 | [MCP](./mcp/overview) | Assistants and automation |
 | [Quickstart](./quickstart) | SDK first receipt |

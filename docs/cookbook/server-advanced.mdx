@@ -1,0 +1,55 @@
+---
+title: Server integrations (advanced)
+description: Backend receipt creation, user approvals, and access keys when Hosted Verify is not enough.
+icon: server
+---
+
+Most products should follow [Quickstart](../quickstart): **VerifyGate** or **Hosted Verify**, then **`gateCheck`** on the server. Use this page when you need your backend to create receipts directly, or when you automate NEUS as your own profile.
+
+## When you need this
+
+| Need | Use |
+|------|-----|
+| User verifies in the browser; you only check later | [Quickstart](../quickstart) — no access key |
+| Your backend creates receipts without opening NEUS in the browser | `verifyFromApp` + per-user approval |
+| MCP, CI, or raw HTTP as **your** NEUS profile | Profile **access key** (`npk_*`) |
+
+## Backend receipt creation (`verifyFromApp`)
+
+After a user approves your product once, your server can create receipts on their behalf with **`verifyFromApp`**. This is **not** the same as **Register app** in Hub, which connects billing for hosted checks.
+
+```javascript
+import { NeusClient } from "@neus/sdk";
+
+const client = new NeusClient({
+  appId: process.env.NEUS_APP_ID,
+  apiKey: process.env.NEUS_ACCESS_KEY,
+});
+
+const receipt = await client.verifyFromApp({
+  user: { walletAddress: user.walletAddress },
+  verifier: "ownership-basic",
+  content: { claim: "User completed onboarding", source: "your-app" },
+});
+```
+
+Requirements:
+
+- An active user approval for your `appId` and site origin
+- Matching app context on the request (`X-Neus-App` and origin)
+
+If approval is missing, send the user through [Hosted Verify](./auth-hosted-verify) first.
+
+## Profile access keys
+
+Create keys under [Profile → Account](https://neus.network/profile?tab=account). Use **`Authorization: Bearer npk_...`** on server and MCP calls only. Never ship keys in browser bundles.
+
+Access keys identify **your builder profile** for automation. They do not replace per-user approval for backend receipt creation.
+
+## Billing note
+
+`appId` alone does not bill your account. For hosted flows, pass **`billingWallet`** (your Hub wallet) so checks spend your credits. Backend flows follow the authenticated context on each request.
+
+See [Billing](../platform/billing).
+
+**Next:** [API Authentication](../api/authentication)

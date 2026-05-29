@@ -35,7 +35,7 @@ export function Page() {
 ```jsx
 import { ProofBadge } from '@neus/sdk/widgets';
 
-<ProofBadge qHash="0x..." showChains />
+<ProofBadge qHash={proof.qHash} showChains />
 ```
 
 ## Docs

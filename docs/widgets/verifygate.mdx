@@ -4,7 +4,7 @@ description: Gate React UI behind verification with hosted verify built in.
 icon: object-group
 ---
 
-`VerifyGate` checks eligibility, runs **Hosted Verify** when a new proof is needed, then renders children. New proofs default to **private** (same default as `client.verify()`). Visibility: [Security and trust](../platform/security-and-trust). Production **`appId`**: [Get started](../get-started).
+`VerifyGate` checks eligibility, runs **Hosted Verify** when a new proof is needed, then renders children. Pass **`appId`** and **`billingWallet`** from Hub so checks bill your account. Visibility: [Security and trust](../platform/security-and-trust). Setup: [Register your app](../platform/setup).
 
 ## Default create behavior
 
@@ -34,6 +34,7 @@ export function Page() {
         }
       }}
       appId="your-app-id"
+      billingWallet="0xYourHubWallet"
     >
       <div>Unlocked</div>
     </VerifyGate>
@@ -51,7 +52,8 @@ export function Page() {
 | `proofOptions` | Overrides privacy and content storage (defaults are private) |
 | `mode` | Chooses create vs access behavior |
 | `qHash` | Existing id for access mode |
-| `appId` | Sends public app attribution; usage bills the linked app owner profile |
+| `appId` | Public product ID from Hub |
+| `billingWallet` | Your Hub wallet — checks bill your credits, not the end user |
 | `hostedCheckoutUrl` | Overrides the hosted verify URL when needed |
 | `oauthProvider` | Pre-selects the OAuth provider when the user already chose one in your app |
 | `wallet` | Explicit provider for direct signing. Use this for non-EVM wallets and pass CAIP-2 `chain` context. |
@@ -76,6 +78,7 @@ export function ConnectGithub() {
       requiredVerifiers={['ownership-social']}
       oauthProvider="github"
       appId="your-app-id"
+      billingWallet="0xYourHubWallet"
     />
   );
 }

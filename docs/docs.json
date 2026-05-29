@@ -93,6 +93,7 @@
               "widgets/verifygate",
               "api/overview",
               "cookbook/auth-hosted-verify",
+              "cookbook/server-advanced",
               "examples",
               "platform/llm-docs"
             ]
@@ -185,6 +186,8 @@
             "group": "Playbooks",
             "pages": [
               "cookbook/overview",
+              "cookbook/auth-hosted-verify",
+              "cookbook/server-advanced",
               "cookbook/domain-verification",
               "cookbook/nft-gating",
               "cookbook/sybil-resistance",

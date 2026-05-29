@@ -6,9 +6,9 @@ icon: signs-post
 
 Use after **`neus_context`**, **`neus_agent_link`** for agents, and **`neus_proofs_check`** for the required verifier IDs.
 
-If existing receipts satisfy the request, continue without this tool. Use **`neus_verify_or_guide`** only when proof, profile, payment, provider, wallet, or delegation setup is missing.
+If existing receipts satisfy the request, continue without this tool. Use **`neus_verify_or_guide`** only when proof, profile, payment, wallet, or delegation setup is missing.
 
-Returns **`already_verified`** or **`hostedVerifyUrl`**. After hosted completion, call **`neus_proofs_get`** on the same identifier to read proof state and receipt fields ([Overview](./overview)).
+Returns an **`action`** (`already_verified` or `verification_required`) and includes **`hostedVerifyUrl`** when a hosted step is required. After hosted completion, call **`neus_proofs_get`** on the same identifier to read proof state and receipt fields ([Overview](./overview)).
 
 ## Input
 

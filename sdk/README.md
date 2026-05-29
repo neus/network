@@ -20,7 +20,7 @@ Already have an agent setup? Use the CLI to package supported local agent contex
 npx -y -p @neus/sdk neus import
 ```
 
-This prepares a local portable-agent manifest. Finish identity and delegation through NEUS MCP with `neus_agent_create` and `neus_agent_link`.
+This prepares a local portable-agent manifest. In MCP, call `neus_agent_link` first; if setup is missing, use `neus_agent_create`, complete the hosted or signing steps, then call `neus_agent_link` again until `linked: true`.
 
 *To check what will be imported without writing changes:*
 ```bash
@@ -63,9 +63,9 @@ window.location.assign(url);
 
 After completion, NEUS redirects back with a `qHash`. Store it with your user or record.
 
-## Create a receipt directly
+## Advanced: in-app signing
 
-Use this when your app handles signing. This example is EVM. For non-EVM wallets, pass the provider explicitly and include `chain` as a CAIP-2 value.
+Use this only when your app intentionally handles signing. This example is EVM. For non-EVM accounts, pass the provider explicitly and include `chain` as a CAIP-2 value.
 
 ```js
 import { NeusClient } from '@neus/sdk';

@@ -1023,6 +1023,8 @@ export function getHostedCheckoutUrl(opts = {}) {
   if (opts.intent) params.set('intent', String(opts.intent));
   if (opts.origin) params.set('origin', String(opts.origin));
   if (opts.oauthProvider) params.set('oauthProvider', String(opts.oauthProvider));
+  if (opts.appId) params.set('appId', String(opts.appId));
+  if (opts.billingWallet) params.set('billingWallet', String(opts.billingWallet).trim().toLowerCase());
   const qs = params.toString();
   return qs ? `${base}?${qs}` : base;
 }

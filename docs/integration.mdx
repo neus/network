@@ -17,11 +17,13 @@ Every NEUS integration follows the same loop.
 
 | Layer     | Use                                                                       |
 | --------- | ------------------------------------------------------------------------- |
-| Browser   | `VerifyGate`, `getHostedCheckoutUrl`, hosted `/verify`, SDK polling       |
-| Server    | `NEUS_ACCESS_KEY`, `verifyFromApp`, `gateCheck`, private reads, API calls |
+| Browser   | `VerifyGate`, `getHostedCheckoutUrl`, hosted `/verify`                    |
+| Server    | `gateCheck` with `appId` + `billingWallet`                                |
 | Assistant | Hosted NEUS MCP, `neus_context`, `neus_proofs_check`, `neus_agent_link`   |
 
-Passkey, wallet, and OAuth flows should run on NEUS hosted pages by default. Do not ship `npk_*` keys or credentialed `fetch` calls in browser bundles.
+Passkey, wallet, and OAuth flows should run on NEUS hosted pages by default. Do not ship access keys or server secrets in browser bundles.
+
+Advanced backend flows: [Server integrations (advanced)](./cookbook/server-advanced).
 
 ## Recommended paths
 

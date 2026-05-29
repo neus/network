@@ -57,7 +57,7 @@ If you already have an AI agent configured locally, the NEUS CLI can package sup
 npx -y -p @neus/sdk neus import
 ```
 
-This writes a local portable-agent manifest. Finish identity and delegation through NEUS MCP with `neus_agent_create` and `neus_agent_link`.
+This writes a local portable-agent manifest. In MCP, call `neus_agent_link` first; if setup is missing, use `neus_agent_create`, complete the hosted or signing steps, then call `neus_agent_link` again until `linked: true`.
 
 ### 2. Add trust to an app
 

@@ -1,39 +1,37 @@
 ---
 title: Agent Create (`neus_agent_create`)
-description: Prepare agent identity and delegation when link shows gaps; confirm with agent_link.
+description: Create agent identity and delegation when link shows gaps.
 icon: robot
 ---
 
-Use this tool **after** **`neus_agent_link`** shows missing proofs (or when you are bootstrapping a brand-new agent wallet and already know you need both steps). It **does not** store receipts by itself: it returns **`signatures`** and/or a **`hostedVerifyUrl`** for you to complete, then you confirm with **`neus_agent_link`**.
+Call after **`neus_agent_link`** when proofs are missing. Returns **`signatures`** and/or **`hostedVerifyUrl`**. Confirm with **`neus_agent_link`** when done.
 
 | Step | Action |
 |------|--------|
-| 1 | **`neus_agent_link`** on the **`agentWallet`** when that address already exists in your design |
-| 2 | If proofs are missing, call **`neus_agent_create`** with **`agentId`** and **`agentWallet`** (see below) |
-| 3 | Complete **`signatures`** (two steps: agent wallet, then approving account) **or** open **`hostedVerifyUrl`** once |
-| 4 | Call **`neus_agent_link`** again until **`linked: true`** |
+| 1 | **`neus_agent_link`** with **`agentWallet`** |
+| 2 | **`neus_agent_create`** with **`agentId`** and **`agentWallet`** |
+| 3 | Finish on NEUS via **`hostedVerifyUrl`** or signing steps |
+| 4 | **`neus_agent_link`** until **`linked: true`** |
 
-Optional **`controllerWallet`**: omit when the signed-in account from **`neus_context`** should approve the delegation.
+Leave out **`controllerWallet`** when the signed-in account from **`neus_context`** should approve.
 
-Vocabulary: [Agent concepts](../agents/concepts).
+[Agent concepts](../agents/concepts)
 
-## Agent wallet
+## Agent address
 
-| Value | When to use |
-|-------|-------------|
-| **EVM / Solana address** | You custody the agent key (recommended for teams that reuse one automation wallet) |
-| **`"generate"`** | NEUS generates a new agent wallet for advanced runtime setup. Store returned key material only in your secrets manager. |
+| Value | Use |
+|-------|-----|
+| EVM or Solana address | You hold the agent key |
+| `"generate"` | NEUS creates a new key — save it in your secrets manager |
 
-## Minimal input (existing agent wallet)
+## Input
 
 ```json
-{ "agentId": "my-assistant", "agentWallet": "0x1234567890abcdef1234567890abcdef12345678" }
+{ "agentId": "my-assistant", "agentWallet": "0x..." }
 ```
 
-Optional **`instructions`**, **`skills`**, **`services`**, presets, spend caps, and delegation fields: [Agent identity](../agents/agent-identity), [Agent delegation](../agents/agent-delegation), and the SDK.
+Optional fields: **`instructions`**, **`skills`**, **`services`**, spend caps, delegation scope. See [Agent identity](../agents/agent-identity) and [Agent delegation](../agents/agent-delegation).
 
 ## Related
 
-Signed-in profile context and private reads: [Auth](./auth).
-
-[Agent link](./agent-link) | [Overview](./overview) | [Agent verification flow](../agents/agent-verification-flow)
+[Auth](./auth) · [Agent link](./agent-link) · [Overview](./overview) · [Verification flow](../agents/agent-verification-flow)

@@ -7,13 +7,25 @@ export function buildHostedCheckoutUrl({
   origin,
   oauthProvider,
   campaignTitle,
-  campaignMessage
+  campaignMessage,
+  appId,
+  billingWallet,
+  gateId
 }) {
   const checkoutUrl = new URL(hostedCheckoutUrl);
   checkoutUrl.searchParams.set('verifiers', verifierList.join(','));
   checkoutUrl.searchParams.set('mode', 'popup');
   checkoutUrl.searchParams.set('returnUrl', returnUrl);
   checkoutUrl.searchParams.set('origin', origin);
+  if (typeof appId === 'string' && appId.trim()) {
+    checkoutUrl.searchParams.set('appId', appId.trim());
+  }
+  if (typeof billingWallet === 'string' && billingWallet.trim()) {
+    checkoutUrl.searchParams.set('billingWallet', billingWallet.trim().toLowerCase());
+  }
+  if (typeof gateId === 'string' && gateId.trim()) {
+    checkoutUrl.searchParams.set('gateId', gateId.trim());
+  }
   if (typeof oauthProvider === 'string' && oauthProvider.trim()) {
     checkoutUrl.searchParams.set('oauthProvider', oauthProvider.trim());
   }

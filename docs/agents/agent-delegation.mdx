@@ -4,53 +4,62 @@ description: Delegate permissions to agents for scoped operations.
 icon: handshake
 ---
 
-Use `agent-delegation` so an account can **approve what an agent is allowed to do**. Registration (`agent-identity`) alone does not grant those permissions.
-
-In API payloads, the field name is **`controllerWallet`**. It represents the **approving account** wallet (the account that signs this step). See [Agent concepts](./concepts).
+Grant scoped authority to an agent. Identity alone (`agent-identity`) does not include permissions.
 
 **Verifier ID:** `agent-delegation`
 
-**Typical path:** complete delegation in the [hosted verify flow](../cookbook/auth-hosted-verify) or with **`neus_agent_create`** in MCP.
+**`controllerWallet`** is the approving account — the address that signs this step. See [Agent concepts](./concepts).
 
-## Basic delegation
+## Setup
 
-```javascript
-const proof = await client.verify({
-  verifier: 'agent-delegation',
-  data: {
-    controllerWallet: '0x...',  // Must match signer (approving account)
-    controllerChainRef: 'eip155:8453',
-    agentWallet: '0x...',
-    agentChainRef: 'eip155:8453',
-    scope: 'global',
-    permissions: ['read-proofs'],
-  },
-  walletAddress: controllerWallet,
-});
-```
+<Steps>
+  <Step title="Check">
+    **`neus_context`** → **`neus_agent_link`**
+  </Step>
+  <Step title="Create">
+    **`neus_agent_create`**. Leave out **`controllerWallet`** when the signed-in profile account should approve.
+  </Step>
+  <Step title="Confirm">
+    **`neus_agent_link`** until **`linked: true`**
+  </Step>
+</Steps>
 
-## App-link happy path
+Or finish on NEUS via [hosted verify](../cookbook/auth-hosted-verify).
 
-Use `scope: 'app-link'` when your app needs to **create proofs on behalf of a user without asking them to sign every request**. The user delegates once, then your app acts with that authority.
-
-**Typical flow:**
-1. User connects (passkey or wallet) on NEUS
-2. Your app asks them to approve delegation once
-3. Your app stores the resulting `qHash`
-4. On future proof requests, your backend calls `POST /api/v1/verification` with `walletAddress` and the `x-neus-app` header — no user signature required
+## SDK
 
 ```javascript
 await client.verify({
   verifier: 'agent-delegation',
   data: {
-    controllerWallet: userWallet,   // The user (approving account)
-    controllerChainRef: 'eip155:8453',
-    agentWallet: userWallet,        // Can be the same wallet for app-link
-    agentChainRef: 'eip155:8453',
+    controllerWallet: '0x...',
+    agentWallet: '0x...',
+    scope: 'global',
+    permissions: ['read-proofs'],
+  },
+  walletAddress: '0x...',
+});
+```
+
+## App Link (advanced)
+
+One-time user approval so your backend can create proofs without asking them to sign every request. This is **not** the same as **Register app** in Hub (billing for hosted checks). See [Server integrations (advanced)](../cookbook/server-advanced).
+
+1. User signs in on NEUS
+2. User approves delegation once
+3. Your app stores the **`qHash`**
+4. Your backend calls verification with **`x-neus-app`** — no per-request signature
+
+```javascript
+await client.verify({
+  verifier: 'agent-delegation',
+  data: {
+    controllerWallet: userWallet,
+    agentWallet: userWallet,
     scope: 'app-link',
     permissions: [
-      'app:your-app-id',           // Required: which app is authorized
-      'origin:https://yourapp.com' // Optional: restrict to your origin
+      'app:your-app-id',
+      'origin:https://yourapp.com',
     ],
     expiresAt: Date.now() + 90 * 24 * 60 * 60 * 1000,
   },
@@ -58,26 +67,16 @@ await client.verify({
 });
 ```
 
-**Permission format:**
-- `app:<appId>` — required; matches your `x-neus-app` header
-- `origin:<exact-origin>` — optional; restricts to your domain
-- `origin:*` — optional wildcard; allows any origin (least restrictive)
+**Permissions:**
+- `app:<appId>` — matches your `x-neus-app` header
+- `origin:<url>` — restrict to your domain
+- `origin:*` — any origin
 
-**On the verification request:**
-Send `x-neus-app: your-app-id` and `Origin: https://yourapp.com`. The API looks up the user's active `app-link` delegation and accepts the request if the app and origin match. If there is no matching delegation, the API falls back to the normal signature requirement.
+Send `x-neus-app: your-app-id` and `Origin: https://yourapp.com` on verification requests.
 
-## Advanced delegation
+## Payment delegation
 
-Use this section for payment-scoped delegation, spend caps, or extra policy fields.
-
-### `maxSpend` (optional)
-
-`maxSpend` is a **whole-number string** in **token base units** (no decimal separator, 1 - 78 digits). This matches common on-chain amount encoding and avoids floating-point rounding issues.
-
-- **USDC (typical `payments:x402`):** six decimal places - e.g. 25 USDC to `"25000000"`. Use `toAgentDelegationMaxSpend('25', 6)` from `@neus/sdk`.
-- **Native ETH-style assets:** eighteen decimal places - e.g. 1 ETH to `"1000000000000000000"`.
-
-Token metadata is not stored on the proof; resolve the cap using your scope and product defaults.
+`maxSpend` is a whole-number string in token base units. For USDC (6 decimals), 25 USDC = `"25000000"`. Use `toAgentDelegationMaxSpend('25', 6)` from `@neus/sdk`.
 
 ```javascript
 import { toAgentDelegationMaxSpend } from '@neus/sdk';
@@ -86,19 +85,15 @@ await client.verify({
   verifier: 'agent-delegation',
   data: {
     controllerWallet: '0x...',
-    controllerChainRef: 'eip155:8453',
     agentWallet: '0x...',
-    agentChainRef: 'eip155:8453',
     scope: 'payments:x402',
     permissions: ['execute', 'read'],
     maxSpend: toAgentDelegationMaxSpend('100.50', 6),
     allowedPaymentTypes: ['x402'],
     receiptDisclosure: 'summary',
     expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    instructions: 'Policy instructions for the delegated agent',
-    skills: [{ id: 'market-data' }]
   },
-  walletAddress: controllerWallet,
+  walletAddress: '0x...',
 });
 ```
 
@@ -106,38 +101,28 @@ await client.verify({
 
 | Field | Required | Description |
 |-------|----------|-------------|
-| `controllerWallet` | Yes | Approving account wallet. Must match signer. |
-| `controllerChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request for both wallets | CAIP-2 chain for the controller |
-| `agentWallet` | Yes | Agent wallet address |
-| `agentChainRef` | Yes in `data`, or set `chain` or `chainId` on the verification request for both wallets | CAIP-2 chain for the agent |
-| `agentId` | No | Reference to a registered agent identity |
-| `scope` | No | Permission scope (**default:** `global`; confirm for your integration - payment agents may use a narrower scope) |
-| `permissions` | No | Allowed actions (`execute`, `read`, etc.) |
-| `maxSpend` | No | Whole-number string: spend cap in token base units. See above. |
-| `allowedPaymentTypes` | No | Allowed payment rails for delegated spend |
+| `controllerWallet` | Yes | Approving account (must match signer) |
+| `agentWallet` | Yes | Agent address |
+| `agentId` | No | Linked identity id |
+| `scope` | No | Permission scope (default: `global`) |
+| `permissions` | No | Allowed actions |
+| `maxSpend` | No | Spend cap in token base units |
+| `allowedPaymentTypes` | No | Payment rails (e.g. `x402`) |
 | `receiptDisclosure` | No | `summary`, `full`, or `none` |
-| `expiresAt` | No | Expiration timestamp (Unix ms) |
-| `instructions` | No | Policy instructions (max 16000 chars) |
-| `skills` | No | Up to 48 skill objects (`id` required) |
+| `expiresAt` | No | Expiration (Unix ms) |
+| `instructions` | No | Policy text (16000 chars) |
+| `skills` | No | Up to 48 skill objects |
 
-Proof responses may include CAIP-10 `controllerAccountId` and `agentAccountId`. Schema: [`agent-delegation.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/agent-delegation.json).
+Schema: [`agent-delegation.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/agent-delegation.json).
 
-## What you get
+## Result
 
-A qHash for policy checks and delegated actions.
+A **`qHash`** you can check before delegated actions. Use **`neus_agent_link`** or **`neus_proofs_check`**.
 
-## Checking access
-
-Use proof checks or MCP **`neus_agent_link`** from your app — you do not need raw REST for the default path.
-
-## Security
-
-<Warning>
-Set `expiresAt` and `maxSpend` when money or high-risk actions are in scope. Revoke proofs you no longer trust.
-</Warning>
-
-## Revocation
+## Revoke
 
 ```javascript
-await client.revokeOwnProof(qHash, wallet);
+await client.revokeOwnProof(qHash, walletAddress);
 ```
+
+Set **`expiresAt`** and **`maxSpend`** when money or high-risk actions are in scope.
