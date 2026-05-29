@@ -35,55 +35,143 @@ html {
 }
 
 /*
-  Mintlify shell scrims — REMOVE top fade, drop shadow, blur plate, grid decoration.
-  (sidebar: sticky bg-gradient-to-b; navbar: absolute backdrop-blur + border-b)
+  Mintlify decorative overlays only — never match [class*="shadow"] (breaks sidebar links
+  with Tailwind text-shadow utilities) or broad gradient/backdrop selectors on <a>.
 */
 main > span.absolute.inset-0.overflow-hidden.pointer-events-none:not(#background-color),
-#navbar > div.absolute,
-#sidebar > div[class*="gradient"],
-#sidebar [class*="bg-gradient"],
-#sidebar [class*="gradient-to-"],
-#navigation-items > div[class*="gradient"],
-#navigation-items [class*="bg-gradient"],
-#navbar [class*="backdrop-blur"],
-#navbar [class*="supports-backdrop-blur"],
-#sidebar [class*="backdrop-blur"],
-#navigation-items [class*="backdrop-blur"],
-.nav-tabs [class*="backdrop-blur"],
-.nav-tabs [class*="bg-gradient"],
-#navbar [class*="shadow-sm"],
-#navbar [class*="shadow-md"],
-#navbar [class*="shadow-lg"],
-#sidebar [class*="shadow-sm"],
-#sidebar [class*="shadow-md"],
-#sidebar [class*="shadow-lg"],
-#navigation-items [class*="shadow"] {
+#sidebar div[class*="bg-gradient-to-b"].pointer-events-none,
+#sidebar div[class*="bg-gradient-to-t"].pointer-events-none {
   display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
   pointer-events: none !important;
 }
 
-#navbar,
 #sidebar,
 #navigation-items,
-.nav-tabs,
-[class*="nav-tabs"],
-#navbar::before,
-#navbar::after,
-#sidebar::before,
-#sidebar::after,
-#navigation-items::before,
-#navigation-items::after {
+.nav-tabs {
   box-shadow: none !important;
-  --tw-shadow: 0 0 #0000 !important;
-  --tw-shadow-colored: 0 0 #0000 !important;
-  --tw-ring-shadow: 0 0 #0000 !important;
-  --tw-ring-offset-shadow: 0 0 #0000 !important;
-  background-image: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-  filter: none !important;
+}
+
+/*
+  Frosted docs header — use Mintlify #navbar-transition as the glass plate (do not hide it).
+  Interactive chrome stays above the plate; no extra drop shadows on the shell.
+*/
+#navbar {
+  background: transparent !important;
+  box-shadow: none !important;
+  isolation: isolate;
+}
+
+#navbar-transition {
+  display: block !important;
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+  background: var(--neus-shell-glass-fill) !important;
+  background-color: transparent !important;
+  -webkit-backdrop-filter: var(--neus-shell-glass-blur) !important;
+  backdrop-filter: var(--neus-shell-glass-blur) !important;
+  border-bottom: 1px solid var(--neus-shell-glass-border) !important;
+  box-shadow: none !important;
+  opacity: 1 !important;
+  z-index: 0;
+}
+
+#navbar > .max-w-8xl,
+#navbar .max-w-8xl {
+  position: relative;
+  z-index: 1;
+}
+
+#navbar a,
+#navbar button {
+  text-shadow: none !important;
+}
+
+@media (min-width: 1024px) {
+  /*
+    Mintlify row 1: one flex-1 wrapper containing logo | search | actions.
+    Target direct children only — the wrapper also has flex-1 + gap-x-4 and must stay full width.
+  */
+  #navbar .flex.items-center.lg\:px-12.h-16 > .h-full.relative.flex-1 {
+    display: flex !important;
+    align-items: center !important;
+    flex: 1 1 0% !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    gap: 0.75rem 1rem !important;
+  }
+
+  #navbar .flex.items-center.lg\:px-12.h-16 > .h-full.relative.flex-1 > .flex-1.flex.items-center.gap-x-4:first-child {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    max-width: 11rem;
+  }
+
+  #navbar .flex.items-center.lg\:px-12.h-16 > .h-full.relative.flex-1 > .relative.hidden.lg\:flex.items-center.flex-1.z-20.justify-center {
+    flex: 1 1 0% !important;
+    width: auto !important;
+    max-width: none !important;
+    min-width: 10rem !important;
+    justify-content: stretch !important;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+
+  #navbar button[class*="group/search"] {
+    width: 100% !important;
+    max-width: none !important;
+    background: rgb(12 14 18 / 0.55) !important;
+    border: 1px solid var(--neus-border-faint) !important;
+    box-shadow: inset 0 1px 0 rgb(90 90 90 / 0.08) !important;
+    color: var(--neus-text-primary) !important;
+  }
+
+  #navbar .flex.items-center.lg\:px-12.h-16 > .h-full.relative.flex-1 > .flex-1.relative.hidden.lg\:flex.items-center.ml-auto.justify-end {
+    flex: 0 0 auto !important;
+    width: auto !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap;
+  }
+
+  /* Tab strip: full-width under main bar, tied to the same glass plate */
+  #navbar .hidden.lg\:flex.px-12.h-12 {
+    width: 100% !important;
+    border-top: 1px solid var(--neus-border-faint);
+  }
+
+  #navbar .nav-tabs {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
+  }
+
+  #navbar .nav-tabs a {
+    color: var(--neus-text-muted) !important;
+  }
+
+  #navbar .nav-tabs a:hover {
+    color: var(--neus-text-secondary) !important;
+  }
+
+  #navbar .nav-tabs a.text-primary,
+  #navbar .nav-tabs a[aria-current="page"] {
+    color: var(--neus-text-primary) !important;
+  }
+}
+
+#navigation-items a,
+#navigation-items button,
+.nav-tabs a {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 body {
@@ -427,14 +515,16 @@ footer {
   border-radius: 4px;
 }
 
-#search-input {
+#search-input,
+#navbar button[class*="group/search"] {
   background: rgb(12 14 18 / 0.72);
   border: 1px solid var(--neus-border-faint);
   box-shadow: inset 0 1px 0 rgb(90 90 90 / 0.08);
   color: var(--neus-text-primary) !important;
 }
 
-#search-input:focus {
+#search-input:focus,
+#navbar button[class*="group/search"]:focus-visible {
   border-color: rgb(var(--neus-rgb-accent-primary) / 0.28);
   box-shadow:
     0 0 0 4px rgb(var(--neus-rgb-accent-primary) / 0.1),

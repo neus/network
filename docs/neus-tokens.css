@@ -124,4 +124,14 @@
       rgb(var(--neus-rgb-surface-canvas) / 1) 100%
     );
   --neus-page-grad-base: rgb(var(--neus-rgb-surface-canvas) / 1);
+
+  /* App shell chrome — match neus/app/globals.css (docs header glass) */
+  --neus-shell-glass-fill: linear-gradient(
+    180deg,
+    rgb(var(--neus-rgb-surface-card-hover) / 0.4) 0%,
+    rgb(var(--neus-rgb-surface-card) / 0.26) 58%,
+    rgb(var(--neus-rgb-surface-canvas) / 0.12) 100%
+  );
+  --neus-shell-glass-blur: blur(14px) saturate(1.1);
+  --neus-shell-glass-border: rgb(var(--neus-rgb-border) / 0.14);
 }
