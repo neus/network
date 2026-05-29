@@ -44,6 +44,8 @@ jobs:
       # Ensure package.json version matches the tag (vX.Y.Z)
       - name: Verify version matches tag
         run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          node scripts/verify-release-versions.mjs --tag "$TAG"
           node -e "const v=require('./sdk/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(`package.json ${v} != tag ${t}`);process.exit(1)}"
 
       - name: Install dependencies
@@ -70,6 +72,9 @@ jobs:
       - name: Package check
         run: npm pack --dry-run
         working-directory: sdk
+
+      - name: Verify npm publish hygiene
+        run: node scripts/verify-publish-hygiene.mjs
 
       - name: Configure npm authentication
         run: |

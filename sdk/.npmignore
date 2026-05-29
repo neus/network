@@ -1,56 +1,40 @@
-# Test files
+# Dev / test (never publish)
 test/
 *.test.js
 vitest.config.js
 coverage/
-
-# Development files
 .eslintrc.json
 .prettierrc
+tsconfig.json
+package-lock.json
 
-# Source control
+# Widget source — dist/ is the shipped browser bundle
+widgets/**/*.jsx
+widgets/**/hostedCheckout.js
+widgets/**/mergeCreateProofOptions.js
+neus-logo.svg
+
+# Source control / IDE / secrets
 .git/
 .gitignore
-
-# IDE
+.npmrc
 .vscode/
 .idea/
 *.swp
 *.swo
-.npmrc
 
-# OS
+# OS / logs / deps
 .DS_Store
 Thumbs.db
-
-# Logs
 *.log
 npm-debug.log*
-
-# Dependencies
 node_modules/
 
-# Build artifacts
-dist/
-build/
-
-# Documentation source
+# Docs mirrors (not part of npm package)
 docs/
 backup-docs/
 
-# Temporary files
+# Temp
 tmp/
 temp/
 *.tmp
-
-# Keep these
-!index.js
-!client.js
-!utils.js
-!errors.js
-!types.d.ts
-!README.md
-!LICENSE
-!SECURITY.md
-!widgets/
-!widgets/verify-gate/dist/**

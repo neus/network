@@ -11,6 +11,8 @@
     "docs:lint:markdown": "npx --yes markdownlint-cli2@0.18.1 --config .markdownlint-cli2.jsonc",
     "docs:lint:openapi": "npx --yes @redocly/cli@2.14.1 lint docs/openapi/public-api.json",
     "docs:validate": "npm run docs:lint:markdown && npm run docs:lint:openapi",
-    "test:sdk": "npm --prefix sdk test"
+    "test:sdk": "npm --prefix sdk test",
+    "verify:release": "node scripts/verify-release-versions.mjs",
+    "verify:publish": "node scripts/verify-publish-hygiene.mjs"
   }
 }

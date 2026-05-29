@@ -1,14 +1,37 @@
-# OS / IDE
+# OS
 .DS_Store
 Thumbs.db
+
+# IDE / assistant adapters (generated locally — do not commit)
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.neus/
+.cursor/
+.cursorrules
+.claude/
+!.claude-plugin/
+!.claude-plugin/**
+
+# Operator / private paths (never in public network)
+internal/
+backup-docs/
+**/backup-docs/
+
+# IDE project folders
 .idea/
 .vscode/*
-!.vscode/settings.json
-.claude/settings.local.json
-.claude/*
-*.swp
-*.swo
+!.vscode/extensions.json
+
+# Secrets and registry auth
 .npmrc
+**/.npmrc
+
+# Env
+.env
+.env.*
+!.env.example
+!**/.env.example
 
 # Dependencies
 node_modules/
@@ -20,18 +43,10 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-AGENTS.md
-
-# Env
-.env
-.env.*
-!.env.example
-!**/.env.example
 
 # Build artifacts
 dist/
-# Widget bundles are consumed via `widgets/verify-gate/index.js` → `./dist/*.js`; keep
-# rebuilt output in Git so clones and publishes cannot ship stale JSX (e.g. undefined Spinner).
+# Widget bundles ship from git so clones/publish cannot ship stale JSX.
 !sdk/widgets/verify-gate/dist/
 !sdk/widgets/verify-gate/dist/**
 build/
@@ -42,25 +57,15 @@ temp/
 *.tmp
 **/.next/
 sdk/cjs/
+
+# Docs tooling caches
 .mintlify-home*/
 docs/.mintlify-home*/
 .tmp-docs-manifest.json
 
-# Tooling caches & configs (keep out of repo)
+# Tooling caches
 .eslintcache
+*.tsbuildinfo
 
 # Local packages / tarballs
 *.tgz
-
-# Local editor and assistant folders (do not commit)
-.CLAUDE/
-.claude/*
-.cursor/*
-.cursorrules
-.vscode/settings.json
-
-# Local compiled context (do not commit)
-.neus/
-GEMINI.md
-CLAUDE.md
-GEMINI.md

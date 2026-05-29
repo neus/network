@@ -1,0 +1,6 @@
+# Discovery metadata only — exclude everything except the published surface.
+*
+!package.json
+!index.mjs
+!server.json
+!README.md
