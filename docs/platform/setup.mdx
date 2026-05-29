@@ -4,7 +4,7 @@ description: Connect your product to NEUS so checks bill your account.
 icon: building
 ---
 
-Register your site in Hub before you ship **VerifyGate** or **Hosted Verify**. One setup step links your product, your domain, and your billing account.
+Register your site in Hub before you ship **VerifyGate** or **Hosted Verify**. One signed step gives you an **app ID** and **billing wallet** so checks bill your account and tag to your product.
 
 ## Steps
 
@@ -29,8 +29,6 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 Full walkthrough: [Quickstart](../quickstart) · Billing: [Billing](./billing).
 
-## DNS domain verification
-
-If you use [`ownership-dns-txt`](../verification/ownership-dns-txt) to prove control of a hostname, publish a **TXT** record on `_neus.<your-domain>` with value **`wallet=<your-wallet-or-account-address>`** (see the verifier page for Ethereum vs other networks, casing, and the optional `wallet=eip155:…` line). Cookbook: [Domain verification](../cookbook/domain-verification).
+**Optional:** [Domain verification](../cookbook/domain-verification) proves DNS control for profile trust and team workspace — it is separate from app registration and not required to ship VerifyGate.
 
 **Next:** [Hosted Verify](../cookbook/auth-hosted-verify)

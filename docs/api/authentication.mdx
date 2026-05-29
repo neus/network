@@ -1,6 +1,6 @@
 ---
 title: Authentication
-description: Hosted verification on NEUS by default; keys for advanced server flows.
+description: Hosted verification on NEUS by default; keys for server automation and backend receipts.
 icon: fingerprint
 ---
 
@@ -11,10 +11,10 @@ icon: fingerprint
 | Product verification (default) | `VerifyGate` / Hosted Verify + app registration | No |
 | MCP client auth | OAuth 2.0 + PKCE | No |
 | Server automation as your profile | Bearer `npk_*` access key | No |
-| Server creates receipts for an approved user | Advanced delegation + `verifyFromApp` | No |
+| Server creates receipts for an approved user | App link + `verifyFromApp` | No |
 | Sign inside your page | SDK `verify` + `wallet` | Yes — rare |
 
-Advanced server paths: [Server integrations (advanced)](../cookbook/server-advanced).
+Server integration: [Integrations](../cookbook/integrations).
 
 ## Hosted Verify (default)
 
@@ -37,9 +37,9 @@ See [MCP OAuth](../mcp/oauth).
 
 [Access keys](https://neus.network/profile?tab=account) for servers, CI, and MCP automation. Never in browser bundles.
 
-## Advanced server delegation
+## Backend receipts
 
-For backend-created receipts after a user approves your product once, see [Server integrations (advanced)](../cookbook/server-advanced). This is separate from **Register app** in Hub, which connects billing for hosted checks.
+For backend-created receipts after a user approves your product once, see [Integrations](../cookbook/integrations). Separate from **Register app** in Hub, which connects billing for hosted checks.
 
 ## Signing inside your app
 

@@ -4,7 +4,7 @@ import path from 'node:path';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
 const repoRoot = path.resolve(here, '../..', '..');
-const src = path.join(repoRoot, 'examples', 'shared', 'css', 'neus-tokens.css');
+const src = path.join(repoRoot, 'docs', 'neus-tokens.css');
 const destDir = path.join(here, '..', 'public');
 const dest = path.join(destDir, 'neus-tokens.css');
 

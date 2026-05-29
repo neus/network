@@ -18,8 +18,11 @@ This site (`docs.neus.network`) is the standard integration reference. Follow th
 
 ## MCP for assistants
 
+**Product server:** `https://mcp.neus.network/mcp` — identity, proofs, delegation, verify.  
+**Not the product:** `https://docs.neus.network/mcp` — documentation search only (Mintlify).
+
 1. Install: [MCP setup](../mcp/setup) — `neus setup` → `neus auth` → `neus doctor --live`
-2. Session flow: [MCP overview](../mcp/overview) (start with **`neus_context`** once; reuse receipts before new verification)
+2. Session flow: [MCP overview](../mcp/overview) (call **`neus_context`** once per session; reuse receipts before new verification)
 3. Install hub: [NEUS for AI assistants](../mcp/ide-plugin)
 
 Use **`neus auth`** for OAuth (recommended). Profile access keys (`npk_*`) are for servers and CI only.

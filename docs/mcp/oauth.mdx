@@ -4,9 +4,11 @@ description: OAuth 2.0 with PKCE for MCP client authentication — discovery, au
 icon: shield-check
 ---
 
-NEUS MCP uses **OAuth 2.0 Authorization Code with PKCE** (RFC 6749 + RFC 7636) as the primary authentication flow for MCP clients.
+NEUS MCP uses **OAuth 2.0 Authorization Code with PKCE** for MCP clients. The user signs in on NEUS (same passkey/wallet flow as the product).
 
-OAuth wraps the existing NEUS hosted login. The user sees the same NEUS sign-in page — OAuth provides the standard contract that MCP clients expect.
+<Note>
+  **Default install:** `npx -y -p @neus/sdk neus setup` and `neus auth`. Use this page for custom MCP hosts, security review, or raw HTTP integration.
+</Note>
 
 ## Flow overview
 
@@ -22,16 +24,7 @@ MCP client discovers NEUS MCP
   → Client uses Bearer token on MCP requests
 ```
 
-## How /oauth/authorize works
-
-The `/oauth/authorize` endpoint owns all OAuth validation and orchestrates the login flow. The frontend does not manually invent or own the OAuth callback behavior.
-
-1. **Validates** all OAuth parameters: `response_type=code`, `client_id`, `redirect_uri`, `code_challenge_method=S256`, `resource=https://mcp.neus.network/mcp`.
-2. **If no NEUS session**: stores the pending OAuth request server-side, then redirects/renders the existing HostedLoginFlow (the same passkey/wallet login used everywhere on NEUS).
-3. **After login**: returns to the `/oauth/authorize` continuation, where the backend issues a one-time authorization code bound to subjectId, client_id, redirect_uri, code_challenge, resource, and scope.
-4. **Redirects** to `redirect_uri?code=...&state=...`.
-
-The auth code is single-use and expires in 10 minutes.
+`/oauth/authorize` validates OAuth parameters, runs Hosted Login when needed, issues a single-use code (10-minute TTL), and redirects to `redirect_uri`.
 
 ## Discovery
 

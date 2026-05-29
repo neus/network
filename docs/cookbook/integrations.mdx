@@ -1,17 +1,17 @@
 ---
-title: Server integrations (advanced)
+title: Integrations
 description: Backend receipt creation, user approvals, and access keys when Hosted Verify is not enough.
 icon: server
 ---
 
-Most products should follow [Quickstart](../quickstart): **VerifyGate** or **Hosted Verify**, then **`gateCheck`** on the server. Use this page when you need your backend to create receipts directly, or when you automate NEUS as your own profile.
+Most products use [Quickstart](../quickstart): **VerifyGate** or **Hosted Verify**, then **`gateCheck`** on the server. Use this guide when your backend creates receipts directly, or when you automate NEUS as your own profile.
 
 ## When you need this
 
 | Need | Use |
 |------|-----|
 | User verifies in the browser; you only check later | [Quickstart](../quickstart) — no access key |
-| Your backend creates receipts without opening NEUS in the browser | `verifyFromApp` + per-user approval |
+| Backend creates receipts without opening NEUS in the browser | `verifyFromApp` + per-user approval |
 | MCP, CI, or raw HTTP as **your** NEUS profile | Profile **access key** (`npk_*`) |
 
 ## Backend receipt creation (`verifyFromApp`)
@@ -35,7 +35,7 @@ const receipt = await client.verifyFromApp({
 
 Requirements:
 
-- An active user approval for your `appId` and site origin
+- Active user approval for your `appId` and site origin
 - Matching app context on the request (`X-Neus-App` and origin)
 
 If approval is missing, send the user through [Hosted Verify](./auth-hosted-verify) first.
@@ -46,7 +46,7 @@ Create keys under [Profile → Account](https://neus.network/profile?tab=account
 
 Access keys identify **your builder profile** for automation. They do not replace per-user approval for backend receipt creation.
 
-## Billing note
+## Billing
 
 `appId` alone does not bill your account. For hosted flows, pass **`billingWallet`** (your Hub wallet) so checks spend your credits. Backend flows follow the authenticated context on each request.
 

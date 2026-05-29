@@ -1,6 +1,6 @@
 ---
 title: Examples
-description: Start with the trust receipts showcase, then Node, React, and raw HTTP.
+description: Trust receipts showcase, Node, React, and HTTP reference implementations.
 icon: code
 ---
 
@@ -8,14 +8,14 @@ Same flow everywhere: check → verify if needed → save **`qHash`** → reuse.
 
 **Showcase:** [trust-receipts-showcase](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) · **Demo:** [neus.network/demo](https://neus.network/demo).
 
-[Quickstart](./quickstart) · [Hosted Verify](./cookbook/auth-hosted-verify) (ceremony on NEUS). Server-only paths: [Server integrations (advanced)](./cookbook/server-advanced).
+[Quickstart](./quickstart) · [Hosted Verify](./cookbook/auth-hosted-verify). Server-only integration: [Integrations](./cookbook/integrations).
 
 | Example | Use it for |
 |------------|----------|
 | [**trust-receipts-showcase** (default)](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) | Full **VerifyGate** + gate check: each card is a trust outcome and a verifier |
-| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | **Advanced:** server key, sign + `gateCheck` |
+| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Server key, sign + `gateCheck` |
 
-Raw HTTP signing examples are inline below (advanced).
+Raw HTTP signing examples are inline below.
 
 ## React: gate
 
@@ -37,15 +37,15 @@ export default function ProtectedPage() {
 
 ## Node
 
-[Server integrations (advanced)](./cookbook/server-advanced) for backend receipt creation. [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) for lower-level SDK usage.
+[Integrations](./cookbook/integrations) for backend receipt creation. [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) for lower-level SDK usage.
 
-## HTTP (advanced)
+## HTTP reference
 
 ```bash
 curl -X POST https://api.neus.network/api/v1/verification/standardize \
   -H "Content-Type: application/json" \
   -d '{"walletAddress":"0x...","verifierIds":["ownership-basic"],"data":{"content":"Hello NEUS","owner":"0x..."},"signedTimestamp":1713312000000}'
-# Advanced raw HTTP only: sign signerString, then POST /api/v1/verification with the same body + signature
+# Then sign signerString and POST /api/v1/verification with the same body + signature
 ```
 
 ## Doc map

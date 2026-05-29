@@ -1,28 +1,19 @@
-/* NEUS Mintlify skin — tokens + page wash from examples/shared/css/neus-tokens.css (mirrors neus/app/globals.css). */
-@import url('../examples/shared/css/neus-tokens.css');
+/* NEUS Mintlify skin — tokens colocated in docs/ (Mintlify CDN does not resolve ../examples imports). */
+@import url('./neus-tokens.css');
 
-/* Doc-only translucent surfaces (cards/rails over the marketing page wash). */
+/* Doc-only card elevation — shell rails use solid tokens from neus-tokens.css (match app). */
 :root {
-  --neus-bg-rail: rgb(18 20 24 / 0.42);
-  --neus-bg-card: rgb(var(--neus-rgb-surface-card) / 0.68);
-  --neus-bg-card-hover: rgb(var(--neus-rgb-surface-card-hover) / 0.74);
-  --neus-bg-glass: rgb(18 20 24 / 0.56);
-  --neus-shadow-card:
-    0 16px 36px rgba(0, 0, 0, 0.32),
-    0 0 0 1px rgba(90, 90, 90, 0.12),
-    inset 0 1px 0 rgba(90, 90, 90, 0.1);
-  --neus-shadow-card-hover:
-    0 20px 44px rgba(0, 0, 0, 0.38),
-    0 0 0 1px rgba(90, 90, 90, 0.16),
-    inset 0 1px 0 rgba(90, 90, 90, 0.12);
+  --neus-docs-card-bg: rgb(var(--neus-rgb-surface-card) / 1);
+  --neus-docs-card-hover: rgb(var(--neus-rgb-surface-card-hover) / 1);
 }
 
 /*
-  Page wash — same composite as marketing (html only; shells stay transparent).
-  docs.json background.color.dark is the grad base (#101113), not a second paint layer.
+  Marketing page wash (neus/app/globals.css --neus-page-bg).
+  Paint on html + fixed #background-color; docs.json dark hex is grad base only.
 */
-html,
-#background-color {
+html {
+  min-height: 100%;
+  min-height: 100dvh;
   background-color: var(--neus-page-grad-base) !important;
   background-image: var(--neus-page-bg) !important;
   background-repeat: no-repeat !important;
@@ -31,19 +22,144 @@ html,
   background-attachment: fixed !important;
 }
 
-#background-color::before,
-#background-color::after {
-  background: transparent !important;
+#background-color {
+  /* Mintlify already applies fixed inset-0 -z-10; only override the paint, not layout. */
+  z-index: -10 !important;
+  pointer-events: none !important;
+  background-color: var(--neus-page-grad-base) !important;
+  background-image: var(--neus-page-bg) !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% 100dvh !important;
+  background-position: center top !important;
+  background-attachment: fixed !important;
+}
+
+/*
+  Mintlify shell scrims — REMOVE top fade, drop shadow, blur plate, grid decoration.
+  (sidebar: sticky bg-gradient-to-b; navbar: absolute backdrop-blur + border-b)
+*/
+main > span.absolute.inset-0.overflow-hidden.pointer-events-none:not(#background-color),
+#navbar > div.absolute,
+#sidebar > div[class*="gradient"],
+#sidebar [class*="bg-gradient"],
+#sidebar [class*="gradient-to-"],
+#navigation-items > div[class*="gradient"],
+#navigation-items [class*="bg-gradient"],
+#navbar [class*="backdrop-blur"],
+#navbar [class*="supports-backdrop-blur"],
+#sidebar [class*="backdrop-blur"],
+#navigation-items [class*="backdrop-blur"],
+.nav-tabs [class*="backdrop-blur"],
+.nav-tabs [class*="bg-gradient"],
+#navbar [class*="shadow-sm"],
+#navbar [class*="shadow-md"],
+#navbar [class*="shadow-lg"],
+#sidebar [class*="shadow-sm"],
+#sidebar [class*="shadow-md"],
+#sidebar [class*="shadow-lg"],
+#navigation-items [class*="shadow"] {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+#navbar,
+#sidebar,
+#navigation-items,
+.nav-tabs,
+[class*="nav-tabs"],
+#navbar::before,
+#navbar::after,
+#sidebar::before,
+#sidebar::after,
+#navigation-items::before,
+#navigation-items::after {
+  box-shadow: none !important;
+  --tw-shadow: 0 0 #0000 !important;
+  --tw-shadow-colored: 0 0 #0000 !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+body {
+  font-family: var(--neus-font-sans);
+  font-size: var(--neus-text-body);
+  font-weight: var(--neus-weight-body);
+  line-height: var(--neus-leading-body);
+  font-feature-settings: "ss01" on, "cv01" on;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: transparent !important;
+  background-image: none !important;
+  color: var(--neus-text-primary);
+}
+
+/* Mintlify shell wrappers must stay transparent so the wash is visible. */
+#body-content,
+#content-area,
+#content {
   background-color: transparent !important;
   background-image: none !important;
 }
 
-body {
-  font-feature-settings: "ss01" on, "cv01" on;
-  -webkit-font-smoothing: antialiased;
-  background-color: transparent !important;
-  background-image: none !important;
-  color: var(--neus-text-primary);
+/*
+  Layout — Mintlify ships flex-col on #content-area without display:flex, which
+  collapses the column to ~243px and breaks card grids + three-column balance.
+*/
+#content-container > .flex.flex-row-reverse {
+  align-items: flex-start !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  padding-top: 2.5rem !important;
+  gap: 2rem 3rem !important;
+}
+
+#content-area {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: stretch !important;
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+}
+
+#content-side-layout {
+  flex: 0 0 17rem !important;
+  width: 17rem !important;
+  max-width: 17rem !important;
+}
+
+#content-area > #header,
+#content-area > #content,
+#content-area > #pagination,
+#content-area > footer,
+#content-area > div {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+.mdx-content {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Mintlify prose grays — lift to NEUS tokens */
+.prose.mdx-content,
+.mdx-content.prose {
+  --tw-prose-body: var(--neus-text-primary);
+  --tw-prose-headings: var(--neus-text-primary);
+  --tw-prose-bold: var(--neus-text-primary);
+  --tw-prose-links: var(--neus-accent);
+  --tw-prose-counters: var(--neus-text-muted);
+  --tw-prose-bullets: var(--neus-text-muted);
+  max-width: none !important;
 }
 
 /* Mintlify auto-injects llms.txt index for agents; keep /llms.txt, hide in-page duplicate. */
@@ -95,31 +211,78 @@ button,
 }
 
 /*
-  Typography — strict dark only; do not rely on Tailwind .dark (Mintlify may omit it).
-  Body copy uses primary token (marketing default), not Mintlify gray-400.
+  Typography — DESIGN.md scale; 16px body / 600 headings; no Mintlify gray-400 prose.
 */
-.mdx-content,
+#content-area,
+#content,
+.mdx-content {
+  font-family: var(--neus-font-sans) !important;
+  font-size: var(--neus-text-body) !important;
+  font-weight: var(--neus-weight-body) !important;
+  line-height: var(--neus-leading-body) !important;
+  color: var(--neus-text-primary) !important;
+}
+
 .mdx-content p,
 .mdx-content li,
 .mdx-content td,
 .mdx-content blockquote,
-.mdx-content figcaption,
-#content-area,
-#content {
+.mdx-content figcaption {
+  font-size: var(--neus-text-body) !important;
+  font-weight: var(--neus-weight-body) !important;
+  line-height: var(--neus-leading-body) !important;
   color: var(--neus-text-primary) !important;
 }
 
-.mdx-content h1,
-.mdx-content h2,
-.mdx-content h3,
+#page-title {
+  font-size: var(--neus-text-display-md) !important;
+  font-weight: var(--neus-weight-heading) !important;
+  line-height: var(--neus-leading-heading) !important;
+  letter-spacing: -0.015em !important;
+  color: var(--neus-text-primary) !important;
+}
+
+.mdx-content h1 {
+  font-size: var(--neus-text-display-md) !important;
+  font-weight: var(--neus-weight-heading) !important;
+  line-height: var(--neus-leading-heading) !important;
+  letter-spacing: -0.015em !important;
+  color: var(--neus-text-primary) !important;
+}
+
+.mdx-content h2 {
+  font-size: var(--neus-text-display-sm) !important;
+  font-weight: var(--neus-weight-heading) !important;
+  line-height: var(--neus-leading-tight) !important;
+  letter-spacing: -0.01em !important;
+  color: var(--neus-text-primary) !important;
+}
+
+.mdx-content h3 {
+  font-size: var(--neus-text-title-md) !important;
+  font-weight: var(--neus-weight-heading) !important;
+  line-height: 1.4 !important;
+  color: var(--neus-text-primary) !important;
+}
+
 .mdx-content h4,
 .mdx-content h5,
-.mdx-content h6,
-.mdx-content th,
+.mdx-content h6 {
+  font-size: var(--neus-text-title-sm) !important;
+  font-weight: var(--neus-weight-heading) !important;
+  line-height: 1.4 !important;
+  color: var(--neus-text-primary) !important;
+}
+
+.mdx-content th {
+  font-size: var(--neus-text-label) !important;
+  font-weight: var(--neus-weight-heading) !important;
+  color: var(--neus-text-primary) !important;
+}
+
 .mdx-content strong,
-.mdx-content b,
-#page-title,
-#page-title * {
+.mdx-content b {
+  font-weight: var(--neus-weight-heading) !important;
   color: var(--neus-text-primary) !important;
 }
 
@@ -155,12 +318,6 @@ button,
   color: var(--neus-text-muted) !important;
 }
 
-.mdx-content p,
-.mdx-content li,
-.mdx-content td {
-  line-height: 1.75 !important;
-}
-
 .mdx-content tbody tr:nth-child(even) {
   background: rgb(var(--neus-rgb-surface-card) / 0.4) !important;
 }
@@ -169,14 +326,6 @@ button,
   border-radius: 0.25rem;
   outline: 2px solid rgb(var(--neus-rgb-accent-primary) / 0.55) !important;
   outline-offset: 2px;
-}
-
-#sidebar a:not([aria-current="page"]):not(.text-primary) {
-  color: var(--neus-text-muted) !important;
-}
-
-#sidebar a:hover {
-  color: var(--neus-text-secondary) !important;
 }
 
 #table-of-contents-content a {
@@ -194,63 +343,40 @@ button,
   display: none !important;
 }
 
-/* Shell chrome: transparent so the html page wash shows through (never flatten #background-color). */
+/*
+  Shell — transparent wash-through on content column only.
+  Left tabs + sidebar: no NEUS overrides (Mintlify defaults). Do not set position on #sidebar/#navbar.
+*/
 #header,
 #header-content,
-#navbar,
-#navigation-items,
-#sidebar,
-#sidebar-content,
 #content-area,
 #content-container,
 #body-content,
 #table-of-contents,
 #table-of-contents-content,
 #table-of-contents-content .toc,
-#table-of-contents-content .toc > div {
+#table-of-contents-content .toc > div,
+#pagination,
+footer {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
-  backdrop-filter: none;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
-#header {
-  border-bottom: 1px solid var(--neus-border-faint);
-}
+/*
+  Left nav: space between tab row (navbar) and first sidebar section label.
+  Mintlify’s top fade scrim was removed — replace with intentional padding (20px desktop).
+*/
+@media (min-width: 1024px) {
+  #navigation-items {
+    padding-top: 1.25rem !important;
+  }
 
-#sidebar {
-  border-right: 1px solid var(--neus-border-faint);
-}
-
-#table-of-contents {
-  border-left: none;
-}
-
-#navigation-items {
-  border-right: none;
-}
-
-.nav-tabs {
-  background: transparent !important;
-}
-
-.sidebar-group-header {
-  color: var(--neus-text-primary);
-  letter-spacing: 0;
-}
-
-#sidebar a {
-  border-radius: 14px;
-}
-
-#sidebar a.text-primary,
-#sidebar a[aria-current="page"] {
-  background: linear-gradient(
-    180deg,
-    rgb(var(--neus-rgb-accent-primary) / 0.16) 0%,
-    rgb(var(--neus-rgb-accent-primary) / 0.1) 100%
-  );
-  box-shadow: inset 0 1px 0 rgba(90, 90, 90, 0.12);
+  #navbar .nav-tabs {
+    padding-bottom: 0.375rem !important;
+  }
 }
 
 #table-of-contents-content {
@@ -283,6 +409,22 @@ button,
 #page-context-menu-button {
   background: transparent;
   border: 1px solid var(--neus-border-faint);
+}
+
+/*
+  Contextual menu (TOC): NEUS mark from /images/neus-mark.png (32px brand asset).
+*/
+#table-of-contents img[src*="neus-mark"],
+#table-of-contents [src="/images/neus-mark.png"],
+#table-of-contents [src*="neus-mark.png"] {
+  display: inline-block !important;
+  width: 1.125rem !important;
+  height: 1.125rem !important;
+  min-width: 1.125rem !important;
+  min-height: 1.125rem !important;
+  object-fit: contain !important;
+  flex-shrink: 0;
+  border-radius: 4px;
 }
 
 #search-input {
@@ -426,16 +568,46 @@ a#topbar-cta-button:focus-visible,
   outline-offset: 2px !important;
 }
 
+.card-group {
+  width: 100% !important;
+  max-width: 100% !important;
+  gap: 1rem !important;
+}
+
+@media (min-width: 640px) {
+  .card-group {
+    grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr)) !important;
+  }
+}
+
 .card,
 .card-group .card {
-  background: var(--neus-bg-card);
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 8.5rem !important;
+  height: auto !important;
+  overflow: visible !important;
+  padding: 1rem 1.125rem !important;
+  background: var(--neus-docs-card-bg);
   border: 1px solid var(--neus-border-faint);
+  border-radius: var(--neus-radius-lg);
   box-shadow: var(--neus-shadow-card);
+}
+
+.card h2,
+.card h3,
+.card p,
+.card-group .card h2,
+.card-group .card h3,
+.card-group .card p {
+  overflow: visible !important;
+  white-space: normal !important;
+  word-break: normal !important;
 }
 
 .card:hover,
 .card-group .card:hover {
-  background: var(--neus-bg-card-hover);
+  background: var(--neus-docs-card-hover);
   border-color: var(--neus-border);
   box-shadow: var(--neus-shadow-card-hover);
 }
@@ -446,6 +618,12 @@ a#topbar-cta-button:focus-visible,
   grid-column: 1 / -1;
 }
 
+@media (max-width: 639px) {
+  .card-group {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 ::selection {
   background: rgb(var(--neus-rgb-accent-primary) / 0.32);
   color: var(--neus-text-primary);
@@ -454,6 +632,12 @@ a#topbar-cta-button:focus-visible,
 html {
   scrollbar-color: rgba(152, 192, 239, 0.16) transparent;
   scrollbar-width: thin;
+}
+
+@media (min-width: 1280px) {
+  #content-area {
+    flex: 1 1 auto !important;
+  }
 }
 
 ::-webkit-scrollbar {
@@ -482,11 +666,6 @@ html {
   );
 }
 
-@media (max-width: 1023px) {
-  #header {
-    background: transparent !important;
-  }
-}
 
 img.neus-how-it-works-diagram {
   width: 100%;

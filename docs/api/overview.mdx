@@ -10,7 +10,7 @@ Use the HTTP API from **servers, workers, CLIs, and MCP**—not from end-user br
 
 ## Browsers
 
-Send end users through the **[JavaScript SDK](../sdks/javascript)** or **[Hosted Verify](../cookbook/auth-hosted-verify)**. If a web client needs behavior outside those paths, **your backend** should call NEUS so secrets stay off the client and CORS stays predictable.
+Send end users through the **[JavaScript SDK](../sdks/javascript)** or **[Hosted Verify](../cookbook/auth-hosted-verify)**. If a web client needs behavior outside those surfaces, **your backend** should call NEUS so secrets stay off the client and CORS stays predictable.
 
 ## Reads vs writes
 
@@ -26,7 +26,7 @@ Send end users through the **[JavaScript SDK](../sdks/javascript)** or **[Hosted
 | `/api/v1/proofs/check` | GET | Eligibility (gates) |
 | `/api/v1/proofs/by-wallet/{address}` | GET | List by wallet |
 | `/api/v1/proofs/{qHash}` | GET | Fetch by `qHash` |
-| `/api/v1/verification` | POST | Create proof (advanced) |
+| `/api/v1/verification` | POST | Create proof (server) |
 | `/api/v1/verification/standardize` | POST | Phase 1 of raw HTTP: returns `signerString` for the exact body you will submit |
 | `/api/v1/verification/verifiers` | GET | Verifier catalog |
 

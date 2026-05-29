@@ -4,7 +4,7 @@ description: Refresh signed-in profile context or look up a public wallet/DID.
 icon: user-circle
 ---
 
-Most sessions do **not** need a separate `neus_me` call. Start with **`neus_context`**; when the connection is authenticated, it already includes signed-in profile context.
+Most sessions do **not** need a separate **`neus_me`** call. Call **`neus_context`** first; when the connection is authenticated, it already includes signed-in profile context.
 
 Use **`neus_me`** when you need to refresh profile context, confirm a changed sign-in, or look up a public Profile by wallet/DID ([Auth](./auth), [Overview](./overview)).
 

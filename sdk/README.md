@@ -46,7 +46,7 @@ Prefer `neus setup` over hand-editing config files so every host stays on **`htt
 - Agent identity and scoped delegation
 - MCP setup for assistants and agent tools
 
-## Fastest path: Hosted Verify
+## Hosted Verify
 
 Use Hosted Verify when you want NEUS to handle the signing/verification flow outside your app UI.
 

@@ -4,38 +4,37 @@ description: Portable trust infrastructure for apps, agents, and ecosystems.
 icon: house
 ---
 
-NEUS makes trust portable across the internet. We issue **reusable trust receipts** that apps, agents, and payment layers check before allowing high-value actions—so you never have to rebuild trust from zero.
+NEUS makes trust portable across the internet. We issue **reusable trust receipts** that apps, agents, and payment layers check before access, payment, or action—so trusted actors do not restart from zero at every gate.
 
-
-## Start with one path
+## Primary integrations
 
 <CardGroup cols={3}>
   <Card title="Quickstart" icon="rocket" href="./quickstart">
-    Add a receipt flow to an app.
+    Register your app, gate UI, and run server checks.
   </Card>
   <Card title="Agents" icon="robot" href="./agents/overview">
-    Add identity and scoped authority to agents.
+    Identity, delegation, and receipts for autonomous agents.
   </Card>
-  <Card title="NEUS for AI assistants" icon="plug" href="./mcp/ide-plugin">
-    Identity, authority, and receipts in Cursor, Claude Code, and Codex.
+  <Card title="MCP" icon="plug" href="./mcp/ide-plugin">
+    Hosted trust MCP for Cursor, VS Code, and Claude Code.
   </Card>
 </CardGroup>
 
-## Build with NEUS
+## Platform
 
 <CardGroup cols={2}>
   <Card title="Integration loop" icon="route" href="./integration">
     Check, verify, save, reuse.
   </Card>
   <Card title="SDK" icon="code" href="./sdks/overview">
-    JavaScript, widgets, and server checks.
+    JavaScript SDK, widgets, and server checks.
   </Card>
   <Card
     title="Hosted Verify"
     icon="shield-check"
     href="./cookbook/auth-hosted-verify"
   >
-    Browser ceremony on NEUS.
+    Passkey, wallet, and OAuth on NEUS.
   </Card>
   <Card title="API" icon="terminal" href="./api/overview">
     Server-side reads and verification.
@@ -48,6 +47,6 @@ NEUS makes trust portable across the internet. We issue **reusable trust receipt
     Privacy and visibility.
   </Card>
   <Card title="Examples" icon="cube" href="./examples">
-    Working app and server samples.
+    Reference apps and server samples.
   </Card>
 </CardGroup>

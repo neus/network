@@ -23,7 +23,7 @@ npm run dev
 - **Optional — Node mock over HTTP:** `npm run dev:with-mock-server` starts the Node server on `8787` and sets `VITE_NEUS_API_URL=http://127.0.0.1:8787`.
 - **Live API:** set `VITE_NEUS_API_URL` (and optionally `VITE_NEUS_HOSTED_CHECKOUT_URL`) in `.env.local`. The in-browser mock is not installed when `VITE_NEUS_API_URL` is set.
 
-Styling uses [`examples/shared/css/neus-tokens.css`](../shared/css/neus-tokens.css) (copied to `public/neus-tokens.css` on prebuild for static `mock-checkout.html`).
+Styling uses [`docs/neus-tokens.css`](../../docs/neus-tokens.css) (copied to `public/neus-tokens.css` on prebuild for static `mock-checkout.html`).
 
 ## Example
 

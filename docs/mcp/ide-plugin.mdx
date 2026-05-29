@@ -1,22 +1,22 @@
 ---
 title: NEUS for AI assistants
 description: Trust infrastructure for agents that act — install NEUS in Cursor, Claude Code, Codex, and other MCP hosts.
-icon: store
+icon: plug
 ---
 
 **Trust infrastructure for agents that act.**
 
-*Trust that travels.*
-
 Verifiable identity, scoped authority, and receipts for every trusted action — so your assistant knows who is real, what agents may do, and which receipts already exist without re-proving every session.
 
-Agent frameworks handle tools and execution. NEUS handles trust before action: who the agent is, who controls it, what it may do, and what left a receipt.
+**Hosted product endpoint:** `https://mcp.neus.network/mcp`
 
-One OAuth sign-in. The same identity, delegation, and receipts in Cursor, Claude Code, and Codex.
-
-**Endpoint:** `https://mcp.neus.network/mcp`
+<Warning>
+  Use **`https://mcp.neus.network/mcp`** for trust receipts and agent tools. The docs site also offers a **search-only** endpoint at `https://docs.neus.network/mcp` — it cannot verify identity or issue proofs.
+</Warning>
 
 Signed in on [neus.network](https://neus.network/profile?tab=account)? Use **Open in** for Cursor, Claude Code, or Codex.
+
+On any docs page, use **On this page** → **Set up trust MCP** or **Quick install**.
 
 <Tabs sync={false}>
   <Tab title="Quick start">
@@ -27,9 +27,7 @@ npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Sign in once. Start each session with **`neus_context`**.
-
-Pick one client:
+Call **`neus_context`** at the start of each session.
 
 ```bash
 npx -y -p @neus/sdk neus setup --client cursor
@@ -40,6 +38,7 @@ npx -y -p @neus/sdk neus setup --client claude
   </Tab>
 
   <Tab title="Cursor">
+    <Icon icon="/images/brandLogos/cursor.svg" size={18} /> **Cursor**
 
 ```bash
 npx -y -p @neus/sdk neus setup --client cursor
@@ -62,13 +61,12 @@ Or add to `~/.cursor/mcp.json`:
   </Tab>
 
   <Tab title="VS Code & Codex">
+    <Icon icon="/images/brandLogos/microsoft.svg" size={18} /> **VS Code & Codex**
 
 ```bash
 npx -y -p @neus/sdk neus setup --client vscode
 npx -y -p @neus/sdk neus auth
 ```
-
-User config path:
 
 | OS | Path |
 | --- | --- |
@@ -81,143 +79,49 @@ Project scope: `./.vscode/mcp.json`
   </Tab>
 
   <Tab title="Claude Code">
-
-**MCP**
+    <Icon icon="/images/brandLogos/anthropic.svg" size={18} /> **Claude Code**
 
 ```bash
 npx -y -p @neus/sdk neus setup --client claude
 npx -y -p @neus/sdk neus auth
 ```
 
-**NEUS Trust plugin** — receipt reuse, agent authority, session workflow:
+**NEUS Trust plugin** (receipt reuse, delegation, session workflow):
 
 ```text
 /plugin marketplace add https://github.com/neus/network
 /plugin install neus-trust@neus
-```
-
-```text
 /neus-trust:neus-trust-workflow
 ```
 
   </Tab>
 </Tabs>
 
-## Other editors
+## Other MCP hosts
 
-The CLI automates install for **Cursor**, **VS Code/Codex**, and **Claude Code** (tabs above). Manual JSON for additional MCP hosts:
+Add remote MCP URL **`https://mcp.neus.network/mcp`** in the host settings, or the JSON below for file-based config.
 
-<AccordionGroup>
-  <Accordion title="Claude Desktop" icon="desktop">
+| Host | Config file |
+|------|-------------|
+| Claude Desktop | `~/.claude.json` → `mcpServers` |
+| Windsurf | `~/.codeium/windsurf/mcp_config.json` |
+| Gemini CLI | `~/.gemini/settings.json` or `gemini mcp add --transport http neus https://mcp.neus.network/mcp` |
+| ChatGPT | Remote MCP URL in client settings |
 
-Add remote MCP URL **`https://mcp.neus.network/mcp`** in the app, or under `mcpServers` in `~/.claude.json`.
-
-  </Accordion>
-
-  <Accordion title="Windsurf" icon="wind">
-
-Add to `~/.codeium/windsurf/mcp_config.json`:
+**OpenClaw / Hermes (headless):** use Profile access keys (`npk_*`) in bearer headers — [Auth](./auth). Copy the trust workflow skill from a [network](https://github.com/neus/network) clone: `plugins/neus-trust/skills/neus-trust-workflow`.
 
 ```json
 {
   "mcpServers": {
     "neus": {
+      "type": "http",
       "url": "https://mcp.neus.network/mcp"
     }
   }
 }
 ```
 
-Restart Windsurf → Cascade → **MCPs**.
-
-  </Accordion>
-
-  <Accordion title="OpenClaw" icon="server">
-
-Prefer `neus setup` + `neus auth` when the host supports OAuth. Use access keys only for headless servers and CI.
-
-`~/.openclaw/agents/main/agent/runtime-mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "type": "http",
-      "url": "https://mcp.neus.network/mcp",
-      "headers": {
-        "Authorization": "Bearer <npk_...>"
-      }
-    }
-  }
-}
-```
-
-Set a Profile access key from [Account → Access keys](https://neus.network/profile?tab=account) as the bearer token in your runtime config.
-
-Trust workflow skill (from a [network repo](https://github.com/neus/network) clone):
-
-```bash
-cp -R plugins/neus-trust/skills/neus-trust-workflow ~/.openclaw/workspace/skills/
-```
-
-  </Accordion>
-
-  <Accordion title="Hermes" icon="bot">
-
-Prefer `neus setup` + `neus auth` when the host supports OAuth. Use access keys only for headless servers and CI.
-
-`~/.hermes/config.json`:
-
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "type": "http",
-      "url": "https://mcp.neus.network/mcp",
-      "headers": {
-        "Authorization": "Bearer <npk_...>"
-      }
-    }
-  }
-}
-```
-
-```bash
-cp -R plugins/neus-trust/skills/neus-trust-workflow ~/.hermes/skills/
-```
-
-  </Accordion>
-
-  <Accordion title="Gemini CLI" icon="sparkles">
-
-`~/.gemini/settings.json`:
-
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "httpUrl": "https://mcp.neus.network/mcp"
-    }
-  }
-}
-```
-
-Or:
-
-```bash
-gemini mcp add --transport http neus https://mcp.neus.network/mcp
-```
-
-  </Accordion>
-
-  <Accordion title="ChatGPT" icon="message">
-
-Add remote MCP URL **`https://mcp.neus.network/mcp`** in ChatGPT or OpenAI client settings.
-
-  </Accordion>
-</AccordionGroup>
-
-## Servers & CI
+## Servers and CI
 
 ```bash
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
