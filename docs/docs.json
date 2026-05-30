@@ -90,26 +90,8 @@
               "get-started",
               "quickstart",
               "integration",
-              "agents/overview",
-              "sdks/overview",
-              "widgets/verifygate",
-              "api/overview",
-              "cookbook/auth-hosted-verify",
-              "cookbook/integrations",
               "examples",
               "platform/llm-docs"
-            ]
-          },
-          {
-            "group": "Platform",
-            "pages": [
-              "platform/overview",
-              "platform/status",
-              "platform/setup",
-              "platform/receipts-and-results",
-              "platform/billing",
-              "platform/x402",
-              "platform/presets"
             ]
           },
           {
@@ -143,12 +125,25 @@
                   "verification/contract-ownership",
                   "verification/proof-of-human",
                   "verification/wallet-risk",
-                  "verification/ai-content-moderation",
-                  "agents/concepts",
-                  "agents/agent-identity",
-                  "agents/agent-delegation"
+                  "verification/ai-content-moderation"
                 ]
               }
+            ]
+          },
+          {
+            "group": "Platform",
+            "pages": [
+              "platform/overview",
+              "platform/status",
+              "platform/setup",
+              "platform/receipts-and-results",
+              "platform/billing",
+              "platform/x402",
+              "platform/presets",
+              "platform/environments",
+              "platform/rate-limits-and-retries",
+              "platform/security-and-trust",
+              "brand-kit"
             ]
           },
           {
@@ -169,15 +164,6 @@
           {
             "group": "API",
             "pages": ["api/overview", "api/authentication", "api/errors"]
-          },
-          {
-            "group": "Production",
-            "pages": [
-              "platform/environments",
-              "platform/rate-limits-and-retries",
-              "platform/security-and-trust",
-              "brand-kit"
-            ]
           }
         ]
       },

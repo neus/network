@@ -4,16 +4,18 @@ description: Connect your product to NEUS so checks bill your account.
 icon: building
 ---
 
-Register your site in Hub before you ship **VerifyGate** or **Hosted Verify**. One signed step gives you an **app ID** and **billing wallet** so checks bill your account and tag to your product.
+Register your site in Hub before you ship **VerifyGate** or **Hosted Verify**. One signed step registers your domain, links billing to your Hub account, and gives you a paste-ready snippet.
 
 ## Steps
 
 1. Sign in at [neus.network/hub](https://neus.network/hub).
 2. Open **Apps** → **Register app**.
 3. Enter your site URL and confirm once.
-4. Copy your **app ID** (`appId`) and **billing wallet** (`billingWallet` — the wallet shown in Hub).
+4. Copy the **integration snippet** Hub shows on success — or open **Apps** anytime for activity, check defaults, and copy-ready widget, hosted, and server integration.
 
-Pass both values in the SDK so user verifications spend **your** credits, not theirs.
+**Apps** is your ongoing control center: attribution stats, credit usage per app, and pre-filled integration copy. You do not hunt for app IDs or wallet addresses separately.
+
+Paste the snippet so user verifications spend **your** credits, not theirs.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';

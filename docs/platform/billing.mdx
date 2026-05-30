@@ -8,18 +8,18 @@ NEUS bills metered verification usage to a NEUS profile. Credits spend first.
 
 ## Default: your account pays for user checks
 
-When users verify through **VerifyGate** or **Hosted Verify**, pass both:
+When users verify through **VerifyGate** or **Hosted Verify**, use the snippet from Hub after app registration. It already includes:
 
 | Field | Role |
 |-------|------|
-| `appId` | Public product ID from Hub → Apps |
-| `billingWallet` | Your Hub wallet — credits on this profile pay for the check |
+| `appId` | Public product ID from your registered domain |
+| `billingWallet` | Your Hub account — the wallet you signed in with when you registered |
 
-Register the app once in Hub, then include both values in the SDK or hosted URL (`?appId=` and `?billingWallet=`). NEUS routes usage to your account so the end user is not charged for the verification step.
+You do not look up or copy these separately after registration. For server-side **`gateCheck`**, reuse the same values from your Hub snippet (for example as `NEUS_APP_ID` and `NEUS_BILLING_WALLET`).
 
 ## What `appId` alone does
 
-`appId` tells NEUS which product made the request. It is public metadata, not a secret. **To bill your account, you also need `billingWallet` and a completed app registration.**
+`appId` tells NEUS which product made the request. It is public metadata, not a secret. **To bill your account, you also need the registered app and its linked billing wallet** — both are in the Hub snippet.
 
 ## Server checks
 
