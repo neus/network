@@ -63,8 +63,8 @@ This writes a local portable-agent manifest. In MCP, call `neus_agent_link` firs
 
 Use Hosted Verify, `VerifyGate`, or the SDK when your app needs a reusable trust receipt.
 
-- [Quickstart](https://docs.neus.network/quickstart) — register your app and run the integration loop.
-- Follow the integration loop: [check -> verify -> save -> reuse](https://docs.neus.network/integration).
+- [Quickstart](https://docs.neus.network/quickstart) — register your app and run the workflow.
+- Follow the workflow: [check -> verify -> save -> reuse](https://docs.neus.network/integration).
 - Use [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) when you want NEUS to own the browser step.
 
 ### 3. Add trust to an agent
