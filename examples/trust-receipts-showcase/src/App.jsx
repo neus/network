@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { LayoutGrid, ShieldCheck, Search, ExternalLink, Globe, BookOpen, Github } from 'lucide-react';
-import { NEUS_MARK_IMG } from './brandMark.js';
 import { claimById, claims, FILTER_CATEGORIES, filterByUiCategory, getInitialDemoProofs } from './claims.js';
+
+const NEUS_MARK_IMG =
+  'https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-03-mark-og-finalize-v1';
 import { applyListScope, filterByQuery } from './viewModel.js';
 import { DetailDrawer } from './components/DetailDrawer.jsx';
 import { OpportunityCard } from './components/OpportunityCard.jsx';

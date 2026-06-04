@@ -1,7 +1,7 @@
 <p align="center">
   <a href="https://neus.network">
     <img
-      src="https://neus.network/images/neus-brand-pack/og-default-1200x630-neus.png"
+      src="https://docs.neus.network/images/og-default.png"
       width="600"
       height="315"
       alt="NEUS"
@@ -130,15 +130,7 @@ Docs, SDK (`@neus/sdk`), widgets, examples, specs, and the NEUS Trust editor plu
 
 ## Brand assets (docs + SDK)
 
-The particle-ring mark is generated in the sibling [`neus`](https://github.com/neus/neus) repo (`npm run brand:generate`). This repo copies the shipped pack into docs and points widgets at the same CDN URLs.
-
-```bash
-# From network/ after updating marks in neus/
-npm run sync:brand
-cd sdk && npm run build
-```
-
-Docs favicon/logo: `docs/images/neus-brand-pack/` (**transparent** `favicon.svg` / `neus-mark.svg` first). SDK default mark: `sdk/brand-mark.js` → `favicon.svg`. Never use `favicon-plate-*` or `apple-touch-icon.png` for logos (opaque PWA/light-tab only). Update `NEUS_BRAND_PACK_VERSION` in `sdk/brand-mark.js` when `neus/lib/brand/tokens.ts` changes.
+Docs ship two files: `docs/images/favicon.svg` and `docs/images/og-default.png` (copy from sibling [`neus`](https://github.com/neus/neus) `public/images/neus-brand-pack/` when the product mark changes). SDK widgets use the hosted mark via `sdk/brand-mark.js` (`NEUS_DEFAULT_MARK_URL` on `neus.network`). Plugin/MCP icon: `plugins/neus-trust/assets/icon.png`.
 
 ## Proof of reality
 

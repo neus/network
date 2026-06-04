@@ -1,6 +1,8 @@
 import React from 'react';
-import { NEUS_MARK_IMG } from '../brandMark.js';
 import { getReceiptLineDetails } from '../claims.js';
+
+const NEUS_MARK_IMG =
+  'https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-03-mark-og-finalize-v1';
 
 const PLACEHOLDER = '0x7a2f4c9e1b8d0f3a5c6e7d8b9a0f1e2c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0';
 

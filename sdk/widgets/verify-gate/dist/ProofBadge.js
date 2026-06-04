@@ -5,20 +5,8 @@ import { useEffect, useState } from "react";
 
 // brand-mark.js
 var NEUS_BRAND_PACK_VERSION = "2026-06-03-mark-og-finalize-v1";
-var NEUS_MARK_CDN_ORIGIN = "https://neus.network";
-var PACK_BASE = `${NEUS_MARK_CDN_ORIGIN}/images/neus-brand-pack`;
-var NEUS_OPAQUE_ICON_PATHS = {
-  appleTouch: `${NEUS_MARK_CDN_ORIGIN}/apple-touch-icon.png`,
-  faviconPlate32: `${PACK_BASE}/favicon-plate-32.png`,
-  faviconPlate48: `${PACK_BASE}/favicon-plate-48.png`
-};
-function withBrandPackVersion(file) {
-  const name = file.replace(/^\//, "");
-  return `${PACK_BASE}/${name}?v=${encodeURIComponent(NEUS_BRAND_PACK_VERSION)}`;
-}
-var NEUS_DEFAULT_MARK_URL = withBrandPackVersion("favicon.svg");
-var NEUS_DEFAULT_MARK_PNG_URL = withBrandPackVersion("neus-mark-64.png");
-var NEUS_MARK_URL_32 = withBrandPackVersion("neus-mark-32.png");
+var v = encodeURIComponent(NEUS_BRAND_PACK_VERSION);
+var NEUS_DEFAULT_MARK_URL = `https://neus.network/images/neus-brand-pack/favicon.svg?v=${v}`;
 
 // widgets/verify-gate/ProofBadge.jsx
 import { jsx, jsxs } from "react/jsx-runtime";
