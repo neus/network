@@ -4,6 +4,9 @@ import { createHash, randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __cliDir = path.dirname(fileURLToPath(import.meta.url));
 
 const NEUS_SERVER_NAME = 'neus';
 const NEUS_MCP_URL = 'https://mcp.neus.network/mcp';
@@ -24,7 +27,6 @@ const SUPPORTED_IMPORT_SOURCES = [
 const SUPPORTED_EXPORT_FORMATS = ['manifest', 'json'];
 const SECRET_NAME_PATTERN =
   /(?:^|_)(?:api[_-]?key|secret|token|password|private[_-]?key|access[_-]?key|bearer)(?:$|_)/i;
-const ANSI_ENABLED = process.env.NO_COLOR !== '1' && process.env.TERM !== 'dumb';
 
 const ansi = {
   reset: '\x1b[0m',
@@ -36,16 +38,216 @@ const ansi = {
   bold: '\x1b[1m'
 };
 
+function isTruthyEnv(value) {
+  const normalized = String(value || '')
+    .trim()
+    .toLowerCase();
+  return normalized === '1' || normalized === 'true' || normalized === 'yes';
+}
+
+function resolveColorEnabled() {
+  if (isTruthyEnv(process.env.NO_COLOR)) return false;
+  if (process.env.TERM === 'dumb') return false;
+  return true;
+}
+
 function paint(value, color) {
-  if (!ANSI_ENABLED) return String(value);
+  if (!resolveColorEnabled()) return String(value);
   return `${ansi[color] || ''}${value}${ansi.reset}`;
 }
 
-function printBrandHeader(title) {
-  const line = paint('NEUS', 'green');
-  process.stdout.write(
-    `${paint('::', 'dim')} ${line} ${paint('trust portability', 'cyan')} ${paint('::', 'dim')} ${title}\n`
+function terminalColumns() {
+  const cols = Number(process.stderr.columns || process.stdout.columns || 0);
+  if (Number.isFinite(cols) && cols >= 40) return cols;
+  return 80;
+}
+
+function truncateDetail(text) {
+  const raw = String(text || '');
+  const max = Math.max(24, terminalColumns() - 18);
+  if (raw.length <= max) return raw;
+  return `${raw.slice(0, Math.max(0, max - 3))}...`;
+}
+
+function useUnicodeSymbols() {
+  if (!resolveColorEnabled()) return false;
+  if (process.platform !== 'win32') return true;
+  return Boolean(
+    process.env.WT_SESSION ||
+      process.env.TERMINAL_EMULATOR === 'JetBrains-JediTerm' ||
+      process.env.TERM_PROGRAM === 'vscode' ||
+      process.env.TERM_PROGRAM === 'cursor'
   );
+}
+
+function cliSymbols() {
+  if (useUnicodeSymbols()) {
+    return { ok: '✓', warn: '!', next: '→', skip: '-' };
+  }
+  return { ok: 'ok', warn: '!', next: '>', skip: '-' };
+}
+
+function writeCliLine(line) {
+  process.stderr.write(`${line}\n`);
+}
+
+let cliBannerEmitted = false;
+
+function readCliVersion() {
+  try {
+    const pkg = JSON.parse(fs.readFileSync(path.join(__cliDir, '..', 'package.json'), 'utf8'));
+    return String(pkg.version || '0.0.0').trim();
+  } catch {
+    return '0.0.0';
+  }
+}
+
+function shouldEmitCliBanner(cliOptions = {}) {
+  if (cliBannerEmitted) return false;
+  if (cliOptions.json) return false;
+  if (!process.stderr.isTTY) return false;
+  return true;
+}
+
+function emitCliBanner(cliOptions = {}) {
+  if (!shouldEmitCliBanner(cliOptions)) return;
+  const version = readCliVersion();
+  const title = paint('NEUS', 'green');
+  const meta = `${paint(`v${version}`, 'dim')}${paint(' | trust receipts', 'dim')}`;
+  writeCliLine('');
+  writeCliLine(`  ${title}  ${meta}`);
+  writeCliLine('');
+  cliBannerEmitted = true;
+}
+
+function logStep(kind, label, detail = '') {
+  const symbols = cliSymbols();
+  const iconKey = kind === 'ok' ? 'ok' : kind === 'warn' ? 'warn' : kind === 'next' ? 'next' : 'skip';
+  const iconColor = kind === 'ok' ? 'green' : kind === 'warn' ? 'yellow' : kind === 'next' ? 'cyan' : 'dim';
+  const iconCell = useUnicodeSymbols() ? symbols[iconKey] : symbols[iconKey].padEnd(2);
+  const icon = paint(iconCell, iconColor);
+  const name = paint(String(label).padEnd(10), 'cyan');
+  const suffix = detail ? `  ${paint(truncateDetail(detail), 'dim')}` : '';
+  writeCliLine(`  ${icon} ${name}${suffix}`);
+}
+
+function printFlowSummary(command, scope, results, { nextStep = '', cliOptions = {} } = {}) {
+  emitCliBanner(cliOptions);
+  writeCliLine(paint(String(command), 'green'));
+
+  for (const result of results) {
+    const client = result.client;
+    if (result.error) {
+      logStep('warn', client, result.error);
+      continue;
+    }
+    if (result.configured) {
+      const detail = result.changed ? 'updated' : result.authConfigured ? 'signed in' : 'ready';
+      logStep('ok', client, detail);
+      continue;
+    }
+    if (result.authConfigured === null) {
+      logStep('skip', client, 'not installed');
+      continue;
+    }
+    logStep('skip', client, 'not configured');
+  }
+
+  if (nextStep) {
+    writeCliLine('');
+    logStep('next', 'next', nextStep);
+  }
+  writeCliLine('');
+}
+
+function printAuthBrowserIntro(authUrl, cliOptions = {}) {
+  emitCliBanner(cliOptions);
+  writeCliLine(paint('auth', 'green'));
+  logStep('next', 'sign-in', 'opens in your browser');
+  writeCliLine('');
+  writeCliLine(`  ${paint(truncateDetail(authUrl), 'dim')}`);
+  writeCliLine('');
+}
+
+function parseBearerHeader(value) {
+  const raw = String(value || '').trim();
+  if (!raw.toLowerCase().startsWith('bearer ')) return '';
+  return raw.slice(7).trim();
+}
+
+function readCursorBearer(scope, cwd) {
+  const targetPath = cursorConfigPath(scope, cwd);
+  if (!fileExists(targetPath)) return '';
+  const doc = readJsonFile(targetPath, {});
+  return parseBearerHeader(doc.mcpServers?.[NEUS_SERVER_NAME]?.headers?.Authorization);
+}
+
+function readVsCodeBearer(scope, cwd) {
+  const targetPath = vscodeConfigPath(scope, cwd);
+  if (!fileExists(targetPath)) return '';
+  const doc = readJsonFile(targetPath, {});
+  return parseBearerHeader(doc.servers?.[NEUS_SERVER_NAME]?.headers?.Authorization);
+}
+
+function readClaudeBearer(scope, cwd) {
+  if (scope === 'project') {
+    const targetPath = claudeProjectConfigPath(cwd);
+    if (!fileExists(targetPath)) return '';
+    const doc = readJsonFile(targetPath, {});
+    return parseBearerHeader(doc.mcpServers?.[NEUS_SERVER_NAME]?.headers?.Authorization);
+  }
+  if (!commandExists('claude')) return '';
+  const result = spawnSync('claude', ['mcp', 'list'], {
+    encoding: 'utf8',
+    env: process.env
+  });
+  if (result.status !== 0) return '';
+  const lines = String(result.stdout || '').split(/\r?\n/);
+  if (!lines.includes(NEUS_SERVER_NAME)) return '';
+  const statePath = process.env.NEUS_TEST_CLAUDE_STATE;
+  if (statePath && fileExists(statePath)) {
+    const state = readJsonFile(statePath, { servers: {} });
+    const headers = state.servers?.[NEUS_SERVER_NAME]?.headers || [];
+    const authLine = headers.find(line => String(line).toLowerCase().startsWith('authorization:'));
+    if (authLine) {
+      return parseBearerHeader(authLine.replace(/^authorization:\s*/i, ''));
+    }
+  }
+  return '';
+}
+
+function readInstalledAccessKey(scope, cwd) {
+  for (const reader of [readCursorBearer, readVsCodeBearer, readClaudeBearer]) {
+    const token = reader(scope, cwd);
+    if (token) return token;
+  }
+  return '';
+}
+
+function envAccessKey() {
+  return String(process.env.NEUS_ACCESS_KEY || '').trim();
+}
+
+/** --access-key flag, else NEUS_ACCESS_KEY from the environment, else browser sign-in. */
+function resolveAccessKey(options) {
+  const explicit = String(options.accessKey || '').trim();
+  if (explicit) return explicit;
+  return envAccessKey();
+}
+
+/** --access-key, IDE MCP config, then NEUS_ACCESS_KEY from the environment. */
+function resolveLiveAccessKey(options, scope, cwd) {
+  const explicit = String(options.accessKey || '').trim();
+  if (explicit) return explicit;
+  const installed = readInstalledAccessKey(scope, cwd);
+  if (installed) return installed;
+  return envAccessKey();
+}
+
+function resolveAuthMethod(options, accessKey) {
+  if (!accessKey) return 'browser';
+  if (String(options.accessKey || '').trim()) return 'access-key';
+  return 'env-key';
 }
 
 function fileExists(targetPath) {
@@ -303,7 +505,7 @@ function parseArgs(argv) {
     return {
       command: 'help',
       options: {
-        accessKey: process.env.NEUS_ACCESS_KEY || '',
+        accessKey: '',
         clients: [],
         source: 'auto',
         format: 'manifest',
@@ -318,7 +520,7 @@ function parseArgs(argv) {
 
   const command = argv[0];
   const options = {
-    accessKey: process.env.NEUS_ACCESS_KEY || '',
+    accessKey: '',
     clients: [],
     source: 'auto',
     format: 'manifest',
@@ -399,9 +601,9 @@ function printUsage(exitCode = 0) {
     'Usage: neus <command> [options]',
     '',
     'Commands:',
-    '  setup         One-command: run init, then auth if --access-key is provided',
+    '  setup         Configure MCP clients (then run auth to sign in)',
     '  init          Configure supported MCP clients automatically',
-    '  auth          Sign in via browser (recommended) or add an access key for NEUS MCP',
+    '  auth          Sign in (browser, or NEUS_ACCESS_KEY / --access-key when set)',
     '  disconnect    Disconnect NEUS MCP (revoke the stored OAuth token or access key)',
     '  status        Show current NEUS MCP setup',
     '  doctor        Deep check: config status, profile connection, agent verification',
@@ -412,11 +614,11 @@ function printUsage(exitCode = 0) {
     'Options:',
     '  --client <name[,name]>   Limit setup to claude, cursor, or vscode',
     '  --project                Write shared project config instead of user config',
-    '  --access-key <npk_...>   Use manual access key instead of browser sign-in',
+    '  --access-key <npk_...>   Override profile access key (else uses NEUS_ACCESS_KEY if set)',
     '  --from <source>          Import source: auto, openclaw, hermes, cursor, claude-code, claude-desktop',
     '  --to <format>            Export format: manifest or json',
     '  --output <path>          Write exported manifest to a specific path',
-    '  --live                   Run live MCP checks when an access key is available',
+    '  --live                   Run live MCP checks (uses IDE credential or --access-key)',
     '  --json                   Print JSON output',
     '  --dry-run                Preview changes without writing files'
   ];
@@ -1240,111 +1442,48 @@ function runClientOperations(clients, scope, cwd, dryRun, runner) {
   });
 }
 
-function printResultSummary(command, scope, results, accessKey) {
-  const changedCount = results.filter(result => result.changed).length;
-  const configuredClients = results
-    .filter(result => result.configured)
-    .map(result => result.client)
-    .join(', ');
-  const failures = results.filter(result => result.error);
-  const lines = [
-    `NEUS ${command} completed for ${results.length} client${results.length === 1 ? '' : 's'} in ${scope} scope.`,
-    `Configured: ${configuredClients || 'none'}.`
-  ];
 
-  if (changedCount > 0) {
-    lines.push(`Updated: ${changedCount} target${changedCount === 1 ? '' : 's'}.`);
-  }
-
-  if ((command === 'init' || command === 'setup') && !accessKey) {
-    lines.push(
-      `Sign in with: neus auth (opens browser) or neus auth --access-key <npk_...> (servers and CI only)`
-    );
-  }
-  if (command === 'init' || command === 'setup') {
-    lines.push('All hosts (Cursor, Codex, OpenClaw, Hermes, Windsurf, Gemini, …): https://docs.neus.network/mcp/ide-plugin');
-    lines.push('Claude Code plugin: neus-trust@neus — same page');
-    lines.push(
-      'Auto-setup clients: claude, cursor, vscode — re-run with --client to limit scope'
-    );
-  }
-  if ((command === 'init' || command === 'auth') && accessKey) {
-    lines.push(
-      'Personal account tools are enabled.'
-    );
-  }
-  if (command === 'status') {
-    const enabled = results.filter(result => result.configured).map(result => result.client);
-    lines.push(`Active: ${enabled.length > 0 ? enabled.join(', ') : 'none'}.`);
-  }
-  if (failures.length > 0) {
-    lines.push(
-      `Issues: ${failures.map(result => `${result.client}: ${result.error}`).join(' | ')}`
-    );
-  }
-
-  process.stdout.write(`${lines.join('\n')}\n`);
-}
-
-function printImportSummary(payload) {
-  printBrandHeader('agent import');
+function printImportSummary(payload, cliOptions = {}) {
+  emitCliBanner(cliOptions);
   const manifest = payload.manifest;
-  const lines = [
-    `${paint('Source', 'cyan')}: ${manifest.source}${payload.dryRun ? ' (dry run)' : ''}`,
-    `${paint('Instructions', 'cyan')}: ${manifest.instructions.length}`,
-    `${paint('Skills', 'cyan')}: ${manifest.skills.length}`,
-    `${paint('MCP servers', 'cyan')}: ${manifest.mcpServers.length}`,
-    `${paint('Secret refs', 'cyan')}: ${manifest.secretRefs.length} detected, values never written`,
-    `${paint('Proofs', 'cyan')}: ${manifest.proofHints.status}; create or link receipts through NEUS MCP`
-  ];
-  if (payload.targetPath) {
-    lines.push(
-      `${paint('Manifest', 'cyan')}: ${payload.targetPath}${payload.changed ? '' : ' (unchanged)'}`
-    );
-  }
-  if (payload.warnings.length > 0) {
-    lines.push('');
-    lines.push(paint('Notes', 'yellow'));
-    lines.push(...payload.warnings.map(warning => `- ${warning}`));
-  }
-  lines.push('');
-  lines.push(
-    'Next: run `neus setup`, then `neus doctor --live`, then call `neus_agent_create` from your MCP client.'
-  );
-  process.stdout.write(`${lines.join('\n')}\n`);
+  writeCliLine(paint('import', 'green'));
+  logStep('ok', 'source', `${manifest.source}${payload.dryRun ? ' (dry run)' : ''}`);
+  logStep('ok', 'skills', String(manifest.skills.length));
+  logStep('ok', 'servers', String(manifest.mcpServers.length));
+  writeCliLine('');
+  logStep('next', 'next', 'neus setup | neus auth');
+  writeCliLine('');
 }
 
-function printExportSummary(payload) {
-  printBrandHeader('agent export');
-  const lines = [
-    `${paint('Format', 'cyan')}: ${payload.format}`,
-    `${paint('Source', 'cyan')}: ${payload.manifest.source}`,
-    `${paint('Skills', 'cyan')}: ${payload.manifest.skills?.length || 0}`,
-    `${paint('Proof refs', 'cyan')}: ${payload.manifest.proofHints?.qHashes?.length || 0} qHash value${payload.manifest.proofHints?.qHashes?.length === 1 ? '' : 's'}`
-  ];
+function printExportSummary(payload, cliOptions = {}) {
+  emitCliBanner(cliOptions);
+  writeCliLine(paint('export', 'green'));
+  logStep('ok', 'format', payload.format);
+  logStep('ok', 'source', payload.manifest.source);
   if (payload.outputPath) {
-    lines.push(`${paint('Output', 'cyan')}: ${payload.outputPath}`);
+    logStep('ok', 'output', payload.outputPath);
   }
-  process.stdout.write(`${lines.join('\n')}\n`);
+  writeCliLine('');
 }
 
 function runInit(options) {
   const scope = resolveScope(options);
-  ensureSafeAuth('init', scope, options.accessKey);
+  const accessKey = resolveAccessKey(options);
+  ensureSafeAuth('init', scope, accessKey);
   const cwd = process.cwd();
 
   const clients = resolveClients(scope, options.clients);
   ensureClientSelection(scope, clients);
 
   const results = runClientOperations(clients, scope, cwd, options.dryRun, client =>
-    installClient(client, scope, options.accessKey, options.dryRun, cwd)
+    installClient(client, scope, accessKey, options.dryRun, cwd)
   );
   const payload = {
     command: 'init',
     scope,
     detectedClients: defaultUserClients(),
     clients,
-    accessKeyConfigured: Boolean(options.accessKey),
+    accessKeyConfigured: Boolean(accessKey),
     results,
     hasErrors: results.some(result => result.error)
   };
@@ -1352,7 +1491,10 @@ function runInit(options) {
   if (options.json) {
     printJson(payload);
   } else {
-    printResultSummary('init', scope, results, options.accessKey);
+    printFlowSummary('init', scope, results, {
+      nextStep: accessKey ? '' : 'neus auth',
+      cliOptions: options
+    });
   }
 
   if (payload.hasErrors) {
@@ -1497,17 +1639,16 @@ async function runAuthBrowser(options) {
       });
       const authUrl = `${NEUS_APP_URL}/oauth/authorize?${authParams.toString()}`;
 
-      console.log('');
-      console.log('  Opening browser for NEUS authentication...');
-      console.log(`  If the browser doesn't open, visit:`);
-      console.log(`  ${authUrl}`);
-      console.log('');
+      if (!options.json) {
+        printAuthBrowserIntro(authUrl, options);
+        logStep('next', 'wait', 'finish sign-in in the browser');
+      }
 
       const { exec } = require('node:child_process');
       const openCmd = process.platform === 'win32' ? 'start' : process.platform === 'darwin' ? 'open' : 'xdg-open';
-      exec(`${openCmd} "${authUrl}"`, (err) => {
-        if (err) {
-          console.log('  Could not open browser automatically. Copy the URL above and open it manually.');
+      exec(`${openCmd} "${authUrl}"`, err => {
+        if (err && !options.json) {
+          logStep('warn', 'browser', 'open the URL above manually');
         }
       });
     });
@@ -1522,27 +1663,26 @@ async function runAuthBrowser(options) {
 
 function runAuth(options) {
   const scope = resolveScope(options);
-  ensureSafeAuth('auth', scope, options.accessKey);
+  const accessKey = resolveAccessKey(options);
+  ensureSafeAuth('auth', scope, accessKey);
   const cwd = process.cwd();
 
-  // Browser flow: when no --access-key is provided, open browser
-  if (!options.accessKey) {
+  if (!accessKey) {
     return runAuthBrowser(options);
   }
 
-  // Manual key flow: --access-key provided
   const clients = resolveClients(scope, options.clients);
   ensureClientSelection(scope, clients);
 
   const results = runClientOperations(clients, scope, cwd, options.dryRun, client =>
-    installClient(client, scope, options.accessKey, options.dryRun, cwd)
+    installClient(client, scope, accessKey, options.dryRun, cwd)
   );
   const payload = {
     command: 'auth',
     scope,
     clients,
     accessKeyConfigured: true,
-    authMethod: 'access-key',
+    authMethod: resolveAuthMethod(options, accessKey),
     results,
     hasErrors: results.some(result => result.error)
   };
@@ -1570,14 +1710,15 @@ function runStatus(options) {
     printJson(payload);
     return;
   }
-  printResultSummary('status', scope, inspected, '');
+  printFlowSummary('status', scope, inspected, { cliOptions: options });
 }
 
-function runSetup(options) {
+async function runSetup(options) {
   const scope = resolveScope(options);
-  ensureSafeAuth('setup', scope, options.accessKey);
+  const accessKey = resolveAccessKey(options);
+  ensureSafeAuth('setup', scope, accessKey);
   const cwd = process.cwd();
-  if (options.project && options.accessKey) {
+  if (options.project && accessKey) {
     throw new Error(
       'Access keys are only supported in user scope. Remove --project or omit --access-key.'
     );
@@ -1587,7 +1728,7 @@ function runSetup(options) {
   ensureClientSelection(scope, clients);
 
   const initResults = runClientOperations(clients, scope, cwd, options.dryRun, client =>
-    installClient(client, scope, options.accessKey, options.dryRun, cwd)
+    installClient(client, scope, accessKey, options.dryRun, cwd)
   );
 
   const payload = {
@@ -1595,20 +1736,43 @@ function runSetup(options) {
     scope,
     detectedClients: defaultUserClients(),
     clients,
-    accessKeyConfigured: Boolean(options.accessKey),
+    accessKeyConfigured: Boolean(accessKey),
     results: initResults,
     hasErrors: initResults.some(result => result.error)
   };
 
-  if (options.json) {
-    printJson(payload);
-  } else {
-    printResultSummary('setup', scope, initResults, options.accessKey);
+  if (payload.hasErrors) {
+    if (options.json) printJson(payload);
+    else printFlowSummary('setup', scope, initResults, { cliOptions: options });
+    process.exitCode = 1;
+    return payload;
   }
 
-  if (payload.hasErrors) {
-    process.exitCode = 1;
+  if (options.json) {
+    printJson(payload);
+    return payload;
   }
+
+  printFlowSummary('setup', scope, initResults, {
+    nextStep: accessKey ? 'neus_context in your MCP client' : '',
+    cliOptions: options
+  });
+
+  if (!accessKey && !options.dryRun) {
+    const authResult = await runAuth(options);
+    if (authResult && !authResult.hasErrors) {
+      printFlowSummary('auth', authResult.scope, authResult.results, {
+        nextStep: 'neus_context in your MCP client',
+        cliOptions: options
+      });
+    }
+    if (authResult?.hasErrors) {
+      process.exitCode = 1;
+    }
+    return authResult || payload;
+  }
+
+  return payload;
 }
 
 function runImport(options) {
@@ -1639,7 +1803,7 @@ function runImport(options) {
   if (options.json) {
     printJson(payload);
   } else {
-    printImportSummary(payload);
+    printImportSummary(payload, options);
   }
 
   if (payload.hasErrors) {
@@ -1679,7 +1843,7 @@ function runExport(options) {
     printJson(payload);
     return;
   }
-  printExportSummary(payload);
+  printExportSummary(payload, options);
 }
 
 async function runDoctor(options) {
@@ -1692,12 +1856,13 @@ async function runDoctor(options) {
     inspectClient(client, scope, cwd)
   );
   const configuredClients = inspected.filter(r => r.configured);
+  const liveAccessKey = resolveLiveAccessKey(options, scope, cwd);
   const payload = {
     command: 'doctor',
     scope,
     clients: inspected,
     configuredCount: configuredClients.length,
-    accessKeyPresent: Boolean(options.accessKey),
+    accessKeyPresent: Boolean(liveAccessKey),
     profileConnectable: false,
     agentVerified: false,
     live: options.live,
@@ -1707,9 +1872,12 @@ async function runDoctor(options) {
   };
 
   if (options.live) {
-    payload.mcp = await runLiveMcpDiagnostics(options.accessKey);
-    payload.profileConnectable = Boolean(payload.mcp.authenticated);
-    payload.hasErrors = payload.hasErrors || !payload.mcp.reachable || !payload.mcp.authenticated;
+    payload.mcp = await runLiveMcpDiagnostics(liveAccessKey);
+    if (liveAccessKey) {
+      payload.profileConnectable = Boolean(payload.mcp.authenticated);
+      payload.hasErrors =
+        payload.hasErrors || !payload.mcp.reachable || !payload.mcp.authenticated;
+    }
   }
 
   if (options.json) {
@@ -1717,45 +1885,32 @@ async function runDoctor(options) {
     return;
   }
 
-  printResultSummary('doctor', scope, inspected, '');
-
-  const lines = [];
-  if (configuredClients.length > 0) {
-    lines.push(
-      `MCP reachable: ${configuredClients.map(r => r.client).join(', ')} ready at ${NEUS_MCP_URL}.`
-    );
-  } else {
-    lines.push('MCP reachable: No clients configured. Run `neus setup` first.');
-    process.stdout.write(`\n${lines.join('\n')}\n`);
+  if (configuredClients.length === 0) {
+    emitCliBanner(options);
+    writeCliLine(paint('doctor', 'green'));
+    logStep('warn', 'mcp', 'run neus setup first');
+    writeCliLine('');
     process.exit(1);
   }
 
-  if (options.accessKey) {
-    if (options.live && payload.mcp) {
-      lines.push(
-        `Profile connection: ${payload.mcp.authenticated ? 'live MCP context confirmed' : 'not confirmed by live MCP check'}.`
-      );
-      lines.push(`Tools: ${payload.mcp.toolsCount || 0} discovered.`);
+  printFlowSummary('doctor', scope, inspected, { cliOptions: options });
+  if (options.live && payload.mcp) {
+    if (!liveAccessKey) {
+      logStep('next', 'sign-in', 'neus auth');
     } else {
-      lines.push(
-        'Profile connection: auth header present. Re-run `neus doctor --live` to confirm against hosted MCP.'
+      logStep(
+        payload.mcp.authenticated ? 'ok' : 'warn',
+        'account',
+        payload.mcp.authenticated ? `${payload.mcp.toolsCount || 0} tools` : 'not confirmed'
       );
     }
+  } else if (liveAccessKey) {
+    logStep('ok', 'account', 'saved | run with --live to verify');
   } else {
-    lines.push(
-      `Profile connection: No access key found. Run \`neus auth\` (browser sign-in) or \`neus auth --access-key <npk_...>\` and reconnect.`
-    );
+    logStep('next', 'sign-in', 'neus auth');
   }
-
-  lines.push(
-    'Agent verification: Run `neus_agent_link` and `neus_proofs_check` inside the MCP-connected client to verify agent identity and delegation proofs.'
-  );
-  lines.push('');
-  lines.push(
-    'Next: Open your editor/IDE, connect to the NEUS MCP endpoint, and run `neus_context`.'
-  );
-
-  process.stdout.write(`\n${lines.join('\n')}\n`);
+  logStep('next', 'next', 'neus_context in your MCP client');
+  writeCliLine('');
 }
 
 async function runDisconnect(options) {
@@ -1764,12 +1919,15 @@ async function runDisconnect(options) {
     throw new Error('Disconnect only supports user scope. Remove --project flag.');
   }
 
-  if (!options.accessKey) {
-    throw new Error('Credential required. Run `neus disconnect --access-key <token>` or set NEUS_ACCESS_KEY.');
+  const cwd = process.cwd();
+  const token = resolveLiveAccessKey(options, scope, cwd);
+  if (!token) {
+    throw new Error(
+      'Credential required. Run `neus disconnect --access-key <token>` or sign in first (`neus auth`).'
+    );
   }
 
   try {
-    const token = String(options.accessKey || '').trim();
     const isProfileKey = token.startsWith('npk_');
     const resp = isProfileKey
       ? await fetch(NEUS_PROFILE_KEY_ENDPOINT, {
@@ -1802,7 +1960,6 @@ async function runDisconnect(options) {
     throw error;
   }
 
-  const cwd = process.cwd();
   const clients = resolveClients(scope, options.clients);
   ensureClientSelection(scope, clients);
 
@@ -1822,9 +1979,11 @@ async function runDisconnect(options) {
   if (options.json) {
     printJson(payload);
   } else {
-    printBrandHeader('disconnect');
-    console.log('  NEUS MCP credential disconnected. Your client configurations have been updated to remove the token.');
-    console.log('  Re-authenticate with: neus auth');
+    emitCliBanner(options);
+    writeCliLine(paint('disconnect', 'green'));
+    logStep('ok', 'signed-out', 'MCP configs updated');
+    logStep('next', 'next', 'neus auth');
+    writeCliLine('');
   }
 }
 
@@ -1845,13 +2004,16 @@ async function main() {
       if (result) {
         if (options.json) {
           printJson(result);
+        } else if (result.authMethod !== 'browser') {
+          printFlowSummary('auth', result.scope, result.results, {
+            nextStep: 'neus_context in your MCP client',
+            cliOptions: options
+          });
         } else {
-          const displayKey = result.authMethod === 'browser' ? '<browser-auth>' : options.accessKey;
-          printResultSummary('auth', result.scope, result.results, displayKey);
-          if (result.authMethod === 'browser') {
-            console.log('');
-            console.log('  Authenticated via browser. Your MCP clients are now configured.');
-          }
+          printFlowSummary('auth', result.scope, result.results, {
+            nextStep: 'neus_context in your MCP client',
+            cliOptions: options
+          });
         }
         if (result.hasErrors) {
           process.exitCode = 1;
@@ -1864,7 +2026,10 @@ async function main() {
       return;
     }
     if (command === 'setup') {
-      runSetup(options);
+      const setupResult = await runSetup(options);
+      if (setupResult?.hasErrors) {
+        process.exitCode = 1;
+      }
       return;
     }
     if (command === 'doctor') {

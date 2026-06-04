@@ -8,10 +8,6 @@ Verifiable identity, scoped authority, and receipts for every trusted action —
 
 **Hosted product endpoint:** `https://mcp.neus.network/mcp`
 
-<Warning>
-  Use **`https://mcp.neus.network/mcp`** for trust receipts and agent tools. The docs site also offers a **search-only** endpoint at `https://docs.neus.network/mcp` — it cannot verify identity or issue proofs.
-</Warning>
-
 Signed in on [neus.network](https://neus.network/profile?tab=account)? Use **Open in** for Cursor, Claude Code, or Codex.
 
 On any docs page, use **On this page** → **Set up trust MCP** or **Quick install**.
@@ -106,7 +102,7 @@ Add remote MCP URL **`https://mcp.neus.network/mcp`** in the host settings, or t
 | Gemini CLI | `~/.gemini/settings.json` or `gemini mcp add --transport http neus https://mcp.neus.network/mcp` |
 | ChatGPT | Remote MCP URL in client settings |
 
-**OpenClaw / Hermes (headless):** use Profile access keys (`npk_*`) in bearer headers — [Auth](./auth). Copy the trust workflow skill from a [network](https://github.com/neus/network) clone: `plugins/neus-trust/skills/neus-trust-workflow`.
+**Zeus / Hermes (headless):** use Profile access keys (`npk_*`) in bearer headers — [Auth](./auth). Copy the trust workflow skill from a [network](https://github.com/neus/network) clone: `plugins/neus-trust/skills/neus-trust-workflow`.
 
 ```json
 {
@@ -127,9 +123,6 @@ npx -y -p @neus/sdk neus setup --access-key <npk_...>
 
 Keys: [Profile → Account](https://neus.network/profile?tab=account). Never paste keys into chat.
 
-## Upgrading from `neus-mcp`
-
-```text
-/plugin uninstall neus-mcp@neus
-/plugin install neus-trust@neus
-```
+<Warning>
+  Use **`https://mcp.neus.network/mcp`** for trust receipts and agent tools. The docs site also offers a **search-only** endpoint at `https://docs.neus.network/mcp` — it cannot verify identity or issue proofs.
+</Warning>

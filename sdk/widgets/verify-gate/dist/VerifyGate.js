@@ -8,7 +8,7 @@ import { NeusClient } from "@neus/sdk/client";
 var HOSTED_CHECKOUT_MESSAGE_TYPE = "neus_checkout_done";
 function buildHostedCheckoutUrl({
   hostedCheckoutUrl,
-  verifierList,
+  verifierList = [],
   returnUrl,
   origin,
   oauthProvider,
@@ -19,18 +19,23 @@ function buildHostedCheckoutUrl({
   gateId
 }) {
   const checkoutUrl = new URL(hostedCheckoutUrl);
-  checkoutUrl.searchParams.set("verifiers", verifierList.join(","));
   checkoutUrl.searchParams.set("mode", "popup");
   checkoutUrl.searchParams.set("returnUrl", returnUrl);
   checkoutUrl.searchParams.set("origin", origin);
-  if (typeof appId === "string" && appId.trim()) {
-    checkoutUrl.searchParams.set("appId", appId.trim());
-  }
-  if (typeof billingWallet === "string" && billingWallet.trim()) {
-    checkoutUrl.searchParams.set("billingWallet", billingWallet.trim().toLowerCase());
-  }
-  if (typeof gateId === "string" && gateId.trim()) {
-    checkoutUrl.searchParams.set("gateId", gateId.trim());
+  const gateIdTrimmed = typeof gateId === "string" ? gateId.trim() : "";
+  if (gateIdTrimmed) {
+    checkoutUrl.searchParams.set("gateId", gateIdTrimmed);
+  } else {
+    const verifiers = Array.isArray(verifierList) ? verifierList.filter(Boolean) : [];
+    if (verifiers.length > 0) {
+      checkoutUrl.searchParams.set("verifiers", verifiers.join(","));
+    }
+    if (typeof appId === "string" && appId.trim()) {
+      checkoutUrl.searchParams.set("appId", appId.trim());
+    }
+    if (typeof billingWallet === "string" && billingWallet.trim()) {
+      checkoutUrl.searchParams.set("billingWallet", billingWallet.trim().toLowerCase());
+    }
   }
   if (typeof oauthProvider === "string" && oauthProvider.trim()) {
     checkoutUrl.searchParams.set("oauthProvider", oauthProvider.trim());
@@ -47,17 +52,6 @@ function buildHostedCheckoutRedirectUrl(popupCheckoutUrl) {
   const checkoutUrl = new URL(popupCheckoutUrl);
   checkoutUrl.searchParams.delete("mode");
   return checkoutUrl.toString();
-}
-
-// widgets/verify-gate/mergeCreateProofOptions.js
-function mergeVerifyGateCreateProofOptions(proofOptions, verifierOptions) {
-  return {
-    privacyLevel: "private",
-    publicDisplay: false,
-    storeOriginalContent: true,
-    ...proofOptions && typeof proofOptions === "object" ? proofOptions : {},
-    ...verifierOptions ? { verifierOptions } : {}
-  };
 }
 
 // widgets/verify-gate/VerifyGate.jsx
@@ -86,37 +80,6 @@ if (typeof document !== "undefined") {
     document.head.appendChild(el);
   }
 }
-var DEFAULT_MAX_AGE_MS_BY_VERIFIER = {
-  "ownership-dns-txt": 60 * 60 * 1e3,
-  "contract-ownership": 60 * 60 * 1e3,
-  "nft-ownership": 60 * 60 * 1e3,
-  "token-holding": 60 * 60 * 1e3,
-  "wallet-risk": 60 * 60 * 1e3,
-  "agent-delegation": 7 * 24 * 60 * 60 * 1e3
-};
-var maxAgeMsForVerifier = (verifierId, overrideMs) => {
-  if (typeof overrideMs === "number") return overrideMs;
-  return DEFAULT_MAX_AGE_MS_BY_VERIFIER[verifierId];
-};
-var CREATABLE_VERIFIERS = /* @__PURE__ */ new Set([
-  "ownership-basic",
-  "ownership-pseudonym",
-  "ownership-dns-txt",
-  "contract-ownership",
-  "nft-ownership",
-  "token-holding",
-  "wallet-link",
-  "wallet-risk",
-  "agent-identity",
-  "agent-delegation",
-  "ai-content-moderation"
-]);
-var INTERACTIVE_VERIFIERS = /* @__PURE__ */ new Set([
-  "ownership-social",
-  "ownership-org-oauth",
-  "proof-of-human"
-]);
-var HOSTED_WHEN_INCOMPLETE = /* @__PURE__ */ new Set(["wallet-link"]);
 var DEFAULT_HOSTED_CHECKOUT_URL = "https://neus.network/verify";
 var VERIFY_GATE_DEFAULT_ERROR = "Something went wrong. Please try again.";
 function getVerifyGateUserError(err) {
@@ -194,6 +157,7 @@ function NeusLogo({ size = 16, onPrimaryFill = false }) {
   );
 }
 function VerifyGate({
+  gateId = void 0,
   requiredVerifiers = ["ownership-basic"],
   onVerified = void 0,
   apiUrl = void 0,
@@ -205,9 +169,6 @@ function VerifyGate({
   oauthProvider = void 0,
   style = void 0,
   children = void 0,
-  verifierOptions = void 0,
-  verifierData = void 0,
-  proofOptions = void 0,
   showBrand = false,
   disabled = false,
   buttonText = void 0,
@@ -215,7 +176,6 @@ function VerifyGate({
   qHash: qHashProp = null,
   strategy = "reuse-or-create",
   checkExisting = true,
-  maxProofAgeMs = void 0,
   allowPrivateReuse = true,
   campaignTitle = void 0,
   campaignMessage = void 0,
@@ -232,27 +192,18 @@ function VerifyGate({
   const [walletAddress, setWalletAddress] = useState(null);
   const [existingProofs, setExistingProofs] = useState(null);
   const [operation, setOperation] = useState("verify");
+  const resolvedGateId = typeof gateId === "string" ? gateId.trim() : "";
   const client = useMemo(
-    () => new NeusClient({ apiUrl, appId, billingWallet, paymentSignature, extraHeaders }),
-    [apiUrl, appId, billingWallet, paymentSignature, extraHeaders]
+    () => new NeusClient({ apiUrl, appId: resolvedGateId ? void 0 : appId, billingWallet: resolvedGateId ? void 0 : billingWallet, paymentSignature, extraHeaders }),
+    [apiUrl, appId, billingWallet, paymentSignature, extraHeaders, resolvedGateId]
   );
   const verifierList = useMemo(() => {
+    if (resolvedGateId) return [];
     return Array.isArray(requiredVerifiers) && requiredVerifiers.length > 0 ? requiredVerifiers : ["ownership-basic"];
-  }, [requiredVerifiers]);
+  }, [requiredVerifiers, resolvedGateId]);
   const primaryVerifier = verifierList[0];
   const qHash = qHashProp || null;
   const resolvedQHash = qHash;
-  const hasInteractiveVerifier = useMemo(
-    () => verifierList.some((verifierId) => {
-      if (INTERACTIVE_VERIFIERS.has(verifierId)) return true;
-      if (HOSTED_WHEN_INCOMPLETE.has(verifierId)) {
-        const data = verifierData && verifierData[verifierId];
-        if (!data || !data.secondaryWalletAddress || !data.signature) return true;
-      }
-      return false;
-    }),
-    [verifierList, verifierData]
-  );
   const resolvedHostedCheckoutUrl = useMemo(() => {
     if (typeof hostedCheckoutUrl === "string" && hostedCheckoutUrl.trim()) {
       return hostedCheckoutUrl.trim();
@@ -266,7 +217,7 @@ function VerifyGate({
     }
     return DEFAULT_HOSTED_CHECKOUT_URL;
   }, [apiUrl, hostedCheckoutUrl]);
-  const shouldCheckExisting = checkExisting && strategy !== "fresh";
+  const shouldCheckExisting = !resolvedGateId && checkExisting && strategy !== "fresh";
   const inferChainFromAddress = useCallback((address) => {
     const raw = String(address || "").trim();
     if (!raw) return void 0;
@@ -275,11 +226,8 @@ function VerifyGate({
     return "solana:mainnet";
   }, [chain]);
   const buildGateRequirements = useCallback(() => {
-    return verifierList.map((verifierId) => ({
-      verifierId,
-      ...maxAgeMsForVerifier(verifierId, maxProofAgeMs) && { maxAgeMs: maxAgeMsForVerifier(verifierId, maxProofAgeMs) }
-    }));
-  }, [verifierList, maxProofAgeMs]);
+    return verifierList.map((verifierId) => ({ verifierId }));
+  }, [verifierList]);
   const applySatisfiedGateResult = useCallback((gateResult, address) => {
     if (!gateResult?.satisfied) return false;
     setNotice(null);
@@ -411,8 +359,9 @@ function VerifyGate({
       oauthProvider,
       campaignTitle,
       campaignMessage,
-      appId,
-      billingWallet
+      gateId: resolvedGateId || void 0,
+      appId: resolvedGateId ? void 0 : appId,
+      billingWallet: resolvedGateId ? void 0 : billingWallet
     });
     let expectedOrigin = null;
     try {
@@ -466,7 +415,7 @@ function VerifyGate({
       };
       window.addEventListener("message", onMessage);
     });
-  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider, campaignTitle, campaignMessage, appId, billingWallet]);
+  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider, campaignTitle, campaignMessage, appId, billingWallet, resolvedGateId]);
   useEffect(() => {
     onStateChange?.(state);
   }, [state, onStateChange]);
@@ -553,118 +502,25 @@ function VerifyGate({
         setState("idle");
         setNotice("No matching proof was found. Create a proof to continue.");
       } else {
-        if (hasInteractiveVerifier) {
-          setOperation("verify");
-          setIsProcessing(true);
-          setState("interactive-checkout");
-          onStateChange?.("interactive-checkout");
-          const checkoutResult = await launchHostedCheckout();
-          const checkoutQHash = checkoutResult?.qHash || null;
-          const handoffWallet = typeof checkoutResult?.walletAddress === "string" && checkoutResult.walletAddress.trim() || walletAddress && String(walletAddress).trim() || "";
-          setState("verified");
-          dispatchNeusProofCreatedForHost({
-            qHash: checkoutQHash,
-            walletAddress: handoffWallet
-          });
-          onVerified?.({
-            qHash: checkoutQHash,
-            verifierIds: verifierList,
-            existing: false,
-            mode: "create",
-            eligible: checkoutResult?.eligible !== false,
-            proofUrl: checkoutResult?.proofUrl || (checkoutQHash ? `${apiUrl || "https://api.neus.network"}/api/v1/proofs/${checkoutQHash}` : null)
-          });
-          return;
-        }
         setOperation("verify");
         setIsProcessing(true);
-        setState("signing");
-        const resolvedProofOptions = mergeVerifyGateCreateProofOptions(
-          proofOptions,
-          verifierOptions
-        );
-        const buildDataForVerifier = (verifierId) => {
-          if (!CREATABLE_VERIFIERS.has(verifierId)) {
-            throw new Error(
-              "This check requires the hosted verifier."
-            );
-          }
-          const explicit = verifierData && verifierData[verifierId];
-          if (explicit && typeof explicit === "object") return explicit;
-          if (verifierId === "ownership-basic") {
-            return null;
-          }
-          if (verifierId === "wallet-risk") {
-            return {};
-          }
-          if (verifierId === "wallet-link") {
-            if (!explicit?.secondaryWalletAddress || !explicit?.signature || !explicit?.chain || !explicit?.signatureMethod) {
-              throw new Error(
-                "Missing required wallet details."
-              );
-            }
-            return explicit;
-          }
-          throw new Error("Missing required verification details.");
-        };
-        const verifyOne = async (verifierId) => {
-          const dataForVerifier = buildDataForVerifier(verifierId);
-          const params = verifierId === "ownership-basic" && dataForVerifier === null ? {
-            verifier: "ownership-basic",
-            content: (typeof verifierData?.["ownership-basic"] === "string" ? verifierData["ownership-basic"] : verifierData?.["ownership-basic"]?.content) || `NEUS verification (${verifierId})`,
-            options: resolvedProofOptions
-          } : {
-            verifier: verifierId,
-            data: dataForVerifier,
-            options: resolvedProofOptions
-          };
-          setState("signing");
-          const created = await client.verify({
-            ...params,
-            wallet: wallet || (typeof window !== "undefined" ? window.ethereum : void 0)
-          });
-          setState("verifying");
-          const qHashToCheck = created.qHash || created?.data?.qHash;
-          const final = await client.pollProofStatus(qHashToCheck, { interval: 3e3, timeout: 6e4 });
-          const verifiedVerifiers = final?.data?.verifiedVerifiers || [];
-          const verifierResult = verifiedVerifiers.find((v) => v.verifierId === verifierId);
-          if (!verifierResult || verifierResult.verified !== true) {
-            throw new Error("Verification could not be completed.");
-          }
-          const hubTx = final?.data?.hubTransaction || {};
-          const crosschain = final?.data?.crosschain || {};
-          const txHash = hubTx?.txHash || crosschain?.hubTxHash || null;
-          const finalQHash = final?.qHash || qHashToCheck;
-          return {
-            verifierId,
-            qHash: finalQHash,
-            address: final?.data?.walletAddress,
-            txHash,
-            verifiedVerifiers,
-            proofUrl: final?.proofUrl
-          };
-        };
-        const results = [];
-        for (const verifierId of verifierList) {
-          results.push(await verifyOne(verifierId));
-        }
+        setState("interactive-checkout");
+        onStateChange?.("interactive-checkout");
+        const checkoutResult = await launchHostedCheckout();
+        const checkoutQHash = checkoutResult?.qHash || null;
+        const handoffWallet = typeof checkoutResult?.walletAddress === "string" && checkoutResult.walletAddress.trim() || walletAddress && String(walletAddress).trim() || "";
         setState("verified");
-        const last = results[results.length - 1];
-        const lastQHash = last?.qHash || null;
-        const handoffAddr = last?.address && String(last.address).trim() || walletAddress && String(walletAddress).trim() || "";
         dispatchNeusProofCreatedForHost({
-          qHash: lastQHash,
-          walletAddress: handoffAddr
+          qHash: checkoutQHash,
+          walletAddress: handoffWallet
         });
         onVerified?.({
-          qHash: lastQHash,
-          qHashes: results.map((r) => r.qHash).filter(Boolean),
-          address: last?.address,
-          txHash: last?.txHash,
+          qHash: checkoutQHash,
           verifierIds: verifierList,
-          verifiedVerifiers: last?.verifiedVerifiers,
-          proofUrl: last?.proofUrl,
-          results
+          existing: false,
+          mode: "create",
+          eligible: checkoutResult?.eligible !== false,
+          proofUrl: checkoutResult?.proofUrl || (checkoutQHash ? `${apiUrl || "https://api.neus.network"}/api/v1/proofs/${checkoutQHash}` : null)
         });
       }
     } catch (err) {
@@ -682,12 +538,8 @@ function VerifyGate({
     mode,
     resolvedQHash,
     verifierList,
-    hasInteractiveVerifier,
     client,
     apiUrl,
-    verifierOptions,
-    verifierData,
-    proofOptions,
     launchHostedCheckout,
     onVerified,
     onError,

@@ -1,10 +1,10 @@
 ---
 title: NFT Gating
-description: VerifyGate + gateCheck with nft-ownership.
+description: Published gate checkout for nft-ownership.
 icon: image
 ---
 
-Verifier: [`nft-ownership`](../verification/nft-ownership). Ownership is **point-in-time** - enforce `since` / fresh proofs for high-stakes gates.
+Verifier: [`nft-ownership`](../verification/nft-ownership). Ownership is **point-in-time**. Configure the NFT contract, token policy, and recency in your published gate.
 
 ## Widget
 
@@ -14,15 +14,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 export function NFTGatedContent() {
   return (
     <VerifyGate
-      requiredVerifiers={['nft-ownership']}
-      verifierData={{
-        'nft-ownership': {
-          contractAddress: '0x...',
-          tokenId: '1',
-          chainId: 8453,
-        },
-      }}
-      appId="my-nft-gate"
+      gateId="gate_abc123"
     >
       <div>Exclusive content</div>
     </VerifyGate>
@@ -34,12 +26,8 @@ export function NFTGatedContent() {
 
 ```javascript
 const result = await client.gateCheck({
+  gateId: 'gate_abc123',
   address: '0x...',
-  verifierIds: ['nft-ownership'],
-  contractAddress: '0x...',
-  tokenId: '1',
-  chainId: 8453,
-  since: Date.now() - 60 * 60 * 1000,
 });
 
 if (!result.data?.eligible) {
@@ -47,25 +35,4 @@ if (!result.data?.eligible) {
 }
 ```
 
-## Multiple token configs
-
-```jsx
-const allowedTokens = [
-  { contractAddress: '0x...', tokenId: '1', chainId: 8453 },
-  { contractAddress: '0x...', tokenId: '2', chainId: 8453 },
-];
-
-export function NFTGatedContent({ selectedToken }) {
-  return (
-    <VerifyGate
-      requiredVerifiers={['nft-ownership']}
-      verifierData={{ 'nft-ownership': allowedTokens[selectedToken] }}
-      appId="my-nft-gate"
-    >
-      <div>Holders of the selected NFT</div>
-    </VerifyGate>
-  );
-}
-```
-
-`VerifyGate` accepts one `nft-ownership` object per check. For “any of these tokens,” let the user choose the token to verify, or perform multiple server-side `gateCheck` calls and allow access when one is eligible.
+For multiple token policies, publish one gate per policy or model the accepted alternatives in the gate owner UI, then check the resulting `gateId`.

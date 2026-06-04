@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "NEUS API — Public API",
+    "title": "NEUS API — Public Integrator API",
     "version": "1.0.0",
-    "description": "Public HTTP API for NEUS.\n\nDescribes request and response shapes for the product API. Use your deployment base URL (for example https://api.neus.network).\n\nSome verifiers require pro access.",
+    "description": "Public HTTP API for NEUS integrators.\n\nRecommended integration order (simplest first):\n1. Browser — VerifyGate widget or hosted verify at https://neus.network/verify (wallet, passkey, and OAuth handled by NEUS).\n2. JavaScript — `@neus/sdk` `client.verify()` signs and submits for signature-based verifiers; use VerifyGate for hosted/interactive verifiers.\n3. Server gate checks — `GET /api/v1/proofs/check` with `gateId` or criteria before granting access.\n4. Raw HTTP — two-phase signing below only when you cannot use the SDK or hosted flows.\n\nRaw HTTP verification uses POST /api/v1/verification/standardize → sign signerString → POST /api/v1/verification with the same body plus signature. Session-authenticated callers may skip the signature when a valid session is present.\n\nUse your deployment base URL (for example https://api.neus.network). Some verifiers require pro access. Administrative endpoints are not included in this specification.",
     "license": {
       "name": "Business Source License 1.1",
       "url": "https://mariadb.com/bsl11/"
@@ -610,6 +610,8 @@
                   "doc",
                   "media",
                   "username-claim",
+                  "job",
+                  "job-status",
                   "other"
                 ],
                 "description": "Reference type"
@@ -717,7 +719,7 @@
           },
           "internalSocialToken": {
             "type": "string",
-            "description": "Opaque token from the hosted link session after the user authorizes. Populated by the hosted flow; do not supply in API calls."
+            "description": "Opaque token from the hosted link session after the user authorizes; not your app API key."
           },
           "walletAddress": {
             "type": "string",
@@ -794,7 +796,7 @@
           },
           "internalSocialToken": {
             "type": "string",
-            "description": "Opaque token from the hosted org sign-in session. Populated by the hosted flow; do not supply in API calls."
+            "description": "Opaque token from the hosted org sign-in session; not your app API key."
           },
           "walletAddress": {
             "type": "string",
@@ -865,7 +867,7 @@
           "neusPersonhoodId": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{64}$",
-            "description": "Salted SHA-256 personhood ID for sybil resistance (system-generated; not supplied in API requests)"
+            "description": "Salted SHA-256 personhood ID for sybil resistance (internal, never exposed in API responses)"
           },
           "assuranceLevel": {
             "type": "string",
@@ -1340,25 +1342,25 @@
           },
           "defaultRuntime": {
             "type": "object",
-            "additionalProperties": false,
-            "description": "Default runtime display hints — not security-authoritative; delegation runtimePolicy overrides these.",
+            "description": "Default runtime display hints — NOT security-authoritative; delegation runtimePolicy overrides these. These are convenience metadata for UI and tooling, not proof of which model/provider the agent actually uses.",
             "properties": {
               "provider": {
                 "type": "string",
                 "maxLength": 64,
-                "description": "Default inference provider label."
+                "description": "Default inference provider label (e.g., \"ollama\", \"openai\")."
               },
               "model": {
                 "type": "string",
                 "maxLength": 128,
-                "description": "Default inference model label."
+                "description": "Default inference model label (e.g., \"kimi-k2.6\", \"gpt-5.4\")."
               },
               "mode": {
                 "type": "string",
                 "maxLength": 64,
-                "description": "Default inference mode."
+                "description": "Default inference mode (e.g., \"openai-chat\", \"openai-responses\")."
               }
-            }
+            },
+            "additionalProperties": false
           }
         },
         "additionalProperties": false
@@ -1408,7 +1410,9 @@
           },
           "scope": {
             "type": "string",
-            "maxLength": 128
+            "maxLength": 128,
+            "default": "global",
+            "description": "Delegation scope. Defaults to \"global\" (all permissions) when omitted."
           },
           "permissions": {
             "type": "array",
@@ -1497,35 +1501,34 @@
           "model": {
             "type": "string",
             "maxLength": 128,
-            "description": "Preferred inference model label (backward compat; prefer runtimePolicy.allowedModelClasses for structured policy)."
+            "description": "Preferred inference model label (backward compat; prefer runtimePolicy.allowedModelClasses for structured policy). Owner-view-only: not included in public proof responses."
           },
           "provider": {
             "type": "string",
             "maxLength": 64,
-            "description": "Preferred inference provider label (backward compat; prefer runtimePolicy.allowedProviders for structured policy)."
+            "description": "Preferred inference provider label (backward compat; prefer runtimePolicy.allowedProviders for structured policy). Owner-view-only: not included in public proof responses."
           },
           "runtimePolicy": {
             "type": "object",
-            "additionalProperties": false,
-            "description": "Runtime execution policy — security-authoritative, overrides identity defaultRuntime. Only include when model/provider constraints affect the permission boundary.",
+            "description": "Runtime execution policy — security-authoritative, overrides identity defaultRuntime. Owner-view-only: not included in public proof responses. Only include when model/provider constraints affect the permission boundary.",
             "properties": {
               "allowedProviders": {
                 "type": "array",
-                "maxItems": 8,
                 "items": {
                   "type": "string",
                   "maxLength": 64
                 },
-                "description": "Allowed inference provider labels."
+                "maxItems": 8,
+                "description": "Allowed inference provider labels (e.g., [\"ollama\", \"openai\"])."
               },
               "allowedModelClasses": {
                 "type": "array",
-                "maxItems": 8,
                 "items": {
                   "type": "string",
                   "maxLength": 128
                 },
-                "description": "Allowed model class patterns."
+                "maxItems": 8,
+                "description": "Allowed model class patterns (e.g., [\"gpt-4.1-*\", \"approved-public-content-models\"])."
               },
               "requiresHumanApproval": {
                 "type": "boolean",
@@ -1535,30 +1538,30 @@
                 "type": "boolean",
                 "description": "Whether the delegation policy allows secrets to appear in action receipts (default false)."
               }
-            }
+            },
+            "additionalProperties": false
           },
           "allowedActions": {
             "type": "array",
-            "maxItems": 32,
             "items": {
               "type": "string",
               "maxLength": 128
             },
-            "description": "Explicit allowlist of action types the agent may perform."
+            "maxItems": 32,
+            "description": "Explicit allowlist of action types the agent may perform (e.g., [\"read-proofs\", \"execute-jobs\", \"publish-approved-content\"]). Owner-view-only: not included in public proof responses."
           },
           "deniedActions": {
             "type": "array",
-            "maxItems": 32,
             "items": {
               "type": "string",
               "maxLength": 128
             },
-            "description": "Explicit denylist of action types the agent may NOT perform. Takes precedence over allowedActions and permissions."
+            "maxItems": 32,
+            "description": "Explicit denylist of action types the agent may NOT perform. Takes precedence over allowedActions and permissions. Owner-view-only: not included in public proof responses."
           },
           "approvalPolicy": {
             "type": "object",
-            "additionalProperties": false,
-            "description": "Approval requirements for the delegated agent.",
+            "description": "Approval requirements for the delegated agent. Owner-view-only: not included in public proof responses.",
             "properties": {
               "humanApprovalRequiredForNewClaims": {
                 "type": "boolean",
@@ -1568,7 +1571,8 @@
                 "type": "boolean",
                 "description": "Whether the agent may only publish content pre-approved by the controller."
               }
-            }
+            },
+            "additionalProperties": false
           }
         },
         "additionalProperties": false
@@ -1667,318 +1671,6 @@
             }
           ]
         }
-      },
-      "AuthorizationServerMetadata": {
-        "type": "object",
-        "description": "OAuth 2.0 Authorization Server Metadata (RFC 8414). Served at https://neus.network/.well-known/oauth-authorization-server.",
-        "required": [
-          "issuer",
-          "authorization_endpoint",
-          "token_endpoint",
-          "response_types_supported",
-          "code_challenge_methods_supported"
-        ],
-        "properties": {
-          "issuer": {
-            "type": "string",
-            "format": "uri",
-            "enum": ["https://neus.network"]
-          },
-          "authorization_endpoint": {
-            "type": "string",
-            "format": "uri",
-            "enum": ["https://neus.network/oauth/authorize"]
-          },
-          "token_endpoint": {
-            "type": "string",
-            "format": "uri",
-            "enum": ["https://neus.network/api/v1/auth/mcp/token"]
-          },
-          "revocation_endpoint": {
-            "type": "string",
-            "format": "uri",
-            "enum": ["https://neus.network/api/v1/auth/mcp/revoke"]
-          },
-          "response_types_supported": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["code"]
-            }
-          },
-          "grant_types_supported": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["authorization_code", "refresh_token"]
-            }
-          },
-          "code_challenge_methods_supported": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["S256"]
-            }
-          },
-          "token_endpoint_auth_methods_supported": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["none"]
-            }
-          },
-          "scopes_supported": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "neus:core",
-                "neus:profile",
-                "neus:secrets",
-                "offline_access"
-              ]
-            }
-          },
-          "service_documentation": {
-            "type": "string",
-            "format": "uri"
-          }
-        }
-      },
-      "ProtectedResourceMetadata": {
-        "type": "object",
-        "description": "OAuth 2.0 Protected Resource Metadata (RFC 9728). Served at https://mcp.neus.network/.well-known/oauth-protected-resource.",
-        "required": [
-          "resource",
-          "authorization_servers"
-        ],
-        "properties": {
-          "resource": {
-            "type": "string",
-            "format": "uri",
-            "enum": ["https://mcp.neus.network/mcp"]
-          },
-          "authorization_servers": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uri"
-            }
-          },
-          "scopes_supported": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": [
-                "neus:core",
-                "neus:profile",
-                "neus:secrets"
-              ]
-            }
-          },
-          "resource_documentation": {
-            "type": "string",
-            "format": "uri"
-          }
-        }
-      },
-      "OAuthTokenRequest": {
-        "type": "object",
-        "description": "Token endpoint request body (application/x-www-form-urlencoded). Supports authorization_code and refresh_token grant types.",
-        "properties": {
-          "grant_type": {
-            "type": "string",
-            "enum": ["authorization_code", "refresh_token"],
-            "description": "OAuth 2.0 grant type."
-          },
-          "code": {
-            "type": "string",
-            "description": "Authorization code (required for authorization_code grant)."
-          },
-          "redirect_uri": {
-            "type": "string",
-            "format": "uri",
-            "description": "Must exactly match the redirect_uri from the authorization request (required for authorization_code grant)."
-          },
-          "client_id": {
-            "type": "string",
-            "description": "OAuth client identifier (required)."
-          },
-          "code_verifier": {
-            "type": "string",
-            "description": "PKCE code verifier (required for authorization_code grant)."
-          },
-          "resource": {
-            "type": "string",
-            "format": "uri",
-            "description": "Resource indicator. Must be https://mcp.neus.network/mcp."
-          },
-          "refresh_token": {
-            "type": "string",
-            "description": "Refresh token (required for refresh_token grant)."
-          },
-          "scope": {
-            "type": "string",
-            "description": "Requested scope (space-separated). Must not exceed scope of the original authorization."
-          }
-        }
-      },
-      "OAuthTokenResponse": {
-        "type": "object",
-        "description": "Standard OAuth 2.0 token response. The access_token is a JWT with audience https://mcp.neus.network/mcp.",
-        "required": [
-          "access_token",
-          "token_type",
-          "expires_in",
-          "scope"
-        ],
-        "properties": {
-          "access_token": {
-            "type": "string",
-            "description": "JWT access token with aud=https://mcp.neus.network/mcp."
-          },
-          "token_type": {
-            "type": "string",
-            "enum": ["Bearer"]
-          },
-          "expires_in": {
-            "type": "integer",
-            "description": "Token lifetime in seconds."
-          },
-          "refresh_token": {
-            "type": "string",
-            "description": "Opaque or JWT refresh token. Rotated on each use. Included when offline_access scope was granted."
-          },
-          "scope": {
-            "type": "string",
-            "description": "Granted scope (space-separated)."
-          },
-          "expires_at": {
-            "type": "integer",
-            "description": "Convenience: absolute expiration timestamp (Unix ms)."
-          }
-        }
-      },
-      "McpAccessTokenClaims": {
-        "type": "object",
-        "description": "JWT claims inside the MCP access token. The token must be validated: iss, aud, exp, token_use, and scope are all enforced by the MCP resource server.",
-        "required": [
-          "iss",
-          "aud",
-          "sub",
-          "azp",
-          "scope",
-          "token_use",
-          "iat",
-          "exp"
-        ],
-        "properties": {
-          "iss": {
-            "type": "string",
-            "enum": ["https://neus.network"]
-          },
-          "aud": {
-            "type": "string",
-            "enum": ["https://mcp.neus.network/mcp"]
-          },
-          "sub": {
-            "type": "string",
-            "description": "Profile subject identifier."
-          },
-          "did": {
-            "type": "string",
-            "description": "DID identifier (e.g. did:pkh:eip155:1:0x...)."
-          },
-          "azp": {
-            "type": "string",
-            "description": "Authorized client (client_id from the original authorization)."
-          },
-          "scope": {
-            "type": "string",
-            "description": "Granted scopes (space-separated)."
-          },
-          "token_use": {
-            "type": "string",
-            "enum": ["mcp_access"],
-            "description": "Token type indicator. The MCP resource server rejects tokens where token_use is not mcp_access."
-          },
-          "iat": {
-            "type": "integer",
-            "description": "Issued-at timestamp (Unix seconds)."
-          },
-          "exp": {
-            "type": "integer",
-            "description": "Expiration timestamp (Unix seconds)."
-          }
-        }
-      },
-      "OAuthRevokeRequest": {
-        "type": "object",
-        "description": "Revoke an MCP OAuth token. Invalidates the access token and all associated refresh tokens for the subject-client pair.",
-        "required": [
-          "token"
-        ],
-        "properties": {
-          "token": {
-            "type": "string",
-            "description": "Access token or refresh token to revoke."
-          },
-          "token_type_hint": {
-            "type": "string",
-            "enum": ["access_token", "refresh_token"]
-          },
-          "client_id": {
-            "type": "string"
-          }
-        }
-      },
-      "OAuthAuthorizeParams": {
-        "type": "object",
-        "description": "Query parameters for the /oauth/authorize endpoint. Redirects the user to NEUS hosted login (HostedLoginFlow), then back to redirect_uri with an authorization code.",
-        "required": [
-          "response_type",
-          "client_id",
-          "redirect_uri",
-          "code_challenge",
-          "code_challenge_method",
-          "state"
-        ],
-        "properties": {
-          "response_type": {
-            "type": "string",
-            "enum": ["code"]
-          },
-          "client_id": {
-            "type": "string",
-            "description": "Registered OAuth client identifier."
-          },
-          "redirect_uri": {
-            "type": "string",
-            "format": "uri",
-            "description": "Must exactly match a registered redirect_uri for the client."
-          },
-          "code_challenge": {
-            "type": "string",
-            "description": "PKCE code challenge (BASE64URL(SHA256(code_verifier)))."
-          },
-          "code_challenge_method": {
-            "type": "string",
-            "enum": ["S256"]
-          },
-          "state": {
-            "type": "string",
-            "description": "Opaque CSRF protection value. Returned verbatim in the redirect."
-          },
-          "scope": {
-            "type": "string",
-            "description": "Requested scope (space-separated). Default: neus:core neus:profile neus:secrets offline_access."
-          },
-          "resource": {
-            "type": "string",
-            "format": "uri",
-            "description": "Resource indicator. Must be https://mcp.neus.network/mcp."
-          }
-        }
       }
     }
   },
@@ -2008,7 +1700,7 @@
       "get": {
         "operationId": "getVerifierCatalog",
         "summary": "Get supported verifiers and configuration",
-        "description": "Returns the verifier catalog: supported IDs, public input schemas, hosted vs. direct capabilities, and chain configuration.",
+        "description": "Returns the public verifier catalog: supported verifier IDs, sanitized public metadata (input schemas + direct-vs-hosted capabilities), and backend chain configuration (hub chain, asset allowlists). Internal transport/provider fields are not exposed here.",
         "tags": [
           "Verification"
         ],
@@ -2452,9 +2144,11 @@
     "/api/v1/proofs/check": {
       "get": {
         "operationId": "proofCheck",
-        "summary": "Check proofs against public criteria",
+        "summary": "Check gate eligibility or proof criteria (server-side)",
+        "description": "Primary server-side integrator endpoint for access control. Pass gateId from your deployed gate, or explicit verifier/criteria filters. Returns eligible plus matched proof references without exposing private proof payloads.",
         "tags": [
-          "Proofs"
+          "Proofs",
+          "Gates"
         ],
         "parameters": [
           {
@@ -2472,6 +2166,16 @@
             "schema": {
               "type": "string",
               "pattern": "^0x[a-fA-F0-9]{64}$"
+            }
+          },
+          {
+            "name": "gateId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "maxLength": 80,
+              "pattern": "^[a-zA-Z0-9:_-]+$"
             }
           },
           {
@@ -3190,228 +2894,6 @@
           },
           "400": {
             "description": "Invalid request"
-          }
-        }
-      }
-    },
-    "/.well-known/oauth-authorization-server": {
-      "get": {
-        "operationId": "getAuthorizationServerMetadata",
-        "summary": "OAuth 2.0 Authorization Server Metadata",
-        "description": "RFC 8414 authorization server metadata for NEUS. MCP clients discover this first when connecting to a protected resource. Served at https://neus.network/.well-known/oauth-authorization-server.",
-        "tags": ["OAuth"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Authorization server metadata",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthorizationServerMetadata"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/.well-known/oauth-protected-resource": {
-      "get": {
-        "operationId": "getProtectedResourceMetadata",
-        "summary": "OAuth 2.0 Protected Resource Metadata",
-        "description": "RFC 9728 protected resource metadata for the NEUS MCP resource server. Served at https://mcp.neus.network/.well-known/oauth-protected-resource. The MCP resource server returns a WWW-Authenticate header pointing to this URL on 401 responses.",
-        "tags": ["OAuth"],
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Protected resource metadata",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProtectedResourceMetadata"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/oauth/authorize": {
-      "get": {
-        "operationId": "oauthAuthorize",
-        "summary": "OAuth 2.0 Authorization Endpoint",
-        "description": "The canonical OAuth 2.0 authorization endpoint. This endpoint owns all OAuth parameter validation and orchestrates the login flow.\n\n1. Validates response_type=code, client_id, redirect_uri, code_challenge_method=S256, and resource=https://mcp.neus.network/mcp.\n2. If no NEUS session exists, stores the pending OAuth request and renders the existing HostedLoginFlow (passkey/wallet login).\n3. After login, returns to /oauth/authorize continuation where the backend issues a one-time authorization code.\n4. Redirects to redirect_uri with code and state.\n\nThe existing /verify?intent=mcp flow remains as a compatibility alias. The code is single-use, bound to subjectId, client_id, redirect_uri, code_challenge, resource, and scope, and expires in 10 minutes.",
-        "tags": ["OAuth"],
-        "parameters": [
-          {
-            "name": "response_type",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": ["code"]
-            }
-          },
-          {
-            "name": "client_id",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "redirect_uri",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uri"
-            }
-          },
-          {
-            "name": "code_challenge",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "code_challenge_method",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": ["S256"]
-            }
-          },
-          {
-            "name": "state",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "scope",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "description": "Requested scope (space-separated). Default: neus:core neus:profile neus:secrets offline_access."
-            }
-          },
-          {
-            "name": "resource",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uri",
-              "description": "Must be https://mcp.neus.network/mcp."
-            }
-          }
-        ],
-        "responses": {
-          "302": {
-            "description": "Redirect to redirect_uri with code and state parameters on success, or error and state on failure."
-          },
-          "400": {
-            "description": "Invalid request (missing or invalid parameters)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/auth/mcp/token": {
-      "post": {
-        "operationId": "oauthToken",
-        "summary": "OAuth 2.0 Token Endpoint",
-        "description": "Exchanges an authorization code for an MCP access token (authorization_code grant), or refreshes an existing token (refresh_token grant). Requires PKCE code_verifier for authorization_code exchanges. The access token is a JWT with audience https://mcp.neus.network/mcp and token_use=mcp_access. Refresh tokens are rotated on each use.",
-        "tags": ["OAuth"],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/OAuthTokenRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Token response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OAuthTokenResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request (missing parameters, invalid grant_type)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Invalid client_id, code_verifier, or refresh_token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/auth/mcp/revoke": {
-      "post": {
-        "operationId": "oauthRevokeToken",
-        "summary": "Revoke MCP OAuth Token",
-        "description": "Revokes an MCP access token and all associated refresh tokens for the subject-client pair. Called when a user disconnects NEUS MCP from a client application, or when a token is suspected compromised.",
-        "tags": ["OAuth"],
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/x-www-form-urlencoded": {
-              "schema": {
-                "$ref": "#/components/schemas/OAuthRevokeRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Token revoked (or already inactive)"
-          },
-          "401": {
-            "description": "Invalid or missing token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
           }
         }
       }

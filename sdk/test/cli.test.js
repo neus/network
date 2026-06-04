@@ -207,6 +207,51 @@ describe('neus CLI', () => {
     ).rejects.toThrow();
   });
 
+  it('applies NEUS_ACCESS_KEY from the shell on setup', async () => {
+    const context = await makeCliContext();
+    context.env.NEUS_ACCESS_KEY = 'npk_from_env_auto';
+
+    await runCli(['setup', '--json'], context);
+
+    const cursorConfig = JSON.parse(
+      await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
+    );
+    expect(cursorConfig.mcpServers.neus.headers.Authorization).toBe('Bearer npk_from_env_auto');
+  });
+
+  it('uses NEUS_ACCESS_KEY from the shell on auth without extra flags', async () => {
+    const context = await makeCliContext();
+    context.env.NEUS_ACCESS_KEY = 'npk_from_env_auth';
+
+    const { stdout } = await runCli(['auth', '--json'], context);
+    const payload = JSON.parse(stdout);
+    expect(payload.authMethod).toBe('env-key');
+
+    const cursorConfig = JSON.parse(
+      await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
+    );
+    expect(cursorConfig.mcpServers.neus.headers.Authorization).toBe('Bearer npk_from_env_auth');
+  });
+
+  it('doctor uses the IDE MCP bearer before shell env', async () => {
+    const context = await makeCliContext();
+    context.env.NEUS_ACCESS_KEY = 'npk_from_env_should_not_apply';
+    await writeJson(path.join(context.homeDir, '.cursor', 'mcp.json'), {
+      mcpServers: {
+        neus: {
+          type: 'http',
+          url: 'https://mcp.neus.network/mcp',
+          headers: { Authorization: 'Bearer oauth_token_from_ide' }
+        }
+      }
+    });
+
+    const { stdout } = await runCli(['doctor', '--json'], context);
+    const payload = JSON.parse(stdout);
+
+    expect(payload.accessKeyPresent).toBe(true);
+  });
+
   it('adds Authorization headers when an access key is supplied', async () => {
     const context = await makeCliContext();
 

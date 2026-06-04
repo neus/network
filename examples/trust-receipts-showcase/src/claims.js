@@ -24,10 +24,6 @@ export const claims = [
     requirementLabel: 'Signed ownership statement',
     verifierName: 'Content ownership',
     verifierId: 'ownership-basic',
-    verifierData: {
-      content:
-        'I own content or reference data related to the Q2 2025 community fund. This portable signed statement is for campaign perks and may appear on the public owner wall.'
-    },
     seedDemoProofId: 'qhash:demo:content-owner',
     demoHighlight: true,
     receiptDetail: {
@@ -51,8 +47,7 @@ export const claims = [
     cardUnlocks: 'Reward eligibility',
     requirementLabel: 'Proof of human',
     verifierName: 'Proof of human (ZKPassport)',
-    verifierId: 'proof-of-human',
-    verifierData: { provider: 'zkpassport', scope: 'fair-drop' }
+    verifierId: 'proof-of-human'
   },
   {
     id: 'creator-badge',
@@ -67,8 +62,7 @@ export const claims = [
     cardUnlocks: 'Creator badge',
     requirementLabel: 'Linked social account',
     verifierName: 'Social account link',
-    verifierId: 'ownership-social',
-    verifierData: { provider: 'x' }
+    verifierId: 'ownership-social'
   },
   {
     id: 'domain-listing',
@@ -83,8 +77,7 @@ export const claims = [
     cardUnlocks: 'Business listing',
     requirementLabel: 'DNS text record',
     verifierName: 'Domain ownership (DNS)',
-    verifierId: 'ownership-dns-txt',
-    verifierData: { domain: 'example.com' }
+    verifierId: 'ownership-dns-txt'
   },
   {
     id: 'insider-program',
@@ -99,8 +92,7 @@ export const claims = [
     cardUnlocks: 'Member offer',
     requirementLabel: 'Proof of human',
     verifierName: 'Proof of human (ZKPassport)',
-    verifierId: 'proof-of-human',
-    verifierData: { provider: 'zkpassport', scope: 'insider' }
+    verifierId: 'proof-of-human'
   },
   {
     id: 'team-resource',
@@ -115,8 +107,7 @@ export const claims = [
     cardUnlocks: 'Team access',
     requirementLabel: 'Org account',
     verifierName: 'Workplace sign-in',
-    verifierId: 'ownership-org-oauth',
-    verifierData: { expectedOrgDomain: 'example.com', provider: 'google' }
+    verifierId: 'ownership-org-oauth'
   },
   {
     id: 'member-perk',
@@ -131,12 +122,7 @@ export const claims = [
     cardUnlocks: 'Member perks',
     requirementLabel: 'Token balance threshold',
     verifierName: 'Token holding',
-    verifierId: 'token-holding',
-    verifierData: {
-      contractAddress: '0x0000000000000000000000000000000000000000',
-      minBalance: '100',
-      chainId: 8453
-    }
+    verifierId: 'token-holding'
   },
   {
     id: 'collector',
@@ -151,12 +137,7 @@ export const claims = [
     cardUnlocks: 'Collector access',
     requirementLabel: 'Holds a specific NFT',
     verifierName: 'NFT ownership',
-    verifierId: 'nft-ownership',
-    verifierData: {
-      contractAddress: '0x0000000000000000000000000000000000000000',
-      tokenId: '1',
-      chainId: 8453
-    }
+    verifierId: 'nft-ownership'
   },
   {
     id: 'project-admin',
@@ -171,12 +152,7 @@ export const claims = [
     cardUnlocks: 'Admin permissions',
     requirementLabel: 'On-chain admin role',
     verifierName: 'Contract control',
-    verifierId: 'contract-ownership',
-    verifierData: {
-      contractAddress: '0x0000000000000000000000000000000000000000',
-      chainId: 8453,
-      method: 'owner'
-    }
+    verifierId: 'contract-ownership'
   },
   {
     id: 'safe-payout',
@@ -191,8 +167,7 @@ export const claims = [
     cardUnlocks: 'Payout path',
     requirementLabel: 'Address and transfer risk check',
     verifierName: 'Payout and transfer risk',
-    verifierId: 'wallet-risk',
-    verifierData: { chainId: 8453, walletAddress: '0x0000000000000000000000000000000000000000' }
+    verifierId: 'wallet-risk'
   },
   {
     id: 'publish',
@@ -207,8 +182,7 @@ export const claims = [
     cardUnlocks: 'Go-live',
     requirementLabel: 'Automated content review',
     verifierName: 'Content moderation (AI)',
-    verifierId: 'ai-content-moderation',
-    verifierData: { content: 'Example post', contentType: 'text/plain' }
+    verifierId: 'ai-content-moderation'
   },
   {
     id: 'agent-listing',
@@ -223,14 +197,7 @@ export const claims = [
     cardUnlocks: 'Directory entry',
     requirementLabel: 'Controller-bound agent',
     verifierName: 'Agent identity',
-    verifierId: 'agent-identity',
-    verifierData: {
-      agentId: 'research-agent',
-      agentWallet: '0x0000000000000000000000000000000000000000',
-      agentChainRef: 'eip155:84532',
-      agentType: 'ai',
-      agentLabel: 'Example agent'
-    }
+    verifierId: 'agent-identity'
   },
   {
     id: 'agent-action',
@@ -245,17 +212,7 @@ export const claims = [
     cardUnlocks: 'Scoped actions',
     requirementLabel: 'Scoped delegation',
     verifierName: 'Agent delegation',
-    verifierId: 'agent-delegation',
-    verifierData: {
-      controllerWallet: '0x0000000000000000000000000000000000000000',
-      controllerChainRef: 'eip155:84532',
-      agentWallet: '0x0000000000000000000000000000000000000000',
-      agentChainRef: 'eip155:84532',
-      scope: 'showcase:claim',
-      permissions: ['read', 'execute'],
-      maxSpend: '0',
-      expiresAt: Date.now() + 7 * 24 * 60 * 60 * 1000
-    }
+    verifierId: 'agent-delegation'
   }
 ];
 

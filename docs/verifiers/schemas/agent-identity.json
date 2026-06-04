@@ -10,7 +10,7 @@
       "type": "string"
     },
     "agentChainRef": {
-      "description": "CAIP-2 network reference for agentWallet.",
+      "description": "CAIP-2 network reference for agentWallet (for example eip155:8453). Supply in data or on the verification request as chain (CAIP-2) or chainId (EVM).",
       "format": "caip2-chain",
       "type": "string"
     },

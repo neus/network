@@ -2,7 +2,7 @@ export const HOSTED_CHECKOUT_MESSAGE_TYPE = 'neus_checkout_done';
 
 export function buildHostedCheckoutUrl({
   hostedCheckoutUrl,
-  verifierList,
+  verifierList = [],
   returnUrl,
   origin,
   oauthProvider,
@@ -13,18 +13,23 @@ export function buildHostedCheckoutUrl({
   gateId
 }) {
   const checkoutUrl = new URL(hostedCheckoutUrl);
-  checkoutUrl.searchParams.set('verifiers', verifierList.join(','));
   checkoutUrl.searchParams.set('mode', 'popup');
   checkoutUrl.searchParams.set('returnUrl', returnUrl);
   checkoutUrl.searchParams.set('origin', origin);
-  if (typeof appId === 'string' && appId.trim()) {
-    checkoutUrl.searchParams.set('appId', appId.trim());
-  }
-  if (typeof billingWallet === 'string' && billingWallet.trim()) {
-    checkoutUrl.searchParams.set('billingWallet', billingWallet.trim().toLowerCase());
-  }
-  if (typeof gateId === 'string' && gateId.trim()) {
-    checkoutUrl.searchParams.set('gateId', gateId.trim());
+  const gateIdTrimmed = typeof gateId === 'string' ? gateId.trim() : '';
+  if (gateIdTrimmed) {
+    checkoutUrl.searchParams.set('gateId', gateIdTrimmed);
+  } else {
+    const verifiers = Array.isArray(verifierList) ? verifierList.filter(Boolean) : [];
+    if (verifiers.length > 0) {
+      checkoutUrl.searchParams.set('verifiers', verifiers.join(','));
+    }
+    if (typeof appId === 'string' && appId.trim()) {
+      checkoutUrl.searchParams.set('appId', appId.trim());
+    }
+    if (typeof billingWallet === 'string' && billingWallet.trim()) {
+      checkoutUrl.searchParams.set('billingWallet', billingWallet.trim().toLowerCase());
+    }
   }
   if (typeof oauthProvider === 'string' && oauthProvider.trim()) {
     checkoutUrl.searchParams.set('oauthProvider', oauthProvider.trim());

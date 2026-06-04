@@ -35,11 +35,11 @@
   },
   "fonts": {
     "body": {
-      "family": "Inter",
+      "family": "Mona Sans",
       "weight": 400
     },
     "heading": {
-      "family": "Inter",
+      "family": "Mona Sans",
       "weight": 600
     }
   },

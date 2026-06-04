@@ -10,19 +10,16 @@ Hosted endpoint: **`https://mcp.neus.network/mcp`**
 
 ## One-command setup
 
-Install the hosted MCP endpoint, then sign in:
+Install and sign in in one step:
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-For servers and automation, add your key in one step:
+`neus setup` wires your editors, then signs you in automatically: it uses `NEUS_ACCESS_KEY` from the environment when set, otherwise opens browser sign-in on [neus.network](https://neus.network). You can still pass `--access-key <npk_...>` to override.
 
-```bash
-npx -y -p @neus/sdk neus setup --access-key <npk_...>
-```
+Use `--json` for scripts.
 
 Check the install anytime:
 

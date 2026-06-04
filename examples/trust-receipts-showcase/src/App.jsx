@@ -69,7 +69,6 @@ function setPendingCheckoutClaimId(claimId) {
 }
 
 export default function App() {
-  const appId = import.meta.env.VITE_NEUS_APP_ID || 'local-demo';
   const apiUrl = withEnvUrl(import.meta.env.VITE_NEUS_API_URL, 'api');
   const hostedCheckoutUrl = withEnvUrl(import.meta.env.VITE_NEUS_HOSTED_CHECKOUT_URL, 'checkout');
   const [cat, setCat] = useState('all');
@@ -278,7 +277,6 @@ export default function App() {
           key={selected.id}
           claim={selected}
           onClose={() => setSelectedId(null)}
-          appId={appId}
           apiUrl={apiUrl}
           hostedCheckoutUrl={hostedCheckoutUrl}
           qHash={proofs[selected.id]?.qHash || null}

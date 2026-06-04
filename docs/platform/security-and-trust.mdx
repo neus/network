@@ -29,9 +29,9 @@ Saved **qHashes** follow the visibility you chose.
 | Surface | Create default |
 |---------|----------------|
 | `client.verify()` | `private` |
-| `VerifyGate` | `private` |
+| `VerifyGate` | Hosted gate policy |
 
-Override with `proofOptions` only when you need public reuse or discovery.
+For browser checkout, publish a gate and pass `gateId`. Visibility overrides belong in advanced `client.verify()` flows.
 
 ## Never ship publicly
 

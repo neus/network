@@ -1,37 +1,43 @@
 ---
 title: Billing
-description: How app checks bill your NEUS account and what happens when credits run out.
+description: How gate checks bill your NEUS account and what happens when credits run out.
 icon: credit-card
 ---
 
 NEUS bills metered verification usage to a NEUS profile. Credits spend first.
 
-## Default: your account pays for user checks
+## Default: you pay for visitor checks
 
-When users verify through **VerifyGate** or **Hosted Verify**, use the snippet from Hub after app registration. It already includes:
+When you publish a gate, you own it — so verifications through that gate bill **your** NEUS account by default. Visitors embed or link your checkout with one public `gateId`:
 
-| Field | Role |
-|-------|------|
-| `appId` | Public product ID from your registered domain |
-| `billingWallet` | Your Hub account — the wallet you signed in with when you registered |
+```jsx
+<VerifyGate gateId="gate_abc123" />
+```
 
-You do not look up or copy these separately after registration. For server-side **`gateCheck`**, reuse the same values from your Hub snippet (for example as `NEUS_APP_ID` and `NEUS_BILLING_WALLET`).
-
-## What `appId` alone does
-
-`appId` tells NEUS which product made the request. It is public metadata, not a secret. **To bill your account, you also need the registered app and its linked billing wallet** — both are in the Hub snippet.
+There is no app ID or billing wallet to copy for this path. The gate carries the check policy and the payer.
 
 ## Server checks
 
-Use the same `appId` and `billingWallet` on **`gateCheck`** so server-side eligibility reads stay aligned with your billing account.
+Confirm eligibility before trusted actions with **`gateCheck`** — pass the same `gateId`:
+
+```javascript
+const result = await client.gateCheck({
+  gateId: 'gate_abc123',
+  address: user.walletAddress,
+});
+```
+
+## Charge visitors instead
+
+A gate can charge visitors directly. Turn it on in the gate's pricing step. Your NEUS credits still cover the verification checks unless you configure otherwise.
+
+**Wallet (USDC):** payments settle on-chain straight to your wallet — no setup required.
+
+**Card:** connect a payout account once from **Treasury → Payouts**. Card payments for your paid gates then settle directly to that account. Until payouts are connected, paid gates offer wallet checkout only.
 
 ## When credits run out
 
 Billable calls return **402** with a quote. Complete payment and retry with `PAYMENT-SIGNATURE`.
-
-## Payment gates
-
-Payment gates can charge your visitors directly. NEUS metered verification usage still bills through your registered app when `billingWallet` is set.
 
 ## Advanced server integration
 

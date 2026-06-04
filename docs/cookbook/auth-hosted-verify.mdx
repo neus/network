@@ -11,12 +11,12 @@ icon: key
 | Query intent | User completes on NEUS |
 |--------------|-------------------------|
 | `intent=login` | NEUS session: passkey sign-in, wallet sign-in, optional passkey registration |
-| `verifiers` / `preset` / `gateId` | Verification or gate checkout; wallet steps **only** if a selected check requires them |
+| `gateId` | Gate checkout; wallet steps **only** if the published gate requires them |
 | Social / org **proof** | OAuth inside a verifier — [ownership-social](../verification/ownership-social), [ownership-org-oauth](../verification/ownership-org-oauth) |
 
 ## Login vs verification
 
-| Topic | `intent=login` | Verification (`verifiers` / `preset` / `gateId`, no login-only intent) |
+| Topic | `intent=login` | Gate checkout (`gateId`, no login-only intent) |
 |--|----------------|---------------------------------------------------------------------|
 | Purpose | NEUS **session** (Hub, profile, later checks) | **Receipt** / gate outcome |
 | Screen | Dedicated login shell | Composer |
@@ -29,13 +29,10 @@ icon: key
 | `returnUrl` | Absolute `https://…` back to **your** app after completion. Validated before redirect. |
 | `returnTo` | **neus.network** path only (e.g. `/profile`). Not for third-party domains. `@neus/sdk` `getHostedCheckoutUrl` does not set this; append manually if needed. |
 | `connect=1` | Optional for wallet-native products. With `intent=login`, auto-starts wallet connect on load |
-| `verifiers` | Comma-separated verifier IDs |
-| `preset` | Bundled verifier set |
 | `gateId` | Gate definition |
 | `mode=popup` | Popup; requires `origin` |
 | `origin` | Opener origin for postMessage |
-| `appId` | Your registered app (from Hub snippet) |
-| `billingWallet` | Your Hub account — included in the snippet after registration |
+| `appId` | Advanced server/app attribution only |
 
 ## Redirect examples
 
@@ -45,10 +42,8 @@ icon: key
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
 window.location.href = getHostedCheckoutUrl({
-  verifiers: ['ownership-basic'],
+  gateId: 'gate_abc123',
   returnUrl: 'https://myapp.com/auth/callback',
-  appId: 'your-app-id',
-  billingWallet: '0xYourHubWallet',
 });
 ```
 

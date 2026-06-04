@@ -1,6 +1,6 @@
 ---
 title: Quickstart
-description: Ship trust checks in four steps — users verify on NEUS, you pay from Hub credits.
+description: Ship trust checkout in four steps — create a gate, publish, embed or link, check on your server.
 icon: rocket
 ---
 
@@ -8,25 +8,21 @@ NEUS runs sign-in and verification in the browser. Your app saves the receipt an
 
 **End users never need a NEUS account, an API key, or extra setup in your product.**
 
-## 1. Register your app
+## 1. Create and publish a gate
 
-1. Sign in at [neus.network/hub](https://neus.network/hub).
-2. Open **Apps** → **Register app**.
-3. Enter your site URL and confirm once.
-4. Copy the **ready-made code snippet** Hub shows on success (or open **Apps** anytime for activity, defaults, and integration copy). Your app ID and billing account are already filled in — no separate lookup.
+1. Sign in at [neus.network](https://neus.network).
+2. Open **Gates** in your profile and choose the checks visitors must pass.
+3. Set pricing (you pay by default, or charge visitors).
+4. **Publish** and copy your checkout link or embed snippet.
 
-Checks that run through your product bill your Hub account. Add credits under **Usage** in Hub.
+Your gate stores the check policy. Visitors only need your `gateId`.
 
-## 2. Gate your UI
+## 2. Protect your UI with VerifyGate
 
 ```jsx
 import { VerifyGate } from "@neus/sdk/widgets";
 
-<VerifyGate
-  appId="your-app-id"
-  billingWallet="0xYourHubWallet"
-  requiredVerifiers={["ownership-basic"]}
->
+<VerifyGate gateId="gate_abc123">
   <ProtectedContent />
 </VerifyGate>;
 ```
@@ -40,10 +36,8 @@ import { getHostedCheckoutUrl } from "@neus/sdk";
 
 window.location.assign(
   getHostedCheckoutUrl({
-    verifiers: ["ownership-basic"],
+    gateId: "gate_abc123",
     returnUrl: "https://myapp.com/auth/callback",
-    appId: "your-app-id",
-    billingWallet: "0xYourHubWallet",
   }),
 );
 ```
@@ -52,27 +46,22 @@ Read **`qHash`** from the callback URL or popup message. Details: [Hosted Verify
 
 ## 4. Check before trusted actions
 
-On your server, confirm the receipt still satisfies your policy before you act:
+On your server, confirm the visitor still satisfies the published gate before you act:
 
 ```javascript
 import { NeusClient } from "@neus/sdk";
 
-const client = new NeusClient({
-  appId: process.env.NEUS_APP_ID,
-  billingWallet: process.env.NEUS_BILLING_WALLET,
-});
+const client = new NeusClient();
 
 const result = await client.gateCheck({
+  gateId: "gate_abc123",
   address: user.walletAddress,
-  verifierIds: ["ownership-basic"],
 });
 
 if (!result.data?.eligible) {
   // send the user back to VerifyGate or hosted verify
 }
 ```
-
-Use the same `appId` and `billingWallet` on the server so eligibility checks stay tied to your billing account.
 
 ## Assistants and agents
 
@@ -88,8 +77,8 @@ Use **`neus auth`** for OAuth in your browser. Access keys are for servers, CI, 
 
 Agent wallets: [Agent verification flow](./agents/agent-verification-flow).
 
-## Advanced server integration
+## Advanced server receipts
 
-Need your backend to create receipts directly, or automation with access keys? See [Integrations](./cookbook/integrations).
+Need backend-created receipts after a one-time user approval? See [Integrations](./cookbook/integrations).
 
 **Next:** [Integration](./integration)

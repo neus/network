@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&family=Michroma&display=swap');
 @import '../../shared/css/neus-tokens.css';
 @tailwind base;
 @tailwind components;
@@ -17,8 +17,7 @@
   :root,
   body {
     @apply min-h-screen font-body antialiased;
-    font-family:
-      'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-family: var(--neus-font-secondary);
     font-feature-settings: 'ss01' on, 'cv01' on;
     color: var(--neus-text-primary);
     background: var(--neus-bg-base);
@@ -265,7 +264,7 @@ code.cm-code {
   color: var(--neus-text-primary);
   background: rgb(var(--neus-rgb-surface-card) / 0.65);
   border: 1px solid var(--neus-border-subtle);
-  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-family: var(--neus-font-mono);
 }
 
 /* Dark secondary: signed gate check (neus .btn-secondary / ghost, inverted for contrast on drawer) */
@@ -300,7 +299,7 @@ code.cm-code {
 
 .pre-code {
   @apply overflow-auto rounded-lg p-3.5 text-[0.7rem] leading-relaxed;
-  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-family: var(--neus-font-mono);
   white-space: pre-wrap;
   word-break: break-word;
   color: var(--neus-text-secondary);

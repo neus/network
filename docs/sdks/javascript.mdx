@@ -11,7 +11,7 @@ Use `@neus/sdk` instead of ad-hoc `fetch` to `api.neus.network` so headers and p
 | Layer | Use |
 |-------|-----|
 | Browser | **`getHostedCheckoutUrl`**, **`VerifyGate`**, polling — default user ceremony on **NEUS** ([Quickstart](../quickstart)) |
-| Server | **`gateCheck`** with `appId` + `billingWallet`; advanced: **`verifyFromApp`**, access keys |
+| Server | **`gateCheck`** with `gateId`; advanced: **`verifyFromApp`**, access keys |
 
 Do not put **`npk_*`** or other secrets in browser bundles. If you need calls the SDK does not expose from the client, **proxy through your backend** — [API overview](../api/overview).
 
@@ -28,15 +28,13 @@ import { getHostedCheckoutUrl } from '@neus/sdk';
 
 window.location.assign(
   getHostedCheckoutUrl({
-    verifiers: ['ownership-basic'],
+    gateId: 'gate_abc123',
     returnUrl: 'https://myapp.com/callback',
-    appId: 'your-app-id',
-    billingWallet: '0xYourHubWallet',
   }),
 );
 ```
 
-`getHostedCheckoutUrl` supports `gateId`, `returnUrl`, `verifiers`, `preset`, `mode`, `intent`, `origin`, `oauthProvider`. The hosted page also accepts `returnTo` and `connect=1` (append manually). [Hosted Verify](../cookbook/auth-hosted-verify).
+`getHostedCheckoutUrl` supports `gateId`, `returnUrl`, `mode`, `intent`, `origin`, `oauthProvider`. The hosted page also accepts `returnTo` and `connect=1` (append manually). [Hosted Verify](../cookbook/auth-hosted-verify).
 
 React: [Widgets](../widgets/overview).
 
@@ -46,8 +44,6 @@ React: [Widgets](../widgets/overview).
 const client = new NeusClient({
   // Optional: API base URL (default: https://api.neus.network)
   apiUrl: 'https://api.neus.network',
-  // Optional: public app attribution ID (non-secret)
-  appId: 'neus-network',
   // Optional: request timeout (ms)
   timeout: 30000,
 });
@@ -55,7 +51,7 @@ const client = new NeusClient({
 
 ## App attribution (`appId`)
 
-Set `appId` on the client for usage attribution. It is public, not a secret.
+Set `appId` only for advanced server/app attribution flows. It is public, not a secret, and it is not required for published gate checkout or `gateCheck({ gateId })`.
 
 ```javascript
 const client = new NeusClient({
@@ -167,11 +163,8 @@ const res = await client.verify({
 
 ```javascript
 const res = await client.gateCheck({
+  gateId: 'gate_abc123',
   address: 'YOUR_WALLET_OR_DID',
-  verifierIds: ['token-holding'],
-  contractAddress: '0x...',
-  minBalance: '100',
-  chainId: 8453, // asset verifiers need chainId
   since: Date.now() - 60 * 60 * 1000
 });
 
@@ -183,6 +176,8 @@ if (!res.data?.eligible) {
 <Warning>
 **`gateCheck`** uses **public** and **unlisted** proofs by default. **Private** proofs count when that user is **signed in**. For strict live checks, create a fresh proof and wait for **verified** status.
 </Warning>
+
+The gate stores verifier requirements, billing owner, sponsor/x402 policy, and attribution. Direct `verifierIds` checks are advanced protocol calls; do not use them as the normal product checkout path.
 
 ## Polling
 

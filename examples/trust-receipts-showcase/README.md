@@ -31,10 +31,9 @@ Styling uses [`docs/neus-tokens.css`](../../docs/neus-tokens.css) (copied to `pu
 import { VerifyGate } from '@neus/sdk/widgets';
 
 <VerifyGate
-  appId={import.meta.env.VITE_NEUS_APP_ID || 'local-demo'}
   apiUrl={import.meta.env.VITE_NEUS_API_URL}
   hostedCheckoutUrl={import.meta.env.VITE_NEUS_HOSTED_CHECKOUT_URL}
-  requiredVerifiers={['proof-of-human']}
+  gateId="gate_fair-airdrop"
   buttonText="Issue receipt"
 >
   <button type="button">Get fair airdrop access</button>
@@ -52,10 +51,10 @@ import { VerifyGate } from '@neus/sdk/widgets';
 | Safe payout (risk) | `wallet-risk` |
 | Agents | `agent-identity`, `agent-delegation` |
 
-## `verifierData` and live checks
+## Gates and live checks
 
-- Replace **placeholder** contract addresses, amounts, and domains in `src/claims.js` with values your test **signer**, DNS, or org can satisfy, or the issue step will not succeed.
-- Shapes for each verifier are the JSON Schemas under `docs/verifiers/schemas/`.
+- Publish gates in Hub and pass their `gateId` into `VerifyGate` and `gateCheck`.
+- In this local demo, each card derives a sample `gateId` from the claim id. Replace those with real published gate ids before using the live API.
 
 ## What to store
 

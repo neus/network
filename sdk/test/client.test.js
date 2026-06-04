@@ -436,6 +436,29 @@ describe('NeusClient', () => {
       expect(calledUrl).toContain('verifierIds=');
     });
 
+    it('passes gateId directly to proofs/check without sponsor headers', async () => {
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: { eligible: true, matches: [] }
+          })
+      });
+
+      await client.gateCheck({
+        gateId: 'gate_abc123',
+        address: EVM_A
+      });
+
+      expect(fetch).toHaveBeenCalledTimes(1);
+      const checkInit = fetch.mock.calls[0][1];
+      expect(checkInit.headers['X-Sponsor-Grant']).toBeUndefined();
+      expect(fetch.mock.calls[0][0]).toContain('/api/v1/proofs/check?');
+      expect(fetch.mock.calls[0][0]).toContain('gateId=gate_abc123');
+      expect(fetch.mock.calls[0][0]).not.toContain('verifierIds=');
+    });
+
     it('attaches sponsor grant header when billingWallet is configured', async () => {
       const billingClient = new NeusClient({
         enableLogging: false,

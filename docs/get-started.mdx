@@ -1,6 +1,6 @@
 ---
 title: Get started
-description: Register your app, agent identity, or assistant MCP for hosted NEUS trust.
+description: Create a gate, agent identity, or assistant MCP for hosted NEUS trust.
 icon: book
 ---
 
@@ -16,12 +16,12 @@ Select the integration that matches your product.
 
 ## App verification
 
-1. Sign in at [neus.network/hub](https://neus.network/hub).
-2. **Apps** → **Register app** — enter your site URL and confirm once.
-3. Copy the **ready-made code snippet** Hub shows when registration finishes (or from **Apps** anytime). Paste it into your product — billing and app tagging are already filled in.
-4. Save the receipt ID from verify callbacks and run **`gateCheck`** on your server before trusted actions.
+1. Sign in at [neus.network](https://neus.network) and open **Gates** in your profile.
+2. Create a gate, choose the checks visitors must pass, and **Publish**.
+3. Copy the **checkout link** or **`<VerifyGate gateId="..." />`** embed from the publish step.
+4. Optionally run **`gateCheck({ gateId, address })`** on your server before trusted actions.
 
-Users complete checks on NEUS. They do not need NEUS accounts or API keys.
+Users complete checks on NEUS. They do not need NEUS accounts or API keys. The published gate owns the checkout policy, verifier set, and default billing.
 
 ## Agent trust
 
@@ -42,10 +42,6 @@ npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Sign in with **`neus auth`** (OAuth). Access keys are for servers and CI only.
+Use **`neus auth`** for OAuth in your browser. Access keys are for servers, CI, and automation — never in browser code. Call **`neus_context`** first in each MCP session.
 
-**Other MCP hosts** (Claude Desktop, Windsurf, OpenClaw, and more): [NEUS for AI assistants](./mcp/ide-plugin).
-
-Claude Code marketplace: install **`neus-trust@neus`** from the same guide.
-
-**Next:** [Quickstart](./quickstart)
+**Next:** [Quickstart](./quickstart) · [Integration](./integration)

@@ -9,7 +9,7 @@ import { ReceiptPreview } from './ReceiptPreview.jsx';
 
 const surface = { background: 'var(--neus-bg-elevated)' };
 
-export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl, qHash, onVerified, onStateChange }) {
+export function DetailDrawer({ claim, onClose, apiUrl, hostedCheckoutUrl, qHash, onVerified, onStateChange }) {
   const [mode, setMode] = useState('preview');
   const [localProof, setLocalProof] = useState(null);
   const [eligBusy, setEligBusy] = useState(false);
@@ -48,10 +48,11 @@ export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl,
         setEligLine('No account connected.');
         return;
       }
-      const client = new NeusClient({ apiUrl, appId });
+      const gateId = claim.gateId || `gate_${claim.id}`;
+      const client = new NeusClient({ apiUrl });
       const res = await client.gateCheck({
+        gateId,
         address,
-        verifierIds: [claim.verifierId],
         includePrivate: true,
         includeQHashes: true,
         wallet: w
@@ -67,7 +68,7 @@ export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl,
     } finally {
       setEligBusy(false);
     }
-  }, [apiUrl, appId, claim.verifierId]);
+  }, [apiUrl, claim.gateId, claim.id]);
 
   useEffect(() => {
     const onKey = (e) => e.key === 'Escape' && onClose();
@@ -267,11 +268,9 @@ export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl,
                     </button>
                     <div className="vg-gate min-w-0 flex-1">
                       <VerifyGate
-                        appId={appId}
                         apiUrl={apiUrl}
                         hostedCheckoutUrl={hostedCheckoutUrl}
-                        requiredVerifiers={[claim.verifierId]}
-                        verifierData={{ [claim.verifierId]: claim.verifierData }}
+                        gateId={claim.gateId || `gate_${claim.id}`}
                         buttonText="Issue receipt"
                         checkExisting
                         allowPrivateReuse
@@ -298,7 +297,7 @@ export function DetailDrawer({ claim, onClose, appId, apiUrl, hostedCheckoutUrl,
               <div className="space-y-5">
                 {drawerHeader}
                 <div className="pt-0.5">
-                  <CodePreview claim={claim} appId={appId} />
+                  <CodePreview claim={claim} />
                 </div>
               </div>
             )}

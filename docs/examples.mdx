@@ -4,7 +4,7 @@ description: Trust receipts showcase, Node, React, and HTTP reference implementa
 icon: code
 ---
 
-Same flow everywhere: check → verify if needed → save **`qHash`** → reuse. Register your app and set billing: [Get started](./get-started).
+Same flow everywhere: check → verify if needed → save **`qHash`** → reuse. Create a gate and set billing: [Get started](./get-started).
 
 **Showcase:** [trust-receipts-showcase](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) · **Demo:** [neus.network/demo](https://neus.network/demo).
 
@@ -24,11 +24,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 export default function ProtectedPage() {
   return (
-    <VerifyGate
-      appId="your-app-id"
-      billingWallet="0xYourHubWallet"
-      requiredVerifiers={['ownership-basic']}
-    >
+    <VerifyGate gateId="gate_abc123">
       <ProtectedContent />
     </VerifyGate>
   );
@@ -52,7 +48,7 @@ curl -X POST https://api.neus.network/api/v1/verification/standardize \
 
 | Doc | Purpose |
 |-----|---------|
-| [Get started](./get-started) | Register app and billing |
+| [Get started](./get-started) | Create a gate and billing |
 | [Hosted Verify](./cookbook/auth-hosted-verify) | Browser ceremony on NEUS |
 | [MCP](./mcp/overview) | Assistants and automation |
 | [Quickstart](./quickstart) | SDK first receipt |

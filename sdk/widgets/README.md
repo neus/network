@@ -10,7 +10,7 @@ npm install @neus/sdk react react-dom
 
 ## VerifyGate
 
-Create mode defaults to **private**. Override `proofOptions` only when you need public visibility for link-based or public checks.
+Create mode opens Hosted Verify. The published gate owns verifier inputs, pricing, and checkout policy.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -18,11 +18,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 export function Page() {
   return (
     <VerifyGate
-      appId="your-app-id"
-      requiredVerifiers={['nft-ownership']}
-      verifierData={{
-        'nft-ownership': { contractAddress: '0x...', tokenId: '1', chainId: 8453 }
-      }}
+      gateId="gate_abc123"
     >
       <div>Unlocked</div>
     </VerifyGate>

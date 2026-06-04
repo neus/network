@@ -47,7 +47,7 @@ https://neus.network/proof/[qHash]
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
 const verifyUrl = getHostedCheckoutUrl({
-  verifiers: ['ownership-basic'],
+  gateId: 'gate_abc123',
   returnUrl: 'https://myapp.com/callback',
 });
 
@@ -63,7 +63,7 @@ const record = await client.getProof(qHash);
 
 const eligible = await client.gateCheck({
   address: '0x...',
-  verifierIds: ['ownership-basic'],
+  gateId: 'gate_abc123',
 });
 ```
 
@@ -71,7 +71,7 @@ const eligible = await client.gateCheck({
 
 ```bash
 GET /api/v1/proofs/{qHash}
-GET /api/v1/proofs/check?address=0x...&verifierIds=ownership-basic
+GET /api/v1/proofs/check?address=0x...&gateId=gate_abc123
 ```
 
 ## Next

@@ -1,17 +1,13 @@
 import React from 'react';
 
-export function CodePreview({ claim, appId }) {
+export function CodePreview({ claim }) {
   if (!claim) return null;
 
-  const vd = JSON.stringify(claim.verifierData);
+  const gateId = claim.gateId || `gate_${claim.id}`;
   const snippet = `import { VerifyGate } from '@neus/sdk/widgets';
 
 <VerifyGate
-  appId="${appId || 'your-app'}"
-  requiredVerifiers={['${claim.verifierId}']}
-  verifierData={{
-    '${claim.verifierId}': ${vd}
-  }}
+  gateId="${gateId}"
   checkExisting
   allowPrivateReuse
   strategy="reuse-or-create"

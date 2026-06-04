@@ -1482,7 +1482,9 @@ export class NeusClient {
 
     const qs = [];
     if (options.limit) qs.push(`limit=${encodeURIComponent(String(options.limit))}`);
-    if (options.offset) qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
+    const cursorRaw = options.cursor !== null && options.cursor !== undefined ? String(options.cursor).trim() : '';
+    if (cursorRaw) qs.push(`cursor=${encodeURIComponent(cursorRaw)}`);
+    else if (options.offset) qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
     if (options.qHash) qs.push(`qHash=${encodeURIComponent(options.qHash.toLowerCase())}`);
 
     const query = qs.length ? `?${qs.join('&')}` : '';
@@ -1501,7 +1503,11 @@ export class NeusClient {
       proofs: Array.isArray(proofs) ? proofs : [],
       totalCount: response.data?.totalCount ?? proofs.length,
       hasMore: Boolean(response.data?.hasMore),
-      nextOffset: response.data?.nextOffset ?? null
+      nextOffset: response.data?.nextOffset ?? null,
+      nextCursor:
+        typeof response.data?.nextCursor === 'string' && response.data.nextCursor.trim()
+          ? response.data.nextCursor.trim()
+          : null
     };
   }
 
@@ -1566,7 +1572,9 @@ export class NeusClient {
 
     const qs = [];
     if (options.limit) qs.push(`limit=${encodeURIComponent(String(options.limit))}`);
-    if (options.offset) qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
+    const cursorRaw = options.cursor !== null && options.cursor !== undefined ? String(options.cursor).trim() : '';
+    if (cursorRaw) qs.push(`cursor=${encodeURIComponent(cursorRaw)}`);
+    else if (options.offset) qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
     if (options.qHash) qs.push(`qHash=${encodeURIComponent(options.qHash.toLowerCase())}`);
     const query = qs.length ? `?${qs.join('&')}` : '';
 
@@ -1587,7 +1595,11 @@ export class NeusClient {
       proofs: Array.isArray(proofs) ? proofs : [],
       totalCount: response.data?.totalCount ?? proofs.length,
       hasMore: Boolean(response.data?.hasMore),
-      nextOffset: response.data?.nextOffset ?? null
+      nextOffset: response.data?.nextOffset ?? null,
+      nextCursor:
+        typeof response.data?.nextCursor === 'string' && response.data.nextCursor.trim()
+          ? response.data.nextCursor.trim()
+          : null
     };
   }
 
@@ -1596,6 +1608,9 @@ export class NeusClient {
     if (!validateUniversalAddress(address, params.chain)) {
       throw new ValidationError('Valid address is required');
     }
+
+    const gateIdParam = typeof params.gateId === 'string' ? params.gateId.trim() : '';
+    const verifierIds = gateIdParam ? undefined : params.verifierIds;
 
     const qs = new URLSearchParams();
     qs.set('address', address);
@@ -1622,7 +1637,8 @@ export class NeusClient {
       setIfPresent(key, value);
     };
 
-    setCsvIfPresent('verifierIds', params.verifierIds);
+    setIfPresent('gateId', gateIdParam);
+    setCsvIfPresent('verifierIds', verifierIds);
     setBoolIfPresent('requireAll', params.requireAll);
     setIfPresent('minCount', params.minCount);
     setIfPresent('sinceDays', params.sinceDays);
@@ -1693,12 +1709,12 @@ export class NeusClient {
     }
 
     let mergedHeaders = headersOverride;
-    if (!mergedHeaders) {
+    if (!mergedHeaders && !gateIdParam) {
       try {
         const sponsorHeaders = await this._resolveSponsorGrantHeaders(
-          Array.isArray(params.verifierIds)
-            ? params.verifierIds
-            : (params.verifierIds ? [params.verifierIds] : [])
+          Array.isArray(verifierIds)
+            ? verifierIds
+            : (verifierIds ? [verifierIds] : [])
         );
         if (sponsorHeaders && Object.keys(sponsorHeaders).length > 0) {
           mergedHeaders = sponsorHeaders;

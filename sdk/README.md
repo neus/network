@@ -48,13 +48,13 @@ Prefer `neus setup` over hand-editing config files so every host stays on **`htt
 
 ## Hosted Verify
 
-Use Hosted Verify when you want NEUS to handle the signing/verification flow outside your app UI.
+Use Hosted Verify when you want NEUS to handle the signing/verification flow outside your app UI. Prefer a **published gate**:
 
 ```js
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
 const url = getHostedCheckoutUrl({
-  verifiers: ['ownership-basic'],
+  gateId: 'gate_abc123',
   returnUrl: 'https://yourapp.com/auth/callback'
 });
 
@@ -71,7 +71,7 @@ Use this only when your app intentionally handles signing. This example is EVM. 
 import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient({
-  appId: 'your-app-id'
+  apiUrl: 'https://api.neus.network'
 });
 
 const proof = await client.verify({
@@ -99,7 +99,7 @@ console.log(proof.proofUrl);
 
 ## React widget
 
-Use `VerifyGate` when you want a drop-in verification flow in React.
+Use `VerifyGate` with your published `gateId`:
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -107,44 +107,29 @@ import { VerifyGate } from '@neus/sdk/widgets';
 export function Page() {
   return (
     <VerifyGate
-      appId="your-app-id"
-      requiredVerifiers={['ownership-basic']}
-      verifierData={{
-        'ownership-basic': {
-          owner: '0x...',
-          contentType: 'application/json',
-          content: JSON.stringify({
-            title: 'Verified claim',
-            summary: 'Public summary of what is being proven.'
-          }),
-          reference: {
-            type: 'url',
-            id: 'https://example.com/source'
-          }
-        }
-      }}
+      gateId="gate_abc123"
       onVerified={result => {
         console.log(result.qHash || result.qHashes);
       }}
-    />
+    >
+      <section>Unlocked content</section>
+    </VerifyGate>
   );
 }
 ```
 
 ## Check receipts
 
-Use `gateCheck` from trusted server code when you need allow/deny or eligibility checks.
+Use `gateCheck` from trusted server code when you need allow/deny before access:
 
 ```js
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient({
-  appId: 'your-app-id'
-});
+const client = new NeusClient();
 
 const result = await client.gateCheck({
-  address: '0x...',
-  verifierIds: ['ownership-basic']
+  gateId: 'gate_abc123',
+  address: '0x...'
 });
 
 if (!result.data?.eligible) {
@@ -171,28 +156,21 @@ Never ship access keys in browser code.
 ```js
 const client = new NeusClient({
   apiUrl: 'https://api.neus.network',
-  appId: 'your-app-id',
   timeout: 30000
 });
 ```
 
-`appId` is public attribution for your app.
+`appId` is optional public attribution for advanced server/app flows. Published gate checkout and `gateCheck({ gateId })` do not require it.
 `apiKey` / `npk_*` is optional and server-side only.
 
 ## MCP step-by-step
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Re-sign in or rotate credentials:
-
-```bash
-npx -y -p @neus/sdk neus auth
-npx -y -p @neus/sdk neus auth --access-key <npk_...>   # servers and CI only
-```
+`neus setup` configures MCP and signs you in: `NEUS_ACCESS_KEY` from the environment when set, otherwise browser sign-in. Pass `--access-key <npk_...>` only to override.
 
 Editors with plugin marketplaces can install **`neus-trust@neus`** for the bundled session workflow. OpenClaw, Hermes, and other runtimes: see [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin) for exact paths.
 

@@ -4,7 +4,7 @@ description: REST proof checks, reads, and HTTP verification for servers and too
 icon: terminal
 ---
 
-Use the HTTP API from **servers, workers, CLIs, and MCP**—not from end-user browsers. Responses use the same **`qHash`** as the SDK; usage is attributed to the NEUS profile linked to your app.
+Use the HTTP API from **servers, workers, CLIs, and MCP**—not from end-user browsers. Responses use the same **`qHash`** as the SDK. For product checkout, publish a gate and pass its **`gateId`**; NEUS resolves the gate policy, billing owner, credits, sponsor/x402 behavior, and attribution server-side.
 
 **Base URL:** `https://api.neus.network`
 
@@ -38,13 +38,26 @@ Send end users through the **[JavaScript SDK](../sdks/javascript)** or **[Hosted
 curl "https://api.neus.network/api/v1/proofs/by-wallet/0x...?limit=50"
 ```
 
+Paged responses include `proofs`, `totalCount`, `hasMore`, and continuation fields:
+
+- **`nextCursor`** — preferred for owner vaults and large histories (keyset paging).
+- **`nextOffset`** — used when the merged vault is multi-wallet or cursor is unavailable.
+
+Pass **`cursor`** (not `offset`) on the next request when `nextCursor` is present:
+
+```bash
+curl "https://api.neus.network/api/v1/proofs/by-wallet/0x...?limit=1000&cursor=<nextCursor>"
+```
+
 Public and unlisted proofs: often callable without auth. **Private** proofs: only with allowed access ([Authentication](./authentication)).
 
 **Check**
 
 ```bash
-curl "https://api.neus.network/api/v1/proofs/check?address=0x...&verifierIds=ownership-basic"
+curl "https://api.neus.network/api/v1/proofs/check?address=0x...&gateId=gate_abc123"
 ```
+
+Direct `verifierIds` checks are for advanced protocol tooling. Product access checks should use `gateId`.
 
 **Create a proof (raw HTTP, advanced)**
 

@@ -18,7 +18,7 @@ Every NEUS integration follows the same loop.
 | Layer     | Use                                                                       |
 | --------- | ------------------------------------------------------------------------- |
 | Browser   | `VerifyGate`, `getHostedCheckoutUrl`, hosted `/verify`                    |
-| Server    | `gateCheck` with `appId` + `billingWallet`                                |
+| Server    | `gateCheck` with `gateId`                                                 |
 | Assistant | Hosted NEUS MCP, `neus_context`, `neus_proofs_check`, `neus_agent_link`   |
 
 Passkey, wallet, and OAuth flows should run on NEUS hosted pages by default. Do not ship access keys or server secrets in browser bundles.

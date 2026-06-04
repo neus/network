@@ -52,16 +52,13 @@ Responses use `code`, `message`, `type`. Fix the request, retry with backoff, or
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-const client = new NeusClient({
-  appId: process.env.NEUS_APP_ID,
-  apiKey: process.env.NEUS_ACCESS_KEY,
-});
+const client = new NeusClient();
 const subjectAddress = '0x...';
 
 try {
   const result = await client.gateCheck({
+    gateId: 'gate_abc123',
     address: subjectAddress,
-    verifierIds: ['ownership-basic'],
   });
   if (!result.data?.eligible) {
     throw new Error('Required receipt not found');

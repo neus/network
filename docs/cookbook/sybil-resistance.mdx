@@ -14,15 +14,13 @@ icon: shield-halved
 
 ```javascript
 const basic = await client.gateCheck({
+  gateId: 'gate_basic',
   address: walletAddress,
-  verifierIds: ['ownership-basic'],
-  since: Date.now() - 24 * 60 * 60 * 1000,
 });
 
 const layered = await client.gateCheck({
+  gateId: 'gate_layered',
   address: walletAddress,
-  verifierIds: ['ownership-basic', 'proof-of-human'],
-  since: Date.now() - 60 * 60 * 1000,
 });
 ```
 
@@ -30,7 +28,7 @@ const layered = await client.gateCheck({
 
 ```jsx
 <VerifyGate
-  requiredVerifiers={['ownership-social']}
+  gateId="gate_social"
   onVerified={(result) => {
     // persist qHash for replay protection
   }}
@@ -40,5 +38,5 @@ const layered = await client.gateCheck({
 ```
 
 <Warning>
-Use **`since`** on point-in-time checks. Store qHashes where replay matters.
+Configure recency on the gate for point-in-time checks. Store qHashes where replay matters.
 </Warning>

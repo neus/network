@@ -1,6 +1,6 @@
 ---
 title: SDK Verification Patterns
-description: Reuse, fresh, hosted, and privacy options.
+description: Reuse, fresh, hosted checkout, and server checks.
 icon: network-wired
 ---
 
@@ -8,7 +8,7 @@ Default strategy: **`reuse-or-create`**.
 
 ## Privacy
 
-`client.verify()` defaults to **private**. `VerifyGate` create also defaults to **private**. Full matrix: [Security and trust](../platform/security-and-trust)
+`client.verify()` is an advanced server or controlled-signing path. `VerifyGate` create opens **Hosted Verify** and uses the published gate policy. Full matrix: [Security and trust](../platform/security-and-trust)
 
 | Option | When |
 |--------|------|
@@ -17,22 +17,13 @@ Default strategy: **`reuse-or-create`**.
 | `publicDisplay: false` | Unlisted - still public to anyone with id |
 | `publicDisplay: true` | Listed / discoverable (needs `public`) |
 
-`storeOriginalContent` is an advanced storage control.
-
-Public-unlisted example:
-
-```javascript
-const proofOptions = {
-  privacyLevel: 'public',
-  publicDisplay: false,
-};
-```
+`storeOriginalContent` and explicit visibility options are advanced `client.verify()` storage controls, not the default VerifyGate path.
 
 ## Reuse-first
 
 ```jsx
 <VerifyGate
-  requiredVerifiers={['ownership-basic']}
+  gateId="gate_abc123"
   strategy="reuse-or-create"
 >
   <Protected />
@@ -44,7 +35,7 @@ const proofOptions = {
 High-stakes actions - force new proof:
 
 ```jsx
-<VerifyGate strategy="fresh" requiredVerifiers={['ownership-basic']}>
+<VerifyGate strategy="fresh" gateId="gate_abc123">
   <Protected />
 </VerifyGate>
 ```
@@ -52,18 +43,18 @@ High-stakes actions - force new proof:
 ## Read-only gate
 
 ```jsx
-<VerifyGate strategy="reuse" requiredVerifiers={['ownership-basic']}>
+<VerifyGate strategy="reuse" gateId="gate_abc123">
   <Protected />
 </VerifyGate>
 ```
 
 ## Hosted interactive
 
-Hand off to `/verify` when the verifier needs it:
+Hand off to `/verify` with a published gate:
 
 ```jsx
 <VerifyGate
-  requiredVerifiers={['ownership-social']}
+  gateId="gate_abc123"
   hostedCheckoutUrl="https://neus.network/verify"
 />
 ```
@@ -76,11 +67,8 @@ Prefer **`gateCheck`** over pulling full proofs for every decision:
 
 ```javascript
 const result = await client.gateCheck({
+  gateId: 'gate_abc123',
   address: '0x...',
-  verifierIds: ['token-holding'],
-  contractAddress: '0x...',
-  minBalance: '1',
-  chainId: 8453,
 });
 ```
 

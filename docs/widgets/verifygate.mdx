@@ -1,100 +1,79 @@
 ---
 title: VerifyGate Component
-description: Gate React UI behind verification with hosted verify built in.
+description: Drop-in checkout for a published NEUS gate.
 icon: object-group
 ---
 
-`VerifyGate` checks eligibility, runs **Hosted Verify** when a new proof is needed, then renders children. Pass **`appId`** and **`billingWallet`** from Hub so checks bill your account. Visibility: [Security and trust](../platform/security-and-trust). Setup: [Register your app](../platform/setup).
+`VerifyGate` checks eligibility, opens **Hosted Verify** when a new proof is needed, then renders your protected content. The default path is a **published gate** — not a manual verifier list.
 
-## Default create behavior
+## Quickstart
 
-When **`proofOptions`** is omitted, create mode merges:
-
-| Field | Default |
-|-------|---------|
-| `privacyLevel` | `private` |
-| `publicDisplay` | `false` |
-
-Pass **`proofOptions`** only when you need **unlisted public** or **listed public**.
-
-## Basic usage
+1. In [NEUS Hub](https://neus.network/profile?tab=listings), create a gate and choose the checks visitors must pass.
+2. Publish the gate and copy your **checkout link** or **embed snippet**.
+3. Paste the embed in your app, or send users to the hosted link.
+4. Optionally run `gateCheck` on your server before granting access.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
 export function Page() {
   return (
-    <VerifyGate
-      requiredVerifiers={['nft-ownership']}
-      verifierData={{
-        'nft-ownership': {
-          contractAddress: '0x...',
-          tokenId: '1',
-          chainId: 8453
-        }
-      }}
-      appId="your-app-id"
-      billingWallet="0xYourHubWallet"
-    >
+    <VerifyGate gateId="gate_abc123">
       <div>Unlocked</div>
     </VerifyGate>
   );
 }
 ```
 
+```js
+import { getHostedCheckoutUrl } from '@neus/sdk';
+
+const url = getHostedCheckoutUrl({
+  gateId: 'gate_abc123',
+  returnUrl: 'https://yourapp.com/continue',
+});
+```
+
+```js
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient();
+const result = await client.gateCheck({
+  gateId: 'gate_abc123',
+  address: user.walletAddress,
+});
+```
+
+Billing and check policy come from the gate. You do not register an app or pass `billingWallet` for this path.
+
 ## Key props
 
 | Prop | What it does |
 |------|--------------|
-| `requiredVerifiers` | Sets the verification policy |
-| `verifierData` | Supplies verifier-specific inputs |
-| `strategy` | Chooses reuse, reuse-or-create, or fresh |
-| `proofOptions` | Overrides privacy and content storage (defaults are private) |
-| `mode` | Chooses create vs access behavior |
-| `qHash` | Existing id for access mode |
-| `appId` | Public product ID from Hub |
-| `billingWallet` | Your Hub wallet — checks bill your credits, not the end user |
-| `hostedCheckoutUrl` | Overrides the hosted verify URL when needed |
-| `oauthProvider` | Pre-selects the OAuth provider when the user already chose one in your app |
-| `wallet` | Explicit provider for direct signing. Use this for non-EVM wallets and pass CAIP-2 `chain` context. |
+| `gateId` | Published gate handle (default) |
+| `strategy` | Reuse, reuse-or-create, or fresh proofs |
+| `mode` | Create vs access behavior |
+| `qHash` | Existing receipt for access mode |
+| `hostedCheckoutUrl` | Override hosted verify base URL |
+| `oauthProvider` | Pre-select social or org sign-in on hosted verify |
+| `wallet` | Optional signer for private receipt reuse or access mode |
 
-## Typical uses
+## Default create behavior
 
-- Paid or premium content behind a check
-- NFT or token access
-- Hosted social or organization verification
-- Fresh proof for high-stakes actions
+Create mode opens **Hosted Verify**. The published gate owns verifier inputs, pricing, and checkout policy.
 
 ## Hosted OAuth
 
-Interactive verifiers (**`ownership-social`**, **`ownership-org-oauth`**, **`proof-of-human`**) use **[Hosted Verify](../cookbook/auth-hosted-verify)**. Set `oauthProvider` when the user already picked a provider in your app.
-
-```jsx
-import { VerifyGate } from '@neus/sdk/widgets';
-
-export function ConnectGithub() {
-  return (
-    <VerifyGate
-      requiredVerifiers={['ownership-social']}
-      oauthProvider="github"
-      appId="your-app-id"
-      billingWallet="0xYourHubWallet"
-    />
-  );
-}
-```
+Social, organization, and human checks use **[Hosted Verify](../cookbook/auth-hosted-verify)**. Set `oauthProvider` when the user already picked a provider in your app.
 
 Allowed values:
 
 - **Social:** `x`, `twitter`, `github`, `discord`, `facebook`, `linkedin`, `telegram`, `farcaster`
 - **Org:** `google`, `microsoft`
 
-**Popup:** still **`neus_checkout_done`**. `oauthProvider` only picks which sign-in opens first; proof payload and your handling stay the same.
+## Advanced server receipts
 
-## Direct-sign vs hosted
-
-- **`ownership-basic`** and other wallet-creatable verifiers can run in-widget with a connected EVM wallet. For non-EVM direct signing, pass `wallet` and CAIP-2 `chain` explicitly.
-- Social, org, and human flows route through hosted verify. Start from **[Hosted Verify](../cookbook/auth-hosted-verify)** when you are unsure.
+For backend-created receipts after a one-time user approval, use the server-side `verifyFromApp` flow in [Integrations](../cookbook/integrations). Keep browser checkout on `gateId`.
 
 ## Next
 

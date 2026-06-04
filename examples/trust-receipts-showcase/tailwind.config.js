@@ -9,22 +9,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: [
-          'Inter',
-          'ui-sans-serif',
-          'system-ui',
-          '-apple-system',
-          'Segoe UI',
-          'sans-serif'
-        ],
-        body: [
-          'Inter',
-          'ui-sans-serif',
-          'system-ui',
-          '-apple-system',
-          'Segoe UI',
-          'sans-serif'
-        ]
+        display: ['Mona Sans', 'sans-serif'],
+        body: ['Mona Sans', 'sans-serif']
       },
       boxShadow: {
         card: '0 10px 28px rgba(0,0,0,0.28), 0 1px 0 rgba(90,90,90,0.12), inset 0 1px 0 rgba(90,90,90,0.1)',

@@ -1,36 +1,34 @@
 ---
-title: Register your app
-description: Connect your product to NEUS so checks bill your account.
+title: Create a gate
+description: Publish a gate in Hub and embed checkout with a single gateId.
 icon: building
 ---
 
-Register your site in Hub before you ship **VerifyGate** or **Hosted Verify**. One signed step registers your domain, links billing to your Hub account, and gives you a paste-ready snippet.
+A **gate** is a public trust checkout entry in NEUS Hub. You choose the checks visitors must pass, publish, and embed checkout with one public `gateId`. No app ID, billing wallet, or API key for the default web path.
 
 ## Steps
 
 1. Sign in at [neus.network/hub](https://neus.network/hub).
-2. Open **Apps** → **Register app**.
-3. Enter your site URL and confirm once.
-4. Copy the **integration snippet** Hub shows on success — or open **Apps** anytime for activity, check defaults, and copy-ready widget, hosted, and server integration.
+2. Open **Gates** in your profile and choose the checks visitors must pass.
+3. Set pricing — you pay for checks by default, or charge visitors.
+4. **Publish** and copy your **checkout link** or **embed snippet**.
 
-**Apps** is your ongoing control center: attribution stats, credit usage per app, and pre-filled integration copy. You do not hunt for app IDs or wallet addresses separately.
-
-Paste the snippet so user verifications spend **your** credits, not theirs.
+Checks bill your NEUS account automatically because you own the gate. Visitors only need your `gateId`.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
-<VerifyGate
-  appId="your-app-id"
-  billingWallet="0xYourHubWallet"
-  requiredVerifiers={['ownership-basic']}
->
+<VerifyGate gateId="gate_abc123">
   <ProtectedContent />
 </VerifyGate>
 ```
 
 Full walkthrough: [Quickstart](../quickstart) · Billing: [Billing](./billing).
 
-**Optional:** [Domain verification](../cookbook/domain-verification) proves DNS control for profile trust and team workspace — it is separate from app registration and not required to ship VerifyGate.
+**Optional:** [Domain verification](../cookbook/domain-verification) proves DNS control for profile trust and team workspace — it is separate from gates and not required to ship VerifyGate.
+
+## Advanced: server-created receipts
+
+Need backend receipt creation after a one-time user approval? See [Integrations](../cookbook/integrations) for `verifyFromApp` and the advanced server path.
 
 **Next:** [Hosted Verify](../cookbook/auth-hosted-verify)

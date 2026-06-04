@@ -479,6 +479,7 @@ declare module '@neus/sdk' {
   export interface GetProofsOptions {
     limit?: number;
     offset?: number;
+    cursor?: string;
     chain?: string;
     signatureMethod?: string;
   }
@@ -489,6 +490,8 @@ declare module '@neus/sdk' {
     totalCount: number;
     hasMore: boolean;
     nextOffset?: number | null;
+    /** Keyset continuation when the API returns cursor paging (preferred over deep offsets). */
+    nextCursor?: string | null;
   }
 
   export interface GateRequirement {
@@ -514,6 +517,8 @@ declare module '@neus/sdk' {
 
   export interface GateCheckApiParams {
     address: string;
+    /** Published gate handle; resolves checks server-side (preferred public path). */
+    gateId?: string;
     verifierIds?: string[] | string;
     requireAll?: boolean;
     minCount?: number;
@@ -879,6 +884,8 @@ declare module '@neus/sdk' {
 
 declare module '@neus/sdk/widgets' {
   export interface VerifyGateProps {
+    /** Published gate checkout handle (default integration path). */
+    gateId?: string;
     requiredVerifiers?: string[];
     onVerified?: (result: {
       qHash: string;
@@ -910,12 +917,8 @@ declare module '@neus/sdk/widgets' {
     oauthProvider?: string;
     style?: Record<string, any>;
     children?: any;
-    verifierOptions?: Record<string, any>;
-    verifierData?: Record<string, any>;
-    proofOptions?: Record<string, any>;
     strategy?: 'reuse-or-create' | 'reuse' | 'fresh';
     checkExisting?: boolean;
-    maxProofAgeMs?: number;
     allowPrivateReuse?: boolean;
     showBrand?: boolean;
     disabled?: boolean;

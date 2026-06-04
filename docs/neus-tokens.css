@@ -2,6 +2,8 @@
  * NEUS docs tokens — colocated for Mintlify (styles.css must not @import outside docs/).
  * Keep aligned with neus/app/globals.css and neus/DESIGN.md typography map.
  */
+@import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&family=Michroma&display=swap');
+
 :root {
   --neus-rgb-surface-canvas: 16 17 19;
   --neus-rgb-surface-rail: 20 22 25;
@@ -34,7 +36,9 @@
   --neus-text-subtle: var(--neus-text-dimmed);
 
   /* Typography scale (DESIGN.md / neus globals) */
-  --neus-font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --neus-font-sans: "Mona Sans";
+  --neus-font-wordmark: "Michroma";
+  --neus-font-mono: var(--neus-font-sans);
   --neus-text-body: 1rem;
   --neus-text-body-sm: 0.875rem;
   --neus-text-label: 0.9375rem;

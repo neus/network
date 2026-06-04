@@ -4,11 +4,11 @@ description: Hosted verification on NEUS by default; keys for server automation 
 icon: fingerprint
 ---
 
-**Default:** users complete checks on **`neus.network/verify`**. Your server runs **`gateCheck`** with `appId` and `billingWallet`. No wallet code in your app, and no NEUS account required for end users.
+**Default:** users complete checks on **`neus.network/verify`**. Your server runs **`gateCheck`** with your published `gateId`. No wallet code in your app, and no NEUS account required for end users.
 
 | Need | Mechanism | Wallet code in your app |
 |------|-----------|---------------------------|
-| Product verification (default) | `VerifyGate` / Hosted Verify + app registration | No |
+| Product verification (default) | `VerifyGate` / Hosted Verify + `gateId` | No |
 | MCP client auth | OAuth 2.0 + PKCE | No |
 | Server automation as your profile | Bearer `npk_*` access key | No |
 | Server creates receipts for an approved user | App link + `verifyFromApp` | No |
@@ -20,7 +20,7 @@ Server integration: [Integrations](../cookbook/integrations).
 
 `https://neus.network/verify` — [Hosted Verify](../cookbook/auth-hosted-verify).
 
-Pass `appId` and `billingWallet` so checks bill your Hub credits, not the user.
+Send users to your checkout with `gateId`; the enforcement policy bills your Hub credits.
 
 ## MCP OAuth
 
@@ -39,7 +39,7 @@ See [MCP OAuth](../mcp/oauth).
 
 ## Backend receipts
 
-For backend-created receipts after a user approves your product once, see [Integrations](../cookbook/integrations). Separate from **Register app** in Hub, which connects billing for hosted checks.
+For backend-created receipts after a user approves your product once, see [Integrations](../cookbook/integrations). Separate from publishing a **gate** in Hub, which bills hosted checks to your account.
 
 ## Signing inside your app
 

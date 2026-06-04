@@ -6,7 +6,6 @@ import {
   buildHostedCheckoutRedirectUrl,
   buildHostedCheckoutUrl
 } from './hostedCheckout.js';
-import { mergeVerifyGateCreateProofOptions } from './mergeCreateProofOptions.js';
 
 const THEME = {
   primary: 'var(--neus-primary, #98C0EF)',
@@ -36,42 +35,6 @@ if (typeof document !== 'undefined') {
     document.head.appendChild(el);
   }
 }
-
-const DEFAULT_MAX_AGE_MS_BY_VERIFIER = {
-  'ownership-dns-txt': 60 * 60 * 1000,
-  'contract-ownership': 60 * 60 * 1000,
-  'nft-ownership': 60 * 60 * 1000,
-  'token-holding': 60 * 60 * 1000,
-  'wallet-risk': 60 * 60 * 1000,
-  'agent-delegation': 7 * 24 * 60 * 60 * 1000
-};
-
-const maxAgeMsForVerifier = (verifierId, overrideMs) => {
-  if (typeof overrideMs === 'number') return overrideMs;
-  return DEFAULT_MAX_AGE_MS_BY_VERIFIER[verifierId];
-};
-
-const CREATABLE_VERIFIERS = new Set([
-  'ownership-basic',
-  'ownership-pseudonym',
-  'ownership-dns-txt',
-  'contract-ownership',
-  'nft-ownership',
-  'token-holding',
-  'wallet-link',
-  'wallet-risk',
-  'agent-identity',
-  'agent-delegation',
-  'ai-content-moderation'
-]);
-
-const INTERACTIVE_VERIFIERS = new Set([
-  'ownership-social',
-  'ownership-org-oauth',
-  'proof-of-human'
-]);
-
-const HOSTED_WHEN_INCOMPLETE = new Set(['wallet-link']);
 
 const DEFAULT_HOSTED_CHECKOUT_URL = 'https://neus.network/verify';
 const VERIFY_GATE_DEFAULT_ERROR = 'Something went wrong. Please try again.';
@@ -159,6 +122,7 @@ function NeusLogo({ size = 16, onPrimaryFill = false }) {
 }
 
 export function VerifyGate({
+  gateId = undefined,
   requiredVerifiers = ['ownership-basic'],
   onVerified = undefined,
   apiUrl = undefined,
@@ -170,9 +134,6 @@ export function VerifyGate({
   oauthProvider = undefined,
   style = undefined,
   children = undefined,
-  verifierOptions = undefined,
-  verifierData = undefined,
-  proofOptions = undefined,
   showBrand = false,
   disabled = false,
   buttonText = undefined,
@@ -180,7 +141,6 @@ export function VerifyGate({
   qHash: qHashProp = null,
   strategy = 'reuse-or-create',
   checkExisting = true,
-  maxProofAgeMs = undefined,
   allowPrivateReuse = true,
   campaignTitle = undefined,
   campaignMessage = undefined,
@@ -198,31 +158,23 @@ export function VerifyGate({
   const [existingProofs, setExistingProofs] = useState(null);
   const [operation, setOperation] = useState('verify');
 
+  const resolvedGateId = typeof gateId === 'string' ? gateId.trim() : '';
+
   const client = useMemo(
-    () => new NeusClient({ apiUrl, appId, billingWallet, paymentSignature, extraHeaders }),
-    [apiUrl, appId, billingWallet, paymentSignature, extraHeaders]
+    () => new NeusClient({ apiUrl, appId: resolvedGateId ? undefined : appId, billingWallet: resolvedGateId ? undefined : billingWallet, paymentSignature, extraHeaders }),
+    [apiUrl, appId, billingWallet, paymentSignature, extraHeaders, resolvedGateId]
   );
 
   const verifierList = useMemo(() => {
+    if (resolvedGateId) return [];
     return Array.isArray(requiredVerifiers) && requiredVerifiers.length > 0
       ? requiredVerifiers
       : ['ownership-basic'];
-  }, [requiredVerifiers]);
+  }, [requiredVerifiers, resolvedGateId]);
 
   const primaryVerifier = verifierList[0];
   const qHash = qHashProp || null;
   const resolvedQHash = qHash;
-  const hasInteractiveVerifier = useMemo(
-    () => verifierList.some(verifierId => {
-      if (INTERACTIVE_VERIFIERS.has(verifierId)) return true;
-      if (HOSTED_WHEN_INCOMPLETE.has(verifierId)) {
-        const data = verifierData && verifierData[verifierId];
-        if (!data || !data.secondaryWalletAddress || !data.signature) return true;
-      }
-      return false;
-    }),
-    [verifierList, verifierData]
-  );
   const resolvedHostedCheckoutUrl = useMemo(() => {
     if (typeof hostedCheckoutUrl === 'string' && hostedCheckoutUrl.trim()) {
       return hostedCheckoutUrl.trim();
@@ -237,7 +189,7 @@ export function VerifyGate({
     return DEFAULT_HOSTED_CHECKOUT_URL;
   }, [apiUrl, hostedCheckoutUrl]);
 
-  const shouldCheckExisting = checkExisting && strategy !== 'fresh';
+  const shouldCheckExisting = !resolvedGateId && checkExisting && strategy !== 'fresh';
 
   const inferChainFromAddress = useCallback((address) => {
     const raw = String(address || '').trim();
@@ -248,12 +200,8 @@ export function VerifyGate({
   }, [chain]);
 
   const buildGateRequirements = useCallback(() => {
-    return verifierList.map(verifierId => ({
-      verifierId,
-      ...(maxAgeMsForVerifier(verifierId, maxProofAgeMs) &&
-        { maxAgeMs: maxAgeMsForVerifier(verifierId, maxProofAgeMs) })
-    }));
-  }, [verifierList, maxProofAgeMs]);
+    return verifierList.map(verifierId => ({ verifierId }));
+  }, [verifierList]);
 
   const applySatisfiedGateResult = useCallback((gateResult, address) => {
     if (!gateResult?.satisfied) return false;
@@ -414,8 +362,9 @@ export function VerifyGate({
       oauthProvider,
       campaignTitle,
       campaignMessage,
-      appId,
-      billingWallet
+      gateId: resolvedGateId || undefined,
+      appId: resolvedGateId ? undefined : appId,
+      billingWallet: resolvedGateId ? undefined : billingWallet
     });
 
     let expectedOrigin = null;
@@ -481,7 +430,7 @@ export function VerifyGate({
 
       window.addEventListener('message', onMessage);
     });
-  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider, campaignTitle, campaignMessage, appId, billingWallet]);
+  }, [resolvedHostedCheckoutUrl, verifierList, oauthProvider, campaignTitle, campaignMessage, appId, billingWallet, resolvedGateId]);
 
   useEffect(() => {
     onStateChange?.(state);
@@ -600,155 +549,33 @@ export function VerifyGate({
         setState('idle');
         setNotice('No matching proof was found. Create a proof to continue.');
       } else {
-        if (hasInteractiveVerifier) {
-          setOperation('verify');
-          setIsProcessing(true);
-          setState('interactive-checkout');
-          onStateChange?.('interactive-checkout');
-
-          const checkoutResult = await launchHostedCheckout();
-          const checkoutQHash = checkoutResult?.qHash || null;
-          const handoffWallet =
-            (typeof checkoutResult?.walletAddress === 'string' && checkoutResult.walletAddress.trim()) ||
-            (walletAddress && String(walletAddress).trim()) ||
-            '';
-
-          setState('verified');
-          dispatchNeusProofCreatedForHost({
-            qHash: checkoutQHash,
-            walletAddress: handoffWallet
-          });
-          onVerified?.({
-            qHash: checkoutQHash,
-            verifierIds: verifierList,
-            existing: false,
-            mode: 'create',
-            eligible: checkoutResult?.eligible !== false,
-            proofUrl: checkoutResult?.proofUrl || (
-              checkoutQHash
-                ? `${apiUrl || 'https://api.neus.network'}/api/v1/proofs/${checkoutQHash}`
-                : null
-            )
-          });
-          return;
-        }
-
         setOperation('verify');
         setIsProcessing(true);
-        setState('signing');
+        setState('interactive-checkout');
+        onStateChange?.('interactive-checkout');
 
-        const resolvedProofOptions = mergeVerifyGateCreateProofOptions(
-          proofOptions,
-          verifierOptions
-        );
-
-        const buildDataForVerifier = (verifierId) => {
-          if (!CREATABLE_VERIFIERS.has(verifierId)) {
-            throw new Error(
-              'This check requires the hosted verifier.'
-            );
-          }
-
-          const explicit = verifierData && verifierData[verifierId];
-          if (explicit && typeof explicit === 'object') return explicit;
-
-          if (verifierId === 'ownership-basic') {
-            return null;
-          }
-          if (verifierId === 'wallet-risk') {
-            return {};
-          }
-          if (verifierId === 'wallet-link') {
-            if (
-              !explicit?.secondaryWalletAddress ||
-              !explicit?.signature ||
-              !explicit?.chain ||
-              !explicit?.signatureMethod
-            ) {
-              throw new Error(
-                'Missing required wallet details.'
-              );
-            }
-            return explicit;
-          }
-
-          throw new Error('Missing required verification details.');
-        };
-
-        const verifyOne = async (verifierId) => {
-          const dataForVerifier = buildDataForVerifier(verifierId);
-          const params =
-            verifierId === 'ownership-basic' && dataForVerifier === null
-              ? {
-                verifier: 'ownership-basic',
-                content:
-                    (typeof verifierData?.['ownership-basic'] === 'string'
-                      ? verifierData['ownership-basic']
-                      : verifierData?.['ownership-basic']?.content) || `NEUS verification (${verifierId})`,
-                options: resolvedProofOptions
-              }
-              : {
-                verifier: verifierId,
-                data: dataForVerifier,
-                options: resolvedProofOptions
-              };
-
-          setState('signing');
-          const created = await client.verify({
-            ...params,
-            wallet: wallet || (typeof window !== 'undefined' ? window.ethereum : undefined)
-          });
-          setState('verifying');
-          const qHashToCheck = created.qHash || created?.data?.qHash;
-          const final = await client.pollProofStatus(qHashToCheck, { interval: 3000, timeout: 60000 });
-
-          const verifiedVerifiers = final?.data?.verifiedVerifiers || [];
-          const verifierResult = verifiedVerifiers.find(v => v.verifierId === verifierId);
-          if (!verifierResult || verifierResult.verified !== true) {
-            throw new Error('Verification could not be completed.');
-          }
-
-          const hubTx = final?.data?.hubTransaction || {};
-          const crosschain = final?.data?.crosschain || {};
-          const txHash = hubTx?.txHash || crosschain?.hubTxHash || null;
-
-          const finalQHash = final?.qHash || qHashToCheck;
-          return {
-            verifierId,
-            qHash: finalQHash,
-            address: final?.data?.walletAddress,
-            txHash,
-            verifiedVerifiers,
-            proofUrl: final?.proofUrl
-          };
-        };
-
-        const results = [];
-        for (const verifierId of verifierList) {
-          results.push(await verifyOne(verifierId));
-        }
-
-        setState('verified');
-
-        const last = results[results.length - 1];
-        const lastQHash = last?.qHash || null;
-        const handoffAddr =
-          (last?.address && String(last.address).trim()) ||
+        const checkoutResult = await launchHostedCheckout();
+        const checkoutQHash = checkoutResult?.qHash || null;
+        const handoffWallet =
+          (typeof checkoutResult?.walletAddress === 'string' && checkoutResult.walletAddress.trim()) ||
           (walletAddress && String(walletAddress).trim()) ||
           '';
+        setState('verified');
         dispatchNeusProofCreatedForHost({
-          qHash: lastQHash,
-          walletAddress: handoffAddr
+          qHash: checkoutQHash,
+          walletAddress: handoffWallet
         });
         onVerified?.({
-          qHash: lastQHash,
-          qHashes: results.map(r => r.qHash).filter(Boolean),
-          address: last?.address,
-          txHash: last?.txHash,
+          qHash: checkoutQHash,
           verifierIds: verifierList,
-          verifiedVerifiers: last?.verifiedVerifiers,
-          proofUrl: last?.proofUrl,
-          results
+          existing: false,
+          mode: 'create',
+          eligible: checkoutResult?.eligible !== false,
+          proofUrl: checkoutResult?.proofUrl || (
+            checkoutQHash
+              ? `${apiUrl || 'https://api.neus.network'}/api/v1/proofs/${checkoutQHash}`
+              : null
+          )
         });
       }
 
@@ -767,12 +594,8 @@ export function VerifyGate({
     mode,
     resolvedQHash,
     verifierList,
-    hasInteractiveVerifier,
     client,
     apiUrl,
-    verifierOptions,
-    verifierData,
-    proofOptions,
     launchHostedCheckout,
     onVerified,
     onError,

@@ -16,7 +16,7 @@ Most products use [Quickstart](../quickstart): **VerifyGate** or **Hosted Verify
 
 ## Backend receipt creation (`verifyFromApp`)
 
-After a user approves your product once, your server can create receipts on their behalf with **`verifyFromApp`**. This is **not** the same as **Register app** in Hub, which connects billing for hosted checks.
+After a user approves your product once, your server can create receipts on their behalf with **`verifyFromApp`**. This is **not** the same as publishing a **gate** in Hub, which bills hosted checks to your account.
 
 ```javascript
 import { NeusClient } from "@neus/sdk";
@@ -48,7 +48,9 @@ Access keys identify **your builder profile** for automation. They do not replac
 
 ## Billing
 
-`appId` alone does not bill your account. For hosted flows, pass **`billingWallet`** (your Hub wallet) so checks spend your credits. Backend flows follow the authenticated context on each request.
+Published gates are the default billing source of truth. Hosted checkout and server eligibility checks should pass **`gateId`**; NEUS resolves the gate owner, usage billing, sponsor precedence, and x402 fallback from that gate.
+
+`appId` is public attribution for advanced server/app flows. It does not bill your account, and the default Hosted Verify path does not require `billingWallet`.
 
 See [Billing](../platform/billing).
 

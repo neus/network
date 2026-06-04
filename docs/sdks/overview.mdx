@@ -8,14 +8,14 @@ icon: code
 npm install @neus/sdk
 ```
 
-The JavaScript SDK builds hosted URLs, runs gate checks, polls status, and optional in-app signing. Register your app and pass **`appId`** + **`billingWallet`** — [Get started](../get-started). MCP calls the same APIs: [MCP](../mcp/overview).
+The JavaScript SDK builds hosted URLs, runs gate checks, polls status, and optional in-app signing. Create a gate and embed it with one **`gateId`** — [Get started](../get-started). MCP calls the same APIs: [MCP](../mcp/overview).
 
 ## Default placement
 
 | Use case | Where |
 |----------|--------|
 | Hosted verify URL, `VerifyGate` | **Browser** (or WebView) |
-| **`gateCheck`** with `appId` + `billingWallet` | **Server** |
+| **`gateCheck`** with `gateId` | **Server** |
 | **`verifyFromApp`**, `npk_*` | **Server** |
 
 Avoid credentialed `fetch` to `api.neus.network` from the browser; use SDK helpers or your backend.
@@ -29,10 +29,8 @@ import { getHostedCheckoutUrl } from '@neus/sdk';
 
 window.location.assign(
   getHostedCheckoutUrl({
-    verifiers: ['ownership-basic'],
+    gateId: 'gate_abc123',
     returnUrl: 'https://myapp.com/callback',
-    appId: 'your-app-id',
-    billingWallet: '0xYourHubWallet',
   }),
 );
 ```
@@ -48,14 +46,11 @@ After you have **`qHash`**, optional wait: `NeusClient` + `pollProofStatus` — 
 ## Eligibility on your server
 
 ```javascript
-const client = new NeusClient({
-  appId: process.env.NEUS_APP_ID,
-  billingWallet: process.env.NEUS_BILLING_WALLET,
-});
+const client = new NeusClient();
 
 const gate = await client.gateCheck({
+  gateId: 'gate_abc123',
   address: '0x...',
-  verifierIds: ['ownership-basic'],
 });
 ```
 
