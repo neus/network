@@ -130,7 +130,7 @@ Docs, SDK (`@neus/sdk`), widgets, examples, specs, and the NEUS Trust editor plu
 
 ## Brand assets (docs + SDK)
 
-Docs OG/favicon: `npm run generate:docs-og` (runs Michroma generator in sibling [`neus`](https://github.com/neus/neus)). SDK/widgets use `sdk/brand-mark.js` on `neus.network`. Plugin icon: `plugins/neus-trust/assets/icon.png`.
+Docs OG/favicon: `npm run generate:docs-og` (this repo). SDK/widgets use `sdk/brand-mark.js` on `neus.network`. Plugin icon: `plugins/neus-trust/assets/icon.png`.
 
 ## Proof of reality
 
