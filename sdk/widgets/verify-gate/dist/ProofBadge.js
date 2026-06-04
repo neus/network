@@ -5,8 +5,15 @@ import { useEffect, useState } from "react";
 
 // brand-mark.js
 var NEUS_BRAND_PACK_VERSION = "2026-06-03-mark-og-finalize-v1";
+var NEUS_MARK_CDN_ORIGIN = "https://neus.network";
+var PACK_BASE = `${NEUS_MARK_CDN_ORIGIN}/images/neus-brand-pack`;
 var v = encodeURIComponent(NEUS_BRAND_PACK_VERSION);
-var NEUS_DEFAULT_MARK_URL = `https://neus.network/images/neus-brand-pack/favicon.svg?v=${v}`;
+function withBrandPackVersion(file) {
+  const name = file.replace(/^\//, "");
+  return `${PACK_BASE}/${name}?v=${v}`;
+}
+var NEUS_DEFAULT_MARK_URL = withBrandPackVersion("favicon.svg");
+var NEUS_DEFAULT_OG_IMAGE_URL = withBrandPackVersion("og-default-1200x630-neus.png");
 
 // widgets/verify-gate/ProofBadge.jsx
 import { jsx, jsxs } from "react/jsx-runtime";

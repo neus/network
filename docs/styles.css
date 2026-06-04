@@ -500,10 +500,10 @@ footer {
 }
 
 /*
-  Contextual menu (TOC): NEUS particle-ring favicon.
+  Contextual menu (TOC): NEUS particle-ring favicon (hosted on neus.network).
 */
-#table-of-contents img[src*="/images/favicon.svg"],
-#table-of-contents [src*="/images/favicon.svg"] {
+#table-of-contents img[src*="neus-brand-pack/favicon.svg"],
+#table-of-contents [src*="neus-brand-pack/favicon.svg"] {
   display: inline-block !important;
   width: 1.125rem !important;
   height: 1.125rem !important;

@@ -1,7 +1,7 @@
 <p align="center">
   <a href="https://neus.network">
     <img
-      src="https://docs.neus.network/images/og-default.png"
+      src="https://neus.network/images/neus-brand-pack/og-default-1200x630-neus.png?v=2026-06-03-mark-og-finalize-v1"
       width="600"
       height="315"
       alt="NEUS"
@@ -130,7 +130,7 @@ Docs, SDK (`@neus/sdk`), widgets, examples, specs, and the NEUS Trust editor plu
 
 ## Brand assets (docs + SDK)
 
-Docs ship two files: `docs/images/favicon.svg` and `docs/images/og-default.png` (copy from sibling [`neus`](https://github.com/neus/neus) `public/images/neus-brand-pack/` when the product mark changes). SDK widgets use the hosted mark via `sdk/brand-mark.js` (`NEUS_DEFAULT_MARK_URL` on `neus.network`). Plugin/MCP icon: `plugins/neus-trust/assets/icon.png`.
+Docs and SDK point at the product CDN (`neus.network/images/neus-brand-pack/`). SSOT: sibling [`neus`](https://github.com/neus/neus) `npm run brand:generate` → `sdk/brand-mark.js` (`NEUS_DEFAULT_MARK_URL`, `NEUS_DEFAULT_OG_IMAGE_URL`). Plugin/MCP icon: `plugins/neus-trust/assets/icon.png`.
 
 ## Proof of reality
 

@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { LayoutGrid, ShieldCheck, Search, ExternalLink, Globe, BookOpen, Github } from 'lucide-react';
+import { NEUS_DEFAULT_MARK_URL } from '../../../sdk/brand-mark.js';
 import { claimById, claims, FILTER_CATEGORIES, filterByUiCategory, getInitialDemoProofs } from './claims.js';
-
-const NEUS_MARK_IMG =
-  'https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-03-mark-og-finalize-v1';
 import { applyListScope, filterByQuery } from './viewModel.js';
 import { DetailDrawer } from './components/DetailDrawer.jsx';
 import { OpportunityCard } from './components/OpportunityCard.jsx';
@@ -133,7 +131,7 @@ export default function App() {
       >
         <div className="mb-9 flex items-center gap-2 px-1">
           <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-md">
-            <img src={NEUS_MARK_IMG} width={32} height={32} className="h-7 w-7" alt="" />
+            <img src={NEUS_DEFAULT_MARK_URL} width={32} height={32} className="h-7 w-7" alt="" />
           </div>
           <span className="font-display text-lg font-bold tracking-tight">NEUS</span>
         </div>

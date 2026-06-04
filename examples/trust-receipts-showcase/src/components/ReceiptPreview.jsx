@@ -1,8 +1,6 @@
 import React from 'react';
+import { NEUS_DEFAULT_MARK_URL } from '../../../../sdk/brand-mark.js';
 import { getReceiptLineDetails } from '../claims.js';
-
-const NEUS_MARK_IMG =
-  'https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-03-mark-og-finalize-v1';
 
 const PLACEHOLDER = '0x7a2f4c9e1b8d0f3a5c6e7d8b9a0f1e2c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0';
 
@@ -38,7 +36,7 @@ export function ReceiptPreview({ claim, qHash }) {
       }}
     >
       <div className="mb-1.5 flex items-start gap-2.5">
-        <img className="h-5 w-5 rounded" src={NEUS_MARK_IMG} width={20} height={20} alt="" />
+        <img className="h-5 w-5 rounded" src={NEUS_DEFAULT_MARK_URL} width={20} height={20} alt="" />
         <div>
           <p
             className="mb-0.5 text-[0.65rem] font-medium uppercase tracking-wide"
