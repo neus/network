@@ -1,12 +1,12 @@
 'use client';
 import { useEffect, useState } from 'react';
-import NEUS_LOGO_DATA_URL from '../../neus-logo.svg';
+import { NEUS_DEFAULT_MARK_URL } from '../../brand-mark.js';
 
 const DEFAULT_API_BASE = 'https://api.neus.network';
 
 const NeusLogo = ({ size = 12, logoUrl }) => (
   <img
-    src={logoUrl ?? NEUS_LOGO_DATA_URL}
+    src={logoUrl ?? NEUS_DEFAULT_MARK_URL}
     alt=""
     aria-hidden="true"
     width={size}
@@ -17,7 +17,8 @@ const NeusLogo = ({ size = 12, logoUrl }) => (
       display: 'block',
       borderRadius: 2,
       flexShrink: 0,
-      objectFit: 'contain'
+      objectFit: 'contain',
+      background: 'transparent'
     }}
   />
 );

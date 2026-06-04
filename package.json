@@ -13,6 +13,7 @@
     "docs:validate": "npm run docs:lint:markdown && npm run docs:lint:openapi",
     "test:sdk": "npm --prefix sdk test",
     "verify:release": "node scripts/verify-release-versions.mjs",
-    "verify:publish": "node scripts/verify-publish-hygiene.mjs"
+    "verify:publish": "node scripts/verify-publish-hygiene.mjs",
+    "sync:brand": "node scripts/sync-brand-pack-from-neus.mjs"
   }
 }

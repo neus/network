@@ -500,11 +500,12 @@ footer {
 }
 
 /*
-  Contextual menu (TOC): NEUS mark from /images/neus-mark.png (32px brand asset).
+  Contextual menu (TOC): NEUS particle-ring mark (32–64px brand-pack rasters).
 */
-#table-of-contents img[src*="neus-mark"],
-#table-of-contents [src="/images/neus-mark.png"],
-#table-of-contents [src*="neus-mark.png"] {
+#table-of-contents img[src*="neus-brand-pack/neus-mark"],
+#table-of-contents img[src*="neus-brand-pack/favicon.svg"],
+#table-of-contents [src*="/images/neus-brand-pack/neus-mark"],
+#table-of-contents [src*="/images/neus-brand-pack/favicon.svg"] {
   display: inline-block !important;
   width: 1.125rem !important;
   height: 1.125rem !important;

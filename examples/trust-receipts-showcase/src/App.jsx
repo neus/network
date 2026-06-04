@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { AnimatePresence } from 'motion/react';
 import { LayoutGrid, ShieldCheck, Search, ExternalLink, Globe, BookOpen, Github } from 'lucide-react';
-import neusMark from './neus-logo.svg?url';
+import { NEUS_MARK_IMG } from './brandMark.js';
 import { claimById, claims, FILTER_CATEGORIES, filterByUiCategory, getInitialDemoProofs } from './claims.js';
 import { applyListScope, filterByQuery } from './viewModel.js';
 import { DetailDrawer } from './components/DetailDrawer.jsx';
@@ -131,7 +131,7 @@ export default function App() {
       >
         <div className="mb-9 flex items-center gap-2 px-1">
           <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-md">
-            <img src={neusMark} width={32} height={32} className="h-7 w-7" alt="" />
+            <img src={NEUS_MARK_IMG} width={32} height={32} className="h-7 w-7" alt="" />
           </div>
           <span className="font-display text-lg font-bold tracking-tight">NEUS</span>
         </div>

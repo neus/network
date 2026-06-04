@@ -54,6 +54,23 @@ function buildHostedCheckoutRedirectUrl(popupCheckoutUrl) {
   return checkoutUrl.toString();
 }
 
+// brand-mark.js
+var NEUS_BRAND_PACK_VERSION = "2026-06-03-mark-og-finalize-v1";
+var NEUS_MARK_CDN_ORIGIN = "https://neus.network";
+var PACK_BASE = `${NEUS_MARK_CDN_ORIGIN}/images/neus-brand-pack`;
+var NEUS_OPAQUE_ICON_PATHS = {
+  appleTouch: `${NEUS_MARK_CDN_ORIGIN}/apple-touch-icon.png`,
+  faviconPlate32: `${PACK_BASE}/favicon-plate-32.png`,
+  faviconPlate48: `${PACK_BASE}/favicon-plate-48.png`
+};
+function withBrandPackVersion(file) {
+  const name = file.replace(/^\//, "");
+  return `${PACK_BASE}/${name}?v=${encodeURIComponent(NEUS_BRAND_PACK_VERSION)}`;
+}
+var NEUS_DEFAULT_MARK_URL = withBrandPackVersion("favicon.svg");
+var NEUS_DEFAULT_MARK_PNG_URL = withBrandPackVersion("neus-mark-64.png");
+var NEUS_MARK_URL_32 = withBrandPackVersion("neus-mark-32.png");
+
 // widgets/verify-gate/VerifyGate.jsx
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 var THEME = {
@@ -134,25 +151,24 @@ function VerifyGateInlineSpinner({ size = 16 }) {
     }
   );
 }
-function NeusLogo({ size = 16, onPrimaryFill = false }) {
+function NeusLogo({ size = 16 }) {
   return /* @__PURE__ */ jsx(
-    "span",
+    "img",
     {
+      src: NEUS_DEFAULT_MARK_URL,
+      alt: "",
       "aria-hidden": "true",
+      width: size,
+      height: size,
       style: {
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: `${size}px`,
-        height: `${size}px`,
-        borderRadius: "4px",
-        border: `1px solid ${onPrimaryFill ? "rgba(10, 10, 10, 0.35)" : "currentColor"}`,
-        color: onPrimaryFill ? "#0a0a0a" : "currentColor",
-        fontSize: `${Math.max(9, Math.round(size * 0.55))}px`,
-        fontWeight: 700,
-        lineHeight: 1
-      },
-      children: "N"
+        width: size,
+        height: size,
+        display: "block",
+        borderRadius: 4,
+        flexShrink: 0,
+        objectFit: "contain",
+        background: "transparent"
+      }
     }
   );
 }
@@ -681,7 +697,7 @@ function VerifyGate({
           style: getButtonStyle(),
           children: [
             (state === "signing" || state === "verifying" || state === "interactive-checkout") && /* @__PURE__ */ jsx(VerifyGateInlineSpinner, { size: 16 }),
-            showBrand && state === "idle" && /* @__PURE__ */ jsx(NeusLogo, { size: 16, onPrimaryFill: true }),
+            showBrand && state === "idle" && /* @__PURE__ */ jsx(NeusLogo, { size: 16 }),
             state === "verified" && /* @__PURE__ */ jsx("svg", { width: "16", height: "16", viewBox: "0 0 20 20", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { fillRule: "evenodd", d: "M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z", clipRule: "evenodd" }) }),
             /* @__PURE__ */ jsx("span", { className: "neus-vg__label", style: { color: "inherit" }, children: getLabel() })
           ]
@@ -738,7 +754,7 @@ function VerifyGate({
       disabled: disabled || isProcessing,
       children: [
         (state === "signing" || state === "verifying" || state === "interactive-checkout") && /* @__PURE__ */ jsx(VerifyGateInlineSpinner, { size: 16 }),
-        showBrand && state === "idle" && /* @__PURE__ */ jsx(NeusLogo, { size: 16, onPrimaryFill: true }),
+        showBrand && state === "idle" && /* @__PURE__ */ jsx(NeusLogo, { size: 16 }),
         state === "verified" && /* @__PURE__ */ jsx("svg", { width: "16", height: "16", viewBox: "0 0 20 20", fill: "currentColor", children: /* @__PURE__ */ jsx("path", { fillRule: "evenodd", d: "M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z", clipRule: "evenodd" }) }),
         /* @__PURE__ */ jsx("span", { className: "neus-vg__label", style: { color: "inherit" }, children: getLabel() }),
         error && /* @__PURE__ */ jsxs("span", { style: { opacity: 0.8, marginLeft: "8px" }, children: [

@@ -6,6 +6,7 @@ import {
   buildHostedCheckoutRedirectUrl,
   buildHostedCheckoutUrl
 } from './hostedCheckout.js';
+import { NEUS_DEFAULT_MARK_URL } from '../../brand-mark.js';
 
 const THEME = {
   primary: 'var(--neus-primary, #98C0EF)',
@@ -98,26 +99,24 @@ function VerifyGateInlineSpinner({ size = 16 }) {
   );
 }
 
-function NeusLogo({ size = 16, onPrimaryFill = false }) {
+function NeusLogo({ size = 16 }) {
   return (
-    <span
+    <img
+      src={NEUS_DEFAULT_MARK_URL}
+      alt=""
       aria-hidden="true"
+      width={size}
+      height={size}
       style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: `${size}px`,
-        height: `${size}px`,
-        borderRadius: '4px',
-        border: `1px solid ${onPrimaryFill ? 'rgba(10, 10, 10, 0.35)' : 'currentColor'}`,
-        color: onPrimaryFill ? '#0a0a0a' : 'currentColor',
-        fontSize: `${Math.max(9, Math.round(size * 0.55))}px`,
-        fontWeight: 700,
-        lineHeight: 1
+        width: size,
+        height: size,
+        display: 'block',
+        borderRadius: 4,
+        flexShrink: 0,
+        objectFit: 'contain',
+        background: 'transparent'
       }}
-    >
-      N
-    </span>
+    />
   );
 }
 
@@ -747,7 +746,7 @@ export function VerifyGate({
           {(state === 'signing' || state === 'verifying' || state === 'interactive-checkout') && (
             <VerifyGateInlineSpinner size={16} />
           )}
-          {showBrand && state === 'idle' && <NeusLogo size={16} onPrimaryFill />}
+          {showBrand && state === 'idle' && <NeusLogo size={16} />}
           {state === 'verified' && (
             <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -817,7 +816,7 @@ export function VerifyGate({
       {(state === 'signing' || state === 'verifying' || state === 'interactive-checkout') && (
         <VerifyGateInlineSpinner size={16} />
       )}
-      {showBrand && state === 'idle' && <NeusLogo size={16} onPrimaryFill />}
+      {showBrand && state === 'idle' && <NeusLogo size={16} />}
       {state === 'verified' && (
         <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor">
           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />

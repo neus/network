@@ -1,6 +1,6 @@
 {
   "name": "@neus/sdk",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.",
   "bin": {
     "neus": "cli/neus.mjs"
@@ -31,6 +31,10 @@
       "import": "./gates.js",
       "require": "./cjs/gates.cjs"
     },
+    "./mcp-hosts": {
+      "import": "./mcp-hosts.js",
+      "require": "./cjs/mcp-hosts.cjs"
+    },
     "./widgets": {
       "types": "./types.d.ts",
       "import": "./widgets/index.js",
@@ -49,8 +53,8 @@
     "lint": "eslint . --ignore-pattern widgets/verify-gate/dist/**",
     "format": "prettier --write \"**/*.js\"",
     "build": "npm run build:widgets && npm run build:cjs",
-    "build:widgets": "npx esbuild widgets/verify-gate/VerifyGate.jsx widgets/verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=widgets/verify-gate/dist --jsx=automatic --legal-comments=none --loader:.svg=dataurl --external:react --external:react-dom --external:react/jsx-runtime --external:@neus/sdk/client",
-    "build:cjs": "npx esbuild index.js client.js utils.js errors.js gates.js --bundle --platform=node --format=cjs --outdir=cjs --out-extension:.js=.cjs --legal-comments=none --external:ethers --external:@zkpassport/sdk --external:react --external:react-dom --external:react/jsx-runtime",
+    "build:widgets": "npx esbuild widgets/verify-gate/VerifyGate.jsx widgets/verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=widgets/verify-gate/dist --jsx=automatic --legal-comments=none --external:react --external:react-dom --external:react/jsx-runtime --external:@neus/sdk/client",
+    "build:cjs": "npx esbuild index.js client.js utils.js errors.js gates.js mcp-hosts.js --bundle --platform=node --format=cjs --outdir=cjs --out-extension:.js=.cjs --legal-comments=none --external:ethers --external:@zkpassport/sdk --external:react --external:react-dom --external:react/jsx-runtime",
     "prepack": "npm run build",
     "prepublishOnly": "npm run lint && npm test && npm run build"
   },
@@ -122,6 +126,7 @@
   },
   "files": [
     "cli/neus.mjs",
+    "mcp-hosts.js",
     "index.js",
     "client.js",
     "utils.js",
