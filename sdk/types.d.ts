@@ -1,4 +1,4 @@
-declare module '@neus/sdk' {
+﻿declare module '@neus/sdk' {
   export interface Eip1193Provider {
     request(args: { method: string; params?: unknown[] | Record<string, unknown> }): Promise<unknown>;
   }
@@ -57,7 +57,7 @@ declare module '@neus/sdk' {
 
   export interface NeusClientConfig {
     apiUrl?: string;
-    /** Optional server profile key — MCP/CI only; not required for VerifyGate or gateCheck. */
+    /** Optional server profile key â€” MCP/CI only; not required for VerifyGate or gateCheck. */
     apiKey?: string;
     /** Public app attribution id (non-secret). */
     appId?: string;
@@ -68,7 +68,7 @@ declare module '@neus/sdk' {
     orgWallet?: string;
     /** Site origin used when issuing billing authorization (defaults to browser origin). */
     appOrigin?: string;
-    /** @deprecated Advanced server path only — use appId + billingWallet for the default app flow. */
+    /** Advanced server path only; use appId + billingWallet for the default app flow. */
     appLinkQHash?: string;
     paymentSignature?: string;
     extraHeaders?: Record<string, string>;
@@ -998,4 +998,32 @@ declare module '@neus/sdk/widgets/verify-gate' {
 
 declare module '@neus/sdk/client' {
   export { NeusClient } from '@neus/sdk';
+}
+
+declare module '@neus/sdk/mcp-hosts' {
+  export type McpInstallClient = 'claude' | 'codex' | 'cursor' | 'vscode';
+  export type McpInstallHost = 'cursor' | 'claude' | 'codex';
+
+  export const NEUS_MCP_SERVER_NAME: string;
+  export const NEUS_MCP_URL: string;
+  export const NEUS_SETUP_CLI: string;
+  export const NEUS_AUTH_CLI: string;
+  export const NEUS_MCP_SETUP_DOCS_URL: string;
+  export const MCP_INSTALL_CLIENTS: McpInstallClient[];
+  export const MCP_INSTALL_HOSTS: McpInstallHost[];
+  export const IDE_HOST_LABELS: Record<McpInstallHost, string>;
+  export const IDE_HOST_BRAND_LOGOS: Record<McpInstallHost, string>;
+
+  export function buildNeusMcpHttpConfig(accessKey?: string | null): {
+    type: 'http';
+    url: string;
+    headers?: { Authorization: string };
+  };
+
+  export function buildCursorMcpInstallUrl(accessKey?: string | null): string;
+  export function buildVsCodeMcpInstallUrl(accessKey?: string | null): string;
+  export function buildAuthCommandForClient(client: McpInstallClient): string;
+  export function buildSetupCommandForClient(client: McpInstallClient, accessKey?: string | null): string;
+  export function buildSetupCommandForHost(host: McpInstallHost, accessKey?: string | null): string;
+  export function supportsMcpInstallDeeplink(host: McpInstallHost): boolean;
 }

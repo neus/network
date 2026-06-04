@@ -1052,23 +1052,22 @@ export class NeusClient {
           }
         };
 
-        const isFarcasterWallet = (() => {
+        const isBaseMiniAppWallet = (() => {
           if (typeof window === 'undefined') return false;
           try {
             const w = window;
-            const fc = w.farcaster;
-            if (!fc || !fc.context) return false;
-            const fcProvider = fc.provider || fc.walletProvider || (fc.context && fc.context.walletProvider);
-            if (fcProvider === provider) return true;
-            if (w.mini && w.mini.wallet === provider && fc && fc.context) return true;
-            if (w.ethereum === provider && fc && fc.context) return true;
+            const mini = w.mini;
+            if (!mini) return false;
+            const miniProvider = mini.wallet || mini.provider;
+            if (miniProvider === provider) return true;
+            if (w.ethereum === provider && mini) return true;
           } catch {
             void 0;
           }
           return false;
         })();
 
-        if (isFarcasterWallet) {
+        if (isBaseMiniAppWallet) {
           try {
             const hexMsg = toHexUtf8(message);
             signature = await provider.request({ method: 'personal_sign', params: [hexMsg, walletAddress] });

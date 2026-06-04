@@ -22,7 +22,7 @@ npx -y -p @neus/sdk neus setup --access-key <npk_...>
 
 | Package | Path | Role |
 | ------- | ---- | ---- |
-| [`@neus/sdk`](https://www.npmjs.com/package/@neus/sdk) | [`sdk/`](../sdk) | JavaScript SDK + `neus` CLI |
+| [`@neus/sdk`](https://www.npmjs.com/package/@neus/sdk) | [`sdk/`](../sdk) | JavaScript SDK + `neus` CLI + `@neus/sdk/mcp-hosts` |
 | [`@neus/mcp-server`](https://www.npmjs.com/package/@neus/mcp-server) | [`mcp/npm-dist/`](./npm-dist) | MCP registry discovery metadata only |
 
 Install with `npm install @neus/sdk` or `npm install @neus/mcp-server`. Release notes: [CHANGELOG.md](../CHANGELOG.md).

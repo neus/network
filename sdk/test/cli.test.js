@@ -90,6 +90,86 @@ process.exit(0);
 `;
 }
 
+function buildFakeCodexScript() {
+  return `
+const fs = require('node:fs');
+
+const statePath = process.env.NEUS_TEST_CODEX_STATE;
+const args = process.argv.slice(2);
+
+function readState() {
+  if (!fs.existsSync(statePath)) {
+    return { servers: {} };
+  }
+  return JSON.parse(fs.readFileSync(statePath, 'utf8'));
+}
+
+function writeState(state) {
+  fs.writeFileSync(statePath, JSON.stringify(state, null, 2));
+}
+
+function optionValue(names) {
+  for (let i = 0; i < args.length; i += 1) {
+    if (names.includes(args[i]) && i + 1 < args.length) {
+      return args[i + 1];
+    }
+  }
+  return null;
+}
+
+if (args[0] === 'mcp' && args[1] === 'add') {
+  const state = readState();
+  const name = args[2];
+  state.servers[name] = {
+    url: optionValue(['--url']),
+    bearerTokenEnvVar: optionValue(['--bearer-token-env-var']),
+    oauthClientId: optionValue(['--oauth-client-id']),
+    oauthResource: optionValue(['--oauth-resource'])
+  };
+  writeState(state);
+  process.stdout.write(\`Added \${name}\\n\`);
+  process.exit(0);
+}
+
+if (args[0] === 'mcp' && args[1] === 'remove') {
+  const state = readState();
+  delete state.servers[args[2]];
+  writeState(state);
+  process.stdout.write(\`Removed \${args[2]}\\n\`);
+  process.exit(0);
+}
+
+if (args[0] === 'mcp' && args[1] === 'login') {
+  const state = readState();
+  const server = state.servers[args[2]] || {};
+  state.servers[args[2]] = {
+    ...server,
+    loggedIn: true,
+    scopes: optionValue(['--scopes'])
+  };
+  writeState(state);
+  process.stdout.write(\`Logged in \${args[2]}\\n\`);
+  process.exit(0);
+}
+
+if (args[0] === 'mcp' && args[1] === 'get') {
+  const state = readState();
+  const server = state.servers[args[2]];
+  if (!server) process.exit(1);
+  process.stdout.write(\`\${args[2]}\\n  enabled: true\\n  transport: streamable_http\\n  url: \${server.url}\\n\`);
+  process.exit(0);
+}
+
+if (args[0] === 'mcp' && args[1] === 'list') {
+  const state = readState();
+  process.stdout.write(Object.keys(state.servers).join('\\n'));
+  process.exit(0);
+}
+
+process.exit(0);
+`;
+}
+
 async function createCommand(binDir, name, body) {
   const scriptPath = path.join(binDir, `${name}.js`);
   await fs.writeFile(scriptPath, body, 'utf8');
@@ -116,6 +196,7 @@ async function makeCliContext() {
   const workspaceDir = path.join(root, 'workspace');
   const binDir = path.join(root, 'bin');
   const claudeStatePath = path.join(root, 'claude-state.json');
+  const codexStatePath = path.join(root, 'codex-state.json');
 
   await fs.mkdir(homeDir, { recursive: true });
   await fs.mkdir(appDataDir, { recursive: true });
@@ -126,6 +207,7 @@ async function makeCliContext() {
   await fs.mkdir(path.join(appDataDir, 'Code'), { recursive: true });
 
   await createCommand(binDir, 'claude', buildFakeClaudeScript());
+  await createCommand(binDir, 'codex', buildFakeCodexScript());
   await createCommand(binDir, 'code', 'process.exit(0);\n');
 
   const env = {
@@ -136,7 +218,9 @@ async function makeCliContext() {
     LOCALAPPDATA: localAppDataDir,
     PATH: `${binDir}${path.delimiter}${process.env.PATH || ''}`,
     NEUS_TEST_CLAUDE_STATE: claudeStatePath,
-    NEUS_ACCESS_KEY: ''
+    NEUS_TEST_CODEX_STATE: codexStatePath,
+    NEUS_ACCESS_KEY: '',
+    NO_COLOR: '1'
   };
 
   return {
@@ -144,7 +228,8 @@ async function makeCliContext() {
     homeDir,
     appDataDir,
     workspaceDir,
-    claudeStatePath
+    claudeStatePath,
+    codexStatePath
   };
 }
 
@@ -178,7 +263,7 @@ describe('neus CLI', () => {
     expect(stderr).toBe('');
     expect(payload.command).toBe('init');
     expect(payload.scope).toBe('user');
-    expect(payload.detectedClients.sort()).toEqual(['claude', 'cursor', 'vscode']);
+    expect(payload.detectedClients.sort()).toEqual(['claude', 'codex', 'cursor', 'vscode']);
 
     const cursorConfig = JSON.parse(
       await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
@@ -202,9 +287,105 @@ describe('neus CLI', () => {
     expect(claudeState.servers.neus.commandOrUrl).toBe('https://mcp.neus.network/mcp');
     expect(claudeState.servers.neus.headers).toEqual([]);
 
+    const codexState = JSON.parse(await fs.readFile(context.codexStatePath, 'utf8'));
+    expect(codexState.servers.neus).toEqual({
+      url: 'https://mcp.neus.network/mcp',
+      bearerTokenEnvVar: null,
+      oauthClientId: 'neus-cli',
+      oauthResource: 'https://mcp.neus.network/mcp'
+    });
+
     await expect(
       fs.readFile(path.join(context.workspaceDir, '.mcp.json'), 'utf8')
     ).rejects.toThrow();
+  });
+
+  it('configures Codex through the Codex MCP CLI when requested directly', async () => {
+    const context = await makeCliContext();
+
+    const { stdout, stderr } = await runCli(['setup', '--client', 'codex', '--json'], context);
+    const payload = JSON.parse(stdout);
+
+    expect(stderr).toBe('');
+    expect(payload.clients).toEqual(['codex']);
+    expect(payload.results[0]).toMatchObject({
+      client: 'codex',
+      configured: true,
+      authConfigured: null,
+      targetPath: '~/.codex/config.toml'
+    });
+
+    const codexState = JSON.parse(await fs.readFile(context.codexStatePath, 'utf8'));
+    expect(codexState.servers.neus.url).toBe('https://mcp.neus.network/mcp');
+    expect(codexState.servers.neus.oauthClientId).toBe('neus-cli');
+  });
+
+  it('uses Codex-owned OAuth for auth --client codex instead of opening NEUS browser auth', async () => {
+    const context = await makeCliContext();
+
+    const { stdout, stderr } = await runCli(['auth', '--client', 'codex', '--json'], context);
+    const payload = JSON.parse(stdout);
+
+    expect(stderr).toBe('');
+    expect(payload.authMethod).toBe('host-oauth');
+    expect(payload.results[0]).toMatchObject({
+      client: 'codex',
+      configured: true,
+      authConfigured: true
+    });
+
+    const codexState = JSON.parse(await fs.readFile(context.codexStatePath, 'utf8'));
+    expect(codexState.servers.neus.loggedIn).toBe(true);
+    expect(codexState.servers.neus.scopes).toBe('neus:core,neus:profile,neus:secrets,offline_access');
+  });
+
+  it('prints builder-facing Codex setup guidance in human output', async () => {
+    const context = await makeCliContext();
+
+    const { stderr } = await runCli(['setup', '--client', 'codex', '--dry-run'], context);
+
+    expect(stderr).toContain('would update ~/.codex/config.toml');
+    expect(stderr).not.toContain('updated');
+    expect(stderr).toContain('neus auth --client codex');
+    expect(stderr).toContain('npx -y -p @neus/sdk neus');
+    expect(stderr).toContain('run inside Claude Code chat, not as `claude install`');
+  });
+
+  it('prints a readable profile connection summary in doctor output', async () => {
+    const context = await makeCliContext();
+    await runCli(['setup', '--client', 'codex', '--json'], context);
+
+    const { stderr } = await runCli(['doctor', '--client', 'codex'], context);
+
+    expect(stderr).toContain('Profile connection');
+    expect(stderr).toContain('Codex owns OAuth');
+    expect(stderr).toContain('neus_context');
+  });
+
+  it('reports installed but unconfigured hosts as not configured in status output', async () => {
+    const context = await makeCliContext();
+
+    const { stderr } = await runCli(['status', '--client', 'codex'], context);
+
+    expect(stderr).toContain('status');
+    expect(stderr).toContain('codex');
+    expect(stderr).toContain('not configured');
+    expect(stderr).not.toContain('not installed');
+    expect(stderr).toContain('MCP endpoint');
+    expect(stderr).toContain('https://mcp.neus.network/mcp');
+  });
+
+  it('prints actionable doctor guidance when no selected MCP host is configured', async () => {
+    const context = await makeCliContext();
+
+    await expect(runCli(['doctor', '--client', 'codex'], context)).rejects.toMatchObject({
+      code: 1,
+      stderr: expect.stringContaining('Profile connection')
+    });
+
+    await expect(runCli(['doctor', '--client', 'codex'], context)).rejects.toMatchObject({
+      stderr: expect.stringContaining('neus setup --client codex')
+    });
   });
 
   it('applies NEUS_ACCESS_KEY from the shell on setup', async () => {
@@ -345,54 +526,12 @@ describe('neus CLI', () => {
     expect(cursorConfig.mcpServers.neus.url).toBe('https://mcp.neus.network/mcp');
   });
 
-  it('imports an OpenClaw workspace in dry-run mode without writing secrets', async () => {
+  it('rejects unsupported import sources from the public CLI', async () => {
     const context = await makeCliContext();
-    const openclawDir = path.join(context.homeDir, '.openclaw', 'workspace');
-    const agentConfigDir = path.join(context.homeDir, '.openclaw', 'agents', 'main', 'agent');
 
-    await fs.mkdir(path.join(openclawDir, 'skills', 'research'), { recursive: true });
-    await fs.mkdir(agentConfigDir, { recursive: true });
-    await fs.writeFile(
-      path.join(openclawDir, 'SOUL.md'),
-      '# Builder Agent\n\nProof-aware operator.',
-      'utf8'
-    );
-    await fs.writeFile(path.join(openclawDir, 'MEMORY.md'), 'Durable preference.', 'utf8');
-    await fs.writeFile(
-      path.join(openclawDir, 'skills', 'research', 'SKILL.md'),
-      '# Research\n',
-      'utf8'
-    );
-    await fs.writeFile(
-      path.join(openclawDir, '.env'),
-      'OPENAI_API_KEY=sk-secret\nPUBLIC_FLAG=true\n',
-      'utf8'
-    );
-    await writeJson(path.join(agentConfigDir, 'claude-mcp.json'), {
-      mcpServers: {
-        filesystem: { command: 'npx', args: ['-y', '@modelcontextprotocol/server-filesystem'] }
-      }
+    await expect(runCli(['import', '--from', 'private-runtime', '--dry-run', '--json'], context)).rejects.toMatchObject({
+      code: 1
     });
-
-    const { stdout, stderr } = await runCli(
-      ['import', '--from', 'openclaw', '--dry-run', '--json'],
-      context
-    );
-    const payload = JSON.parse(stdout);
-
-    expect(stderr).toBe('');
-    expect(payload.command).toBe('import');
-    expect(payload.source).toBe('openclaw');
-    expect(payload.dryRun).toBe(true);
-    expect(payload.manifest.instructions.length).toBe(1);
-    expect(payload.manifest.skills.map(skill => skill.name)).toContain('research');
-    expect(payload.manifest.secretRefs).toEqual([
-      { name: 'OPENAI_API_KEY', source: 'openclaw', handling: 'detected-only' }
-    ]);
-    expect(stdout).not.toContain('sk-secret');
-    await expect(
-      fs.readFile(path.join(context.workspaceDir, '.neus', 'imported', 'openclaw.json'), 'utf8')
-    ).rejects.toThrow();
   });
 
   it('auto-detects portable agent sources when import --from auto is used', async () => {
@@ -404,42 +543,26 @@ describe('neus CLI', () => {
       'alwaysApply: true\n',
       'utf8'
     );
-    await fs.mkdir(path.join(context.homeDir, '.hermes', 'skills', 'ops'), { recursive: true });
-    await fs.writeFile(
-      path.join(context.homeDir, '.hermes', 'SOUL.md'),
-      '# Hermes Agent\n',
-      'utf8'
-    );
-    await fs.writeFile(
-      path.join(context.homeDir, '.hermes', 'skills', 'ops', 'SKILL.md'),
-      '# Ops\n',
-      'utf8'
-    );
-
     const { stdout } = await runCli(['import', '--dry-run', '--json'], context);
     const payload = JSON.parse(stdout);
 
     expect(payload.source).toBe('auto');
-    expect(payload.detectedSources.map(source => source.source).sort()).toEqual([
-      'cursor',
-      'hermes'
-    ]);
-    expect(payload.manifest.source).toBe('hermes');
-    expect(payload.manifest.skills.map(skill => skill.name)).toContain('ops');
+    expect(payload.detectedSources.map(source => source.source).sort()).toEqual(['cursor']);
+    expect(payload.manifest.source).toBe('cursor');
+    expect(payload.manifest.rules.map(rule => rule.name)).toContain('neus.mdc');
   });
 
   it('exports the local imported manifest as a portable NEUS manifest', async () => {
     const context = await makeCliContext();
-    const importedPath = path.join(context.workspaceDir, '.neus', 'imported', 'openclaw.json');
+    const importedPath = path.join(context.workspaceDir, '.neus', 'imported', 'cursor.json');
 
     await writeJson(importedPath, {
       schema: 'neus.portable-agent.v1',
-      source: 'openclaw',
+      source: 'cursor',
       generatedAt: '2026-05-22T00:00:00.000Z',
-      instructions: [{ name: 'SOUL.md', path: '/tmp/SOUL.md', bytes: 12 }],
-      skills: [{ name: 'research', path: '/tmp/skills/research', kind: 'skill' }],
-      mcpServers: [{ name: 'neus', source: 'openclaw' }],
-      secretRefs: [{ name: 'OPENAI_API_KEY', source: 'openclaw', handling: 'detected-only' }],
+      rules: [{ name: 'neus.mdc', path: '/tmp/.cursor/rules/neus.mdc', bytes: 12 }],
+      mcpServers: [{ name: 'neus', source: 'cursor' }],
+      secretRefs: [],
       proofHints: { status: 'not-issued', qHashes: [] }
     });
 
@@ -449,9 +572,9 @@ describe('neus CLI', () => {
     expect(stderr).toBe('');
     expect(payload.command).toBe('export');
     expect(payload.format).toBe('manifest');
-    expect(payload.manifest.source).toBe('openclaw');
+    expect(payload.manifest.source).toBe('cursor');
     expect(payload.manifest.proofHints.qHashes).toEqual([]);
-    expect(payload.manifest.secretRefs[0].handling).toBe('detected-only');
+    expect(payload.manifest.secretRefs).toEqual([]);
   });
 
   it('exits non-zero for unknown subcommand', async () => {

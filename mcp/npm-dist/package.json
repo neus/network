@@ -1,7 +1,7 @@
 {
   "name": "@neus/mcp-server",
-  "version": "1.1.1",
-  "description": "Public discovery metadata for the hosted NEUS MCP (streamable HTTP). Runtime is not shipped in this package.",
+  "version": "1.1.2",
+  "description": "Discovery manifest for hosted NEUS MCP — identity, authority, and trust receipts for AI assistants (streamable HTTP). Runtime is not shipped.",
   "type": "module",
   "main": "./index.mjs",
   "exports": {
@@ -26,7 +26,14 @@
     "verification",
     "trust-receipts",
     "proofs",
-    "agents"
+    "agents",
+    "agent-identity",
+    "agent-delegation",
+    "cursor",
+    "claude-code",
+    "codex",
+    "vscode",
+    "ai-assistant"
   ],
   "files": [
     "index.mjs",

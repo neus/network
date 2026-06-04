@@ -1,8 +1,8 @@
 {
   "name": "neus-trust",
   "displayName": "NEUS Trust",
-  "description": "Trust infrastructure for agents that act — identity, authority, and receipts before your assistant runs tools.",
-  "version": "1.1.1",
+  "description": "Trust infrastructure for agents that act. Verifiable identity, scoped authority, and receipts before your assistant runs tools. One setup for Cursor, Claude Code, Codex, and VS Code.",
+  "version": "1.1.2",
   "author": {
     "name": "NEUS",
     "url": "https://neus.network"
@@ -18,17 +18,21 @@
     "agent-delegation",
     "identity-verification",
     "ai-assistant",
+    "ai-builders",
     "code-assistant",
     "cursor",
     "vscode",
     "codex",
     "claude-code",
-    "openclaw",
-    "hermes",
+    "agent-runtime",
+    "headless-runtime",
+    "runtime-trust",
+    "policy-gates",
     "windsurf",
     "gemini",
     "chatgpt",
     "oauth",
+    "mcp",
     "secrets-management",
     "audit-trail"
   ]

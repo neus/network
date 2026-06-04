@@ -8,11 +8,11 @@ Add portable trust to your app, agent, or workflow with Hosted Verify, the NEUS 
 
 Select the integration that matches your product.
 
-| Integration          | Use this when                                                                 | Start                       |
-| -------------------- | ----------------------------------------------------------------------------- | --------------------------- |
-| **App verification** | Your product needs reusable trust receipts before access, rewards, or payment | [Quickstart](./quickstart)  |
-| **Agent trust**      | An agent needs identity, scoped authority, and receipts for trusted actions   | [Agents](./agents/overview) |
-| **Assistant setup**  | Cursor, Claude Code, or Codex needs live identity and authority for agents | [NEUS for AI assistants](./mcp/ide-plugin) · [MCP setup](./mcp/setup) |
+| Integration          | Use this when                                                                 | Start                                                       |
+| -------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **App verification** | Your product needs reusable trust receipts before access, rewards, or payment | [Quickstart](./quickstart)                                  |
+| **Agent trust**      | An agent needs identity, scoped authority, and receipts for trusted actions   | [Agents](./agents/overview)                                 |
+| **Assistant setup**  | Cursor, Claude Code, or Codex needs live identity and authority for agents    | [NEUS for AI assistants](./mcp/ide-plugin) - [MCP setup](./mcp/setup) |
 
 ## App verification
 
@@ -23,25 +23,17 @@ Select the integration that matches your product.
 
 Users complete checks on NEUS. They do not need NEUS accounts or API keys. The published gate owns the checkout policy, verifier set, and default billing.
 
-## Agent trust
-
-1. `npx -y -p @neus/sdk neus import` (optional)
-2. **`neus_context`** → **`neus_agent_link`**
-3. **`neus_agent_create`** when proofs are missing — finish on NEUS
-4. **`neus_agent_link`** until **`linked: true`**
-
-Details: [Agent identity](./agents/agent-identity) · [Agent delegation](./agents/agent-delegation)
-
-## Assistant setup
-
-**CLI-supported hosts:** Cursor, VS Code/Codex, and Claude Code.
+## Agent trust and assistants
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Use **`neus auth`** for OAuth in your browser. Access keys are for servers, CI, and automation — never in browser code. Call **`neus_context`** first in each MCP session.
+Setup covers Cursor, Codex, VS Code, and Claude Code. Then **`neus_context`** -> **`neus_agent_link`** -> **`neus_agent_create`** when proofs are missing.
 
-**Next:** [Quickstart](./quickstart) · [Integration](./integration)
+Details: [MCP setup](./mcp/setup) - [Agent identity](./agents/agent-identity) - [Agent delegation](./agents/agent-delegation)
+
+Codex only: `npx -y -p @neus/sdk neus setup --client codex`, then `npx -y -p @neus/sdk neus auth --client codex`.
+
+**Next:** [Quickstart](./quickstart) - [Integration](./integration)

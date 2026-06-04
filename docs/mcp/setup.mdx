@@ -1,4 +1,4 @@
----
+﻿---
 title: Setup
 description: Install hosted NEUS MCP with neus setup, OAuth sign-in, access keys, and per-editor config paths.
 icon: code
@@ -10,14 +10,14 @@ Hosted endpoint: **`https://mcp.neus.network/mcp`**
 
 ## One-command setup
 
-Install and sign in in one step:
+Install everything detected on the machine in one step:
 
 ```bash
 npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-`neus setup` wires your editors, then signs you in automatically: it uses `NEUS_ACCESS_KEY` from the environment when set, otherwise opens browser sign-in on [neus.network](https://neus.network). You can still pass `--access-key <npk_...>` to override.
+`neus setup` configures hosted MCP for detected editors and signs you in automatically. It uses `NEUS_ACCESS_KEY` from the environment when set; otherwise it starts OAuth for the selected host. Cursor, VS Code, and Claude Code use browser sign-in on [neus.network](https://neus.network). Codex uses `codex mcp login neus`. Pass `--access-key <npk_...>` to override.
 
 Use `--json` for scripts.
 
@@ -34,7 +34,7 @@ Create keys under **Profile -> Account** on [neus.network](https://neus.network/
 | Package | Use |
 | ------- | --- |
 | **`@neus/sdk`** | SDK, widgets, and `neus` CLI (`setup`, `auth`, import/export) |
-| **`@neus/mcp-server`** | Registry/discovery metadata (`server.json`) for MCP installers — no runtime |
+| **`@neus/mcp-server`** | Registry/discovery metadata (`server.json`) for MCP installers â€” no runtime |
 
 ```bash
 npm install @neus/mcp-server
@@ -54,34 +54,39 @@ npx -y -p @neus/sdk neus import --from auto
 npx -y -p @neus/sdk neus export --to manifest
 ```
 
+`--from auto` prefers **Claude Code**, **Cursor**, and **Claude Desktop** when multiple workspaces are detected.
+
+Named sources:
+
+```bash
+npx -y -p @neus/sdk neus import --from cursor
+npx -y -p @neus/sdk neus import --from claude-code
+npx -y -p @neus/sdk neus import --from claude-desktop
+```
+
 ## Client setup
 
 Per-editor install paths (Cursor, VS Code, Claude Code, and more): **[NEUS for AI assistants](./ide-plugin)**.
 
-`neus setup` connects **Cursor**, **VS Code / Codex**, and **Claude Code** in one command.
+`neus setup` connects **Cursor**, **Codex**, **VS Code**, and **Claude Code** in one command.
 
 | Host | User scope | Project scope |
 | --- | --- | --- |
 | **Cursor** | `~/.cursor/mcp.json` | `./.cursor/mcp.json` |
-| **VS Code / Codex** | macOS: `~/Library/Application Support/Code/User/mcp.json` · Linux: `~/.config/Code/User/mcp.json` · Windows: `%APPDATA%\Code\User\mcp.json` | `./.vscode/mcp.json` |
-| **Claude Code** | `claude mcp add` → `~/.claude.json` | `./.mcp.json` |
+| **Codex** | `~/.codex/config.toml` through `codex mcp add` | User-scoped |
+| **VS Code** | macOS: `~/Library/Application Support/Code/User/mcp.json` Â· Linux: `~/.config/Code/User/mcp.json` Â· Windows: `%APPDATA%\Code\User\mcp.json` | `./.vscode/mcp.json` |
+| **Claude Code** | `claude mcp add` â†’ `~/.claude.json` | `./.mcp.json` |
 
 Limit to one client:
 
 ```bash
 npx -y -p @neus/sdk neus setup --client cursor
+npx -y -p @neus/sdk neus setup --client codex
 npx -y -p @neus/sdk neus setup --client vscode
 npx -y -p @neus/sdk neus setup --client claude
 ```
 
-Import an existing workspace before connecting:
-
-```bash
-npx -y -p @neus/sdk neus import --from openclaw
-npx -y -p @neus/sdk neus import --from hermes
-npx -y -p @neus/sdk neus import --from cursor
-npx -y -p @neus/sdk neus import --from claude-code
-```
+Codex owns its local OAuth session. Use `npx -y -p @neus/sdk neus auth --client codex` or `codex mcp login neus` after setup.
 
 ## First session
 

@@ -1,32 +1,33 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 import { spawnSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  NEUS_MCP_SERVER_NAME,
+  NEUS_MCP_URL,
+  buildNeusMcpHttpConfig
+} from '../mcp-hosts.js';
 
 const __cliDir = path.dirname(fileURLToPath(import.meta.url));
 
-const NEUS_SERVER_NAME = 'neus';
-const NEUS_MCP_URL = 'https://mcp.neus.network/mcp';
 const NEUS_APP_URL = 'https://neus.network';
 const NEUS_TOKEN_ENDPOINT = 'https://neus.network/api/v1/auth/mcp/token';
 const NEUS_DISCONNECT_ENDPOINT = 'https://neus.network/api/v1/auth/mcp/revoke';
 const NEUS_PROFILE_KEY_ENDPOINT = 'https://api.neus.network/api/v1/auth/profile-key';
-const SUPPORTED_CLIENTS = ['claude', 'cursor', 'vscode'];
+const SUPPORTED_CLIENTS = ['claude', 'codex', 'cursor', 'vscode'];
+const PROJECT_CLIENTS = ['claude', 'cursor', 'vscode'];
+const CODEX_OAUTH_SCOPES = 'neus:core,neus:profile,neus:secrets,offline_access';
 const IMPORT_SCHEMA = 'neus.portable-agent.v1';
 const SUPPORTED_IMPORT_SOURCES = [
   'auto',
-  'openclaw',
-  'hermes',
   'cursor',
   'claude-code',
   'claude-desktop'
 ];
 const SUPPORTED_EXPORT_FORMATS = ['manifest', 'json'];
-const SECRET_NAME_PATTERN =
-  /(?:^|_)(?:api[_-]?key|secret|token|password|private[_-]?key|access[_-]?key|bearer)(?:$|_)/i;
 
 const ansi = {
   reset: '\x1b[0m',
@@ -82,7 +83,7 @@ function useUnicodeSymbols() {
 
 function cliSymbols() {
   if (useUnicodeSymbols()) {
-    return { ok: '✓', warn: '!', next: '→', skip: '-' };
+    return { ok: 'âœ“', warn: '!', next: 'â†’', skip: '-' };
   }
   return { ok: 'ok', warn: '!', next: '>', skip: '-' };
 }
@@ -131,6 +132,83 @@ function logStep(kind, label, detail = '') {
   writeCliLine(`  ${icon} ${name}${suffix}`);
 }
 
+function writeGuidanceLine(text) {
+  writeCliLine(`  ${paint('-', 'dim')} ${text}`);
+}
+
+function describeClientResult(command, result) {
+  if (result.dryRun && result.changed) {
+    if (result.client === 'codex') {
+      return `would update ${result.targetPath || '~/.codex/config.toml'}`;
+    }
+    return 'would update';
+  }
+  if (result.client === 'codex' && result.configured) {
+    if (command === 'auth') {
+      return result.authConfigured ? 'Codex OAuth complete' : 'Codex MCP config ready';
+    }
+    return `Codex MCP config: ${result.targetPath || '~/.codex/config.toml'}`;
+  }
+  if (result.changed) return 'updated';
+  if (result.authConfigured) return 'signed in';
+  return 'ready';
+}
+
+function printBuilderGuidance(command, results) {
+  if (!['setup', 'auth'].includes(command)) return;
+  const hasCodex = results.some(result => result.client === 'codex');
+  writeCliLine('');
+  writeCliLine(paint('Builder notes', 'cyan'));
+  writeGuidanceLine('Use from any shell without a global install: `npx -y -p @neus/sdk neus ...`.');
+  if (hasCodex) {
+    writeGuidanceLine('Codex owns OAuth: run `neus auth --client codex` or `codex mcp login neus`.');
+  }
+  writeGuidanceLine(
+    'Claude plugin commands run inside Claude Code chat, not as `claude install`: `/plugin marketplace add https://github.com/neus/network`.'
+  );
+}
+
+function selectedClientNames(results) {
+  return results.map(result => result.client).filter(Boolean);
+}
+
+function preferredSetupCommand(results) {
+  const clients = selectedClientNames(results);
+  const suffix = clients.length === 1 ? ` --client ${clients[0]}` : '';
+  return `npx -y -p @neus/sdk neus setup${suffix}`;
+}
+
+function preferredAuthCommand(results) {
+  const clients = selectedClientNames(results);
+  if (clients.length === 1 && clients[0] === 'codex') {
+    return 'npx -y -p @neus/sdk neus auth --client codex';
+  }
+  return 'npx -y -p @neus/sdk neus auth';
+}
+
+function printStatusGuidance(results) {
+  writeCliLine('');
+  writeCliLine(paint('MCP endpoint', 'cyan'));
+  writeGuidanceLine(NEUS_MCP_URL);
+  writeCliLine(paint('Profile connection', 'cyan'));
+  if (results.some(result => result.configured)) {
+    writeGuidanceLine('Saved config found. Run `npx -y -p @neus/sdk neus doctor --live` to confirm live Profile context.');
+  } else {
+    writeGuidanceLine(`No selected MCP host is configured yet. Run \`${preferredSetupCommand(results)}\`.`);
+  }
+}
+
+function printHostAuthIntro(host, cliOptions = {}) {
+  if (cliOptions.json) return;
+  emitCliBanner(cliOptions);
+  writeCliLine(paint('auth', 'green'));
+  if (host === 'codex') {
+    logStep('next', 'codex', 'starting Codex-owned MCP OAuth');
+    logStep('next', 'command', 'codex mcp login neus');
+    writeCliLine('');
+  }
+}
+
 function printFlowSummary(command, scope, results, { nextStep = '', cliOptions = {} } = {}) {
   emitCliBanner(cliOptions);
   writeCliLine(paint(String(command), 'green'));
@@ -142,7 +220,7 @@ function printFlowSummary(command, scope, results, { nextStep = '', cliOptions =
       continue;
     }
     if (result.configured) {
-      const detail = result.changed ? 'updated' : result.authConfigured ? 'signed in' : 'ready';
+      const detail = describeClientResult(command, result);
       logStep('ok', client, detail);
       continue;
     }
@@ -157,6 +235,10 @@ function printFlowSummary(command, scope, results, { nextStep = '', cliOptions =
     writeCliLine('');
     logStep('next', 'next', nextStep);
   }
+  if (command === 'status') {
+    printStatusGuidance(results);
+  }
+  printBuilderGuidance(command, results);
   writeCliLine('');
 }
 
@@ -179,14 +261,14 @@ function readCursorBearer(scope, cwd) {
   const targetPath = cursorConfigPath(scope, cwd);
   if (!fileExists(targetPath)) return '';
   const doc = readJsonFile(targetPath, {});
-  return parseBearerHeader(doc.mcpServers?.[NEUS_SERVER_NAME]?.headers?.Authorization);
+  return parseBearerHeader(doc.mcpServers?.[NEUS_MCP_SERVER_NAME]?.headers?.Authorization);
 }
 
 function readVsCodeBearer(scope, cwd) {
   const targetPath = vscodeConfigPath(scope, cwd);
   if (!fileExists(targetPath)) return '';
   const doc = readJsonFile(targetPath, {});
-  return parseBearerHeader(doc.servers?.[NEUS_SERVER_NAME]?.headers?.Authorization);
+  return parseBearerHeader(doc.servers?.[NEUS_MCP_SERVER_NAME]?.headers?.Authorization);
 }
 
 function readClaudeBearer(scope, cwd) {
@@ -194,7 +276,7 @@ function readClaudeBearer(scope, cwd) {
     const targetPath = claudeProjectConfigPath(cwd);
     if (!fileExists(targetPath)) return '';
     const doc = readJsonFile(targetPath, {});
-    return parseBearerHeader(doc.mcpServers?.[NEUS_SERVER_NAME]?.headers?.Authorization);
+    return parseBearerHeader(doc.mcpServers?.[NEUS_MCP_SERVER_NAME]?.headers?.Authorization);
   }
   if (!commandExists('claude')) return '';
   const result = spawnSync('claude', ['mcp', 'list'], {
@@ -203,11 +285,11 @@ function readClaudeBearer(scope, cwd) {
   });
   if (result.status !== 0) return '';
   const lines = String(result.stdout || '').split(/\r?\n/);
-  if (!lines.includes(NEUS_SERVER_NAME)) return '';
+  if (!lines.includes(NEUS_MCP_SERVER_NAME)) return '';
   const statePath = process.env.NEUS_TEST_CLAUDE_STATE;
   if (statePath && fileExists(statePath)) {
     const state = readJsonFile(statePath, { servers: {} });
-    const headers = state.servers?.[NEUS_SERVER_NAME]?.headers || [];
+    const headers = state.servers?.[NEUS_MCP_SERVER_NAME]?.headers || [];
     const authLine = headers.find(line => String(line).toLowerCase().startsWith('authorization:'));
     if (authLine) {
       return parseBearerHeader(authLine.replace(/^authorization:\s*/i, ''));
@@ -381,36 +463,20 @@ function instructionEntry(targetPath, name) {
   };
 }
 
-function parseEnvSecretRefs(targetPath, source, warnings) {
-  if (!fileExists(targetPath)) return [];
-  const refs = [];
-  const seen = new Set();
-  const raw = readTextFile(targetPath);
-  for (const line of raw.split(/\r?\n/)) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#') || !trimmed.includes('=')) continue;
-    const name = trimmed.split('=')[0].trim();
-    if (!name || !SECRET_NAME_PATTERN.test(name) || seen.has(name)) continue;
-    seen.add(name);
-    refs.push({ name, source, handling: 'detected-only' });
-  }
-  if (refs.length > 0) {
-    warnings.push(
-      `Detected ${refs.length} secret-like env name${refs.length === 1 ? '' : 's'} in ${portablePath(targetPath)}; values were not read into the manifest.`
-    );
-  }
-  return refs;
-}
-
 function readMcpServers(targetPath, source, warnings) {
   const doc = safeReadJson(targetPath, warnings);
   if (!doc) return [];
+  const mcpSection = doc.mcp && typeof doc.mcp === 'object' && !Array.isArray(doc.mcp) ? doc.mcp : null;
   const servers =
     doc.mcpServers && typeof doc.mcpServers === 'object' && !Array.isArray(doc.mcpServers)
       ? doc.mcpServers
-      : doc.servers && typeof doc.servers === 'object' && !Array.isArray(doc.servers)
-        ? doc.servers
-        : {};
+      : mcpSection?.servers &&
+          typeof mcpSection.servers === 'object' &&
+          !Array.isArray(mcpSection.servers)
+        ? mcpSection.servers
+        : doc.servers && typeof doc.servers === 'object' && !Array.isArray(doc.servers)
+          ? doc.servers
+          : {};
   return Object.keys(servers)
     .sort((a, b) => a.localeCompare(b))
     .map(name => ({
@@ -487,6 +553,7 @@ function cursorInstalled() {
 function defaultUserClients() {
   const detected = [];
   if (commandExists('claude')) detected.push('claude');
+  if (commandExists('codex')) detected.push('codex');
   if (cursorInstalled()) detected.push('cursor');
   if (commandExists('code') || fileExists(path.join(process.env.APPDATA || '', 'Code')))
     detected.push('vscode');
@@ -601,21 +668,21 @@ function printUsage(exitCode = 0) {
     'Usage: neus <command> [options]',
     '',
     'Commands:',
-    '  setup         Configure MCP clients (then run auth to sign in)',
+    '  setup         Configure hosted NEUS MCP for supported clients',
     '  init          Configure supported MCP clients automatically',
     '  auth          Sign in (browser, or NEUS_ACCESS_KEY / --access-key when set)',
     '  disconnect    Disconnect NEUS MCP (revoke the stored OAuth token or access key)',
     '  status        Show current NEUS MCP setup',
-    '  doctor        Deep check: config status, profile connection, agent verification',
-    '  import        Detect and package an existing agent runtime for NEUS proof-backed portability',
+    '  doctor        Deep check: config status, profile connection, and live MCP context',
+    '  import        Detect and package supported assistant context for NEUS portability',
     '  export        Export the latest local NEUS portable agent manifest',
     '  help          Show this message',
     '',
     'Options:',
-    '  --client <name[,name]>   Limit setup to claude, cursor, or vscode',
+    '  --client <name[,name]>   Limit setup to claude, codex, cursor, or vscode',
     '  --project                Write shared project config instead of user config',
     '  --access-key <npk_...>   Override profile access key (else uses NEUS_ACCESS_KEY if set)',
-    '  --from <source>          Import source: auto, openclaw, hermes, cursor, claude-code, claude-desktop',
+    '  --from <source>          Import source: auto, cursor, claude-code, or claude-desktop',
     '  --to <format>            Export format: manifest or json',
     '  --output <path>          Write exported manifest to a specific path',
     '  --live                   Run live MCP checks (uses IDE credential or --access-key)',
@@ -642,7 +709,7 @@ function resolveScope(options) {
 function resolveClients(scope, requestedClients) {
   assertValidClients(requestedClients);
   if (requestedClients.length > 0) return requestedClients;
-  if (scope === 'project') return [...SUPPORTED_CLIENTS];
+  if (scope === 'project') return [...PROJECT_CLIENTS];
   return defaultUserClients();
 }
 
@@ -668,27 +735,15 @@ function ensureSafeAuth(command, scope, accessKey) {
 }
 
 function buildCursorServer(accessKey) {
-  return {
-    type: 'http',
-    url: NEUS_MCP_URL,
-    ...(accessKey ? { headers: { Authorization: `Bearer ${accessKey}` } } : {})
-  };
+  return buildNeusMcpHttpConfig(accessKey);
 }
 
 function buildVsCodeServer(accessKey) {
-  return {
-    type: 'http',
-    url: NEUS_MCP_URL,
-    ...(accessKey ? { headers: { Authorization: `Bearer ${accessKey}` } } : {})
-  };
+  return buildNeusMcpHttpConfig(accessKey);
 }
 
 function buildClaudeServer(accessKey) {
-  return {
-    type: 'http',
-    url: NEUS_MCP_URL,
-    ...(accessKey ? { headers: { Authorization: `Bearer ${accessKey}` } } : {})
-  };
+  return buildNeusMcpHttpConfig(accessKey);
 }
 
 function cursorConfigPath(scope, cwd) {
@@ -719,6 +774,10 @@ function claudeProjectConfigPath(cwd) {
   return path.join(cwd, '.mcp.json');
 }
 
+function codexConfigPath() {
+  return path.join(os.homedir(), '.codex', 'config.toml');
+}
+
 function installCursor(scope, accessKey, dryRun, cwd) {
   const targetPath = cursorConfigPath(scope, cwd);
   const doc = readJsonFile(targetPath, { mcpServers: {} });
@@ -728,7 +787,7 @@ function installCursor(scope, accessKey, dryRun, cwd) {
       ...(doc.mcpServers && typeof doc.mcpServers === 'object' && !Array.isArray(doc.mcpServers)
         ? doc.mcpServers
         : {}),
-      [NEUS_SERVER_NAME]: buildCursorServer(accessKey)
+      [NEUS_MCP_SERVER_NAME]: buildCursorServer(accessKey)
     }
   };
   const writeResult = writeJsonFile(targetPath, next, dryRun);
@@ -754,7 +813,7 @@ function installVsCode(scope, accessKey, dryRun, cwd) {
       ...(doc.servers && typeof doc.servers === 'object' && !Array.isArray(doc.servers)
         ? doc.servers
         : {}),
-      [NEUS_SERVER_NAME]: buildVsCodeServer(accessKey)
+      [NEUS_MCP_SERVER_NAME]: buildVsCodeServer(accessKey)
     }
   };
   const writeResult = writeJsonFile(targetPath, next, dryRun);
@@ -780,7 +839,7 @@ function installClaudeProject(scope, accessKey, dryRun, cwd) {
       ...(doc.mcpServers && typeof doc.mcpServers === 'object' && !Array.isArray(doc.mcpServers)
         ? doc.mcpServers
         : {}),
-      [NEUS_SERVER_NAME]: buildClaudeServer(accessKey)
+      [NEUS_MCP_SERVER_NAME]: buildClaudeServer(accessKey)
     }
   };
   const writeResult = writeJsonFile(targetPath, next, dryRun);
@@ -803,7 +862,7 @@ function installClaudeUser(scope, accessKey, dryRun, cwd) {
   }
 
   if (!dryRun) {
-    runCommand('claude', ['mcp', 'remove', '--scope', 'user', NEUS_SERVER_NAME], cwd, true);
+    runCommand('claude', ['mcp', 'remove', '--scope', 'user', NEUS_MCP_SERVER_NAME], cwd, true);
     const addArgs = [
       'mcp',
       'add',
@@ -811,7 +870,7 @@ function installClaudeUser(scope, accessKey, dryRun, cwd) {
       'http',
       '--scope',
       'user',
-      NEUS_SERVER_NAME,
+      NEUS_MCP_SERVER_NAME,
       NEUS_MCP_URL
     ];
     if (accessKey) {
@@ -840,10 +899,66 @@ function installClaude(scope, accessKey, dryRun, cwd) {
   return installClaudeUser(scope, accessKey, dryRun, cwd);
 }
 
+function installCodex(scope, accessKey, dryRun, cwd) {
+  if (scope !== 'user') {
+    throw new Error('Codex MCP setup is user-scoped through ~/.codex/config.toml.');
+  }
+  if (!commandExists('codex')) {
+    throw new Error('Codex CLI is not installed or not on PATH.');
+  }
+
+  const bearerTokenEnvVar = envAccessKey() ? 'NEUS_ACCESS_KEY' : '';
+
+  if (!dryRun) {
+    runCommand('codex', ['mcp', 'remove', NEUS_MCP_SERVER_NAME], cwd, true);
+    const addArgs = [
+      'mcp',
+      'add',
+      NEUS_MCP_SERVER_NAME,
+      '--url',
+      NEUS_MCP_URL,
+      '--oauth-client-id',
+      NEUS_OAUTH_CLIENT_ID,
+      '--oauth-resource',
+      NEUS_MCP_RESOURCE
+    ];
+    if (bearerTokenEnvVar) {
+      addArgs.push('--bearer-token-env-var', bearerTokenEnvVar);
+    }
+    runCommand('codex', addArgs, cwd);
+  }
+
+  return {
+    client: 'codex',
+    scope,
+    configured: true,
+    authConfigured: bearerTokenEnvVar ? true : null,
+    changed: true,
+    targetPath: portablePath(codexConfigPath()),
+    backupPath: null,
+    dryRun,
+    error: null
+  };
+}
+
+function authCodex(scope, dryRun, cwd, cliOptions = {}) {
+  const setupResult = installCodex(scope, '', dryRun, cwd);
+  if (!dryRun) {
+    printHostAuthIntro('codex', cliOptions);
+    runCommand('codex', ['mcp', 'login', NEUS_MCP_SERVER_NAME, '--scopes', CODEX_OAUTH_SCOPES], cwd);
+  }
+  return {
+    ...setupResult,
+    authConfigured: !dryRun,
+    changed: true
+  };
+}
+
 function installClient(client, scope, accessKey, dryRun, cwd) {
   if (client === 'cursor') return installCursor(scope, accessKey, dryRun, cwd);
   if (client === 'vscode') return installVsCode(scope, accessKey, dryRun, cwd);
   if (client === 'claude') return installClaude(scope, accessKey, dryRun, cwd);
+  if (client === 'codex') return installCodex(scope, accessKey, dryRun, cwd);
   throw new Error(`Unsupported client: ${client}`);
 }
 
@@ -860,7 +975,7 @@ function inspectCursor(scope, cwd) {
     };
   }
   const doc = readJsonFile(targetPath, {});
-  const server = doc.mcpServers?.[NEUS_SERVER_NAME];
+  const server = doc.mcpServers?.[NEUS_MCP_SERVER_NAME];
   return {
     client: 'cursor',
     scope,
@@ -884,7 +999,7 @@ function inspectVsCode(scope, cwd) {
     };
   }
   const doc = readJsonFile(targetPath, {});
-  const server = doc.servers?.[NEUS_SERVER_NAME];
+  const server = doc.servers?.[NEUS_MCP_SERVER_NAME];
   return {
     client: 'vscode',
     scope,
@@ -909,7 +1024,7 @@ function inspectClaude(scope, cwd) {
       };
     }
     const doc = readJsonFile(targetPath, {});
-    const server = doc.mcpServers?.[NEUS_SERVER_NAME];
+    const server = doc.mcpServers?.[NEUS_MCP_SERVER_NAME];
     return {
       client: 'claude',
       scope,
@@ -934,13 +1049,50 @@ function inspectClaude(scope, cwd) {
   const result = runCommand('claude', ['mcp', 'list'], cwd, true);
   const configured =
     result.status === 0 &&
-    result.stdout.split(/\r?\n/).some(line => line.trim() === NEUS_SERVER_NAME);
+    result.stdout.split(/\r?\n/).some(line => line.trim() === NEUS_MCP_SERVER_NAME);
   return {
     client: 'claude',
     scope,
     configured,
-    authConfigured: null,
+    authConfigured: configured ? null : false,
     targetPath: '~/.claude.json',
+    error: null
+  };
+}
+
+function inspectCodex(scope, cwd) {
+  const targetPath = portablePath(codexConfigPath());
+  if (scope !== 'user') {
+    return {
+      client: 'codex',
+      scope,
+      configured: false,
+      authConfigured: null,
+      targetPath,
+      error: 'Codex MCP setup is user-scoped through ~/.codex/config.toml.'
+    };
+  }
+  if (!commandExists('codex')) {
+    return {
+      client: 'codex',
+      scope,
+      configured: false,
+      authConfigured: null,
+      targetPath,
+      error: null
+    };
+  }
+
+  const result = runCommand('codex', ['mcp', 'get', NEUS_MCP_SERVER_NAME], cwd, true);
+  const configured =
+    result.status === 0 &&
+    result.stdout.split(/\r?\n/).some(line => line.trim() === `url: ${NEUS_MCP_URL}`);
+  return {
+    client: 'codex',
+    scope,
+    configured,
+    authConfigured: configured ? null : false,
+    targetPath,
     error: null
   };
 }
@@ -949,6 +1101,7 @@ function inspectClient(client, scope, cwd) {
   if (client === 'cursor') return inspectCursor(scope, cwd);
   if (client === 'vscode') return inspectVsCode(scope, cwd);
   if (client === 'claude') return inspectClaude(scope, cwd);
+  if (client === 'codex') return inspectCodex(scope, cwd);
   throw new Error(`Unsupported client: ${client}`);
 }
 
@@ -971,29 +1124,7 @@ function createEmptyManifest(source) {
   };
 }
 
-function openclawRoots() {
-  return [
-    path.join(os.homedir(), '.openclaw', 'workspace'),
-    path.join(process.cwd(), '.openclaw', 'workspace'),
-    process.cwd()
-  ];
-}
-
-function hermesRoots() {
-  return [path.join(os.homedir(), '.hermes'), path.join(process.cwd(), '.hermes')];
-}
-
 function sourceDetected(source) {
-  if (source === 'openclaw') {
-    return openclawRoots().some(
-      root => fileExists(path.join(root, 'SOUL.md')) || fileExists(path.join(root, 'skills'))
-    );
-  }
-  if (source === 'hermes') {
-    return hermesRoots().some(
-      root => fileExists(path.join(root, 'SOUL.md')) || fileExists(path.join(root, 'skills'))
-    );
-  }
   if (source === 'cursor') {
     return (
       fileExists(path.join(process.cwd(), '.cursor', 'rules')) ||
@@ -1023,7 +1154,7 @@ function detectImportSources() {
 
 function chooseImportSource(requestedSource, detectedSources) {
   if (requestedSource && requestedSource !== 'auto') return requestedSource;
-  const preference = ['openclaw', 'hermes', 'claude-code', 'cursor', 'claude-desktop'];
+  const preference = ['claude-code', 'cursor', 'claude-desktop'];
   return (
     preference.find(source => detectedSources.some(candidate => candidate.source === source)) ||
     'cursor'
@@ -1040,79 +1171,6 @@ function mergeManifest(base, next) {
     mcpServers: [...base.mcpServers, ...next.mcpServers],
     secretRefs: [...base.secretRefs, ...next.secretRefs]
   };
-}
-
-function buildOpenclawManifest(warnings) {
-  const source = 'openclaw';
-  const root = openclawRoots().find(
-    candidate =>
-      fileExists(path.join(candidate, 'SOUL.md')) || fileExists(path.join(candidate, 'skills'))
-  );
-  const manifest = createEmptyManifest(source);
-  if (!root) {
-    warnings.push('OpenClaw workspace was not found.');
-    return manifest;
-  }
-
-  const soul = instructionEntry(path.join(root, 'SOUL.md'), 'SOUL.md');
-  const memory = instructionEntry(path.join(root, 'MEMORY.md'), 'MEMORY.md');
-  if (soul) manifest.instructions.push(soul);
-  if (memory) manifest.memories.push(memory);
-
-  for (const skillName of listDirectoryNames(path.join(root, 'skills'))) {
-    manifest.skills.push({
-      name: skillName,
-      kind: 'skill',
-      source,
-      path: portablePath(path.join(root, 'skills', skillName)),
-      hasSkillMd: fileExists(path.join(root, 'skills', skillName, 'SKILL.md'))
-    });
-  }
-
-  manifest.secretRefs.push(...parseEnvSecretRefs(path.join(root, '.env'), source, warnings));
-  manifest.mcpServers.push(
-    ...readMcpServers(
-      path.join(os.homedir(), '.openclaw', 'agents', 'main', 'agent', 'claude-mcp.json'),
-      source,
-      warnings
-    ),
-    ...readMcpServers(
-      path.join(os.homedir(), '.openclaw', 'agents', 'main', 'agent', 'runtime-mcp.json'),
-      source,
-      warnings
-    )
-  );
-  return manifest;
-}
-
-function buildHermesManifest(warnings) {
-  const source = 'hermes';
-  const root = hermesRoots().find(
-    candidate =>
-      fileExists(path.join(candidate, 'SOUL.md')) || fileExists(path.join(candidate, 'skills'))
-  );
-  const manifest = createEmptyManifest(source);
-  if (!root) {
-    warnings.push('HERMES workspace was not found.');
-    return manifest;
-  }
-
-  const soul = instructionEntry(path.join(root, 'SOUL.md'), 'SOUL.md');
-  if (soul) manifest.instructions.push(soul);
-
-  for (const skillName of listDirectoryNames(path.join(root, 'skills'))) {
-    manifest.skills.push({
-      name: skillName,
-      kind: 'skill',
-      source,
-      path: portablePath(path.join(root, 'skills', skillName)),
-      hasSkillMd: fileExists(path.join(root, 'skills', skillName, 'SKILL.md'))
-    });
-  }
-
-  manifest.secretRefs.push(...parseEnvSecretRefs(path.join(root, '.env'), source, warnings));
-  manifest.mcpServers.push(...readMcpServers(path.join(root, 'config.json'), source, warnings));
-  return manifest;
 }
 
 function buildCursorManifest(warnings) {
@@ -1168,8 +1226,6 @@ function buildClaudeDesktopManifest(warnings) {
 }
 
 function buildSourceManifest(source, warnings) {
-  if (source === 'openclaw') return buildOpenclawManifest(warnings);
-  if (source === 'hermes') return buildHermesManifest(warnings);
   if (source === 'cursor') return buildCursorManifest(warnings);
   if (source === 'claude-code') return buildClaudeCodeManifest(warnings);
   if (source === 'claude-desktop') return buildClaudeDesktopManifest(warnings);
@@ -1528,6 +1584,8 @@ async function runAuthBrowser(options) {
   }
   const clients = resolveClients(scope, options.clients);
   ensureClientSelection(scope, clients);
+  const browserManagedClients = clients.filter(client => client !== 'codex');
+  const hostManagedClients = clients.filter(client => client === 'codex');
   const cwd = process.cwd();
 
   const { createServer } = await import('node:http');
@@ -1598,8 +1656,13 @@ async function runAuthBrowser(options) {
             res.end('<html><body><h2>Authenticated</h2><p>You can close this tab and return to your terminal.</p></body></html>');
             server.close();
 
-            const results = runClientOperations(clients, scope, cwd, options.dryRun, client =>
+            const results = runClientOperations(browserManagedClients, scope, cwd, options.dryRun, client =>
               installClient(client, scope, accessToken, options.dryRun, cwd)
+            );
+            results.push(
+              ...runClientOperations(hostManagedClients, scope, cwd, options.dryRun, () =>
+                authCodex(scope, options.dryRun, cwd, options)
+              )
             );
             const payload = {
               command: 'auth',
@@ -1666,13 +1729,26 @@ function runAuth(options) {
   const accessKey = resolveAccessKey(options);
   ensureSafeAuth('auth', scope, accessKey);
   const cwd = process.cwd();
-
-  if (!accessKey) {
-    return runAuthBrowser(options);
-  }
-
   const clients = resolveClients(scope, options.clients);
   ensureClientSelection(scope, clients);
+
+  if (!accessKey) {
+    if (clients.length === 1 && clients[0] === 'codex') {
+      const results = runClientOperations(clients, scope, cwd, options.dryRun, () =>
+        authCodex(scope, options.dryRun, cwd, options)
+      );
+      return {
+        command: 'auth',
+        scope,
+        clients,
+        accessKeyConfigured: results.some(result => result.authConfigured === true),
+        authMethod: 'host-oauth',
+        results,
+        hasErrors: results.some(result => result.error)
+      };
+    }
+    return runAuthBrowser(options);
+  }
 
   const results = runClientOperations(clients, scope, cwd, options.dryRun, client =>
     installClient(client, scope, accessKey, options.dryRun, cwd)
@@ -1726,7 +1802,6 @@ async function runSetup(options) {
 
   const clients = resolveClients(scope, options.clients);
   ensureClientSelection(scope, clients);
-
   const initResults = runClientOperations(clients, scope, cwd, options.dryRun, client =>
     installClient(client, scope, accessKey, options.dryRun, cwd)
   );
@@ -1775,7 +1850,7 @@ async function runSetup(options) {
   return payload;
 }
 
-function runImport(options) {
+function runImport(options, { emitOutput = true } = {}) {
   if (!SUPPORTED_IMPORT_SOURCES.includes(options.source)) {
     throw new Error(`Unsupported import source: ${options.source}`);
   }
@@ -1800,15 +1875,18 @@ function runImport(options) {
       manifest.mcpServers.length === 0
   };
 
-  if (options.json) {
-    printJson(payload);
-  } else {
-    printImportSummary(payload, options);
+  if (emitOutput) {
+    if (options.json) {
+      printJson(payload);
+    } else {
+      printImportSummary(payload, options);
+    }
   }
 
-  if (payload.hasErrors) {
+  if (emitOutput && payload.hasErrors) {
     process.exitCode = 1;
   }
+  return payload;
 }
 
 function runExport(options) {
@@ -1888,28 +1966,56 @@ async function runDoctor(options) {
   if (configuredClients.length === 0) {
     emitCliBanner(options);
     writeCliLine(paint('doctor', 'green'));
-    logStep('warn', 'mcp', 'run neus setup first');
+    for (const result of inspected) {
+      if (result.error) {
+        logStep('warn', result.client, result.error);
+      } else if (result.authConfigured === null) {
+        logStep('skip', result.client, 'not installed');
+      } else {
+        logStep('skip', result.client, 'not configured');
+      }
+    }
     writeCliLine('');
-    process.exit(1);
+    writeCliLine(paint('MCP endpoint', 'cyan'));
+    writeGuidanceLine(NEUS_MCP_URL);
+    writeCliLine(paint('Profile connection', 'cyan'));
+    writeGuidanceLine(`No selected MCP host is configured yet. Run \`${preferredSetupCommand(inspected)}\`.`);
+    writeGuidanceLine(`Then run \`${preferredAuthCommand(inspected)}\` and re-check with \`npx -y -p @neus/sdk neus doctor --live\`.`);
+    writeCliLine('');
+    process.exitCode = 1;
+    return;
   }
 
   printFlowSummary('doctor', scope, inspected, { cliOptions: options });
+  const hasCodex = inspected.some(result => result.client === 'codex');
+  writeCliLine(paint('Profile connection', 'cyan'));
   if (options.live && payload.mcp) {
     if (!liveAccessKey) {
-      logStep('next', 'sign-in', 'neus auth');
+      writeGuidanceLine(
+        hasCodex
+          ? 'Codex owns OAuth: run `neus auth --client codex` or `codex mcp login neus`.'
+          : 'No account credential found for the configured MCP clients. Run `neus auth`.'
+      );
     } else {
       logStep(
         payload.mcp.authenticated ? 'ok' : 'warn',
-        'account',
-        payload.mcp.authenticated ? `${payload.mcp.toolsCount || 0} tools` : 'not confirmed'
+        'profile',
+        payload.mcp.authenticated
+          ? `live MCP context confirmed; ${payload.mcp.toolsCount || 0} tools discovered`
+          : 'live MCP context was not confirmed'
       );
     }
   } else if (liveAccessKey) {
-    logStep('ok', 'account', 'saved | run with --live to verify');
+    writeGuidanceLine('Saved credential found. Run `neus doctor --live` to confirm Profile context.');
   } else {
-    logStep('next', 'sign-in', 'neus auth');
+    writeGuidanceLine(
+      hasCodex
+        ? 'Codex owns OAuth: run `neus auth --client codex` or `codex mcp login neus`.'
+        : 'No account credential found. Run `neus auth` for browser sign-in.'
+    );
   }
-  logStep('next', 'next', 'neus_context in your MCP client');
+  writeGuidanceLine('In the connected MCP client, call `neus_context` first.');
+  writeGuidanceLine('For agents, run `neus_agent_link` before assuming identity or delegation is ready.');
   writeCliLine('');
 }
 

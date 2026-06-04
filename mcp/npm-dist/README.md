@@ -1,8 +1,8 @@
 # @neus/mcp-server
 
-Public **discovery metadata** for the hosted NEUS MCP at **`https://mcp.neus.network/mcp`**. This package does not ship a runtime server.
+**Trust infrastructure for agents that act** — public discovery metadata for hosted NEUS MCP at **`https://mcp.neus.network/mcp`**. Identity, authority, and reusable receipts for Cursor, Claude Code, Codex, and VS Code. This package does not ship a runtime server.
 
-## Connect (recommended)
+## Connect
 
 ```bash
 npx -y -p @neus/sdk neus setup

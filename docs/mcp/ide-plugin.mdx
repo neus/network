@@ -1,16 +1,16 @@
 ---
 title: NEUS for AI assistants
-description: Trust infrastructure for agents that act — install NEUS in Cursor, Claude Code, Codex, and other MCP hosts.
+description: Trust infrastructure for agents that act - install NEUS in Cursor, Claude Code, Codex, and other MCP hosts.
 icon: plug
 ---
 
-Verifiable identity, scoped authority, and receipts for every trusted action — so your assistant knows who is real, what agents may do, and which receipts already exist without re-proving every session. One OAuth sign-in via `neus auth`, then NEUS handles trust before action on each run.
+Verifiable identity, scoped authority, and receipts for every trusted action. Sign in through the selected host, then NEUS gives your assistant live proof context before access, payment, tool use, or agent action.
 
 **Hosted product endpoint:** `https://mcp.neus.network/mcp`
 
 Signed in on [neus.network](https://neus.network/profile?tab=account)? Use **Open in** for Cursor, Claude Code, or Codex.
 
-On any docs page, use **On this page** → **Set up trust MCP** or **Quick install**.
+On any docs page, use **On this page** -> **Set up trust MCP** or **Quick install**.
 
 <Tabs sync={false}>
   <Tab title="Quick start">
@@ -25,6 +25,7 @@ Call **`neus_context`** at the start of each session.
 
 ```bash
 npx -y -p @neus/sdk neus setup --client cursor
+npx -y -p @neus/sdk neus setup --client codex
 npx -y -p @neus/sdk neus setup --client vscode
 npx -y -p @neus/sdk neus setup --client claude
 ```
@@ -54,8 +55,22 @@ Or add to `~/.cursor/mcp.json`:
 
   </Tab>
 
-  <Tab title="VS Code & Codex">
-    <Icon icon="/images/brandLogos/microsoft.svg" size={18} /> **VS Code & Codex**
+  <Tab title="Codex">
+    <Icon icon="/images/brandLogos/openai.svg" size={18} /> **Codex**
+
+```bash
+npx -y -p @neus/sdk neus setup --client codex
+npx -y -p @neus/sdk neus auth --client codex
+```
+
+NEUS writes the remote MCP entry through `codex mcp add`. Codex owns OAuth for its local host, so `neus auth --client codex` delegates to `codex mcp login neus`.
+
+Config path: `~/.codex/config.toml`
+
+  </Tab>
+
+  <Tab title="VS Code">
+    <Icon icon="/images/brandLogos/microsoft.svg" size={18} /> **VS Code**
 
 ```bash
 npx -y -p @neus/sdk neus setup --client vscode
@@ -97,12 +112,12 @@ Add remote MCP URL **`https://mcp.neus.network/mcp`** in the host settings, or t
 
 | Host | Config file |
 |------|-------------|
-| Claude Desktop | `~/.claude.json` → `mcpServers` |
+| Claude Desktop | `~/.claude.json` -> `mcpServers` |
 | Windsurf | `~/.codeium/windsurf/mcp_config.json` |
 | Gemini CLI | `~/.gemini/settings.json` or `gemini mcp add --transport http neus https://mcp.neus.network/mcp` |
 | ChatGPT | Remote MCP URL in client settings |
 
-**Zeus / Hermes (headless):** use Profile access keys (`npk_*`) in bearer headers — [Auth](./auth). Copy the trust workflow skill from a [network](https://github.com/neus/network) clone: `plugins/neus-trust/skills/neus-trust-workflow`.
+For servers and CI, use Profile access keys in bearer headers: [Auth](./auth). Install **neus-trust@neus** for the bundled trust workflow skill in hosts that support plugins.
 
 ```json
 {
@@ -121,8 +136,8 @@ Add remote MCP URL **`https://mcp.neus.network/mcp`** in the host settings, or t
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
 ```
 
-Keys: [Profile → Account](https://neus.network/profile?tab=account). Never paste keys into chat.
+Keys: [Profile -> Account](https://neus.network/profile?tab=account). Never paste keys into chat.
 
 <Warning>
-  Use **`https://mcp.neus.network/mcp`** for trust receipts and agent tools. The docs site also offers a **search-only** endpoint at `https://docs.neus.network/mcp` — it cannot verify identity or issue proofs.
+  Use **`https://mcp.neus.network/mcp`** for trust receipts and agent tools. The docs site also offers a **search-only** endpoint at `https://docs.neus.network/mcp` - it cannot verify identity or issue proofs.
 </Warning>

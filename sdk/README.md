@@ -1,6 +1,6 @@
 # @neus/sdk
 
-Create, check, and reuse NEUS trust receipts from apps and backends. The same package ships the **`neus`** CLI for hosted MCP setup and portable agent import.
+Create, check, and reuse NEUS trust receipts from apps and backends. The same package ships the **`neus`** CLI for hosted MCP setup.
 
 NEUS makes trust portable across apps, agents, and ecosystems before access, payment, or action.
 
@@ -12,22 +12,18 @@ Roadmap: [docs.neus.network/platform/status](https://docs.neus.network/platform/
 npm install @neus/sdk
 ```
 
-## Bring Your Own Agent (BYOA)
-
-Already have an agent setup? Use the CLI to package supported local agent context, including instructions, rules, skills, and MCP server references from **OpenClaw, Cursor, Claude Code, and Claude Desktop**:
-
-```bash
-npx -y -p @neus/sdk neus import
-```
-
-This prepares a local portable-agent manifest. In MCP, call `neus_agent_link` first; if setup is missing, use `neus_agent_create`, complete the hosted or signing steps, then call `neus_agent_link` again until `linked: true`.
-
-*To check what will be imported without writing changes:*
-```bash
-npx -y -p @neus/sdk neus import --dry-run
-```
-
 ## Connect editors and assistants
+
+One command detects your environment and configures hosted MCP for Claude Code, Codex, Cursor, or VS Code.
+
+```bash
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus doctor --live
+```
+
+Call `neus_context` in your MCP client. For agent workflows, call `neus_agent_link` before assuming identity or delegation is ready.
+
+## MCP docs
 
 | Topic                             | Link                                                                          |
 | --------------------------------- | ----------------------------------------------------------------------------- |
@@ -170,9 +166,13 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-`neus setup` configures MCP and signs you in: `NEUS_ACCESS_KEY` from the environment when set, otherwise browser sign-in. Pass `--access-key <npk_...>` only to override.
+`neus setup` configures MCP and signs you in: `NEUS_ACCESS_KEY` from the environment when set, otherwise the selected host starts OAuth. Cursor, VS Code, and Claude Code use browser sign-in on NEUS. Pass `--access-key <npk_...>` only to override.
 
-Editors with plugin marketplaces can install **`neus-trust@neus`** for the bundled session workflow. OpenClaw, Hermes, and other runtimes: see [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin) for exact paths.
+Codex owns its local MCP OAuth session. Use `npx -y -p @neus/sdk neus setup --client codex`, then `npx -y -p @neus/sdk neus auth --client codex`.
+
+Integrators embedding install UX in apps should import **`@neus/sdk/mcp-hosts`** (setup commands, deeplinks, host labels) instead of duplicating strings.
+
+Editors with plugin marketplaces can install **`neus-trust@neus`** for the bundled session workflow. In Claude Code, run `/plugin marketplace add https://github.com/neus/network` and `/plugin install neus-trust@neus` inside chat. Other hosts: [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin).
 
 ## Docs
 

@@ -11,22 +11,20 @@ NEUS gives agents identity, scoped authority, and receipts for trusted actions.
 | Identify the agent | `agent-identity` |
 | Set what it can do | `agent-delegation` |
 | Check if ready | `neus_agent_link` |
-| Reuse trust | Receipt ID, proof URL, or DID |
+| Reuse trust | `qHash`, proof URL, or DID |
 | Audit later | Receipts and proof reads |
 
 ## Flow
 
 <Steps>
-  <Step title="Import (optional)">
-    ```bash
-    npx -y -p @neus/sdk neus import
-    ```
-  </Step>
   <Step title="Connect">
     ```bash
     npx -y -p @neus/sdk neus setup
-    npx -y -p @neus/sdk neus auth
+    npx -y -p @neus/sdk neus doctor --live
     ```
+    Configures hosted NEUS MCP for Cursor, Codex, VS Code, or Claude Code.
+  </Step>
+  <Step title="Connect MCP">
     Call **`neus_context`** at the start of each session.
   </Step>
   <Step title="Link">
@@ -57,7 +55,7 @@ NEUS gives agents identity, scoped authority, and receipts for trusted actions.
     Grant permissions.
   </Card>
   <Card title="MCP setup" icon="plug" href="../mcp/setup">
-    Connect your assistant.
+    Hosted MCP, OAuth, and access keys.
   </Card>
   <Card title="A2A discovery" icon="cards" href="./a2a">
     Agent cards.

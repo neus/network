@@ -13,7 +13,7 @@ GEMINI.md
 !.claude-plugin/
 !.claude-plugin/**
 
-# Operator / private paths (never in public network)
+# Local-only paths
 internal/
 backup-docs/
 **/backup-docs/

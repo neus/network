@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Fail if npm pack would ship dev-only or internal surfaces for @neus/sdk or @neus/mcp-server.
+ * Fail if npm pack would ship dev-only files for @neus/sdk or @neus/mcp-server.
  */
 import { execSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
