@@ -2,7 +2,7 @@
  * Canonical NEUS mark + OG URLs (hosted on neus.network).
  * Keep NEUS_BRAND_PACK_VERSION aligned with neus/lib/brand/tokens.ts BRAND_PACK_VERSION.
  */
-export const NEUS_BRAND_PACK_VERSION = '2026-06-03-mark-og-finalize-v1';
+export const NEUS_BRAND_PACK_VERSION = '2026-06-04-docs-og-v1';
 
 export const NEUS_MARK_CDN_ORIGIN = 'https://neus.network';
 

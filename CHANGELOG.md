@@ -11,7 +11,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **`@neus/sdk/mcp-hosts`** - browser-safe MCP install constants, setup/auth commands, and product "Open in" host metadata for Cursor, Claude Code, and Codex.
 ### Changed
 
-- **Brand marks** - docs/SDK/MCP use canonical `neus.network/images/neus-brand-pack/` URLs via `sdk/brand-mark.js` (removed phantom `og-default.png` copies and legacy monogram assets).
+- **Brand marks** - procedurally generated docs OG cards (Michroma + particle-ring, 1200×630) under `docs/images/og-*.png`; `npm run generate:docs-og` from `neus` brand generator.
 - **`neus setup`** - public setup is focused on hosted MCP for Claude Code, Codex, Cursor, and VS Code.
 - **`neus import --from auto`** - prefers Claude Code, Cursor, and Claude Desktop.
 - Public docs and plugin guidance now stay focused on hosted MCP and assistant setup.

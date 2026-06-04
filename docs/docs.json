@@ -3,11 +3,11 @@
   "name": "NEUS",
   "theme": "mint",
   "logo": {
-    "light": "https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-03-mark-og-finalize-v1",
-    "dark": "https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-03-mark-og-finalize-v1",
+    "light": "/images/favicon.svg",
+    "dark": "/images/favicon.svg",
     "href": "https://neus.network"
   },
-  "favicon": "https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-03-mark-og-finalize-v1",
+  "favicon": "/images/favicon.svg",
   "colors": {
     "primary": "#98C0EF",
     "light": "#98C0EF",
@@ -50,7 +50,7 @@
       "description": "Trust infrastructure enabling reusable trust receipts for apps, agents, and ecosystems before access, payment, delegation, or action.",
       "og:title": "NEUS Docs | Trust Infrastructure for Apps and Agents",
       "og:description": "Add reusable trust receipts to apps, agents, and ecosystems before access, payment, delegation, or action.",
-      "og:image": "https://neus.network/images/neus-brand-pack/og-default-1200x630-neus.png?v=2026-06-03-mark-og-finalize-v1",
+      "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
       "og:type": "website",
@@ -58,7 +58,7 @@
       "twitter:card": "summary_large_image",
       "twitter:title": "NEUS Docs | Trust Infrastructure for Apps and Agents",
       "twitter:description": "Add reusable trust receipts to apps, agents, and ecosystems before access, payment, delegation, or action.",
-      "twitter:image": "https://neus.network/images/neus-brand-pack/og-default-1200x630-neus.png?v=2026-06-03-mark-og-finalize-v1"
+      "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
   "navbar": {
@@ -607,7 +607,7 @@
       {
         "title": "Set up trust MCP",
         "description": "Install the live NEUS server (mcp.neus.network) in Cursor, VS Code, or Claude Code",
-        "icon": "https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-03-mark-og-finalize-v1",
+        "icon": "/images/favicon.svg",
         "href": "/mcp/ide-plugin"
       },
       {
