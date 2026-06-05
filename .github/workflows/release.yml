@@ -2,6 +2,12 @@ name: release
 on:
   push:
     tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g. 1.1.3)'
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -17,13 +23,15 @@ env:
 
 jobs:
   publish_sdk:
-    if: github.ref_type == 'tag' && startsWith(github.ref_name, 'v') && github.repository_owner == 'neus'
+    if: (github.ref_type == 'tag' && startsWith(github.ref_name, 'v') && github.repository_owner == 'neus') || (github.event_name == 'workflow_dispatch' && github.repository_owner == 'neus')
     runs-on: ubuntu-latest
+    env:
+      RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
     steps:
       - name: Checkout tag
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.ref_name }}
 
       - name: Setup Node ${{ env.NODE_VERSION }}
         uses: actions/setup-node@v4
@@ -33,9 +41,9 @@ jobs:
 
       - name: Verify version matches tag
         run: |
-          TAG="${GITHUB_REF_NAME#v}"
+          TAG="${RELEASE_VERSION#v}"
           node scripts/verify-release-versions.mjs --tag "$TAG"
-          node -e "const v=require('./sdk/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(\`package.json ${v} != tag ${t}\`);process.exit(1)}"
+          node -e "const v=require('./sdk/package.json').version;const t=process.env.RELEASE_VERSION.replace(/^v/,'');if(v!==t){console.error(\`package.json ${v} != tag ${t}\`);process.exit(1)}"
 
       - name: Install dependencies
         run: npm ci
@@ -70,7 +78,7 @@ jobs:
 
       - name: Verify @neus/mcp-server version matches tag
         run: |
-          node -e "const v=require('./mcp/npm-dist/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(\`mcp/npm-dist ${v} != tag ${t}\`);process.exit(1)}"
+          node -e "const v=require('./mcp/npm-dist/package.json').version;const t=process.env.RELEASE_VERSION.replace(/^v/,'');if(v!==t){console.error(\`mcp/npm-dist ${v} != tag ${t}\`);process.exit(1)}"
 
       - name: Package check (@neus/mcp-server)
         run: npm pack --dry-run
