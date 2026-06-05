@@ -1,15 +1,4 @@
 <p align="center">
-  <a href="https://neus.network">
-    <img
-      src="https://docs.neus.network/images/og-default.png"
-      width="600"
-      height="315"
-      alt="NEUS"
-    />
-  </a>
-</p>
-
-<p align="center">
   <strong>Trust infrastructure for apps, agents, and ecosystems.</strong><br />
   Trust that travels. Add reusable trust receipts before access, payment, or agent action.
 </p>
