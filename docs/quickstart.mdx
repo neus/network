@@ -24,7 +24,7 @@ Your gate stores the check policy. Visitors only need your `gateId`.
 ```jsx
 import { VerifyGate } from "@neus/sdk/widgets";
 
-<VerifyGate gateId="gate_abc123">
+<VerifyGate gateId="gate_your-app-name">
   <ProtectedContent />
 </VerifyGate>;
 ```
@@ -38,7 +38,7 @@ import { getHostedCheckoutUrl } from "@neus/sdk";
 
 window.location.assign(
   getHostedCheckoutUrl({
-    gateId: "gate_abc123",
+    gateId: "gate_your-app-name",
     returnUrl: "https://myapp.com/auth/callback",
   }),
 );
@@ -56,7 +56,7 @@ import { NeusClient } from "@neus/sdk";
 const client = new NeusClient();
 
 const result = await client.gateCheck({
-  gateId: "gate_abc123",
+  gateId: "gate_your-app-name",
   address: user.walletAddress,
 });
 

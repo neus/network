@@ -48,9 +48,9 @@ Access keys identify **your builder profile** for automation. They do not replac
 
 ## Billing
 
-Published gates are the default billing source of truth. Hosted checkout and server eligibility checks should pass **`gateId`**; NEUS resolves the gate owner, usage billing, sponsor precedence, and x402 fallback from that gate.
+Published gates are the default billing source. Hosted checkout and server eligibility checks should pass **`gateId`**; NEUS resolves the gate owner, usage billing, sponsor precedence, and x402 fallback from that gate.
 
-`appId` is public attribution for advanced server/app flows. It does not bill your account, and the default Hosted Verify path does not require `billingWallet`.
+`appId` is public attribution for advanced server/app flows. It does not bill your account, and published gate checkout does not require `appId` or `billingWallet`.
 
 See [Billing](../platform/billing).
 

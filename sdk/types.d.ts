@@ -57,18 +57,18 @@
 
   export interface NeusClientConfig {
     apiUrl?: string;
-    /** Optional server profile key â€” MCP/CI only; not required for VerifyGate or gateCheck. */
+    /** Optional server profile key; MCP/CI only. Not required for VerifyGate or gateCheck. */
     apiKey?: string;
     /** Public app attribution id (non-secret). */
     appId?: string;
-    /** Hub wallet that pays for user verification checks (your NEUS account). */
+    /** Advanced server/app sponsor wallet. Published gate checkout resolves billing from gateId. */
     billingWallet?: string;
     /** Alias for billingWallet. */
     sponsorOrgWallet?: string;
     orgWallet?: string;
     /** Site origin used when issuing billing authorization (defaults to browser origin). */
     appOrigin?: string;
-    /** Advanced server path only; use appId + billingWallet for the default app flow. */
+    /** Advanced server path only; not required for published gate checkout. */
     appLinkQHash?: string;
     paymentSignature?: string;
     extraHeaders?: Record<string, string>;

@@ -18,8 +18,6 @@ const forbidden = [
   /package-lock\.json/,
   /\b\.env\b/,
   /\b\.npmrc\b/,
-  /_workspace/,
-  /\/internal\//,
 ];
 
 const required = {

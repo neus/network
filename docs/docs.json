@@ -88,6 +88,7 @@
             "pages": [
               "index",
               "get-started",
+              "install",
               "quickstart",
               "integration",
               "examples",
@@ -608,7 +609,7 @@
         "title": "Set up trust MCP",
         "description": "Install the live NEUS server (mcp.neus.network) in Cursor, VS Code, or Claude Code",
         "icon": "/images/favicon.svg",
-        "href": "/mcp/ide-plugin"
+        "href": "/install"
       },
       {
         "title": "Quick install",

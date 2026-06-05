@@ -1,16 +1,22 @@
 ---
-title: NEUS for AI assistants
-description: Trust infrastructure for agents that act - install NEUS in Cursor, Claude Code, Codex, and other MCP hosts.
+title: Install NEUS Trust
+description: Choose your agent environment and connect hosted NEUS MCP.
 icon: plug
 ---
 
-Verifiable identity, scoped authority, and receipts for every trusted action. Sign in through the selected host, then NEUS gives your assistant live proof context before access, payment, tool use, or agent action.
+NEUS Trust connects to any MCP-capable agent environment and adds identity, scoped authority, policy checks, and receipts before trusted actions.
 
-**Hosted product endpoint:** `https://mcp.neus.network/mcp`
+**Hosted endpoint:** `https://mcp.neus.network/mcp`
+
+| | |
+|---|---|
+| **Identity** | Verified |
+| **Authority** | Scoped |
+| **Policy** | Checked |
+| **Receipt** | Issued |
+| **Endpoint** | `https://mcp.neus.network/mcp` |
 
 Signed in on [neus.network](https://neus.network/profile?tab=account)? Use **Open in** for Cursor, Claude Code, or Codex.
-
-On any docs page, use **On this page** -> **Set up trust MCP** or **Quick install**.
 
 <Tabs sync={false}>
   <Tab title="Quick start">
@@ -63,7 +69,7 @@ npx -y -p @neus/sdk neus setup --client codex
 npx -y -p @neus/sdk neus auth --client codex
 ```
 
-NEUS writes the remote MCP entry through `codex mcp add`. Codex owns OAuth for its local host, so `neus auth --client codex` delegates to `codex mcp login neus`.
+Codex handles OAuth separately. Run `neus auth --client codex` after setup, or use `codex mcp login neus`.
 
 Config path: `~/.codex/config.toml`
 
@@ -97,11 +103,13 @@ npx -y -p @neus/sdk neus auth
 
 **NEUS Trust plugin** (receipt reuse, delegation, session workflow):
 
+<Accordion title="Claude Code manual install">
 ```text
 /plugin marketplace add https://github.com/neus/network
 /plugin install neus-trust@neus
 /neus-trust:neus-trust-workflow
 ```
+</Accordion>
 
   </Tab>
 </Tabs>
@@ -112,7 +120,8 @@ Add remote MCP URL **`https://mcp.neus.network/mcp`** in the host settings, or t
 
 | Host | Config file |
 |------|-------------|
-| Claude Desktop | `~/.claude.json` -> `mcpServers` |
+| Claude Desktop | `~/.claude.json` → `mcpServers` |
+| Cline | `cline_mcp_settings.json` in Cline settings |
 | Windsurf | `~/.codeium/windsurf/mcp_config.json` |
 | Gemini CLI | `~/.gemini/settings.json` or `gemini mcp add --transport http neus https://mcp.neus.network/mcp` |
 | ChatGPT | Remote MCP URL in client settings |

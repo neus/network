@@ -86,7 +86,7 @@
   --neus-radius-lg: 0.75rem;
   --neus-radius-xl: 1rem;
 
-  /* Marketing page wash — SSOT: neus/app/globals.css --neus-page-bg */
+  /* Marketing page wash */
   --neus-page-bg:
     radial-gradient(
       ellipse 125% 90% at 0% -18%,

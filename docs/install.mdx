@@ -1,0 +1,89 @@
+---
+title: Install NEUS Trust
+description: Choose your agent environment and connect hosted NEUS MCP.
+icon: download
+---
+
+NEUS Trust connects to any MCP-capable agent environment and adds identity, scoped authority, policy checks, and receipts before trusted actions.
+
+**Hosted endpoint:** `https://mcp.neus.network/mcp`
+
+---
+
+## Trust at a glance
+
+| | |
+|---|---|
+| **Identity** | Verified |
+| **Authority** | Scoped |
+| **Policy** | Checked |
+| **Receipt** | Issued |
+| **Endpoint** | `https://mcp.neus.network/mcp` |
+
+---
+
+## Choose your environment
+
+<CardGroup cols={3}>
+  <Card title="Cursor" icon="mouse-pointer" href="./mcp/ide-plugin">
+    Add NEUS Trust to Cursor
+  </Card>
+  <Card title="Claude Code" icon="terminal" href="./mcp/ide-plugin">
+    Install NEUS Trust for Claude Code
+  </Card>
+  <Card title="VS Code" icon="code" href="./mcp/ide-plugin">
+    Install NEUS Trust MCP Server
+  </Card>
+  <Card title="Codex" icon="bot" href="./mcp/ide-plugin">
+    Connect NEUS Trust MCP
+  </Card>
+  <Card title="Cline" icon="code" href="./mcp/ide-plugin">
+    Connect NEUS Trust MCP
+  </Card>
+  <Card title="ChatGPT / OpenAI" icon="message-square" href="./mcp/ide-plugin">
+    Connect NEUS Trust App
+  </Card>
+  <Card title="Server / CI" icon="server" href="./mcp/setup">
+    Use NEUS access key
+  </Card>
+</CardGroup>
+
+---
+
+## One-command setup
+
+Detects your environment and wires hosted NEUS MCP automatically.
+
+```bash
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus doctor --live
+```
+
+Then call **`neus_context`** at the start of each session. For agent workflows, call **`neus_agent_link`** before assuming identity or delegation is ready.
+
+---
+
+## Platform details
+
+For per-editor config paths, JSON snippets, and manual setup steps, see [MCP setup](./mcp/setup).
+
+| Surface | What NEUS ships |
+|---|---|
+| Cursor | MCP install path to hosted NEUS Trust |
+| VS Code | MCP server config + gallery presence |
+| Claude Code | Claude plugin adapter for the trust workflow skill |
+| Codex | MCP server config + Codex OAuth flow |
+| OpenAI Apps SDK | Remote MCP app wrapper |
+| MCP Registry | Public remote MCP server listing |
+| CI / servers | `neus setup --access-key <npk_...>` |
+
+---
+
+## What to do next
+
+1. Run `neus_context` once per session.
+2. Use `neus_proofs_check` to reuse existing receipts before starting new verification.
+3. Use `neus_agent_link` before assuming an agent identity or delegation is ready.
+4. Use `neus_verify_or_guide` only when setup, consent, payment, or account prerequisites are missing.
+
+Read the full [MCP overview](./mcp/overview) for the tool list and session order.

@@ -6,19 +6,19 @@ icon: users
 
 ## Overview
 
-**Register** the agent, then **approve** what it can do. These can be the same person or two different accounts.
+**Register** the agent, then **grant** what it can do. These can be the same person or two different accounts.
 
 ## Roles
 
 | Role | Action | Signs with |
 |------|--------|------------|
-| **Publisher** | Registers agent metadata | Agent address |
-| **Approver** | Grants scopes and limits | Approving account |
+| **Agent** | Registers agent metadata | Agent address |
+| **Controller** | Grants scopes and limits | Controller account |
 
 ## Addresses
 
-- **Agent address** — registers and publishes the agent.
-- **Approving account** — signs delegation. Does not need to own the agent address.
+- **Agent address** - identifies the agent in NEUS.
+- **Controller account** - signs delegation. Does not need to own the agent address.
 
 ## Signing
 
@@ -29,7 +29,7 @@ Use [hosted verify](../cookbook/auth-hosted-verify) or MCP. NEUS handles the cer
 | Field | Meaning |
 |-------|---------|
 | `agentWallet` | Agent address |
-| `controllerWallet` | Approving account |
+| `controllerWallet` | Controller account |
 | `linked` | Identity + delegation both present |
 | `principal` | Signed-in account from MCP session |
 

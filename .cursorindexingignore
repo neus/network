@@ -24,12 +24,11 @@ coverage/
 .eslintcache
 **/.eslintcache/
 
-# Local / generated assistant context (never index)
+# Local generated context
 AGENTS.md
 CLAUDE.md
 GEMINI.md
 .neus/
-internal/
 backup-docs/
 
 .DS_Store

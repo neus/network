@@ -1,6 +1,6 @@
 ---
 title: Hosted Verify
-description: Login, checks, and gates hosted by NEUS."
+description: Login, checks, and gates hosted by NEUS.
 icon: key
 ---
 
@@ -32,7 +32,7 @@ icon: key
 | `gateId` | Gate definition |
 | `mode=popup` | Popup; requires `origin` |
 | `origin` | Opener origin for postMessage |
-| `appId` | Advanced server/app attribution only |
+| `appId` | Advanced server/app attribution only; not required for published gate checkout |
 
 ## Redirect examples
 
@@ -42,7 +42,7 @@ icon: key
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
 window.location.href = getHostedCheckoutUrl({
-  gateId: 'gate_abc123',
+  gateId: 'gate_your-app-name',
   returnUrl: 'https://myapp.com/auth/callback',
 });
 ```

@@ -866,7 +866,7 @@
           "neusPersonhoodId": {
             "type": "string",
             "pattern": "^0x[a-fA-F0-9]{64}$",
-            "description": "Salted SHA-256 personhood ID for sybil resistance (internal, never exposed in API responses)"
+            "description": "Salted SHA-256 personhood ID for sybil resistance (not returned in API responses)"
           },
           "assuranceLevel": {
             "type": "string",
@@ -1699,7 +1699,7 @@
       "get": {
         "operationId": "getVerifierCatalog",
         "summary": "Get supported verifiers and configuration",
-        "description": "Returns the public verifier catalog: supported verifier IDs, sanitized public metadata (input schemas + direct-vs-hosted capabilities), and backend chain configuration (hub chain, asset allowlists). Internal transport/provider fields are not exposed here.",
+        "description": "Returns the public verifier catalog: supported verifier IDs, sanitized public metadata (input schemas + direct-vs-hosted capabilities), and backend chain configuration (hub chain, asset allowlists). Non-public transport/provider fields are not exposed here.",
         "tags": [
           "Verification"
         ],
@@ -1762,7 +1762,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -1855,7 +1855,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2118,7 +2118,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2600,7 +2600,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2701,7 +2701,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -2849,7 +2849,7 @@
             }
           },
           "500": {
-            "description": "Internal error",
+            "description": "Server error",
             "content": {
               "application/json": {
                 "schema": {

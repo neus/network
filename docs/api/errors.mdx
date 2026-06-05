@@ -57,7 +57,7 @@ const subjectAddress = '0x...';
 
 try {
   const result = await client.gateCheck({
-    gateId: 'gate_abc123',
+    gateId: 'gate_your-app-name',
     address: subjectAddress,
   });
   if (!result.data?.eligible) {

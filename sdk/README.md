@@ -30,7 +30,7 @@ Call `neus_context` in your MCP client. For agent workflows, call `neus_agent_li
 | Setup, JSON snippets, and headers | [MCP setup](https://docs.neus.network/mcp/setup)                              |
 | Tools and session order           | [MCP overview](https://docs.neus.network/mcp/overview)                        |
 | Discovery URLs                    | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints)            |
-| NEUS for AI assistants          | [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin)          |
+| Install NEUS Trust                | [Install NEUS Trust](https://docs.neus.network/install)                         |
 
 Prefer `neus setup` over hand-editing config files so every host stays on **`https://mcp.neus.network/mcp`**.
 
@@ -50,7 +50,7 @@ Use Hosted Verify when you want NEUS to handle the signing/verification flow out
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
 const url = getHostedCheckoutUrl({
-  gateId: 'gate_abc123',
+  gateId: 'gate_your-app-name',
   returnUrl: 'https://yourapp.com/auth/callback'
 });
 
@@ -103,7 +103,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 export function Page() {
   return (
     <VerifyGate
-      gateId="gate_abc123"
+      gateId="gate_your-app-name"
       onVerified={result => {
         console.log(result.qHash || result.qHashes);
       }}
@@ -124,7 +124,7 @@ import { NeusClient } from '@neus/sdk';
 const client = new NeusClient();
 
 const result = await client.gateCheck({
-  gateId: 'gate_abc123',
+  gateId: 'gate_your-app-name',
   address: '0x...'
 });
 
@@ -172,7 +172,14 @@ Codex owns its local MCP OAuth session. Use `npx -y -p @neus/sdk neus setup --cl
 
 Integrators embedding install UX in apps should import **`@neus/sdk/mcp-hosts`** (setup commands, deeplinks, host labels) instead of duplicating strings.
 
-Editors with plugin marketplaces can install **`neus-trust@neus`** for the bundled session workflow. In Claude Code, run `/plugin marketplace add https://github.com/neus/network` and `/plugin install neus-trust@neus` inside chat. Other hosts: [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin).
+Claude Code users can install **`neus-trust@neus`** for the bundled session workflow:
+
+```text
+/plugin marketplace add https://github.com/neus/network
+/plugin install neus-trust@neus
+```
+
+Other hosts: [Install NEUS Trust](https://docs.neus.network/install).
 
 ## Docs
 

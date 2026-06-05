@@ -62,7 +62,7 @@ Then call **`neus_context`** in your MCP client. For agent workflows, call **`ne
 
 | Path | Doc |
 | ---- | --- |
-| AI assistants | [NEUS for AI assistants](https://docs.neus.network/mcp/ide-plugin) |
+| AI assistants | [Install NEUS Trust](https://docs.neus.network/install) |
 | MCP setup | [MCP setup](https://docs.neus.network/mcp/setup) |
 | App verification | [Quickstart](https://docs.neus.network/quickstart) |
 

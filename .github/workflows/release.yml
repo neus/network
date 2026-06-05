@@ -21,32 +21,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout tag
-        run: |
-          git init
-          git remote add origin https://github.com/${{ github.repository }}.git
-          git fetch origin tag ${{ github.ref_name }} --no-tags
-          git checkout ${{ github.ref_name }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
 
       - name: Setup Node ${{ env.NODE_VERSION }}
-        run: |
-          NODE_VERSION="${{ env.NODE_VERSION }}"
-          curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install "$NODE_VERSION"
-          nvm use "$NODE_VERSION"
-          echo "PATH=$HOME/.nvm/versions/node/v$NODE_VERSION/bin:$PATH" >> $GITHUB_PATH
-          node --version
-          npm --version
-        env:
-          NPM_REGISTRY: ${{ env.NPM_REGISTRY }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.NPM_REGISTRY }}
 
-      # Ensure package.json version matches the tag (vX.Y.Z)
       - name: Verify version matches tag
         run: |
           TAG="${GITHUB_REF_NAME#v}"
           node scripts/verify-release-versions.mjs --tag "$TAG"
-          node -e "const v=require('./sdk/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(`package.json ${v} != tag ${t}`);process.exit(1)}"
+          node -e "const v=require('./sdk/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(\`package.json ${v} != tag ${t}\`);process.exit(1)}"
 
       - name: Install dependencies
         run: npm ci
@@ -64,7 +53,6 @@ jobs:
         run: npm audit --omit=dev --audit-level=high
         working-directory: sdk
 
-      # Build before pack so dry-run matches the published tarball.
       - name: Build
         run: npm run build
         working-directory: sdk
@@ -76,60 +64,18 @@ jobs:
       - name: Verify npm publish hygiene
         run: node scripts/verify-publish-hygiene.mjs
 
-      - name: Configure npm authentication
-        run: |
-          rm -f ~/.npmrc sdk/.npmrc mcp/npm-dist/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > sdk/.npmrc
-          echo "registry=${{ env.NPM_REGISTRY }}" >> sdk/.npmrc
-          echo "//registry.npmjs.org/:always-auth=true" >> sdk/.npmrc
-          echo "Verifying npm authentication..."
-          npm whoami --userconfig=sdk/.npmrc --registry=${{ env.NPM_REGISTRY }} || (
-            echo "ERROR: npm authentication failed."
-            echo "Use a granular npm token with Read+Write on @neus/sdk and @neus/mcp-server, and Bypass 2FA for automation enabled."
-            echo "If neus/network has a repository NPM_TOKEN secret, it overrides the organization secret — update or delete the repo secret."
-            exit 1
-          )
-          echo "Authentication verified successfully"
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      # npm provenance only when this repository is public (Sigstore source visibility rule).
       - name: Publish @neus/sdk
-        shell: bash
-        run: |
-          set -euo pipefail
-          export NPM_CONFIG_USERCONFIG="${GITHUB_WORKSPACE}/sdk/.npmrc"
-          if [ "${{ github.event.repository.private }}" = "false" ]; then
-            echo "Repository is public — publishing with npm provenance."
-            npm publish --access public --provenance
-          else
-            echo "Repository is private — publishing without provenance (npm policy)."
-            npm publish --access public
-          fi
+        run: npm publish --access public --provenance
         working-directory: sdk
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Verify @neus/mcp-server version matches tag
         run: |
-          node -e "const v=require('./mcp/npm-dist/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(`mcp/npm-dist ${v} != tag ${t}`);process.exit(1)}"
+          node -e "const v=require('./mcp/npm-dist/package.json').version;const t=process.env.GITHUB_REF_NAME.replace(/^v/,'');if(v!==t){console.error(\`mcp/npm-dist ${v} != tag ${t}\`);process.exit(1)}"
 
       - name: Package check (@neus/mcp-server)
         run: npm pack --dry-run
         working-directory: mcp/npm-dist
 
       - name: Publish @neus/mcp-server
-        shell: bash
-        run: |
-          set -euo pipefail
-          export NPM_CONFIG_USERCONFIG="${GITHUB_WORKSPACE}/sdk/.npmrc"
-          if [ "${{ github.event.repository.private }}" = "false" ]; then
-            npm publish --access public --provenance
-          else
-            npm publish --access public
-          fi
+        run: npm publish --access public --provenance
         working-directory: mcp/npm-dist
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

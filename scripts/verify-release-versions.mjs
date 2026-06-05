@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 /**
  * Ensures lockstep semver across npm, MCP discovery, plugin, and example surfaces.
- * Maintainer checklist: network/CHANGELOG.md and .github/workflows/release.yml
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';

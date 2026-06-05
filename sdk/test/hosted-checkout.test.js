@@ -32,6 +32,21 @@ describe('hosted checkout handoff URLs', () => {
       '0xabcdef0123456789012345678901234567890abcd'
     );
 
+    const gateUrl = buildHostedCheckoutUrl({
+      hostedCheckoutUrl: 'https://neus.network/verify',
+      verifierList: ['ownership-basic'],
+      returnUrl: 'https://app.example/callback',
+      origin: 'https://app.example',
+      appId: 'my-app',
+      billingWallet: '0xAbCdEf0123456789012345678901234567890AbCd',
+      gateId: 'gate_abc123'
+    });
+    const gateCheckoutUrl = new URL(gateUrl);
+    expect(gateCheckoutUrl.searchParams.get('gateId')).toBe('gate_abc123');
+    expect(gateCheckoutUrl.searchParams.get('verifiers')).toBeNull();
+    expect(gateCheckoutUrl.searchParams.get('appId')).toBeNull();
+    expect(gateCheckoutUrl.searchParams.get('billingWallet')).toBeNull();
+
     const redirect = new URL(buildHostedCheckoutRedirectUrl(popupUrl));
     expect(redirect.searchParams.get('mode')).toBeNull();
     expect(redirect.searchParams.get('returnUrl')).toBe('https://app.example/demo?claim=fair-airdrop');

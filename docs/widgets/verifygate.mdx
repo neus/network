@@ -18,7 +18,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 export function Page() {
   return (
-    <VerifyGate gateId="gate_abc123">
+    <VerifyGate gateId="gate_your-app-name">
       <div>Unlocked</div>
     </VerifyGate>
   );
@@ -29,7 +29,7 @@ export function Page() {
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
 const url = getHostedCheckoutUrl({
-  gateId: 'gate_abc123',
+  gateId: 'gate_your-app-name',
   returnUrl: 'https://yourapp.com/continue',
 });
 ```
@@ -39,7 +39,7 @@ import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient();
 const result = await client.gateCheck({
-  gateId: 'gate_abc123',
+  gateId: 'gate_your-app-name',
   address: user.walletAddress,
 });
 ```

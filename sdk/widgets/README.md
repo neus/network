@@ -18,7 +18,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 export function Page() {
   return (
     <VerifyGate
-      gateId="gate_abc123"
+      gateId="gate_your-app-name"
     >
       <div>Unlocked</div>
     </VerifyGate>

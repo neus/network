@@ -1,5 +1,5 @@
 /**
- * Re-export docs tokens for examples (SSOT: docs/neus-tokens.css).
+ * Re-export docs tokens for examples.
  * Keep aligned with neus/app/globals.css — update docs/neus-tokens.css first.
  */
 @import url('../../../docs/neus-tokens.css');

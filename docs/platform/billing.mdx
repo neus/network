@@ -11,7 +11,7 @@ NEUS bills metered verification usage to a NEUS profile. Credits spend first.
 When you publish a gate, you own it — so verifications through that gate bill **your** NEUS account by default. Visitors embed or link your checkout with one public `gateId`:
 
 ```jsx
-<VerifyGate gateId="gate_abc123" />
+<VerifyGate gateId="gate_your-app-name" />
 ```
 
 There is no app ID or billing wallet to copy for this path. The gate carries the check policy and the payer.
@@ -22,7 +22,7 @@ Confirm eligibility before trusted actions with **`gateCheck`** — pass the sam
 
 ```javascript
 const result = await client.gateCheck({
-  gateId: 'gate_abc123',
+  gateId: 'gate_your-app-name',
   address: user.walletAddress,
 });
 ```

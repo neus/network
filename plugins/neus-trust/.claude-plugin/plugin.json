@@ -1,17 +1,17 @@
 {
   "name": "neus-trust",
   "displayName": "NEUS Trust",
-  "description": "Trust infrastructure for agents that act. Verifiable identity, scoped authority, and receipts before your assistant runs tools. One setup for Cursor, Claude Code, Codex, and VS Code.",
-  "version": "1.1.2",
+  "description": "Verifiable identity, scoped authority, policy checks, and receipts before agents run trusted actions. One setup for Cursor, Claude Code, Codex, and VS Code.",
+  "version": "1.1.3",
   "author": {
     "name": "NEUS",
     "url": "https://neus.network"
   },
-  "homepage": "https://docs.neus.network/mcp/ide-plugin",
+  "homepage": "https://docs.neus.network/install",
   "repository": "https://github.com/neus/network",
   "license": "Apache-2.0",
   "icon": "./assets/icon.png",
-  "skills": ["./skills/neus-trust-workflow"],
+  "skills": ["skills/neus-trust-workflow"],
   "keywords": [
     "trust-receipts",
     "agent-identity",

@@ -19,7 +19,7 @@ icon: key
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
-<VerifyGate gateId="gate_abc123">
+<VerifyGate gateId="gate_your-app-name">
   <ProtectedContent />
 </VerifyGate>;
 ```
@@ -32,7 +32,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
 const url = getHostedCheckoutUrl({
-  gateId: 'gate_abc123',
+  gateId: 'gate_your-app-name',
   returnUrl: 'https://yourapp.com/auth/callback',
 });
 ```
@@ -45,7 +45,7 @@ import { NeusClient } from '@neus/sdk';
 const client = new NeusClient();
 
 await client.gateCheck({
-  gateId: 'gate_abc123',
+  gateId: 'gate_your-app-name',
   address: user.walletAddress,
 });
 ```
