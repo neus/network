@@ -339,11 +339,11 @@ function buildDocsOgCard({ michroma, W, H, title, tagline }) {
   const markX = markCx - markH / 2;
   const markY = markCy - markH / 2;
 
-  let titleFont = 58;
+  let titleFont = 76;
   const titleLs = titleFont * 0.03;
   let titlePath = textToPath(michroma, title, titleFont, titleLs);
   const maxTitleW = W - leftW - DOCS_OG_CARD.pad * 2;
-  while (titlePath.width > maxTitleW && titleFont > 36) {
+  while (titlePath.width > maxTitleW && titleFont > 44) {
     titleFont -= 2;
     titlePath = textToPath(michroma, title, titleFont, titleFont * 0.03);
   }
@@ -363,7 +363,7 @@ function buildDocsOgCard({ michroma, W, H, title, tagline }) {
   const tagEls = tagLines
     .map(
       (line, i) =>
-        `<text x="${f(textX)}" y="${f(tagStartY + i * tagLineHeight)}" fill="${COLOR.textSecondary}" font-family="Mona Sans, Arial, sans-serif" font-size="${tagFont}" font-weight="500">${escapeSvgText(line)}</text>`,
+        `<text x="${f(textX)}" y="${f(tagStartY + i * tagLineHeight)}" fill="${COLOR.white}" font-family="Mona Sans, Arial, sans-serif" font-size="${tagFont}" font-weight="500">${escapeSvgText(line)}</text>`,
     )
     .join('\n  ');
 
@@ -376,7 +376,7 @@ function buildDocsOgCard({ michroma, W, H, title, tagline }) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none" role="img" aria-label="${escapeSvgText(title)}">
   ${buildDocsOgBackground({ W, H, spotlightCx: markCx, spotlightCy: markCy })}
   <g transform="translate(${f(markX)} ${f(markY)}) scale(${f(ms)})">${buildMarkInner(COLOR.accent)}</g>
-  <g transform="translate(${f(textX)} ${f(titleBaseline)})"><path d="${titlePath.d}" fill="${COLOR.textPrimary}"/></g>
+  <g transform="translate(${f(textX)} ${f(titleBaseline)})"><path d="${titlePath.d}" fill="${COLOR.accent}"/></g>
   ${tagEls}
   <g transform="translate(${f(brandX - brand.width)} ${f(brandBaseline - brandFont * 0.15)})"><path d="${brand.d}" fill="${COLOR.textMuted}"/></g>
 </svg>`;
