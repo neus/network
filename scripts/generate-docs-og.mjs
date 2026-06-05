@@ -293,167 +293,113 @@ const OG_COPY = {
   travels: 'Trust that travels.',
 };
 
-/** Mintlify docs social cards (1200├ù630). Output via `--docs` ΓåÆ sibling network/docs/images. */
+/** Mintlify docs social cards (1200×630). */
 const DOCS_OG_SPECS = [
-  { file: 'og-default.png', eyebrow: 'Documentation', tagline: OG_COPY.travels },
-  { file: 'og-quickstart.png', eyebrow: 'Quickstart', tagline: 'Ship your first proof-backed check.' },
-  { file: 'og-api.png', eyebrow: 'API', tagline: 'HTTP reference for verifiers and receipts.' },
-  { file: 'og-sdk.png', eyebrow: 'SDK', tagline: 'JavaScript SDK, CLI, and widgets.' },
-  { file: 'og-mcp.png', eyebrow: 'MCP', tagline: 'Trust context inside your IDE.' },
-  { file: 'og-agents.png', eyebrow: 'Agents', tagline: 'Identity, delegation, and runtime trust.' },
-  { file: 'og-verification.png', eyebrow: 'Verification', tagline: 'Checks that become reusable receipts.' },
-  { file: 'og-widgets.png', eyebrow: 'Widgets', tagline: 'VerifyGate for hosted checkout flows.' },
+  { file: 'og-default.png', title: 'Documentation', tagline: OG_COPY.travels },
+  { file: 'og-quickstart.png', title: 'Quickstart', tagline: 'Ship your first proof-backed check.' },
+  { file: 'og-api.png', title: 'API', tagline: 'HTTP reference for verifiers and receipts.' },
+  { file: 'og-sdk.png', title: 'SDK', tagline: 'JavaScript SDK, CLI, and widgets.' },
+  { file: 'og-mcp.png', title: 'MCP', tagline: 'Trust context inside your IDE.' },
+  { file: 'og-agents.png', title: 'Agents', tagline: 'Identity, delegation, and runtime trust.' },
+  { file: 'og-verification.png', title: 'Verification', tagline: 'Checks that become reusable receipts.' },
+  { file: 'og-widgets.png', title: 'Widgets', tagline: 'VerifyGate for hosted checkout flows.' },
 ];
 
-const DOCS_OG_CARD = {
-  W: 1200,
-  H: 630,
-  markH: 188,
-  wordFont: 84,
-  tagFont: 26,
-  urlLabel: 'docs.neus.network',
-};
+const DOCS_OG_CARD = { W: 1200, H: 630, leftFrac: 0.6, pad: 52 };
 
-function buildPortalAtmosphere({ W, H, portalCx, portalCy, reach = 1 }) {
-  const coreR = Math.round(Math.min(W, H) * 0.18 * reach);
-  const fieldR = Math.round(Math.max(W, H) * 0.72 * reach);
-  const meshR1 = Math.round(Math.max(W, H) * 0.55 * reach);
-  const meshR2 = Math.round(Math.max(W, H) * 0.48 * reach);
-  const meshCx1 = W * 0.12;
-  const meshCy1 = H * 0.06;
-  const meshCx2 = W * 0.92;
-  const meshCy2 = H * 0.94;
+/** Flat canvas + smooth radial spotlight centered on the left mark, spanning the full card. */
+function buildDocsOgBackground({ W, H, spotlightCx, spotlightCy }) {
+  const spotR = Math.round(Math.hypot(W, H) * 0.92);
   return `<defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="bg-base" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#11151B"/>
-      <stop offset="56%" stop-color="#101113"/>
       <stop offset="100%" stop-color="#090A0C"/>
     </linearGradient>
-    <radialGradient id="mesh-a" gradientUnits="userSpaceOnUse" cx="${f(meshCx1)}" cy="${f(meshCy1)}" r="${meshR1}">
-      <stop offset="0%" stop-color="${COLOR.accent}" stop-opacity="0.22"/>
-      <stop offset="38%" stop-color="#3D72C9" stop-opacity="0.10"/>
+    <radialGradient id="mark-spotlight" gradientUnits="userSpaceOnUse" cx="${f(spotlightCx)}" cy="${f(spotlightCy)}" r="${spotR}">
+      <stop offset="0%" stop-color="${COLOR.accent}" stop-opacity="0.32"/>
+      <stop offset="28%" stop-color="#98C0EF" stop-opacity="0.14"/>
+      <stop offset="52%" stop-color="#3D72C9" stop-opacity="0.06"/>
+      <stop offset="78%" stop-color="#101113" stop-opacity="0"/>
       <stop offset="100%" stop-color="#101113" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="mesh-b" gradientUnits="userSpaceOnUse" cx="${f(meshCx2)}" cy="${f(meshCy2)}" r="${meshR2}">
-      <stop offset="0%" stop-color="#3D72C9" stop-opacity="0.18"/>
-      <stop offset="42%" stop-color="#203A64" stop-opacity="0.08"/>
-      <stop offset="100%" stop-color="#101113" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="portal-core" gradientUnits="userSpaceOnUse" cx="${f(portalCx)}" cy="${f(portalCy)}" r="${coreR}">
-      <stop offset="0%" stop-color="${COLOR.accent}" stop-opacity="0"/>
-      <stop offset="34%" stop-color="${COLOR.accent}" stop-opacity="0"/>
-      <stop offset="42%" stop-color="${COLOR.accent}" stop-opacity="0.34"/>
-      <stop offset="54%" stop-color="${COLOR.accent}" stop-opacity="0.10"/>
-      <stop offset="100%" stop-color="${COLOR.accent}" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="portal-field" gradientUnits="userSpaceOnUse" cx="${f(portalCx)}" cy="${f(portalCy)}" r="${fieldR}">
-      <stop offset="0%" stop-color="#203A64" stop-opacity="0"/>
-      <stop offset="26%" stop-color="#203A64" stop-opacity="0"/>
-      <stop offset="46%" stop-color="#203A64" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#101113" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="edge-vignette" cx="50%" cy="48%" r="78%">
-      <stop offset="50%" stop-color="#101113" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#050608" stop-opacity="0.62"/>
-    </radialGradient>
-    <pattern id="grain" width="88" height="88" patternUnits="userSpaceOnUse">
-      <path d="M6 12h1M38 9h1M73 19h1M21 44h1M61 58h1M12 78h1M82 81h1" stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="1"/>
-    </pattern>
   </defs>
-  <rect width="${W}" height="${H}" fill="url(#bg)"/>
-  <rect width="${W}" height="${H}" fill="url(#mesh-a)"/>
-  <rect width="${W}" height="${H}" fill="url(#mesh-b)"/>
-  <rect width="${W}" height="${H}" fill="url(#portal-field)"/>
-  <rect width="${W}" height="${H}" fill="url(#portal-core)"/>
-  <rect width="${W}" height="${H}" fill="url(#edge-vignette)"/>
-  <rect width="${W}" height="${H}" fill="url(#grain)" opacity="0.06"/>`;
+  <rect width="${W}" height="${H}" fill="url(#bg-base)"/>
+  <rect width="${W}" height="${H}" fill="url(#mark-spotlight)"/>`;
 }
 
-/** Shared dark atmosphere + NEUS lockup; ring highlight stays on the portal, center stays clear. */
-function buildCard({
-  michroma,
-  monaSans,
-  W,
-  H,
-  markH,
-  wordFont,
-  tagFont,
-  showUrl = true,
-  tagline = OG_COPY.travels,
-  layout = 'horizontal',
-  urlLabel = 'neus.network',
-  eyebrow = null,
-}) {
-  const cx = W / 2;
+/**
+ * Docs OG layout: dominant mark left (~60%), section title + subtitle right, NEUS in bottom corner.
+ */
+function buildDocsOgCard({ michroma, W, H, title, tagline }) {
+  const leftW = W * DOCS_OG_CARD.leftFrac;
+  const markH = Math.min(leftW * 0.88, H * 0.8);
+  const markCx = leftW / 2;
+  const markCy = H / 2;
   const ms = markH / 1024;
-  const wls = wordFont * 0.05;
-  const word = textToPath(michroma, 'NEUS', wordFont, wls);
-  const wordCap = wordFont * 0.765;
+  const markX = markCx - markH / 2;
+  const markY = markCy - markH / 2;
 
-  let markX;
-  let markY;
-  let wordX;
-  let wordBaseline;
-  let tagBaseline;
-  let portalCx;
-  let portalCy;
-
-  const eyebrowFont = eyebrow ? Math.round(tagFont * 0.72) : 0;
-  const gapEyebrowTag = eyebrow ? Math.round(tagFont * 0.38) : 0;
-  const tagBlock = tagFont + (eyebrow ? eyebrowFont + gapEyebrowTag : 0);
-
-  if (layout === 'stacked') {
-    const gapMarkWord = Math.round(markH * 0.28);
-    const gapWordTag = Math.round(markH * 0.26);
-    const blockH = markH + gapMarkWord + wordCap + gapWordTag + tagBlock;
-    const blockTop = (H - blockH) / 2 - (showUrl ? H * 0.02 : 0);
-    markX = cx - markH / 2;
-    markY = blockTop;
-    wordX = cx - word.width / 2;
-    wordBaseline = markY + markH + gapMarkWord + wordCap;
-    tagBaseline = wordBaseline + gapWordTag + tagBlock;
-    portalCx = cx;
-    portalCy = markY + markH / 2;
-  } else {
-    // One-line lockup: ring mark + Michroma wordmark, vertically centered.
-    const lockupGap = markH * 0.2;
-    const lockupW = markH + lockupGap + word.width;
-    const lockupH = Math.max(markH, wordCap);
-    const gapLockTag = Math.round(markH * 0.34);
-    const blockH = lockupH + gapLockTag + tagBlock;
-    const blockTop = (H - blockH) / 2 - (showUrl ? H * 0.015 : 0);
-    const lockupLeft = cx - lockupW / 2;
-    const lockupCy = blockTop + lockupH / 2;
-    markX = lockupLeft;
-    markY = lockupCy - markH / 2;
-    wordX = lockupLeft + markH + lockupGap;
-    wordBaseline = lockupCy + wordCap / 2;
-    tagBaseline = blockTop + lockupH + gapLockTag + tagBlock;
-    portalCx = markX + markH / 2;
-    portalCy = lockupCy;
+  let titleFont = 58;
+  const titleLs = titleFont * 0.03;
+  let titlePath = textToPath(michroma, title, titleFont, titleLs);
+  const maxTitleW = W - leftW - DOCS_OG_CARD.pad * 2;
+  while (titlePath.width > maxTitleW && titleFont > 36) {
+    titleFont -= 2;
+    titlePath = textToPath(michroma, title, titleFont, titleFont * 0.03);
   }
+  const titleCap = titleFont * 0.765;
 
-  let eyebrowEl = '';
-  if (eyebrow) {
-    const eyebrowBaseline =
-      tagBaseline - tagFont - gapEyebrowTag + Math.round(eyebrowFont * 0.12);
-    eyebrowEl = `<text x="${f(cx)}" y="${f(eyebrowBaseline)}" text-anchor="middle" fill="${COLOR.accent}" font-family="Michroma, Arial, sans-serif" font-size="${eyebrowFont}" font-weight="400" letter-spacing="${f(eyebrowFont * 0.2)}">${escapeSvgText(String(eyebrow).toUpperCase())}</text>`;
-  }
+  const tagFont = 24;
+  const tagLineHeight = Math.round(tagFont * 1.38);
+  const tagLines = wrapTagline(tagline, maxTitleW, tagFont);
 
-  let footer = '';
-  if (showUrl) {
-    const uFont = Math.round(H * 0.035);
-    footer = `<text x="${f(cx)}" y="${f(H - H * 0.07)}" text-anchor="middle" fill="${COLOR.textMuted}" font-family="Mona Sans, Arial, sans-serif" font-size="${uFont}" font-weight="600" letter-spacing="${f(uFont * 0.05)}">${escapeSvgText(urlLabel)}</text>`;
-  }
+  const gapTitleTag = 22;
+  const blockH = titleCap + gapTitleTag + tagLines.length * tagLineHeight;
+  const blockTop = (H - blockH) / 2;
+  const textX = leftW + DOCS_OG_CARD.pad;
+  const titleBaseline = blockTop + titleCap;
+  const tagStartY = titleBaseline + gapTitleTag + tagFont;
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none">
-  ${buildPortalAtmosphere({ W, H, portalCx, portalCy, reach: layout === 'stacked' ? 0.86 : 1 })}
+  const tagEls = tagLines
+    .map(
+      (line, i) =>
+        `<text x="${f(textX)}" y="${f(tagStartY + i * tagLineHeight)}" fill="${COLOR.textSecondary}" font-family="Mona Sans, Arial, sans-serif" font-size="${tagFont}" font-weight="500">${escapeSvgText(line)}</text>`,
+    )
+    .join('\n  ');
+
+  const brandFont = 20;
+  const brandLs = brandFont * 0.14;
+  const brand = textToPath(michroma, 'NEUS', brandFont, brandLs);
+  const brandX = W - DOCS_OG_CARD.pad;
+  const brandBaseline = H - DOCS_OG_CARD.pad * 0.65;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" fill="none" role="img" aria-label="${escapeSvgText(title)}">
+  ${buildDocsOgBackground({ W, H, spotlightCx: markCx, spotlightCy: markCy })}
   <g transform="translate(${f(markX)} ${f(markY)}) scale(${f(ms)})">${buildMarkInner(COLOR.accent)}</g>
-  <g transform="translate(${f(wordX)} ${f(wordBaseline)})"><path d="${word.d}" fill="${COLOR.textPrimary}"/></g>
-  ${eyebrowEl}
-  <text x="${f(cx)}" y="${f(tagBaseline)}" text-anchor="middle" fill="${COLOR.textSecondary}" font-family="Mona Sans, Arial, sans-serif" font-size="${tagFont}" font-weight="500">${escapeSvgText(tagline)}</text>
-  ${footer}
+  <g transform="translate(${f(textX)} ${f(titleBaseline)})"><path d="${titlePath.d}" fill="${COLOR.textPrimary}"/></g>
+  ${tagEls}
+  <g transform="translate(${f(brandX - brand.width)} ${f(brandBaseline - brandFont * 0.15)})"><path d="${brand.d}" fill="${COLOR.textMuted}"/></g>
 </svg>`;
+}
+
+/** @param {string} text @param {number} maxWidth @param {number} fontSize */
+function wrapTagline(text, maxWidth, fontSize) {
+  const charW = fontSize * 0.5;
+  const maxChars = Math.max(12, Math.floor(maxWidth / charW));
+  const words = String(text).split(/\s+/);
+  const lines = [];
+  let line = '';
+  for (const word of words) {
+    const next = line ? `${line} ${word}` : word;
+    if (next.length > maxChars && line) {
+      lines.push(line);
+      line = word;
+    } else {
+      line = next;
+    }
+  }
+  if (line) lines.push(line);
+  return lines.slice(0, 3);
 }
 
 async function svgToPng(svg, width, outPath, { height } = {}) {
@@ -471,17 +417,12 @@ async function generateDocsOgCards({ michroma, monaSans }) {
   const docsFavicon = path.join(docsDir, 'favicon.svg');
 
   for (const spec of DOCS_OG_SPECS) {
-    const svg = buildCard({
+    const svg = buildDocsOgCard({
       michroma,
-      monaSans,
       W: DOCS_OG_CARD.W,
       H: DOCS_OG_CARD.H,
-      markH: DOCS_OG_CARD.markH,
-      wordFont: DOCS_OG_CARD.wordFont,
-      tagFont: DOCS_OG_CARD.tagFont,
+      title: spec.title,
       tagline: spec.tagline,
-      eyebrow: spec.eyebrow,
-      urlLabel: DOCS_OG_CARD.urlLabel,
     });
     await svgToPng(svg, DOCS_OG_CARD.W, path.join(docsDir, spec.file), { height: DOCS_OG_CARD.H });
   }
