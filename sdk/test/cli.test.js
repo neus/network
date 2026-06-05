@@ -12,6 +12,19 @@ const cliPath = path.join(__dirname, '..', 'cli', 'neus.mjs');
 
 const cleanupPaths = [];
 
+function vscodeConfigPathForTest(scope, homeDir, appDataDir, cwd) {
+  if (scope !== 'user') {
+    return path.join(cwd, '.vscode', 'mcp.json');
+  }
+  if (process.platform === 'darwin') {
+    return path.join(homeDir, 'Library', 'Application Support', 'Code', 'User', 'mcp.json');
+  }
+  if (process.platform === 'win32') {
+    return path.join(appDataDir || path.join(homeDir, 'AppData', 'Roaming'), 'Code', 'User', 'mcp.json');
+  }
+  return path.join(homeDir, '.config', 'Code', 'User', 'mcp.json');
+}
+
 function buildFakeClaudeScript() {
   return `
 const fs = require('node:fs');
@@ -274,7 +287,7 @@ describe('neus CLI', () => {
     });
 
     const vscodeConfig = JSON.parse(
-      await fs.readFile(path.join(context.appDataDir, 'Code', 'User', 'mcp.json'), 'utf8')
+      await fs.readFile(vscodeConfigPathForTest('user', context.homeDir, context.appDataDir, context.workspaceDir), 'utf8')
     );
     expect(vscodeConfig.servers.neus).toEqual({
       type: 'http',
@@ -448,7 +461,7 @@ describe('neus CLI', () => {
     expect(cursorConfig.mcpServers.neus.headers.Authorization).toBe('Bearer npk_test.secret');
 
     const vscodeConfig = JSON.parse(
-      await fs.readFile(path.join(context.appDataDir, 'Code', 'User', 'mcp.json'), 'utf8')
+      await fs.readFile(vscodeConfigPathForTest('user', context.homeDir, context.appDataDir, context.workspaceDir), 'utf8')
     );
     expect(vscodeConfig.servers.neus.headers.Authorization).toBe('Bearer npk_test.secret');
 
@@ -492,7 +505,7 @@ describe('neus CLI', () => {
 
   it('reports malformed MCP config files without blocking other clients', async () => {
     const context = await makeCliContext();
-    const vscodeConfigPath = path.join(context.appDataDir, 'Code', 'User', 'mcp.json');
+    const vscodeConfigPath = vscodeConfigPathForTest('user', context.homeDir, context.appDataDir, context.workspaceDir);
 
     await fs.mkdir(path.dirname(vscodeConfigPath), { recursive: true });
     await fs.writeFile(vscodeConfigPath, '{"servers":', 'utf8');
@@ -511,7 +524,7 @@ describe('neus CLI', () => {
 
   it('continues configuring healthy clients when one config file is malformed', async () => {
     const context = await makeCliContext();
-    const vscodeConfigPath = path.join(context.appDataDir, 'Code', 'User', 'mcp.json');
+    const vscodeConfigPath = vscodeConfigPathForTest('user', context.homeDir, context.appDataDir, context.workspaceDir);
 
     await fs.mkdir(path.dirname(vscodeConfigPath), { recursive: true });
     await fs.writeFile(vscodeConfigPath, '{"servers":', 'utf8');
