@@ -20,6 +20,7 @@ concurrency:
 env:
   NODE_VERSION: 20.19.0
   NPM_REGISTRY: https://registry.npmjs.org
+  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
 jobs:
   publish_sdk:
