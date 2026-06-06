@@ -71,7 +71,13 @@ jobs:
         run: node scripts/verify-publish-hygiene.mjs
 
       - name: Publish @neus/sdk
-        run: npm publish --access public --provenance --registry https://registry.npmjs.org
+        run: |
+          VERSION="${RELEASE_VERSION#v}"
+          if npm view "@neus/sdk@$VERSION" version --registry https://registry.npmjs.org >/dev/null 2>&1; then
+            echo "@neus/sdk@$VERSION already published; skipping"
+          else
+            npm publish --access public --provenance --registry https://registry.npmjs.org
+          fi
         working-directory: sdk
 
       - name: Verify @neus/mcp-server version matches tag
@@ -83,5 +89,11 @@ jobs:
         working-directory: mcp/npm-dist
 
       - name: Publish @neus/mcp-server
-        run: npm publish --access public --provenance --registry https://registry.npmjs.org
+        run: |
+          VERSION="${RELEASE_VERSION#v}"
+          if npm view "@neus/mcp-server@$VERSION" version --registry https://registry.npmjs.org >/dev/null 2>&1; then
+            echo "@neus/mcp-server@$VERSION already published; skipping"
+          else
+            npm publish --access public --provenance --registry https://registry.npmjs.org
+          fi
         working-directory: mcp/npm-dist
