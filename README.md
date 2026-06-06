@@ -47,7 +47,7 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Then call **`neus_context`** in your MCP client. For agent workflows, call **`neus_agent_link`** before assuming identity or delegation is ready.
+Open your MCP client and ask the assistant to use NEUS Trust.
 
 | Path | Doc |
 | ---- | --- |

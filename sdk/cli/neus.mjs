@@ -70,21 +70,7 @@ function truncateDetail(text) {
   return `${raw.slice(0, Math.max(0, max - 3))}...`;
 }
 
-function useUnicodeSymbols() {
-  if (!resolveColorEnabled()) return false;
-  if (process.platform !== 'win32') return true;
-  return Boolean(
-    process.env.WT_SESSION ||
-      process.env.TERMINAL_EMULATOR === 'JetBrains-JediTerm' ||
-      process.env.TERM_PROGRAM === 'vscode' ||
-      process.env.TERM_PROGRAM === 'cursor'
-  );
-}
-
 function cliSymbols() {
-  if (useUnicodeSymbols()) {
-    return { ok: 'âœ“', warn: '!', next: 'â†’', skip: '-' };
-  }
   return { ok: 'ok', warn: '!', next: '>', skip: '-' };
 }
 
@@ -125,7 +111,7 @@ function logStep(kind, label, detail = '') {
   const symbols = cliSymbols();
   const iconKey = kind === 'ok' ? 'ok' : kind === 'warn' ? 'warn' : kind === 'next' ? 'next' : 'skip';
   const iconColor = kind === 'ok' ? 'green' : kind === 'warn' ? 'yellow' : kind === 'next' ? 'cyan' : 'dim';
-  const iconCell = useUnicodeSymbols() ? symbols[iconKey] : symbols[iconKey].padEnd(2);
+  const iconCell = symbols[iconKey].padEnd(2);
   const icon = paint(iconCell, iconColor);
   const name = paint(String(label).padEnd(10), 'cyan');
   const suffix = detail ? `  ${paint(truncateDetail(detail), 'dim')}` : '';
@@ -1119,7 +1105,7 @@ function createEmptyManifest(source) {
     proofHints: {
       status: 'not-issued',
       qHashes: [],
-      next: ['neus setup', 'neus doctor --live', 'open your MCP client and call neus_agent_create']
+      next: ['neus setup', 'neus auth', 'neus doctor --live']
     }
   };
 }
@@ -1829,7 +1815,7 @@ async function runSetup(options) {
   }
 
   printFlowSummary('setup', scope, initResults, {
-    nextStep: accessKey ? 'neus_context in your MCP client' : '',
+    nextStep: accessKey ? 'Open your MCP client and ask the assistant to use NEUS Trust.' : '',
     cliOptions: options
   });
 
@@ -1837,7 +1823,7 @@ async function runSetup(options) {
     const authResult = await runAuth(options);
     if (authResult && !authResult.hasErrors) {
       printFlowSummary('auth', authResult.scope, authResult.results, {
-        nextStep: 'neus_context in your MCP client',
+        nextStep: 'Open your MCP client and ask the assistant to use NEUS Trust.',
         cliOptions: options
       });
     }
@@ -2014,8 +2000,6 @@ async function runDoctor(options) {
         : 'No account credential found. Run `neus auth` for browser sign-in.'
     );
   }
-  writeGuidanceLine('In the connected MCP client, call `neus_context` first.');
-  writeGuidanceLine('For agents, run `neus_agent_link` before assuming identity or delegation is ready.');
   writeCliLine('');
 }
 
@@ -2112,12 +2096,12 @@ async function main() {
           printJson(result);
         } else if (result.authMethod !== 'browser') {
           printFlowSummary('auth', result.scope, result.results, {
-            nextStep: 'neus_context in your MCP client',
+            nextStep: 'Open your MCP client and ask the assistant to use NEUS Trust.',
             cliOptions: options
           });
         } else {
           printFlowSummary('auth', result.scope, result.results, {
-            nextStep: 'neus_context in your MCP client',
+            nextStep: 'Open your MCP client and ask the assistant to use NEUS Trust.',
             cliOptions: options
           });
         }

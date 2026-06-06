@@ -59,7 +59,7 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Then call **`neus_context`** at the start of each session. For agent workflows, call **`neus_agent_link`** before assuming identity or delegation is ready.
+Open your MCP client and ask the assistant to use NEUS Trust.
 
 ---
 
@@ -81,9 +81,8 @@ For per-editor config paths, JSON snippets, and manual setup steps, see [MCP set
 
 ## What to do next
 
-1. Run `neus_context` once per session.
-2. Use `neus_proofs_check` to reuse existing receipts before starting new verification.
-3. Use `neus_agent_link` before assuming an agent identity or delegation is ready.
-4. Use `neus_verify_or_guide` only when setup, consent, payment, or account prerequisites are missing.
+1. Open your MCP client and ask the assistant to use NEUS Trust.
+2. Run `neus doctor --live` to confirm live setup.
+3. Sign in with `neus auth` if profile connection is missing.
 
 Read the full [MCP overview](./mcp/overview) for the tool list and session order.

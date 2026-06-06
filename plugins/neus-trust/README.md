@@ -10,7 +10,7 @@ One setup for Cursor, Claude Code, Codex, and VS Code. Same identity, delegation
 
 Hosted MCP: **`https://mcp.neus.network/mcp`**
 
-**[Install guide →](https://docs.neus.network/mcp/ide-plugin)**
+**[Install guide →](https://docs.neus.network/install)**
 
 ```bash
 npx -y -p @neus/sdk neus setup

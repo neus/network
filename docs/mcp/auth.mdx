@@ -54,7 +54,7 @@ Authorization: Bearer <token>
 
 OAuth tokens and access keys both use the `Bearer` scheme.
 
-Authenticated MCP sessions should reuse receipts before any browser step: **`neus_context`** → **`neus_agent_link`** (when an agent wallet is in play) → **`neus_proofs_check`** → **`neus_proofs_get`** when you need proof details. Use **`neus_me`** only to refresh profile context or look up a wallet/DID. Use **`neus_verify_or_guide`** only when something required is still missing.
+Authenticated MCP sessions should reuse existing trust receipts before any browser step. See [MCP Overview](./overview) for the recommended tool order.
 
 ## Disconnect
 

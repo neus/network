@@ -372,7 +372,6 @@ describe('neus CLI', () => {
 
     expect(stderr).toContain('Profile connection');
     expect(stderr).toContain('Codex owns OAuth');
-    expect(stderr).toContain('neus_context');
   });
 
   it('reports installed but unconfigured hosts as not configured in status output', async () => {
