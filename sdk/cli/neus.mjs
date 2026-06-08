@@ -100,7 +100,7 @@ function emitCliBanner(cliOptions = {}) {
   if (!shouldEmitCliBanner(cliOptions)) return;
   const version = readCliVersion();
   const title = paint('NEUS', 'green');
-  const meta = `${paint(`v${version}`, 'dim')}${paint(' | trust receipts', 'dim')}`;
+  const meta = `${paint(`v${version}`, 'dim')}${paint(' | trust that travels', 'dim')}`;
   writeCliLine('');
   writeCliLine(`  ${title}  ${meta}`);
   writeCliLine('');
@@ -141,17 +141,15 @@ function describeClientResult(command, result) {
 }
 
 function printBuilderGuidance(command, results) {
-  if (!['setup', 'auth'].includes(command)) return;
+  if (!['setup', 'auth', 'check'].includes(command)) return;
   const hasCodex = results.some(result => result.client === 'codex');
   writeCliLine('');
-  writeCliLine(paint('Builder notes', 'cyan'));
-  writeGuidanceLine('Use from any shell without a global install: `npx -y -p @neus/sdk neus ...`.');
+  writeCliLine(paint('Next steps', 'cyan'));
+  writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for assistant prompts.');
   if (hasCodex) {
-    writeGuidanceLine('Codex owns OAuth: run `neus auth --client codex` or `codex mcp login neus`.');
+    writeGuidanceLine('Codex OAuth: `neus auth --client codex` or `codex mcp login neus`.');
   }
-  writeGuidanceLine(
-    'Claude plugin commands run inside Claude Code chat, not as `claude install`: `/plugin marketplace add https://github.com/neus/network`.'
-  );
+  writeGuidanceLine('Ask your assistant: "Use NEUS Verify before taking sensitive actions."');
 }
 
 function selectedClientNames(results) {
@@ -178,7 +176,7 @@ function printStatusGuidance(results) {
   writeGuidanceLine(NEUS_MCP_URL);
   writeCliLine(paint('Profile connection', 'cyan'));
   if (results.some(result => result.configured)) {
-    writeGuidanceLine('Saved config found. Run `npx -y -p @neus/sdk neus doctor --live` to confirm live Profile context.');
+    writeGuidanceLine('Saved config found. Run `npx -y -p @neus/sdk neus check` to confirm live connection.');
   } else {
     writeGuidanceLine(`No selected MCP host is configured yet. Run \`${preferredSetupCommand(results)}\`.`);
   }
@@ -659,6 +657,8 @@ function printUsage(exitCode = 0) {
     '  auth          Sign in (browser, or NEUS_ACCESS_KEY / --access-key when set)',
     '  disconnect    Disconnect NEUS MCP (revoke the stored OAuth token or access key)',
     '  status        Show current NEUS MCP setup',
+    '  check         Confirm setup and live NEUS connection (alias for doctor --live)',
+    '  examples      Show assistant prompts to try after install',
     '  doctor        Deep check: config status, profile connection, and live MCP context',
     '  import        Detect and package supported assistant context for NEUS portability',
     '  export        Export the latest local NEUS portable agent manifest',
@@ -1105,7 +1105,7 @@ function createEmptyManifest(source) {
     proofHints: {
       status: 'not-issued',
       qHashes: [],
-      next: ['neus setup', 'neus auth', 'neus doctor --live']
+      next: ['neus setup', 'neus auth', 'neus check']
     }
   };
 }
@@ -1383,7 +1383,7 @@ async function runLiveMcpDiagnostics(accessKey) {
       params: {
         protocolVersion: '2025-11-25',
         capabilities: {},
-        clientInfo: { name: 'neus-cli', version: '1.0.0' }
+        clientInfo: { name: 'neus-cli', version: '1.1.4' }
       },
       accessKey,
       signal: controller.signal
@@ -1424,6 +1424,9 @@ async function runLiveMcpDiagnostics(accessKey) {
       signal: controller.signal
     });
     const mode = context.ok ? context.payload?.mode?.current || context.payload?.mode || '' : '';
+    const profileCtx = context.ok ? context.payload?.profileContext : null;
+    const principal = profileCtx?.principal || null;
+    const proofsTotal = profileCtx?.profileSummary?.proofsSummary?.total;
     return {
       live: true,
       reachable: true,
@@ -1431,6 +1434,9 @@ async function runLiveMcpDiagnostics(accessKey) {
       toolsCount: toolNames.length,
       tools: toolNames,
       contextMode: mode,
+      sessionWallet: context.ok ? context.payload?.sessionWallet || principal?.primaryAccount || null : null,
+      profileHandle: principal?.handle || null,
+      proofsTotal: Number.isFinite(Number(proofsTotal)) ? Number(proofsTotal) : null,
       checks: [
         {
           name: 'initialize',
@@ -1815,7 +1821,7 @@ async function runSetup(options) {
   }
 
   printFlowSummary('setup', scope, initResults, {
-    nextStep: accessKey ? 'Open your MCP client and ask the assistant to use NEUS Trust.' : '',
+    nextStep: accessKey ? 'Run `neus examples`, then ask your assistant to use NEUS Verify.' : '',
     cliOptions: options
   });
 
@@ -1823,7 +1829,7 @@ async function runSetup(options) {
     const authResult = await runAuth(options);
     if (authResult && !authResult.hasErrors) {
       printFlowSummary('auth', authResult.scope, authResult.results, {
-        nextStep: 'Open your MCP client and ask the assistant to use NEUS Trust.',
+        nextStep: 'Run `neus examples`, then ask your assistant to use NEUS Verify.',
         cliOptions: options
       });
     }
@@ -1910,7 +1916,39 @@ function runExport(options) {
   printExportSummary(payload, options);
 }
 
+const ASSISTANT_EXAMPLE_PROMPTS = [
+  'Use NEUS Verify before taking sensitive actions.',
+  'Check whether I already have the required trust receipt.',
+  'Verify this agent is trusted before it runs tools.',
+  'Use NEUS Vault before storing or using secrets.',
+  'Show the receipt for this verification.'
+];
+
+function runExamples(options) {
+  const payload = {
+    command: 'examples',
+    intro: 'Try this in your assistant:',
+    prompts: ASSISTANT_EXAMPLE_PROMPTS
+  };
+
+  if (options.json) {
+    printJson(payload);
+    return;
+  }
+
+  emitCliBanner(options);
+  writeCliLine(paint('examples', 'green'));
+  writeCliLine('');
+  writeCliLine(`  ${paint(payload.intro, 'dim')}`);
+  writeCliLine('');
+  ASSISTANT_EXAMPLE_PROMPTS.forEach((prompt, index) => {
+    writeCliLine(`  ${paint(String(index + 1) + '.', 'cyan')} ${prompt}`);
+  });
+  writeCliLine('');
+}
+
 async function runDoctor(options) {
+  const displayCommand = options.displayCommand || 'doctor';
   const scope = resolveScope(options);
   const cwd = process.cwd();
   const clients = resolveClients(scope, options.clients);
@@ -1922,7 +1960,7 @@ async function runDoctor(options) {
   const configuredClients = inspected.filter(r => r.configured);
   const liveAccessKey = resolveLiveAccessKey(options, scope, cwd);
   const payload = {
-    command: 'doctor',
+    command: displayCommand,
     scope,
     clients: inspected,
     configuredCount: configuredClients.length,
@@ -1951,7 +1989,7 @@ async function runDoctor(options) {
 
   if (configuredClients.length === 0) {
     emitCliBanner(options);
-    writeCliLine(paint('doctor', 'green'));
+    writeCliLine(paint(displayCommand, 'green'));
     for (const result of inspected) {
       if (result.error) {
         logStep('warn', result.client, result.error);
@@ -1966,13 +2004,13 @@ async function runDoctor(options) {
     writeGuidanceLine(NEUS_MCP_URL);
     writeCliLine(paint('Profile connection', 'cyan'));
     writeGuidanceLine(`No selected MCP host is configured yet. Run \`${preferredSetupCommand(inspected)}\`.`);
-    writeGuidanceLine(`Then run \`${preferredAuthCommand(inspected)}\` and re-check with \`npx -y -p @neus/sdk neus doctor --live\`.`);
+    writeGuidanceLine(`Then run \`${preferredAuthCommand(inspected)}\` and re-check with \`npx -y -p @neus/sdk neus check\`.`);
     writeCliLine('');
     process.exitCode = 1;
     return;
   }
 
-  printFlowSummary('doctor', scope, inspected, { cliOptions: options });
+  printFlowSummary(displayCommand, scope, inspected, { cliOptions: options });
   const hasCodex = inspected.some(result => result.client === 'codex');
   writeCliLine(paint('Profile connection', 'cyan'));
   if (options.live && payload.mcp) {
@@ -1983,16 +2021,19 @@ async function runDoctor(options) {
           : 'No account credential found for the configured MCP clients. Run `neus auth`.'
       );
     } else {
-      logStep(
-        payload.mcp.authenticated ? 'ok' : 'warn',
-        'profile',
-        payload.mcp.authenticated
-          ? `live MCP context confirmed; ${payload.mcp.toolsCount || 0} tools discovered`
-          : 'live MCP context was not confirmed'
-      );
+      if (payload.mcp.authenticated) {
+        const handle = payload.mcp.profileHandle ? ` as ${payload.mcp.profileHandle}` : '';
+        const receipts =
+          payload.mcp.proofsTotal != null ? ` · ${payload.mcp.proofsTotal} trust receipts on file` : '';
+        logStep('ok', 'profile', `connected${handle}${receipts}`);
+        writeGuidanceLine('NEUS Verify is ready. Ask your assistant to verify trust before sensitive actions.');
+        writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for starter prompts.');
+      } else {
+        logStep('warn', 'profile', 'live connection was not confirmed — run `neus auth`');
+      }
     }
   } else if (liveAccessKey) {
-    writeGuidanceLine('Saved credential found. Run `neus doctor --live` to confirm Profile context.');
+    writeGuidanceLine('Saved credential found. Run `neus check` to confirm live connection.');
   } else {
     writeGuidanceLine(
       hasCodex
@@ -2096,12 +2137,12 @@ async function main() {
           printJson(result);
         } else if (result.authMethod !== 'browser') {
           printFlowSummary('auth', result.scope, result.results, {
-            nextStep: 'Open your MCP client and ask the assistant to use NEUS Trust.',
+            nextStep: 'Run `neus examples`, then ask your assistant to use NEUS Verify.',
             cliOptions: options
           });
         } else {
           printFlowSummary('auth', result.scope, result.results, {
-            nextStep: 'Open your MCP client and ask the assistant to use NEUS Trust.',
+            nextStep: 'Run `neus examples`, then ask your assistant to use NEUS Verify.',
             cliOptions: options
           });
         }
@@ -2122,8 +2163,16 @@ async function main() {
       }
       return;
     }
+    if (command === 'check') {
+      await runDoctor({ ...options, live: true, displayCommand: 'check' });
+      return;
+    }
     if (command === 'doctor') {
       await runDoctor(options);
+      return;
+    }
+    if (command === 'examples') {
+      runExamples(options);
       return;
     }
     if (command === 'import') {

@@ -1,7 +1,7 @@
 {
   "name": "@neus/mcp-server",
   "version": "1.1.4",
-  "description": "Discovery manifest for hosted NEUS MCP — identity, authority, and trust receipts for AI assistants (streamable HTTP). Runtime is not shipped.",
+  "description": "Hosted NEUS MCP registry manifest for agent identity, scoped authority, trust receipts, and Vault.",
   "type": "module",
   "main": "./index.mjs",
   "exports": {

@@ -1,8 +1,12 @@
 # Verifier JSON Schemas
 
-Integrator-facing request shapes for the public verifier catalog. The live catalog and user-facing docs live under **[Verification](../verification/verifiers)** in Mintlify.
+Integrator-facing request shapes for the public verifier catalog. User-facing guides live under **[Verification](../verification/verifiers)**.
 
-- **`schemas/`** — JSON Schema per verifier (`ownership-basic.json`, `agent-delegation.json`, …). Hosted OAuth verifiers include fields the hosted flow fills automatically; supply only the documented request fields from each **Verification** page.
-- **`../spec/VERIFIERS.json`** — Machine-readable catalog index (`inputSchemaPath` points here under `docs/verifiers/schemas/`).
+## Source of truth
 
-Do not maintain parallel schema trees elsewhere in this repo.
+| Artifact | Role |
+| -------- | ---- |
+| **`schemas/*.json`** | One JSON Schema per public verifier |
+| **`../../spec/VERIFIERS.json`** | Catalog index; each `inputSchemaPath` is `docs/verifiers/schemas/<id>.json` |
+
+Schemas and the spec are generated from **`protocol`** (`verifierRegistry.js` via `npm run verifier:sync`). Do not add parallel schema trees or hand-maintained duplicates in this repo.

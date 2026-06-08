@@ -11,19 +11,19 @@ import {
 
 const FALLBACK_PUBLIC_VERIFIER_CATALOG = {
   'ownership-basic': { supportsDirectApi: true },
+  'ownership-social': { supportsDirectApi: false },
   'ownership-pseudonym': { supportsDirectApi: true },
   'ownership-dns-txt': { supportsDirectApi: true },
-  'ownership-social': { supportsDirectApi: false },
   'ownership-org-oauth': { supportsDirectApi: false },
   'contract-ownership': { supportsDirectApi: true },
+  'proof-of-human': { supportsDirectApi: false },
   'nft-ownership': { supportsDirectApi: true },
   'token-holding': { supportsDirectApi: true },
-  'wallet-link': { supportsDirectApi: true },
   'wallet-risk': { supportsDirectApi: true },
-  'proof-of-human': { supportsDirectApi: false },
+  'wallet-link': { supportsDirectApi: true },
+  'ai-content-moderation': { supportsDirectApi: true },
   'agent-identity': { supportsDirectApi: true },
-  'agent-delegation': { supportsDirectApi: true },
-  'ai-content-moderation': { supportsDirectApi: true }
+  'agent-delegation': { supportsDirectApi: true }
 };
 
 const EVM_ADDRESS_RE = /^0x[a-fA-F0-9]{40}$/;

@@ -1,0 +1,43 @@
+---
+title: MCP journeys
+description: Day-one assistant workflows for verify, receipts, portable context, agents, and Vault.
+icon: route
+---
+
+NEUS MCP is built for outcomes. After `neus setup` and `neus check`, ask your assistant in plain language.
+
+## Verify before action
+
+The default autopilot path:
+
+1. Reuse existing trust receipts when possible
+2. Run missing checks through hosted verify only when needed
+3. Summarize the result as **NEUS Verify** for you (Passed / Action needed / Blocked)
+
+**Try:** “Use NEUS Verify before taking sensitive actions.”
+
+Signed in? Your assistant uses your profile wallet automatically — you do not pass wallet addresses.
+
+## Show Trust Receipts
+
+**Try:** “Show my trust receipts for identity checks.”
+
+Use this when you need the receipt URL, status, tags, or profile summary behind a prior check.
+
+## Reuse Portable Context
+
+**Try:** “Use my NEUS context from prior receipts before asking me again.”
+
+Assistants can read tagged receipts through `neus_proofs_get` for prior instructions, rules, memory, or session references. This keeps context portable without exposing unrelated runtime surfaces or private implementation details.
+
+## Trusted Agent
+
+**Try:** “Verify this agent is trusted before it runs tools.”
+
+## Vault
+
+**Try:** “Use NEUS Vault before storing or using secrets.”
+
+---
+
+Tool reference: [MCP tools](./tools) · Install: [Install NEUS](../install)

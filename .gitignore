@@ -12,6 +12,14 @@ GEMINI.md
 .claude/
 !.claude-plugin/
 !.claude-plugin/**
+.claude/settings.json
+.claude/settings.local.json
+
+# Legacy install tree (SSOT: docs/install.mdx + docs/mcp/setup.mdx)
+integrations/
+
+# Repo-root maintainer tooling (ops scripts live in private _workspace, not public network)
+/scripts/
 
 # Local-only paths
 backup-docs/

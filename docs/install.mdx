@@ -1,88 +1,64 @@
 ---
-title: Install NEUS Trust
-description: Choose your agent environment and connect hosted NEUS MCP.
+title: Install NEUS
+description: Connect assistants to NEUS MCP in one command.
 icon: download
 ---
 
-NEUS Trust connects to any MCP-capable agent environment and adds identity, scoped authority, policy checks, and receipts before trusted actions.
+Trust infrastructure for agents that act.
 
-**Hosted endpoint:** `https://mcp.neus.network/mcp`
-
----
-
-## Trust at a glance
-
-| | |
-|---|---|
-| **Identity** | Verified |
-| **Authority** | Scoped |
-| **Policy** | Checked |
-| **Receipt** | Issued |
-| **Endpoint** | `https://mcp.neus.network/mcp` |
+Verifiable identity, scoped authority, and receipts for every trusted action.
 
 ---
 
-## Choose your environment
-
-<CardGroup cols={3}>
-  <Card title="Cursor" icon="mouse-pointer" href="./mcp/ide-plugin">
-    Add NEUS Trust to Cursor
-  </Card>
-  <Card title="Claude Code" icon="terminal" href="./mcp/ide-plugin">
-    Install NEUS Trust for Claude Code
-  </Card>
-  <Card title="VS Code" icon="code" href="./mcp/ide-plugin">
-    Install NEUS Trust MCP Server
-  </Card>
-  <Card title="Codex" icon="bot" href="./mcp/ide-plugin">
-    Connect NEUS Trust MCP
-  </Card>
-  <Card title="Cline" icon="code" href="./mcp/ide-plugin">
-    Connect NEUS Trust MCP
-  </Card>
-  <Card title="ChatGPT / OpenAI" icon="message-square" href="./mcp/ide-plugin">
-    Connect NEUS Trust App
-  </Card>
-  <Card title="Server / CI" icon="server" href="./mcp/setup">
-    Use NEUS access key
-  </Card>
-</CardGroup>
-
----
-
-## One-command setup
-
-Detects your environment and wires hosted NEUS MCP automatically.
+## Install
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
+npx -y -p @neus/sdk neus check
 ```
 
-Open your MCP client and ask the assistant to use NEUS Trust.
+Ask your assistant:
+
+```txt
+Use NEUS Verify before taking sensitive actions.
+```
+
+This gives your assistant one public trust loop: check existing trust receipts, guide any missing verification step, then summarize the outcome as **NEUS Verify**.
+
+For example prompts, see [MCP journeys](./mcp/journeys).
 
 ---
 
-## Platform details
+## Supported tools
 
-For per-editor config paths, JSON snippets, and manual setup steps, see [MCP setup](./mcp/setup).
-
-| Surface | What NEUS ships |
-|---|---|
-| Cursor | MCP install path to hosted NEUS Trust |
-| VS Code | MCP server config + gallery presence |
-| Claude Code | Claude plugin adapter for the trust workflow skill |
-| Codex | MCP server config + Codex OAuth flow |
-| OpenAI Apps SDK | Remote MCP app wrapper |
-| MCP Registry | Public remote MCP server listing |
-| CI / servers | `neus setup --access-key <npk_...>` |
+- Cursor
+- Claude Code
+- Codex
+- VS Code
+- MCP-compatible clients
 
 ---
 
-## What to do next
+## Advanced
 
-1. Open your MCP client and ask the assistant to use NEUS Trust.
-2. Run `neus doctor --live` to confirm live setup.
-3. Sign in with `neus auth` if profile connection is missing.
+| Topic | Link |
+| ----- | ---- |
+| NEUS MCP setup | [MCP setup](./mcp/setup) |
+| Assistant journeys | [MCP journeys](./mcp/journeys) |
+| NEUS SDK | [JavaScript SDK](./sdks/javascript) |
+| Access keys (servers / CI) | [MCP setup](./mcp/setup#access-keys) |
+| Trust receipt APIs | [API overview](./api/overview) |
 
-Read the full [MCP overview](./mcp/overview) for the tool list and session order.
+Codex uses its own OAuth step after setup:
+
+```bash
+npx -y -p @neus/sdk neus setup --client codex
+npx -y -p @neus/sdk neus auth --client codex
+```
+
+Claude Code plugin (optional):
+
+```text
+/plugin marketplace add https://github.com/neus/network
+/plugin install neus-trust@neus
+```

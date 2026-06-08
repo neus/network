@@ -1,10 +1,10 @@
 ﻿---
 title: Setup
-description: Install NEUS Trust with neus setup, OAuth sign-in, access keys, and per-editor config paths.
+description: Install NEUS with neus setup, OAuth sign-in, access keys, and per-editor config paths.
 icon: code
 ---
 
-Install NEUS Trust once with one OAuth sign-in, then reuse receipts across sessions. Agent frameworks handle execution; NEUS handles trust before action.
+NEUS MCP connects AI tools to identity, scoped authority, trust receipts, and Vault. Install once, then reuse receipts across sessions.
 
 Hosted endpoint: **`https://mcp.neus.network/mcp`**
 
@@ -14,31 +14,18 @@ Install everything detected on the machine in one step:
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
+npx -y -p @neus/sdk neus check
 ```
 
 `neus setup` configures hosted MCP for detected editors and signs you in automatically. It uses `NEUS_ACCESS_KEY` from the environment when set; otherwise it starts OAuth for the selected host. Cursor, VS Code, and Claude Code use browser sign-in on [neus.network](https://neus.network). Codex uses `codex mcp login neus`. Pass `--access-key <npk_...>` to override.
 
 Use `--json` for scripts.
 
-Check the install anytime:
-
 ```bash
-npx -y -p @neus/sdk neus doctor
+npx -y -p @neus/sdk neus check
 ```
 
-Create keys under **Profile -> Account** on [neus.network](https://neus.network/profile?tab=account) for servers and CI only. Treat access keys like passwords.
-
-## npm packages
-
-| Package | Use |
-| ------- | --- |
-| **`@neus/sdk`** | SDK, widgets, and `neus` CLI (`setup`, `auth`, import/export) |
-| **`@neus/mcp-server`** | Registry/discovery metadata (`server.json`) for MCP installers — no runtime |
-
-```bash
-npm install @neus/mcp-server
-```
+Create keys under **Account → Access keys** on [neus.network](https://neus.network/profile?tab=account) for servers and CI. Treat access keys like passwords.
 
 ## Disconnect
 
@@ -48,7 +35,7 @@ npx -y -p @neus/sdk neus disconnect --access-key <token>
 
 ## Migrate your workspace
 
-Import existing IDE configuration (skills, rules, and MCP servers) into a portable NEUS manifest.
+Import existing IDE configuration into a portable NEUS manifest, then export it for another workspace.
 
 ```bash
 npx -y -p @neus/sdk neus import --dry-run
@@ -68,7 +55,7 @@ npx -y -p @neus/sdk neus import --from claude-desktop
 
 ## Client setup
 
-Per-editor install paths (Cursor, VS Code, Claude Code, and more): **[Install NEUS Trust](../install)**.
+Per-editor install paths (Cursor, VS Code, Claude Code, and more): **[Install NEUS](../install)**.
 
 `neus setup` connects **Cursor**, **Codex**, **VS Code**, **Claude Code**, and **Cline** in one command.
 
@@ -93,10 +80,10 @@ Codex owns its local OAuth session. Use `npx -y -p @neus/sdk neus auth --client 
 
 ## First session
 
-Open your MCP client and use NEUS Trust before trusted actions. Run `neus doctor --live` to confirm live Profile context.
+Ask your assistant: **"Use NEUS Verify before taking sensitive actions."** Run `neus check` to confirm live connection. Assistants read live receipts with **`neus_proofs_get`** when details are needed.
 
 <CardGroup cols={3}>
-  <Card title="Install NEUS Trust" icon="plug" href="../install">
+  <Card title="Install NEUS" icon="plug" href="../install">
     Connect NEUS in Cursor, VS Code, Claude Code, and more.
   </Card>
   <Card title="MCP OAuth" icon="shield-check" href="./oauth">

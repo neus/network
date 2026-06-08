@@ -1,6 +1,6 @@
 <p align="center">
   <strong>Trust infrastructure for apps, agents, and ecosystems.</strong><br />
-  Trust that travels. Add reusable trust receipts before access, payment, or agent action.
+  Trust that travels. Verify trust before access, payment, or action.
 </p>
 
 <p align="center">
@@ -19,9 +19,11 @@
 
 ## What NEUS is
 
-NEUS turns identity, ownership, authority, risk, content, and actions into reusable trust receipts. Your app or agent can check a receipt before allowing access, payment, tool use, delegation, or audit-sensitive work.
+NEUS makes trust portable across the internet so people, apps, and AI agents can prove what is real before access, payout, or execution.
 
-Use the hosted URL when you want NEUS to own the flow. Use the SDK, widgets, API, or MCP when you want the receipt inside your product, backend, or agent workflow.
+**NEUS Portal** manages accounts, trust receipts, agents, and Vault. **NEUS Verify** runs trust checks and missing-requirement guidance. **NEUS MCP** connects assistants. **NEUS CLI / SDK** installs and embeds trust in your product.
+
+Use Hosted Verify when NEUS should own the browser step. Use the SDK, widgets, API, or MCP when trust should live inside your app, backend, or agent workflow.
 
 ## Why NEUS
 
@@ -33,7 +35,7 @@ Trust keeps getting rebuilt inside each app, marketplace, workflow, and agent st
 | Assistant setup              | One CLI setup for Claude Code, Codex, Cursor, and VS Code               |
 | Gate access or rewards       | Hosted flows, widgets, and server checks for trusted access             |
 | Trust agents before they act | Agent identity, scoped delegation, and receipts for trusted actions     |
-| Audit what happened          | Proof pages, receipt reads, tags, and durable references                |
+| Audit what happened          | Receipt pages, receipt reads, tags, and durable references              |
 | Ship without owning ceremony | Hosted Verify, SDK helpers, API checks, and MCP on the same trust model |
 
 ## Start building
@@ -44,14 +46,14 @@ Detects where you are working and wires hosted NEUS MCP for Claude Code, Codex, 
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
+npx -y -p @neus/sdk neus check
 ```
 
-Open your MCP client and ask the assistant to use NEUS Trust.
+Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
 | Path | Doc |
 | ---- | --- |
-| AI assistants | [Install NEUS Trust](https://docs.neus.network/install) |
+| AI assistants | [Install NEUS](https://docs.neus.network/install) |
 | MCP setup | [MCP setup](https://docs.neus.network/mcp/setup) |
 | App verification | [Quickstart](https://docs.neus.network/quickstart) |
 
@@ -65,7 +67,7 @@ Use Hosted Verify, `VerifyGate`, or the SDK when your app needs a reusable trust
 
 ### Add trust to an agent
 
-- [Agents](https://docs.neus.network/agents/overview) - identity, delegation, and receipts for autonomous agents.
+- [Agents](https://docs.neus.network/agents/overview) - identity, scoped authority, and receipts for agents that act.
 - Register identity with [`agent-identity`](https://docs.neus.network/agents/agent-identity).
 - Add scoped authority with [`agent-delegation`](https://docs.neus.network/agents/agent-delegation).
 
@@ -78,14 +80,14 @@ Hosted MCP URL: **`https://mcp.neus.network/mcp`**
 | Surface        | Use it for                                                          |
 | -------------- | ------------------------------------------------------------------- |
 | Hosted Verify  | Browser verification at `neus.network/verify`                       |
-| Trust receipts | Reusable qHashes, proof pages, profile surfaces, and eligibility    |
+| Trust receipts | Reusable verification records, receipt pages, and eligibility checks |
 | SDK            | Verification, polling, hosted URLs, and server-side gate checks     |
 | Widgets        | `VerifyGate` and `ProofBadge` for React products                    |
 | API            | Server reads, checks, verifier catalog, and verification endpoints  |
 | Agents         | Agent identity, delegation, stable URLs, and action receipts        |
 | MCP            | Live trust context for assistants, tools, and agent workflows       |
 
-## Start here
+## Choose your path
 
 | Path                  | Best next step                                               |
 | --------------------- | ------------------------------------------------------------ |
@@ -110,7 +112,7 @@ The live verifier catalog is documented at [docs.neus.network/verification/verif
 
 ## This repository
 
-Docs, SDK (`@neus/sdk`), widgets, examples, specs, and the NEUS Trust editor plugin.
+Docs, SDK (`@neus/sdk`), widgets, examples, specs, and the NEUS Claude Code plugin.
 
 ## Where to go next
 
@@ -119,7 +121,7 @@ Docs, SDK (`@neus/sdk`), widgets, examples, specs, and the NEUS Trust editor plu
 
 ## Brand assets (docs + SDK)
 
-Docs OG/favicon: `npm run generate:docs-og` (this repo). SDK/widgets use `sdk/brand-mark.js` on `neus.network`. Plugin icon: `plugins/neus-trust/assets/icon.png`.
+Docs OG images and favicon live under `docs/images/`. SDK/widgets use `sdk/brand-mark.js` on `neus.network`. Plugin icon: `plugins/neus-trust/assets/icon.png`.
 
 ## Proof of reality
 
@@ -129,7 +131,7 @@ Docs OG/favicon: `npm run generate:docs-og` (this repo). SDK/widgets use `sdk/br
 | Hosted Verify    | [neus.network/verify](https://neus.network/verify)                      |
 | Docs             | [docs.neus.network](https://docs.neus.network)                          |
 | SDK              | [npm: @neus/sdk](https://www.npmjs.com/package/@neus/sdk)               |
-| MCP discovery    | [npm: @neus/mcp-server](https://www.npmjs.com/package/@neus/mcp-server) |
+| MCP              | [npm: @neus/sdk](https://www.npmjs.com/package/@neus/sdk) (`neus setup`) |
 | Examples         | [`examples/`](./examples)                                               |
 | Verifier catalog | [Verifier docs](https://docs.neus.network/verification/verifiers)       |
 
@@ -143,8 +145,6 @@ Docs OG/favicon: `npm run generate:docs-og` (this repo). SDK/widgets use `sdk/br
 | [Discussions](https://github.com/neus/network/discussions)   | Questions and implementation patterns       |
 | [Issues](https://github.com/neus/network/issues)             | Bugs and requests                           |
 | [dev@neus.network](mailto:dev@neus.network)                  | Security                                    |
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution guidance.
 
 ## License
 

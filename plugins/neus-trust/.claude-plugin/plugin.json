@@ -1,7 +1,7 @@
 {
   "name": "neus-trust",
-  "displayName": "NEUS Trust",
-  "description": "Verifiable identity, scoped authority, policy checks, and receipts before agents run trusted actions. One setup for Cursor, Claude Code, Codex, and VS Code.",
+  "displayName": "NEUS",
+  "description": "Trust infrastructure for agents that act. Verify identity, scoped authority, trust receipts, and Vault-backed secrets before assistants act. One setup for Cursor, Claude Code, Codex, and VS Code.",
   "version": "1.1.4",
   "author": {
     "name": "NEUS",
@@ -14,8 +14,9 @@
   "skills": ["skills/neus-trust-workflow"],
   "keywords": [
     "trust-receipts",
+    "proof-receipts",
     "agent-identity",
-    "agent-delegation",
+    "trusted-agents",
     "identity-verification",
     "ai-assistant",
     "ai-builders",
@@ -24,16 +25,10 @@
     "vscode",
     "codex",
     "claude-code",
-    "agent-runtime",
-    "headless-runtime",
-    "runtime-trust",
-    "policy-gates",
-    "windsurf",
-    "gemini",
-    "chatgpt",
+    "neus-verify",
+    "neus-vault",
     "oauth",
     "mcp",
-    "secrets-management",
-    "audit-trail"
+    "secrets-management"
   ]
 }

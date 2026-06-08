@@ -8,8 +8,11 @@ on:
       - "plugins/**"
       - ".claude-plugin/**"
       - "examples/**"
-      - "scripts/verify-release-versions.mjs"
-      - "scripts/verify-publish-hygiene.mjs"
+      - "spec/VERIFIERS.json"
+      - "docs/verifiers/schemas/**"
+      - "docs/install.mdx"
+      - "mcp/README.md"
+      - "README.md"
       - ".github/workflows/ci.yml"
       - ".github/workflows/release.yml"
   push:
@@ -20,8 +23,11 @@ on:
       - "plugins/**"
       - ".claude-plugin/**"
       - "examples/**"
-      - "scripts/verify-release-versions.mjs"
-      - "scripts/verify-publish-hygiene.mjs"
+      - "spec/VERIFIERS.json"
+      - "docs/verifiers/schemas/**"
+      - "docs/install.mdx"
+      - "mcp/README.md"
+      - "README.md"
       - ".github/workflows/ci.yml"
       - ".github/workflows/release.yml"
   workflow_dispatch:
@@ -59,12 +65,6 @@ jobs:
           echo "PATH=$HOME/.nvm/versions/node/v$NODE_VERSION/bin:$PATH" >> $GITHUB_PATH
           node --version
           npm --version
-
-      - name: Verify release version alignment
-        run: node scripts/verify-release-versions.mjs
-
-      - name: Verify npm publish hygiene
-        run: node scripts/verify-publish-hygiene.mjs
 
       - name: Install dependencies
         run: if [ -f package-lock.json ]; then npm ci; else npm install; fi

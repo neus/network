@@ -30,6 +30,9 @@ CLAUDE.md
 GEMINI.md
 .neus/
 backup-docs/
+integrations/
+.claude/settings.json
+.claude/settings.local.json
 
 .DS_Store
 Thumbs.db

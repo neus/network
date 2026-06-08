@@ -54,7 +54,7 @@ Authorization: Bearer <token>
 
 OAuth tokens and access keys both use the `Bearer` scheme.
 
-Authenticated MCP sessions should reuse existing trust receipts before any browser step. See [MCP Overview](./overview) for the recommended tool order.
+Authenticated MCP sessions should reuse existing trust receipts before any browser step. See [MCP Overview](./overview) for the reuse-first flow.
 
 ## Disconnect
 
@@ -77,7 +77,7 @@ Clients that support MCP OAuth follow that metadata to start browser sign-in. Yo
 
 ## Interactive verification flows
 
-[Hosted Verify](../cookbook/auth-hosted-verify): passkey, wallet, OAuth, and social **proof** steps run **on NEUS**. If a tool returns **`hostedVerifyUrl`**, open it once, then continue in MCP.
+[Hosted Verify](../cookbook/auth-hosted-verify): passkey, wallet, OAuth, and social verification steps run **on NEUS**. If a tool returns **`hostedVerifyUrl`**, open it once, then continue in MCP.
 
 ## Security
 

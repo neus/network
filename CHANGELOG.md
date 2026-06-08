@@ -6,6 +6,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- **Install SSOT** — `docs/install.mdx`, `docs/mcp/setup.mdx`, and `docs/mcp/journeys.mdx` replace the legacy `integrations/` tree.
+- **Public copy** — first-touch README, install, MCP registry, plugin, and SDK surfaces use the GTM hierarchy (trust infrastructure → trust receipts → NEUS Verify).
+
+### Removed
+
+- **`integrations/`** — redundant host install files; use `npx -y -p @neus/sdk neus setup` and [Install NEUS](https://docs.neus.network/install).
+- **`.github/PULL_REQUEST_TEMPLATE.md`** — use GitHub issue templates and a clear PR description instead.
+- **Repo-root `scripts/`** — maintainer guardrails and OG generators are not part of the public integrator surface.
+
 ## [1.1.3] - 2026-06-05
 
 ### Highlights

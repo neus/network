@@ -40,8 +40,20 @@ jobs:
       - name: Verify version matches tag
         run: |
           TAG="${RELEASE_VERSION#v}"
-          node scripts/verify-release-versions.mjs --tag "$TAG"
-          node -e "const v=require('./sdk/package.json').version;const t=process.env.RELEASE_VERSION.replace(/^v/,'');if(v!==t){console.error(\`package.json ${v} != tag ${t}\`);process.exit(1)}"
+          node -e "
+          const fs=require('fs');
+          const t=process.env.RELEASE_VERSION.replace(/^v/,'');
+          const read=(p)=>JSON.parse(fs.readFileSync(p,'utf8'));
+          const surfaces={
+            'sdk/package.json': read('sdk/package.json').version,
+            'mcp/npm-dist/package.json': read('mcp/npm-dist/package.json').version,
+            'mcp/npm-dist/server.json': read('mcp/npm-dist/server.json').version,
+            'plugins/neus-trust/.claude-plugin/plugin.json': read('plugins/neus-trust/.claude-plugin/plugin.json').version,
+            '.claude-plugin/marketplace.json': read('.claude-plugin/marketplace.json').version,
+          };
+          const bad=Object.entries(surfaces).filter(([,v])=>v!==t);
+          if(bad.length){console.error('Version mismatch:',bad);process.exit(1)}
+          "
 
       - name: Install dependencies
         run: npm ci
@@ -66,9 +78,6 @@ jobs:
       - name: Package check
         run: npm pack --dry-run
         working-directory: sdk
-
-      - name: Verify npm publish hygiene
-        run: node scripts/verify-publish-hygiene.mjs
 
       - name: Publish @neus/sdk
         run: |

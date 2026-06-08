@@ -1,10 +1,12 @@
 ---
-title: Install NEUS Trust
-description: Choose your agent environment and connect hosted NEUS MCP.
+title: Install NEUS
+description: Connect your agent environment to hosted NEUS MCP.
 icon: plug
 ---
 
-NEUS Trust connects to any MCP-capable agent environment and adds identity, scoped authority, policy checks, and receipts before trusted actions.
+Trust infrastructure for agents that act.
+
+Verifiable identity, scoped authority, and receipts for every trusted action.
 
 **Hosted endpoint:** `https://mcp.neus.network/mcp`
 
@@ -13,7 +15,7 @@ NEUS Trust connects to any MCP-capable agent environment and adds identity, scop
 | **Identity** | Verified |
 | **Authority** | Scoped |
 | **Policy** | Checked |
-| **Receipt** | Issued |
+| **Receipt** | Recorded |
 | **Endpoint** | `https://mcp.neus.network/mcp` |
 
 Signed in on [neus.network](https://neus.network/profile?tab=account)? Use **Open in** for Cursor, Claude Code, or Codex.
@@ -23,11 +25,12 @@ Signed in on [neus.network](https://neus.network/profile?tab=account)? Use **Ope
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
-npx -y -p @neus/sdk neus doctor --live
+npx -y -p @neus/sdk neus check
 ```
 
-Open your MCP client and ask the assistant to use NEUS Trust.
+One OAuth sign-in wires hosted NEUS MCP for Cursor, Claude Code, and VS Code.
+
+Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
 ```bash
 npx -y -p @neus/sdk neus setup --client cursor
@@ -101,7 +104,7 @@ npx -y -p @neus/sdk neus setup --client claude
 npx -y -p @neus/sdk neus auth
 ```
 
-**NEUS Trust plugin** (receipt reuse, delegation, session workflow):
+**NEUS plugin** (trust receipts, agent authority, session workflow):
 
 <Accordion title="Claude Code manual install">
 ```text
@@ -148,5 +151,5 @@ npx -y -p @neus/sdk neus setup --access-key <npk_...>
 Keys: [Profile -> Account](https://neus.network/profile?tab=account). Never paste keys into chat.
 
 <Warning>
-  Use **`https://mcp.neus.network/mcp`** for trust receipts and agent tools. The docs site also offers a **search-only** endpoint at `https://docs.neus.network/mcp` - it cannot verify identity or issue proofs.
+  Use **`https://mcp.neus.network/mcp`** for trust receipts and agent tools. The docs site also offers a **search-only** endpoint at `https://docs.neus.network/mcp` - it cannot verify identity or create receipts.
 </Warning>

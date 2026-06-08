@@ -1,20 +1,19 @@
 ---
-name: NEUS Trust Harness
-description: Trust harness for AI agents. Use when agents need proof-backed context, identity, authority, policy checks, NEUS MCP tools, or proof receipts before running tools or taking trusted actions.
+name: NEUS Trust Workflow
+description: Trust infrastructure for agents that act. Verify identity and scoped authority, reuse trust receipts, and protect secrets across IDEs and runtimes.
 ---
 
-Proof-backed context, identity, authority, policy checks, and receipts before your assistant runs tools.
-
-**Trust harness for AI agents.** NEUS gives assistants verifiable identity, scoped authority, and receipts for every trusted action. Your framework handles reasoning, tools, and execution. NEUS proves whether the agent should be trusted to act and leaves receipts other apps, gates, and audits can check later.
+NEUS gives agents verifiable identity, scoped authority, and receipts for every trusted action. Verify trust before your assistant runs tools.
 
 ## Setup
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
+npx -y -p @neus/sdk neus check
+npx -y -p @neus/sdk neus examples
 ```
 
-`neus setup` configures hosted MCP for Cursor, Codex, VS Code, and Claude Code. Cursor, VS Code, and Claude Code use browser OAuth. Codex uses its own MCP login after setup.
+`neus setup` configures hosted NEUS MCP for Cursor, Codex, VS Code, and Claude Code. Cursor, VS Code, and Claude Code use browser OAuth. Codex uses its own MCP login after setup.
 
 Codex-only:
 
@@ -29,25 +28,68 @@ Servers and CI:
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
 ```
 
-Create access keys under **Account -> Access keys** on [neus.network](https://neus.network/profile?tab=account). Never paste keys into chat or committed files.
+Create access keys under **Account → Access keys** on [neus.network](https://neus.network/profile?tab=account). Never paste keys into chat or committed files.
 
 Hosted MCP: **`https://mcp.neus.network/mcp`**
 
-## Every Session
+## Autopilot (default)
 
-1. Run **`neus_context`** once for mode, profile context, verifier summary, and next steps.
-2. Use **`neus_me`** only to refresh profile context or look up a wallet/DID.
-3. For agent work, use **`neus_agent_link`** before assuming identity or delegation is ready.
-4. Prefer **`neus_proofs_check`** and existing trust receipts before starting new verification.
-5. Use **`neus_proofs_get`** when you need exact receipt records or qHash values from NEUS.
-6. Use **`neus_secret_*`** only when signed in and encrypted portable secrets are required.
-7. Use **`neus_verify_or_guide`** only when setup, consent, payment, or account prerequisites are missing.
+1. Run **`neus_context`** once. Use signed-in profile context when present — omit wallet fields on check/verify tools.
+2. **Trust before action:** **`neus_proofs_check`** then **`neus_verify_or_guide`**.
+3. **Trusted Agent:** **`neus_agent_link`** then **`neus_verify_or_guide`** if needed.
+4. **Receipts:** **`neus_proofs_get`** when exact receipt fields are needed.
+5. **Vault:** **`neus_secret_create`** / **`neus_secret_list`** / **`neus_secret_revoke`** when signed in.
+6. **`neus_me`** only to refresh profile context or look up a wallet/DID.
+7. Summarize outcomes as **Trust Result** for the user — never dump raw tool JSON.
+
+## Trust Result format (assistant output)
+
+Summarize NEUS results in plain language. Do not dump raw tool JSON, MCP session state, or implementation field names.
+
+**Passed:**
+
+```txt
+NEUS Verify
+Status: Passed
+Requirement: Identity and permission check
+Receipt: Existing trust receipt accepted
+Next: Continue
+```
+
+**Action needed:**
+
+```txt
+NEUS Verify
+Status: Action needed
+Missing: Sign-in
+Next: Connect NEUS, then retry
+```
+
+**Blocked:**
+
+```txt
+NEUS Verify
+Status: Blocked
+Reason: Required trust condition was not satisfied
+Next: Do not continue until verification is complete
+```
 
 ## Receipt Links
 
-Use real qHashes only.
+Use real receipt identifiers only — take them from tool responses, never invent them.
 
 - App: `https://neus.network/proof/<qHash>`
-- API: `https://api.neus.network/api/v1/proofs/<qHash>`
 
-Never invent qHashes, check types, or receipt fields.
+Never invent qHashes, verifier IDs, or receipt fields.
+
+## Secrets
+
+- Store values only through **`neus_secret_create`**. Never paste raw tokens into chat.
+- Confirm with **alias + qHash** after create.
+- **Revoke** and recreate if a value may have leaked.
+
+## Integrator notes
+
+- **Protocol** is the source of truth for verifiers, gates, receipts, and MCP tool behavior.
+- **Product app** (`neus.network`) consumes protocol state — do not duplicate verifier schema in client apps.
+- Public docs and SDK: [docs.neus.network](https://docs.neus.network)

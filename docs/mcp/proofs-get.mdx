@@ -1,15 +1,28 @@
 ---
-title: Proof Context (`neus_proofs_get`)
-description: Proofs and profile summary for a wallet or DID.
+title: Read Trust Receipts (`neus_proofs_get`)
+description: Receipt records, profile summary, tags, and portable context for a wallet or DID.
 icon: receipt
 ---
 
-Use when you have an **`identifier`** and need proof records, receipt fields, tags, profile summary, or delegated proof context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility.
+Use when you have an **`identifier`** and need receipt records, receipt fields, tags, profile summary, or delegated context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility.
+
+In MCP, **Proof Receipt** is the tool-facing trust receipt record. In user-facing replies, summarize the result in plain language and link only real receipt URLs returned by NEUS.
 
 | Auth | Visibility |
 |------|------------|
 | None | Public-scope view |
-| Bearer | Can include **private** proofs for that account ([Auth](./auth)) |
+| Bearer | Can include **private** receipts for that account ([Auth](./auth)) |
+
+## Common Reads
+
+| Need | Use |
+|------|-----|
+| Show prior checks | Read recent receipts for the account |
+| Reuse assistant context | Filter by tags such as `memory`, `rules`, or `instruction` |
+| Confirm an agent handoff | Include `agentWallet` for delegated reads |
+| Continue a session | Filter by the tags your app saved on earlier receipts |
+
+Keep tag values short and product-facing in your own app. Avoid exposing private workflow names in assistant replies.
 
 ## Input
 
@@ -18,7 +31,7 @@ Use when you have an **`identifier`** and need proof records, receipt fields, ta
   "identifier": "0x...",
   "limit": 25,
   "offset": 0,
-  "tags": "memory,skill,job",
+  "tags": "memory,rules,instruction",
   "agentWallet": "0x..."
 }
 ```
@@ -26,14 +39,27 @@ Use when you have an **`identifier`** and need proof records, receipt fields, ta
 | Field | Notes |
 |-------|-------|
 | `identifier` | EVM, Solana base58, **`did:pkh:...`** |
-| `tags` | Comma-separated filter on **`proof.meta.tags`** |
+| `tags` | Comma-separated receipt tag filter |
 | `agentWallet` | Delegation (**`x-agent-wallet`**) |
 
 When `identifier` is a DID, NEUS resolves the DID to its native account. Non-EVM signing and account context still use CAIP-2 `chain`; see [CAIP-380 Portable Proof](../learn/standards/caip-380).
 
 ## Response
 
-Proof records, receipt fields, **`profileSummary`**, and pagination. Follow the live tool response. Tags and proof bodies come from this call.
+Receipt records, receipt fields, **`profileSummary`**, and pagination. Follow the live tool response. Tags and receipt bodies come from this call.
+
+## Assistant Output
+
+Do:
+
+```txt
+NEUS Verify
+Status: Passed
+Receipt: Existing trust receipt accepted
+Next: Continue
+```
+
+Avoid raw JSON, private implementation tags, or guessed receipt URLs.
 
 ## Next
 

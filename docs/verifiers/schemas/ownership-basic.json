@@ -18,7 +18,7 @@
       ]
     }
   ],
-  "description": "Ownership proofs require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep proof receipts linkable and explain origin without storing unnecessary raw content.",
+  "description": "Ownership checks require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep trust receipts linkable and explain origin without storing unnecessary raw content.",
   "properties": {
     "content": {
       "description": "Exact text/content being claimed (max 50KB inline). Use when you want NEUS to derive the ownership anchor from the submitted content.",
@@ -88,7 +88,7 @@
       "type": "object"
     },
     "reference": {
-      "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proof receipts, or external records.",
+      "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior trust receipts, or external records.",
       "properties": {
         "description": {
           "description": "Short explanation of what the reference points to.",

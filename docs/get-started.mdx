@@ -1,10 +1,10 @@
 ---
 title: Get started
-description: Create a gate, agent identity, or assistant MCP for hosted NEUS trust.
+description: Add reusable trust receipts to an app, agent, or assistant workflow.
 icon: book
 ---
 
-Add portable trust to your app, agent, or workflow with Hosted Verify, the NEUS API, or the SDK.
+Add portable trust to your app, agent, or workflow with Hosted Verify, the NEUS API, the SDK, or MCP.
 
 Select the integration that matches your product.
 
@@ -12,7 +12,7 @@ Select the integration that matches your product.
 | -------------------- | ----------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | **App verification** | Your product needs reusable trust receipts before access, rewards, or payment | [Quickstart](./quickstart)                                  |
 | **Agent trust**      | An agent needs identity, scoped authority, and receipts for trusted actions   | [Agents](./agents/overview)                                 |
-| **Assistant setup**  | Cursor, Claude Code, or Codex needs live identity and authority for agents    | [Install NEUS Trust](./install) - [MCP setup](./mcp/setup) |
+| **Assistant setup**  | Cursor, Claude Code, or Codex needs live identity and authority for agents    | [Install NEUS](./install) - [MCP journeys](./mcp/journeys) |
 
 ## App verification
 
@@ -27,10 +27,10 @@ Users complete checks on NEUS. They do not need NEUS accounts or API keys. The p
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
+npx -y -p @neus/sdk neus check
 ```
 
-Setup covers Cursor, Codex, VS Code, and Claude Code. Then **`neus_context`** -> **`neus_agent_link`** -> **`neus_agent_create`** when proofs are missing.
+Setup covers Cursor, Codex, VS Code, and Claude Code. Ask your assistant to use NEUS Verify before sensitive actions.
 
 Details: [MCP setup](./mcp/setup) - [Agent identity](./agents/agent-identity) - [Agent delegation](./agents/agent-delegation)
 

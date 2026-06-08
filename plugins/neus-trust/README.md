@@ -1,21 +1,19 @@
-# NEUS Trust
+# NEUS
 
-**Trust infrastructure for agents that act.** *Trust that travels.*
+Trust infrastructure for agents that act.
 
 Verifiable identity, scoped authority, and receipts for every trusted action.
 
-Agent frameworks handle tools and execution. NEUS handles trust before action — who the agent is, who authorized it, what it may do, and what left a receipt.
+One setup for Cursor, Claude Code, Codex, and VS Code.
 
-One setup for Cursor, Claude Code, Codex, and VS Code. Same identity, delegation, and receipts everywhere.
-
-Hosted MCP: **`https://mcp.neus.network/mcp`**
-
-**[Install guide →](https://docs.neus.network/install)**
+**[Install →](https://docs.neus.network/install)**
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
+npx -y -p @neus/sdk neus check
 ```
+
+Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
 Codex:
 

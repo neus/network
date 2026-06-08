@@ -28,7 +28,7 @@ curl "https://neus.network/.well-known/a2a/agent-card.json"
 The live response includes:
 - **Skills** — platform-registered skill IDs (for example `verification`, `mcp-tools`) with A2A descriptions
 - **Interfaces** — MCP (`2025-11-25`), REST (`v1`), x402 payments
-- **Security** — OAuth-first MCP setup, NEUS access keys for servers/CI, and proof receipt references (`qHash`) for trust-gated endpoints
+- **Security** — OAuth-first MCP setup, NEUS access keys for servers/CI, and receipt references (`qHash`) for trust-gated endpoints
 - **Networks** — Base Sepolia (`eip155:84532`), Base Mainnet (`eip155:8453`), Solana Mainnet, Solana Devnet
 
 Fetch the card and read the returned **`skills`** array.

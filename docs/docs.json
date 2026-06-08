@@ -47,7 +47,7 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "Trust infrastructure enabling reusable trust receipts for apps, agents, and ecosystems before access, payment, delegation, or action.",
+      "description": "Trust infrastructure for apps, agents, and ecosystems. Reusable trust receipts before access, payment, delegation, or action.",
       "og:title": "NEUS Docs | Trust Infrastructure for Apps and Agents",
       "og:description": "Add reusable trust receipts to apps, agents, and ecosystems before access, payment, delegation, or action.",
       "og:image": "https://docs.neus.network/images/og-default.png",
@@ -81,7 +81,7 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Start Here",
+        "tab": "Get started",
         "groups": [
           {
             "group": "Essentials",
@@ -207,6 +207,7 @@
             "group": "MCP Basics",
             "pages": [
               "mcp/overview",
+              "mcp/journeys",
               "mcp/setup",
               "mcp/ide-plugin",
               "mcp/oauth",
@@ -256,6 +257,14 @@
     {
       "source": "/mcp/claude-code-marketplace",
       "destination": "/mcp/ide-plugin"
+    },
+    {
+      "source": "/integrations",
+      "destination": "/install"
+    },
+    {
+      "source": "/integrations/:path*",
+      "destination": "/install"
     },
     {
       "source": "/choose-an-integration-path",
@@ -613,7 +622,7 @@
       },
       {
         "title": "Quick install",
-        "description": "Run neus setup, sign in, and verify with neus doctor",
+        "description": "Run neus setup and neus check",
         "icon": "terminal",
         "iconType": "solid",
         "href": "/mcp/setup"

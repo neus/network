@@ -361,7 +361,8 @@ describe('neus CLI', () => {
     expect(stderr).not.toContain('updated');
     expect(stderr).toContain('neus auth --client codex');
     expect(stderr).toContain('npx -y -p @neus/sdk neus');
-    expect(stderr).toContain('run inside Claude Code chat, not as `claude install`');
+    expect(stderr).toContain('neus examples');
+    expect(stderr).toContain('Use NEUS Verify before taking sensitive actions');
   });
 
   it('prints a readable profile connection summary in doctor output', async () => {
@@ -593,5 +594,25 @@ describe('neus CLI', () => {
     const context = await makeCliContext();
 
     await expect(runCli(['nope'], context)).rejects.toMatchObject({ code: 1 });
+  });
+
+  it('prints assistant examples', async () => {
+    const context = await makeCliContext();
+    const { stdout, stderr } = await runCli(['examples', '--json'], context);
+    const payload = JSON.parse(stdout);
+
+    expect(stderr).toBe('');
+    expect(payload.command).toBe('examples');
+    expect(payload.prompts).toContain('Use NEUS Verify before taking sensitive actions.');
+    expect(payload.prompts).toHaveLength(5);
+  });
+
+  it('runs check as doctor --live', async () => {
+    const context = await makeCliContext();
+    const { stdout } = await runCli(['check', '--json'], context);
+    const payload = JSON.parse(stdout);
+
+    expect(payload.command).toBe('check');
+    expect(payload.live).toBe(true);
   });
 });

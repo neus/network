@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "neus",
   "version": "1.1.4",
-  "description": "Trust infrastructure for AI builders. Portable identity, authority, and receipts in Cursor, Claude Code, Codex, and VS Code.",
+  "description": "Trust infrastructure for agents that act. Verify identity, scoped authority, trust receipts, and Vault-backed secrets in Cursor, Claude Code, Codex, and VS Code.",
   "owner": {
     "name": "NEUS",
     "email": "info@neus.network"
@@ -12,7 +12,7 @@
       "name": "neus-trust",
       "displayName": "NEUS Trust",
       "source": "./plugins/neus-trust",
-      "description": "Trust infrastructure for agents that act. Verifiable identity, scoped authority, and receipts before your assistant runs tools. One setup for Cursor, Claude Code, Codex, and VS Code.",
+      "description": "Trust infrastructure for agents that act. Verify identity, scoped authority, trust receipts, and Vault-backed secrets before assistants act. One setup for Cursor, Claude Code, Codex, and VS Code.",
       "homepage": "https://docs.neus.network/install",
       "repository": "https://github.com/neus/network",
       "license": "Apache-2.0",

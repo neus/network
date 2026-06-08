@@ -21,6 +21,18 @@ Thank you for helping improve NEUS materials in this open project.
 
 **Do not** share keys, tokens, bearer secrets, or private proof content in public issues or change descriptions.
 
+## Do not commit
+
+These paths are local-only or generated elsewhere (see `.gitignore`):
+
+- `.env`, `.npmrc`, secrets, and key material
+- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.neus/`, `.cursor/`, `.claude/settings*.json`
+- `integrations/` (removed — install docs are the SSOT)
+- `/scripts/` at repo root (maintainer tooling — not part of this public repo)
+- `sdk/cjs/` and other build artifacts
+
+Verifier schemas ship from **`protocol`** (`npm run verifier:sync`); keep `spec/VERIFIERS.json` and `docs/verifiers/schemas/` in sync when you change verifiers.
+
 ## Describing your change
 
 Explain **what builders or end users will experience differently** (for example new fields, new errors, or renamed concepts). If you adjust verifiers or any documented HTTP surface, keep the written API reference and examples aligned with the live product.

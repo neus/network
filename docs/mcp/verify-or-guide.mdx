@@ -1,32 +1,35 @@
 ---
-title: Verify or Guide (`neus_verify_or_guide`)
-description: Fallback setup when reuse checks cannot satisfy the request.
+title: Trust autopilot (`neus_verify_or_guide`)
+description: Reuse trust receipts or return the single next verification step.
 icon: signs-post
 ---
 
-Use after **`neus_context`**, **`neus_agent_link`** for agents, and **`neus_proofs_check`** for the required verifier IDs.
+**Trust autopilot** — the default orchestration tool for “can I do this?” and “verify before action.”
 
-If existing receipts satisfy the request, continue without this tool. Use **`neus_verify_or_guide`** only when proof, profile, payment, wallet, or delegation setup is missing.
+When signed in, **omit `walletAddress`** to use your profile wallet from `neus_context`.
 
-Returns an **`action`** (`already_verified` or `verification_required`) and includes **`hostedVerifyUrl`** when a hosted step is required. After hosted completion, call **`neus_proofs_get`** on the same identifier to read proof state and receipt fields ([Overview](./overview)).
+## What it does
+
+1. Checks existing trust receipts for the required checks
+2. If satisfied → `already_verified` (continue silently)
+3. If not → returns one next step (hosted verify link or in-MCP verify path)
+
+Summarize the outcome for users as **NEUS Verify** (Passed / Action needed / Blocked).
 
 ## Input
 
-`walletAddress` (EVM / Solana / DID-shaped), `verifierIds`, optional `requireAll`, `chain`, `data`.
+`verifierIds` (required). Optional `walletAddress` when not signed in, `requireAll`, `chain`, `data`.
 
 ```json
 {
-  "walletAddress": "0x…",
-  "verifierIds": ["proof-of-human"],
-  "requireAll": true
+  "verifierIds": ["ownership-basic"]
 }
 ```
 
 ## Output
 
-| Result | Meaning |
-|--------|---------|
-| **`already_verified`** | Policy satisfied; no browser step needed |
-| **`verification_required`** | Open **`hostedVerifyUrl`**; honor **`requiredVerifiers`** |
+`action` (`already_verified` | `verification_required`), `eligible`, `hostedVerifyUrl` when a browser step is required.
 
-Schemas load from the server. Auth: [Auth](./auth).
+After hosted completion, read receipt state with **`neus_proofs_get`**.
+
+Journeys: [MCP journeys](./journeys)

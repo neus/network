@@ -1,8 +1,8 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.neus/neus-mcp",
-  "title": "NEUS Trust",
-  "description": "Verifiable identity, scoped authority, policy checks, and receipts before agents run trusted actions. Hosted remote MCP for Cursor, Claude Code, Codex, VS Code, and CI.",
+  "title": "NEUS MCP",
+  "description": "NEUS MCP connects AI tools to identity, scoped authority, trust receipts, and Vault-backed secrets before sensitive actions.",
   "version": "1.1.4",
   "repository": {
     "url": "https://github.com/neus/network",
@@ -38,7 +38,7 @@
   "tools": [
     {
       "name": "neus_context",
-      "description": "Start each session here: mode, signed-in profile context, verifier summary, reuse-first workflow, tool order, and safety rules."
+      "description": "Start each session here: mode, signed-in profile context, verifier summary, reuse-first workflow, and safety rules."
     },
     {
       "name": "neus_verifiers_catalog",
@@ -46,7 +46,7 @@
     },
     {
       "name": "neus_proofs_check",
-      "description": "Check whether existing receipts already satisfy verifier IDs. Eligibility only — never creates proofs."
+      "description": "Checks whether existing trust receipts satisfy required checks. Eligibility only; never creates receipts. Omit wallet when signed in to use the session profile wallet."
     },
     {
       "name": "neus_verify",
@@ -54,7 +54,7 @@
     },
     {
       "name": "neus_verify_or_guide",
-      "description": "When setup is still missing: profile, wallet, payment, provider, or delegation. Use only after reuse checks fail."
+      "description": "Trust autopilot: reuse existing trust receipts when eligible, otherwise return the single next step (continue in MCP or open hosted verify). Omit walletAddress when signed in."
     },
     {
       "name": "neus_proofs_get",
@@ -111,18 +111,18 @@
   "examples": [
     {
       "title": "Start every session",
-      "description": "Load trust context and verifier summaries before any other NEUS tool.",
-      "prompt": "Call neus_context once, then follow recommendedFlow. When signed in, use returned profile context; call neus_me only to refresh identity context or look up a wallet/DID."
+      "description": "Load trust context before actions or authorizations.",
+      "prompt": "Use NEUS Verify before taking sensitive actions. Start with neus_context, then follow the returned workflow."
     },
     {
-      "title": "Register an agent wallet",
-      "description": "Issue identity and delegation receipts, then confirm the wallet is ready.",
-      "prompt": "Use neus_agent_link first when an agent wallet already exists. Use neus_agent_create only when setup is missing. If a hosted URL is returned, share it exactly, then call neus_agent_link after completion."
+      "title": "Register an Agent",
+      "description": "Confirm agent identity and delegated authority before it acts.",
+      "prompt": "Verify this agent is trusted before it runs tools. Use neus_agent_link first; use neus_agent_create only when setup is still missing."
     },
     {
-      "title": "Reuse receipts before verify",
-      "description": "Check existing trust before opening a browser verification flow.",
-      "prompt": "Call neus_proofs_check for wallet 0x... and verifier IDs [\"ownership-basic\"]. If eligible, continue without hosted verify. If not eligible, call neus_verify_or_guide, share any returned hosted URL exactly, then call neus_proofs_get after completion."
+      "title": "Reuse Trust Receipts",
+      "description": "Check existing trust before opening a new verification flow.",
+      "prompt": "Check whether I already have the required trust receipt before verifying again."
     }
   ],
   "compatibility": {

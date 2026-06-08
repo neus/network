@@ -1,51 +1,44 @@
 ---
 title: MCP Overview
-description: Trust infrastructure for agents that act - hosted MCP for identity, authority, and reusable trust receipts.
+description: NEUS MCP connects assistants to identity, scoped authority, trust receipts, and Vault.
 icon: plug
 "og:image": "/images/og-mcp.png"
 "twitter:image": "/images/og-mcp.png"
 ---
 
-*Trust that travels.*
+Trust infrastructure for agents that act.
 
-NEUS MCP connects assistants and tools to live identity, delegation, and receipt state at **`https://mcp.neus.network/mcp`**. Verifiable identity, scoped authority, and receipts for every trusted action - before access, payment, or action. Agent frameworks handle tools and execution; NEUS handles trust before anything runs.
+Verifiable identity, scoped authority, and receipts for every trusted action.
+
+NEUS MCP connects assistants and tools to live identity, delegation, receipt state, and encrypted Vault entries at **`https://mcp.neus.network/mcp`**. Agent frameworks handle tools and execution; NEUS handles trust before action.
 
 ## Install
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
-npx -y -p @neus/sdk neus doctor --live
+npx -y -p @neus/sdk neus check
 ```
 
-For servers and automation, add a Profile access key:
+Servers and CI:
 
 ```bash
 npx -y -p @neus/sdk neus setup --access-key <npk_...>
 ```
 
-Check setup:
-
-```bash
-npx -y -p @neus/sdk neus doctor
-```
-
 Full setup: [MCP setup](./setup). OAuth reference: [MCP OAuth](./oauth).
 
-## Session order
+## How it works
 
-| Step | Tool                   | Purpose                                                              |
-| ---- | ---------------------- | -------------------------------------------------------------------- |
-| 1    | `neus_context`         | Load current mode, signed-in profile context, verifier summary, and next steps |
-| 2    | `neus_agent_link`      | Reuse existing agent identity and delegation receipts                |
-| 3    | `neus_proofs_check`    | Check eligibility without creating a new receipt                     |
-| 4    | `neus_proofs_get`      | Read receipt details when needed                                     |
-| 5    | `neus_verify`          | Verify only when signing and profile prerequisites already match     |
-| 6    | `neus_verify_or_guide` | Guide the user when setup, payment, wallet, or delegation is missing |
+Assistants call **`neus_context`** once, then follow the **autopilot** workflow returned in context:
 
-Use **`neus_me`** only when you need to refresh signed-in profile context or look up a public wallet/DID.
+- **Trust before action** — check existing receipts, then guide the single next step
+- **Show receipts** — read live trust receipt records with **`neus_proofs_get`**
+- **Trusted Agent** — confirm agent identity and delegation before tools run
+- **Vault** — list, store, or revoke encrypted secrets when signed in
 
-Public tools also include **`neus_secret_create`**, **`neus_secret_list`**, and **`neus_secret_revoke`** when signed in ([Secrets](./secrets)).
+You should see **Trust Result** summaries in chat (Passed / Action needed / Blocked), not raw tool JSON.
+
+Journey guide: [MCP journeys](./journeys) · Tool reference: [MCP tools](./tools)
 
 ## Agent setup
 
@@ -63,12 +56,13 @@ Details: [Agent verification flow](../agents/agent-verification-flow).
 ```bash
 npx -y -p @neus/sdk neus import --dry-run
 npx -y -p @neus/sdk neus import --from auto
+npx -y -p @neus/sdk neus export --to manifest
 ```
 
 ## Reference
 
 <CardGroup cols={4}>
-  <Card title="Install NEUS Trust" icon="plug" href="../install">
+  <Card title="Install NEUS" icon="plug" href="../install">
     Install in Cursor, Claude Code, Codex, and other MCP hosts.
   </Card>
   <Card title="OAuth" icon="shield-check" href="./oauth">

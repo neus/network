@@ -1,6 +1,6 @@
 ---
 title: LLM Docs
-description: Reading order, MCP URL, llms.txt, integration rules.
+description: Reading order, MCP URL, llms.txt, and integration rules.
 icon: sparkles
 ---
 
@@ -21,9 +21,9 @@ This site (`docs.neus.network`) is the standard integration reference. Follow th
 **Product server:** `https://mcp.neus.network/mcp` — identity, proofs, delegation, verify.  
 **Not the product:** `https://docs.neus.network/mcp` — documentation search only (Mintlify).
 
-1. Install: [MCP setup](../mcp/setup) — `neus setup` → `neus auth` → `neus doctor --live`
-2. Session flow: [MCP overview](../mcp/overview) (call **`neus_context`** once per session; reuse receipts before new verification)
-3. Install hub: [Install NEUS Trust](../install)
+1. Install: [Install NEUS](../install) — `neus setup` → `neus check`
+2. Session flow: [MCP overview](../mcp/overview) — reuse receipts before new verification
+3. Example prompts: [MCP journeys](../mcp/journeys)
 
 Use **`neus auth`** for OAuth. Profile access keys (`npk_*`) are for servers and CI only.
 
@@ -36,7 +36,7 @@ Use **`neus auth`** for OAuth. Profile access keys (`npk_*`) are for servers and
 - Do not use wallet **private keys** as MCP credentials. Sign in with **OAuth** or use **Profile access keys** (`npk_*`) for Bearer in MCP or server config only.
 - **402:** use the x402 retry pattern
 - Agents: [Overview](../agents/overview) · [Verification flow](../agents/agent-verification-flow) · [A2A cards](../agents/a2a)
-- Reuse **`qHash`**
+- Use returned receipt URLs or qHashes only when the API/tool response provides them.
 
 ## Exports
 

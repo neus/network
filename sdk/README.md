@@ -1,8 +1,8 @@
 # @neus/sdk
 
-Create, check, and reuse NEUS trust receipts from apps and backends. The same package ships the **`neus`** CLI for hosted MCP setup.
+Create, check, and reuse NEUS trust receipts from apps and backends. The same package ships the **`neus`** CLI for assistant setup.
 
-NEUS makes trust portable across apps, agents, and ecosystems before access, payment, or action.
+NEUS is trust infrastructure for apps, agents, and ecosystems.
 
 Roadmap: [docs.neus.network/platform/status](https://docs.neus.network/platform/status)
 
@@ -18,25 +18,26 @@ One command detects your environment and configures hosted MCP for Claude Code, 
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
+npx -y -p @neus/sdk neus check
+npx -y -p @neus/sdk neus examples
 ```
 
-Open your MCP client and ask the assistant to use NEUS Trust.
+Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
 ## MCP docs
 
 | Topic                             | Link                                                                          |
 | --------------------------------- | ----------------------------------------------------------------------------- |
 | Setup, JSON snippets, and headers | [MCP setup](https://docs.neus.network/mcp/setup)                              |
-| Tools and session order           | [MCP overview](https://docs.neus.network/mcp/overview)                        |
+| Reuse-first MCP flow              | [MCP overview](https://docs.neus.network/mcp/overview)                        |
 | Discovery URLs                    | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints)            |
-| Install NEUS Trust                | [Install NEUS Trust](https://docs.neus.network/install)                         |
+| Install NEUS                      | [Install NEUS](https://docs.neus.network/install)                               |
 
 Prefer `neus setup` over hand-editing config files so every host stays on **`https://mcp.neus.network/mcp`**.
 
 ## What you can ship
 
-- Hosted verification flows that return a reusable receipt
+- Hosted verification flows that return reusable receipts
 - Server checks before access, rewards, payments, or actions
 - React gates with `VerifyGate`
 - Agent identity and scoped delegation
@@ -163,14 +164,14 @@ const client = new NeusClient({
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
+npx -y -p @neus/sdk neus check
 ```
 
 `neus setup` configures MCP and signs you in: `NEUS_ACCESS_KEY` from the environment when set, otherwise the selected host starts OAuth. Cursor, VS Code, and Claude Code use browser sign-in on NEUS. Pass `--access-key <npk_...>` only to override.
 
 Codex owns its local MCP OAuth session. Use `npx -y -p @neus/sdk neus setup --client codex`, then `npx -y -p @neus/sdk neus auth --client codex`.
 
-Integrators embedding install UX in apps should import **`@neus/sdk/mcp-hosts`** (setup commands, deeplinks, host labels) instead of duplicating strings.
+Embed install UX with **`@neus/sdk/mcp-hosts`** (setup commands, deeplinks, host labels).
 
 Claude Code users can install **`neus-trust@neus`** for the bundled session workflow:
 
@@ -179,7 +180,7 @@ Claude Code users can install **`neus-trust@neus`** for the bundled session work
 /plugin install neus-trust@neus
 ```
 
-Other hosts: [Install NEUS Trust](https://docs.neus.network/install).
+Other hosts: [Install NEUS](https://docs.neus.network/install).
 
 ## Docs
 
