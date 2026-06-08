@@ -43,6 +43,9 @@
   "engines": {
     "node": ">=20.0.0"
   },
+  "scripts": {
+    "prepublishOnly": "node -e \"const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));const s=JSON.parse(fs.readFileSync('server.json','utf8'));if(p.version!==s.version)throw new Error('package.json and server.json version mismatch: '+p.version+' vs '+s.version);if(String(s.description||'').length>100)throw new Error('server.json description must be <=100 chars for MCP Registry (got '+String(s.description).length+')');\""
+  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
