@@ -1383,7 +1383,7 @@ async function runLiveMcpDiagnostics(accessKey) {
       params: {
         protocolVersion: '2025-11-25',
         capabilities: {},
-        clientInfo: { name: 'neus-cli', version: '1.1.4' }
+        clientInfo: { name: 'neus-cli', version: '1.1.5' }
       },
       accessKey,
       signal: controller.signal

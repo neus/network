@@ -55,7 +55,7 @@ function buildHostedCheckoutRedirectUrl(popupCheckoutUrl) {
 }
 
 // brand-mark.js
-var NEUS_BRAND_PACK_VERSION = "2026-06-03-mark-og-finalize-v1";
+var NEUS_BRAND_PACK_VERSION = "2026-06-07-app-icon-raster-v1";
 var NEUS_MARK_CDN_ORIGIN = "https://neus.network";
 var PACK_BASE = `${NEUS_MARK_CDN_ORIGIN}/images/neus-brand-pack`;
 var v = encodeURIComponent(NEUS_BRAND_PACK_VERSION);
