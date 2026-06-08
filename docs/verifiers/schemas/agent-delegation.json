@@ -24,7 +24,7 @@
       "type": "string"
     },
     "allowedActions": {
-      "description": "Explicit allowlist of action types the agent may perform (e.g., [\"read-receipts\", \"call-approved-tool\", \"publish-approved-content\"]). Owner-view-only: not included in public proof responses.",
+      "description": "Explicit allowlist of action types the agent may perform (e.g., [\"read-proofs\", \"execute-jobs\", \"publish-approved-content\"]). Owner-view-only: not included in public proof responses.",
       "items": {
         "maxLength": 128,
         "type": "string"

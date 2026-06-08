@@ -543,7 +543,7 @@
       },
       "VerifierData_ownership_basic": {
         "type": "object",
-        "description": "Ownership checks require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep trust receipts linkable and explain origin without storing unnecessary raw content.",
+        "description": "Ownership proofs require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep proof receipts linkable and explain origin without storing unnecessary raw content.",
         "required": [
           "owner"
         ],
@@ -592,7 +592,7 @@
               "type",
               "id"
             ],
-            "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior trust receipts, or external records.",
+            "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proof receipts, or external records.",
             "properties": {
               "type": {
                 "type": "string",
@@ -1547,7 +1547,7 @@
               "maxLength": 128
             },
             "maxItems": 32,
-            "description": "Explicit allowlist of action types the agent may perform (e.g., [\"read-receipts\", \"call-approved-tool\", \"publish-approved-content\"]). Owner-view-only: not included in public proof responses."
+            "description": "Explicit allowlist of action types the agent may perform (e.g., [\"read-proofs\", \"execute-jobs\", \"publish-approved-content\"]). Owner-view-only: not included in public proof responses."
           },
           "deniedActions": {
             "type": "array",
