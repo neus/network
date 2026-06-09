@@ -11,7 +11,11 @@
   "repository": "https://github.com/neus/network",
   "license": "Apache-2.0",
   "icon": "./assets/icon.png",
-  "skills": ["skills/neus-trust-workflow"],
+  "skills": [
+    {
+      "slug": "neus-trust-workflow"
+    }
+  ],
   "keywords": [
     "trust-receipts",
     "proof-receipts",

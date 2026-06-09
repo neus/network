@@ -10,4 +10,6 @@ It returns the current mode, setup links, session flow, safety rules, compact ve
 
 Use **`neus_me`** only when you need to refresh profile context or look up a public wallet/DID.
 
+Authenticated profile context can include `profileSummary.proofsSummary`: a compact receipt snapshot with total counts, verifier counts, and latest receipt pointers. Use **`neus_proofs_get`** when you need full receipt records or pagination.
+
 Session flow recap: **[Overview](./overview)**. Reuse existing receipts first; use hosted links only when the next step needs a browser.

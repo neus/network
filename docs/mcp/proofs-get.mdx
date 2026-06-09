@@ -48,6 +48,20 @@ When `identifier` is a DID, NEUS resolves the DID to its native account. Non-EVM
 
 Receipt records, receipt fields, **`profileSummary`**, and pagination. Follow the live tool response. Tags and receipt bodies come from this call.
 
+`profileSummary.proofsSummary` uses the same compact summary shape as the hosted profile context:
+
+| Field | Meaning |
+|-------|---------|
+| `total` | Total receipts known for the profile summary |
+| `embeddedCount` | Receipt references included in the profile document |
+| `isTruncated` | `true` when more receipts exist than the embedded profile references |
+| `byVerifier` | Counts by verifier id |
+| `latestByVerifier` | Latest receipt pointer by verifier id |
+| `latestByCategory` | Latest receipt pointer grouped by verifier category |
+| `latestByScope` | Latest receipt pointer grouped by verifier id and scope |
+
+Use the paginated `proofs` list for full receipt history. Treat the summary as a fast profile snapshot, not a replacement for pagination.
+
 ## Assistant Output
 
 Do:
