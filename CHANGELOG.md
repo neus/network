@@ -19,6 +19,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **CLI diagnostics** — `neus doctor` initialize reports package version from `sdk/package.json`.
 - **`--oauth` flag** — `neus setup` and `neus auth` ignore `NEUS_ACCESS_KEY` when `--oauth` is passed; `neus setup --json` reports `authRequired` and `nextCommand` when browser sign-in is needed.
 
+### Upgrade
+
+```bash
+npx -y -p @neus/sdk@1.1.6 neus setup
+npx -y -p @neus/sdk@1.1.6 neus auth
+npx -y -p @neus/sdk@1.1.6 neus doctor --live
+```
+
+### Links
+
+- [Install NEUS](https://docs.neus.network/install)
+- [npm: @neus/sdk](https://www.npmjs.com/package/@neus/sdk)
+- [npm: @neus/mcp-server](https://www.npmjs.com/package/@neus/mcp-server)
+
 ## [1.1.5] - 2026-06-07
 
 ### Changed
