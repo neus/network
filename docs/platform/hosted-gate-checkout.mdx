@@ -1,0 +1,135 @@
+---
+title: Hosted Gate Checkout
+description: Full lifecycle for published gate checkout — snapshot, eligibility, verify, pay, fulfill.
+icon: door-open
+---
+
+A published gate is a reusable checkout: visitors pass the checks you configured, optionally pay, and receive the reward you attached. This page documents the full server contract behind hosted checkout so you can mirror it from your own app or backend.
+
+The simplest integrations do not need any of this directly — use the [VerifyGate widget](../widgets/verifygate) or the hosted checkout link. Read on when you want to drive the flow yourself.
+
+## Lifecycle
+
+1. **Snapshot** — `GET /api/v1/gates/{gateId}` returns the public gate: requirements, price, schedule, and reward presence. The secret reward value is never in the snapshot.
+2. **Eligibility** — `GET /api/v1/proofs/check?gateId=...&address=...&includePrivate=true&includeQHashes=true` evaluates the visitor's existing proofs against every requirement.
+3. **Verify** — if checks are missing, the visitor completes them (hosted verify link, VerifyGate, or `POST /api/v1/verification` for signature-based verifiers). Pass `gateId` and reuse satisfied checks via `options.reusedVerifierProofs`.
+4. **Pay** — for paid gates, payment happens after verification by default (`executionOrder: "verifyThenCharge"`), by card (Stripe) or USDC on Base.
+5. **Fulfill** — `POST /api/v1/gates/{gateId}/fulfill` with the verified `qHash` (plus payment evidence for paid gates) delivers the reward.
+
+```js
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient();
+
+// 1. Snapshot
+const gate = await client.getGate('gate_your-listing');
+
+// 2. Eligibility
+const check = await client.gateCheck({
+  gateId: 'gate_your-listing',
+  address: visitorWallet,
+  includePrivate: true,
+  includeQHashes: true,
+});
+
+// 5. Fulfill (after verify + pay)
+const reward = await client.fulfillGate({
+  gateId: 'gate_your-listing',
+  qHash: verifiedQHash,
+  walletAddress: visitorWallet,
+});
+```
+
+## Reading the gate check
+
+When `gateId` is passed, the response carries a per-requirement `data.gate` block. **`gate.allRequiredSatisfied === true` is the only signal that checkout is ready.** Top-level `eligible` and `matchedCount` exist for criteria-only checks and must not be used as gate readiness on their own.
+
+```json
+{
+  "success": true,
+  "data": {
+    "eligible": true,
+    "gate": {
+      "gateId": "gate_your-listing",
+      "allRequiredSatisfied": true,
+      "satisfiedVerifierIds": ["proof-of-human", "wallet-risk"],
+      "missingVerifierIds": [],
+      "reusedVerifierProofs": {
+        "proof-of-human": "0xabc…",
+        "wallet-risk": "0xdef…"
+      }
+    }
+  }
+}
+```
+
+- `satisfiedVerifierIds` / `missingVerifierIds` — which requirements existing proofs cover.
+- `reusedVerifierProofs` — verifierId → qHash map (requires `includeQHashes=true`). Pass it as `options.reusedVerifierProofs` on `POST /api/v1/verification` so satisfied checks are not re-run.
+- Re-run the gate check after every interactive step (OAuth grant, personhood session) before treating checkout as complete. Interactive completions only count once the protocol confirms them here.
+
+## Request-time vs proof-backed rules
+
+Each requirement carries `match` rows (`{ path, op, value }`). They are enforced at two different moments:
+
+| Rule type | Examples | Enforced |
+|-----------|----------|----------|
+| Request-time (`eq` on input fields) | `domain`, `contractAddress`, `chainId`, `minBalance`, `provider` | When the verification request is submitted — the locked value must match exactly |
+| Proof-backed (`traits.*`, `claims.*`, risk fields, `gte`/`lte`) | `claims.age_min`, `claims.liveness_verified`, `riskLevel`, `overallRisk` | After verification, against the verifier's output |
+
+Proof-backed rows mean an existing proof can fail a stricter gate. Example: a personhood proof created for a basic gate (personhood + sanctions) will **not** satisfy a gate that also requires `claims.age_min ≥ 21` — the visitor is asked to complete a stronger check, and the new proof carries the extra claims.
+
+Note for `wallet-risk` gates: any proof-backed row also requires the proof's `policyVerified` to be true — a risk proof that failed its own policy never satisfies a gate.
+
+## Paid gates
+
+The snapshot's `monetization.charge` describes pricing:
+
+- `amountUsd`, `label`, `methods` (`usdc`, `stripe`), `cardPayoutReady`
+- `executionOrder` — `verifyThenCharge` (default): verification completes first, then payment, then fulfill.
+
+Fulfill payment evidence:
+
+- **Card** — `paymentCheckoutSessionId` from the Stripe checkout return.
+- **USDC** — `paymentTxHash` of the on-chain transfer.
+
+Payments are bound to one `gateId` + `qHash` pair and cannot be reused for another checkout (`409 PAYMENT_ALREADY_USED`).
+
+## Fulfillment result
+
+```json
+{
+  "success": true,
+  "data": {
+    "gateId": "gate_your-listing",
+    "qHash": "0xabc…",
+    "fulfillment": {
+      "delivery": "redirect",
+      "type": "redirect_url",
+      "value": "https://yourapp.com/members"
+    }
+  }
+}
+```
+
+`fulfillment.delivery` is one of `access_granted`, `redirect`, `download`, or `reveal`. The secret value appears only here — after verification (and payment) succeeded for the caller's wallet.
+
+## Campaign windows
+
+Gates may carry a `schedule` (`startsAt` / `endsAt`). Outside the window, gate checks report the closed state and verification/fulfillment are refused server-side (`GATE_NOT_STARTED`, `GATE_ENDED`). Treat the window as enforced — it is not a UI-only hint.
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="VerifyGate widget" icon="object-group" href="../widgets/verifygate">
+    Drop-in checkout for published gates
+  </Card>
+  <Card title="Billing" icon="credit-card" href="./billing">
+    How verification and checkout charges work
+  </Card>
+  <Card title="API overview" icon="code" href="../api/overview">
+    Full HTTP API surface
+  </Card>
+  <Card title="Verifier catalog" icon="list-check" href="../verification/verifiers">
+    Every check a gate can require
+  </Card>
+</CardGroup>

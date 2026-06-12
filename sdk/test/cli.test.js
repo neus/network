@@ -401,6 +401,23 @@ describe('neus CLI', () => {
     });
   });
 
+  it('ignores NEUS_ACCESS_KEY when --oauth is passed', async () => {
+    const context = await makeCliContext();
+    context.env.NEUS_ACCESS_KEY = 'npk_should_be_ignored';
+
+    const { stdout } = await runCli(['setup', '--client', 'cursor', '--oauth', '--json'], context);
+    const payload = JSON.parse(stdout);
+
+    expect(payload.accessKeyConfigured).toBe(false);
+    expect(payload.authRequired).toBe(true);
+    expect(payload.nextCommand).toBe('neus auth');
+
+    const cursorConfig = JSON.parse(
+      await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
+    );
+    expect(cursorConfig.mcpServers.neus.headers?.Authorization).toBeUndefined();
+  });
+
   it('applies NEUS_ACCESS_KEY from the shell on setup', async () => {
     const context = await makeCliContext();
     context.env.NEUS_ACCESS_KEY = 'npk_from_env_auto';

@@ -1204,6 +1204,12 @@ export class NeusClient {
         typeof options?.storeOriginalContent === 'boolean' ? options.storeOriginalContent : true
     };
     if (typeof options?.enableIpfs === 'boolean') optionsPayload.enableIpfs = options.enableIpfs;
+    // Receipts persist offchain by default; hub registry anchoring is explicit opt-in.
+    if (options?.publishToHub === true) {
+      optionsPayload.publishToHub = true;
+    } else {
+      delete optionsPayload.publishToHub;
+    }
 
     const requestData = {
       verifierIds: normalizedVerifierIds,
@@ -1471,6 +1477,33 @@ export class NeusClient {
     return true;
   }
 
+  _buildProofsByWalletQuery(options = {}) {
+    const qs = [];
+    if (options.limit) qs.push(`limit=${encodeURIComponent(String(options.limit))}`);
+    const cursorRaw = options.cursor !== null && options.cursor !== undefined ? String(options.cursor).trim() : '';
+    if (cursorRaw) qs.push(`cursor=${encodeURIComponent(cursorRaw)}`);
+    else if (options.offset !== undefined && options.offset !== null) {
+      qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
+    }
+    if (options.q) qs.push(`q=${encodeURIComponent(String(options.q))}`);
+    if (options.qHash) qs.push(`qHash=${encodeURIComponent(String(options.qHash).toLowerCase())}`);
+    if (options.verifierId) qs.push(`verifierId=${encodeURIComponent(String(options.verifierId))}`);
+    if (options.verifierIds) qs.push(`verifierIds=${encodeURIComponent(String(options.verifierIds))}`);
+    if (options.tags) qs.push(`tags=${encodeURIComponent(String(options.tags))}`);
+    if (options.tagPrefix) qs.push(`tagPrefix=${encodeURIComponent(String(options.tagPrefix))}`);
+    if (options.tagContains) qs.push(`tagContains=${encodeURIComponent(String(options.tagContains))}`);
+    if (options.tagPrefixesAll) qs.push(`tagPrefixesAll=${encodeURIComponent(String(options.tagPrefixesAll))}`);
+    if (options.status) qs.push(`status=${encodeURIComponent(String(options.status))}`);
+    if (options.appId) qs.push(`appId=${encodeURIComponent(String(options.appId))}`);
+    if (options.chainCoverage) qs.push(`chainCoverage=${encodeURIComponent(String(options.chainCoverage))}`);
+    if (options.privacyLevel) qs.push(`privacyLevel=${encodeURIComponent(String(options.privacyLevel))}`);
+    if (options.includeHistory) qs.push('includeHistory=1');
+    if (options.includeFacets) qs.push(`includeFacets=${encodeURIComponent(String(options.includeFacets))}`);
+    if (options.visibility) qs.push(`visibility=${encodeURIComponent(String(options.visibility))}`);
+    if (options.isPublicRead) qs.push('isPublicRead=1');
+    return qs;
+  }
+
   async getProofsByWallet(walletAddress, options = {}) {
     if (!walletAddress || typeof walletAddress !== 'string') {
       throw new ValidationError('walletAddress is required');
@@ -1479,12 +1512,7 @@ export class NeusClient {
     const id = walletAddress.trim();
     const pathId = /^0x[a-fA-F0-9]{40}$/i.test(id) ? id.toLowerCase() : id;
 
-    const qs = [];
-    if (options.limit) qs.push(`limit=${encodeURIComponent(String(options.limit))}`);
-    const cursorRaw = options.cursor !== null && options.cursor !== undefined ? String(options.cursor).trim() : '';
-    if (cursorRaw) qs.push(`cursor=${encodeURIComponent(cursorRaw)}`);
-    else if (options.offset) qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
-    if (options.qHash) qs.push(`qHash=${encodeURIComponent(options.qHash.toLowerCase())}`);
+    const qs = this._buildProofsByWalletQuery(options);
 
     const query = qs.length ? `?${qs.join('&')}` : '';
     const response = await this._makeRequest(
@@ -1500,13 +1528,14 @@ export class NeusClient {
     return {
       success: true,
       proofs: Array.isArray(proofs) ? proofs : [],
-      totalCount: response.data?.totalCount ?? proofs.length,
+      totalCount: typeof response.data?.totalCount === 'number' ? response.data.totalCount : null,
       hasMore: Boolean(response.data?.hasMore),
       nextOffset: response.data?.nextOffset ?? null,
       nextCursor:
         typeof response.data?.nextCursor === 'string' && response.data.nextCursor.trim()
           ? response.data.nextCursor.trim()
-          : null
+          : null,
+      facets: response.data?.facets || null,
     };
   }
 
@@ -1569,12 +1598,7 @@ export class NeusClient {
       throw new ValidationError(`Failed to sign message: ${error.message}`);
     }
 
-    const qs = [];
-    if (options.limit) qs.push(`limit=${encodeURIComponent(String(options.limit))}`);
-    const cursorRaw = options.cursor !== null && options.cursor !== undefined ? String(options.cursor).trim() : '';
-    if (cursorRaw) qs.push(`cursor=${encodeURIComponent(cursorRaw)}`);
-    else if (options.offset) qs.push(`offset=${encodeURIComponent(String(options.offset))}`);
-    if (options.qHash) qs.push(`qHash=${encodeURIComponent(options.qHash.toLowerCase())}`);
+    const qs = this._buildProofsByWalletQuery(options);
     const query = qs.length ? `?${qs.join('&')}` : '';
 
     const response = await this._makeRequest('GET', `/api/v1/proofs/by-wallet/${encodeURIComponent(pathId)}${query}`, null, {
@@ -1592,7 +1616,7 @@ export class NeusClient {
     return {
       success: true,
       proofs: Array.isArray(proofs) ? proofs : [],
-      totalCount: response.data?.totalCount ?? proofs.length,
+      totalCount: typeof response.data?.totalCount === 'number' ? response.data.totalCount : null,
       hasMore: Boolean(response.data?.hasMore),
       nextOffset: response.data?.nextOffset ?? null,
       nextCursor:
@@ -1726,6 +1750,67 @@ export class NeusClient {
     const response = await this._makeRequest('GET', `/api/v1/proofs/check?${qs.toString()}`, null, mergedHeaders);
     if (!response.success) {
       throw new ApiError(`Gate check failed: ${response.error?.message || 'Unknown error'}`, response.error);
+    }
+    return response;
+  }
+
+  /**
+   * Get the public snapshot of a published gate: requirements, charge, schedule,
+   * checkout plan, and reward presence. Never returns the secret reward value —
+   * that is delivered post-verify via fulfillGate().
+   *
+   * @param {string} gateId Published gate handle
+   * @returns {Promise<object>} Public gate snapshot
+   */
+  async getGate(gateId) {
+    const id = String(gateId || '').trim();
+    if (!id || id.length > 80 || !/^[a-zA-Z0-9:_-]+$/.test(id)) {
+      throw new ValidationError('Valid gateId is required');
+    }
+    const response = await this._makeRequest('GET', `/api/v1/gates/${encodeURIComponent(id)}`);
+    if (!response.success || !response.data?.gate) {
+      throw new ApiError(`Gate lookup failed: ${response.error?.message || 'Gate not found'}`, response.error);
+    }
+    return response.data.gate;
+  }
+
+  /**
+   * Post-verify reward delivery for hosted gate checkout. Requires a verified
+   * proof (qHash) for the gate; paid gates also require payment evidence
+   * (paymentCheckoutSessionId for card, or paymentTxHash for USDC).
+   *
+   * @param {object} params
+   * @param {string} params.gateId Published gate handle
+   * @param {string} params.qHash Verified proof receipt id
+   * @param {string} [params.walletAddress] Wallet bound to the proof (required without a session cookie)
+   * @param {string} [params.paymentCheckoutSessionId] Stripe checkout session id (card rail)
+   * @param {string} [params.paymentTxHash] USDC payment transaction hash (wallet rail)
+   * @returns {Promise<object>} `{ success, data: { gateId, qHash, fulfillment, successReturnUrl? } }`
+   */
+  async fulfillGate(params = {}) {
+    const gateId = String(params.gateId || '').trim();
+    if (!gateId || gateId.length > 80 || !/^[a-zA-Z0-9:_-]+$/.test(gateId)) {
+      throw new ValidationError('Valid gateId is required');
+    }
+    const qHash = String(params.qHash || '').trim();
+    if (!/^0x[a-fA-F0-9]{64}$/.test(qHash)) {
+      throw new ValidationError('Valid qHash is required');
+    }
+    const body = { qHash };
+    const walletAddress = String(params.walletAddress || '').trim();
+    if (walletAddress) body.walletAddress = walletAddress;
+    const paymentCheckoutSessionId = String(params.paymentCheckoutSessionId || '').trim();
+    if (paymentCheckoutSessionId) body.paymentCheckoutSessionId = paymentCheckoutSessionId;
+    const paymentTxHash = String(params.paymentTxHash || '').trim();
+    if (paymentTxHash) body.paymentTxHash = paymentTxHash;
+
+    const response = await this._makeRequest(
+      'POST',
+      `/api/v1/gates/${encodeURIComponent(gateId)}/fulfill`,
+      body
+    );
+    if (!response.success) {
+      throw new ApiError(`Gate fulfillment failed: ${response.error?.message || 'Unknown error'}`, response.error);
     }
     return response;
   }

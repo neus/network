@@ -246,6 +246,34 @@
           },
           "options": {
             "type": "object",
+            "description": "Optional verification options. By default the trust receipt persists offchain with no on-chain transaction.",
+            "properties": {
+              "publishToHub": {
+                "type": "boolean",
+                "description": "Opt in to an on-chain hub registry transaction when targetChains is empty. Default false: offchain receipt only."
+              },
+              "targetChains": {
+                "type": "array",
+                "items": {
+                  "type": "integer"
+                },
+                "description": "Optional chain IDs for cross-chain propagation. Empty (default) = no cross-chain spokes."
+              },
+              "enableIpfs": {
+                "type": "boolean",
+                "description": "Pin proof metadata to IPFS (public proofs only)."
+              },
+              "privacyLevel": {
+                "type": "string",
+                "enum": [
+                  "private",
+                  "public"
+                ]
+              },
+              "publicDisplay": {
+                "type": "boolean"
+              }
+            },
             "additionalProperties": true
           },
           "meta": {

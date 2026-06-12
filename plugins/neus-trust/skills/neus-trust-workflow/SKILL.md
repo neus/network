@@ -32,6 +32,8 @@ Create access keys under **Account → Access keys** on [neus.network](https://n
 
 Hosted MCP: **`https://mcp.neus.network/mcp`**
 
+Trust receipts persist **offchain by default**. Do not prompt for wallet connection or on-chain anchoring unless the user explicitly asks; only then pass `options.publishToHub: true` on verify.
+
 ## Autopilot (default)
 
 1. Run **`neus_context`** once. Use signed-in profile context when present — omit wallet fields on check/verify tools.

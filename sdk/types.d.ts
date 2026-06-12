@@ -51,6 +51,12 @@
 
     checkGate(params: CheckGateParams): Promise<CheckGateResult>;
 
+    /** Public gate snapshot (requirements, charge, schedule — never the secret reward value). */
+    getGate(gateId: string): Promise<PublicGateSnapshot>;
+
+    /** Post-verify reward delivery for hosted gate checkout (session or wallet-bound). */
+    fulfillGate(params: FulfillGateParams): Promise<GateFulfillmentResponse>;
+
   }
 
   export type PrivacyLevel = 'public' | 'private';
@@ -102,6 +108,8 @@
     enableIpfs?: boolean;
     storeOriginalContent?: boolean;
     targetChains?: number[];
+    /** Anchor the receipt on the hub registry chain. Defaults to false (receipts persist offchain). */
+    publishToHub?: boolean;
     publicDisplay?: boolean;
     meta?: Record<string, any>;
     verifierOptions?: Record<string, any>;
@@ -429,11 +437,101 @@
     scheme: string;
     label: string;
     amountUsd: number;
-    methods: string[];
+    /** Payment methods offered to visitors: 'usdc' and/or 'stripe' (card). */
+    methods: Array<'usdc' | 'stripe' | string>;
+    /** True when the owner can receive card payouts (Stripe Connect ready). */
+    cardPayoutReady?: boolean;
     appliesTo: string;
+    /** 'verifyThenCharge' (default) or 'chargeThenVerify'. */
     executionOrder?: string;
     recipient?: string;
   };
+
+  /** One gate requirement row on the wire (protocol shape used by published gates). */
+  export interface GateMatchRowWire {
+    path: string;
+    op?: 'eq' | 'gte' | 'lte' | string;
+    value: string;
+  }
+
+  export interface GateRequirementWire {
+    verifierId: string;
+    match?: GateMatchRowWire[];
+    optional?: boolean;
+    minCount?: number;
+    maxAgeMs?: number;
+  }
+
+  /** Public snapshot returned by GET /api/v1/gates/{gateId} — never includes the secret reward value. */
+  export interface PublicGateSnapshot {
+    schemaVersion: number;
+    gateId: string;
+    name?: string;
+    status?: string;
+    version?: number;
+    requirements: GateRequirementWire[];
+    policy?: {
+      visibility?: string;
+      gateFreshnessHours?: number;
+    };
+    monetization?: {
+      charge?: NeusPublicGateCharge | null;
+    };
+    checkout?: {
+      mode?: string;
+      flowPlan?: {
+        batches?: number;
+        hasInteractive?: boolean;
+        hasBackground?: boolean;
+      };
+      description?: string;
+      successReturnUrl?: string;
+    };
+    marketplaceTemplate?: {
+      templateId: string;
+      label?: string;
+      tags?: string[];
+    };
+    schedule?: {
+      startsAt?: string;
+      endsAt?: string;
+    };
+    artifact?: {
+      type: string;
+      label?: string;
+    };
+  }
+
+  export interface FulfillGateParams {
+    gateId: string;
+    /** Verified proof receipt id for this checkout. */
+    qHash: string;
+    /** Required when no session cookie binds the wallet. */
+    walletAddress?: string;
+    /** Stripe checkout session id for paid gates (card rail). */
+    paymentCheckoutSessionId?: string;
+    /** USDC payment transaction hash for paid gates (wallet rail). */
+    paymentTxHash?: string;
+  }
+
+  export interface GateFulfillmentResult {
+    delivery: 'access_granted' | 'redirect' | 'download' | 'reveal' | string;
+    type?: string;
+    value?: string;
+    label?: string;
+    message?: string;
+  }
+
+  export interface GateFulfillmentResponse {
+    success: boolean;
+    data?: {
+      gateId: string;
+      qHash: string;
+      fulfillment: GateFulfillmentResult;
+      successReturnUrl?: string;
+    };
+    error?: any;
+  }
 
   export const NEUS_CONSTANTS: {
     HUB_CHAIN_ID: number;
@@ -482,16 +580,36 @@
     cursor?: string;
     chain?: string;
     signatureMethod?: string;
+    q?: string;
+    qHash?: string;
+    verifierId?: string;
+    verifierIds?: string;
+    tags?: string;
+    tagPrefix?: string;
+    tagContains?: string;
+    tagPrefixesAll?: string;
+    status?: string;
+    appId?: string;
+    chainCoverage?: 'hub-only' | 'cross-chain';
+    privacyLevel?: 'public' | 'private';
+    includeHistory?: boolean;
+    includeFacets?: string;
+    visibility?: 'public';
+    isPublicRead?: boolean;
   }
 
   export interface ProofsResult {
     success: boolean;
     proofs: any[];
-    totalCount: number;
+    totalCount: number | null;
     hasMore: boolean;
     nextOffset?: number | null;
     /** Keyset continuation when the API returns cursor paging (preferred over deep offsets). */
     nextCursor?: string | null;
+    facets?: {
+      tags?: string[];
+      truncated?: boolean;
+    } | null;
   }
 
   export interface GateRequirement {
@@ -499,7 +617,11 @@
     maxAgeMs?: number;
     optional?: boolean;
     minCount?: number;
-    match?: Record<string, any>;
+    /**
+     * Either the protocol wire shape (array of { path, op, value } rows — what
+     * published gates store) or a flat { path: value } map for client-side checks.
+     */
+    match?: GateMatchRowWire[] | Record<string, any>;
   }
 
   export interface CheckGateParams {
@@ -577,6 +699,25 @@
       matchedTags?: string[];
       projections?: Array<Record<string, any>> | null;
       criteria?: Record<string, any>;
+      /**
+       * Per-requirement gate evaluation — present whenever `gateId` was passed.
+       * `allRequiredSatisfied === true` is the ONLY readiness signal for gate
+       * checkout; `eligible`/`matchedCount` alone are not sufficient.
+       */
+      gate?: {
+        gateId: string | null;
+        allRequiredSatisfied: boolean;
+        satisfiedVerifierIds: string[];
+        missingVerifierIds: string[];
+        /** verifierId → qHash map for `options.reusedVerifierProofs` on submit (requires includeQHashes=true). */
+        reusedVerifierProofs?: Record<string, string>;
+        /** Per-requirement rows (requires includeQHashes=true). */
+        rows?: Array<{
+          verifierId: string;
+          satisfied: boolean;
+          qHashes?: string[];
+        }>;
+      };
     };
     error?: any;
   }
@@ -830,6 +971,8 @@
   
   interface VerifyOptions {
     targetChains?: number[];
+    /** Anchor the receipt on the hub registry chain. Defaults to false (receipts persist offchain). */
+    publishToHub?: boolean;
     enableIpfs?: boolean;
     privacyLevel?: 'private' | 'public';
     publicDisplay?: boolean;

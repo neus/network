@@ -6,6 +6,8 @@ icon: receipt
 
 After verification, NEUS returns a **trust receipt** identified by its `qHash`. Save the `qHash` — it is how you reference, retrieve, and reuse the proof across your app.
 
+**Default storage is offchain** — you get a durable receipt without a blockchain transaction. Opt in to an on-chain hub anchor only when you explicitly set `options.publishToHub: true` (SDK/API) or enable cross-chain spokes via `targetChains`.
+
 Details in one place: [Integration](../integration).
 
 ## `qHash`

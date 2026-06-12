@@ -140,6 +140,7 @@
               "platform/receipts-and-results",
               "platform/billing",
               "platform/x402",
+              "platform/hosted-gate-checkout",
               "platform/presets",
               "platform/environments",
               "platform/rate-limits-and-retries",

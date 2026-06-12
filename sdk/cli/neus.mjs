@@ -1,5 +1,5 @@
 ﻿#!/usr/bin/env node
-import { spawnSync } from 'node:child_process';
+import { exec, spawnSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -12,6 +12,13 @@ import {
 } from '../mcp-hosts.js';
 
 const __cliDir = path.dirname(fileURLToPath(import.meta.url));
+const CLI_PACKAGE_VERSION = (() => {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(__cliDir, '..', 'package.json'), 'utf8')).version;
+  } catch {
+    return '0.0.0';
+  }
+})();
 
 const NEUS_APP_URL = 'https://neus.network';
 const NEUS_TOKEN_ENDPOINT = 'https://neus.network/api/v1/auth/mcp/token';
@@ -137,6 +144,7 @@ function describeClientResult(command, result) {
   }
   if (result.changed) return 'updated';
   if (result.authConfigured) return 'signed in';
+  if (result.configured) return 'ready';
   return 'ready';
 }
 
@@ -296,6 +304,7 @@ function envAccessKey() {
 
 /** --access-key flag, else NEUS_ACCESS_KEY from the environment, else browser sign-in. */
 function resolveAccessKey(options) {
+  if (options?.oauth) return '';
   const explicit = String(options.accessKey || '').trim();
   if (explicit) return explicit;
   return envAccessKey();
@@ -307,6 +316,7 @@ function resolveLiveAccessKey(options, scope, cwd) {
   if (explicit) return explicit;
   const installed = readInstalledAccessKey(scope, cwd);
   if (installed) return installed;
+  if (options?.oauth) return '';
   return envAccessKey();
 }
 
@@ -579,7 +589,8 @@ function parseArgs(argv) {
     live: false,
     json: false,
     dryRun: false,
-    project: false
+    project: false,
+    oauth: false
   };
 
   for (let index = 1; index < argv.length; index += 1) {
@@ -635,6 +646,10 @@ function parseArgs(argv) {
       index += 1;
       continue;
     }
+    if (token === '--oauth') {
+      options.oauth = true;
+      continue;
+    }
     if (token === '--help' || token === '-h') {
       return { command: 'help', options };
     }
@@ -668,6 +683,7 @@ function printUsage(exitCode = 0) {
     '  --client <name[,name]>   Limit setup to claude, codex, cursor, or vscode',
     '  --project                Write shared project config instead of user config',
     '  --access-key <npk_...>   Override profile access key (else uses NEUS_ACCESS_KEY if set)',
+    '  --oauth                    Force browser OAuth (ignore NEUS_ACCESS_KEY in the environment)',
     '  --from <source>          Import source: auto, cursor, claude-code, or claude-desktop',
     '  --to <format>            Export format: manifest or json',
     '  --output <path>          Write exported manifest to a specific path',
@@ -1383,7 +1399,7 @@ async function runLiveMcpDiagnostics(accessKey) {
       params: {
         protocolVersion: '2025-11-25',
         capabilities: {},
-        clientInfo: { name: 'neus-cli', version: '1.1.5' }
+        clientInfo: { name: 'neus-cli', version: CLI_PACKAGE_VERSION }
       },
       accessKey,
       signal: controller.signal
@@ -1699,9 +1715,12 @@ async function runAuthBrowser(options) {
         logStep('next', 'wait', 'finish sign-in in the browser');
       }
 
-      const { exec } = require('node:child_process');
-      const openCmd = process.platform === 'win32' ? 'start' : process.platform === 'darwin' ? 'open' : 'xdg-open';
-      exec(`${openCmd} "${authUrl}"`, err => {
+      const openCommand = process.platform === 'win32'
+        ? `cmd /c start "" "${authUrl.replace(/"/g, '\\"')}"`
+        : process.platform === 'darwin'
+          ? `open "${authUrl.replace(/"/g, '\\"')}"`
+          : `xdg-open "${authUrl.replace(/"/g, '\\"')}"`;
+      exec(openCommand, { shell: true }, err => {
         if (err && !options.json) {
           logStep('warn', 'browser', 'open the URL above manually');
         }
@@ -1816,6 +1835,12 @@ async function runSetup(options) {
   }
 
   if (options.json) {
+    payload.authRequired = !accessKey && !options.dryRun;
+    if (payload.authRequired) {
+      payload.nextCommand = clients.length === 1 && clients[0] === 'codex'
+        ? 'neus auth --client codex'
+        : 'neus auth';
+    }
     printJson(payload);
     return payload;
   }

@@ -6,6 +6,19 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.1.6] - 2026-06-12
+
+### Fixed
+
+- **CLI OAuth browser open** — `neus auth` no longer crashes with `require is not defined` in ESM (`.mjs`); uses `import { exec } from 'node:child_process'`.
+- **MCP docs** — OAuth authorize flow documents hosted-login redirect (not in-page render); removed false Cline one-command claim; added `#access-keys` section.
+
+### Changed
+
+- **Version alignment** — `@neus/sdk`, `@neus/mcp-server`, plugin, and `server.json` aligned to `1.1.6`.
+- **CLI diagnostics** — `neus doctor` initialize reports package version from `sdk/package.json`.
+- **`--oauth` flag** — `neus setup` and `neus auth` ignore `NEUS_ACCESS_KEY` when `--oauth` is passed; `neus setup --json` reports `authRequired` and `nextCommand` when browser sign-in is needed.
+
 ## [1.1.5] - 2026-06-07
 
 ### Changed

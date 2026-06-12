@@ -35,6 +35,8 @@ A gate can charge visitors directly. Turn it on in the gate's pricing step. Your
 
 **Card:** connect a payout account once from **Treasury → Payouts**. Card payments for your paid gates then settle directly to that account. Until payouts are connected, paid gates offer wallet checkout only.
 
+Payment runs after verification by default and unlocks the reward at fulfillment — the full sequence (snapshot → check → verify → pay → fulfill) is documented in [Hosted Gate Checkout](./hosted-gate-checkout).
+
 ## When credits run out
 
 Billable calls return **402** with a quote. Complete payment and retry with `PAYMENT-SIGNATURE`.

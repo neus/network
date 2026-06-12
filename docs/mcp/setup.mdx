@@ -25,7 +25,13 @@ Use `--json` for scripts.
 npx -y -p @neus/sdk neus check
 ```
 
-Create keys under **Account → Access keys** on [neus.network](https://neus.network/profile?tab=account) for servers and CI. Treat access keys like passwords.
+## Access keys
+
+OAuth is the default for IDE setup. Use profile access keys only for **servers, CI, and automation** — not everyday IDE sign-in.
+
+Create keys under **Account → Access keys** on [neus.network](https://neus.network/profile?tab=account). Treat access keys like passwords.
+
+use `neus setup` and `neus auth` instead of browser OAuth. Pass `--oauth` to force browser sign-in even when the variable is set.
 
 ## Disconnect
 
@@ -57,7 +63,7 @@ npx -y -p @neus/sdk neus import --from claude-desktop
 
 Per-editor install paths (Cursor, VS Code, Claude Code, and more): **[Install NEUS](../install)**.
 
-`neus setup` connects **Cursor**, **Codex**, **VS Code**, **Claude Code**, and **Cline** in one command.
+`neus setup` connects **Cursor**, **Codex**, **VS Code**, and **Claude Code** in one command. Other MCP hosts (including Cline) use the same hosted URL — see [IDE plugin](./ide-plugin).
 
 | Host | User scope | Project scope |
 | --- | --- | --- |
@@ -65,7 +71,6 @@ Per-editor install paths (Cursor, VS Code, Claude Code, and more): **[Install NE
 | **Codex** | `~/.codex/config.toml` through `codex mcp add` | User-scoped |
 | **VS Code** | macOS: `~/Library/Application Support/Code/User/mcp.json` · Linux: `~/.config/Code/User/mcp.json` · Windows: `%APPDATA%\Code\User\mcp.json` | `./.vscode/mcp.json` |
 | **Claude Code** | `claude mcp add` → `~/.claude.json` | `./.mcp.json` |
-| **Cline** | `cline_mcp_settings.json` in Cline settings | Project-scoped |
 
 Limit to one client:
 
