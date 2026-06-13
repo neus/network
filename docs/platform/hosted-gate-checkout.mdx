@@ -13,7 +13,7 @@ The simplest integrations do not need any of this directly — use the [VerifyGa
 1. **Snapshot** — `GET /api/v1/gates/{gateId}` returns the public gate: requirements, price, schedule, and reward presence. The secret reward value is never in the snapshot.
 2. **Eligibility** — `GET /api/v1/proofs/check?gateId=...&address=...&includePrivate=true&includeQHashes=true` evaluates the visitor's existing proofs against every requirement.
 3. **Verify** — if checks are missing, the visitor completes them (hosted verify link, VerifyGate, or `POST /api/v1/verification` for signature-based verifiers). Pass `gateId` and reuse satisfied checks via `options.reusedVerifierProofs`.
-4. **Pay** — for paid gates, payment happens after verification by default (`executionOrder: "verifyThenCharge"`), by card (Stripe) or USDC on Base.
+4. **Pay** — for paid gates, payment happens after verification by default (`executionOrder: "verifyThenCharge"`). Gates that pay out to a NEUS treasury or connected payout account settle through one Stripe checkout session — the visitor picks card or crypto there. Gates that pay out to a custom wallet settle by direct USDC on Base.
 5. **Fulfill** — `POST /api/v1/gates/{gateId}/fulfill` with the verified `qHash` (plus payment evidence for paid gates) delivers the reward.
 
 ```js
@@ -87,9 +87,14 @@ The snapshot's `monetization.charge` describes pricing:
 - `amountUsd`, `label`, `methods` (`usdc`, `stripe`), `cardPayoutReady`
 - `executionOrder` — `verifyThenCharge` (default): verification completes first, then payment, then fulfill.
 
+Method semantics:
+
+- `stripe` — hosted Stripe checkout. One session covers **card and crypto**; the visitor chooses at checkout. Available when the gate pays out to a NEUS treasury or connected payout account.
+- `usdc` — direct on-chain USDC transfer on Base. The only method for custom-wallet payout gates.
+
 Fulfill payment evidence:
 
-- **Card** — `paymentCheckoutSessionId` from the Stripe checkout return.
+- **Stripe** (card or crypto) — `paymentCheckoutSessionId` from the checkout return.
 - **USDC** — `paymentTxHash` of the on-chain transfer.
 
 Payments are bound to one `gateId` + `qHash` pair and cannot be reused for another checkout (`409 PAYMENT_ALREADY_USED`).

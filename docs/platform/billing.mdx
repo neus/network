@@ -31,9 +31,9 @@ const result = await client.gateCheck({
 
 A gate can charge visitors directly. Turn it on in the gate's pricing step. Your NEUS credits still cover the verification checks unless you configure otherwise.
 
-**Wallet (USDC):** payments settle on-chain straight to your wallet — no setup required.
+**Checkout (card or crypto):** connect a payout account once from **Treasury → Payouts**. Visitors then pay through one hosted checkout and choose card or crypto there — both settle to your payout account. Until payouts are connected, paid gates offer USDC checkout only.
 
-**Card:** connect a payout account once from **Treasury → Payouts**. Card payments for your paid gates then settle directly to that account. Until payouts are connected, paid gates offer wallet checkout only.
+**Custom wallet (USDC):** point the gate's payout at any wallet address and payments settle on-chain straight to it — no setup required. Custom-wallet gates are USDC-only.
 
 Payment runs after verification by default and unlocks the reward at fulfillment — the full sequence (snapshot → check → verify → pay → fulfill) is documented in [Hosted Gate Checkout](./hosted-gate-checkout).
 
