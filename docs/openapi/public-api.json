@@ -1575,7 +1575,7 @@
               "maxLength": 128
             },
             "maxItems": 32,
-            "description": "Explicit allowlist of action types the agent may perform (e.g., [\"read-proofs\", \"execute-jobs\", \"publish-approved-content\"]). Owner-view-only: not included in public proof responses."
+            "description": "Explicit allowlist of canonical actions the agent may perform (e.g., [\"read_proofs\", \"execute_jobs\", \"publish_content\"]). Owner-view-only: not included in public proof responses."
           },
           "deniedActions": {
             "type": "array",

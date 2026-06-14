@@ -35,7 +35,7 @@ await client.verify({
     controllerWallet: '0x...',
     agentWallet: '0x...',
     scope: 'global',
-    permissions: ['read-proofs'],
+    allowedActions: ['read_proofs'],
   },
   walletAddress: '0x...',
 });
@@ -106,12 +106,16 @@ await client.verify({
 | `agentId` | No | Linked identity id |
 | `scope` | No | Permission scope (default: `global`) |
 | `permissions` | No | Allowed actions |
+| `allowedActions` | No | Explicit action allowlist |
+| `deniedActions` | No | Explicit action denylist |
 | `maxSpend` | No | Spend cap in token base units |
 | `allowedPaymentTypes` | No | Payment rails (e.g. `x402`) |
 | `receiptDisclosure` | No | `summary`, `full`, or `none` |
 | `expiresAt` | No | Expiration (Unix ms) |
 | `instructions` | No | Policy text (16000 chars) |
 | `skills` | No | Up to 48 skill objects |
+
+The protocol accepts bounded action strings in **`allowedActions`** and **`deniedActions`**..
 
 Schema: [`agent-delegation.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/agent-delegation.json).
 
