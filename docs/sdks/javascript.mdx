@@ -34,7 +34,7 @@ window.location.assign(
 );
 ```
 
-`getHostedCheckoutUrl` supports `gateId`, `returnUrl`, `mode`, `intent`, `origin`, `oauthProvider`. The hosted page also accepts `returnTo` and `connect=1` (append manually). [Hosted Verify](../cookbook/auth-hosted-verify).
+`getHostedCheckoutUrl` supports `gateId`, `verifiers`, `preset`, `returnUrl`, `mode`, `intent`, `origin`, `oauthProvider`, `appId`, `billingWallet`, and `baseUrl`. The hosted page also accepts `returnTo` and `connect=1` (append manually). [Hosted Verify](../cookbook/auth-hosted-verify).
 
 React: [Widgets](../widgets/overview).
 
@@ -49,6 +49,8 @@ const client = new NeusClient({
 });
 ```
 
+Other options (advanced): `apiKey` (server key, sent as `Authorization: Bearer`), `appId`, `billingWallet`, `appLinkQHash`, `paymentSignature`, `extraHeaders`, `hubChainId`, `enableLogging`. Keep `apiKey` and any secret server-side only.
+
 ## App attribution (`appId`)
 
 Set `appId` only for advanced server/app attribution flows. It is public, not a secret, and it is not required for published gate checkout or `gateCheck({ gateId })`.
@@ -62,15 +64,19 @@ const client = new NeusClient({
 
 ## Verification options
 
-| Option | When to Use |
-|--------|-------------|
-| `persist: true` | Persist a reusable **qHash** |
-| `ipfs: true` / `pin: true` | IPFS-backed storage |
-| `strategy: 'reuse-or-create'` | Eligible proof first, else create (default) |
-| `strategy: 'fresh'` | Always create a new proof |
-| `strategy: 'reuse'` | Eligible proofs only; never create |
+Pass these under `options` on `client.verify(...)`:
 
-[Verification patterns](./verifications) for privacy and widget options.
+| Option | When to use |
+|--------|-------------|
+| `privacyLevel: 'public' \| 'unlisted' \| 'private'` | Control who can read the receipt |
+| `enableIpfs: true` | Pin proof data to IPFS |
+| `storeOriginalContent: true` | Keep the original content with the proof |
+| `targetChains: [...]` | Anchor/publish to specific chains |
+| `publishToHub: true` | Make the receipt discoverable in Hub |
+| `publicDisplay: true` | Allow public display of the receipt |
+| `meta`, `verifierOptions` | App metadata and per-verifier options |
+
+Reuse-vs-create is a **widget** concern: the `strategy` prop (`reuse-or-create` default, `fresh`, `reuse`) lives on [`VerifyGate`](../widgets/verifygate), not on `client.verify()`. [Verification patterns](./verifications) for privacy and widget options.
 
 ## Optional: `client.verify()` (signs in the browser)
 

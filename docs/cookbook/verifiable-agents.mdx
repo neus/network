@@ -35,6 +35,16 @@ To bill hosted checks through your product, complete [Quickstart](../quickstart)
 
 Schemas: **`docs/verifiers/schemas/`**
 
+## Agent that pays
+
+To let an agent pay for metered APIs autonomously, give its delegation a spend cap and the payments scope, then let it settle pay-per-call requests:
+
+1. Delegate with `scope: 'payments:x402'`, `allowedPaymentTypes: ['x402']`, and a `maxSpend` cap — see [Agent delegation](../agents/agent-delegation).
+2. The agent calls your priced endpoint; a `402` returns the price.
+3. The agent pays and retries with a `PAYMENT-SIGNATURE` header — full flow in [x402 pay-per-call](../platform/x402).
+
+The `maxSpend` cap is enforced as a hard limit, so the agent can never exceed its budget.
+
 ## Related
 
 <CardGroup cols={2}>

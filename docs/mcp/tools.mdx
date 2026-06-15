@@ -8,7 +8,8 @@ icon: wrench
 |-------|--------|
 | Session context | Call **`neus_context`** first. When signed in, it includes the current profile context. |
 | Profile refresh | Use **`neus_me`** only to refresh profile context or look up a public wallet/DID. |
-| Interactive | **`neus_verify_or_guide`** only after reuse checks show a receipt, profile, payment, provider, wallet, or delegation step is missing. |
+| Create in-session | **`neus_verify`** when the signed-in wallet can complete the check without a browser. |
+| Interactive | **`neus_verify_or_guide`** when a step needs a browser (OAuth, personhood, payment, wallet connect) — it returns a hosted link. |
 
 ## Field names
 
@@ -41,6 +42,8 @@ Same flow as [Overview](./overview).
   <Card title="Catalog" icon="list-tree" href="./verifiers-catalog">
   </Card>
   <Card title="Check" icon="circle-check" href="./proofs-check">
+  </Card>
+  <Card title="Verify" icon="circle-plus" href="./verify">
   </Card>
   <Card title="Verify or guide" icon="signs-post" href="./verify-or-guide">
   </Card>

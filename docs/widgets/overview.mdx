@@ -6,7 +6,10 @@ icon: puzzle-piece
 "twitter:image": "/images/og-widgets.png"
 ---
 
-React widgets gate UI behind verification: **`VerifyGate`** for reuse-first gating and **`ProofBadge`** for status. The default path is a published gate — pass one **`gateId`**.
+The fastest way to add trust to a React app: **`VerifyGate`** gates content behind a check, and **`ProofBadge`** shows verified status. Your app uses the same checks your server already trusts — no verifier logic in the browser.
+
+- **`VerifyGate`** reuses an existing receipt, opens Hosted Verify only when needed, then renders your content. It runs on a published gate — pass one **`gateId`**.
+- **`ProofBadge`** displays status for any receipt — pass a **`qHash`**, no gate required.
 
 ## Install
 
@@ -14,10 +17,15 @@ React widgets gate UI behind verification: **`VerifyGate`** for reuse-first gati
 npm install @neus/sdk react react-dom
 ```
 
-| Widget | For |
+| Export | For |
 |--------|-----|
-| VerifyGate | Gated UI |
-| ProofBadge | Status badge |
+| `VerifyGate` | Gate content behind a check |
+| `ProofBadge` | Status badge with chains popover |
+| `SimpleProofBadge` | Minimal verified badge |
+| `NeusPillLink` | "Verified on NEUS" pill linking to the receipt |
+| `VerifiedIcon` | Standalone verified icon |
+
+All are imported from `@neus/sdk/widgets`.
 
 ## VerifyGate
 
@@ -42,6 +50,8 @@ import { ProofBadge } from '@neus/sdk/widgets';
 
 <ProofBadge qHash={proof.qHash} showChains />
 ```
+
+`ProofBadge` also accepts `showLabel`, `logoUrl`, `onClick`, and `className`. See the [VerifyGate](./verifygate) page for the full `VerifyGate` prop list (`requiredVerifiers`, `onVerified`, `strategy`, `checkExisting`, and more).
 
 ## Next
 

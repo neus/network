@@ -52,7 +52,37 @@ await client.gateCheck({
 
 ## Personal access keys
 
-`Authorization: Bearer <npk_...>` from [Access keys](https://neus.network/profile?tab=account). Server / MCP only.
+Pass an access key to `NeusClient` server-side — it is sent as `Authorization: Bearer <npk_...>`:
+
+```javascript
+import { NeusClient } from '@neus/sdk';
+
+// Server only — never ship npk_* in a browser bundle
+const client = new NeusClient({ apiKey: process.env.NEUS_ACCESS_KEY });
+```
+
+Create keys under [Access keys](https://neus.network/profile?tab=account). Server / MCP only.
+
+## App link: `verifyFromApp` (advanced server)
+
+After a one-time user approval ([agent delegation app link](../agents/agent-delegation)), your backend can create proofs without a per-request signature. Set the app link on the client and call `verifyFromApp`:
+
+```javascript
+const client = new NeusClient({
+  apiUrl: 'https://api.neus.network',
+  appId: 'acme-web',
+  appLinkQHash: process.env.NEUS_APP_LINK_QHASH, // from the user's approval
+});
+
+await client.verifyFromApp({
+  user: '0x...',
+  verifier: 'ownership-basic',
+  content: 'Hello NEUS',
+  data: { reference: { type: 'url', id: 'https://example.com' } },
+});
+```
+
+Send `x-neus-app: acme-web` and `Origin: https://yourapp.com` so the delegation's `app:` / `origin:` permissions match.
 
 ## Advanced
 

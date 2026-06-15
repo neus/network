@@ -6,30 +6,35 @@ icon: wand-magic-sparkles
 
 **Verifier ID:** `ai-content-moderation`
 
+Screen text or images for safety and get a reusable receipt of the result — useful before publishing user-generated or AI-generated content.
+
 ## Use cases
 
-- user-generated content
+- User-generated content
 - AI-generated output
-- moderation and publishing workflows
+- Moderation and publishing workflows
 
-## Flow Type
+## Flow type
 
-Lookup. NEUS checks the content with a moderation provider.
+External lookup. NEUS screens the content with a moderation provider and records the outcome.
 
-## Required Fields
+## Fields
 
 | Field | Required | Notes |
 |------|----------|-------|
-| `content` | Yes | Raw content or encoded payload |
-| `contentType` | Yes | MIME type |
-| `provider` | No | Example: `google-vision`, `google-perspective` |
+| `content` | Yes | Raw text, base64, or an `ipfs://` / CID reference |
+| `contentType` | Yes | MIME type — see supported types below |
+| `provider` | No | Defaults by content: text → `google-perspective`, images → `google-vision` |
+
+**Supported `contentType` values:** `text/plain`, `text/html`, `image/jpeg`, `image/png`, `image/gif`, `image/webp`, `application/json`, `image/svg+xml`, `text/markdown`.
 
 ## Example
 
 ```json
 {
-  "content": "<base64-or-text>",
+  "content": "Text to screen, or a base64/ipfs:// reference",
   "contentType": "text/plain"
 }
 ```
 
+Full schema: [`ai-content-moderation.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/ai-content-moderation.json).

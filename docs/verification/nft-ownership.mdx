@@ -22,6 +22,9 @@ Lookup. NEUS checks on-chain ownership.
 | `contractAddress` | Yes | NFT contract or mint |
 | `tokenId` | Yes | Token ID |
 | `chainId` or `chain` | Yes | EVM `chainId` or Solana CAIP-2 chain |
+| `tokenType` | No | `erc721` (default) or `erc1155` |
+| `ownerAddress` | No | Wallet to check; defaults to the signer |
+| `blockNumber` | No | Check ownership at a specific block |
 
 ## Example
 
@@ -34,3 +37,5 @@ Lookup. NEUS checks on-chain ownership.
 ```
 
 High-stakes access: pair with freshness checks or require a new proof when policy demands it.
+
+Full schema: [`nft-ownership.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/nft-ownership.json).

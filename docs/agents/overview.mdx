@@ -1,22 +1,42 @@
 ---
 title: Agents Overview
-description: Identity, authority, and receipts for agents that act.
+description: Identity, scoped authority, and receipts for agents that act.
 icon: robot
 "og:image": "/images/og-agents.png"
 "twitter:image": "/images/og-agents.png"
 ---
 
-NEUS gives agents identity, scoped authority, and receipts for trusted actions.
+NEUS gives agents a portable identity, **scoped authority** with hard limits, and a trust receipt for every action — so other apps, agents, and payment rails can trust an agent before it acts, not after.
 
 | Need | How |
 |------|-----|
-| Identify the agent | `agent-identity` |
-| Set what it can do | `agent-delegation` |
-| Check if ready | `neus_agent_link` |
+| Identify the agent | `agent-identity` — the agent wallet signs for itself |
+| Set what it can do | `agent-delegation` — a controller account grants scoped authority |
+| Cap what it can spend | `maxSpend` on the delegation (base units) |
+| Check if it is ready | `neus_agent_link` → `linked: true` |
+| Be discoverable | A2A and EIP-8004 agent cards |
 | Reuse trust | `qHash`, proof URL, or DID |
-| Audit later | Receipts and proof reads |
+| Audit later | Receipt reads and proof pages |
 
-## Flow
+## Two proofs make an agent trusted
+
+- **Identity** (`agent-identity`) — the agent wallet self-attests its name, type, capabilities, and skills. Identity alone grants no authority.
+- **Delegation** (`agent-delegation`) — a **controller** account signs to grant scoped authority to the agent: which actions it may take, spend caps, and an expiry.
+
+An agent is **ready** only when both are on file.
+
+## Scoped authority
+
+A delegation is a hard boundary, not a hint:
+
+- **`allowedActions` / `deniedActions`** — explicit allow/deny lists. A denied action always wins.
+- **`maxSpend`** — a spend cap as a whole-number string in token base units (USDC uses 6 decimals: 25 USDC = `"25000000"`).
+- **`scope`** — e.g. `payments:x402` for metered payments, or `global`.
+- **`expiresAt`** — Unix milliseconds; set it whenever money or high-risk actions are in scope.
+
+Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are available through `neus_agent_create`. Full field reference: [Agent delegation](./agent-delegation).
+
+## Set it up
 
 <Steps>
   <Step title="Connect">
@@ -26,23 +46,19 @@ NEUS gives agents identity, scoped authority, and receipts for trusted actions.
     ```
     Configures hosted NEUS MCP for Cursor, Codex, VS Code, or Claude Code.
   </Step>
-  <Step title="Connect MCP">
-    Call **`neus_context`** at the start of each session.
-  </Step>
-  <Step title="Link">
-    Call **`neus_agent_link`**. If **`linked: true`**, reuse existing receipts.
+  <Step title="Check">
+    Call **`neus_context`**, then **`neus_agent_link`** with the agent wallet.
   </Step>
   <Step title="Create">
-    Call **`neus_agent_create`** when proofs are missing. Finish on NEUS.
+    If proofs are missing, call **`neus_agent_create`** — the agent wallet signs identity, the controller signs delegation. Finish on NEUS.
+  </Step>
+  <Step title="Confirm">
+    Call **`neus_agent_link`** until **`linked: true`**, then reuse receipts.
   </Step>
   <Step title="Act">
     Check receipts before payments, data access, or other trusted actions.
   </Step>
 </Steps>
-
-```json
-{ "agentId": "my-agent", "agentWallet": "0x..." }
-```
 
 ## Next
 
@@ -54,14 +70,15 @@ NEUS gives agents identity, scoped authority, and receipts for trusted actions.
     Register an agent.
   </Card>
   <Card title="Agent delegation" icon="key" href="./agent-delegation">
-    Grant permissions.
+    Grant scoped authority and spend caps.
+  </Card>
+  <Card title="A2A agent cards" icon="cards" href="./a2a">
+    Discovery for multi-agent systems.
+  </Card>
+  <Card title="Pay per call" icon="coins" href="../platform/x402">
+    Agentic payments with x402.
   </Card>
   <Card title="MCP setup" icon="plug" href="../mcp/setup">
     Hosted MCP, OAuth, and access keys.
   </Card>
-  <Card title="A2A discovery" icon="cards" href="./a2a">
-    Agent cards.
-  </Card>
 </CardGroup>
-
-SDK details: [Agent identity](./agent-identity) · [Agent delegation](./agent-delegation)

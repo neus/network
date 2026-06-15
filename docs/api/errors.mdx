@@ -28,11 +28,14 @@ Responses use `code`, `message`, `type`. Fix the request, retry with backoff, or
 | `INVALID_SIGNATURE` | Signature format or context is invalid | Rebuild the signing flow and retry |
 | `EXPIRED_SIGNATURE` | Signature timestamp is too old | Generate a fresh request and sign again |
 | `INVALID_WALLET` | Wallet address format is invalid | Fix the request before retrying |
-| `VERIFIER_NOT_FOUND` | Requested verifier does not exist | Read the live verifier catalog and correct the request |
+| `INVALID_VERIFIER_DATA` | Verifier inputs are missing or malformed | Check the verifier's required fields and retry |
+| `INVALID_VERIFIER_COMBINATION` | Requested verifiers can't be combined in one request | Split into separate requests |
+| `INVALID_VERIFIER_FLOW_COMBINATION` | A hosted-only verifier was mixed with others | Run the hosted-only check on its own |
 | `VERIFICATION_FAILED` | The requested check did not pass | Treat as a failed verification, not a transport error |
-| `PROOF_NOT_FOUND` | Id not found | Confirm the id and visibility |
-| `UNAUTHORIZED` | The caller is not allowed to perform this action | Re-authenticate the right owner or user |
-| `RATE_LIMITED` | Too many requests | Back off and retry later |
+| `NOT_FOUND` | Proof or resource not found | Confirm the id and visibility |
+| `PROOF_NOT_FOUND` | Gate/fulfill proof not found | Confirm the gate and the proof exist |
+| `WALLET_AUTH_REQUIRED` | Action needs an owner wallet signature/session | Authenticate the right wallet, then retry |
+| `RATE_LIMIT_EXCEEDED` | Too many requests | Back off and retry after `Retry-After` |
 
 ## HTTP Status Codes
 
@@ -64,8 +67,8 @@ try {
     throw new Error('Required receipt not found');
   }
 } catch (error) {
-  if (error.code === 'RATE_LIMITED') {
-    // Back off and retry later
+  if (error.code === 'RATE_LIMIT_EXCEEDED') {
+    // Back off and retry after Retry-After
   } else if (error.code === 'SIGNATURE_VERIFICATION_FAILED') {
     // Re-standardize and sign the current request
   }

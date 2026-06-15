@@ -22,14 +22,18 @@ Lookup. NEUS checks owner or admin authority on-chain.
 |------|----------|-------|
 | `contractAddress` | Yes | EVM contract address |
 | `chainId` | Yes | EVM chain ID |
-| `method` | No | `owner`, `admin`, or access-control style check |
+| `method` | No | `owner`, `admin`, or `accessControl` (defaults to `owner`) |
+| `walletAddress` | No | Address to check; defaults to the signer |
 
 ## Example
 
 ```json
 {
   "contractAddress": "0x...",
-  "chainId": 8453
+  "chainId": 8453,
+  "method": "owner"
 }
 ```
+
+Full schema: [`contract-ownership.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/contract-ownership.json).
 

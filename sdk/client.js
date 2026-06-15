@@ -1464,13 +1464,12 @@ export class NeusClient {
       throw new ValidationError(`Failed to sign revocation: ${error.message}`);
     }
 
-    const res = await this._makeRequest('POST', `/api/v1/proofs/revoke-self/${qHash}`, {
+    const json = await this._makeRequest('POST', `/api/v1/proofs/revoke-self/${qHash}`, {
       walletAddress: address,
       signature,
       signedTimestamp,
       ...(signerIsEvm ? {} : { chain, signatureMethod })
     });
-    const json = await res.json();
     if (!json.success) {
       throw new ApiError(json.error?.message || 'Failed to revoke proof', json.error);
     }
@@ -1767,7 +1766,7 @@ export class NeusClient {
     if (!id || id.length > 80 || !/^[a-zA-Z0-9:_-]+$/.test(id)) {
       throw new ValidationError('Valid gateId is required');
     }
-    const response = await this._makeRequest('GET', `/api/v1/gates/${encodeURIComponent(id)}`);
+    const response = await this._makeRequest('GET', `/api/v1/profile/gates/${encodeURIComponent(id)}`);
     if (!response.success || !response.data?.gate) {
       throw new ApiError(`Gate lookup failed: ${response.error?.message || 'Gate not found'}`, response.error);
     }
@@ -1806,7 +1805,7 @@ export class NeusClient {
 
     const response = await this._makeRequest(
       'POST',
-      `/api/v1/gates/${encodeURIComponent(gateId)}/fulfill`,
+      `/api/v1/profile/gates/${encodeURIComponent(gateId)}/fulfill`,
       body
     );
     if (!response.success) {

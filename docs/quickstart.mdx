@@ -1,85 +1,92 @@
 ---
 title: Quickstart
-description: Ship trust checkout in four steps — create a gate, publish, embed or link, check on your server.
+description: Ship trust in your app with drop-in widgets — VerifyGate, ProofBadge, and a server check.
 icon: rocket
 "og:image": "/images/og-quickstart.png"
 "twitter:image": "/images/og-quickstart.png"
 ---
 
-NEUS runs sign-in and verification in the browser. Your app saves the receipt and checks it before payouts, access, or other trusted actions.
+The fastest way to add trust to an app: gate content with **`<VerifyGate>`**, show status with **`<ProofBadge>`**, and confirm on your server before trusted actions. Your app never implements verifier logic — a published gate owns the checks, pricing, and checkout.
 
 **End users never need a NEUS account, an API key, or extra setup in your product.**
 
-## 1. Create and publish a gate
+## Build it
 
-1. Sign in at [neus.network](https://neus.network).
-2. Open **Gates** in your profile and choose the checks visitors must pass.
-3. Set pricing (you pay by default, or charge visitors).
-4. **Publish** and copy your checkout link or embed snippet.
+<Steps>
+  <Step title="Publish a gate">
+    Sign in at [neus.network](https://neus.network), open **Gates**, choose the checks visitors must pass, set pricing (you pay by default, or charge visitors), and **Publish**. Copy your `gateId` — visitors only ever need that.
+  </Step>
+  <Step title="Gate content with VerifyGate">
+    ```jsx
+    import { VerifyGate } from '@neus/sdk/widgets';
 
-Your gate stores the check policy. Visitors only need your `gateId`.
+    <VerifyGate gateId="gate_your-app-name">
+      <ProtectedContent />
+    </VerifyGate>;
+    ```
+    `VerifyGate` looks for an existing receipt, opens **Hosted Verify** only when a new one is needed, then renders your content. Wallet, passkey, and OAuth all happen on NEUS — not inside your app.
+  </Step>
+  <Step title="Show status with ProofBadge">
+    ```jsx
+    import { ProofBadge } from '@neus/sdk/widgets';
 
-## 2. Protect your UI with VerifyGate
+    <ProofBadge qHash={proof.qHash} showChains />;
+    ```
+  </Step>
+  <Step title="Confirm before trusted actions">
+    On your server, check the visitor still satisfies the gate before you act:
+    ```js
+    import { NeusClient } from '@neus/sdk';
 
-```jsx
-import { VerifyGate } from "@neus/sdk/widgets";
+    const client = new NeusClient();
+    const result = await client.gateCheck({
+      gateId: 'gate_your-app-name',
+      address: user.walletAddress,
+    });
 
-<VerifyGate gateId="gate_your-app-name">
-  <ProtectedContent />
-</VerifyGate>;
-```
+    if (!result.data?.eligible) {
+      // send the user back to VerifyGate or Hosted Verify
+    }
+    ```
+  </Step>
+</Steps>
 
-`VerifyGate` looks for an existing receipt, opens **Hosted Verify** when a new one is needed, then shows your content. Wallet, passkey, and OAuth all happen on NEUS — not inside your app.
+## Not using React? Send users to Hosted Verify
 
-## 3. Or send users to Hosted Verify
-
-```javascript
-import { getHostedCheckoutUrl } from "@neus/sdk";
+```js
+import { getHostedCheckoutUrl } from '@neus/sdk';
 
 window.location.assign(
   getHostedCheckoutUrl({
-    gateId: "gate_your-app-name",
-    returnUrl: "https://myapp.com/auth/callback",
+    gateId: 'gate_your-app-name',
+    returnUrl: 'https://myapp.com/auth/callback',
   }),
 );
 ```
 
-Read **`qHash`** from the callback URL or popup message. Details: [Hosted Verify](./cookbook/auth-hosted-verify).
+Read **`qHash`** from the callback URL or popup message, then store it. Details: [Hosted Verify](./cookbook/auth-hosted-verify).
 
-## 4. Check before trusted actions
-
-On your server, confirm the visitor still satisfies the published gate before you act:
-
-```javascript
-import { NeusClient } from "@neus/sdk";
-
-const client = new NeusClient();
-
-const result = await client.gateCheck({
-  gateId: "gate_your-app-name",
-  address: user.walletAddress,
-});
-
-if (!result.data?.eligible) {
-  // send the user back to VerifyGate or hosted verify
-}
-```
-
-## Assistants and agents
-
-Connect MCP hosts:
+## Adding trust to an agent instead?
 
 ```bash
 npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus check
 ```
 
-Setup starts OAuth when your host needs it. Access keys are for servers, CI, and automation — never in browser code. Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
+Wires NEUS MCP into Cursor, Codex, VS Code, and Claude Code, then ask: **"Use NEUS Verify before taking sensitive actions."** See [Install NEUS](./install).
 
-Agent wallets: [Agent verification flow](./agents/agent-verification-flow).
+## Next
 
-## Advanced server receipts
+<CardGroup cols={3}>
+  <Card title="VerifyGate" icon="square-check" href="./widgets/verifygate">
+    Props, modes, and OAuth.
+  </Card>
+  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
+    The browser flow on NEUS.
+  </Card>
+  <Card title="Integration" icon="compass" href="./integration">
+    Check, verify, save, reuse.
+  </Card>
+</CardGroup>
 
-Need backend-created receipts after a one-time user approval? See [Integrations](./cookbook/integrations).
-
-**Next:** [Integration](./integration)
+Backend-created receipts after a one-time approval: [Integrations](./cookbook/integrations).

@@ -1,37 +1,41 @@
 ---
 title: Agent concepts
-description: Roles, wallets, and how NEUS agent API field names map to those concepts.
+description: Roles, wallets, scoped authority, and how NEUS agent fields map to them.
 icon: users
 ---
 
-## Overview
-
-**Register** the agent, then **grant** what it can do. These can be the same person or two different accounts.
+**Register** the agent, then **grant** what it can do. The two steps can be the same account (self-delegation) or two different accounts (a controller delegating to an agent).
 
 ## Roles
 
-| Role | Action | Signs with |
-|------|--------|------------|
-| **Agent** | Registers agent metadata | Agent address |
-| **Controller** | Grants scopes and limits | Controller account |
+| Role | Does | Signs with |
+|------|------|------------|
+| **Agent** | Registers identity (name, type, capabilities) | Agent wallet |
+| **Controller** | Grants scoped authority and limits | Controller account |
 
-## Addresses
+- **Agent wallet** — identifies the agent in NEUS and self-signs `agent-identity`.
+- **Controller account** — signs `agent-delegation`. It does not need to own the agent wallet.
 
-- **Agent address** - identifies the agent in NEUS.
-- **Controller account** - signs delegation. Does not need to own the agent address.
+## Scoped authority
 
-## Signing
+A delegation defines exactly what the agent may do:
 
-Use [hosted verify](../cookbook/auth-hosted-verify) or MCP. NEUS handles the ceremony.
+| Concept | Field | Notes |
+|---------|-------|-------|
+| Allowed actions | `allowedActions` | Empty means permissive (unless denied) |
+| Denied actions | `deniedActions` | Always wins over allowed |
+| Scope | `scope` | Defaults to `global`; use `payments:x402` for metered pay |
+| Spend cap | `maxSpend` | Whole-number string in token base units (USDC: 6 decimals) |
+| Expiry | `expiresAt` | Unix milliseconds; set when money or risk is in scope |
 
-## Field names
+Capabilities (`wallet`, `signing`, `spending`, `publishing`, `mcp`, …) describe what an agent *can* do; delegation decides what it is *allowed* to do.
+
+## Setup state
 
 | Field | Meaning |
 |-------|---------|
-| `agentWallet` | Agent address |
-| `controllerWallet` | Controller account |
-| `linked` | Identity + delegation both present |
-| `principal` | Signed-in account from MCP session |
+| `linked` | Identity and delegation both present |
+| `principal` | Signed-in account from your MCP session |
 
 ## Next
 
@@ -39,11 +43,11 @@ Use [hosted verify](../cookbook/auth-hosted-verify) or MCP. NEUS handles the cer
  <Card title="Overview" icon="robot" href="./overview">
  Start here.
  </Card>
+ <Card title="Delegation" icon="key" href="./agent-delegation">
+ Full field reference.
+ </Card>
  <Card title="Flow" icon="route" href="./agent-verification-flow">
  Setup order.
- </Card>
- <Card title="MCP create" icon="plug" href="../mcp/agent-create">
- Create from MCP.
  </Card>
  <Card title="Cookbook" icon="book-open" href="../cookbook/verifiable-agents">
  Recipes.

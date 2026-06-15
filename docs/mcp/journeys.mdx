@@ -1,42 +1,78 @@
 ---
 title: MCP journeys
-description: Day-one assistant workflows for verify, receipts, portable context, agents, and Vault.
+description: Real assistant workflows — verify before action, reuse receipts, portable context, trusted agents, vault, and agentic payments.
 icon: route
 ---
 
-NEUS MCP is built for outcomes. After `neus setup` and `neus check`, ask your assistant in plain language.
+NEUS MCP is built for outcomes. After `neus setup` and `neus check`, ask your assistant in plain language — it runs the trust loop and reports a **Trust Result** (Passed / Action needed / Blocked) instead of raw tool output.
 
-## Verify before action
+Signed in? Your assistant uses your profile wallet automatically — you never paste wallet addresses.
 
-The default autopilot path:
+## Verify before a sensitive action
 
-1. Reuse existing trust receipts when possible
-2. Run missing checks through hosted verify only when needed
-3. Summarize the result as **NEUS Verify** for you (Passed / Action needed / Blocked)
+The default autopilot: reuse an existing receipt when one fits, run the missing check only when needed, then continue.
 
-**Try:** “Use NEUS Verify before taking sensitive actions.”
+**Try:** "Use NEUS Verify before taking sensitive actions."
 
-Signed in? Your assistant uses your profile wallet automatically — you do not pass wallet addresses.
+```txt
+NEUS Verify
+Status: Passed
+Requirement: Identity and permission check
+Receipt: Existing trust receipt accepted
+Next: Continue
+```
 
-## Show Trust Receipts
+If nothing on file covers the request:
 
-**Try:** “Show my trust receipts for identity checks.”
+```txt
+NEUS Verify
+Status: Action needed
+Missing: Sign-in
+Next: Connect NEUS, then retry
+```
 
-Use this when you need the receipt URL, status, tags, or profile summary behind a prior check.
+## Show your trust receipts
 
-## Reuse Portable Context
+Pull the receipt URL, status, tags, or summary behind any prior check.
 
-**Try:** “Use my NEUS context from prior receipts before asking me again.”
+**Try:** "Show my trust receipts for identity checks."
 
-Assistants can read tagged receipts through `neus_proofs_get` for prior instructions, rules, memory, or session references. This keeps context portable without exposing unrelated runtime surfaces or private implementation details.
+## Reuse portable context
 
-## Trusted Agent
+Tagged receipts carry prior instructions, rules, or session references — so your assistant picks up where you left off without re-asking.
 
-**Try:** “Verify this agent is trusted before it runs tools.”
+**Try:** "Use my NEUS context from prior receipts before asking me again."
 
-## Vault
+## Trust an agent before it runs tools
 
-**Try:** “Use NEUS Vault before storing or using secrets.”
+Confirm an agent has both identity and approved authority before it acts.
+
+**Try:** "Verify this agent is trusted before it runs tools."
+
+```txt
+NEUS Verify
+Status: Blocked
+Reason: Agent has no approved delegation on file
+Next: Run agent setup, then retry
+```
+
+When setup is missing, the assistant guides identity + delegation, then re-checks until the agent is linked. See [Agent verification flow](../agents/agent-verification-flow).
+
+## Pay per call within a cap
+
+With a `payments:x402` delegation and a `maxSpend` cap, an agent can settle metered calls on its own — and is refused past the cap.
+
+**Try:** "Pay for this API call with my x402 delegation, up to the cap."
+
+Details: [x402 pay-per-call](../platform/x402).
+
+## Store and use secrets safely
+
+Keep tokens in encrypted Vault instead of pasting them into chat.
+
+**Try:** "Use NEUS Vault before storing or using secrets."
+
+Details: [Secrets](./secrets).
 
 ---
 

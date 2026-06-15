@@ -34,8 +34,13 @@ Use direct/API mode only for advanced integrations that already control the seco
 | `primaryWalletAddress` | Yes | Primary wallet |
 | `secondaryWalletAddress` | Yes | Secondary wallet |
 | `signature` | Yes | Secondary wallet signature |
+| `signatureMethod` | Yes | `eip191` for EVM, `ed25519` for non-EVM |
 | `chain` | Yes | CAIP-2 chain |
 | `signedTimestamp` | Yes | Unix ms timestamp |
+| `relationshipType` | No | `linked` (default), `controller`, or `delegate` |
+| `label` | No | Display label for the link |
+
+Instead of `primaryWalletAddress` / `secondaryWalletAddress` + `chain`, you may pass CAIP-10 `primaryAccountId` and `secondaryAccountId`.
 
 ## Example
 
@@ -46,7 +51,10 @@ Advanced direct/API payload after the secondary wallet has already signed:
   "primaryWalletAddress": "0x...",
   "secondaryWalletAddress": "0x...",
   "signature": "0x...",
+  "signatureMethod": "eip191",
   "chain": "eip155:84532",
   "signedTimestamp": 1730000000000
 }
 ```
+
+Full schema: [`wallet-link.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/wallet-link.json).

@@ -6,26 +6,37 @@ icon: building
 
 **Verifier ID:** `ownership-org-oauth`
 
-Google or Microsoft workspace membership. Hosted `/verify` or `VerifyGate` - avoid custom OAuth UI. Visibility: [Security and trust](../platform/security-and-trust).
+Prove a person belongs to a Google Workspace or Microsoft 365 organization, then gate org-only apps, agents, and content. The OAuth ceremony runs on NEUS — use Hosted Verify or `VerifyGate`, never a custom OAuth UI.
 
 ## Use cases
 
 - Gating to members of a Google Workspace or Microsoft 365 organization
 - Org-scoped agents and apps
+- Internal tools and partner portals
 
-## Example
+## Flow type
+
+Interactive, hosted-only. This verifier cannot be submitted directly from your backend, and it cannot be combined with other checks in one request.
+
+## The simplest path
 
 ```text
-https://neus.network/verify?preset=org-pack&returnUrl=https://app.example.com/verified
+https://neus.network/verify?verifiers=ownership-org-oauth&returnUrl=https://app.example.com/verified
 ```
 
-## What You Configure
+You get a `qHash`. Store and reuse it.
+
+## Fields
 
 | Field | Required | Notes |
 |------|----------|-------|
 | `provider` | Yes | `google` or `microsoft` |
+| `internalSocialToken` | Yes (direct submit) | Short-lived token issued by the hosted OAuth step |
 | `expectedOrgDomain` | No | Restrict the proof to one company domain such as `acme.com` |
+| `walletAddress` | No | Subject override to bind membership to a wallet |
 
 <Tip>
-`expectedOrgDomain` only when a single company domain should pass; omit if any Workspace / M365 tenant is OK.
+Set `expectedOrgDomain` only when a single company domain should pass; omit it if any Workspace / M365 tenant is acceptable.
 </Tip>
+
+Full schema: [`ownership-org-oauth.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/ownership-org-oauth.json).

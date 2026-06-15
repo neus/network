@@ -12,10 +12,14 @@ icon: list-tree
 | Social link | [ownership-social](./ownership-social) | Interactive |
 | Domain | [ownership-dns-txt](./ownership-dns-txt) | Lookup |
 | Org / team | [ownership-org-oauth](./ownership-org-oauth) | Interactive |
+| Username / handle | [ownership-pseudonym](./ownership-pseudonym) | Instant |
+| Linked wallets | [wallet-link](./wallet-link) | Instant |
 | NFT gate | [nft-ownership](./nft-ownership) | Lookup |
 | Token gate | [token-holding](./token-holding) | Lookup |
+| Contract control | [contract-ownership](./contract-ownership) | Lookup |
 | Human | [proof-of-human](./proof-of-human) | Interactive |
 | Wallet risk | [wallet-risk](./wallet-risk) | Lookup |
+| Content safety | [ai-content-moderation](./ai-content-moderation) | Lookup |
 | Agent register | [agent-identity](../agents/agent-identity) | Instant |
 | Agent delegate | [agent-delegation](../agents/agent-delegation) | Instant |
 
@@ -70,12 +74,14 @@ icon: list-tree
 
 ## Bundles
 
-| Bundle | Verifiers | For |
+Ready-made `?preset=` bundles, or combine any checks with `?verifiers=id1,id2` — see [Presets](../platform/presets).
+
+| Preset | Verifiers | For |
 |--------|-----------|-----|
-| AI Trust | ownership-basic + proof-of-human | AI + human |
-| Agent Pack | agent-identity + agent-delegation | Scoped agents |
-| Community Gate | nft-ownership + proof-of-human | Communities |
-| Org Onboard | ownership-org-oauth + ownership-dns-txt | Org + domain |
+| `agent-pack` | agent-identity + agent-delegation + wallet-risk | Scoped agents |
+| `project-pack` | contract-ownership + ownership-dns-txt | Project trust |
+| `creator-pack` | ownership-basic + ai-content-moderation | Content trust |
+| `workspace-pack` | ownership-social + ownership-basic + agent-identity + wallet-link | Team onboarding |
 
 ## Next
 
