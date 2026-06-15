@@ -1,0 +1,34 @@
+---
+title: "Verify (`neus_verify`)"
+description: "Create a NEUS trust receipt from inside an MCP session."
+icon: circle-check
+---
+
+Use **`neus_verify`** to create a receipt when the signed-in wallet can complete the check in-session. For steps that need a browser (OAuth, personhood, payment, wallet connect), use **[`neus_verify_or_guide`](./verify-or-guide)** instead — it returns a hosted link.
+
+Always run **`neus_proofs_check`** first and reuse an existing receipt before creating a new one.
+
+## Input
+
+| Field | Required | Notes |
+|-------|----------|-------|
+| `walletAddress` | Yes | Subject wallet (EVM `0x…`, Solana base58) |
+| `verifierIds` | Yes | One or more verifier ids |
+| `data` | No | Verifier inputs (see each [verifier](../verification/verifiers)) |
+| `chain` | No | CAIP-2 chain for the wallet |
+| `signature` | No | Provided in the finalize step |
+| `signedTimestamp` | No | Provided in the finalize step |
+| `options.returnUrl` | No | Where to send the user if a hosted step is needed |
+| `options.publishToHub` | No | Make the receipt discoverable in Hub |
+
+```json
+{ "walletAddress": "0x...", "verifierIds": ["ownership-basic"], "data": { "content": "Hello NEUS" } }
+```
+
+## Signing flow
+
+`neus_verify` is two-phase. The first call returns the exact signing material once; sign it with the bound wallet and submit it back to finalize. Do not restart the preparation step blindly — finalize with the material you were given.
+
+## Output
+
+A **Trust Result**: the new receipt **`qHash`** and status on success, or a `next_action` pointing to a hosted step when the check can't complete in-session.

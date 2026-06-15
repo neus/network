@@ -20,9 +20,9 @@ Lookup. NEUS checks wallet risk through an external provider.
 
 | Field | Required | Notes |
 |------|----------|-------|
-| `walletAddress` | Yes | Wallet to assess |
+| `walletAddress` | Yes | Wallet to assess (EVM, Solana, TON, Sui, Sei, Bitcoin, or Stellar) |
 | `provider` | No | Example: `webacy` |
-| `chain` or `chainId` | No | Optional chain context |
+| `chain` or `chainId` | No | Chain context: `eth`, `base`, `bsc`, `pol`, `opt`, `arb`, `sol`, `ton`, `sei`, `sui`, `btc`, `stellar` |
 
 ## Example
 
@@ -32,4 +32,6 @@ Lookup. NEUS checks wallet risk through an external provider.
   "chain": "base"
 }
 ```
+
+Full schema: [`wallet-risk.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/wallet-risk.json).
 

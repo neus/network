@@ -17,4 +17,6 @@ icon: table
 
 ## Output
 
-Array of verifiers with IDs, labels, flow hints, schemas, and **`meta.count`**. Use the returned fields when building verifier-specific payloads.
+An array of live verifier **IDs** (strings), e.g. `["ownership-basic", "proof-of-human", ...]`. Use it to confirm which verifiers exist before building a request.
+
+For input fields and schemas per verifier, see the [Verifiers](../verification/verifiers) pages and the JSON schemas in [`docs/verifiers/schemas/`](https://github.com/neus/network/tree/main/docs/verifiers/schemas), or call `GET /api/v1/verification/verifiers` for the full metadata response.

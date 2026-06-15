@@ -33,13 +33,17 @@ await client.verify({
   verifier: 'agent-delegation',
   data: {
     controllerWallet: '0x...',
+    controllerChainRef: 'eip155:8453',
     agentWallet: '0x...',
+    agentChainRef: 'eip155:8453',
     scope: 'global',
     allowedActions: ['read_proofs'],
   },
   walletAddress: '0x...',
 });
 ```
+
+Both wallets need a CAIP-2 chain reference (`controllerChainRef`, `agentChainRef`) unless your request already carries `chain` or `chainId`.
 
 ## App link
 
@@ -102,7 +106,9 @@ await client.verify({
 | Field | Required | Description |
 |-------|----------|-------------|
 | `controllerWallet` | Yes | Approving account (must match signer) |
+| `controllerChainRef` | Yes* | CAIP-2 chain for the controller wallet. *Optional if the request supplies `chain` or `chainId` |
 | `agentWallet` | Yes | Agent address |
+| `agentChainRef` | Yes* | CAIP-2 chain for the agent wallet. *Optional if the request supplies `chain` or `chainId` |
 | `agentId` | No | Linked identity id |
 | `scope` | No | Permission scope (default: `global`) |
 | `permissions` | No | Allowed actions |
@@ -115,7 +121,7 @@ await client.verify({
 | `instructions` | No | Policy text (16000 chars) |
 | `skills` | No | Up to 48 skill objects |
 
-The protocol accepts bounded action strings in **`allowedActions`** and **`deniedActions`**..
+The protocol accepts bounded action strings in **`allowedActions`** and **`deniedActions`**. `deniedActions` always wins over `allowedActions`.
 
 Schema: [`agent-delegation.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/agent-delegation.json).
 

@@ -1,51 +1,61 @@
 ---
 title: Presets
-description: "Short hosted-verify bundles (preset query param)."
+description: "Hosted-verify shortcuts: pick one check, several checks, or a ready-made bundle."
 icon: layer-group
 ---
 
-Use `preset=<id>` for common hosted URLs instead of long verifier lists.
+Hosted Verify accepts the checks you want directly in the URL. Three ways, simplest first.
+
+## One check
+
+Use `?verifiers=<id>` (or `?preset=<id>` — same result for a single check):
 
 ```text
-https://neus.network/verify?preset=<id>
+https://neus.network/verify?verifiers=ownership-basic&returnUrl=https://myapp.com/callback
 ```
 
-Add `returnUrl`, `gateId`, `mode=popup`, `origin` as required.
+Any verifier id works: `ownership-basic`, `proof-of-human`, `ownership-social`, `ownership-dns-txt`, `ownership-org-oauth`, `nft-ownership`, `token-holding`, `contract-ownership`, `wallet-link`, `ownership-pseudonym`, `wallet-risk`, `agent-identity`, `agent-delegation`. See [Verifiers](../verification/verifiers).
 
-## Catalog
+## Several checks
 
-| Preset | For |
-|--------|-----|
-| `basic-pack` | Ownership / provenance |
-| `human-pack` | Human verification |
-| `project-pack` | Project trust |
-| `creator-pack` | Content trust |
-| `agent-pack` | Agent setup |
-| `holder-pack` | Holder + safety |
-| `social-pack` | Linked accounts |
-| `domain-pack` | Domain control |
-| `org-pack` | Team / org |
-| `nft-pack` | NFT gate |
-| `wallet-link-pack` | Linked wallets |
-| `pseudonym-pack` | Handle / namespace |
-
-## Examples
+Combine checks with a comma — this is the recommended way to run more than one:
 
 ```text
-https://neus.network/verify?preset=agent-pack
-https://neus.network/verify?preset=basic-pack&returnUrl=https://myapp.com/callback
-https://neus.network/verify?preset=social-pack&mode=popup&origin=https://myapp.com
+https://neus.network/verify?verifiers=agent-identity,agent-delegation,wallet-risk
 ```
+
+## Ready-made bundles
+
+A few named bundles resolve for convenience and older links:
+
+| Bundle | Checks |
+|--------|--------|
+| `agent-pack` | `agent-identity`, `agent-delegation`, `wallet-risk` |
+| `project-pack` | `contract-ownership`, `ownership-dns-txt` |
+| `creator-pack` | `ownership-basic`, `ai-content-moderation` |
+| `workspace-pack` | `ownership-social`, `ownership-basic`, `agent-identity`, `wallet-link` |
+
+```text
+https://neus.network/verify?preset=agent-pack&returnUrl=https://myapp.com/callback
+```
+
+For any other combination, use `?verifiers=` with the ids you need.
+
+Add `returnUrl`, `gateId`, `mode=popup`, or `origin` to any of these as needed.
 
 ## SDK
 
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
-getHostedCheckoutUrl({
-  preset: 'agent-pack',
-  returnUrl: 'https://myapp.com/callback',
-});
+// One check
+getHostedCheckoutUrl({ verifiers: ['ownership-basic'], returnUrl: 'https://myapp.com/callback' });
+
+// Several checks
+getHostedCheckoutUrl({ verifiers: ['agent-identity', 'agent-delegation', 'wallet-risk'] });
+
+// Named bundle
+getHostedCheckoutUrl({ preset: 'agent-pack', returnUrl: 'https://myapp.com/callback' });
 ```
 
 ## Related
@@ -55,6 +65,6 @@ getHostedCheckoutUrl({
  Params + popup.
  </Card>
  <Card title="Verifiers" icon="list-tree" href="../verification/verifiers">
- What presets bundle.
+ Every check you can run.
  </Card>
 </CardGroup>

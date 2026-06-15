@@ -46,12 +46,15 @@ await client.verify({
   data: {
     agentId: 'my-assistant',
     agentWallet: '0x...',
+    agentChainRef: 'eip155:8453',
     agentType: 'ai',
     description: 'My AI assistant',
   },
   walletAddress: '0x...',
 });
 ```
+
+The agent wallet signs this proof, so `agentChainRef` (CAIP-2, e.g. `eip155:8453`) is required unless your request already carries `chain` or `chainId`.
 
 With optional metadata:
 
@@ -80,6 +83,7 @@ Or use [hosted verify](../cookbook/auth-hosted-verify).
 |-------|----------|-------------|
 | `agentId` | Yes | Unique id (1–128 chars) |
 | `agentWallet` | Yes | Agent address (EVM or Solana) |
+| `agentChainRef` | Yes* | CAIP-2 chain for the agent wallet (e.g. `eip155:8453`). *Optional if the request supplies `chain` or `chainId` |
 | `agentLabel` | No | Display name |
 | `agentType` | No | `ai`, `bot`, `service`, `automation`, or `agent` |
 | `description` | No | Short description (500 chars) |

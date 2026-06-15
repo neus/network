@@ -6,6 +6,16 @@ icon: credit-card
 
 NEUS bills metered verification usage to a NEUS profile. Credits spend first.
 
+## How money moves on NEUS
+
+Three lanes cover every flow. Most products only use the first.
+
+| Lane | Who pays | Use it for |
+|------|----------|------------|
+| **You pay for checks** | Your NEUS credits | The default — verifications run through your gate bill your account |
+| **Charge visitors at a gate** | Your visitor | Paid content, drops, and member access — USDC or card at [checkout](./hosted-gate-checkout) |
+| **Charge per call (x402)** | The caller / agent | Metered APIs and autonomous agents that [pay as they go](./x402) |
+
 ## Default: you pay for visitor checks
 
 When you publish a gate, you own it — so verifications through that gate bill **your** NEUS account by default. Visitors embed or link your checkout with one public `gateId`:

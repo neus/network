@@ -6,49 +6,63 @@ icon: house
 "twitter:image": "/images/og-default.png"
 ---
 
-NEUS makes trust portable across the internet. We issue **reusable trust receipts** that apps, agents, and payment layers check before access, payment, or action—so trusted actors do not restart from zero at every gate.
+NEUS makes trust portable across the internet. We issue **reusable trust receipts** that apps, agents, and payment layers check before access, payment, or action — so trusted actors do not restart from zero at every gate.
 
-## Primary integrations
+Verify once, get a `qHash`, then reuse it everywhere. That receipt is the asset.
 
-<CardGroup cols={3}>
-  <Card title="Quickstart" icon="rocket" href="./quickstart">
-    Create a gate, protect your UI with VerifyGate, and run server checks.
+## Start in seconds
+
+Two drop-in paths cover most products. Pick the one that matches what you are building.
+
+<CardGroup cols={2}>
+  <Card title="Add trust to an app" icon="puzzle-piece" href="./quickstart">
+    Drop **`<VerifyGate>`** in front of any content and show status with **`<ProofBadge>`**. No verifier logic in your app.
   </Card>
-  <Card title="Agents" icon="robot" href="./agents/overview">
-    Identity, delegation, and receipts for autonomous agents.
-  </Card>
-  <Card title="MCP" icon="plug" href="./install">
-    Hosted trust MCP for Cursor, VS Code, and Claude Code.
+  <Card title="Give an agent trust" icon="robot" href="./install">
+    One command — `npx -y -p @neus/sdk neus setup` — wires NEUS MCP into Cursor, Claude Code, Codex, or VS Code.
   </Card>
 </CardGroup>
 
-## Platform
+## What you can build
 
 <CardGroup cols={2}>
-  <Card title="Workflow" icon="route" href="./integration">
-    Check, verify, save, reuse.
+  <Card title="Gate access or rewards" icon="door-open" href="./platform/hosted-gate-checkout">
+    Verified-only content, drops, and member areas — with optional USDC or card checkout.
+  </Card>
+  <Card title="Trust agents before they act" icon="shield-halved" href="./agents/overview">
+    Agent identity, scoped delegation with spend caps, and a receipt for every action.
+  </Card>
+  <Card title="Stop bots and sybils" icon="user-check" href="./cookbook/sybil-resistance">
+    Proof of human and wallet-risk checks reused across your whole product.
+  </Card>
+  <Card title="Charge per call" icon="coins" href="./platform/x402">
+    Pay-per-request for APIs and agents with the x402 retry flow.
+  </Card>
+</CardGroup>
+
+## How every integration works
+
+The same loop everywhere: **check → verify → save `qHash` → reuse**. See [Integration](./integration).
+
+## Build with
+
+<CardGroup cols={3}>
+  <Card title="Widgets" icon="square-check" href="./widgets/overview">
+    `VerifyGate` and `ProofBadge` for React.
   </Card>
   <Card title="SDK" icon="code" href="./sdks/overview">
-    JavaScript SDK, widgets, and server checks.
+    Hosted links, polling, and server checks.
   </Card>
-  <Card
-    title="Hosted Verify"
-    icon="shield-check"
-    href="./cookbook/auth-hosted-verify"
-  >
+  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
     Passkey, wallet, and OAuth on NEUS.
   </Card>
   <Card title="API" icon="terminal" href="./api/overview">
-    Server-side reads and verification.
+    Server reads and verification.
   </Card>
-  <Card
-    title="Security"
-    icon="user-shield"
-    href="./platform/security-and-trust"
-  >
-    Privacy and visibility.
+  <Card title="MCP" icon="plug" href="./mcp/overview">
+    Live trust for assistants and agents.
   </Card>
   <Card title="Examples" icon="cube" href="./examples">
-    Reference apps and server samples.
+    Reference apps and samples.
   </Card>
 </CardGroup>

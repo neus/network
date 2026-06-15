@@ -11,12 +11,18 @@ icon: user-check
 - Sybil resistance
 - Rewards and trusted onboarding flows
 
-## What You Configure
+## Flow type
+
+Interactive, hosted-only. The user completes the personhood step on NEUS and returns to your app with a `qHash`. This verifier cannot be combined with other checks in one request.
+
+## What you configure (hosted)
 
 | Field | Required | Notes |
 |------|----------|-------|
 | `provider` | Yes | Pin a supported provider (e.g. `zkpassport`) |
 | `scope` | No | Scope for the personhood identifier (defaults to `neus-v1`) |
+
+For direct API submission after a hosted proof, the request carries the provider `proofs` and `queryResult` returned by the hosted step — you don't assemble these yourself. Use Hosted Verify or `VerifyGate` for the standard path.
 
 ## Response Fields
 
@@ -36,6 +42,4 @@ icon: user-check
 | `medium` | Facematch (non-strict) or KYC bundle verified |
 | `low` | Age/sanctions/personhood only |
 
-## Flow
-
-Hosted - user completes the step in NEUS, then returns to your app with a `qHash`.
+Full schema: [`proof-of-human.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/proof-of-human.json).

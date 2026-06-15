@@ -31,7 +31,7 @@ OAuth is the default for IDE setup. Use profile access keys only for **servers, 
 
 Create keys under **Account → Access keys** on [neus.network](https://neus.network/profile?tab=account). Treat access keys like passwords.
 
-use `neus setup` and `neus auth` instead of browser OAuth. Pass `--oauth` to force browser sign-in even when the variable is set.
+When `NEUS_ACCESS_KEY` is set in the environment, `neus setup` and `neus auth` use it instead of browser OAuth. Pass `--oauth` to force browser sign-in even when the variable is set.
 
 ## Disconnect
 

@@ -6,23 +6,26 @@ icon: id-badge
 
 **Verifier ID:** `ownership-pseudonym`
 
+Claim a portable handle backed by a wallet signature — a public name without a legal identity.
+
 ## Use cases
 
-- product handles
-- portable public names
-- pseudonymous creator identity
+- Product handles
+- Portable public names
+- Pseudonymous creator identity
 
-## Flow Type
+## Flow type
 
 Instant. The user signs once and the pseudonym binding is created.
 
-## Required Fields
+## Fields
 
 | Field | Required | Notes |
 |------|----------|-------|
-| `pseudonymId` | Yes | Handle string |
+| `pseudonymId` | Yes | Handle, 3–32 chars, pattern `^[a-z0-9][a-z0-9._-]{1,30}[a-z0-9]$` |
 | `namespace` | No | Defaults to `neus` |
 | `displayName` | No | Human-readable label |
+| `metadata` | No | Optional object for app-specific attributes |
 
 ## Example
 
@@ -33,3 +36,8 @@ Instant. The user signs once and the pseudonym binding is created.
 }
 ```
 
+## Expiry
+
+Pseudonym proofs are time-bound: the receipt includes an `expiresAt`. Re-verify to refresh before it lapses.
+
+Full schema: [`ownership-pseudonym.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/ownership-pseudonym.json).

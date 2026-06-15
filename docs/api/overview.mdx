@@ -26,13 +26,18 @@ Send end users through the **[JavaScript SDK](../sdks/javascript)** or **[Hosted
 | Path | Method | Purpose |
 |------|--------|---------|
 | `/api/v1/proofs/check` | GET | Eligibility (gates) |
-| `/api/v1/gates/{gateId}` | GET | Public gate snapshot (requirements, price, schedule) |
-| `/api/v1/gates/{gateId}/fulfill` | POST | Deliver gate reward after verify (+ payment) — see [Hosted Gate Checkout](../platform/hosted-gate-checkout) |
+| `/api/v1/profile/gates/{gateId}` | GET | Public gate snapshot (requirements, price, schedule) |
+| `/api/v1/profile/gates/{gateId}/fulfill` | POST | Deliver gate reward after verify (+ payment) — see [Hosted Gate Checkout](../platform/hosted-gate-checkout) |
+| `/api/v1/profile/gates/discoverable` | GET | List public, discoverable gates |
 | `/api/v1/proofs/by-wallet/{address}` | GET | List by wallet |
 | `/api/v1/proofs/{qHash}` | GET | Fetch by `qHash` |
+| `/api/v1/proofs/revoke-self/{qHash}` | POST | Owner revokes their own proof |
 | `/api/v1/verification` | POST | Create proof (server) |
 | `/api/v1/verification/standardize` | POST | Phase 1 of raw HTTP: returns `signerString` for the exact body you will submit |
 | `/api/v1/verification/verifiers` | GET | Verifier catalog |
+| `/api/v1/health` | GET | Service health |
+
+The SDK's `getGate()` / `fulfillGate()` wrap the gate endpoints above.
 
 ## Examples
 

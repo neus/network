@@ -14,6 +14,33 @@ icon: triangle-exclamation
 | Private read | Owner auth, retry |
 | Transient | Backoff; `Retry-After` |
 
+## Error classes
+
+All SDK errors extend `SDKError` and carry a `.code` and `.details`. Import them from `@neus/sdk`:
+
+| Class | `isRetryable` | Use it for |
+|-------|---------------|------------|
+| `ApiError` | `true` on 5xx / 429 | HTTP failures — also has `.statusCode`, `.isClientError`, `.isServerError`, `.response` |
+| `ValidationError` | `false` | Bad request shape — has `.field`, `.value` |
+| `NetworkError` | `true` | Transport / DNS / timeout |
+| `ConfigurationError` | `false` | Missing/invalid client config — has `.configKey` |
+| `VerificationError` | `true` | Verifier failure — has `.verifierId` |
+| `AuthenticationError` | `false` | Owner/session/key not allowed |
+
+```javascript
+import { ApiError } from '@neus/sdk';
+
+try {
+  await client.gateCheck({ gateId: 'gate_your-app-name', address });
+} catch (error) {
+  if (error instanceof ApiError && error.isRetryable) {
+    // back off and retry (5xx / 429)
+  } else if (error.code === 'VALIDATION_ERROR') {
+    // fix the request and do not retry
+  }
+}
+```
+
 ## Polling Example
 
 ```javascript

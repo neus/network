@@ -12,8 +12,10 @@ Same flow everywhere: check → verify if needed → save **`qHash`** → reuse.
 
 | Example | Use it for |
 |------------|----------|
-| [**trust-receipts-showcase** (default)](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) | Full **VerifyGate** + gate check: each card is a trust outcome and a verifier |
+| [**trust-receipts-showcase** (default)](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) | Full **VerifyGate** + **ProofBadge**: each card is a trust outcome and a verifier |
 | [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Server key, sign + `gateCheck` |
+
+Adding trust to an assistant or agent instead? Connect MCP in one command — [Install NEUS](./install) — then run `npx -y -p @neus/sdk neus examples`.
 
 Raw HTTP signing examples are inline below.
 

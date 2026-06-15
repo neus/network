@@ -1,20 +1,97 @@
 ---
-title: x402
-description: Retry a billable request after payment.
+title: x402 pay-per-call
+description: Charge per request for APIs and agents — a signed quote on 402, pay, then retry with one header.
 icon: coins
 ---
 
-When credits cannot cover a billable call, the API returns **402** with a quote. Pay, then retry with the receipt header.
+x402 turns any billable NEUS call into pay-as-you-go. When prepaid credits cannot cover a request, NEUS returns **HTTP 402** with a signed quote. Pay the quote, then retry the **same request** with one header. It is built for agents and machine-to-machine APIs that settle value as they go — no subscription, no human in the loop.
 
 ## Flow
 
-1. Call the API
-2. **402** and quote
-3. Pay
-4. Retry with `PAYMENT-SIGNATURE: <receipt>`
+<Steps>
+  <Step title="Call the API">
+    Make your normal request (for example `POST /api/v1/verification`).
+  </Step>
+  <Step title="Get a 402 + quote">
+    If credits are short, NEUS responds **402** with a quote in the body and the **`PAYMENT-REQUIRED`** response header.
+  </Step>
+  <Step title="Pay the quote">
+    Settle in USDC (or native ETH) via `POST /api/v1/payments/verify`. NEUS returns a one-time payment receipt.
+  </Step>
+  <Step title="Retry with the receipt">
+    Repeat the original call with the receipt in the **`PAYMENT-SIGNATURE`** header. The call now succeeds.
+  </Step>
+</Steps>
 
-## Header
+## The 402 response
 
-```text
-PAYMENT-SIGNATURE: <receipt>
+The body carries `error.code: "INSUFFICIENT_CREDITS"` and an `x402` block you can act on directly:
+
+```json
+{
+  "success": false,
+  "error": { "code": "INSUFFICIENT_CREDITS", "remaining": 0, "required": 4 },
+  "x402": {
+    "scheme": "x402",
+    "requiredCredits": 4,
+    "remainingCredits": 0,
+    "quote": {
+      "quoteId": "…",
+      "amountUSD": 0.01,
+      "amountCents": 1,
+      "creditsNeeded": 4,
+      "exp": 1713312300000
+    },
+    "pay": { "pricing": "/api/v1/payments/pricing" },
+    "receiptHeader": "PAYMENT-SIGNATURE"
+  }
+}
 ```
+
+The same quote is also sent as JSON in the `PAYMENT-REQUIRED` response header. `exp` is a millisecond timestamp — quotes are short-lived, so pay and retry promptly.
+
+## Pay and retry
+
+```bash
+# 1. Original call returns 402 with the quote above.
+# 2. Settle the quote (USDC or ETH), then retry with the receipt:
+curl -X POST https://api.neus.network/api/v1/verification \
+  -H "Content-Type: application/json" \
+  -H "PAYMENT-SIGNATURE: <receipt-from-payments-verify>" \
+  -d '{ /* the same body as the original request */ }'
+```
+
+Get the receipt by settling the quote through `POST /api/v1/payments/verify` (`type: "x402"`). The successful response returns the receipt token and a `PAYMENT-RESPONSE` header. Each receipt is **single-use** — reusing one is rejected.
+
+## Payment methods
+
+| Rail | Where it settles |
+|------|------------------|
+| **USDC** | Base mainnet (`eip155:8453`), with Ethereum mainnet as fallback |
+| **Native ETH** | NEUS treasury |
+
+Card (Stripe) is **not** used for x402 API billing — it is available for [gate checkout](./hosted-gate-checkout). Live unit, minimum, and maximum pricing: `GET /api/v1/payments/pricing`.
+
+## Agents that pay on their own
+
+Pair x402 with a scoped delegation so an agent can settle calls within a hard cap:
+
+- Grant `agent-delegation` with `scope: "payments:x402"` and a `maxSpend` cap.
+- `maxSpend` is a whole-number string in token base units — for USDC (6 decimals), 25 USDC is `"25000000"`. Use `toAgentDelegationMaxSpend('25', 6)` from `@neus/sdk`.
+- The agent can pay per call up to the cap; spend beyond it is refused.
+
+Details: [Agent delegation](../agents/agent-delegation).
+
+## Next
+
+<CardGroup cols={3}>
+  <Card title="Billing" icon="credit-card" href="./billing">
+    Credits, who pays, and the 402 fallback.
+  </Card>
+  <Card title="Gate checkout" icon="door-open" href="./hosted-gate-checkout">
+    Charge visitors with USDC or card.
+  </Card>
+  <Card title="Agent delegation" icon="key" href="../agents/agent-delegation">
+    Spend caps for autonomous agents.
+  </Card>
+</CardGroup>

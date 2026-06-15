@@ -462,7 +462,7 @@
     maxAgeMs?: number;
   }
 
-  /** Public snapshot returned by GET /api/v1/gates/{gateId} — never includes the secret reward value. */
+  /** Public snapshot returned by GET /api/v1/profile/gates/{gateId} — never includes the secret reward value. */
   export interface PublicGateSnapshot {
     schemaVersion: number;
     gateId: string;

@@ -12,4 +12,18 @@ Use **`neus_me`** only when you need to refresh profile context or look up a pub
 
 Authenticated profile context can include `profileSummary.proofsSummary`: a compact receipt snapshot with total counts, verifier counts, and latest receipt pointers. Use **`neus_proofs_get`** when you need full receipt records or pagination.
 
+## What it returns
+
+| Field | Use |
+|-------|-----|
+| `setup.mcpEndpoint` | The hosted MCP endpoint in use (`https://mcp.neus.network/mcp`) |
+| `sessionWallet` | Signed-in wallet — omit `wallet` on check/verify tools when present |
+| `autopilot` | Recommended trust-before-action flow |
+| `verifierSummary` | Compact list of available checks |
+| `trustResult` | Current trust posture for the session |
+| `tools` | Map of available NEUS MCP tools |
+| `profileSummary` | Signed-in profile context, including `proofsSummary` |
+
+When signed in, prefer `sessionWallet` and reuse existing receipts before opening any hosted link.
+
 Session flow recap: **[Overview](./overview)**. Reuse existing receipts first; use hosted links only when the next step needs a browser.
