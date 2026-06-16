@@ -19,6 +19,7 @@ concurrency:
 
 env:
   NODE_VERSION: 20.19.0
+  NPM_REGISTRY: https://registry.npmjs.org
 
 jobs:
   publish_sdk:
@@ -26,6 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
+      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     steps:
       - name: Checkout tag
         uses: actions/checkout@v4
@@ -36,7 +38,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          registry-url: https://registry.npmjs.org
+          registry-url: ${{ env.NPM_REGISTRY }}
 
       - name: Verify version matches tag
         run: |
