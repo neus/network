@@ -13,6 +13,8 @@ icon: users
 | **Agent** | Registers identity (name, type, capabilities) | Agent wallet |
 | **Controller** | Grants scoped authority and limits | Controller account |
 
+Together, identity and delegation give an agent a portable trust context. Any app or runtime can check who the agent is and what it is allowed to do without trusting your infrastructure.
+
 - **Agent wallet** — identifies the agent in NEUS and self-signs `agent-identity`.
 - **Controller account** — signs `agent-delegation`. It does not need to own the agent wallet.
 

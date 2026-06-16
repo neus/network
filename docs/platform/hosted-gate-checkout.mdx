@@ -8,13 +8,23 @@ A published gate is a reusable checkout: visitors pass the checks you configured
 
 The simplest integrations do not need any of this directly — use the [VerifyGate widget](../widgets/verifygate) or the hosted checkout link. Read on when you want to drive the flow yourself.
 
+## Which API host?
+
+| Caller | Gate snapshot | Fulfill |
+|--------|---------------|---------|
+| **SDK** (`NeusClient`) | `client.getGate(gateId)` | `client.fulfillGate(...)` |
+| **`api.neus.network`** | `GET /api/v1/profile/gates/{gateId}` | `POST /api/v1/profile/gates/{gateId}/fulfill` |
+| **`neus.network` (browser)** | `GET /api/v1/gates/{gateId}` | `POST /api/v1/gates/{gateId}/fulfill` |
+
+Prefer the SDK on your server. The `neus.network` paths are the same contract, proxied for same-origin browser calls.
+
 ## Lifecycle
 
-1. **Snapshot** — `GET /api/v1/gates/{gateId}` returns the public gate: requirements, price, schedule, and reward presence. The secret reward value is never in the snapshot.
+1. **Snapshot** — load the public gate: requirements, price, schedule, and reward presence (not the secret reward value). Use `client.getGate(gateId)` or `GET /api/v1/profile/gates/{gateId}` on `api.neus.network`.
 2. **Eligibility** — `GET /api/v1/proofs/check?gateId=...&address=...&includePrivate=true&includeQHashes=true` evaluates the visitor's existing proofs against every requirement.
 3. **Verify** — if checks are missing, the visitor completes them (hosted verify link, VerifyGate, or `POST /api/v1/verification` for signature-based verifiers). Pass `gateId` and reuse satisfied checks via `options.reusedVerifierProofs`.
 4. **Pay** — for paid gates, payment happens after verification by default (`executionOrder: "verifyThenCharge"`). Gates that pay out to a NEUS treasury or connected payout account settle through one Stripe checkout session — the visitor picks card or crypto there. Gates that pay out to a custom wallet settle by direct USDC on Base.
-5. **Fulfill** — `POST /api/v1/gates/{gateId}/fulfill` with the verified `qHash` (plus payment evidence for paid gates) delivers the reward.
+5. **Fulfill** — deliver the reward with the verified `qHash` (plus payment evidence for paid gates) via `client.fulfillGate(...)` or `POST /api/v1/gates/{gateId}/fulfill`.
 
 ```js
 import { NeusClient } from '@neus/sdk';
@@ -127,6 +137,9 @@ Gates may carry a `schedule` (`startsAt` / `endsAt`). Outside the window, gate c
 <CardGroup cols={2}>
   <Card title="VerifyGate widget" icon="object-group" href="../widgets/verifygate">
     Drop-in checkout for published gates
+  </Card>
+  <Card title="Pricing" icon="tags" href="./pricing">
+    Plans and credits
   </Card>
   <Card title="Billing" icon="credit-card" href="./billing">
     How verification and checkout charges work

@@ -63,6 +63,12 @@ const client = new NeusClient({ apiKey: process.env.NEUS_ACCESS_KEY });
 
 Create keys under [Access keys](https://neus.network/profile?tab=account). Server / MCP only.
 
+## IDE and MCP sign-in
+
+For Cursor, VS Code, or Claude Code, run `npx -y -p @neus/sdk neus setup` then `neus auth`. That stores a separate MCP access credential for `https://mcp.neus.network/mcp` — not the browser session cookie from `neus.network/verify`. Use a profile access key (`npk_*`) for servers and CI when browser sign-in is unavailable.
+
+See [MCP setup](../mcp/setup) and [MCP OAuth](../mcp/oauth).
+
 ## App link: `verifyFromApp` (advanced server)
 
 After a one-time user approval ([agent delegation app link](../agents/agent-delegation)), your backend can create proofs without a per-request signature. Set the app link on the client and call `verifyFromApp`:

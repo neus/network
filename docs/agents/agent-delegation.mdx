@@ -6,6 +6,8 @@ icon: handshake
 
 Grant scoped authority to an agent. Identity alone (`agent-identity`) does not include permissions.
 
+Delegation receipts are the authorization layer for agents: who approved this agent, what it may do, and how much it can spend — all checkable by any gate.
+
 **Verifier ID:** `agent-delegation`
 
 **`controllerWallet`** is the approving account — the address that signs this step. See [Agent concepts](./concepts).
@@ -47,7 +49,7 @@ Both wallets need a CAIP-2 chain reference (`controllerChainRef`, `agentChainRef
 
 ## App link
 
-One-time user approval so your backend can create proofs without asking them to sign every request. This is **not** the same as publishing a **gate** in Hub (billing for hosted checks). See [Integrations](../cookbook/integrations).
+One-time user approval so your backend can create proofs without asking them to sign every request. This is **not** the same as creating a **portal** in your profile (billing for hosted checks). See [Integrations](../cookbook/integrations).
 
 1. User signs in on NEUS
 2. User approves delegation once

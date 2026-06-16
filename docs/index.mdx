@@ -8,7 +8,9 @@ icon: house
 
 NEUS makes trust portable across the internet. We issue **reusable trust receipts** that apps, agents, and payment layers check before access, payment, or action — so trusted actors do not restart from zero at every gate.
 
-Verify once, get a `qHash`, then reuse it everywhere. That receipt is the asset.
+Verify once, get a **trust receipt**, then reuse it everywhere — at the next gate, app, or agent check.
+
+Your trust context — identity, authority, and ownership — lives in one place and travels with you across apps and agents. You control what is shared.
 
 ## Start in seconds
 
@@ -29,20 +31,19 @@ Two drop-in paths cover most products. Pick the one that matches what you are bu
   <Card title="Gate access or rewards" icon="door-open" href="./platform/hosted-gate-checkout">
     Verified-only content, drops, and member areas — with optional USDC or card checkout.
   </Card>
-  <Card title="Trust agents before they act" icon="shield-halved" href="./agents/overview">
-    Agent identity, scoped delegation with spend caps, and a receipt for every action.
+  <Card title="Portable trust profile" icon="shield-halved" href="./agents/overview">
+    One URL that proves who you are, what you own, and what your agents may do — with receipts any gate can check.
   </Card>
   <Card title="Stop bots and sybils" icon="user-check" href="./cookbook/sybil-resistance">
     Proof of human and wallet-risk checks reused across your whole product.
-  </Card>
-  <Card title="Charge per call" icon="coins" href="./platform/x402">
-    Pay-per-request for APIs and agents with the x402 retry flow.
   </Card>
 </CardGroup>
 
 ## How every integration works
 
-The same loop everywhere: **check → verify → save `qHash` → reuse**. See [Integration](./integration).
+The same loop everywhere: **check → verify → save receipt → reuse**. See [Integration](./integration).
+
+Advanced: [metered API billing (x402)](./platform/x402) · [Plans and credits](./platform/pricing)
 
 ## Build with
 

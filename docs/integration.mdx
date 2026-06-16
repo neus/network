@@ -6,11 +6,13 @@ icon: compass
 
 Every NEUS integration follows the same loop.
 
+The same `qHash` works in a React widget, a server gate, an MCP assistant, or a partner app — because the receipt is the trust context, not a local state flag.
+
 | Step | Do this                                                                       |
 | ---- | ----------------------------------------------------------------------------- |
 | 1    | Check whether you already have a valid receipt                                |
 | 2    | Verify only when the receipt is missing, stale, or needs a new trust decision |
-| 3    | Save the returned `qHash` on your user, account, agent, or record            |
+| 3    | Save the trust receipt on your user, account, agent, or record (API field: `qHash`) |
 | 4    | Reuse the receipt before access, payment, delegation, or action               |
 
 ## Where code runs
@@ -19,7 +21,7 @@ Every NEUS integration follows the same loop.
 | --------- | ------------------------------------------------------------------------- |
 | Browser   | `VerifyGate`, `getHostedCheckoutUrl`, hosted `/verify`                    |
 | Server    | `gateCheck` with `gateId`                                                 |
-| Assistant | Hosted NEUS MCP, `neus_context`, `neus_proofs_check`, `neus_agent_link`   |
+| Assistant | NEUS MCP — reuse receipts before action ([Install](./install)) |
 
 Passkey, wallet, and OAuth flows should run on NEUS hosted pages by default. Do not ship access keys or server secrets in browser bundles.
 
@@ -46,6 +48,6 @@ Backend receipt creation and access keys: [Integrations](./cookbook/integrations
   </Card>
 </CardGroup>
 
-Identity and chain terms: [CAIP-380 Portable Proof](./learn/standards/caip-380). Receipt fields and URLs: [Receipts and results](./platform/receipts-and-results).
+Receipt fields and URLs: [Receipts and results](./platform/receipts-and-results). Advanced identity encoding: [CAIP-380](./learn/standards/caip-380).
 
 **Next:** [Hosted Verify](./cookbook/auth-hosted-verify)

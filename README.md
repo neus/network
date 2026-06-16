@@ -21,7 +21,7 @@
 
 NEUS makes trust portable across the internet so people, apps, and AI agents can prove what is real before access, payout, or execution.
 
-**NEUS Portal** manages accounts, trust receipts, agents, and Vault. **NEUS Verify** runs trust checks and missing-requirement guidance. **NEUS MCP** connects assistants. **NEUS CLI / SDK** installs and embeds trust in your product.
+**[neus.network](https://neus.network)** is where you manage your profile, trust receipts, agents, and Vault. **NEUS Verify** is the trust-check result assistants summarize before sensitive actions. **NEUS MCP** connects assistants. **NEUS CLI / SDK** installs and embeds trust in your product.
 
 Use Hosted Verify when NEUS should own the browser step. Use the SDK, widgets, API, or MCP when trust should live inside your app, backend, or agent workflow.
 
