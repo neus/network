@@ -526,4 +526,82 @@ describe('NeusClient', () => {
       ).rejects.toThrow(ValidationError);
     });
   });
+
+  describe('getGate()', () => {
+    it('calls profile gate snapshot on api.neus.network', async () => {
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: { gate: { gateId: 'gate_demo', requirements: [] } }
+          })
+      });
+
+      const gate = await client.getGate('gate_demo');
+      expect(gate.gateId).toBe('gate_demo');
+      const calledUrl = fetch.mock.calls[0][0];
+      expect(calledUrl).toBe(
+        'https://api.neus.network/api/v1/profile/gates/gate_demo'
+      );
+      expect(calledUrl).not.toContain('/api/v1/gates/');
+    });
+  });
+
+  describe('fulfillGate()', () => {
+    const qHash = `0x${'ab'.repeat(32)}`;
+
+    it('posts to profile gate fulfill on api.neus.network', async () => {
+      fetch.mockResolvedValueOnce({
+        ok: true,
+        json: () =>
+          Promise.resolve({
+            success: true,
+            data: { gateId: 'gate_demo', qHash, fulfillment: { type: 'url' } }
+          })
+      });
+
+      const out = await client.fulfillGate({
+        gateId: 'gate_demo',
+        qHash,
+        walletAddress: EVM_A
+      });
+
+      expect(out.success).toBe(true);
+      const [calledUrl, init] = fetch.mock.calls[0];
+      expect(calledUrl).toBe(
+        'https://api.neus.network/api/v1/profile/gates/gate_demo/fulfill'
+      );
+      expect(calledUrl).not.toContain('/api/v1/gates/');
+      expect(init.method).toBe('POST');
+      expect(JSON.parse(init.body)).toMatchObject({
+        qHash,
+        walletAddress: EVM_A
+      });
+    });
+  });
+
+  describe('revokeOwnProof()', () => {
+    const qHash = `0x${'cd'.repeat(32)}`;
+
+    it('uses the parsed _makeRequest response (no second JSON parse)', async () => {
+      const wallet = {
+        address: EVM_A,
+        request: async ({ method }) => {
+          if (method === 'personal_sign') return `0x${'ab'.repeat(65)}`;
+          return null;
+        }
+      };
+      const makeRequest = vi
+        .spyOn(client, '_makeRequest')
+        .mockResolvedValue({ success: true });
+
+      await expect(client.revokeOwnProof(qHash, wallet)).resolves.toBe(true);
+      expect(makeRequest).toHaveBeenCalledWith(
+        'POST',
+        `/api/v1/proofs/revoke-self/${qHash}`,
+        expect.objectContaining({ walletAddress: EVM_A })
+      );
+    });
+  });
 });

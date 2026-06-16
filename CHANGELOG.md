@@ -6,6 +6,33 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.1.7] - 2026-06-16
+
+### Fixed
+
+- **`NeusClient.getGate` / `fulfillGate`** — use `GET` / `POST` on `/api/v1/profile/gates/{gateId}` (and `/fulfill`) on `api.neus.network`. Earlier `1.1.6` builds called `/api/v1/gates/*`, which does not exist on the hosted API.
+- **`NeusClient.revokeOwnProof`** — use the parsed `_makeRequest` response directly (fixes a double JSON parse runtime failure).
+
+### Changed
+
+- **Version alignment** — `@neus/sdk`, `@neus/mcp-server`, plugin, and `server.json` aligned to `1.1.7`.
+- **SDK tests** — contract tests lock gate snapshot/fulfill URL paths and revoke-self response handling.
+
+### Upgrade
+
+```bash
+npx -y -p @neus/sdk@1.1.7 neus setup
+npx -y -p @neus/sdk@1.1.7 neus auth
+npx -y -p @neus/sdk@1.1.7 neus doctor --live
+```
+
+### Links
+
+- [Install NEUS](https://docs.neus.network/install)
+- [Hosted gate checkout](https://docs.neus.network/platform/hosted-gate-checkout)
+- [npm: @neus/sdk](https://www.npmjs.com/package/@neus/sdk)
+- [npm: @neus/mcp-server](https://www.npmjs.com/package/@neus/mcp-server)
+
 ## [1.1.6] - 2026-06-12
 
 ### Fixed
