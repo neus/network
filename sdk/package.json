@@ -113,6 +113,9 @@
   "optionalDependencies": {
     "@zkpassport/sdk": "^0.14.0"
   },
+  "overrides": {
+    "ws": "8.21.0"
+  },
   "dependencies": {
     "bs58": "^6.0.0"
   },
