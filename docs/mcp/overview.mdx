@@ -12,6 +12,8 @@ Verifiable identity, scoped authority, and receipts for every trusted action.
 
 NEUS MCP connects assistants and tools to live identity, delegation, receipt state, and encrypted Vault entries at **`https://mcp.neus.network/mcp`**. Agent frameworks handle tools and execution; NEUS handles trust before action.
 
+One OAuth sign-in. The same identity, delegation, and receipts in Cursor, Claude Code, Codex, and VS Code — plus any backend that checks the same `qHash`.
+
 ## Install
 
 ```bash
@@ -29,7 +31,7 @@ Full setup: [MCP setup](./setup). OAuth reference: [MCP OAuth](./oauth).
 
 ## How it works
 
-Assistants call **`neus_context`** once, then follow the **autopilot** workflow returned in context:
+Assistants call **`neus_context`** once, then follow the **autopilot** workflow returned in context. They read your live trust context, not just the current chat thread — a receipt checked in one session is reusable in another without re-verifying.
 
 - **Trust before action** — check existing receipts, then guide the single next step
 - **Show receipts** — read live trust receipt records with **`neus_proofs_get`**

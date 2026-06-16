@@ -74,7 +74,7 @@ Card (Stripe) is **not** used for x402 API billing — it is available for [gate
 
 ## Agents that pay on their own
 
-Pair x402 with a scoped delegation so an agent can settle calls within a hard cap:
+Pair x402 with a scoped delegation so an agent can settle calls within a hard cap. This is how autonomous agents settle API calls inside a scoped budget — identity, authority, and payment context in one receipt.
 
 - Grant `agent-delegation` with `scope: "payments:x402"` and a `maxSpend` cap.
 - `maxSpend` is a whole-number string in token base units — for USDC (6 decimals), 25 USDC is `"25000000"`. Use `toAgentDelegationMaxSpend('25', 6)` from `@neus/sdk`.

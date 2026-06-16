@@ -15,7 +15,7 @@ Reference URLs for NEUS products (hosted verify, hub, API, MCP). Setup steps liv
 | | |
 |--|--|
 | Hosted Verify | `/verify` |
-| Proof pages | `/proof/[qHash]` |
+| Proof pages | `/proof/[receipt-id]` (`qHash` in API) |
 | Agent cards | `/agent/[id]` - [Agents](../agents/overview) |
 | Platform explorer | Public feed + discovery (`/hub`) |
 | API | Programmatic |
@@ -41,7 +41,7 @@ Reference URLs for NEUS products (hosted verify, hub, API, MCP). Setup steps liv
 
 ## Flow
 
-<Frame caption="Hosted Verify to API to proof page; your app reuses the same qHash.">
+<Frame caption="Hosted Verify to API to proof page; your app reuses the same trust receipt.">
  <img
  className="neus-docs-flow-diagram"
  src="/images/diagrams/platform-flow.svg"
@@ -54,8 +54,8 @@ Reference URLs for NEUS products (hosted verify, hub, API, MCP). Setup steps liv
 | Service | URL |
 |---------|-----|
 | Hosted Verify | `https://neus.network/verify` |
-| Proof page | `https://neus.network/proof/[qHash]` |
-| Platform (`/hub`) | `https://neus.network/hub` |
+| Proof page | `https://neus.network/proof/[receipt-id]` (`qHash` in API) |
+| Product app | `https://neus.network` |
 | API | `https://api.neus.network` |
 | MCP | `https://mcp.neus.network/mcp` |
 

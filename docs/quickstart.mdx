@@ -14,7 +14,7 @@ The fastest way to add trust to an app: gate content with **`<VerifyGate>`**, sh
 
 <Steps>
   <Step title="Publish a gate">
-    Sign in at [neus.network](https://neus.network), open **Gates**, choose the checks visitors must pass, set pricing (you pay by default, or charge visitors), and **Publish**. Copy your `gateId` — visitors only ever need that.
+    Sign in at [neus.network](https://neus.network), open your profile → **Portals**, choose the checks visitors must pass, set pricing (you pay by default, or charge visitors), and **Publish**. Copy your `gateId` — visitors only ever need that.
   </Step>
   <Step title="Gate content with VerifyGate">
     ```jsx
@@ -51,6 +51,8 @@ The fastest way to add trust to an app: gate content with **`<VerifyGate>`**, sh
   </Step>
 </Steps>
 
+The user's receipt is theirs. If they return or visit another gate that needs the same checks, they can reuse it.
+
 ## Not using React? Send users to Hosted Verify
 
 ```js
@@ -64,7 +66,7 @@ window.location.assign(
 );
 ```
 
-Read **`qHash`** from the callback URL or popup message, then store it. Details: [Hosted Verify](./cookbook/auth-hosted-verify).
+Read the **receipt ID** (`qHash`) from the callback URL or popup message, then store it. Details: [Hosted Verify](./cookbook/auth-hosted-verify).
 
 ## Adding trust to an agent instead?
 

@@ -4,7 +4,7 @@ description: Pick your path and set up trust once — drop-in widgets for apps, 
 icon: book
 ---
 
-Three ways to add reusable trust receipts. Pick the one that matches your product, then follow that path.
+Pick your surface — app, agent, or backend. NEUS gives you the same portable trust receipts everywhere.
 
 | You are building | Simplest path | Start |
 | ---------------- | ------------- | ----- |
@@ -18,7 +18,7 @@ Three ways to add reusable trust receipts. Pick the one that matches your produc
 
 <Steps>
   <Step title="Publish a gate">
-    Sign in at [neus.network](https://neus.network), open **Gates**, choose the checks visitors must pass, set pricing (you pay by default, or charge visitors), and **Publish**. Copy your `gateId`.
+    Sign in at [neus.network](https://neus.network), open your profile → **Portals**, choose the checks visitors must pass, set pricing (you pay by default, or charge visitors), and **Publish**. Copy your `gateId`.
   </Step>
   <Step title="Gate your content">
     ```jsx
@@ -36,6 +36,7 @@ Three ways to add reusable trust receipts. Pick the one that matches your produc
 
     <ProofBadge qHash={proof.qHash} showChains />;
     ```
+    The receipt ID in API responses is `qHash` — save it if your server needs to look up the receipt later.
   </Step>
 </Steps>
 
@@ -56,7 +57,7 @@ Details: [Install NEUS](./install) · [Agent verification flow](./agents/agent-v
 
 ## Backends: API and access keys
 
-Use the HTTP API from servers, workers, and CI — never from end-user browsers. Eligibility, reads, and verification all return the same `qHash`. Server automation uses a profile access key (`npk_*`).
+Use the HTTP API from servers, workers, and CI — never from end-user browsers. Eligibility, reads, and verification all return the same trust receipt ID (`qHash`). Server automation uses a profile access key from **Profile → Keys** (`npk_*`).
 
 Details: [API overview](./api/overview) · [Integrations](./cookbook/integrations)
 

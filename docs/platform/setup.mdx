@@ -1,16 +1,16 @@
 ---
-title: Create a gate
-description: Publish a gate in Hub and embed checkout with a single gateId.
+title: Create a portal
+description: Publish an access portal in your profile and embed checkout with a single gateId.
 icon: building
 ---
 
-A **gate** is a public trust checkout entry in NEUS Hub. You choose the checks visitors must pass, publish, and embed checkout with one public `gateId`. No app ID, billing wallet, or API key for the default web path.
+A **portal** is a reusable trust checkout: you choose what visitors must prove, publish once, and embed with one public `gateId`. No app ID, billing wallet, or API key for the default web path.
 
 ## Steps
 
-1. Sign in at [neus.network/hub](https://neus.network/hub).
-2. Open **Gates** in your profile and choose the checks visitors must pass.
-3. Set pricing — you pay for checks by default, or charge visitors.
+1. Sign in at [neus.network](https://neus.network).
+2. Open your profile → **Portals** ([`?tab=portals`](https://neus.network/profile?tab=portals)) and create a portal.
+3. Choose the checks visitors must pass and set pricing — you pay for checks by default, or charge visitors.
 4. **Publish** and copy your **checkout link** or **embed snippet**.
 
 Checks bill your NEUS account automatically because you own the gate. Visitors only need your `gateId`.
@@ -23,7 +23,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>
 ```
 
-Full walkthrough: [Quickstart](../quickstart) · Billing: [Billing](./billing).
+Full walkthrough: [Quickstart](../quickstart) · [Pricing](./pricing) · [Billing](./billing).
 
 **Optional:** [Domain verification](../cookbook/domain-verification) proves DNS control for profile trust and team workspace — it is separate from gates and not required to ship VerifyGate.
 

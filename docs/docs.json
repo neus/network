@@ -138,6 +138,7 @@
               "platform/status",
               "platform/setup",
               "platform/receipts-and-results",
+              "platform/pricing",
               "platform/billing",
               "platform/x402",
               "platform/hosted-gate-checkout",
@@ -567,6 +568,10 @@
     {
       "source": "/x402",
       "destination": "/platform/x402"
+    },
+    {
+      "source": "/pricing",
+      "destination": "/platform/pricing"
     },
     {
       "source": "/mcp/catalog",

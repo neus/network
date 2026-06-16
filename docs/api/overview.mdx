@@ -6,7 +6,7 @@ icon: terminal
 "twitter:image": "/images/og-api.png"
 ---
 
-Use the HTTP API from **servers, workers, CLIs, and MCP**—not from end-user browsers. Responses use the same **`qHash`** as the SDK. For product checkout, publish a gate and pass its **`gateId`**; NEUS resolves the gate policy, billing owner, credits, sponsor/x402 behavior, and attribution server-side.
+Use the HTTP API from **servers, workers, CLIs, and MCP**—not from end-user browsers. Responses return the same **trust receipt** ID (`qHash`) as the SDK. For product checkout, publish a gate and pass its **`gateId`**; NEUS resolves the check policy, billing, and checkout server-side.
 
 **Base URL:** `https://api.neus.network`
 
@@ -38,6 +38,8 @@ Send end users through the **[JavaScript SDK](../sdks/javascript)** or **[Hosted
 | `/api/v1/health` | GET | Service health |
 
 The SDK's `getGate()` / `fulfillGate()` wrap the gate endpoints above.
+
+**Same-origin in the product app:** `https://neus.network/api/v1/gates/{gateId}` and `.../fulfill` return the same gate contract for browser calls. Server integrations should call `api.neus.network` paths directly (or use the SDK).
 
 ## Examples
 
