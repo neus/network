@@ -1603,96 +1603,108 @@ async function runAuthBrowser(options) {
   const codeChallenge = deriveCodeChallenge(codeVerifier);
 
   return new Promise((resolve, reject) => {
+    let settled = false;
+    function finish(error, value) {
+      if (settled) return;
+      settled = true;
+      server.close();
+      if (error) reject(error);
+      else resolve(value);
+    }
+
     const server = createServer((req, res) => {
       const url = new URL(req.url, `http://127.0.0.1:${server.address().port}`);
-      if (url.pathname === '/callback') {
-        const returnedState = url.searchParams.get('state');
-        if (!returnedState || returnedState !== csrfState) {
-          res.writeHead(403, { 'Content-Type': 'text/html' });
-          res.end('<html><body><h2>Security check failed</h2><p>Invalid request. Try again.</p></body></html>');
-          server.close();
-          reject(new Error('CSRF state mismatch'));
-          return;
-        }
 
-        const code = url.searchParams.get('code');
-        const error = url.searchParams.get('error');
+      // Ignore browser noise; keep the server alive for the real callback.
+      if (url.pathname === '/favicon.ico') {
+        res.writeHead(204);
+        res.end();
+        return;
+      }
 
-        if (error) {
-          res.writeHead(200, { 'Content-Type': 'text/html' });
-          res.end('<html><body><h2>Authentication failed</h2><p>You can close this tab and try again.</p></body></html>');
-          server.close();
-          reject(new Error(`Authentication failed: ${error}`));
-          return;
-        }
-
-        if (!code) {
-          res.writeHead(200, { 'Content-Type': 'text/html' });
-          res.end('<html><body><h2>Missing auth code</h2><p>You can close this tab and try again.</p></body></html>');
-          server.close();
-          reject(new Error('No auth code received from callback'));
-          return;
-        }
-
-        const redirectUri = `http://127.0.0.1:${server.address().port}/callback`;
-        const params = new URLSearchParams();
-        params.set('grant_type', 'authorization_code');
-        params.set('code', code);
-        params.set('redirect_uri', redirectUri);
-        params.set('client_id', NEUS_OAUTH_CLIENT_ID);
-        params.set('code_verifier', codeVerifier);
-        params.set('resource', NEUS_MCP_RESOURCE);
-
-        fetch(NEUS_TOKEN_ENDPOINT, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
-          body: params.toString(),
-          signal: AbortSignal.timeout(15_000),
-        })
-          .then(tokenResp => tokenResp.json())
-          .then(tokenJson => {
-            if (!tokenJson.access_token) {
-              res.writeHead(200, { 'Content-Type': 'text/html' });
-              res.end('<html><body><h2>Token exchange failed</h2><p>Please try again.</p></body></html>');
-              server.close();
-              reject(new Error(tokenJson.error_description || tokenJson.error || 'Token exchange failed'));
-              return;
-            }
-
-            const accessToken = tokenJson.access_token;
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end('<html><body><h2>Authenticated</h2><p>You can close this tab and return to your terminal.</p></body></html>');
-            server.close();
-
-            const results = runClientOperations(browserManagedClients, scope, cwd, options.dryRun, client =>
-              installClient(client, scope, accessToken, options.dryRun, cwd)
-            );
-            results.push(
-              ...runClientOperations(hostManagedClients, scope, cwd, options.dryRun, () =>
-                authCodex(scope, options.dryRun, cwd, options)
-              )
-            );
-            const payload = {
-              command: 'auth',
-              scope,
-              clients,
-              accessKeyConfigured: true,
-              authMethod: 'browser',
-              results,
-              hasErrors: results.some(result => result.error)
-            };
-            resolve(payload);
-          })
-          .catch(err => {
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end('<html><body><h2>Connection error</h2><p>Please try again.</p></body></html>');
-            server.close();
-            reject(err);
-          });
-      } else {
+      if (url.pathname !== '/callback') {
         res.writeHead(404);
         res.end();
+        return;
       }
+
+      const returnedState = url.searchParams.get('state');
+      if (!returnedState || returnedState !== csrfState) {
+        res.writeHead(403, { 'Content-Type': 'text/html' });
+        res.end('<html><body><h2>Security check failed</h2><p>Invalid request. Try again.</p></body></html>');
+        finish(new Error('CSRF state mismatch'));
+        return;
+      }
+
+      const code = url.searchParams.get('code');
+      const error = url.searchParams.get('error');
+
+      if (error) {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('<html><body><h2>Authentication failed</h2><p>You can close this tab and try again.</p></body></html>');
+        finish(new Error(`Authentication failed: ${error}`));
+        return;
+      }
+
+      if (!code) {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('<html><body><h2>Missing auth code</h2><p>You can close this tab and try again.</p></body></html>');
+        finish(new Error('No auth code received from callback'));
+        return;
+      }
+
+      const redirectUri = `http://127.0.0.1:${server.address().port}/callback`;
+      const params = new URLSearchParams();
+      params.set('grant_type', 'authorization_code');
+      params.set('code', code);
+      params.set('redirect_uri', redirectUri);
+      params.set('client_id', NEUS_OAUTH_CLIENT_ID);
+      params.set('code_verifier', codeVerifier);
+      params.set('resource', NEUS_MCP_RESOURCE);
+
+      fetch(NEUS_TOKEN_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
+        body: params.toString(),
+        signal: AbortSignal.timeout(15_000),
+      })
+        .then(tokenResp => tokenResp.json())
+        .then(tokenJson => {
+          if (!tokenJson.access_token) {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end('<html><body><h2>Token exchange failed</h2><p>Please try again.</p></body></html>');
+            finish(new Error(tokenJson.error_description || tokenJson.error || 'Token exchange failed'));
+            return;
+          }
+
+          const accessToken = tokenJson.access_token;
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end('<html><body><h2>Authenticated</h2><p>You can close this tab and return to your terminal.</p></body></html>');
+
+          const results = runClientOperations(browserManagedClients, scope, cwd, options.dryRun, client =>
+            installClient(client, scope, accessToken, options.dryRun, cwd)
+          );
+          results.push(
+            ...runClientOperations(hostManagedClients, scope, cwd, options.dryRun, () =>
+              authCodex(scope, options.dryRun, cwd, options)
+            )
+          );
+          const payload = {
+            command: 'auth',
+            scope,
+            clients,
+            accessKeyConfigured: true,
+            authMethod: 'browser',
+            results,
+            hasErrors: results.some(result => result.error)
+          };
+          finish(null, payload);
+        })
+        .catch(err => {
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end('<html><body><h2>Connection error</h2><p>Please try again.</p></body></html>');
+          finish(err);
+        });
     });
 
     server.listen(0, '127.0.0.1', () => {
@@ -1728,10 +1740,13 @@ async function runAuthBrowser(options) {
     });
 
     // Timeout after 5 minutes
-    setTimeout(() => {
-      server.close();
-      reject(new Error('Authentication timed out after 5 minutes. Try again.'));
+    const timeout = setTimeout(() => {
+      finish(new Error('Authentication timed out after 5 minutes. Try again.'));
     }, 5 * 60 * 1000);
+
+    server.on('close', () => {
+      clearTimeout(timeout);
+    });
   });
 }
 
