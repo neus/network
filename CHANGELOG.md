@@ -6,6 +6,31 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-06-18
+
+### Added
+
+- **Runtime Mount (`neus.runtime-mount.v1`)** — one proof-backed bundle for identity, delegation, policy, skills, and trust receipt refs. Use from any IDE, worker, or backend.
+- **`neus mount <agentId>`** — resolve mount via MCP (`neus_agent_mount` when hosted) or client assembly; writes `.neus/mount.json`.
+- **`--apply cursor|claude|codex`** — project adapters write host rule files + mount manifest.
+- **`neus setup --agent <agentId>`** — MCP setup plus optional project mount.
+- **`neus_agent_mount`** — public MCP tool #13 (authenticated).
+- **SDK exports** — `@neus/sdk/runtime-mount`, `@neus/sdk/runtime-adapters`.
+
+### Changed
+
+- **`neus doctor --live`** — reports project mount file, agent link readiness, and `agentVerified`.
+- **Profile agent UI** — **Mount in IDE** downloads mount artifacts and copies the mount CLI command.
+
+### Upgrade
+
+```bash
+npx -y -p @neus/sdk@1.2.0 neus setup
+npx -y -p @neus/sdk@1.2.0 neus auth
+npx -y -p @neus/sdk@1.2.0 neus mount <agentId> --apply cursor
+npx -y -p @neus/sdk@1.2.0 neus doctor --live
+```
+
 ## [1.1.7] - 2026-06-16
 
 ### Fixed
@@ -205,7 +230,7 @@ npx -y -p @neus/sdk@1.1.1 neus doctor --live
 
 - **Default MCP auth path is OAuth**, not Profile access keys. Keys remain supported for **servers and CI only**.
 - Docs and setup flows on [neus.network](https://neus.network) now lead with OAuth first.
-- MCP discovery at `/.well-known/mcp.json` points to the hosted server with the current twelve-tool listing.
+- MCP discovery at `/.well-known/mcp.json` points to the hosted server with the current public tool listing (13 tools as of 1.2.0).
 - `@neus/mcp-server` discovery metadata uses OAuth-first tool descriptions.
 
 ### Fixed

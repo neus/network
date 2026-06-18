@@ -7,8 +7,9 @@ Verifiable identity, scoped authority, and receipts for every trusted action.
 **Endpoint:** `https://mcp.neus.network/mcp`
 
 ```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
+npm i -g @neus/sdk
+neus setup
+neus check
 ```
 
 [docs.neus.network/install](https://docs.neus.network/install)

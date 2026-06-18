@@ -3,7 +3,7 @@
   "name": "io.github.neus/neus-mcp",
   "title": "NEUS MCP",
   "description": "NEUS MCP: identity, authority, trust receipts, and Vault secrets before sensitive AI actions.",
-  "version": "1.1.7",
+  "version": "1.2.0",
   "repository": {
     "url": "https://github.com/neus/network",
     "source": "github"
@@ -71,6 +71,10 @@
     {
       "name": "neus_agent_create",
       "description": "Prepare agent identity and delegation (signatures and/or hosted verify). Confirm with neus_agent_link after signing. Skills/services fields are metadata only, not secrets."
+    },
+    {
+      "name": "neus_agent_mount",
+      "description": "Mount proof-backed agent runtime context in one call: identity, delegation, scoped policy, and trust receipt refs for any IDE or worker."
     },
     {
       "name": "neus_secret_create",

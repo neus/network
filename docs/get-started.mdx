@@ -45,13 +45,13 @@ End users never need a NEUS account or API key. To confirm eligibility on your s
 ## Agents and assistants: one command
 
 ```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
+neus setup
+neus check
 ```
 
 Wires hosted NEUS MCP into Cursor, Codex, VS Code, and Claude Code. Then ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
-Codex only: `npx -y -p @neus/sdk neus setup --client codex`, then `npx -y -p @neus/sdk neus auth --client codex`.
+Codex only: `neus setup --client codex`, then `neus auth --client codex`.
 
 Details: [Install NEUS](./install) · [Agent verification flow](./agents/agent-verification-flow)
 

@@ -10,6 +10,13 @@ import {
   NEUS_MCP_URL,
   buildNeusMcpHttpConfig
 } from '../mcp-hosts.js';
+import {
+  resolveRuntimeBundleFromMcp,
+  RUNTIME_MOUNT_SCHEMA,
+  normalizeWallet,
+  evaluateMountFileHealth
+} from '../runtime-mount.js';
+import { applyRuntimeBundle, readMountManifest } from '../runtime-adapters.js';
 
 const __cliDir = path.dirname(fileURLToPath(import.meta.url));
 const CLI_PACKAGE_VERSION = (() => {
@@ -590,7 +597,10 @@ function parseArgs(argv) {
     json: false,
     dryRun: false,
     project: false,
-    oauth: false
+    oauth: false,
+    agent: '',
+    apply: '',
+    agentTarget: ''
   };
 
   for (let index = 1; index < argv.length; index += 1) {
@@ -650,6 +660,24 @@ function parseArgs(argv) {
       options.oauth = true;
       continue;
     }
+    if (token === '--agent') {
+      const value = argv[index + 1];
+      if (!value) throw new Error('--agent requires a value');
+      options.agent = value.trim();
+      index += 1;
+      continue;
+    }
+    if (token === '--apply') {
+      const value = argv[index + 1];
+      if (!value) throw new Error('--apply requires a value (cursor, claude, or codex)');
+      options.apply = value.trim().toLowerCase();
+      index += 1;
+      continue;
+    }
+    if (command === 'mount' && !token.startsWith('-') && !options.agentTarget) {
+      options.agentTarget = token;
+      continue;
+    }
     if (token === '--help' || token === '-h') {
       return { command: 'help', options };
     }
@@ -675,6 +703,7 @@ function printUsage(exitCode = 0) {
     '  check         Confirm setup and live NEUS connection (alias for doctor --live)',
     '  examples      Show assistant prompts to try after install',
     '  doctor        Deep check: config status, profile connection, and live MCP context',
+    '  mount         Mount proof-backed agent context for any runtime',
     '  import        Detect and package supported assistant context for NEUS portability',
     '  export        Export the latest local NEUS portable agent manifest',
     '  help          Show this message',
@@ -688,6 +717,8 @@ function printUsage(exitCode = 0) {
     '  --to <format>            Export format: manifest or json',
     '  --output <path>          Write exported manifest to a specific path',
     '  --live                   Run live MCP checks (uses IDE credential or --access-key)',
+    '  --agent <agentId>        Agent id for mount (also: neus mount <agentId>)',
+    '  --apply <cursor|claude|codex>  Write mounted agent rules to the current project',
     '  --json                   Print JSON output',
     '  --dry-run                Preview changes without writing files'
   ];
@@ -1378,6 +1409,151 @@ async function callMcpTool({ name, args, accessKey, sessionId, signal }) {
   };
 }
 
+async function initializeMcpSession(accessKey, signal) {
+  const init = await postMcpJsonRpc({
+    id: 1,
+    method: 'initialize',
+    params: {
+      protocolVersion: '2025-11-25',
+      capabilities: {},
+      clientInfo: { name: 'neus-cli', version: CLI_PACKAGE_VERSION }
+    },
+    accessKey,
+    signal
+  });
+  if (!init.response.ok || init.json?.error) {
+    throw new Error(init.json?.error?.message || 'MCP initialize failed');
+  }
+  return { sessionId: init.sessionId || '' };
+}
+
+async function evaluateAgentMountDoctor(accessKey, cwd, signal) {
+  const manifest = readMountManifest(cwd);
+  const fileHealth = evaluateMountFileHealth(manifest);
+  const out = {
+    mountFilePresent: Boolean(manifest),
+    mountFileValid: fileHealth.mountFileValid,
+    mountNeedsRefresh: fileHealth.needsRefresh,
+    mountRefreshReason: fileHealth.reason,
+    missingDelegation: fileHealth.missingDelegation,
+    delegationExpired: fileHealth.delegationExpired,
+    mountAgentId: manifest?.identity?.agentId || null,
+    agentVerified: false,
+    agentLinkStatus: null
+  };
+  if (!accessKey) return out;
+
+  let sessionId = '';
+  try {
+    const init = await initializeMcpSession(accessKey, signal);
+    sessionId = init.sessionId;
+  } catch {
+    return out;
+  }
+
+  const agentId = out.mountAgentId || manifest?.identity?.agentId;
+  const agentWallet = manifest?.identity?.agentWallet;
+  if (agentWallet) {
+    const link = await callMcpTool({
+      name: 'neus_agent_link',
+      args: { agentWallet },
+      accessKey,
+      sessionId,
+      signal
+    });
+    if (link.ok) {
+      out.agentLinkStatus = link.payload?.status || (link.payload?.linked ? 'ok' : 'link_required');
+      out.agentVerified = Boolean(link.payload?.linked);
+    }
+  } else if (agentId) {
+    try {
+      const bundle = await resolveRuntimeBundleFromMcp({
+        callMcpTool: args => callMcpTool({ ...args, accessKey, sessionId, signal }),
+        accessKey,
+        agentId,
+        signal
+      });
+      out.agentVerified = Boolean(bundle?.trust?.identityQHash && bundle?.delegation);
+      out.mountAgentId = bundle.identity?.agentId || agentId;
+    } catch {
+      out.agentVerified = false;
+    }
+  }
+  return out;
+}
+
+async function runMount(options) {
+  const cwd = process.cwd();
+  const scope = resolveScope(options);
+  const accessKey = resolveLiveAccessKey(options, scope, cwd);
+  const agentTarget = String(options.agentTarget || options.agent || '').trim();
+  if (!agentTarget) {
+    throw new Error('Usage: neus mount <agentId> [--apply cursor|claude|codex]');
+  }
+  if (!accessKey) {
+    throw new Error('Credential required. Run `neus auth` or pass --access-key.');
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
+  try {
+    const bundle = await resolveRuntimeBundleFromMcp({
+      callMcpTool: args => callMcpTool({ ...args, accessKey, signal: controller.signal }),
+      initializeMcp: () => initializeMcpSession(accessKey, controller.signal),
+      accessKey,
+      agentId: agentTarget,
+      signal: controller.signal
+    });
+
+    const applyFlavor = String(options.apply || '').trim().toLowerCase();
+    let applyResult = null;
+    if (applyFlavor) {
+      if (!['cursor', 'claude', 'codex'].includes(applyFlavor)) {
+        throw new Error('--apply must be cursor, claude, or codex');
+      }
+      applyResult = applyRuntimeBundle(applyFlavor, bundle, cwd, { dryRun: options.dryRun });
+    } else if (!options.json) {
+      applyRuntimeBundle('cursor', bundle, cwd, { dryRun: options.dryRun });
+    }
+
+    const payload = {
+      command: 'mount',
+      schema: RUNTIME_MOUNT_SCHEMA,
+      agentId: bundle.identity.agentId,
+      bundle,
+      applied: applyResult,
+      dryRun: Boolean(options.dryRun)
+    };
+
+    if (options.json) {
+      printJson(payload);
+      return payload;
+    }
+
+    emitCliBanner(options);
+    writeCliLine(paint('mount', 'green'));
+    logStep('ok', 'agent', bundle.identity.agentLabel || bundle.identity.agentId);
+    writeGuidanceLine(`Identity receipt: ${bundle.trust.identityProofUrl}`);
+    if (bundle.trust.delegationProofUrl) {
+      writeGuidanceLine(`Delegation receipt: ${bundle.trust.delegationProofUrl}`);
+    } else {
+      writeGuidanceLine('Delegation not on file — run agent setup on neus.network before scoped actions.');
+    }
+    if (applyResult) {
+      for (const filePath of applyResult.written) {
+        logStep('ok', 'wrote', filePath);
+      }
+    } else if (!options.dryRun) {
+      logStep('ok', 'wrote', path.join(cwd, '.neus', 'mount.json'));
+    }
+    writeGuidanceLine('Start a new Agent chat so mounted rules load. Use NEUS Verify before sensitive actions.');
+    writeCliLine('');
+    return payload;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 async function runLiveMcpDiagnostics(accessKey) {
   if (!accessKey) {
     return {
@@ -1879,6 +2055,19 @@ async function runSetup(options) {
     return authResult || payload;
   }
 
+  if (options.agent && !options.dryRun) {
+    const mountKey = resolveLiveAccessKey(options, scope, cwd);
+    if (mountKey) {
+      await runMount({
+        ...options,
+        agentTarget: options.agent,
+        apply: options.apply || 'cursor',
+        json: false,
+        live: true
+      });
+    }
+  }
+
   return payload;
 }
 
@@ -1960,6 +2149,7 @@ const ASSISTANT_EXAMPLE_PROMPTS = [
   'Use NEUS Verify before taking sensitive actions.',
   'Check whether I already have the required trust receipt.',
   'Verify this agent is trusted before it runs tools.',
+  'Mount my NEUS agent context with neus_agent_mount, then follow its scoped policy.',
   'Use NEUS Vault before storing or using secrets.',
   'Show the receipt for this verification.'
 ];
@@ -2019,7 +2209,29 @@ async function runDoctor(options) {
       payload.profileConnectable = Boolean(payload.mcp.authenticated);
       payload.hasErrors =
         payload.hasErrors || !payload.mcp.reachable || !payload.mcp.authenticated;
+      try {
+        const agentDoctor = await evaluateAgentMountDoctor(
+          liveAccessKey,
+          cwd,
+          AbortSignal.timeout(20000)
+        );
+        payload.agentVerified = agentDoctor.agentVerified;
+        payload.mountFilePresent = agentDoctor.mountFilePresent;
+        payload.mountFileValid = agentDoctor.mountFileValid;
+        payload.mountNeedsRefresh = agentDoctor.mountNeedsRefresh;
+        payload.mountRefreshReason = agentDoctor.mountRefreshReason;
+        payload.mountAgentId = agentDoctor.mountAgentId;
+        payload.agentLinkStatus = agentDoctor.agentLinkStatus;
+        payload.delegationExpired = agentDoctor.delegationExpired;
+        payload.missingDelegation = agentDoctor.missingDelegation;
+      } catch {
+        payload.agentVerified = false;
+      }
     }
+  } else {
+    const manifest = readMountManifest(cwd);
+    payload.mountFilePresent = Boolean(manifest);
+    payload.mountAgentId = manifest?.identity?.agentId || null;
   }
 
   if (options.json) {
@@ -2068,6 +2280,26 @@ async function runDoctor(options) {
         logStep('ok', 'profile', `connected${handle}${receipts}`);
         writeGuidanceLine('NEUS Verify is ready. Ask your assistant to verify trust before sensitive actions.');
         writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for starter prompts.');
+        if (payload.mountFilePresent) {
+          logStep('ok', 'mount', payload.mountAgentId ? `project mount: ${payload.mountAgentId}` : 'project mount on file');
+        }
+        if (payload.mountNeedsRefresh) {
+          const reason =
+            payload.delegationExpired
+              ? 'delegation expired'
+              : payload.missingDelegation
+                ? 'delegation missing on file'
+                : 'mount stale';
+          logStep('warn', 'mount', `${reason} — run \`neus mount ${payload.mountAgentId || '<agentId>'} --apply cursor\``);
+          payload.hasErrors = true;
+        } else if (payload.agentVerified) {
+          logStep('ok', 'agent', 'identity and delegation on file');
+        } else if (payload.mountAgentId || payload.mountFilePresent) {
+          writeGuidanceLine(
+            `Mounted agent is not fully linked yet. Run \`neus mount ${payload.mountAgentId || '<agentId>'} --apply cursor\` after auth.`
+          );
+          payload.hasErrors = true;
+        }
       } else {
         logStep('warn', 'profile', 'live connection was not confirmed — run `neus auth`');
       }
@@ -2209,6 +2441,10 @@ async function main() {
     }
     if (command === 'doctor') {
       await runDoctor(options);
+      return;
+    }
+    if (command === 'mount') {
+      await runMount(options);
       return;
     }
     if (command === 'examples') {

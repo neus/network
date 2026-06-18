@@ -43,8 +43,8 @@ Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are av
 <Steps>
   <Step title="Connect">
     ```bash
-    npx -y -p @neus/sdk neus setup
-    npx -y -p @neus/sdk neus check
+    neus setup
+    neus check
     ```
     Configures hosted NEUS MCP for Cursor, Codex, VS Code, or Claude Code.
   </Step>
@@ -56,6 +56,13 @@ Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are av
   </Step>
   <Step title="Confirm">
     Call **`neus_agent_link`** until **`linked: true`**, then reuse receipts.
+  </Step>
+  <Step title="Mount">
+    In your project repo:
+    ```bash
+    neus mount <agentId> --apply cursor
+    ```
+    Binds identity, delegation, and scoped policy to the workspace. [Runtime Mount](./runtime-mount).
   </Step>
   <Step title="Act">
     Check receipts before payments, data access, or other trusted actions.
@@ -79,6 +86,9 @@ Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are av
   </Card>
   <Card title="Pay per call" icon="coins" href="../platform/x402">
     Agentic payments with x402.
+  </Card>
+  <Card title="Runtime Mount" icon="layers" href="./runtime-mount">
+    Bind a trusted agent to any repo or runtime.
   </Card>
   <Card title="MCP setup" icon="plug" href="../mcp/setup">
     Hosted MCP, OAuth, and access keys.

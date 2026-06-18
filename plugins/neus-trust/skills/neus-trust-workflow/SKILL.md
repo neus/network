@@ -7,10 +7,18 @@ NEUS gives agents verifiable identity, scoped authority, and receipts for every 
 
 ## Setup
 
+**Install once (recommended):**
+
 ```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
-npx -y -p @neus/sdk neus examples
+npm i -g @neus/sdk
+neus setup
+neus check
+```
+
+**Or try without installing:**
+
+```bash
+npx @neus/sdk setup
 ```
 
 `neus setup` configures hosted NEUS MCP for Cursor, Codex, VS Code, and Claude Code. Cursor, VS Code, and Claude Code use browser OAuth. Codex uses its own MCP login after setup.
@@ -18,14 +26,14 @@ npx -y -p @neus/sdk neus examples
 Codex-only:
 
 ```bash
-npx -y -p @neus/sdk neus setup --client codex
-npx -y -p @neus/sdk neus auth --client codex
+neus setup --client codex
+neus auth --client codex
 ```
 
 Servers and CI:
 
 ```bash
-npx -y -p @neus/sdk neus setup --access-key <npk_...>
+neus setup --access-key <npk_...>
 ```
 
 Create access keys under **Account → Access keys** on [neus.network](https://neus.network/profile?tab=account). Never paste keys into chat or committed files.
@@ -34,15 +42,32 @@ Hosted MCP: **`https://mcp.neus.network/mcp`**
 
 Trust receipts persist **offchain by default**. Do not prompt for wallet connection or on-chain anchoring unless the user explicitly asks; only then pass `options.publishToHub: true` on verify.
 
+## Project mount (per repo)
+
+After MCP is connected on the machine:
+
+```bash
+neus mount <agentId> --apply cursor
+```
+
+| Layer | Command |
+|-------|---------|
+| **Machine** | `neus setup` + `neus auth` (once) |
+| **Repo** | `neus mount <agentId> --apply cursor` |
+| **Session** | `neus_context` → `neus_agent_mount` when acting as the agent |
+
+Profile **Mount in** copies the mount command — run it in the project root for the full write.
+
 ## Autopilot (default)
 
 1. Run **`neus_context`** once. Use signed-in profile context when present — omit wallet fields on check/verify tools.
-2. **Trust before action:** **`neus_proofs_check`** then **`neus_verify_or_guide`**.
-3. **Trusted Agent:** **`neus_agent_link`** then **`neus_verify_or_guide`** if needed.
-4. **Receipts:** **`neus_proofs_get`** when exact receipt fields are needed.
-5. **Vault:** **`neus_secret_create`** / **`neus_secret_list`** / **`neus_secret_revoke`** when signed in.
-6. **`neus_me`** only to refresh profile context or look up a wallet/DID.
-7. Summarize outcomes as **Trust Result** for the user — never dump raw tool JSON.
+2. **Acting as a profile agent:** **`neus_agent_mount`** (or `neus mount <agentId> --apply cursor` in the project) — identity, delegation, and scoped policy in one bundle.
+3. **Trust before action:** **`neus_proofs_check`** then **`neus_verify_or_guide`**.
+4. **Trusted Agent:** **`neus_agent_link`** then **`neus_verify_or_guide`** if needed.
+5. **Receipts:** **`neus_proofs_get`** when exact receipt fields are needed.
+6. **Vault:** **`neus_secret_create`** / **`neus_secret_list`** / **`neus_secret_revoke`** when signed in.
+7. **`neus_me`** only to refresh profile context or look up a wallet/DID.
+8. Summarize outcomes as **Trust Result** for the user — never dump raw tool JSON.
 
 ## Trust Result format (assistant output)
 

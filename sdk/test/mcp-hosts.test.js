@@ -49,7 +49,8 @@ describe('mcp-hosts', () => {
     expect(buildSetupCommandForClient('vscode')).toContain('--client vscode');
     expect(buildSetupCommandForClient('claude')).toContain('--client claude');
     expect(buildSetupCommandForClient('codex', 'npk_x')).toBe(
-      'npx -y -p @neus/sdk neus setup --client codex --access-key npk_x'
+      'npm i -g @neus/sdk
+neus setup --client codex --access-key npk_x'
     );
   });
 

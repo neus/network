@@ -621,7 +621,7 @@ describe('neus CLI', () => {
     expect(stderr).toBe('');
     expect(payload.command).toBe('examples');
     expect(payload.prompts).toContain('Use NEUS Verify before taking sensitive actions.');
-    expect(payload.prompts).toHaveLength(5);
+    expect(payload.prompts).toHaveLength(6);
   });
 
   it('runs check as doctor --live', async () => {

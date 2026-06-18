@@ -14,15 +14,28 @@ npm install @neus/sdk
 
 ## Connect editors and assistants
 
-One command detects your environment and configures hosted MCP for Claude Code, Codex, Cursor, or VS Code.
+Install once, then use short commands:
 
 ```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
-npx -y -p @neus/sdk neus examples
+npm i -g @neus/sdk
+neus setup
+neus check
+neus examples
 ```
 
+Zero-install: `npx @neus/sdk setup`
+
 Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
+
+## Mount an agent in a project
+
+```bash
+neus auth
+neus mount <agentId> --apply cursor
+neus doctor --live
+```
+
+Writes `.neus/mount.json` and host rules in the current repo. [Runtime Mount docs](https://docs.neus.network/agents/runtime-mount).
 
 ## MCP docs
 

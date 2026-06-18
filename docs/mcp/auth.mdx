@@ -9,7 +9,7 @@ NEUS MCP uses **OAuth 2.0 Authorization Code with PKCE** as the primary authenti
 ## OAuth
 
 ```bash
-npx -y -p @neus/sdk neus auth
+neus auth
 ```
 
 The CLI opens your browser to the NEUS hosted sign-in page. After you authenticate (passkey or wallet), the CLI receives an MCP access token via the standard OAuth code exchange with PKCE.
@@ -35,7 +35,7 @@ Full OAuth reference: [MCP OAuth](./oauth).
 Use a **personal access key** from [Access Keys](https://neus.network/profile?tab=account) when browser OAuth is not available — servers, CI, and automation.
 
 ```bash
-npx -y -p @neus/sdk neus setup --access-key <npk_...>
+neus setup --access-key <npk_...>
 ```
 
 ## Summary
@@ -59,7 +59,7 @@ Authenticated MCP sessions should reuse existing trust receipts before any brows
 ## Disconnect
 
 ```bash
-npx -y -p @neus/sdk neus disconnect --access-key <token>
+neus disconnect --access-key <token>
 ```
 
 Disconnect revokes OAuth MCP tokens through the OAuth revocation endpoint. For `npk_*` credentials, it revokes the Profile access key through the protocol API, then removes the local MCP header from configured clients.
