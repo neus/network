@@ -7,7 +7,6 @@ import {
   NEUS_AUTH_CLI,
   NEUS_INSTALL_CLI,
   NEUS_NPX,
-  NEUS_SETUP_CLI,
   NEUS_SETUP_NPX,
   neusCmd,
 } from './cli-commands.js';

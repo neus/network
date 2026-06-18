@@ -48,7 +48,7 @@ function capabilitiesToArray(caps) {
  * @param {number | null | undefined} expiresAt
  */
 export function isDelegationExpired(expiresAt) {
-  if (expiresAt == null || expiresAt === 0) return false;
+  if (expiresAt === null || expiresAt === undefined || expiresAt === 0) return false;
   const ms = Number(expiresAt);
   return Number.isFinite(ms) && ms > 0 && ms <= Date.now();
 }
@@ -176,7 +176,9 @@ export function extractAgentContextFromProofs(proofs) {
               : undefined,
           expiresAt: vvData.expiresAt ?? null,
           isExpired: isDelegationExpired(vvData.expiresAt),
-          maxSpend: vvData.maxSpend != null ? String(vvData.maxSpend) : undefined,
+          maxSpend: vvData.maxSpend !== null && vvData.maxSpend !== undefined
+            ? String(vvData.maxSpend)
+            : undefined,
           instructions: vvData.instructions || null,
           skills: Array.isArray(vvData.skills) ? vvData.skills : [],
           provider: vvData.provider || vvData.modelProvider || null,
