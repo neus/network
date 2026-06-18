@@ -6,6 +6,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-06-18
+
+### Fixed
+
+- **npm pack contents** — ship `cli-commands.js`, `runtime-mount.js`, and `runtime-adapters.js` (fixes `Can't resolve './runtime-adapters.js'` and missing `NEUS_SETUP_CLI` / `NEUS_AUTH_CLI` from `mcp-hosts.js` on clean `npm install`).
+- **Browser / Next.js builds** — stop re-exporting Node-only `runtime-adapters` from the main `@neus/sdk` entry; use `@neus/sdk/runtime-adapters` in CLI and server contexts only.
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.2.1
+# or zero-install
+npx -y -p @neus/sdk@1.2.1 neus doctor --live
+```
+
 ## [1.2.0] - 2026-06-18
 
 ### Added

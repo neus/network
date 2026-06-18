@@ -72,16 +72,7 @@ export {
   evaluateMountFileHealth
 } from './runtime-mount.js';
 
-export {
-  MOUNT_MANIFEST_RELATIVE,
-  sanitizeAgentIdForFilename,
-  bundleToCursorRules,
-  bundleToClaudeMd,
-  bundleToCodexJson,
-  readMountManifest,
-  writeMountManifest,
-  applyRuntimeBundle
-} from './runtime-adapters.js';
+// Node-only adapters (fs/path): import `@neus/sdk/runtime-adapters` — not re-exported here (Next/webpack safe).
 
 export {
   SDKError,
