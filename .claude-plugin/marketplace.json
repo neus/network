@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
   "name": "neus",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Trust infrastructure for agents that act. Verify identity, scoped authority, trust receipts, and Vault-backed secrets in Cursor, Claude Code, Codex, and VS Code.",
   "owner": {
     "name": "NEUS",
@@ -16,7 +16,7 @@
       "homepage": "https://docs.neus.network/install",
       "repository": "https://github.com/neus/network",
       "license": "Apache-2.0",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "author": {
         "name": "NEUS",
         "url": "https://neus.network"

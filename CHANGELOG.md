@@ -13,6 +13,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **npm pack contents** — ship `cli-commands.js`, `runtime-mount.js`, and `runtime-adapters.js` (fixes `Can't resolve './runtime-adapters.js'` and missing `NEUS_SETUP_CLI` / `NEUS_AUTH_CLI` from `mcp-hosts.js` on clean `npm install`).
 - **Browser / Next.js builds** — stop re-exporting Node-only `runtime-adapters` from the main `@neus/sdk` entry; use `@neus/sdk/runtime-adapters` in CLI and server contexts only.
 
+### Changed
+
+- **Version alignment** — `@neus/mcp-server`, plugin, marketplace, and `server.json` aligned to `1.2.1` (lockstep with `@neus/sdk`).
+
 ### Upgrade
 
 ```bash
