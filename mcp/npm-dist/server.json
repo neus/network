@@ -12,7 +12,9 @@
   "icons": [
     {
       "src": "https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-07-app-icon-raster-v1",
-      "sizes": ["128x128"],
+      "sizes": [
+        "128x128"
+      ],
       "mimeType": "image/svg+xml"
     }
   ],
@@ -38,55 +40,55 @@
   "tools": [
     {
       "name": "neus_context",
-      "description": "Start each session here: mode, signed-in profile context, verifier summary, reuse-first workflow, and safety rules."
+      "description": "NEUS MCP session home: current mode, signed-in profile context, verifier summary, reuse-first workflow, tools, and safety rules. Call once at session start."
     },
     {
       "name": "neus_verifiers_catalog",
-      "description": "Full verifier directory with JSON schemas. Call after neus_context when you need exact payload fields beyond the summary."
+      "description": "Full verifier directory with JSON schemas. Use after neus_context when payloads need exact fields beyond the summary."
     },
     {
       "name": "neus_proofs_check",
-      "description": "Checks whether existing trust receipts satisfy required checks. Eligibility only; never creates receipts. Omit wallet when signed in to use the session profile wallet."
+      "description": "Checks whether existing Proof Receipts satisfy required checks. Eligibility only; never creates proofs. Omit wallet when signed in to use the session profile wallet."
     },
     {
       "name": "neus_verify",
-      "description": "Create or continue verification when profile access, wallet, and signing already meet NEUS requirements. Check existing receipts first."
+      "description": "Creates or continues verification only when Profile access, wallet, and signing already satisfy NEUS for this verifier. Check existing receipts first."
     },
     {
       "name": "neus_verify_or_guide",
-      "description": "Trust autopilot: reuse existing trust receipts when eligible, otherwise return the single next step (continue in MCP or open hosted verify). Omit walletAddress when signed in."
+      "description": "Trust autopilot: reuse existing Proof Receipts when eligible, otherwise return the single next step (continue in MCP or open hosted verify). Omit walletAddress when signed in."
     },
     {
       "name": "neus_proofs_get",
-      "description": "Read proof records, tags, delegated agent reads, profile summary fields, and live status. Use returned qHashes as receipt references."
+      "description": "Reads proof records, tags, delegated agent reads, Profile summary fields, and live proof state. Use returned proof records as receipt references."
     },
     {
       "name": "neus_me",
-      "description": "Refresh signed-in profile context, or look up a public profile by wallet or DID."
+      "description": "Refresh signed-in Profile context, or look up a public Profile by wallet/DID."
     },
     {
       "name": "neus_agent_link",
-      "description": "Check agent wallet readiness: linked when identity and delegation receipts exist; otherwise returns a hosted verify URL."
+      "description": "Readiness check for an agent wallet: returns linked when identity and access receipts exist. When setup is missing and the caller is authenticated, call neus_agent_create next — browser is fallback only."
     },
     {
       "name": "neus_agent_create",
-      "description": "Prepare agent identity and delegation (signatures and/or hosted verify). Confirm with neus_agent_link after signing. Skills/services fields are metadata only, not secrets."
+      "description": "Creates agent identity and access receipts. Requires agentId (provide a meaningful id like \"my-ai-assistant\"; if omitted, NEUS auto-generates one). Uses the authenticated session first (no browser when the profile can authorize). Falls back to hosted verify only when session cannot complete. Confirm with neus_agent_link when done."
     },
     {
       "name": "neus_agent_mount",
-      "description": "Mount proof-backed agent runtime context in one call: identity, delegation, scoped policy, and trust receipt refs for any IDE or worker."
+      "description": "Mount proof-backed agent runtime context in one call: identity, delegation, effective runtime, skills, scoped policy, and trust receipt refs (neus.runtime-mount.v1). Requires authentication. Use before acting as a profile agent in any IDE or worker."
     },
     {
       "name": "neus_secret_create",
-      "description": "Store an env-style secret as an encrypted proof (ownership-basic with secret-storage tags). Values are sealed and never returned in plaintext."
+      "description": "Store an env-style secret as an encrypted proof. Creates an ownership-basic proof with secret-storage tags. Values are AES-256-GCM sealed and never returned in plaintext via MCP."
     },
     {
       "name": "neus_secret_list",
-      "description": "List stored secret proofs for a wallet. Metadata only (qHash, alias, type, updatedAt) — values are never exposed."
+      "description": "List env-style secret proofs for a wallet. Returns metadata only (qHash, alias, type, updatedAt). Values are never exposed."
     },
     {
       "name": "neus_secret_revoke",
-      "description": "Revoke a stored secret proof by qHash and clean up agent bindings. Requires authenticated ownership."
+      "description": "Revoke a stored secret proof by qHash. Removes the proof and cleans up any agent bindings. Requires authenticated ownership."
     }
   ],
   "license": "Apache-2.0",
