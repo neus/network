@@ -135,6 +135,7 @@
             "group": "Platform",
             "pages": [
               "platform/overview",
+              "platform/trust-stack",
               "platform/status",
               "platform/setup",
               "platform/receipts-and-results",

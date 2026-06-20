@@ -1,12 +1,14 @@
 ---
 title: Integration
-description: Check, verify, save, reuse.
+description: Check, verify, save, reuse — one loop for apps, gates, profiles, and agents.
 icon: compass
 ---
 
 Every NEUS integration follows the same loop.
 
-The same `qHash` works in a React widget, a server gate, an MCP assistant, or a partner app — because the receipt is the trust context, not a local state flag.
+The same trust receipt works in a React widget, a server gate, an MCP assistant, or a partner app — because the **receipt** is the trust context, not a session flag in your database.
+
+**Profile → portal → check → receipt:** builders publish access from their NEUS profile; visitors complete hosted sign-in or trust checks on NEUS; receipts attach to profiles and reuse everywhere. See [Trust stack](./platform/trust-stack) for how sign-in, gates, and agents fit together.
 
 | Step | Do this                                                                       |
 | ---- | ----------------------------------------------------------------------------- |
