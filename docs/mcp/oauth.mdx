@@ -43,7 +43,8 @@ GET https://mcp.neus.network/.well-known/oauth-protected-resource
   "scopes_supported": [
     "neus:core",
     "neus:profile",
-    "neus:secrets"
+    "neus:secrets",
+    "offline_access"
   ],
   "resource_documentation": "https://docs.neus.network/mcp/overview"
 }
@@ -68,6 +69,7 @@ GET https://neus.network/.well-known/oauth-authorization-server
   "authorization_endpoint": "https://neus.network/oauth/authorize",
   "token_endpoint": "https://neus.network/api/v1/auth/mcp/token",
   "revocation_endpoint": "https://neus.network/api/v1/auth/mcp/revoke",
+  "registration_endpoint": "https://neus.network/oauth/register",
   "response_types_supported": ["code"],
   "grant_types_supported": ["authorization_code", "refresh_token"],
   "code_challenge_methods_supported": ["S256"],
