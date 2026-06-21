@@ -192,7 +192,7 @@ Revoking an access token also invalidates all associated refresh tokens.
 |-------------|-----|
 | `neus-cli` | NEUS SDK CLI (`neus auth`) — loopback redirect on `127.0.0.1` |
 
-Hosted MCP clients (Cursor, VS Code, Claude Code, OpenAI) should use **URL-only** config when possible and let the host run OAuth discovery from `/.well-known/mcp.json`.
+Hosted MCP clients (Cursor, VS Code, Claude Code, OpenAI) should use a **URL-only** MCP config. The host discovers OAuth metadata at `/.well-known/mcp.json` and runs its own DCR + PKCE + silent refresh lifecycle. Use the NEUS SDK CLI (`neus setup`) to generate the correct config.
 
 ## Security properties
 

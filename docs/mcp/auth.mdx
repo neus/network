@@ -4,17 +4,19 @@ description: OAuth 2.0 with PKCE for MCP clients, access key fallback, and token
 icon: lock
 ---
 
-NEUS MCP uses **OAuth 2.0 Authorization Code with PKCE** as the primary authentication flow. MCP clients that support OAuth (Claude Code, OpenAI, VS Code, Cursor) authenticate through a standard browser-based flow. Access keys are the fallback for servers and automation.
+Sign in once, then let your IDE handle the rest. NEUS MCP uses **OAuth 2.0 with PKCE** by default, so Cursor, Claude Code, VS Code, and Codex can authenticate through a browser flow and refresh your session silently for up to 30 days.
 
-## OAuth
+For servers, CI, and other environments that cannot open a browser, use a durable personal access key instead.
+
+## OAuth sign-in
 
 ```bash
 neus auth
 ```
 
-The CLI opens your browser to the NEUS hosted sign-in page. After you authenticate (passkey or wallet), the CLI receives an MCP access token via the standard OAuth code exchange with PKCE.
+The CLI opens your browser to the NEUS hosted sign-in page. After you authenticate with a passkey or wallet, the CLI receives an MCP access token through the standard OAuth code exchange.
 
-MCP clients that support OAuth discovery read metadata from the hosted MCP server:
+OAuth-capable clients discover NEUS metadata automatically from the hosted MCP server:
 
 ```text
 GET https://mcp.neus.network/.well-known/mcp.json
@@ -26,9 +28,9 @@ GET https://neus.network/.well-known/oauth-authorization-server
 → Authenticated MCP session (Bearer on MCP requests)
 ```
 
-Some clients also follow a `401` + `WWW-Authenticate` challenge when a protected resource requires auth. Hosted NEUS MCP is open for public tools; sign in when you need account-aware context, private reads, or encrypted secrets.
+When a protected resource returns `401` + `WWW-Authenticate`, OAuth-capable clients follow that metadata to sign you in and refresh tokens. Anonymous proof checking is still available through the web UI and the HTTP API.
 
-Full OAuth reference: [MCP OAuth](./oauth).
+For full OAuth mechanics, see [MCP OAuth](./oauth).
 
 ## Access key (fallback)
 
@@ -38,13 +40,16 @@ Use a **personal access key** from [Access Keys](https://neus.network/profile?ta
 neus setup --access-key <npk_...>
 ```
 
-## Summary
+## Choose an auth mode
 
-| Mode | Use it for |
-|------|------------|
-| **No authentication** | `neus_context`, `neus_proofs_check`, public `neus_proofs_get`, and verifier catalog reads |
-| **OAuth** | Cursor, VS Code, Claude Code, OpenAI — browser sign-in, no manual keys |
-| **Bearer (`npk_*` or OAuth JWT)** | Same header shape — profile context in `neus_context`, private reads, secrets tools |
+| Mode | Best for |
+|------|----------|
+| **OAuth** | Cursor, VS Code, Claude Code, OpenAI — browser sign-in, no manual keys, silent refresh for 30 days |
+| **Access key (`npk_*`)** | Servers, CI, automation, or operator machines with stable environment variables. Durable and never expires |
+
+Both modes send the same `Authorization: Bearer <token>` header against the same NEUS Profile and Account. `npk_*` keys are long-lived credentials; OAuth sessions are long-lived too — the IDE refreshes the short-lived access token silently for up to 30 days via the `offline_access` refresh token, exactly like Linear, GitHub, and Notion MCP hosts.
+
+Hosted MCP requires authentication on every request. Anonymous proof checking and verifier catalog reads are available through the web UI and the HTTP API.
 
 ## Authorization header
 

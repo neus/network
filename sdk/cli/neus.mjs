@@ -43,6 +43,106 @@ const SUPPORTED_IMPORT_SOURCES = [
 ];
 const SUPPORTED_EXPORT_FORMATS = ['manifest', 'json'];
 
+// ---------------------------------------------------------------------------
+// OAuth token store (~/.neus/mcp-tokens.json — gitignored user-scope cache)
+// ---------------------------------------------------------------------------
+// Holds the refresh token returned alongside the short-lived OAuth access
+// token. Powers the `neus refresh` escape hatch: when an IDE MCP client's
+// own OAuth refresh has a bug, `neus refresh` rotates the access token in one
+// command instead of a full browser re-auth. The primary refresh path is the
+// IDE's native OAuth client; a URL-only mcp.json config lets the host run
+// discovery, PKCE, and silent refresh itself.
+//
+// Never committed (lives under ~/.neus/). Never written into mcp.json. Refresh
+// tokens rotate on each use; `neus refresh` is a user-run fallback, not a
+// background daemon.
+const NEUS_HOME_DIR = path.join(os.homedir(), '.neus');
+const NEUS_TOKEN_STORE_PATH = path.join(NEUS_HOME_DIR, 'mcp-tokens.json');
+const NEUS_OAUTH_CLIENT_ID = 'neus-cli';
+const NEUS_MCP_RESOURCE = 'https://mcp.neus.network/mcp';
+
+function readTokenStore() {
+  try {
+    const raw = fs.readFileSync(NEUS_TOKEN_STORE_PATH, 'utf8').trim();
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeTokenStore(store) {
+  if (!store || typeof store !== 'object') return;
+  try {
+    fs.mkdirSync(NEUS_HOME_DIR, { recursive: true });
+    fs.writeFileSync(NEUS_TOKEN_STORE_PATH, `${JSON.stringify(store, null, 2)}\n`, { mode: 0o600 });
+  } catch {
+    // Non-blocking: refresh fallback is insurance, not the primary auth path.
+  }
+}
+
+function clearTokenStore() {
+  try {
+    fs.unlinkSync(NEUS_TOKEN_STORE_PATH);
+  } catch {
+    // Non-blocking: file may not exist.
+  }
+}
+
+function tokenExpiresAt(expiresIn) {
+  const seconds = Number(expiresIn);
+  if (!Number.isFinite(seconds) || seconds <= 0) return null;
+  return Date.now() + seconds * 1000;
+}
+
+function isTokenExpired(store) {
+  if (!store?.expiresAt) return true;
+  return Date.now() >= (store.expiresAt - 60_000);
+}
+
+function persistOAuthTokens(tokenJson, clientId, resource) {
+  const refreshToken = String(tokenJson?.refresh_token || '').trim();
+  if (!refreshToken) return;
+  writeTokenStore({
+    accessToken: String(tokenJson?.access_token || '').trim(),
+    refreshToken,
+    expiresAt: tokenExpiresAt(tokenJson?.expires_in) || (Date.now() + 3600_000),
+    clientId: clientId || NEUS_OAUTH_CLIENT_ID,
+    resource: resource || NEUS_MCP_RESOURCE,
+    scope: String(tokenJson?.scope || '').trim(),
+    updatedAt: Date.now()
+  });
+}
+
+async function refreshOAuthToken() {
+  const store = readTokenStore();
+  if (!store?.refreshToken) {
+    throw new Error('No stored OAuth refresh token. Run `neus auth --oauth` first.');
+  }
+  const params = new URLSearchParams();
+  params.set('grant_type', 'refresh_token');
+  params.set('refresh_token', store.refreshToken);
+  params.set('client_id', store.clientId || NEUS_OAUTH_CLIENT_ID);
+  params.set('resource', store.resource || NEUS_MCP_RESOURCE);
+  const resp = await fetch(NEUS_TOKEN_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
+    body: params.toString(),
+    signal: AbortSignal.timeout(15_000)
+  });
+  const tokenJson = await resp.json();
+  if (!tokenJson.access_token) {
+    if (tokenJson.error === 'invalid_grant') clearTokenStore();
+    throw new Error(tokenJson.error_description || tokenJson.error || 'Token refresh failed');
+  }
+  persistOAuthTokens(tokenJson, store.clientId, store.resource);
+  return {
+    accessToken: String(tokenJson.access_token).trim(),
+    expiresAt: tokenExpiresAt(tokenJson.expires_in) || (Date.now() + 3600_000)
+  };
+}
+
 const ansi = {
   reset: '\x1b[0m',
   dim: '\x1b[2m',
@@ -698,6 +798,7 @@ function printUsage(exitCode = 0) {
     '  setup         Configure hosted NEUS MCP for supported clients',
     '  init          Configure supported MCP clients automatically',
     '  auth          Sign in (browser, or NEUS_ACCESS_KEY / --access-key when set)',
+    '  refresh       Rotate the stored OAuth token using the saved refresh token',
     '  disconnect    Disconnect NEUS MCP (revoke the stored OAuth token or access key)',
     '  status        Show current NEUS MCP setup',
     '  check         Confirm setup and live NEUS connection (alias for doctor --live)',
@@ -814,13 +915,14 @@ function codexConfigPath() {
 function installCursor(scope, accessKey, dryRun, cwd) {
   const targetPath = cursorConfigPath(scope, cwd);
   const doc = readJsonFile(targetPath, { mcpServers: {} });
+  const serverConfig = buildCursorServer(accessKey);
   const next = {
     ...doc,
     mcpServers: {
       ...(doc.mcpServers && typeof doc.mcpServers === 'object' && !Array.isArray(doc.mcpServers)
         ? doc.mcpServers
         : {}),
-      [NEUS_MCP_SERVER_NAME]: buildCursorServer(accessKey)
+      [NEUS_MCP_SERVER_NAME]: serverConfig
     }
   };
   const writeResult = writeJsonFile(targetPath, next, dryRun);
@@ -828,7 +930,7 @@ function installCursor(scope, accessKey, dryRun, cwd) {
     client: 'cursor',
     scope,
     configured: true,
-    authConfigured: Boolean(accessKey),
+    authConfigured: Boolean(serverConfig.headers),
     changed: writeResult.changed,
     targetPath,
     backupPath: writeResult.backupPath,
@@ -840,13 +942,14 @@ function installCursor(scope, accessKey, dryRun, cwd) {
 function installVsCode(scope, accessKey, dryRun, cwd) {
   const targetPath = vscodeConfigPath(scope, cwd);
   const doc = readJsonFile(targetPath, { servers: {} });
+  const serverConfig = buildVsCodeServer(accessKey);
   const next = {
     ...doc,
     servers: {
       ...(doc.servers && typeof doc.servers === 'object' && !Array.isArray(doc.servers)
         ? doc.servers
         : {}),
-      [NEUS_MCP_SERVER_NAME]: buildVsCodeServer(accessKey)
+      [NEUS_MCP_SERVER_NAME]: serverConfig
     }
   };
   const writeResult = writeJsonFile(targetPath, next, dryRun);
@@ -854,7 +957,7 @@ function installVsCode(scope, accessKey, dryRun, cwd) {
     client: 'vscode',
     scope,
     configured: true,
-    authConfigured: Boolean(accessKey),
+    authConfigured: Boolean(serverConfig.headers),
     changed: writeResult.changed,
     targetPath,
     backupPath: writeResult.backupPath,
@@ -866,13 +969,14 @@ function installVsCode(scope, accessKey, dryRun, cwd) {
 function installClaudeProject(scope, accessKey, dryRun, cwd) {
   const targetPath = claudeProjectConfigPath(cwd);
   const doc = readJsonFile(targetPath, { mcpServers: {} });
+  const serverConfig = buildClaudeServer(accessKey);
   const next = {
     ...doc,
     mcpServers: {
       ...(doc.mcpServers && typeof doc.mcpServers === 'object' && !Array.isArray(doc.mcpServers)
         ? doc.mcpServers
         : {}),
-      [NEUS_MCP_SERVER_NAME]: buildClaudeServer(accessKey)
+      [NEUS_MCP_SERVER_NAME]: serverConfig
     }
   };
   const writeResult = writeJsonFile(targetPath, next, dryRun);
@@ -880,7 +984,7 @@ function installClaudeProject(scope, accessKey, dryRun, cwd) {
     client: 'claude',
     scope,
     configured: true,
-    authConfigured: Boolean(accessKey),
+    authConfigured: Boolean(serverConfig.headers),
     changed: writeResult.changed,
     targetPath,
     backupPath: writeResult.backupPath,
@@ -1742,9 +1846,6 @@ function runInit(options) {
   }
 }
 
-const NEUS_OAUTH_CLIENT_ID = 'neus-cli';
-const NEUS_MCP_RESOURCE = 'https://mcp.neus.network/mcp';
-
 function base64url(buffer) {
   return Buffer.from(buffer)
     .toString('base64')
@@ -1854,6 +1955,7 @@ async function runAuthBrowser(options) {
           }
 
           const accessToken = tokenJson.access_token;
+          persistOAuthTokens(tokenJson, NEUS_OAUTH_CLIENT_ID, NEUS_MCP_RESOURCE);
           res.writeHead(200, { 'Content-Type': 'text/html' });
           res.end('<html><body><h2>Authenticated</h2><p>You can close this tab and return to your terminal.</p></body></html>');
 
@@ -1966,6 +2068,52 @@ function runAuth(options) {
   };
 
   return payload;
+}
+
+async function runRefresh(options = {}) {
+  const store = readTokenStore();
+  if (!store?.refreshToken) {
+    const message = 'No stored OAuth refresh token. Run `neus auth --oauth` first.';
+    if (options.json) {
+      printJson({ command: 'refresh', error: message });
+    } else {
+      writeCliLine('');
+      writeCliLine(`  ${paint('NEUS', 'green')}  ${paint('refresh', 'red')}`);
+      writeCliLine('');
+      logStep('!', 'missing', 'no stored refresh token; run `neus auth --oauth` first');
+    }
+    process.exitCode = 1;
+    return null;
+  }
+  try {
+    const refreshed = await refreshOAuthToken();
+    const expiresAtDate = new Date(refreshed.expiresAt).toLocaleString();
+    if (options.json) {
+      printJson({ command: 'refresh', status: 'ok', expiresAt: refreshed.expiresAt });
+    } else {
+      writeCliLine('');
+      writeCliLine(`  ${paint('NEUS', 'green')}  ${paint('refresh', 'green')}`);
+      writeCliLine('');
+      logStep('ok', 'token', `rotated; valid until ${expiresAtDate}`);
+      writeCliLine('');
+      writeCliLine('  IDE MCP clients with their own OAuth lifecycle (Cursor with a URL-only');
+      writeCliLine('  config) do not need this command. It is an escape hatch for clients whose');
+      writeCliLine('  own refresh is absent or buggy. The stored access token is now fresh.');
+    }
+    return refreshed;
+  } catch (err) {
+    const message = err?.message || 'refresh failed';
+    if (options.json) {
+      printJson({ command: 'refresh', error: message });
+    } else {
+      writeCliLine('');
+      writeCliLine(`  ${paint('NEUS', 'green')}  ${paint('refresh', 'red')}`);
+      writeCliLine('');
+      logStep('!', 'failed', message);
+    }
+    process.exitCode = 1;
+    return null;
+  }
 }
 
 function runStatus(options) {
@@ -2422,6 +2570,18 @@ async function main() {
           process.exitCode = 1;
         }
       }
+      return;
+    }
+    if (command === 'refresh') {
+      await runRefresh(options);
+      return;
+    }
+    if (command === 'refresh') {
+      await runRefresh(options);
+      return;
+    }
+    if (command === 'refresh') {
+      await runRefresh(options);
       return;
     }
     if (command === 'status') {
