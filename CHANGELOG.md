@@ -6,6 +6,25 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-06-21
+
+### Fixed
+
+- **MCP OAuth docs alignment** — purged stale "60 min / silently dies / cannot refresh" comments and docs that contradicted the actual URL-only OAuth config path. `buildNeusMcpHttpConfig` already returns URL-only config for JWT-shaped tokens; the IDE runs DCR + PKCE + silent refresh for up to 30 days via `offline_access`, matching Linear, GitHub, and Notion. The access token is a short-lived JWT refreshed silently by the host; the session is long-lived, not the access token.
+- **Dead regression guard removed** — the Cursor MCP sync helper no longer warns about a JWT in `~/.cursor/mcp.json`; the SDK no longer writes that state, so the warning was stale.
+
+### Changed
+
+- **Version alignment** — `@neus/mcp-server`, `server.json`, and `server-card.json` aligned to `1.2.2` (lockstep with `@neus/sdk`).
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.2.2
+# or zero-install
+npx -y -p @neus/sdk@1.2.2 neus doctor --live
+```
+
 ## [1.2.1] - 2026-06-18
 
 ### Fixed
