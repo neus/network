@@ -1,6 +1,6 @@
 {
   "name": "@neus/sdk",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.",
   "bin": {
     "neus": "cli/neus.mjs"
