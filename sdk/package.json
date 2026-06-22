@@ -1,6 +1,6 @@
 {
   "name": "@neus/sdk",
-  "version": "1.1.7",
+  "version": "1.2.3",
   "description": "NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.",
   "bin": {
     "neus": "cli/neus.mjs"
@@ -31,9 +31,21 @@
       "import": "./gates.js",
       "require": "./cjs/gates.cjs"
     },
+    "./cli-commands": {
+      "import": "./cli-commands.js",
+      "require": "./cjs/cli-commands.cjs"
+    },
     "./mcp-hosts": {
       "import": "./mcp-hosts.js",
       "require": "./cjs/mcp-hosts.cjs"
+    },
+    "./runtime-mount": {
+      "import": "./runtime-mount.js",
+      "require": "./cjs/runtime-mount.cjs"
+    },
+    "./runtime-adapters": {
+      "import": "./runtime-adapters.js",
+      "require": "./cjs/runtime-adapters.cjs"
     },
     "./widgets": {
       "types": "./types.d.ts",
@@ -54,7 +66,7 @@
     "format": "prettier --write \"**/*.js\"",
     "build": "npm run build:widgets && npm run build:cjs",
     "build:widgets": "npx esbuild widgets/verify-gate/VerifyGate.jsx widgets/verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=widgets/verify-gate/dist --jsx=automatic --legal-comments=none --external:react --external:react-dom --external:react/jsx-runtime --external:@neus/sdk/client",
-    "build:cjs": "npx esbuild index.js client.js utils.js errors.js gates.js mcp-hosts.js --bundle --platform=node --format=cjs --outdir=cjs --out-extension:.js=.cjs --legal-comments=none --external:ethers --external:@zkpassport/sdk --external:react --external:react-dom --external:react/jsx-runtime",
+    "build:cjs": "npx esbuild index.js client.js utils.js errors.js gates.js cli-commands.js mcp-hosts.js runtime-mount.js runtime-adapters.js --bundle --platform=node --format=cjs --outdir=cjs --out-extension:.js=.cjs --legal-comments=none --external:ethers --external:@zkpassport/sdk --external:react --external:react-dom --external:react/jsx-runtime",
     "prepack": "npm run build",
     "prepublishOnly": "npm run lint && npm test && npm run build"
   },
@@ -129,6 +141,7 @@
   },
   "files": [
     "cli/neus.mjs",
+    "cli-commands.js",
     "mcp-hosts.js",
     "index.js",
     "client.js",
@@ -136,6 +149,8 @@
     "errors.js",
     "gates.js",
     "sponsor.js",
+    "runtime-mount.js",
+    "runtime-adapters.js",
     "cjs/**",
     "widgets.cjs",
     "types.d.ts",

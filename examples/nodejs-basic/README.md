@@ -1,8 +1,10 @@
 # Node.js example
 
-**Prefer [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) or browser `client.verify()`** for product flows. Use this example for **backend-held keys** or to learn the **standardize to sign to submit** HTTP pattern.
+Use this example when your backend already holds a wallet key or signer and you want to create NEUS trust receipts server-side.
 
-**Run the full server-side flow** (prepare signing text, sign, submit, wait for completion, then gate check) in one file - ideal when your backend already has a wallet key or signer and you want **`qHash`** values you can persist like any other id.
+For product flows with user signing, prefer [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) or browser `client.verify()`.
+
+## Run it
 
 ```bash
 cd nodejs-basic
@@ -11,7 +13,9 @@ export TEST_WALLET_PRIVATE_KEY=0x...   # test wallet only
 node index.js
 ```
 
-Core pattern:
+This runs the full server-side flow: prepare the signing message, sign it, submit the proof, wait for completion, then run a gate check. The result is a `qHash` you can persist like any other id.
+
+## Core pattern
 
 ```javascript
 const standardizeRes = await fetch('https://api.neus.network/api/v1/verification/standardize', {
@@ -19,6 +23,7 @@ const standardizeRes = await fetch('https://api.neus.network/api/v1/verification
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ walletAddress, verifierIds: ['ownership-basic'], data, signedTimestamp })
 });
+
 const standardized = await standardizeRes.json();
 const message = standardized.data.signerString;
 const signature = await wallet.signMessage(message);

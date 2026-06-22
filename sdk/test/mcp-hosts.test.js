@@ -13,7 +13,7 @@ import {
 
 describe('mcp-hosts', () => {
   it('lists product install hosts', () => {
-    expect(MCP_INSTALL_HOSTS).toEqual(['cursor', 'claude', 'codex']);
+    expect(MCP_INSTALL_HOSTS).toEqual(['cursor', 'claude', 'codex', 'vscode']);
   });
 
   it('builds NEUS HTTP MCP config', () => {
@@ -49,7 +49,7 @@ describe('mcp-hosts', () => {
     expect(buildSetupCommandForClient('vscode')).toContain('--client vscode');
     expect(buildSetupCommandForClient('claude')).toContain('--client claude');
     expect(buildSetupCommandForClient('codex', 'npk_x')).toBe(
-      'npx -y -p @neus/sdk neus setup --client codex --access-key npk_x'
+      'npm i -g @neus/sdk\nneus setup --client codex --access-key npk_x'
     );
   });
 

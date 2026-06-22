@@ -9,7 +9,7 @@ Call after **`neus_agent_link`** when proofs are missing. Returns **`signatures`
 | Step | Action |
 |------|--------|
 | 1 | **`neus_agent_link`** with **`agentWallet`** |
-| 2 | **`neus_agent_create`** with **`agentId`** and **`agentWallet`** |
+| 2 | **`neus_agent_create`** with **`agentId`** (required; NEUS generates one if omitted) and **`agentWallet`** |
 | 3 | Finish on NEUS via **`hostedVerifyUrl`** or signing steps |
 | 4 | **`neus_agent_link`** until **`linked: true`** |
 
@@ -30,7 +30,8 @@ Leave out **`controllerWallet`** when the signed-in account from **`neus_context
 { "agentId": "my-assistant", "agentWallet": "0x..." }
 ```
 
-Optional fields: **`instructions`**, **`skills`**, **`services`**, spend caps, delegation scope. See [Agent identity](../agents/agent-identity) and [Agent delegation](../agents/agent-delegation).
+- **`agentId`** is required. Provide a meaningful identifier (e.g. `my-assistant`). If omitted, NEUS generates a default like `agent-{walletShort}-{timestamp}`.
+- Optional fields: **`instructions`**, **`skills`**, **`services`**, spend caps, delegation scope. See [Agent identity](../agents/agent-identity) and [Agent delegation](../agents/agent-delegation).
 
 ## Related
 

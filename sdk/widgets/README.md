@@ -1,6 +1,6 @@
 # NEUS Widgets
 
-**Proof-aware React components** (VerifyGate, ProofBadge) so your UI can show verified state and gate content **using the same checks your server already trusts** - avoid re-implementing verifier rules only in the browser.
+React components that show verified state and gate content with the same trust receipts your server checks.
 
 ## Install
 
@@ -10,17 +10,15 @@ npm install @neus/sdk react react-dom
 
 ## VerifyGate
 
-Create mode opens Hosted Verify. The published gate owns verifier inputs, pricing, and checkout policy.
+`VerifyGate` opens Hosted Verify when a user needs a receipt. The published gate owns verifier inputs, pricing, and checkout policy.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
 
 export function Page() {
   return (
-    <VerifyGate
-      gateId="gate_your-app-name"
-    >
-      <div>Unlocked</div>
+    <VerifyGate gateId="gate_your-app-name">
+      <div>Unlocked content</div>
     </VerifyGate>
   );
 }
@@ -36,6 +34,6 @@ import { ProofBadge } from '@neus/sdk/widgets';
 
 ## Docs
 
-- [Widgets Overview](https://docs.neus.network/widgets/overview)
-- [Verify Component](https://docs.neus.network/widgets/verifygate)
+- [Widgets overview](https://docs.neus.network/widgets/overview)
+- [VerifyGate](https://docs.neus.network/widgets/verifygate)
 - [Quickstart](https://docs.neus.network/quickstart)

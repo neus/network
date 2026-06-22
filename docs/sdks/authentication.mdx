@@ -1,14 +1,15 @@
 ---
 title: SDK Authentication
-description: Hosted verification on NEUS by default; keys for automation only.
+description: Hosted sign-in and trust checks — no wallet code in your app by default.
 icon: key
 ---
 
-**Default:** no wallet or passkey code in **your** app — users verify on **`neus.network/verify`** via `VerifyGate` or `getHostedCheckoutUrl`.
+**Default:** no wallet or passkey code in **your** app. Users **sign in** or complete **trust checks** on **`neus.network/verify`** via `VerifyGate`, `getHostedCheckoutUrl`, or MCP OAuth. Credits apply to checks and saved receipts, not to hosted session sign-in.
 
 | Where | What | Wallet code in your app |
 |-------|------|---------------------------|
-| Browser | `VerifyGate` + `gateId` | No |
+| Browser — access gate | `VerifyGate` + `gateId` | No |
+| Browser — sign-in | `getHostedCheckoutUrl` + `intent: 'login'` | No |
 | Server | `NeusClient` + `gateCheck` with the same `gateId` | No |
 | Automation | `NeusClient` + `npk_*` access key | No |
 | Advanced server | `verifyFromApp` after per-user approval | No |
@@ -33,6 +34,15 @@ import { getHostedCheckoutUrl } from '@neus/sdk';
 
 const url = getHostedCheckoutUrl({
   gateId: 'gate_your-app-name',
+  returnUrl: 'https://yourapp.com/auth/callback',
+});
+```
+
+**Sign-in only** (return to your app after NEUS session):
+
+```javascript
+const loginUrl = getHostedCheckoutUrl({
+  intent: 'login',
   returnUrl: 'https://yourapp.com/auth/callback',
 });
 ```
@@ -65,7 +75,7 @@ Create keys under [Access keys](https://neus.network/profile?tab=account). Serve
 
 ## IDE and MCP sign-in
 
-For Cursor, VS Code, or Claude Code, run `npx -y -p @neus/sdk neus setup` then `neus auth`. That stores a separate MCP access credential for `https://mcp.neus.network/mcp` — not the browser session cookie from `neus.network/verify`. Use a profile access key (`npk_*`) for servers and CI when browser sign-in is unavailable.
+For Cursor, VS Code, or Claude Code, run `neus setup` then `neus auth`. That stores a separate MCP access credential for `https://mcp.neus.network/mcp` — not the browser session cookie from `neus.network/verify`. Use a profile access key (`npk_*`) for servers and CI when browser sign-in is unavailable.
 
 See [MCP setup](../mcp/setup) and [MCP OAuth](../mcp/oauth).
 

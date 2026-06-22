@@ -18,14 +18,14 @@ Verifiable identity, scoped authority, and receipts for every trusted action.
 | **Receipt** | Recorded |
 | **Endpoint** | `https://mcp.neus.network/mcp` |
 
-Signed in on [neus.network](https://neus.network/profile?tab=account)? Use **Open in** for Cursor, Claude Code, or Codex.
+Signed in on [neus.network](https://neus.network/profile?tab=account)? Use **Mount in** for Cursor, Claude Code, or Codex — then run the copied `neus mount` command in your project repo.
 
 <Tabs sync={false}>
   <Tab title="Quick start">
 
 ```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
+neus setup
+neus check
 ```
 
 One OAuth sign-in wires hosted NEUS MCP for Cursor, Claude Code, and VS Code.
@@ -33,10 +33,10 @@ One OAuth sign-in wires hosted NEUS MCP for Cursor, Claude Code, and VS Code.
 Ask your assistant: **"Use NEUS Verify before taking sensitive actions."** That is trust before action — identity, authority, and receipts checked first.
 
 ```bash
-npx -y -p @neus/sdk neus setup --client cursor
-npx -y -p @neus/sdk neus setup --client codex
-npx -y -p @neus/sdk neus setup --client vscode
-npx -y -p @neus/sdk neus setup --client claude
+neus setup --client cursor
+neus setup --client codex
+neus setup --client vscode
+neus setup --client claude
 ```
 
   </Tab>
@@ -45,8 +45,8 @@ npx -y -p @neus/sdk neus setup --client claude
     <Icon icon="/images/brandLogos/cursor.svg" size={18} /> **Cursor**
 
 ```bash
-npx -y -p @neus/sdk neus setup --client cursor
-npx -y -p @neus/sdk neus auth
+neus setup --client cursor
+neus auth
 ```
 
 Or add to `~/.cursor/mcp.json`:
@@ -68,8 +68,8 @@ Or add to `~/.cursor/mcp.json`:
     <Icon icon="/images/brandLogos/openai.svg" size={18} /> **Codex**
 
 ```bash
-npx -y -p @neus/sdk neus setup --client codex
-npx -y -p @neus/sdk neus auth --client codex
+neus setup --client codex
+neus auth --client codex
 ```
 
 Codex handles OAuth separately. Run `neus auth --client codex` after setup, or use `codex mcp login neus`.
@@ -82,8 +82,8 @@ Config path: `~/.codex/config.toml`
     <Icon icon="/images/brandLogos/microsoft.svg" size={18} /> **VS Code**
 
 ```bash
-npx -y -p @neus/sdk neus setup --client vscode
-npx -y -p @neus/sdk neus auth
+neus setup --client vscode
+neus auth
 ```
 
 | OS | Path |
@@ -100,8 +100,8 @@ Project scope: `./.vscode/mcp.json`
     <Icon icon="/images/brandLogos/anthropic.svg" size={18} /> **Claude Code**
 
 ```bash
-npx -y -p @neus/sdk neus setup --client claude
-npx -y -p @neus/sdk neus auth
+neus setup --client claude
+neus auth
 ```
 
 **NEUS plugin** (trust receipts, agent authority, session workflow):
@@ -145,7 +145,7 @@ For servers and CI, use Profile access keys in bearer headers: [Auth](./auth). I
 ## Servers and CI
 
 ```bash
-npx -y -p @neus/sdk neus setup --access-key <npk_...>
+neus setup --access-key <npk_...>
 ```
 
 Keys: [Profile -> Account](https://neus.network/profile?tab=account). Never paste keys into chat.

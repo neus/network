@@ -15,9 +15,12 @@ Install once. The same trust identity and receipts move with you across editors 
 ## Install
 
 ```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
+npm i -g @neus/sdk
+neus setup
+neus check
 ```
+
+No global install? Run `npx @neus/sdk setup` once.
 
 Ask your assistant:
 
@@ -54,8 +57,8 @@ For example prompts, see [MCP journeys](./mcp/journeys).
 Codex uses its own OAuth step after setup:
 
 ```bash
-npx -y -p @neus/sdk neus setup --client codex
-npx -y -p @neus/sdk neus auth --client codex
+neus setup --client codex
+neus auth --client codex
 ```
 
 Claude Code plugin (optional):

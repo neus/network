@@ -8,7 +8,8 @@ Pick your surface — app, agent, or backend. NEUS gives you the same portable t
 
 | You are building | Simplest path | Start |
 | ---------------- | ------------- | ----- |
-| **An app or site** | Drop-in React widgets — `<VerifyGate>` and `<ProofBadge>` | [Quickstart](./quickstart) |
+| **Sign-in or access for your app** | Hosted Verify — sign-in or gate checkout on NEUS | [Trust stack](./platform/trust-stack) · [Hosted Verify](./cookbook/auth-hosted-verify) |
+| **Gated content or checkout** | `<VerifyGate>` + one published `gateId` | [Quickstart](./quickstart) |
 | **An agent or AI workflow** | One-command MCP setup | [Install NEUS](./install) |
 | **A backend in any language** | HTTP API and server checks | [API overview](./api/overview) |
 
@@ -45,13 +46,13 @@ End users never need a NEUS account or API key. To confirm eligibility on your s
 ## Agents and assistants: one command
 
 ```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
+neus setup
+neus check
 ```
 
 Wires hosted NEUS MCP into Cursor, Codex, VS Code, and Claude Code. Then ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
-Codex only: `npx -y -p @neus/sdk neus setup --client codex`, then `npx -y -p @neus/sdk neus auth --client codex`.
+Codex only: `neus setup --client codex`, then `neus auth --client codex`.
 
 Details: [Install NEUS](./install) · [Agent verification flow](./agents/agent-verification-flow)
 

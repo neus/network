@@ -1170,3 +1170,92 @@ declare module '@neus/sdk/mcp-hosts' {
   export function buildSetupCommandForHost(host: McpInstallHost, accessKey?: string | null): string;
   export function supportsMcpInstallDeeplink(host: McpInstallHost): boolean;
 }
+
+declare module '@neus/sdk/runtime-mount' {
+  export const RUNTIME_MOUNT_SCHEMA: 'neus.runtime-mount.v1';
+
+  export interface RuntimeBundleTrust {
+    identityQHash?: string;
+    delegationQHash?: string;
+    identityUrl?: string;
+    delegationUrl?: string;
+  }
+
+  export interface RuntimeBundleIdentity {
+    agentId: string;
+    agentWallet: string;
+    displayName?: string;
+    capabilities?: string[];
+    identityQHash?: string;
+  }
+
+  export interface RuntimeBundleDelegation {
+    delegationQHash?: string;
+    controllerWallet?: string;
+    allowedActions?: string[];
+    deniedActions?: string[];
+    expiresAt?: number | null;
+  }
+
+  export interface RuntimeBundle {
+    schema: typeof RUNTIME_MOUNT_SCHEMA;
+    mountedAt: string;
+    trust: RuntimeBundleTrust;
+    identity: RuntimeBundleIdentity;
+    delegation: RuntimeBundleDelegation;
+    effectiveRuntime?: Record<string, unknown>;
+    tools?: string[];
+    secretBindings?: Array<Record<string, unknown>>;
+    enforce?: Record<string, unknown>;
+    contextPack?: Record<string, unknown>;
+  }
+
+  export function normalizeWallet(value: string | null | undefined): string;
+  export function isDelegationExpired(expiresAt: number | null | undefined): boolean;
+  export function pickIdentity(
+    identities: Array<Record<string, unknown>>,
+    selector: { agentId?: string; agentWallet?: string; identityQHash?: string },
+  ): Record<string, unknown> | null;
+  export function pickActiveDelegation(
+    delegations: Array<Record<string, unknown>>,
+    controllerWallet: string,
+    agentWallet: string,
+    agentId: string,
+  ): Record<string, unknown> | null;
+  export function extractAgentContextFromProofs(proofs: unknown): {
+    identities: Array<Record<string, unknown>>;
+    delegations: Array<Record<string, unknown>>;
+  };
+  export function buildRuntimeBundle(input: Record<string, unknown>): RuntimeBundle;
+  export function resolveRuntimeBundleFromMcp(
+    mcpClient: { callTool: (name: string, args?: Record<string, unknown>) => Promise<unknown> },
+    selector: { agentId?: string; agentWallet?: string; identityQHash?: string }
+  ): Promise<RuntimeBundle>;
+
+  export function evaluateMountFileHealth(
+    manifest: RuntimeBundle | Record<string, unknown> | null | undefined
+  ): {
+    mountFileValid: boolean;
+    missingDelegation: boolean;
+    delegationExpired: boolean;
+    needsRefresh: boolean;
+    reason: string | null;
+  };
+}
+
+declare module '@neus/sdk/runtime-adapters' {
+  import type { RuntimeBundle } from '@neus/sdk/runtime-mount';
+
+  export type RuntimeAdapterHost = 'cursor' | 'claude' | 'codex';
+
+  export interface ApplyRuntimeBundleResult {
+    mountPath: string;
+    adapterFiles: string[];
+  }
+
+  export function applyRuntimeBundle(
+    host: RuntimeAdapterHost,
+    bundle: RuntimeBundle,
+    projectRoot: string
+  ): Promise<ApplyRuntimeBundleResult>;
+}

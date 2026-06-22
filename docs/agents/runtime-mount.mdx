@@ -1,0 +1,74 @@
+---
+title: Runtime Mount
+description: Mount proof-backed agent context in one call for any IDE, worker, or backend.
+icon: layers
+---
+
+**Runtime Mount** packages proof-backed agent context into one bundle (`neus.runtime-mount.v1`):
+
+identity, delegation, effective runtime, skills, scoped policy, tool refs, and trust receipt links.
+
+Use it when an assistant or worker should **act as a profile agent** with portable trust context — not reinvent five separate MCP calls.
+
+## Quick start (CLI)
+
+```bash
+neus auth
+neus mount my-agent --apply cursor
+```
+
+This writes:
+
+- `.neus/mount.json` — machine-readable mount manifest
+- `.cursor/rules/neus-agent-my-agent.mdc` — agent instructions + trust workflow
+
+Start a **new** Agent chat in Cursor so mounted rules load.
+
+## MCP
+
+When signed in, call **`neus_agent_mount`** with `agentId` (or `agentWallet` / `identityQHash`).
+
+Returns the same bundle shape as the CLI. Public tool — not Pro-gated.
+
+Suggested order:
+
+1. `neus_context`
+2. `neus_agent_mount` when acting as a specific agent
+3. `neus_proofs_check` / `neus_verify_or_guide` before sensitive actions
+
+## SDK
+
+```javascript
+import {
+  resolveRuntimeBundleFromMcp,
+  applyRuntimeBundle,
+} from '@neus/sdk/runtime-mount';
+```
+
+Use `resolveRuntimeBundleFromMcp` with your MCP transport, then `applyRuntimeBundle('cursor', bundle, cwd)` for project files.
+
+## Zeus vs IDE (honest scope)
+
+| Surface | What mount gives you |
+|--------|----------------------|
+| **Zeus agent tab** | Full runtime enforcement via product harness (scope, tools, receipts) |
+| **IDE adapters** | Mounted rules + trust layer via NEUS MCP; host must start a new chat |
+| **Workers / backends** | Fetch bundle over MCP or CLI; wrap your own tool loop |
+
+NEUS does **not** claim to block third-party MCP tools inside Cursor. Mount is **trust context**, not a replacement IDE.
+
+## Profile UI
+
+**Mount in IDE** on the agent card downloads mount artifacts and copies:
+
+```bash
+neus mount <agentId> --apply cursor
+```
+
+Run that command in your project repo for the full write path.
+
+## Related
+
+- [Agent identity](./agent-identity)
+- [Agent delegation](./agent-delegation)
+- [Install NEUS MCP](../mcp/ide-plugin)

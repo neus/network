@@ -9,8 +9,9 @@ One setup for Cursor, Claude Code, Codex, and VS Code.
 **[Install →](https://docs.neus.network/install)**
 
 ```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
+npm i -g @neus/sdk
+neus setup
+neus check
 ```
 
 Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
@@ -18,8 +19,8 @@ Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 Codex:
 
 ```bash
-npx -y -p @neus/sdk neus setup --client codex
-npx -y -p @neus/sdk neus auth --client codex
+neus setup --client codex
+neus auth --client codex
 ```
 
 Claude Code plugin:

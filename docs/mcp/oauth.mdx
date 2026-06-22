@@ -7,7 +7,7 @@ icon: shield-check
 NEUS MCP uses **OAuth 2.0 Authorization Code with PKCE** for MCP clients. The user signs in on NEUS (same passkey/wallet flow as the product).
 
 <Note>
-  **Default install:** `npx -y -p @neus/sdk neus setup` and `neus auth`. Use this page for custom MCP hosts, security review, or raw HTTP integration.
+  **Default install:** `neus setup` and `neus auth`. Use this page for custom MCP hosts, security review, or raw HTTP integration.
 </Note>
 
 ## Flow overview
@@ -43,7 +43,8 @@ GET https://mcp.neus.network/.well-known/oauth-protected-resource
   "scopes_supported": [
     "neus:core",
     "neus:profile",
-    "neus:secrets"
+    "neus:secrets",
+    "offline_access"
   ],
   "resource_documentation": "https://docs.neus.network/mcp/overview"
 }
@@ -68,6 +69,7 @@ GET https://neus.network/.well-known/oauth-authorization-server
   "authorization_endpoint": "https://neus.network/oauth/authorize",
   "token_endpoint": "https://neus.network/api/v1/auth/mcp/token",
   "revocation_endpoint": "https://neus.network/api/v1/auth/mcp/revoke",
+  "registration_endpoint": "https://neus.network/oauth/register",
   "response_types_supported": ["code"],
   "grant_types_supported": ["authorization_code", "refresh_token"],
   "code_challenge_methods_supported": ["S256"],
@@ -192,7 +194,7 @@ Revoking an access token also invalidates all associated refresh tokens.
 |-------------|-----|
 | `neus-cli` | NEUS SDK CLI (`neus auth`) — loopback redirect on `127.0.0.1` |
 
-Hosted MCP clients (Cursor, VS Code, Claude Code, OpenAI) should use **URL-only** config when possible and let the host run OAuth discovery from `/.well-known/mcp.json`.
+Hosted MCP clients (Cursor, VS Code, Claude Code, OpenAI) should use a **URL-only** MCP config. The host discovers OAuth metadata at `/.well-known/mcp.json` and runs its own DCR + PKCE + silent refresh lifecycle. Use the NEUS SDK CLI (`neus setup`) to generate the correct config.
 
 ## Security properties
 

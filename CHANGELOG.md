@@ -6,6 +6,93 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.3] - 2026-06-21
+
+### Added
+
+- **VS Code host** — `MCP_INSTALL_HOSTS`, `IDE_HOST_LABELS`, and `IDE_HOST_BRAND_LOGOS` now include `vscode`, so the install UI and `neus setup` surface VS Code alongside Cursor, Claude Code, and Codex.
+- **OAuth resource metadata** — the NEUS Trust plugin `.mcp.json` now declares `resourceMetadataUrl` (`https://mcp.neus.network/.well-known/oauth-protected-resource`) per RFC 9728, so IDE-native OAuth (Cursor, Claude Code, Codex, VS Code) auto-discovers auth metadata without a manual Bearer header.
+
+### Fixed
+
+- **`neus doctor --live` with browser OAuth** — when only a browser-issued OAuth token is present (`~/.neus/mcp-tokens.json`), the CLI now uses it as the live credential and silently rotates it via `refreshToken` when expired. URL-only IDE configs (no static access key) are now reported as "IDE-native OAuth configured" instead of "No account credential found."
+- **401-as-reachable** — `runLiveMcpDiagnostics` now treats a 401 from the MCP server as proof the server is reachable and OAuth is configured, rather than marking it unreachable. The full authenticated tool list still runs when a valid credential is available.
+
+### Changed
+
+- **Version alignment** — `@neus/mcp-server`, `server.json`, plugin, marketplace, and `server-card.json` aligned to `1.2.3` (lockstep with `@neus/sdk`).
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.2.3
+# or zero-install
+npx -y -p @neus/sdk@1.2.3 neus doctor --live
+```
+
+## [1.2.2] - 2026-06-21
+
+### Fixed
+
+- **MCP OAuth docs alignment** — purged stale "60 min / silently dies / cannot refresh" comments and docs that contradicted the actual URL-only OAuth config path. `buildNeusMcpHttpConfig` already returns URL-only config for JWT-shaped tokens; the IDE runs DCR + PKCE + silent refresh for up to 30 days via `offline_access`, matching Linear, GitHub, and Notion. The access token is a short-lived JWT refreshed silently by the host; the session is long-lived, not the access token.
+- **Dead regression guard removed** — the Cursor MCP sync helper no longer warns about a JWT in `~/.cursor/mcp.json`; the SDK no longer writes that state, so the warning was stale.
+
+### Changed
+
+- **Version alignment** — `@neus/mcp-server`, `server.json`, and `server-card.json` aligned to `1.2.2` (lockstep with `@neus/sdk`).
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.2.2
+# or zero-install
+npx -y -p @neus/sdk@1.2.2 neus doctor --live
+```
+
+## [1.2.1] - 2026-06-18
+
+### Fixed
+
+- **npm pack contents** — ship `cli-commands.js`, `runtime-mount.js`, and `runtime-adapters.js` (fixes `Can't resolve './runtime-adapters.js'` and missing `NEUS_SETUP_CLI` / `NEUS_AUTH_CLI` from `mcp-hosts.js` on clean `npm install`).
+- **Browser / Next.js builds** — stop re-exporting Node-only `runtime-adapters` from the main `@neus/sdk` entry; use `@neus/sdk/runtime-adapters` in CLI and server contexts only.
+
+### Changed
+
+- **Version alignment** — `@neus/mcp-server`, plugin, marketplace, and `server.json` aligned to `1.2.1` (lockstep with `@neus/sdk`).
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.2.1
+# or zero-install
+npx -y -p @neus/sdk@1.2.1 neus doctor --live
+```
+
+## [1.2.0] - 2026-06-18
+
+### Added
+
+- **Runtime Mount (`neus.runtime-mount.v1`)** — one proof-backed bundle for identity, delegation, policy, skills, and trust receipt refs. Use from any IDE, worker, or backend.
+- **`neus mount <agentId>`** — resolve mount via MCP (`neus_agent_mount` when hosted) or client assembly; writes `.neus/mount.json`.
+- **`--apply cursor|claude|codex`** — project adapters write host rule files + mount manifest.
+- **`neus setup --agent <agentId>`** — MCP setup plus optional project mount.
+- **`neus_agent_mount`** — public MCP tool #13 (authenticated).
+- **SDK exports** — `@neus/sdk/runtime-mount`, `@neus/sdk/runtime-adapters`.
+
+### Changed
+
+- **`neus doctor --live`** — reports project mount file, agent link readiness, and `agentVerified`.
+- **Profile agent UI** — **Mount in IDE** downloads mount artifacts and copies the mount CLI command.
+
+### Upgrade
+
+```bash
+npx -y -p @neus/sdk@1.2.0 neus setup
+npx -y -p @neus/sdk@1.2.0 neus auth
+npx -y -p @neus/sdk@1.2.0 neus mount <agentId> --apply cursor
+npx -y -p @neus/sdk@1.2.0 neus doctor --live
+```
+
 ## [1.1.7] - 2026-06-16
 
 ### Fixed
@@ -205,7 +292,7 @@ npx -y -p @neus/sdk@1.1.1 neus doctor --live
 
 - **Default MCP auth path is OAuth**, not Profile access keys. Keys remain supported for **servers and CI only**.
 - Docs and setup flows on [neus.network](https://neus.network) now lead with OAuth first.
-- MCP discovery at `/.well-known/mcp.json` points to the hosted server with the current twelve-tool listing.
+- MCP discovery at `/.well-known/mcp.json` points to the hosted server with the current public tool listing (13 tools as of 1.2.0).
 - `@neus/mcp-server` discovery metadata uses OAuth-first tool descriptions.
 
 ### Fixed

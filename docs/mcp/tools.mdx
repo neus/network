@@ -26,6 +26,7 @@ EVM `0x…`, Solana base58, or `did:pkh:…`. Delegated reads: **`agentWallet`**
 | Phase | Calls |
 |-------|--------|
 | Default | Connect → **`neus_context`** → **`neus_agent_link`** for agents → **`neus_proofs_check`** → continue if satisfied |
+| Project agent | **`neus_agent_mount`** or `neus mount <agentId> --apply <host>` in the repo |
 | Details | **`neus_proofs_get`** for receipt records, tags, delegated context, and receipt fields |
 | Secrets | **`neus_secret_list`** / **`neus_secret_create`** / **`neus_secret_revoke`** when auth is configured ([Secrets](./secrets)) |
 | Fallback | **`neus_verify_or_guide`** only when something is missing |
@@ -54,6 +55,8 @@ Same flow as [Overview](./overview).
   <Card title="Agent create" icon="robot" href="./agent-create">
   </Card>
   <Card title="Agent link" icon="link" href="./agent-link">
+  </Card>
+  <Card title="Agent mount" icon="layers" href="../agents/runtime-mount">
   </Card>
   <Card title="Secrets" icon="key" href="./secrets">
   </Card>

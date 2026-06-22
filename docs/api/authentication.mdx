@@ -1,15 +1,18 @@
 ---
 title: Authentication
-description: Hosted verification on NEUS by default; keys for server automation and backend receipts.
+description: Hosted sign-in and trust checks on NEUS — same surface, no wallet code in your app.
 icon: fingerprint
 ---
 
-**Default:** users complete checks on **`neus.network/verify`**. Your server runs **`gateCheck`** with your published `gateId`. No wallet code in your app, and no NEUS account required for end users.
+**Hosted Verify** (`neus.network/verify`) runs **sign-in** and **trust checks** in the browser. Your app embeds a gate or redirects users to NEUS; your server confirms with **`gateCheck`**. No wallet or passkey code in your app. End users do not need a NEUS account unless your flow requires it.
+
+Credits apply to **trust checks and saved receipts**, not to hosted session sign-in. See [Trust stack](../platform/trust-stack) · [Pricing](../platform/pricing).
 
 | Need | Mechanism | Wallet code in your app |
 |------|-----------|---------------------------|
-| Product verification (default) | `VerifyGate` / Hosted Verify + `gateId` | No |
-| MCP client auth | OAuth 2.0 + PKCE | No |
+| Sign-in for your app | Hosted Verify + `intent=login` + `returnUrl` | No |
+| Access or checkout (default) | `VerifyGate` / Hosted Verify + `gateId` | No |
+| MCP client sign-in | OAuth 2.0 + PKCE | No |
 | Server automation as your profile | Bearer `npk_*` access key | No |
 | Server creates receipts for an approved user | App link + `verifyFromApp` | No |
 | Sign inside your page | SDK `verify` + `wallet` | Yes — rare |
@@ -27,8 +30,8 @@ Send users to your checkout with `gateId`; the enforcement policy bills your Hub
 MCP clients (Claude Code, OpenAI, VS Code, Cursor) authenticate via **OAuth 2.0 Authorization Code with PKCE**:
 
 ```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
+neus setup
+neus auth
 ```
 
 See [MCP OAuth](../mcp/oauth).

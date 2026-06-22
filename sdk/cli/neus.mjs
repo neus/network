@@ -10,6 +10,13 @@ import {
   NEUS_MCP_URL,
   buildNeusMcpHttpConfig
 } from '../mcp-hosts.js';
+import {
+  resolveRuntimeBundleFromMcp,
+  RUNTIME_MOUNT_SCHEMA,
+  normalizeWallet,
+  evaluateMountFileHealth
+} from '../runtime-mount.js';
+import { applyRuntimeBundle, readMountManifest } from '../runtime-adapters.js';
 
 const __cliDir = path.dirname(fileURLToPath(import.meta.url));
 const CLI_PACKAGE_VERSION = (() => {
@@ -35,6 +42,106 @@ const SUPPORTED_IMPORT_SOURCES = [
   'claude-desktop'
 ];
 const SUPPORTED_EXPORT_FORMATS = ['manifest', 'json'];
+
+// ---------------------------------------------------------------------------
+// OAuth token store (~/.neus/mcp-tokens.json — gitignored user-scope cache)
+// ---------------------------------------------------------------------------
+// Holds the refresh token returned alongside the short-lived OAuth access
+// token. Powers the `neus refresh` escape hatch: when an IDE MCP client's
+// own OAuth refresh has a bug, `neus refresh` rotates the access token in one
+// command instead of a full browser re-auth. The primary refresh path is the
+// IDE's native OAuth client; a URL-only mcp.json config lets the host run
+// discovery, PKCE, and silent refresh itself.
+//
+// Never committed (lives under ~/.neus/). Never written into mcp.json. Refresh
+// tokens rotate on each use; `neus refresh` is a user-run fallback, not a
+// background daemon.
+const NEUS_HOME_DIR = path.join(os.homedir(), '.neus');
+const NEUS_TOKEN_STORE_PATH = path.join(NEUS_HOME_DIR, 'mcp-tokens.json');
+const NEUS_OAUTH_CLIENT_ID = 'neus-cli';
+const NEUS_MCP_RESOURCE = 'https://mcp.neus.network/mcp';
+
+function readTokenStore() {
+  try {
+    const raw = fs.readFileSync(NEUS_TOKEN_STORE_PATH, 'utf8').trim();
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeTokenStore(store) {
+  if (!store || typeof store !== 'object') return;
+  try {
+    fs.mkdirSync(NEUS_HOME_DIR, { recursive: true });
+    fs.writeFileSync(NEUS_TOKEN_STORE_PATH, `${JSON.stringify(store, null, 2)}\n`, { mode: 0o600 });
+  } catch {
+    // Non-blocking: refresh fallback is insurance, not the primary auth path.
+  }
+}
+
+function clearTokenStore() {
+  try {
+    fs.unlinkSync(NEUS_TOKEN_STORE_PATH);
+  } catch {
+    // Non-blocking: file may not exist.
+  }
+}
+
+function tokenExpiresAt(expiresIn) {
+  const seconds = Number(expiresIn);
+  if (!Number.isFinite(seconds) || seconds <= 0) return null;
+  return Date.now() + seconds * 1000;
+}
+
+function isTokenExpired(store) {
+  if (!store?.expiresAt) return true;
+  return Date.now() >= (store.expiresAt - 60_000);
+}
+
+function persistOAuthTokens(tokenJson, clientId, resource) {
+  const refreshToken = String(tokenJson?.refresh_token || '').trim();
+  if (!refreshToken) return;
+  writeTokenStore({
+    accessToken: String(tokenJson?.access_token || '').trim(),
+    refreshToken,
+    expiresAt: tokenExpiresAt(tokenJson?.expires_in) || (Date.now() + 3600_000),
+    clientId: clientId || NEUS_OAUTH_CLIENT_ID,
+    resource: resource || NEUS_MCP_RESOURCE,
+    scope: String(tokenJson?.scope || '').trim(),
+    updatedAt: Date.now()
+  });
+}
+
+async function refreshOAuthToken() {
+  const store = readTokenStore();
+  if (!store?.refreshToken) {
+    throw new Error('No stored OAuth refresh token. Run `neus auth --oauth` first.');
+  }
+  const params = new URLSearchParams();
+  params.set('grant_type', 'refresh_token');
+  params.set('refresh_token', store.refreshToken);
+  params.set('client_id', store.clientId || NEUS_OAUTH_CLIENT_ID);
+  params.set('resource', store.resource || NEUS_MCP_RESOURCE);
+  const resp = await fetch(NEUS_TOKEN_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
+    body: params.toString(),
+    signal: AbortSignal.timeout(15_000)
+  });
+  const tokenJson = await resp.json();
+  if (!tokenJson.access_token) {
+    if (tokenJson.error === 'invalid_grant') clearTokenStore();
+    throw new Error(tokenJson.error_description || tokenJson.error || 'Token refresh failed');
+  }
+  persistOAuthTokens(tokenJson, store.clientId, store.resource);
+  return {
+    accessToken: String(tokenJson.access_token).trim(),
+    expiresAt: tokenExpiresAt(tokenJson.expires_in) || (Date.now() + 3600_000)
+  };
+}
 
 const ansi = {
   reset: '\x1b[0m',
@@ -316,6 +423,13 @@ function resolveLiveAccessKey(options, scope, cwd) {
   if (explicit) return explicit;
   const installed = readInstalledAccessKey(scope, cwd);
   if (installed) return installed;
+  // Browser OAuth stores the access token in ~/.neus/mcp-tokens.json (not in
+  // the IDE config, which is URL-only for IDE-native OAuth). Use it as a
+  // fallback so `doctor --live` can probe the MCP server with a real credential.
+  const store = readTokenStore();
+  if (store?.accessToken && !isTokenExpired(store)) {
+    return store.accessToken;
+  }
   if (options?.oauth) return '';
   return envAccessKey();
 }
@@ -590,7 +704,10 @@ function parseArgs(argv) {
     json: false,
     dryRun: false,
     project: false,
-    oauth: false
+    oauth: false,
+    agent: '',
+    apply: '',
+    agentTarget: ''
   };
 
   for (let index = 1; index < argv.length; index += 1) {
@@ -650,6 +767,24 @@ function parseArgs(argv) {
       options.oauth = true;
       continue;
     }
+    if (token === '--agent') {
+      const value = argv[index + 1];
+      if (!value) throw new Error('--agent requires a value');
+      options.agent = value.trim();
+      index += 1;
+      continue;
+    }
+    if (token === '--apply') {
+      const value = argv[index + 1];
+      if (!value) throw new Error('--apply requires a value (cursor, claude, or codex)');
+      options.apply = value.trim().toLowerCase();
+      index += 1;
+      continue;
+    }
+    if (command === 'mount' && !token.startsWith('-') && !options.agentTarget) {
+      options.agentTarget = token;
+      continue;
+    }
     if (token === '--help' || token === '-h') {
       return { command: 'help', options };
     }
@@ -670,11 +805,13 @@ function printUsage(exitCode = 0) {
     '  setup         Configure hosted NEUS MCP for supported clients',
     '  init          Configure supported MCP clients automatically',
     '  auth          Sign in (browser, or NEUS_ACCESS_KEY / --access-key when set)',
+    '  refresh       Rotate the stored OAuth token using the saved refresh token',
     '  disconnect    Disconnect NEUS MCP (revoke the stored OAuth token or access key)',
     '  status        Show current NEUS MCP setup',
     '  check         Confirm setup and live NEUS connection (alias for doctor --live)',
     '  examples      Show assistant prompts to try after install',
     '  doctor        Deep check: config status, profile connection, and live MCP context',
+    '  mount         Mount proof-backed agent context for any runtime',
     '  import        Detect and package supported assistant context for NEUS portability',
     '  export        Export the latest local NEUS portable agent manifest',
     '  help          Show this message',
@@ -688,6 +825,8 @@ function printUsage(exitCode = 0) {
     '  --to <format>            Export format: manifest or json',
     '  --output <path>          Write exported manifest to a specific path',
     '  --live                   Run live MCP checks (uses IDE credential or --access-key)',
+    '  --agent <agentId>        Agent id for mount (also: neus mount <agentId>)',
+    '  --apply <cursor|claude|codex>  Write mounted agent rules to the current project',
     '  --json                   Print JSON output',
     '  --dry-run                Preview changes without writing files'
   ];
@@ -783,13 +922,14 @@ function codexConfigPath() {
 function installCursor(scope, accessKey, dryRun, cwd) {
   const targetPath = cursorConfigPath(scope, cwd);
   const doc = readJsonFile(targetPath, { mcpServers: {} });
+  const serverConfig = buildCursorServer(accessKey);
   const next = {
     ...doc,
     mcpServers: {
       ...(doc.mcpServers && typeof doc.mcpServers === 'object' && !Array.isArray(doc.mcpServers)
         ? doc.mcpServers
         : {}),
-      [NEUS_MCP_SERVER_NAME]: buildCursorServer(accessKey)
+      [NEUS_MCP_SERVER_NAME]: serverConfig
     }
   };
   const writeResult = writeJsonFile(targetPath, next, dryRun);
@@ -797,7 +937,7 @@ function installCursor(scope, accessKey, dryRun, cwd) {
     client: 'cursor',
     scope,
     configured: true,
-    authConfigured: Boolean(accessKey),
+    authConfigured: Boolean(serverConfig.headers),
     changed: writeResult.changed,
     targetPath,
     backupPath: writeResult.backupPath,
@@ -809,13 +949,14 @@ function installCursor(scope, accessKey, dryRun, cwd) {
 function installVsCode(scope, accessKey, dryRun, cwd) {
   const targetPath = vscodeConfigPath(scope, cwd);
   const doc = readJsonFile(targetPath, { servers: {} });
+  const serverConfig = buildVsCodeServer(accessKey);
   const next = {
     ...doc,
     servers: {
       ...(doc.servers && typeof doc.servers === 'object' && !Array.isArray(doc.servers)
         ? doc.servers
         : {}),
-      [NEUS_MCP_SERVER_NAME]: buildVsCodeServer(accessKey)
+      [NEUS_MCP_SERVER_NAME]: serverConfig
     }
   };
   const writeResult = writeJsonFile(targetPath, next, dryRun);
@@ -823,7 +964,7 @@ function installVsCode(scope, accessKey, dryRun, cwd) {
     client: 'vscode',
     scope,
     configured: true,
-    authConfigured: Boolean(accessKey),
+    authConfigured: Boolean(serverConfig.headers),
     changed: writeResult.changed,
     targetPath,
     backupPath: writeResult.backupPath,
@@ -835,13 +976,14 @@ function installVsCode(scope, accessKey, dryRun, cwd) {
 function installClaudeProject(scope, accessKey, dryRun, cwd) {
   const targetPath = claudeProjectConfigPath(cwd);
   const doc = readJsonFile(targetPath, { mcpServers: {} });
+  const serverConfig = buildClaudeServer(accessKey);
   const next = {
     ...doc,
     mcpServers: {
       ...(doc.mcpServers && typeof doc.mcpServers === 'object' && !Array.isArray(doc.mcpServers)
         ? doc.mcpServers
         : {}),
-      [NEUS_MCP_SERVER_NAME]: buildClaudeServer(accessKey)
+      [NEUS_MCP_SERVER_NAME]: serverConfig
     }
   };
   const writeResult = writeJsonFile(targetPath, next, dryRun);
@@ -849,7 +991,7 @@ function installClaudeProject(scope, accessKey, dryRun, cwd) {
     client: 'claude',
     scope,
     configured: true,
-    authConfigured: Boolean(accessKey),
+    authConfigured: Boolean(serverConfig.headers),
     changed: writeResult.changed,
     targetPath,
     backupPath: writeResult.backupPath,
@@ -1378,18 +1520,156 @@ async function callMcpTool({ name, args, accessKey, sessionId, signal }) {
   };
 }
 
-async function runLiveMcpDiagnostics(accessKey) {
-  if (!accessKey) {
-    return {
-      live: false,
-      reachable: false,
-      authenticated: false,
-      toolsCount: 0,
-      tools: [],
-      checks: [{ name: 'access-key', ok: false, status: 'missing' }]
-    };
+async function initializeMcpSession(accessKey, signal) {
+  const init = await postMcpJsonRpc({
+    id: 1,
+    method: 'initialize',
+    params: {
+      protocolVersion: '2025-11-25',
+      capabilities: {},
+      clientInfo: { name: 'neus-cli', version: CLI_PACKAGE_VERSION }
+    },
+    accessKey,
+    signal
+  });
+  if (!init.response.ok || init.json?.error) {
+    throw new Error(init.json?.error?.message || 'MCP initialize failed');
+  }
+  return { sessionId: init.sessionId || '' };
+}
+
+async function evaluateAgentMountDoctor(accessKey, cwd, signal) {
+  const manifest = readMountManifest(cwd);
+  const fileHealth = evaluateMountFileHealth(manifest);
+  const out = {
+    mountFilePresent: Boolean(manifest),
+    mountFileValid: fileHealth.mountFileValid,
+    mountNeedsRefresh: fileHealth.needsRefresh,
+    mountRefreshReason: fileHealth.reason,
+    missingDelegation: fileHealth.missingDelegation,
+    delegationExpired: fileHealth.delegationExpired,
+    mountAgentId: manifest?.identity?.agentId || null,
+    agentVerified: false,
+    agentLinkStatus: null
+  };
+  if (!accessKey) return out;
+
+  let sessionId = '';
+  try {
+    const init = await initializeMcpSession(accessKey, signal);
+    sessionId = init.sessionId;
+  } catch {
+    return out;
   }
 
+  const agentId = out.mountAgentId || manifest?.identity?.agentId;
+  const agentWallet = manifest?.identity?.agentWallet;
+  if (agentWallet) {
+    const link = await callMcpTool({
+      name: 'neus_agent_link',
+      args: { agentWallet },
+      accessKey,
+      sessionId,
+      signal
+    });
+    if (link.ok) {
+      out.agentLinkStatus = link.payload?.status || (link.payload?.linked ? 'ok' : 'link_required');
+      out.agentVerified = Boolean(link.payload?.linked);
+    }
+  } else if (agentId) {
+    try {
+      const bundle = await resolveRuntimeBundleFromMcp({
+        callMcpTool: args => callMcpTool({ ...args, accessKey, sessionId, signal }),
+        accessKey,
+        agentId,
+        signal
+      });
+      out.agentVerified = Boolean(bundle?.trust?.identityQHash && bundle?.delegation);
+      out.mountAgentId = bundle.identity?.agentId || agentId;
+    } catch {
+      out.agentVerified = false;
+    }
+  }
+  return out;
+}
+
+async function runMount(options) {
+  const cwd = process.cwd();
+  const scope = resolveScope(options);
+  const accessKey = await resolveLiveAccessKeyWithRefresh(options, scope, cwd);
+  const agentTarget = String(options.agentTarget || options.agent || '').trim();
+  if (!agentTarget) {
+    throw new Error('Usage: neus mount <agentId> [--apply cursor|claude|codex]');
+  }
+  if (!accessKey) {
+    throw new Error('Credential required. Run `neus auth` or pass --access-key.');
+  }
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 30000);
+  try {
+    const bundle = await resolveRuntimeBundleFromMcp({
+      callMcpTool: args => callMcpTool({ ...args, accessKey, signal: controller.signal }),
+      initializeMcp: () => initializeMcpSession(accessKey, controller.signal),
+      accessKey,
+      agentId: agentTarget,
+      signal: controller.signal
+    });
+
+    const applyFlavor = String(options.apply || '').trim().toLowerCase();
+    let applyResult = null;
+    if (applyFlavor) {
+      if (!['cursor', 'claude', 'codex'].includes(applyFlavor)) {
+        throw new Error('--apply must be cursor, claude, or codex');
+      }
+      applyResult = applyRuntimeBundle(applyFlavor, bundle, cwd, { dryRun: options.dryRun });
+    } else if (!options.json) {
+      applyRuntimeBundle('cursor', bundle, cwd, { dryRun: options.dryRun });
+    }
+
+    const payload = {
+      command: 'mount',
+      schema: RUNTIME_MOUNT_SCHEMA,
+      agentId: bundle.identity.agentId,
+      bundle,
+      applied: applyResult,
+      dryRun: Boolean(options.dryRun)
+    };
+
+    if (options.json) {
+      printJson(payload);
+      return payload;
+    }
+
+    emitCliBanner(options);
+    writeCliLine(paint('mount', 'green'));
+    logStep('ok', 'agent', bundle.identity.agentLabel || bundle.identity.agentId);
+    writeGuidanceLine(`Identity receipt: ${bundle.trust.identityProofUrl}`);
+    if (bundle.trust.delegationProofUrl) {
+      writeGuidanceLine(`Delegation receipt: ${bundle.trust.delegationProofUrl}`);
+    } else {
+      writeGuidanceLine('Delegation not on file — run agent setup on neus.network before scoped actions.');
+    }
+    if (applyResult) {
+      for (const filePath of applyResult.written) {
+        logStep('ok', 'wrote', filePath);
+      }
+    } else if (!options.dryRun) {
+      logStep('ok', 'wrote', path.join(cwd, '.neus', 'mount.json'));
+    }
+    writeGuidanceLine('Start a new Agent chat so mounted rules load. Use NEUS Verify before sensitive actions.');
+    writeCliLine('');
+    return payload;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function runLiveMcpDiagnostics(accessKey) {
+  // Even without a static access key, attempt an unauthenticated initialize.
+  // The MCP server responds with 401 + WWW-Authenticate (OAuth challenge) when
+  // unauthenticated — that confirms the server is reachable and OAuth is configured.
+  // With an access key, the full authenticated flow runs.
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
   try {
@@ -1405,9 +1685,13 @@ async function runLiveMcpDiagnostics(accessKey) {
       signal: controller.signal
     });
     if (!init.response.ok || init.json?.error) {
+      // 401 means the server is reachable but requires authentication.
+      // For URL-only OAuth configs (no accessKey), this is the expected
+      // response — the IDE handles OAuth, not the CLI. Report as reachable.
+      const isAuthRequired = init.response.status === 401;
       return {
         live: true,
-        reachable: false,
+        reachable: isAuthRequired || init.response.status < 500,
         authenticated: false,
         toolsCount: 0,
         tools: [],
@@ -1566,9 +1850,6 @@ function runInit(options) {
   }
 }
 
-const NEUS_OAUTH_CLIENT_ID = 'neus-cli';
-const NEUS_MCP_RESOURCE = 'https://mcp.neus.network/mcp';
-
 function base64url(buffer) {
   return Buffer.from(buffer)
     .toString('base64')
@@ -1678,6 +1959,7 @@ async function runAuthBrowser(options) {
           }
 
           const accessToken = tokenJson.access_token;
+          persistOAuthTokens(tokenJson, NEUS_OAUTH_CLIENT_ID, NEUS_MCP_RESOURCE);
           res.writeHead(200, { 'Content-Type': 'text/html' });
           res.end('<html><body><h2>Authenticated</h2><p>You can close this tab and return to your terminal.</p></body></html>');
 
@@ -1792,6 +2074,52 @@ function runAuth(options) {
   return payload;
 }
 
+async function runRefresh(options = {}) {
+  const store = readTokenStore();
+  if (!store?.refreshToken) {
+    const message = 'No stored OAuth refresh token. Run `neus auth --oauth` first.';
+    if (options.json) {
+      printJson({ command: 'refresh', error: message });
+    } else {
+      writeCliLine('');
+      writeCliLine(`  ${paint('NEUS', 'green')}  ${paint('refresh', 'red')}`);
+      writeCliLine('');
+      logStep('!', 'missing', 'no stored refresh token; run `neus auth --oauth` first');
+    }
+    process.exitCode = 1;
+    return null;
+  }
+  try {
+    const refreshed = await refreshOAuthToken();
+    const expiresAtDate = new Date(refreshed.expiresAt).toLocaleString();
+    if (options.json) {
+      printJson({ command: 'refresh', status: 'ok', expiresAt: refreshed.expiresAt });
+    } else {
+      writeCliLine('');
+      writeCliLine(`  ${paint('NEUS', 'green')}  ${paint('refresh', 'green')}`);
+      writeCliLine('');
+      logStep('ok', 'token', `rotated; valid until ${expiresAtDate}`);
+      writeCliLine('');
+      writeCliLine('  IDE MCP clients with their own OAuth lifecycle (Cursor with a URL-only');
+      writeCliLine('  config) do not need this command. It is an escape hatch for clients whose');
+      writeCliLine('  own refresh is absent or buggy. The stored access token is now fresh.');
+    }
+    return refreshed;
+  } catch (err) {
+    const message = err?.message || 'refresh failed';
+    if (options.json) {
+      printJson({ command: 'refresh', error: message });
+    } else {
+      writeCliLine('');
+      writeCliLine(`  ${paint('NEUS', 'green')}  ${paint('refresh', 'red')}`);
+      writeCliLine('');
+      logStep('!', 'failed', message);
+    }
+    process.exitCode = 1;
+    return null;
+  }
+}
+
 function runStatus(options) {
   const scope = resolveScope(options);
   const cwd = process.cwd();
@@ -1879,6 +2207,19 @@ async function runSetup(options) {
     return authResult || payload;
   }
 
+  if (options.agent && !options.dryRun) {
+    const mountKey = resolveLiveAccessKey(options, scope, cwd);
+    if (mountKey) {
+      await runMount({
+        ...options,
+        agentTarget: options.agent,
+        apply: options.apply || 'cursor',
+        json: false,
+        live: true
+      });
+    }
+  }
+
   return payload;
 }
 
@@ -1960,6 +2301,7 @@ const ASSISTANT_EXAMPLE_PROMPTS = [
   'Use NEUS Verify before taking sensitive actions.',
   'Check whether I already have the required trust receipt.',
   'Verify this agent is trusted before it runs tools.',
+  'Mount my NEUS agent context with neus_agent_mount, then follow its scoped policy.',
   'Use NEUS Vault before storing or using secrets.',
   'Show the receipt for this verification.'
 ];
@@ -1987,6 +2329,25 @@ function runExamples(options) {
   writeCliLine('');
 }
 
+async function resolveLiveAccessKeyWithRefresh(options, scope, cwd) {
+  const liveAccessKey = resolveLiveAccessKey(options, scope, cwd);
+  const store = readTokenStore();
+  // If the CLI is using a stored OAuth access token that has expired, rotate
+  // it silently so `doctor --live` and `check` stay useful without forcing a
+  // full re-auth. Access keys (npk_…) and IDE-native OAuth never hit this path.
+  if (store?.refreshToken && store?.accessToken && liveAccessKey === store.accessToken && isTokenExpired(store)) {
+    try {
+      const refreshed = await refreshOAuthToken();
+      return refreshed.accessToken;
+    } catch (error) {
+      // Leave the original key in place; downstream diagnostics will report the
+      // authentication failure in plain language.
+      return liveAccessKey;
+    }
+  }
+  return liveAccessKey;
+}
+
 async function runDoctor(options) {
   const displayCommand = options.displayCommand || 'doctor';
   const scope = resolveScope(options);
@@ -1998,7 +2359,7 @@ async function runDoctor(options) {
     inspectClient(client, scope, cwd)
   );
   const configuredClients = inspected.filter(r => r.configured);
-  const liveAccessKey = resolveLiveAccessKey(options, scope, cwd);
+  const liveAccessKey = await resolveLiveAccessKeyWithRefresh(options, scope, cwd);
   const payload = {
     command: displayCommand,
     scope,
@@ -2015,11 +2376,33 @@ async function runDoctor(options) {
 
   if (options.live) {
     payload.mcp = await runLiveMcpDiagnostics(liveAccessKey);
+    payload.profileConnectable = Boolean(payload.mcp.authenticated);
+    payload.hasErrors =
+      payload.hasErrors || (liveAccessKey && (!payload.mcp.reachable || !payload.mcp.authenticated));
     if (liveAccessKey) {
-      payload.profileConnectable = Boolean(payload.mcp.authenticated);
-      payload.hasErrors =
-        payload.hasErrors || !payload.mcp.reachable || !payload.mcp.authenticated;
+      try {
+        const agentDoctor = await evaluateAgentMountDoctor(
+          liveAccessKey,
+          cwd,
+          AbortSignal.timeout(20000)
+        );
+        payload.agentVerified = agentDoctor.agentVerified;
+        payload.mountFilePresent = agentDoctor.mountFilePresent;
+        payload.mountFileValid = agentDoctor.mountFileValid;
+        payload.mountNeedsRefresh = agentDoctor.mountNeedsRefresh;
+        payload.mountRefreshReason = agentDoctor.mountRefreshReason;
+        payload.mountAgentId = agentDoctor.mountAgentId;
+        payload.agentLinkStatus = agentDoctor.agentLinkStatus;
+        payload.delegationExpired = agentDoctor.delegationExpired;
+        payload.missingDelegation = agentDoctor.missingDelegation;
+      } catch {
+        payload.agentVerified = false;
+      }
     }
+  } else {
+    const manifest = readMountManifest(cwd);
+    payload.mountFilePresent = Boolean(manifest);
+    payload.mountAgentId = manifest?.identity?.agentId || null;
   }
 
   if (options.json) {
@@ -2055,11 +2438,28 @@ async function runDoctor(options) {
   writeCliLine(paint('Profile connection', 'cyan'));
   if (options.live && payload.mcp) {
     if (!liveAccessKey) {
-      writeGuidanceLine(
-        hasCodex
-          ? 'Codex owns OAuth: run `neus auth --client codex` or `codex mcp login neus`.'
-          : 'No account credential found for the configured MCP clients. Run `neus auth`.'
+      // Check if any configured client uses URL-only OAuth (no Bearer header in
+      // the config, but the IDE handles OAuth natively). This is a valid auth
+      // path — the credential lives in the IDE's OAuth lifecycle, not in a
+      // static header. Don't say "No account credential found" when OAuth is set up.
+      const hasUrlOnlyOAuth = inspected.some(
+        result => result.configured && !result.authConfigured
       );
+      if (hasUrlOnlyOAuth) {
+        writeGuidanceLine('IDE-native OAuth configured. The MCP server handles authentication through your IDE session.');
+        if (payload.mcp.reachable) {
+          writeGuidanceLine('MCP server is reachable. Ask your assistant to use NEUS tools.');
+        } else {
+          writeGuidanceLine('MCP server was not reachable. Check your network or run `neus check` again.');
+          payload.hasErrors = true;
+        }
+      } else {
+        writeGuidanceLine(
+          hasCodex
+            ? 'Codex owns OAuth: run `neus auth --client codex` or `codex mcp login neus`.'
+            : 'No account credential found for the configured MCP clients. Run `neus auth`.'
+        );
+      }
     } else {
       if (payload.mcp.authenticated) {
         const handle = payload.mcp.profileHandle ? ` as ${payload.mcp.profileHandle}` : '';
@@ -2068,8 +2468,32 @@ async function runDoctor(options) {
         logStep('ok', 'profile', `connected${handle}${receipts}`);
         writeGuidanceLine('NEUS Verify is ready. Ask your assistant to verify trust before sensitive actions.');
         writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for starter prompts.');
+        if (payload.mountFilePresent) {
+          logStep('ok', 'mount', payload.mountAgentId ? `project mount: ${payload.mountAgentId}` : 'project mount on file');
+        }
+        if (payload.mountNeedsRefresh) {
+          const reason =
+            payload.delegationExpired
+              ? 'delegation expired'
+              : payload.missingDelegation
+                ? 'delegation missing on file'
+                : 'mount stale';
+          logStep('warn', 'mount', `${reason} — run \`neus mount ${payload.mountAgentId || '<agentId>'} --apply cursor\``);
+          payload.hasErrors = true;
+        } else if (payload.agentVerified) {
+          logStep('ok', 'agent', 'identity and delegation on file');
+        } else if (payload.mountAgentId || payload.mountFilePresent) {
+          writeGuidanceLine(
+            `Mounted agent is not fully linked yet. Run \`neus mount ${payload.mountAgentId || '<agentId>'} --apply cursor\` after auth.`
+          );
+          payload.hasErrors = true;
+        }
       } else {
-        logStep('warn', 'profile', 'live connection was not confirmed — run `neus auth`');
+        if (!payload.mcp.reachable) {
+          logStep('warn', 'profile', 'MCP server unreachable — check network or try again');
+        } else {
+          logStep('warn', 'profile', 'sign-in expired or invalid — run `neus auth` to reconnect');
+        }
       }
     }
   } else if (liveAccessKey) {
@@ -2192,6 +2616,18 @@ async function main() {
       }
       return;
     }
+    if (command === 'refresh') {
+      await runRefresh(options);
+      return;
+    }
+    if (command === 'refresh') {
+      await runRefresh(options);
+      return;
+    }
+    if (command === 'refresh') {
+      await runRefresh(options);
+      return;
+    }
     if (command === 'status') {
       runStatus(options);
       return;
@@ -2209,6 +2645,10 @@ async function main() {
     }
     if (command === 'doctor') {
       await runDoctor(options);
+      return;
+    }
+    if (command === 'mount') {
+      await runMount(options);
       return;
     }
     if (command === 'examples') {

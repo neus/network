@@ -17,14 +17,17 @@ One OAuth sign-in. The same identity, delegation, and receipts in Cursor, Claude
 ## Install
 
 ```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
+npm i -g @neus/sdk
+neus setup
+neus check
 ```
+
+Or without installing: `npx @neus/sdk setup`
 
 Servers and CI:
 
 ```bash
-npx -y -p @neus/sdk neus setup --access-key <npk_...>
+neus setup --access-key <npk_...>
 ```
 
 Full setup: [MCP setup](./setup). OAuth reference: [MCP OAuth](./oauth).
@@ -36,6 +39,7 @@ Assistants call **`neus_context`** once, then follow the **autopilot** workflow 
 - **Trust before action** — check existing receipts, then guide the single next step
 - **Show receipts** — read live trust receipt records with **`neus_proofs_get`**
 - **Trusted Agent** — confirm agent identity and delegation before tools run
+- **Runtime Mount** — `neus_agent_mount` or `neus mount` binds an agent to a project
 - **Vault** — list, store, or revoke encrypted secrets when signed in
 
 You should see **Trust Result** summaries in chat (Passed / Action needed / Blocked), not raw tool JSON.
@@ -51,14 +55,22 @@ For an agent wallet:
 3. If missing, call `neus_agent_create` and complete the returned hosted or signing steps.
 4. Call `neus_agent_link` again until `linked: true`.
 
-Details: [Agent verification flow](../agents/agent-verification-flow).
+Details: [Agent verification flow](../agents/agent-verification-flow) · [Runtime Mount](../agents/runtime-mount)
 
-## Import an existing setup
+## Bind an agent to a project
 
 ```bash
-npx -y -p @neus/sdk neus import --dry-run
-npx -y -p @neus/sdk neus import --from auto
-npx -y -p @neus/sdk neus export --to manifest
+neus mount <agentId> --apply cursor
+```
+
+Writes `.neus/mount.json` and host rules in the **current repo**. Re-run after delegation changes.
+
+## Migrate legacy IDE config
+
+```bash
+neus import --dry-run
+neus import --from auto
+neus export --to manifest
 ```
 
 ## Reference
