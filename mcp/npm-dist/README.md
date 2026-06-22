@@ -1,16 +1,20 @@
 # @neus/mcp-server
 
-MCP registry discovery manifest for hosted NEUS MCP at **`https://mcp.neus.network/mcp`**.
+Hosted NEUS MCP for agents that act.
 
-Trust infrastructure for agents that act: verifiable identity, scoped authority, and receipts for every trusted action.
+Verifiable identity, scoped authority, and receipts for every trusted action.
+
+Connect Cursor, VS Code, Claude Code, or Codex in one command:
 
 ```bash
 npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus check
 ```
 
+**Endpoint:** `https://mcp.neus.network/mcp`
+
 [docs.neus.network/install](https://docs.neus.network/install)
 
 ## Manifest
 
-`server.json` — public tool catalog and OAuth discovery URLs for MCP registries.
+`server.json` is the public tool catalog and OAuth discovery document for MCP registries.

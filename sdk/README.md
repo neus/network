@@ -1,10 +1,8 @@
 # @neus/sdk
 
-Create, check, and reuse NEUS trust receipts from apps and backends. The same package ships the **`neus`** CLI for assistant setup.
+Create, check, and reuse NEUS trust receipts from apps and backends. Ships the **`neus`** CLI for assistant setup and project mounting.
 
-NEUS is trust infrastructure for apps, agents, and ecosystems.
-
-Roadmap: [docs.neus.network/platform/status](https://docs.neus.network/platform/status)
+NEUS makes trust portable across the internet, so people, apps, and AI agents can prove what is real before access, payout, or execution.
 
 ## Install (library)
 
@@ -23,9 +21,9 @@ neus check
 neus examples
 ```
 
-Zero-install: `npx @neus/sdk setup`
+Or run without installing: `npx @neus/sdk setup`
 
-Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
+Then ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
 ## Mount an agent in a project
 
@@ -35,16 +33,16 @@ neus mount <agentId> --apply cursor
 neus doctor --live
 ```
 
-Writes `.neus/mount.json` and host rules in the current repo. [Runtime Mount docs](https://docs.neus.network/agents/runtime-mount).
+This writes the project mount and editor rules in the current repo. See [Runtime Mount docs](https://docs.neus.network/agents/runtime-mount).
 
 ## MCP docs
 
-| Topic                             | Link                                                                          |
-| --------------------------------- | ----------------------------------------------------------------------------- |
-| Setup, JSON snippets, and headers | [MCP setup](https://docs.neus.network/mcp/setup)                              |
-| Reuse-first MCP flow              | [MCP overview](https://docs.neus.network/mcp/overview)                        |
-| Discovery URLs                    | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints)            |
-| Install NEUS                      | [Install NEUS](https://docs.neus.network/install)                               |
+| Topic | Link |
+| ----- | ---- |
+| Setup, JSON snippets, and headers | [MCP setup](https://docs.neus.network/mcp/setup) |
+| Reuse-first MCP flow | [MCP overview](https://docs.neus.network/mcp/overview) |
+| Discovery URLs | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints) |
+| Install NEUS | [Install NEUS](https://docs.neus.network/install) |
 
 Prefer `neus setup` over hand-editing config files so every host stays on **`https://mcp.neus.network/mcp`**.
 
@@ -58,7 +56,7 @@ Prefer `neus setup` over hand-editing config files so every host stays on **`htt
 
 ## Hosted Verify
 
-Use Hosted Verify when you want NEUS to handle the signing/verification flow outside your app UI. Prefer a **published gate**:
+Use Hosted Verify when NEUS should handle the signing step outside your app UI. Prefer a **published gate**:
 
 ```js
 import { getHostedCheckoutUrl } from '@neus/sdk';
@@ -73,7 +71,7 @@ window.location.assign(url);
 
 After completion, NEUS redirects back with a `qHash`. Store it with your user or record.
 
-## Advanced: in-app signing
+## In-app signing
 
 Use this only when your app intentionally handles signing. This example is EVM. For non-EVM accounts, pass the provider explicitly and include `chain` as a CAIP-2 value.
 
@@ -151,15 +149,15 @@ Never ship access keys in browser code.
 
 ## Core methods
 
-| Method                          | Use it for                                  |
-| ------------------------------- | ------------------------------------------- |
-| `getHostedCheckoutUrl()`        | Send a user to Hosted Verify                |
-| `client.verify()`               | Create a proof                              |
-| `client.getProof()`             | Fetch a receipt by `qHash`                  |
-| `client.pollProofStatus()`      | Wait for async completion                   |
-| `client.gateCheck()`            | Server-side eligibility checks              |
-| `client.checkGate()`            | Local preview against already-loaded proofs |
-| `client.createWalletLinkData()` | Wallet-link payloads                        |
+| Method | Use it for |
+| ------ | ---------- |
+| `getHostedCheckoutUrl()` | Send a user to Hosted Verify |
+| `client.verify()` | Create a trust receipt |
+| `client.getProof()` | Fetch a receipt by `qHash` |
+| `client.pollProofStatus()` | Wait for async completion |
+| `client.gateCheck()` | Server-side eligibility checks |
+| `client.checkGate()` | Local preview against already-loaded proofs |
+| `client.createWalletLinkData()` | Wallet-link payloads |
 
 ## Configuration
 
@@ -171,6 +169,7 @@ const client = new NeusClient({
 ```
 
 `appId` is optional public attribution for advanced server/app flows. Published gate checkout and `gateCheck({ gateId })` do not require it.
+
 `apiKey` / `npk_*` is optional and server-side only.
 
 ## MCP step-by-step
@@ -180,7 +179,7 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus check
 ```
 
-`neus setup` configures MCP and signs you in: `NEUS_ACCESS_KEY` from the environment when set, otherwise the selected host starts OAuth. Cursor, VS Code, and Claude Code use browser sign-in on NEUS. Pass `--access-key <npk_...>` only to override.
+`neus setup` configures MCP and signs you in: it uses `NEUS_ACCESS_KEY` from the environment when set, otherwise the selected host starts OAuth. Cursor, VS Code, and Claude Code use browser sign-in on NEUS. Pass `--access-key <npk_...>` only to override.
 
 Codex owns its local MCP OAuth session. Use `npx -y -p @neus/sdk neus setup --client codex`, then `npx -y -p @neus/sdk neus auth --client codex`.
 

@@ -1,16 +1,10 @@
-# Trust receipts showcase (default open-source demo)
+# Trust receipts showcase
 
-A small **trust showcase** where every card is a real-world outcome, each backed by a NEUS verifier. This is the **default** runnable app in the [neus/network](https://github.com/neus/network) `examples` folder. The **live** product walkthrough is at [neus.network/demo](https://neus.network/demo).
+A runnable demo where every card is a real-world trust outcome backed by a NEUS verifier. See the live walkthrough at [neus.network/demo](https://neus.network/demo).
 
-NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution. Verification becomes a reusable **trust receipt** you can hold, look up, and attach to a claim.
+NEUS turns trust decisions into reusable **trust receipts** you can hold, look up, and attach to a claim. This demo uses `VerifyGate` to issue receipts in the browser. In a real app, persist the returned `qHash` in your own record and validate it server-side.
 
-Each card maps one story to one verifier. The UI wires **VerifyGate**; this demo keeps `qHash` in memory only. Persist `onVerified` in a real app.
-
-## Run it
-
-### Local (default: in-browser mock, no second process)
-
-`npm run dev` runs **Vite** only. Before any `VerifyGate` call, `src/neusApiBrowserMock.js` patches `fetch` so `GET/POST` to same-origin `/api/v1/...` is served from an in-memory mock (shared logic with `scripts/neus-mock-core.mjs`).
+## Run it locally
 
 ```bash
 cd examples/trust-receipts-showcase
@@ -18,10 +12,12 @@ npm install
 npm run dev
 ```
 
-- **Optional — Node mock over HTTP:** `npm run dev:with-mock-server` starts the Node server on `8787` and sets `VITE_NEUS_API_URL=http://127.0.0.1:8787`.
-- **Live API:** set `VITE_NEUS_API_URL` (and optionally `VITE_NEUS_HOSTED_CHECKOUT_URL`) in `.env.local`. The in-browser mock is not installed when `VITE_NEUS_API_URL` is set.
+By default this runs Vite with an in-browser mock of the NEUS API, so you can explore the flow without a backend.
 
-Styling uses [`docs/neus-tokens.css`](../../docs/neus-tokens.css) (copied to `public/neus-tokens.css` on prebuild for static `mock-checkout.html`).
+- **Mock over HTTP:** `npm run dev:with-mock-server` starts a Node mock server on `8787`.
+- **Live API:** set `VITE_NEUS_API_URL` (and optionally `VITE_NEUS_HOSTED_CHECKOUT_URL`) in `.env.local`. The mock is disabled when `VITE_NEUS_API_URL` is set.
+
+Styling uses [`docs/neus-tokens.css`](../../docs/neus-tokens.css).
 
 ## Example
 
@@ -38,10 +34,10 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>
 ```
 
-## Claim table (verifier IDs in code)
+## Verifiers used in the demo
 
-| Outcome (card) | Verifier ID |
-| --- | --- |
+| Card | Verifier |
+| ---- | --------- |
 | Fair airdrop, insider path | `proof-of-human` |
 | Creator, domain listing | `ownership-social`, `ownership-dns-txt` |
 | Team resource | `ownership-org-oauth` |
@@ -49,13 +45,12 @@ import { VerifyGate } from '@neus/sdk/widgets';
 | Safe payout (risk) | `wallet-risk` |
 | Agents | `agent-identity`, `agent-delegation` |
 
-## Gates and live checks
+## Use real gates
 
-- Publish gates in Hub and pass their `gateId` into `VerifyGate` and `gateCheck`.
-- In this local demo, each card derives a sample `gateId` from the claim id. Replace those with real published gate ids before using the live API.
+Publish gates in [Hub](https://neus.network/hub) and pass their real `gateId` into `VerifyGate` and `gateCheck`. The demo uses sample gate ids derived from each claim; replace them before connecting to the live API.
 
-## What to store
+## Store the receipt
 
-Store the returned `qHash` with your claim record. Before prompting again, check whether a valid proof already exists.
+Store the returned `qHash` with your claim record. Before prompting the user again, check whether a valid proof already exists.
 
-A qHash is a reusable **receipt handle**, not a session token. In production, validate server-side (for example with `gateCheck`).
+A `qHash` is a reusable receipt handle, not a session token. In production, validate it server-side, for example with `gateCheck`.

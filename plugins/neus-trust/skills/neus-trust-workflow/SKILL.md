@@ -7,15 +7,13 @@ NEUS gives agents verifiable identity, scoped authority, and receipts for every 
 
 ## Setup
 
-**Install once (recommended):**
-
 ```bash
 npm i -g @neus/sdk
 neus setup
 neus check
 ```
 
-**Or try without installing:**
+Or try without installing:
 
 ```bash
 npx @neus/sdk setup
@@ -71,7 +69,7 @@ Profile **Mount in** copies the mount command — run it in the project root for
 
 ## Trust Result format (assistant output)
 
-Summarize NEUS results in plain language. Do not dump raw tool JSON, MCP session state, or implementation field names.
+Summarize NEUS results in plain language. Do not dump raw tool JSON, MCP details, or implementation field names.
 
 **Passed:**
 
