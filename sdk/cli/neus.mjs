@@ -423,6 +423,13 @@ function resolveLiveAccessKey(options, scope, cwd) {
   if (explicit) return explicit;
   const installed = readInstalledAccessKey(scope, cwd);
   if (installed) return installed;
+  // Browser OAuth stores the access token in ~/.neus/mcp-tokens.json (not in
+  // the IDE config, which is URL-only for IDE-native OAuth). Use it as a
+  // fallback so `doctor --live` can probe the MCP server with a real credential.
+  const store = readTokenStore();
+  if (store?.accessToken && !isTokenExpired(store)) {
+    return store.accessToken;
+  }
   if (options?.oauth) return '';
   return envAccessKey();
 }
@@ -1589,7 +1596,7 @@ async function evaluateAgentMountDoctor(accessKey, cwd, signal) {
 async function runMount(options) {
   const cwd = process.cwd();
   const scope = resolveScope(options);
-  const accessKey = resolveLiveAccessKey(options, scope, cwd);
+  const accessKey = await resolveLiveAccessKeyWithRefresh(options, scope, cwd);
   const agentTarget = String(options.agentTarget || options.agent || '').trim();
   if (!agentTarget) {
     throw new Error('Usage: neus mount <agentId> [--apply cursor|claude|codex]');
@@ -1659,17 +1666,10 @@ async function runMount(options) {
 }
 
 async function runLiveMcpDiagnostics(accessKey) {
-  if (!accessKey) {
-    return {
-      live: false,
-      reachable: false,
-      authenticated: false,
-      toolsCount: 0,
-      tools: [],
-      checks: [{ name: 'access-key', ok: false, status: 'missing' }]
-    };
-  }
-
+  // Even without a static access key, attempt an unauthenticated initialize.
+  // The MCP server responds with 401 + WWW-Authenticate (OAuth challenge) when
+  // unauthenticated — that confirms the server is reachable and OAuth is configured.
+  // With an access key, the full authenticated flow runs.
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
   try {
@@ -1685,9 +1685,13 @@ async function runLiveMcpDiagnostics(accessKey) {
       signal: controller.signal
     });
     if (!init.response.ok || init.json?.error) {
+      // 401 means the server is reachable but requires authentication.
+      // For URL-only OAuth configs (no accessKey), this is the expected
+      // response — the IDE handles OAuth, not the CLI. Report as reachable.
+      const isAuthRequired = init.response.status === 401;
       return {
         live: true,
-        reachable: false,
+        reachable: isAuthRequired || init.response.status < 500,
         authenticated: false,
         toolsCount: 0,
         tools: [],
@@ -2325,6 +2329,25 @@ function runExamples(options) {
   writeCliLine('');
 }
 
+async function resolveLiveAccessKeyWithRefresh(options, scope, cwd) {
+  const liveAccessKey = resolveLiveAccessKey(options, scope, cwd);
+  const store = readTokenStore();
+  // If the CLI is using a stored OAuth access token that has expired, rotate
+  // it silently so `doctor --live` and `check` stay useful without forcing a
+  // full re-auth. Access keys (npk_…) and IDE-native OAuth never hit this path.
+  if (store?.refreshToken && store?.accessToken && liveAccessKey === store.accessToken && isTokenExpired(store)) {
+    try {
+      const refreshed = await refreshOAuthToken();
+      return refreshed.accessToken;
+    } catch (error) {
+      // Leave the original key in place; downstream diagnostics will report the
+      // authentication failure in plain language.
+      return liveAccessKey;
+    }
+  }
+  return liveAccessKey;
+}
+
 async function runDoctor(options) {
   const displayCommand = options.displayCommand || 'doctor';
   const scope = resolveScope(options);
@@ -2336,7 +2359,7 @@ async function runDoctor(options) {
     inspectClient(client, scope, cwd)
   );
   const configuredClients = inspected.filter(r => r.configured);
-  const liveAccessKey = resolveLiveAccessKey(options, scope, cwd);
+  const liveAccessKey = await resolveLiveAccessKeyWithRefresh(options, scope, cwd);
   const payload = {
     command: displayCommand,
     scope,
@@ -2353,10 +2376,10 @@ async function runDoctor(options) {
 
   if (options.live) {
     payload.mcp = await runLiveMcpDiagnostics(liveAccessKey);
+    payload.profileConnectable = Boolean(payload.mcp.authenticated);
+    payload.hasErrors =
+      payload.hasErrors || (liveAccessKey && (!payload.mcp.reachable || !payload.mcp.authenticated));
     if (liveAccessKey) {
-      payload.profileConnectable = Boolean(payload.mcp.authenticated);
-      payload.hasErrors =
-        payload.hasErrors || !payload.mcp.reachable || !payload.mcp.authenticated;
       try {
         const agentDoctor = await evaluateAgentMountDoctor(
           liveAccessKey,
@@ -2415,11 +2438,28 @@ async function runDoctor(options) {
   writeCliLine(paint('Profile connection', 'cyan'));
   if (options.live && payload.mcp) {
     if (!liveAccessKey) {
-      writeGuidanceLine(
-        hasCodex
-          ? 'Codex owns OAuth: run `neus auth --client codex` or `codex mcp login neus`.'
-          : 'No account credential found for the configured MCP clients. Run `neus auth`.'
+      // Check if any configured client uses URL-only OAuth (no Bearer header in
+      // the config, but the IDE handles OAuth natively). This is a valid auth
+      // path — the credential lives in the IDE's OAuth lifecycle, not in a
+      // static header. Don't say "No account credential found" when OAuth is set up.
+      const hasUrlOnlyOAuth = inspected.some(
+        result => result.configured && !result.authConfigured
       );
+      if (hasUrlOnlyOAuth) {
+        writeGuidanceLine('IDE-native OAuth configured. The MCP server handles authentication through your IDE session.');
+        if (payload.mcp.reachable) {
+          writeGuidanceLine('MCP server is reachable. Ask your assistant to use NEUS tools.');
+        } else {
+          writeGuidanceLine('MCP server was not reachable. Check your network or run `neus check` again.');
+          payload.hasErrors = true;
+        }
+      } else {
+        writeGuidanceLine(
+          hasCodex
+            ? 'Codex owns OAuth: run `neus auth --client codex` or `codex mcp login neus`.'
+            : 'No account credential found for the configured MCP clients. Run `neus auth`.'
+        );
+      }
     } else {
       if (payload.mcp.authenticated) {
         const handle = payload.mcp.profileHandle ? ` as ${payload.mcp.profileHandle}` : '';
@@ -2449,7 +2489,11 @@ async function runDoctor(options) {
           payload.hasErrors = true;
         }
       } else {
-        logStep('warn', 'profile', 'live connection was not confirmed — run `neus auth`');
+        if (!payload.mcp.reachable) {
+          logStep('warn', 'profile', 'MCP server unreachable — check network or try again');
+        } else {
+          logStep('warn', 'profile', 'sign-in expired or invalid — run `neus auth` to reconnect');
+        }
       }
     }
   } else if (liveAccessKey) {

@@ -13,7 +13,7 @@ import {
 
 describe('mcp-hosts', () => {
   it('lists product install hosts', () => {
-    expect(MCP_INSTALL_HOSTS).toEqual(['cursor', 'claude', 'codex']);
+    expect(MCP_INSTALL_HOSTS).toEqual(['cursor', 'claude', 'codex', 'vscode']);
   });
 
   it('builds NEUS HTTP MCP config', () => {

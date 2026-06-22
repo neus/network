@@ -42,18 +42,20 @@ export const NEUS_MCP_SETUP_DOCS_URL = 'https://docs.neus.network/mcp/setup';
 export const MCP_INSTALL_CLIENTS = ['claude', 'codex', 'cursor', 'vscode'];
 
 /** Product Profile "Open in" hosts. */
-export const MCP_INSTALL_HOSTS = ['cursor', 'claude', 'codex'];
+export const MCP_INSTALL_HOSTS = ['cursor', 'claude', 'codex', 'vscode'];
 
 export const IDE_HOST_LABELS = {
   cursor: 'Cursor',
   claude: 'Claude Code',
   codex: 'Codex',
+  vscode: 'VS Code',
 };
 
 export const IDE_HOST_BRAND_LOGOS = {
   cursor: '/images/brandLogos/cursor.svg',
   claude: '/images/brandLogos/anthropic.svg',
   codex: '/images/brandLogos/openai.svg',
+  vscode: '/images/brandLogos/microsoft.svg',
 };
 
 /**
