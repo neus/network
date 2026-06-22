@@ -6,6 +6,30 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.3] - 2026-06-21
+
+### Added
+
+- **VS Code host** — `MCP_INSTALL_HOSTS`, `IDE_HOST_LABELS`, and `IDE_HOST_BRAND_LOGOS` now include `vscode`, so the install UI and `neus setup` surface VS Code alongside Cursor, Claude Code, and Codex.
+- **OAuth resource metadata** — the NEUS Trust plugin `.mcp.json` now declares `resourceMetadataUrl` (`https://mcp.neus.network/.well-known/oauth-protected-resource`) per RFC 9728, so IDE-native OAuth (Cursor, Claude Code, Codex, VS Code) auto-discovers auth metadata without a manual Bearer header.
+
+### Fixed
+
+- **`neus doctor --live` with browser OAuth** — when only a browser-issued OAuth token is present (`~/.neus/mcp-tokens.json`), the CLI now uses it as the live credential and silently rotates it via `refreshToken` when expired. URL-only IDE configs (no static access key) are now reported as "IDE-native OAuth configured" instead of "No account credential found."
+- **401-as-reachable** — `runLiveMcpDiagnostics` now treats a 401 from the MCP server as proof the server is reachable and OAuth is configured, rather than marking it unreachable. The full authenticated tool list still runs when a valid credential is available.
+
+### Changed
+
+- **Version alignment** — `@neus/mcp-server`, `server.json`, plugin, marketplace, and `server-card.json` aligned to `1.2.3` (lockstep with `@neus/sdk`).
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.2.3
+# or zero-install
+npx -y -p @neus/sdk@1.2.3 neus doctor --live
+```
+
 ## [1.2.2] - 2026-06-21
 
 ### Fixed
