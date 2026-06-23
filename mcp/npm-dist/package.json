@@ -1,6 +1,6 @@
 {
   "name": "@neus/mcp-server",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Hosted NEUS MCP registry manifest for agent identity, scoped authority, trust receipts, and Vault.",
   "type": "module",
   "main": "./index.mjs",

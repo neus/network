@@ -21,7 +21,7 @@ neus check
 neus examples
 ```
 
-Or run without installing: `npx @neus/sdk setup`
+Or run without installing: `npx -y -p @neus/sdk neus setup`
 
 Then ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
@@ -175,13 +175,16 @@ const client = new NeusClient({
 ## MCP step-by-step
 
 ```bash
-npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
+npm i -g @neus/sdk
+neus setup
+neus check
 ```
 
 `neus setup` configures MCP and signs you in: it uses `NEUS_ACCESS_KEY` from the environment when set, otherwise the selected host starts OAuth. Cursor, VS Code, and Claude Code use browser sign-in on NEUS. Pass `--access-key <npk_...>` only to override.
 
-Codex owns its local MCP OAuth session. Use `npx -y -p @neus/sdk neus setup --client codex`, then `npx -y -p @neus/sdk neus auth --client codex`.
+Codex owns its local MCP OAuth session. Use `neus setup --client codex`, then `neus auth --client codex`.
+
+No global install? Run `npx -y -p @neus/sdk neus setup` once.
 
 Embed install UX with **`@neus/sdk/mcp-hosts`** (setup commands, deeplinks, host labels).
 
