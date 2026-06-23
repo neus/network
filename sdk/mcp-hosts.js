@@ -64,8 +64,8 @@ export const IDE_HOST_BRAND_LOGOS = {
  * Two paths, one session model — same NEUS Profile/Account either way:
  *
  * - `npk_…` Profile access keys are durable (never expire). Written as a static
- *   `Authorization: Bearer npk_…` header. Used for operator IDEs, servers, CI,
- *   and automation where browser OAuth is unavailable.
+ *   `Authorization: Bearer npk_…` header. Used for servers, CI, and automation
+ *   where browser OAuth is unavailable.
  * - OAuth (default for Cursor, VS Code, Claude Code, Codex): we return a URL-only
  *   config (no `headers`). The IDE MCP client discovers OAuth metadata from the
  *   server's `401 + WWW-Authenticate` challenge, then runs its own DCR + PKCE +

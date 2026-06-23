@@ -45,7 +45,7 @@ neus setup --access-key <npk_...>
 | Mode | Best for |
 |------|----------|
 | **OAuth** | Cursor, VS Code, Claude Code, OpenAI — browser sign-in, no manual keys, silent refresh for 30 days |
-| **Access key (`npk_*`)** | Servers, CI, automation, or operator machines with stable environment variables. Durable and never expires |
+| **Access key (`npk_*`)** | Servers, CI, and automation with stable environment variables. Durable and never expires |
 
 Both modes send the same `Authorization: Bearer <token>` header against the same NEUS Profile and Account. `npk_*` keys are long-lived credentials; OAuth sessions are long-lived too — the IDE refreshes the short-lived access token silently for up to 30 days via the `offline_access` refresh token, exactly like Linear, GitHub, and Notion MCP hosts.
 
@@ -67,7 +67,7 @@ Authenticated MCP sessions should reuse existing trust receipts before any brows
 neus disconnect --access-key <token>
 ```
 
-Disconnect revokes OAuth MCP tokens through the OAuth revocation endpoint. For `npk_*` credentials, it revokes the Profile access key through the protocol API, then removes the local MCP header from configured clients.
+Disconnect revokes OAuth MCP tokens through the OAuth revocation endpoint. For `npk_*` credentials, it revokes the Profile access key through the NEUS API, then removes the local MCP header from configured clients.
 
 ## MCP server auth challenge
 
