@@ -1,11 +1,14 @@
 ---
 name: NEUS Trust Workflow
+version: "1.2.4"
 description: Trust infrastructure for agents that act. Verify identity and scoped authority, reuse trust receipts, and protect secrets across IDEs and runtimes.
 ---
 
 NEUS gives agents verifiable identity, scoped authority, and receipts for every trusted action. Verify trust before your assistant runs tools.
 
 ## Setup
+
+Install the NEUS CLI:
 
 ```bash
 npm i -g @neus/sdk
@@ -16,7 +19,7 @@ neus check
 Or try without installing:
 
 ```bash
-npx @neus/sdk setup
+npx -y -p @neus/sdk neus setup
 ```
 
 `neus setup` configures hosted NEUS MCP for Cursor, Codex, VS Code, and Claude Code. Cursor, VS Code, and Claude Code use browser OAuth. Codex uses its own MCP login after setup.
@@ -42,19 +45,19 @@ Trust receipts persist **offchain by default**. Do not prompt for wallet connect
 
 ## Project mount (per repo)
 
-After MCP is connected on the machine:
+After MCP is connected on the machine, mount an agent into a project:
 
 ```bash
 neus mount <agentId> --apply cursor
 ```
+
+Use `neus mount` only when acting as a registered profile agent in a project. For general MCP trust workflow (verification, receipts, secrets), `neus setup` + `neus_context` is enough.
 
 | Layer | Command |
 |-------|---------|
 | **Machine** | `neus setup` + `neus auth` (once) |
 | **Repo** | `neus mount <agentId> --apply cursor` |
 | **Session** | `neus_context` → `neus_agent_mount` when acting as the agent |
-
-Profile **Mount in** copies the mount command — run it in the project root for the full write.
 
 ## Autopilot (default)
 

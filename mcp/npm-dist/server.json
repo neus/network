@@ -3,7 +3,7 @@
   "name": "io.github.neus/neus-mcp",
   "title": "NEUS MCP",
   "description": "NEUS MCP: identity, authority, trust receipts, and Vault secrets before sensitive AI actions.",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "repository": {
     "url": "https://github.com/neus/network",
     "source": "github"
@@ -11,7 +11,7 @@
   "websiteUrl": "https://docs.neus.network/install",
   "icons": [
     {
-      "src": "https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-07-app-icon-raster-v1",
+      "src": "https://neus.network/images/neus-brand-pack/favicon.svg",
       "sizes": [
         "128x128"
       ],
@@ -76,7 +76,7 @@
     },
     {
       "name": "neus_agent_mount",
-      "description": "Mount proof-backed agent runtime context in one call: identity, delegation, effective runtime, skills, scoped policy, and trust receipt refs (neus.runtime-mount.v1). Requires authentication. Use before acting as a profile agent in any IDE or worker."
+      "description": "Mount an agent identity, permissions, skills, and context in one call. Use before acting as a profile agent in any IDE or worker."
     },
     {
       "name": "neus_secret_create",

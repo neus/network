@@ -18,7 +18,7 @@ GEMINI.md
 # Legacy install tree (SSOT: docs/install.mdx + docs/mcp/setup.mdx)
 integrations/
 
-# Repo-root maintainer tooling (ops scripts live in private _workspace, not public network)
+# Repo-root local tooling (not part of the public surface)
 /scripts/
 
 # Local-only paths

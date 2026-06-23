@@ -21,7 +21,7 @@ neus check
 **Or run without installing:**
 
 ```bash
-npx @neus/sdk setup
+npx -y -p @neus/sdk neus setup
 ```
 
 `neus setup` detects your editors, configures hosted MCP, and signs you in. By default it uses browser OAuth for Cursor, VS Code, and Claude Code. If you set `NEUS_ACCESS_KEY` first, the CLI uses that key instead. Pass `--access-key <npk_...>` to override, and `--json` for scripted installs.
