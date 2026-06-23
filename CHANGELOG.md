@@ -6,6 +6,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.2.4] - 2026-06-23
+
+### Fixed
+
+- **Marketplace + skill version alignment** — plugin `marketplace.json`, `plugins/neus-trust/.claude-plugin/plugin.json`, `@neus/mcp-server` `server.json`, `@neus/sdk` lockfile, examples, and the `neus-trust-workflow` skill frontmatter now all report `1.2.4`.
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.2.4
+# or zero-install
+npx -y -p @neus/sdk@1.2.4 neus doctor --live
+```
+
 ## [1.2.3] - 2026-06-21
 
 ### Added

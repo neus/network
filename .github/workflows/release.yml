@@ -49,10 +49,12 @@ jobs:
           const read=(p)=>JSON.parse(fs.readFileSync(p,'utf8'));
           const surfaces={
             'sdk/package.json': read('sdk/package.json').version,
+            'sdk/package-lock.json': read('sdk/package-lock.json').version,
             'mcp/npm-dist/package.json': read('mcp/npm-dist/package.json').version,
             'mcp/npm-dist/server.json': read('mcp/npm-dist/server.json').version,
             'plugins/neus-trust/.claude-plugin/plugin.json': read('plugins/neus-trust/.claude-plugin/plugin.json').version,
-            '.claude-plugin/marketplace.json': read('.claude-plugin/marketplace.json').version,
+            '.claude-plugin/marketplace.json': read('.claude-plugin/marketplace.json').plugins[0].version,
+            'plugins/neus-trust/skills/neus-trust-workflow/SKILL.md': (read('plugins/neus-trust/skills/neus-trust-workflow/SKILL.md').match(/^version:\s*"([^"]+)"$/m)||[])[1],
           };
           const bad=Object.entries(surfaces).filter(([,v])=>v!==t);
           if(bad.length){console.error('Version mismatch:',bad);process.exit(1)}
