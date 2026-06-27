@@ -4,7 +4,7 @@ const client = new NeusClient();
 
 export async function checkCreatorEligibility(walletAddress) {
   const result = await client.gateCheck({
-    gateId: 'gate_catalyst-creator',
+    gateId: 'gate_acme-creator',
     address: walletAddress,
   });
 

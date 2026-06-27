@@ -1,6 +1,6 @@
 # NEUS Verified Handle React Example
 
-Claim a Catalyst-style handle, display a NEUS Proof Badge, and gate a creator action.
+Claim a  handle, display a NEUS Proof Badge, and gate a creator action.
 
 ## Run
 
@@ -12,7 +12,7 @@ npm run dev
 
 ## What it demonstrates
 
-1. **Claim flow** — user signs a handle binding with `ownership-pseudonym` and namespace `catalyst`.
+1. **Claim flow** — user signs a handle binding with `ownership-pseudonym` and namespace `acme`.
 2. **Badge display** — `<ProofBadge qHash={qHash} showChains />` on a profile.
 3. **Server gate check** — before a privileged action, the backend calls `client.gateCheck({ gateId, address })`.
 

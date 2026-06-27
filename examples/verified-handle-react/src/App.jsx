@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { NeusClient, getHostedCheckoutUrl } from '@neus/sdk';
 import { ProofBadge } from '@neus/sdk/widgets';
 
-const GATE_ID = 'gate_catalyst-creator';
-const NAMESPACE = 'catalyst';
+const GATE_ID = 'gate_acme-creator';
+const NAMESPACE = 'acme';
 
 export default function App() {
   const [handle, setHandle] = useState('');
@@ -50,7 +50,7 @@ export default function App() {
 
   return (
     <main style={{ fontFamily: 'system-ui', padding: 24, maxWidth: 520 }}>
-      <h1>Claim your Catalyst handle</h1>
+      <h1>Claim your ACME handle</h1>
       <p>Bind your handle to your wallet and get a NEUS Proof Receipt.</p>
 
       <label>

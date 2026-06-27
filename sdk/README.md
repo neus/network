@@ -118,7 +118,7 @@ const proof = await client.verify({
   verifier: 'ownership-pseudonym',
   data: {
     pseudonymId: 'alice123',
-    namespace: 'catalyst',
+    namespace: 'acme',
     displayName: 'Alice'
   },
   wallet: window.ethereum
