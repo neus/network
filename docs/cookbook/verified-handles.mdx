@@ -1,0 +1,148 @@
+---
+title: Verified creator handles
+description: Bind a pseudonymous handle to a wallet, display a verified badge, and gate creator actions with NEUS Proof Receipts.
+icon: badge-check
+---
+
+Use NEUS to make creator handles portable and verifiable. A user claims a handle, NEUS binds it to their wallet with the `ownership-pseudonym` verifier, and your app gets a reusable `qHash` you can badge, link, and gate.
+
+## When to use this
+
+- Creator platforms, media networks, or launchpads that need handle ownership proof.
+- Pseudonymous identity without legal identity exposure.
+- Gating drops, founders tables, or premium calls behind a verified handle.
+- Co-marketing moments where the proof itself is the story.
+
+## What you need
+
+- A published NEUS gate with `ownership-pseudonym` enabled (or use direct verification with in-app signing).
+- The user's wallet address.
+- A `namespace` to isolate your handles from the default `neus` namespace.
+
+## Flow
+
+1. User claims a handle in your app.
+2. Your app asks NEUS to bind `handle` + `namespace` + `walletAddress`.
+3. NEUS returns a `qHash` and a proof URL.
+4. Your app stores the `qHash` with the user record.
+5. Surface a verified badge that links to the public proof page.
+6. Before any privileged action, check the receipt on your server.
+
+## Direct verification (in-app signing)
+
+Use `NeusClient.verify()` when your app already handles wallet signatures.
+
+```js
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient();
+
+const proof = await client.verify({
+  verifier: 'ownership-pseudonym',
+  data: {
+    pseudonymId: 'alice123',     // 3-32 lowercase chars
+    namespace: 'catalyst',         // isolate from default neus namespace
+    displayName: 'Alice',
+    metadata: { platform: 'catalyst' }
+  },
+  wallet: window.ethereum        // EVM provider
+});
+
+// Store proof.qHash with the user record
+// proof.proofUrl === https://neus.network/proof/{qHash}
+```
+
+`pseudonymId` must match `^[a-z0-9][a-z0-9._-]{1,30}[a-z0-9]$`.
+
+## Hosted Verify (no in-app signing)
+
+Send the user to NEUS and get the `qHash` back on return.
+
+```js
+import { getHostedCheckoutUrl } from '@neus/sdk';
+
+const url = getHostedCheckoutUrl({
+  gateId: 'gate_catalyst-handles',
+  returnUrl: 'https://catalyst.network/handle/callback',
+});
+
+window.location.assign(url);
+```
+
+Read the `qHash` from the callback URL or popup message and store it.
+
+## Show the badge
+
+Drop the SDK widget next to the handle.
+
+```jsx
+import { ProofBadge } from '@neus/sdk/widgets';
+
+export function CreatorHandle({ handle, qHash }) {
+  return (
+    <div className="handle-row">
+      <span>@{handle}</span>
+      <ProofBadge qHash={qHash} showChains />
+    </div>
+  );
+}
+```
+
+The badge links to `https://neus.network/proof/{qHash}` and shows live proof status.
+
+## Gate creator actions on the server
+
+Always check the receipt server-side before allowing privileged actions.
+
+```js
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient();
+
+const result = await client.gateCheck({
+  gateId: 'gate_catalyst-handles',
+  address: walletAddress
+});
+
+if (!result.data?.eligible) {
+  throw new Error('Handle not verified');
+}
+```
+
+Or call the HTTP API directly:
+
+```bash
+curl "https://api.neus.network/api/v1/proofs/check?gateId=gate_catalyst-handles&address=0x...&namespace=catalyst"
+```
+
+## Namespace policy
+
+Namespaces other than `neus` require the namespace owner to prove DNS control with `ownership-dns-txt`, or NEUS admin approval. Contact NEUS to reserve a production namespace for your platform.
+
+## Optional: link social accounts
+
+Layer `ownership-social` to also prove a linked X, Discord, Telegram, GitHub, or other social account. Social verification is interactive and hosted-only, so it is typically run through `VerifyGate` or Hosted Verify rather than direct signing.
+
+```jsx
+import { VerifyGate } from '@neus/sdk/widgets';
+
+<VerifyGate
+  gateId="gate_catalyst-social"
+  onVerified={result => {
+    console.log(result.qHash || result.qHashes);
+  }}
+>
+  <button>Verify social account</button>
+</VerifyGate>
+```
+
+## Full example
+
+See the [verified-handle-react example](https://github.com/neus/network/tree/main/examples/verified-handle-react) for a complete React + Vite app.
+
+## Next
+
+- [Username and Namespace Claims](../verification/ownership-pseudonym)
+- [SDK Quickstart](../quickstart)
+- [Hosted Verify](./auth-hosted-verify)
+- [API: GET /proofs/check](../api/overview)

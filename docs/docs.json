@@ -183,7 +183,8 @@
               "cookbook/domain-verification",
               "cookbook/nft-gating",
               "cookbook/sybil-resistance",
-              "cookbook/verifiable-agents"
+              "cookbook/verifiable-agents",
+              "cookbook/verified-handles"
             ]
           }
         ]
