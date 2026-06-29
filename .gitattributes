@@ -1,0 +1,71 @@
+# NEUS repo line-ending policy
+# Force LF for all text files so Windows clones stay consistent with macOS/Linux
+# and content hashes / shell scripts / MCP tool schemas do not drift.
+
+* text=auto eol=lf
+
+# Source code
+*.mjs text eol=lf
+*.js text eol=lf
+*.cjs text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.jsonc text eol=lf
+*.md text eol=lf
+*.mdx text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+*.less text eol=lf
+*.html text eol=lf
+*.htm text eol=lf
+*.xml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.ini text eol=lf
+*.cfg text eol=lf
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+*.fish text eol=lf
+*.cmd text eol=lf
+*.bat text eol=lf
+*.ps1 text eol=lf
+*.env text eol=lf
+*.example text eol=lf
+
+# Explicit binary files — never normalize
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.avif binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.otf binary
+*.eot binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+*.tgz binary
+*.rar binary
+*.7z binary
+*.mp4 binary
+*.webm binary
+*.mov binary
+*.mp3 binary
+*.wav binary
+*.ogg binary
+*.exe binary
+*.dll binary
+*.so binary
+*.dylib binary
+
+# SVG is text but can contain binary-ish content; keep LF
+*.svg text eol=lf
