@@ -14,6 +14,7 @@ Same flow everywhere: check → verify if needed → save **receipt** → reuse.
 |------------|----------|
 | [**trust-receipts-showcase** (default)](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) | Full **VerifyGate** + **ProofBadge**: each card is a trust outcome and a verifier |
 | [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Server key, sign + `gateCheck` |
+| [verified-handle-react](https://github.com/neus/network/tree/main/examples/verified-handle-react) | Claim a handle, show a **ProofBadge**, and gate creator actions |
 
 Adding trust to an assistant or agent instead? Connect MCP in one command — [Install NEUS](./install) — then run `neus examples`.
 
@@ -32,6 +33,22 @@ export default function ProtectedPage() {
   );
 }
 ```
+
+## React: verified handle
+
+```jsx
+import { ProofBadge } from '@neus/sdk/widgets';
+
+export function CreatorHandle({ handle, qHash }) {
+  return (
+    <span>
+      @{handle} <ProofBadge qHash={qHash} showChains />
+    </span>
+  );
+}
+```
+
+Full walkthrough: [Verified handles cookbook](./cookbook/verified-handles).
 
 ## Node
 
@@ -52,6 +69,7 @@ curl -X POST https://api.neus.network/api/v1/verification/standardize \
 |-----|---------|
 | [Get started](./get-started) | Create a gate and billing |
 | [Hosted Verify](./cookbook/auth-hosted-verify) | Browser ceremony on NEUS |
+| [Verified handles](./cookbook/verified-handles) | Creator / platform handle verification |
 | [MCP](./mcp/overview) | Assistants and automation |
 | [Quickstart](./quickstart) | SDK first receipt |
 | [API](./api/overview) | HTTP reference |

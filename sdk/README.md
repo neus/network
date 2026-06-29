@@ -105,6 +105,42 @@ console.log(proof.qHash);
 console.log(proof.proofUrl);
 ```
 
+## Verified handles
+
+Bind a creator handle to a wallet and show a live badge:
+
+```js
+import { NeusClient } from '@neus/sdk';
+
+const client = new NeusClient();
+
+const proof = await client.verify({
+  verifier: 'ownership-pseudonym',
+  data: {
+    pseudonymId: 'alice123',
+    namespace: 'acme',
+    displayName: 'Alice'
+  },
+  wallet: window.ethereum
+});
+
+// proof.qHash, proof.proofUrl
+```
+
+```jsx
+import { ProofBadge } from '@neus/sdk/widgets';
+
+export function CreatorHandle({ handle, qHash }) {
+  return (
+    <span>
+      @{handle} <ProofBadge qHash={qHash} showChains />
+    </span>
+  );
+}
+```
+
+Full walkthrough: [docs.neus.network/cookbook/verified-handles](https://docs.neus.network/cookbook/verified-handles).
+
 ## React widget
 
 Use `VerifyGate` with your published `gateId`:

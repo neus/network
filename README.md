@@ -1,4 +1,8 @@
-<h1 align="center">The Portable Trust Layer</h1>
+<h1 align="center">NEUS Network — The Portable Trust Layer</h1>
+
+<p align="center">
+  <img src="./docs/images/neus-social-card.png" alt="NEUS Network social card" width="640" />
+</p>
 
 <p align="center">
   NEUS makes trust portable across the internet, so people, apps, and AI agents can prove what is real before access, payout, or execution.

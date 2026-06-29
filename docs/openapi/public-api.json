@@ -1714,9 +1714,6 @@
           "200": {
             "description": "OK"
           },
-          "400": {
-            "description": "Invalid request"
-          },
           "503": {
             "description": "Unhealthy"
           }
