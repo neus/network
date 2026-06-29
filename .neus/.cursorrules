@@ -1,0 +1,14 @@
+# Project rules (.cursorrules)
+# Universal baseline — loaded heavily on every agent request.
+
+## Architecture
+- Match existing patterns in this repository before introducing new abstractions.
+- Keep diffs focused; do not refactor unrelated code.
+
+## Never
+- Commit secrets, API keys, or wallet private keys.
+- Delete data without explicit user confirmation.
+
+## Always
+- Read AGENTS.md and DESIGN.md in this .neus folder when starting work.
+- Prefer project_grep over shell grep for local code search.

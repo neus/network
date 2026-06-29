@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "contextEngine": "neus",
+  "rules": {
+    "globalFile": ".cursorrules",
+    "modularDir": "rules",
+    "standards": ["AGENTS.md", "CLAUDE.md", "DESIGN.md"]
+  },
+  "chatHistory": {
+    "enabled": true,
+    "storePath": "context/history.sqlite",
+    "note": "Full chat sessions are stored for agent retrieval when summaries lose detail."
+  },
+  "terminalLogs": {
+    "enabled": true,
+    "storePath": "context/terminal",
+    "note": "Integrated terminal output is synced here so agents can read build failures without paste."
+  },
+  "skillsDiscovery": {
+    "folders": ["skills", "imports/.claude", "imports/.cursor"],
+    "note": "Agent loads MCP configs and skill schemas on demand — not all at once."
+  }
+}
