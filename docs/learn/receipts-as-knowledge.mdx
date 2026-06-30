@@ -1,0 +1,104 @@
+---
+title: Receipts as knowledge
+description: Linkable, verifiable trust receipts that replace siloed notes with portable proof.
+icon: link
+---
+
+NEUS receipts are not just audit records — they are **linkable knowledge**. Every proof receipt has a stable `qHash` that can reference other receipts, supersede prior versions, and be discovered by any agent, app, or gate. This replaces siloed note systems (Obsidian, Notion, spreadsheets) with portable, verifiable, receipt-backed context.
+
+## Three link primitives
+
+### 1. Typed reference — `reference.type: "qhash"`
+
+The `ownership-basic` verifier accepts a `reference` object with `type: "qhash"` and `id` set to a prior receipt's qHash. This creates a **schema-level typed link** from one receipt to another.
+
+```json
+{
+  "verifierIds": ["ownership-basic"],
+  "data": {
+    "owner": "0x...",
+    "reference": {
+      "type": "qhash",
+      "id": "0x1d20926e943c34432947f116faeadc18e8b6caba9322546bedb01c1de7b7ebb1",
+      "title": "Agent identity receipt"
+    }
+  }
+}
+```
+
+The qHash of the referencing proof is **deterministically derived** from the target qHash — anyone re-issuing for the same target gets the same qHash. This makes links stable, dedup-friendly, and tamper-evident.
+
+### 2. Version chain — `supersedes:<qHash>` tag
+
+When you append to or update a memory receipt, NEUS tags the new receipt with `supersedes:<previousQHash>`. This creates a **singly-linked version chain** — newer receipts point back to older ones.
+
+```text
+Receipt A → supersedes:none
+Receipt B → supersedes:0xA  (replaces A)
+Receipt C → supersedes:0xB  (replaces B)
+```
+
+Use `neus_proofs_get` to walk the chain backward and find the full history of any concept.
+
+### 3. Multipart hub — `manifest:true` + `part:NNN-of-MMM`
+
+For artifacts larger than the 50,000-character inline limit, split content into chunk receipts tagged `part:001-of-004`, then issue a **manifest receipt** that references all chunks. The manifest is the hub node in a one-to-many graph.
+
+## Reuse flow
+
+Tag receipts with semantic prefixes so agents can discover them:
+
+| Tag prefix | Purpose |
+|------------|---------|
+| `memory:` | Durable operating context |
+| `rules:` | Policy or constraint receipts |
+| `instruction:` | Agent operating instructions |
+| `topic:` | Subject-area facets |
+| `domain:` | Knowledge domain |
+| `quality:` | `draft` / `approved` / `pending` |
+
+Agents read tagged receipts via `neus_proofs_get` with tag filters, or mount them via `neus_agent_mount` as part of the runtime bundle.
+
+## Replacing Obsidian
+
+| Obsidian concept | NEUS equivalent |
+|------------------|-----------------|
+| Note | Proof receipt (`ownership-basic`) |
+| `[[wiki link]]` | `reference.type: "qhash"` |
+| Backlinks | Query by `reference.id` or `supersedes:` tag |
+| Tags | Receipt tag prefixes (`memory:`, `topic:`, `domain:`) |
+| Folders | Scope + tag filters |
+| Version history | `supersedes:` chain |
+| Publish | `publicDisplay: true` on the receipt |
+
+The key difference: NEUS receipts are **verifiable**. Every note carries a cryptographic proof of who created it, when, and on which chain. Notes are not just text — they are trust records that any gate, app, or agent can check.
+
+## Artifact promotion
+
+Every meaningful artifact follows this path:
+
+1. Generate or update the artifact
+2. Issue an `ownership-basic` receipt with full content (up to 50 KB)
+3. Attach taxonomy tags (`memory:`, `topic:`, `quality:draft`)
+4. Capture the qHash
+5. Write the qHash back to the source artifact or log
+6. For larger artifacts, use chunk + manifest receipts
+
+Receipts persist offchain by default. No wallet connection or on-chain anchoring is needed unless explicitly requested.
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Proof receipts" icon="receipt" href="../platform/receipts-and-results">
+    How receipts work on NEUS.
+  </Card>
+  <Card title="Reuse portable context" icon="refresh-cw" href="../mcp/journeys">
+    MCP journeys for context reuse.
+  </Card>
+  <Card title="Proofs read" icon="search" href="../mcp/proofs-get">
+    Query receipts by tag and scope.
+  </Card>
+  <Card title="Runtime Mount" icon="layers" href="../agents/runtime-mount">
+    Mount receipts as agent context.
+  </Card>
+</CardGroup>

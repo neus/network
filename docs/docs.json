@@ -97,7 +97,7 @@
           },
           {
             "group": "Standards",
-            "pages": ["learn/standards/caip-380"]
+            "pages": ["learn/standards/caip-380", "learn/receipts-as-knowledge"]
           }
         ]
       },
@@ -197,10 +197,12 @@
               "pages": [
                 "agents/overview",
                 "agents/concepts",
+                "agents/team-agents",
                 "agents/agent-identity",
                 "agents/agent-delegation",
                 "agents/runtime-mount",
-              "agents/agent-verification-flow"
+              "agents/agent-verification-flow",
+              "agents/named-agent-card"
             ]
           }
         ]
