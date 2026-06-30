@@ -1,0 +1,79 @@
+---
+title: Agent cards
+description: Public discovery for named agents via /agent/[id], A2A, and EIP-8004.
+icon: card
+---
+
+Every registered NEUS agent has a **public card** — a discoverable profile that shows its identity, delegation scope, and capabilities. Other apps, agents, and integrators can check an agent before trusting it.
+
+## Three discovery paths
+
+| Path | URL | Returns |
+|------|-----|---------|
+| NEUS agent page | `https://neus.network/agent/{agentId}` | Human-readable agent profile |
+| NEUS universal API | `https://neus.network/api/agent/{agentId}?format=json` | Identity + delegation + proofs |
+| A2A / EIP-8004 | `https://neus.network/api/agent/{agentId}?format=a2a` | Agent card per A2A spec |
+
+## Example
+
+If you registered an agent with `agentId: "my-support-agent"`, you can discover it three ways:
+
+**Agent page:**
+```
+https://neus.network/agent/my-support-agent
+```
+
+**Universal JSON:**
+```bash
+curl https://neus.network/api/agent/my-support-agent?format=json
+```
+
+Returns identity proof (agentId, agentWallet, capabilities, skills, instructions) and delegation proof (controller, scope, allowedActions, deniedActions).
+
+**A2A card:**
+```bash
+curl https://neus.network/api/agent/my-support-agent?format=a2a
+```
+
+Returns an A2A-compatible agent card for multi-agent discovery systems.
+
+## What a card shows
+
+| Field | Source | Visible |
+|-------|--------|---------|
+| `agentId` | agent-identity proof | Public |
+| `agentWallet` | agent-identity proof | Public |
+| `agentLabel` | agent-identity proof | Public |
+| `description` | agent-identity proof | Public |
+| `capabilities` | agent-identity proof | Public |
+| `skills` | agent-identity proof | Public |
+| `controllerWallet` | agent-delegation proof | Public |
+| `scope` | agent-delegation proof | Public |
+| `allowedActions` | agent-delegation proof | Owner-view only |
+| `deniedActions` | agent-delegation proof | Owner-view only |
+
+Sensitive fields (`allowedActions`, `deniedActions`, `approvalPolicy`) are owner-view only — they are not exposed in public card responses. External consumers see the agent's identity, capabilities, and controller, but not the internal permission boundaries.
+
+## How integrators use it
+
+1. **Discover** — fetch the agent card to learn what the agent is and who controls it.
+2. **Verify** — check the delegation proof to confirm the controller trusts the agent wallet.
+3. **Delegate** — if building on NEUS, create your own delegation to the agent for your app's scope.
+4. **Act** — call the agent through MCP, A2A, or your runtime with confidence in its identity.
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Team agents" icon="users" href="./team-agents">
+    One controller, many scoped agents.
+  </Card>
+  <Card title="A2A" icon="cards" href="./a2a">
+    Full A2A and EIP-8004 spec.
+  </Card>
+  <Card title="Agent identity" icon="badge-check" href="./agent-identity">
+    Register an agent.
+  </Card>
+  <Card title="Overview" icon="robot" href="./overview">
+    Start here.
+  </Card>
+</CardGroup>

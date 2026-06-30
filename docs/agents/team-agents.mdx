@@ -1,0 +1,88 @@
+---
+title: Team agents
+description: One controller, many scoped agents — how to structure a team on NEUS.
+icon: users
+---
+
+A NEUS profile can run **multiple agents** under one controller account. Each agent gets its own identity and scoped delegation — same wallet, different authority. This is how teams, orgs, and multi-agent systems share trust without sharing keys.
+
+## The model
+
+One controller account delegates scoped authority to multiple agents. All agents share the same operational wallet, but each has a separate delegation receipt with its own `allowedActions`, `deniedActions`, and `scope`.
+
+```text
+Controller account
+  ├── sales-agent       → read, create, run, jobs, send (drafts)
+  ├── creative-agent     → read, create, run, jobs
+  ├── marketing-agent    → read, create, run, jobs, send (drafts)
+  └── ops-agent         → read, create, run, jobs, manage_runtime
+```
+
+Separation is **delegation scope**, not key material. Every agent signs with the same wallet, but the delegation receipt controls what each one is allowed to do at any gate.
+
+## Why one wallet, many delegations
+
+- **No key sprawl.** One wallet to manage, secure, and rotate.
+- **Per-agent scope.** Each agent has a narrow delegation; a compromised creative agent cannot send messages or modify secrets.
+- **Audit trail.** Every action is tied to a delegation receipt, so you always know which agent did what.
+- **Instant revocation.** Revoke a single delegation to disable one agent without touching the others.
+
+## Action matrix
+
+| Action | Sales | Creative | Marketing | Ops |
+|--------|-------|----------|-----------|-----|
+| `read_context` | yes | yes | yes | yes |
+| `read_proofs` | yes | yes | yes | yes |
+| `create_proof` | yes | yes | yes | yes |
+| `run_command` | yes | yes | yes | yes |
+| `execute_jobs` | yes | yes | yes | yes |
+| `send_message` | yes | — | yes | — |
+| `manage_runtime` | — | — | — | yes |
+| `modify_secrets` | denied | denied | denied | denied |
+| `manage_delegations` | denied | denied | denied | denied |
+| `manage_proofs` | denied | denied | denied | denied |
+| `access_secret` | denied | denied | denied | denied |
+
+Denied actions always win over allowed actions. Agents that can `send_message` are still gated by `humanApprovalRequiredForNewClaims` — they draft for human review, they do not auto-send.
+
+## Set it up
+
+<Steps>
+  <Step title="Create each agent">
+    Call **`neus_agent_create`** for each team agent. Pass `agentId`, `scope`, `delegationAllowedActions`, `delegationDeniedActions`, `skills`, and `instructions`. The controller wallet signs the delegation.
+  </Step>
+  <Step title="Confirm each agent">
+    Call **`neus_agent_link`** for each agent until **`linked: true`**.
+  </Step>
+  <Step title="Mount per project">
+    In each project repo where the agent should operate:
+    ```bash
+    neus mount <agentId> --apply cursor
+    ```
+    Binds identity, delegation, and scoped policy to the workspace.
+  </Step>
+  <Step title="Assign jobs">
+    Add recurring jobs to the agent in the job schedule. Each job carries its own `agentId` so the runtime dispatches to the correct agent.
+  </Step>
+</Steps>
+
+## Skills
+
+Each agent carries role-specific skills in its delegation receipt. Skills are metadata — they advertise what the agent can do, but the delegation `allowedActions`/`deniedActions` decide what it is actually permitted to do. Skill catalogs are available to all agents at runtime without bloating the delegation payload.
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Agent delegation" icon="key" href="./agent-delegation">
+    Full field reference for `allowedActions` and `deniedActions`.
+  </Card>
+  <Card title="Runtime Mount" icon="layers" href="./runtime-mount">
+    Bind an agent to any repo or runtime.
+  </Card>
+  <Card title="Agent cards" icon="cards" href="./named-agent-card">
+    Public discovery via `/agent/[id]` and A2A.
+  </Card>
+  <Card title="Verification flow" icon="route" href="./agent-verification-flow">
+    Step-by-step setup order.
+  </Card>
+</CardGroup>
