@@ -10,12 +10,7 @@
   "homepage": "https://docs.neus.network/install",
   "repository": "https://github.com/neus/network",
   "license": "Apache-2.0",
-  "icon": "./assets/icon.png",
-  "skills": [
-    {
-      "slug": "neus-trust-workflow"
-    }
-  ],
+  "logo": "./assets/icon.png",
   "keywords": [
     "trust-receipts",
     "proof-receipts",

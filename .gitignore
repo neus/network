@@ -10,8 +10,8 @@ GEMINI.md
 .cursor/
 .cursorrules
 .claude/
-!.claude-plugin/
-!.claude-plugin/**
+!.cursor-plugin/
+!.cursor-plugin/**
 .claude/settings.json
 .claude/settings.local.json
 
@@ -19,7 +19,8 @@ GEMINI.md
 integrations/
 
 # Repo-root local tooling (not part of the public surface)
-/scripts/
+/scripts/*
+!/scripts/validate-template.mjs
 
 # Local-only paths
 backup-docs/

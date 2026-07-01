@@ -6,6 +6,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- **Cursor Marketplace template alignment** — renamed `.claude-plugin/` → `.cursor-plugin/` (marketplace + plugin manifests) and `plugins/neus-trust/.mcp.json` → `mcp.json` to match the official `cursor/plugin-template` structure. `plugin.json` now uses `logo` (not `icon`); the skill auto-discovers from `skills/` per template convention. Vendored `scripts/validate-template.mjs` so CI can validate the marketplace structure. CI path triggers and release version-check paths updated to the new `.cursor-plugin/` locations. Zero disruption to the MCP server config, OAuth flow, or skill content.
+
 ## [1.2.4] - 2026-06-23
 
 ### Fixed
