@@ -2,7 +2,7 @@
  * NEUS mark + OG URLs hosted on neus.network.
  * Keep NEUS_BRAND_PACK_VERSION aligned with neus/lib/brand/tokens.ts BRAND_PACK_VERSION.
  */
-export const NEUS_BRAND_PACK_VERSION = '2026-06-07-app-icon-raster-v1';
+export const NEUS_BRAND_PACK_VERSION = '2026-06-24-hq-vector-glass-v12';
 
 export const NEUS_MARK_CDN_ORIGIN = 'https://neus.network';
 

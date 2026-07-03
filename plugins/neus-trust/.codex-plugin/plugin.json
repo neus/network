@@ -1,11 +1,10 @@
 {
   "name": "neus-trust",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Trust infrastructure for agents that act. Verify identity, scoped authority, trust receipts, and Vault-backed secrets before assistants act. One setup for Cursor, Claude Code, Codex, and VS Code.",
   "author": {
     "name": "NEUS",
-    "email": "info@neus.network",
-    "url": "https://neus.network"
+    "email": "info@neus.network"
   },
   "homepage": "https://docs.neus.network/install",
   "repository": "https://github.com/neus/network",
@@ -37,7 +36,10 @@
     "longDescription": "Trust infrastructure for agents that act. Verify identity, scoped authority, trust receipts, and Vault-backed secrets before assistants act. One setup for Cursor, Claude Code, Codex, and VS Code.",
     "developerName": "NEUS",
     "category": "Security",
-    "capabilities": ["code", "search"],
+    "capabilities": [
+      "code",
+      "search"
+    ],
     "websiteURL": "https://neus.network",
     "privacyPolicyURL": "https://neus.network/privacy",
     "termsOfServiceURL": "https://neus.network/terms",

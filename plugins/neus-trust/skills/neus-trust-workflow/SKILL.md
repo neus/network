@@ -1,6 +1,6 @@
 ---
 name: NEUS Trust Workflow
-version: "1.2.4"
+version: "1.2.5"
 description: Trust infrastructure for agents that act. Verify identity and scoped authority, reuse trust receipts, and protect secrets across IDEs and runtimes.
 ---
 

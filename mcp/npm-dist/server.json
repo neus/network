@@ -3,7 +3,7 @@
   "name": "io.github.neus/neus-mcp",
   "title": "NEUS MCP",
   "description": "NEUS MCP: identity, authority, trust receipts, and Vault secrets before sensitive AI actions.",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "repository": {
     "url": "https://github.com/neus/network",
     "source": "github"
@@ -11,7 +11,7 @@
   "websiteUrl": "https://docs.neus.network/install",
   "icons": [
     {
-      "src": "https://neus.network/images/neus-brand-pack/favicon.svg",
+      "src": "https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-24-hq-vector-glass-v12",
       "sizes": [
         "128x128"
       ],
