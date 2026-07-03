@@ -28,12 +28,7 @@ integrations/
 !/scripts/validate-cursor-mcp.mjs
 !/scripts/validate-cursor-schemas.mjs
 !/scripts/validate-universal-manifests.mjs
-!/scripts/validate-universal-manifests.mjs
-!/scripts/validate-universal-manifests.mjs
-!/scripts/validate-universal-manifests.mjs
-!/scripts/validate-universal-manifests.mjs
-!/scripts/validate-universal-manifests.mjs
-!/scripts/validate-universal-manifests.mjs
+!/scripts/verify-release-versions.mjs
 
 # Vendored official Cursor plugin + marketplace JSON schemas (draft-07) used by
 # scripts/validate-cursor-schemas.mjs. Pinned from cursor/plugins; update deliberately.
