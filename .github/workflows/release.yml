@@ -11,14 +11,16 @@ on:
 
 permissions:
   contents: read
-  id-token: write   # required for npm Trusted Publishing provenance
+  id-token: write   # required for npm Trusted Publishing (OIDC)
 
 concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
 env:
-  NODE_VERSION: 20.19.0
+  # Node 24 ships npm 11.16.0 — meets the npm >= 11.5.1 requirement for OIDC trusted publishing.
+  # Node 20 (npm 10.x) does NOT support OIDC and causes ENEEDAUTH / silent publish failures.
+  NODE_VERSION: '24'
   NPM_REGISTRY: https://registry.npmjs.org
 
 jobs:
@@ -27,7 +29,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
-      NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      # NOTE: NODE_AUTH_TOKEN is intentionally NOT set here. npm OIDC trusted publishing
+      # uses the GitHub Actions OIDC token (granted via id-token: write) instead of a
+      # long-lived npm token. Setting NODE_AUTH_TOKEN — even to an empty string — makes
+      # npm attempt token auth and never initiate the OIDC exchange, causing ENEEDAUTH.
     steps:
       - name: Checkout tag
         uses: actions/checkout@v4
@@ -39,6 +44,8 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: ${{ env.NPM_REGISTRY }}
+          # registry-url writes an empty _authToken line to .npmrc that breaks OIDC
+          # (actions/setup-node issue #1551). We strip it before each publish step below.
 
       - name: Verify version matches tag
         run: |
@@ -93,6 +100,10 @@ jobs:
           if npm view "@neus/sdk@$VERSION" version --registry https://registry.npmjs.org >/dev/null 2>&1; then
             echo "@neus/sdk@$VERSION already published; skipping"
           else
+            # Strip the empty _authToken line that setup-node writes (issue #1551).
+            # Without this, npm sees _authToken= (empty) and skips the OIDC exchange.
+            npmrc="${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}"
+            sed -i '/_authToken/d' "$npmrc" 2>/dev/null || true
             npm publish --access public --provenance --registry https://registry.npmjs.org
           fi
         working-directory: sdk
@@ -111,6 +122,8 @@ jobs:
           if npm view "@neus/mcp-server@$VERSION" version --registry https://registry.npmjs.org >/dev/null 2>&1; then
             echo "@neus/mcp-server@$VERSION already published; skipping"
           else
+            npmrc="${NPM_CONFIG_USERCONFIG:-$HOME/.npmrc}"
+            sed -i '/_authToken/d' "$npmrc" 2>/dev/null || true
             npm publish --access public --provenance --registry https://registry.npmjs.org
           fi
         working-directory: mcp/npm-dist

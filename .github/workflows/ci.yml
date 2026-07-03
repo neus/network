@@ -44,7 +44,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: 20.19.0
+  # Keep aligned with release.yml. Release uses Node 24 for npm 11 OIDC support;
+  # CI must run the same version to catch incompatibilities before release.
+  NODE_VERSION: '24'
 
 jobs:
   sdk:
