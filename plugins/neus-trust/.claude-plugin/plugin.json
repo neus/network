@@ -5,13 +5,13 @@
   "version": "1.2.4",
   "author": {
     "name": "NEUS",
-    "email": "info@neus.network"
+    "email": "info@neus.network",
+    "url": "https://neus.network"
   },
   "homepage": "https://docs.neus.network/install",
   "repository": "https://github.com/neus/network",
   "license": "Apache-2.0",
-  "logo": "./assets/icon.svg",
-  "category": "security",
+  "icon": "./assets/icon.png",
   "keywords": [
     "trust-receipts",
     "proof-receipts",
@@ -30,20 +30,5 @@
     "oauth",
     "mcp",
     "secrets-management"
-  ],
-  "tags": [
-    "trust-receipts",
-    "agent-identity",
-    "agent-delegation",
-    "mcp",
-    "cursor",
-    "vscode",
-    "codex",
-    "claude-code",
-    "agent-runtime",
-    "windsurf",
-    "gemini",
-    "oauth",
-    "security"
   ]
 }

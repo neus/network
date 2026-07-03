@@ -6,9 +6,17 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- **Universal marketplace plugin** — the NEUS Trust plugin now ships platform-specific manifests for all four target IDEs from one repo: Cursor (`.cursor-plugin/`), Claude Code (`.claude-plugin/` + spec-compliant `.mcp.json`), and Codex (`.codex-plugin/` + `.agents/plugins/marketplace.json`). Each host consumes its native manifest shape and MCP config format, so one repo serves every marketplace without forking. Added `scripts/validate-universal-manifests.mjs` to enforce the Claude + Codex manifests and the spec-compliant `.mcp.json` (`type: "http"`) in CI. Release version-check and release-flow surfaces now bump the Claude + Codex manifests alongside Cursor's.
+
 ### Changed
 
-- **Cursor Marketplace template alignment** — renamed `.claude-plugin/` → `.cursor-plugin/` (marketplace + plugin manifests) and `plugins/neus-trust/.mcp.json` → `mcp.json` to match the official `cursor/plugin-template` structure. `plugin.json` now uses `logo` (not `icon`); the skill auto-discovers from `skills/` per template convention. Vendored `scripts/validate-template.mjs` so CI can validate the marketplace structure. CI path triggers and release version-check paths updated to the new `.cursor-plugin/` locations. Zero disruption to the MCP server config, OAuth flow, or skill content.
+- **Optimized plugin logo** — `plugins/neus-trust/.cursor-plugin/plugin.json` `logo` now points at a committed SVG (`./assets/icon.svg`, the canonical NEUS particle-ring mark) for crisp rendering at every marketplace resolution. PNG fallback retained at `assets/icon.png` for hosts that don't render SVG. Codex `interface.composerIcon`/`interface.logo` use the same SVG.
+
+- **Cursor Marketplace template alignment** — renamed `.claude-plugin/` → `.cursor-plugin/` (marketplace + plugin manifests) and `plugins/neus-trust/.mcp.json` → `mcp.json` to match the official `cursor/plugin-template` structure. `plugin.json` now uses `logo` (not `icon`); the skill auto-discovers from `skills/` per template convention. Vendored `scripts/validate-template.mjs` so CI can validate the marketplace structure. CI path triggers and release version-check paths updated to the new `.cursor-plugin/` locations. Zero disruption to the OAuth flow or skill content.
+- **Cursor-native MCP config** — `plugins/neus-trust/mcp.json` now uses Cursor's expected `mcpServers.<name>.url` shape (no `type: 'http'`, no `authorization` block). The SDK's `neus setup` now writes the same Cursor-native shape into `~/.cursor/mcp.json`, while VS Code, Claude Code, and Codex keep their respective spec-compliant formats. Added `scripts/validate-cursor-mcp.mjs` and wired both validators into CI so marketplace schema drift is caught before submission.
+- **Official Cursor schema conformance** — `.cursor-plugin/marketplace.json` and `plugins/neus-trust/.cursor-plugin/plugin.json` now strictly conform to Cursor's published JSON Schemas (`additionalProperties: false`). Removed non-schema fields from the marketplace plugin entry (`homepage`, `repository`, `license`, `version`, `author`, `category`, `keywords`, `tags` — these belong only in `plugin.json`); moved marketplace `version`/`description` under `metadata`. Removed `author.url` from `plugin.json` (schema allows only `name` + `email`). Vendored the official schemas under `schemas/` and added `scripts/validate-cursor-schemas.mjs` so CI enforces the same constraints Cursor's marketplace ingestion applies. Updated `release.yml` version check to read `marketplace.json` `metadata.version`.
 
 ## [1.2.4] - 2026-06-23
 

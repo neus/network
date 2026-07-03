@@ -53,7 +53,10 @@ jobs:
             'mcp/npm-dist/package.json': read('mcp/npm-dist/package.json').version,
             'mcp/npm-dist/server.json': read('mcp/npm-dist/server.json').version,
             'plugins/neus-trust/.cursor-plugin/plugin.json': read('plugins/neus-trust/.cursor-plugin/plugin.json').version,
-            '.cursor-plugin/marketplace.json': read('.cursor-plugin/marketplace.json').plugins[0].version,
+            'plugins/neus-trust/.claude-plugin/plugin.json': read('plugins/neus-trust/.claude-plugin/plugin.json').version,
+            'plugins/neus-trust/.codex-plugin/plugin.json': read('plugins/neus-trust/.codex-plugin/plugin.json').version,
+            '.cursor-plugin/marketplace.json': read('.cursor-plugin/marketplace.json').metadata?.version,
+            '.claude-plugin/marketplace.json': read('.claude-plugin/marketplace.json').metadata?.version,
             'plugins/neus-trust/skills/neus-trust-workflow/SKILL.md': (read('plugins/neus-trust/skills/neus-trust-workflow/SKILL.md').match(/^version:\s*"([^"]+)"$/m)||[])[1],
           };
           const bad=Object.entries(surfaces).filter(([,v])=>v!==t);

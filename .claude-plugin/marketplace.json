@@ -1,8 +1,8 @@
 {
-  "name": "neus",
   "owner": {
     "name": "NEUS",
-    "email": "info@neus.network"
+    "email": "info@neus.network",
+    "url": "https://neus.network"
   },
   "metadata": {
     "description": "Trust infrastructure for agents that act. Verify identity, scoped authority, trust receipts, and Vault-backed secrets in Cursor, Claude Code, Codex, and VS Code.",

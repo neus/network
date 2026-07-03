@@ -7,6 +7,8 @@ on:
       - "mcp/npm-dist/**"
       - "plugins/**"
       - ".cursor-plugin/**"
+      - ".claude-plugin/**"
+      - ".agents/**"
       - "examples/**"
       - "spec/VERIFIERS.json"
       - "docs/verifiers/schemas/**"
@@ -22,6 +24,8 @@ on:
       - "mcp/npm-dist/**"
       - "plugins/**"
       - ".cursor-plugin/**"
+      - ".claude-plugin/**"
+      - ".agents/**"
       - "examples/**"
       - "spec/VERIFIERS.json"
       - "docs/verifiers/schemas/**"
@@ -93,3 +97,22 @@ jobs:
       - name: Package check (@neus/mcp-server)
         run: npm pack --dry-run
         working-directory: mcp/npm-dist
+
+  plugin-template:
+    name: Plugin manifests (Cursor, Claude Code, Codex)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Validate marketplace + plugin manifests
+        run: |
+          node scripts/validate-template.mjs
+          node scripts/validate-cursor-schemas.mjs
+          node scripts/validate-cursor-mcp.mjs
+          node scripts/validate-universal-manifests.mjs

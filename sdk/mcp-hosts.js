@@ -59,6 +59,24 @@ export const IDE_HOST_BRAND_LOGOS = {
 };
 
 /**
+ * Normalize an access key and decide whether it is a static Profile access key
+ * (`npk_…`) or a JWT-shaped OAuth access token. OAuth tokens are never written
+ * as a static Bearer header because IDE MCP clients cannot refresh them.
+ *
+ * @param {string | null | undefined} accessKey
+ * @returns {string} The normalized key, or an empty string for OAuth-only mode.
+ */
+function normalizeAccessKey(accessKey) {
+  const key = String(accessKey || '').trim();
+  // OAuth access tokens are JWTs (three dot-separated base64url segments). Never write
+  // them as a static Bearer header — return URL-only so the IDE runs OAuth itself.
+  if (key && !key.startsWith('npk_') && key.split('.').length === 3) {
+    return '';
+  }
+  return key;
+}
+
+/**
  * Build the MCP HTTP server config for an IDE/client.
  *
  * Two paths, one session model — same NEUS Profile/Account either way:
@@ -83,17 +101,43 @@ export const IDE_HOST_BRAND_LOGOS = {
  * @returns {{ type: 'http'; url: string; headers?: { Authorization: string } }}
  */
 export function buildNeusMcpHttpConfig(accessKey) {
-  const key = String(accessKey || '').trim();
-  // OAuth access tokens are JWTs (three dot-separated base64url segments). Never write
-  // them as a static Bearer header — return URL-only so the IDE runs OAuth itself.
-  if (key && !key.startsWith('npk_') && key.split('.').length === 3) {
-    return { type: 'http', url: NEUS_MCP_URL };
-  }
+  const key = normalizeAccessKey(accessKey);
   return {
     type: 'http',
     url: NEUS_MCP_URL,
     ...(key ? { headers: { Authorization: `Bearer ${key}` } } : {}),
   };
+}
+
+/**
+ * Build the Cursor-native MCP server config.
+ *
+ * Cursor's `mcp.json` does not use the spec `type: 'http'` field; it expects a
+ * top-level `mcpServers.<name>` object with a `url` field (and optional static
+ * `headers` for access keys). OAuth discovery is driven by the server's 401
+ * `WWW-Authenticate` challenge.
+ *
+ * @param {string | null | undefined} accessKey
+ * @returns {{ url: string; headers?: { Authorization: string } }}
+ */
+export function buildCursorMcpConfig(accessKey) {
+  const key = normalizeAccessKey(accessKey);
+  return {
+    url: NEUS_MCP_URL,
+    ...(key ? { headers: { Authorization: `Bearer ${key}` } } : {}),
+  };
+}
+
+/**
+ * Build the VS Code-native MCP server config.
+ *
+ * VS Code's `mcp.json` uses the spec-compliant `type: 'http'` field.
+ *
+ * @param {string | null | undefined} accessKey
+ * @returns {{ type: 'http'; url: string; headers?: { Authorization: string } }}
+ */
+export function buildVsCodeMcpConfig(accessKey) {
+  return buildNeusMcpHttpConfig(accessKey);
 }
 
 /**
@@ -113,7 +157,7 @@ function encodeBase64Json(value) {
  * @returns {string}
  */
 export function buildCursorMcpInstallUrl(accessKey) {
-  const config = buildNeusMcpHttpConfig(accessKey);
+  const config = buildCursorMcpConfig(accessKey);
   const encoded = encodeBase64Json(config);
   return `cursor://anysphere.cursor-deeplink/mcp/install?name=${encodeURIComponent(NEUS_MCP_SERVER_NAME)}&config=${encodeURIComponent(encoded)}`;
 }
@@ -125,7 +169,7 @@ export function buildCursorMcpInstallUrl(accessKey) {
 export function buildVsCodeMcpInstallUrl(accessKey) {
   const payload = {
     name: NEUS_MCP_SERVER_NAME,
-    ...buildNeusMcpHttpConfig(accessKey),
+    ...buildVsCodeMcpConfig(accessKey),
   };
   return `vscode:mcp/install?${encodeURIComponent(JSON.stringify(payload))}`;
 }

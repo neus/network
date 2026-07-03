@@ -1,0 +1,53 @@
+{
+  "name": "neus-trust",
+  "version": "1.2.4",
+  "description": "Trust infrastructure for agents that act. Verify identity, scoped authority, trust receipts, and Vault-backed secrets before assistants act. One setup for Cursor, Claude Code, Codex, and VS Code.",
+  "author": {
+    "name": "NEUS",
+    "email": "info@neus.network",
+    "url": "https://neus.network"
+  },
+  "homepage": "https://docs.neus.network/install",
+  "repository": "https://github.com/neus/network",
+  "license": "Apache-2.0",
+  "keywords": [
+    "trust-receipts",
+    "proof-receipts",
+    "agent-identity",
+    "trusted-agents",
+    "identity-verification",
+    "ai-assistant",
+    "ai-builders",
+    "code-assistant",
+    "cursor",
+    "vscode",
+    "codex",
+    "claude-code",
+    "neus-verify",
+    "neus-vault",
+    "oauth",
+    "mcp",
+    "secrets-management"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "NEUS",
+    "shortDescription": "Verify identity, authority, and trust receipts before agents act.",
+    "longDescription": "Trust infrastructure for agents that act. Verify identity, scoped authority, trust receipts, and Vault-backed secrets before assistants act. One setup for Cursor, Claude Code, Codex, and VS Code.",
+    "developerName": "NEUS",
+    "category": "Security",
+    "capabilities": ["code", "search"],
+    "websiteURL": "https://neus.network",
+    "privacyPolicyURL": "https://neus.network/privacy",
+    "termsOfServiceURL": "https://neus.network/terms",
+    "defaultPrompt": [
+      "Use NEUS to verify identity and scoped authority before taking action.",
+      "Use NEUS to check trust receipts for this wallet or organization."
+    ],
+    "brandColor": "#98C0EF",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

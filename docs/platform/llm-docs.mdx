@@ -47,7 +47,19 @@ curl https://neus.network/llms.txt
 
 ## MCP JSON
 
-**`type`** is client-specific; use **`http`** for URL-based hosted MCP.
+**Cursor** uses a URL-only entry inside `mcpServers` and discovers OAuth from the server's 401 challenge:
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
+}
+```
+
+**VS Code, Claude Desktop, and other spec-compliant hosts** use `type: "http"`:
 
 ```json
 {

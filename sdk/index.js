@@ -104,6 +104,8 @@ export {
   IDE_HOST_LABELS,
   IDE_HOST_BRAND_LOGOS,
   buildNeusMcpHttpConfig,
+  buildCursorMcpConfig,
+  buildVsCodeMcpConfig,
   buildCursorMcpInstallUrl,
   buildVsCodeMcpInstallUrl,
   buildSetupCommandForClient,

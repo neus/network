@@ -55,12 +55,21 @@ Or add to `~/.cursor/mcp.json`:
 {
   "mcpServers": {
     "neus": {
-      "type": "http",
       "url": "https://mcp.neus.network/mcp"
     }
   }
 }
 ```
+
+**NEUS plugin** (trust receipts, agent authority, session workflow):
+
+<Accordion title="Cursor manual install">
+```text
+Cursor → Settings → Cursor Plugins → Add marketplace
+Marketplace URL: https://github.com/neus/network
+Install: neus-trust
+```
+</Accordion>
 
   </Tab>
 
@@ -75,6 +84,15 @@ neus auth --client codex
 Codex handles OAuth separately. Run `neus auth --client codex` after setup, or use `codex mcp login neus`.
 
 Config path: `~/.codex/config.toml`
+
+**NEUS plugin** (trust receipts, agent authority, session workflow):
+
+<Accordion title="Codex manual install">
+```text
+codex plugin marketplace add https://github.com/neus/network
+codex plugin install neus-trust
+```
+</Accordion>
 
   </Tab>
 

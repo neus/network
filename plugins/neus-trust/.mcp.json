@@ -1,6 +1,7 @@
 {
   "mcpServers": {
     "neus": {
+      "type": "http",
       "url": "https://mcp.neus.network/mcp"
     }
   }
