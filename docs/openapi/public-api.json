@@ -2921,6 +2921,229 @@
           }
         }
       }
+    },
+    "/api/v1/profile/gates/{gateId}": {
+      "get": {
+        "operationId": "getPublicGate",
+        "summary": "Get a public gate snapshot (requirements, charge, schedule — never the secret reward value)",
+        "tags": ["Gates"],
+        "parameters": [
+          {
+            "name": "gateId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "maxLength": 80, "pattern": "^[a-zA-Z0-9:_-]+$" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Public gate snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "enum": [true] },
+                    "data": { "type": "object", "additionalProperties": true },
+                    "timestamp": { "$ref": "#/components/schemas/Timestamp" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid gateId",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "404": {
+            "description": "Gate not found or not public",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "503": {
+            "description": "Profile storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/profile/gates/discoverable": {
+      "get": {
+        "operationId": "listDiscoverableGates",
+        "summary": "Public cross-owner marketplace feed of live, listed gates (no secrets — reward value is never exposed)",
+        "tags": ["Gates"],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "minimum": 1, "maximum": 120, "default": 60 }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Discoverable gates list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "enum": [true] },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "gates": {
+                          "type": "array",
+                          "items": { "type": "object", "additionalProperties": true }
+                        }
+                      }
+                    },
+                    "timestamp": { "$ref": "#/components/schemas/Timestamp" }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "User service unavailable",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/profile/gates/{gateId}/fulfill": {
+      "post": {
+        "operationId": "fulfillGate",
+        "summary": "Deliver a post-verify reward for hosted gate checkout (session or wallet-bound)",
+        "tags": ["Gates"],
+        "parameters": [
+          {
+            "name": "gateId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "maxLength": 80, "pattern": "^[a-zA-Z0-9:_-]+$" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["qHash"],
+                "properties": {
+                  "qHash": { "type": "string", "description": "Receipt qHash from the completed verification" },
+                  "walletAddress": { "type": "string", "description": "Wallet that completed verification (optional if session-authenticated)" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Fulfillment result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "enum": [true] },
+                    "data": { "type": "object", "additionalProperties": true },
+                    "timestamp": { "$ref": "#/components/schemas/Timestamp" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid gateId or qHash",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "401": {
+            "description": "Wallet authentication required or mismatch",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "503": {
+            "description": "Fulfillment service unavailable",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/profile/gates/estimate": {
+      "post": {
+        "operationId": "estimateGateCredits",
+        "summary": "Preview credit cost for a set of gate requirements (public, no auth required)",
+        "tags": ["Gates"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "requirements": {
+                    "type": "array",
+                    "items": { "type": "object", "additionalProperties": true }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Credit estimate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean", "enum": [true] },
+                    "data": { "type": "object", "additionalProperties": true },
+                    "timestamp": { "$ref": "#/components/schemas/Timestamp" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid requirements",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

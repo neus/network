@@ -188,12 +188,23 @@ Never ship access keys in browser code.
 | Method | Use it for |
 | ------ | ---------- |
 | `getHostedCheckoutUrl()` | Send a user to Hosted Verify |
-| `client.verify()` | Create a trust receipt |
-| `client.getProof()` | Fetch a receipt by `qHash` |
-| `client.pollProofStatus()` | Wait for async completion |
-| `client.gateCheck()` | Server-side eligibility checks |
+| `client.verify()` | Create a trust receipt (in-app signing) |
+| `client.verifyFromApp()` | Create a receipt when your backend signs |
+| `client.getProof()` | Fetch a public receipt by `qHash` |
+| `client.getPrivateProof()` | Fetch a private receipt (wallet-bound) |
+| `client.pollProofStatus()` | Wait for async verification completion |
+| `client.getProofsByWallet()` | List a wallet's public receipts |
+| `client.getPrivateProofsByWallet()` | List a wallet's private receipts |
+| `client.gateCheck()` | Server-side eligibility check before access |
 | `client.checkGate()` | Local preview against already-loaded proofs |
+| `client.getGate()` | Read a published gate's requirements and charge |
+| `client.fulfillGate()` | Deliver a post-verify reward for hosted checkout |
+| `client.createGatePrivateAuth()` | Signed proof for private gate access |
+| `client.revokeOwnProof()` | Revoke a receipt you own |
 | `client.createWalletLinkData()` | Wallet-link payloads |
+| `client.getVerifiers()` | List live verifier ids |
+| `client.getVerifierCatalog()` | Full verifier catalog with access levels |
+| `client.isHealthy()` | Ping the API health endpoint |
 
 ## Configuration
 

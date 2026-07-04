@@ -202,7 +202,8 @@
                 "agents/agent-delegation",
                 "agents/runtime-mount",
               "agents/agent-verification-flow",
-              "agents/named-agent-card"
+              "agents/named-agent-card",
+              "agents/a2a"
             ]
           }
         ]
