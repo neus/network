@@ -6,7 +6,9 @@ on:
       - "sdk/**"
       - "mcp/npm-dist/**"
       - "plugins/**"
+      - ".cursor-plugin/**"
       - ".claude-plugin/**"
+      - ".agents/**"
       - "examples/**"
       - "spec/VERIFIERS.json"
       - "docs/verifiers/schemas/**"
@@ -21,7 +23,9 @@ on:
       - "sdk/**"
       - "mcp/npm-dist/**"
       - "plugins/**"
+      - ".cursor-plugin/**"
       - ".claude-plugin/**"
+      - ".agents/**"
       - "examples/**"
       - "spec/VERIFIERS.json"
       - "docs/verifiers/schemas/**"
@@ -40,7 +44,9 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: 20.19.0
+  # Keep aligned with release.yml. Release uses Node 24 for npm 11 OIDC support;
+  # CI must run the same version to catch incompatibilities before release.
+  NODE_VERSION: '24'
 
 jobs:
   sdk:
@@ -48,26 +54,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        run: |
-          git init
-          git remote add origin https://github.com/${{ github.repository }}.git
-          git fetch origin ${{ github.sha }}
-          git checkout ${{ github.sha }}
+        uses: actions/checkout@v4
 
       - name: Setup Node ${{ env.NODE_VERSION }}
-        run: |
-          NODE_VERSION="${{ env.NODE_VERSION }}"
-          curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-          nvm install "$NODE_VERSION"
-          nvm use "$NODE_VERSION"
-          echo "PATH=$HOME/.nvm/versions/node/v$NODE_VERSION/bin:$PATH" >> $GITHUB_PATH
-          node --version
-          npm --version
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: sdk/package-lock.json
 
       - name: Install dependencies
-        run: if [ -f package-lock.json ]; then npm ci; else npm install; fi
+        run: npm ci
         working-directory: sdk
 
       - name: Lint
@@ -93,3 +90,22 @@ jobs:
       - name: Package check (@neus/mcp-server)
         run: npm pack --dry-run
         working-directory: mcp/npm-dist
+
+  plugin-template:
+    name: Plugin manifests (Cursor, Claude Code, Codex)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Validate marketplace + plugin manifests
+        run: |
+          node scripts/validate-template.mjs
+          node scripts/validate-cursor-schemas.mjs
+          node scripts/validate-cursor-mcp.mjs
+          node scripts/validate-universal-manifests.mjs

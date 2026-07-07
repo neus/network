@@ -10,8 +10,12 @@ GEMINI.md
 .cursor/
 .cursorrules
 .claude/
+!.cursor-plugin/
+!.cursor-plugin/**
 !.claude-plugin/
 !.claude-plugin/**
+!.agents/
+!.agents/**
 .claude/settings.json
 .claude/settings.local.json
 
@@ -19,7 +23,18 @@ GEMINI.md
 integrations/
 
 # Repo-root local tooling (not part of the public surface)
-/scripts/
+/scripts/*
+!/scripts/validate-template.mjs
+!/scripts/validate-cursor-mcp.mjs
+!/scripts/validate-cursor-schemas.mjs
+!/scripts/validate-universal-manifests.mjs
+!/scripts/verify-release-versions.mjs
+
+# Vendored official Cursor plugin + marketplace JSON schemas (draft-07) used by
+# scripts/validate-cursor-schemas.mjs. Pinned from cursor/plugins; update deliberately.
+/schemas/*
+!/schemas/plugin.schema.json
+!/schemas/marketplace.schema.json
 
 # Local-only paths
 backup-docs/

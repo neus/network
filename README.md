@@ -129,6 +129,14 @@ Public docs, SDK (`@neus/sdk`), widgets, examples, specs, and the NEUS Claude Co
 | Examples | [`examples/`](./examples) |
 | Verifier catalog | [docs.neus.network/verification/verifiers](https://docs.neus.network/verification/verifiers) |
 
+<p align="center">
+  <strong>The receipt envelope is specified as <a href="https://github.com/ChainAgnostic/CAIPs/pull/380">CAIP-380 (Portable Proof)</a>, an open ChainAgnostic standard submission.</strong>
+  Receipts are verifiable against the spec independently of NEUS infrastructure — see the
+  <a href="https://github.com/ChainAgnostic/CAIPs/pull/380">CAIP-380 PR</a>,
+  <a href="./docs/verifiers/schemas/">JSON schemas</a>, and
+  <a href="https://docs.neus.network/learn/standards/caip-380">NEUS docs</a>.
+</p>
+
 ## Support
 
 | Channel | Use for |

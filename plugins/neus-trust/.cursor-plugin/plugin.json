@@ -11,6 +11,7 @@
   "repository": "https://github.com/neus/network",
   "license": "Apache-2.0",
   "logo": "./assets/icon.svg",
+  "category": "security",
   "keywords": [
     "trust-receipts",
     "proof-receipts",
@@ -29,5 +30,20 @@
     "oauth",
     "mcp",
     "secrets-management"
+  ],
+  "tags": [
+    "trust-receipts",
+    "agent-identity",
+    "agent-delegation",
+    "mcp",
+    "cursor",
+    "vscode",
+    "codex",
+    "claude-code",
+    "agent-runtime",
+    "windsurf",
+    "gemini",
+    "oauth",
+    "security"
   ]
 }

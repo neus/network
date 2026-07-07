@@ -4,10 +4,12 @@ import {
   NEUS_MCP_SERVER_NAME,
   NEUS_MCP_URL,
   buildAuthCommandForClient,
+  buildCursorMcpConfig,
   buildCursorMcpInstallUrl,
   buildNeusMcpHttpConfig,
   buildSetupCommandForClient,
   buildSetupCommandForHost,
+  buildVsCodeMcpConfig,
   buildVsCodeMcpInstallUrl
 } from '../mcp-hosts.js';
 
@@ -22,6 +24,32 @@ describe('mcp-hosts', () => {
       url: NEUS_MCP_URL
     });
     expect(buildNeusMcpHttpConfig('npk_test')).toEqual({
+      type: 'http',
+      url: NEUS_MCP_URL,
+      headers: { Authorization: 'Bearer npk_test' }
+    });
+  });
+
+  it('builds Cursor-native MCP config without type field', () => {
+    expect(buildCursorMcpConfig()).toEqual({
+      url: NEUS_MCP_URL
+    });
+    expect(buildCursorMcpConfig('npk_test')).toEqual({
+      url: NEUS_MCP_URL,
+      headers: { Authorization: 'Bearer npk_test' }
+    });
+    // OAuth JWT tokens must not be written as a static header.
+    expect(buildCursorMcpConfig('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3AM9Hz8bpA5G2Fw')).toEqual({
+      url: NEUS_MCP_URL
+    });
+  });
+
+  it('builds VS Code MCP config with type field', () => {
+    expect(buildVsCodeMcpConfig()).toEqual({
+      type: 'http',
+      url: NEUS_MCP_URL
+    });
+    expect(buildVsCodeMcpConfig('npk_test')).toEqual({
       type: 'http',
       url: NEUS_MCP_URL,
       headers: { Authorization: 'Bearer npk_test' }

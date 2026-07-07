@@ -2,11 +2,7 @@
   "mcpServers": {
     "neus": {
       "type": "http",
-      "url": "https://mcp.neus.network/mcp",
-      "authorization": {
-        "type": "oauth2",
-        "resourceMetadataUrl": "https://mcp.neus.network/.well-known/oauth-protected-resource"
-      }
+      "url": "https://mcp.neus.network/mcp"
     }
   }
 }

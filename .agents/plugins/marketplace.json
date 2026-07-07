@@ -1,0 +1,10 @@
+{
+  "plugins": [
+    {
+      "name": "neus-trust",
+      "source": {
+        "path": "./plugins/neus-trust"
+      }
+    }
+  ]
+}

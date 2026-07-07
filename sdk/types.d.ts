@@ -1163,6 +1163,17 @@ declare module '@neus/sdk/mcp-hosts' {
     headers?: { Authorization: string };
   };
 
+  export function buildCursorMcpConfig(accessKey?: string | null): {
+    url: string;
+    headers?: { Authorization: string };
+  };
+
+  export function buildVsCodeMcpConfig(accessKey?: string | null): {
+    type: 'http';
+    url: string;
+    headers?: { Authorization: string };
+  };
+
   export function buildCursorMcpInstallUrl(accessKey?: string | null): string;
   export function buildVsCodeMcpInstallUrl(accessKey?: string | null): string;
   export function buildAuthCommandForClient(client: McpInstallClient): string;

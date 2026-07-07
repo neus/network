@@ -12,9 +12,9 @@ One controller account delegates scoped authority to multiple agents. All agents
 
 ```text
 Controller account
-  ├── sales-agent       → read, create, run, jobs, send (drafts)
+  ├── sales-agent       → read, create, run, jobs, send
   ├── creative-agent     → read, create, run, jobs
-  ├── marketing-agent    → read, create, run, jobs, send (drafts)
+  ├── marketing-agent    → read, create, run, jobs, send
   └── ops-agent         → read, create, run, jobs, manage_runtime
 ```
 
@@ -43,7 +43,7 @@ Separation is **delegation scope**, not key material. Every agent signs with the
 | `manage_proofs` | denied | denied | denied | denied |
 | `access_secret` | denied | denied | denied | denied |
 
-Denied actions always win over allowed actions. Agents that can `send_message` are still gated by `humanApprovalRequiredForNewClaims` — they draft for human review, they do not auto-send.
+Denied actions always win over allowed actions. Whether an agent sends immediately or drafts for review is a per-delegation policy decision (see `runtimePolicy`), not a fixed property of the role.
 
 ## Set it up
 

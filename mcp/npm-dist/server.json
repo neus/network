@@ -3,7 +3,7 @@
   "name": "io.github.neus/neus-mcp",
   "title": "NEUS MCP",
   "description": "NEUS MCP: identity, authority, trust receipts, and Vault secrets before sensitive AI actions.",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "repository": {
     "url": "https://github.com/neus/network",
     "source": "github"
@@ -11,7 +11,7 @@
   "websiteUrl": "https://docs.neus.network/install",
   "icons": [
     {
-      "src": "https://neus.network/images/neus-brand-pack/favicon.svg",
+      "src": "https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-24-hq-vector-glass-v12",
       "sizes": [
         "128x128"
       ],
@@ -40,27 +40,27 @@
   "tools": [
     {
       "name": "neus_context",
-      "description": "NEUS MCP session home: current mode, signed-in profile context, verifier summary, reuse-first workflow, tools, and safety rules. Call once at session start."
+      "description": "Load the NEUS session context: trust workflow, verifier summary, signed-in Profile, and how to phrase Trust Results. Call this first each session before other NEUS tools."
     },
     {
       "name": "neus_verifiers_catalog",
-      "description": "Full verifier directory with JSON schemas. Use after neus_context when payloads need exact fields beyond the summary."
+      "description": "List the verifiers NEUS supports, with their IDs, chains, and required input fields. Call this after neus_context when a verifier needs data you do not have yet."
     },
     {
       "name": "neus_proofs_check",
-      "description": "Checks whether existing Proof Receipts satisfy required checks. Eligibility only; never creates proofs. Omit wallet when signed in to use the session profile wallet."
+      "description": "Check whether existing proof receipts already satisfy one or more verifiers for a wallet or DID. This only checks eligibility — it never creates proofs. Omit the wallet when the session is signed in."
     },
     {
       "name": "neus_verify",
-      "description": "Creates or continues verification only when Profile access, wallet, and signing already satisfy NEUS for this verifier. Check existing receipts first."
+      "description": "Create or refresh a reusable Proof Receipt for a wallet or DID against one or more verifiers. Omit the wallet when the session is signed in — your session authorizes the request. Reuse existing receipts first; only run a new verification when neus_proofs_check shows one is missing."
     },
     {
       "name": "neus_verify_or_guide",
-      "description": "Trust autopilot: reuse existing Proof Receipts when eligible, otherwise return the single next step (continue in MCP or open hosted verify). Omit walletAddress when signed in."
+      "description": "Trust autopilot: reuse existing receipts when they already satisfy a verifier, or return the single next step needed to complete verification (signed-in session, hosted link, or missing input). Omit the wallet when signed in."
     },
     {
       "name": "neus_proofs_get",
-      "description": "Reads proof records, tags, delegated agent reads, Profile summary fields, and live proof state. Use returned proof records as receipt references."
+      "description": "Read proof receipt records for a wallet or DID: titles, tags, status, and content. Use this for live proof inventory — never assume proof state from memory. Omit the wallet when the session is signed in."
     },
     {
       "name": "neus_me",
@@ -68,27 +68,27 @@
     },
     {
       "name": "neus_agent_link",
-      "description": "Readiness check for an agent wallet: returns linked when identity and access receipts exist. When setup is missing and the caller is authenticated, call neus_agent_create next — browser is fallback only."
+      "description": "Check whether a Trusted Agent is ready to act — returns ready, or the single missing setup step. When setup is missing and the caller is signed in, call neus_agent_create next."
     },
     {
       "name": "neus_agent_create",
-      "description": "Creates agent identity and access receipts. Requires agentId (provide a meaningful id like \"my-ai-assistant\"; if omitted, NEUS auto-generates one). Uses the authenticated session first (no browser when the profile can authorize). Falls back to hosted verify only when session cannot complete. Confirm with neus_agent_link when done."
+      "description": "Prepare a Trusted Agent: its identity, what it may do, and the limits on its actions. NEUS signs for you when you are signed in; only fall back to the hosted flow when the session cannot complete a required step. Pick a meaningful agentId (e.g. \"my-ai-assistant\"). Confirm readiness with neus_agent_link when done."
     },
     {
       "name": "neus_agent_mount",
-      "description": "Mount an agent identity, permissions, skills, and context in one call. Use before acting as a profile agent in any IDE or worker."
+      "description": "Load a Trusted Agent’s identity, permissions, skills, and context in one call, so the agent can act in this chat or job. Use this at the start of any agent-scoped turn."
     },
     {
       "name": "neus_secret_create",
-      "description": "Store an env-style secret as an encrypted proof. Creates an ownership-basic proof with secret-storage tags. Values are AES-256-GCM sealed and never returned in plaintext via MCP."
+      "description": "Store a secret (such as an API key) as an encrypted record only you can read. NEUS seals the value and never returns the plaintext through tools."
     },
     {
       "name": "neus_secret_list",
-      "description": "List env-style secret proofs for a wallet. Returns metadata only (qHash, alias, type, updatedAt). Values are never exposed."
+      "description": "List the encrypted secrets stored for a wallet — name, type, and last-updated time only. The secret values themselves are never returned. Omit the wallet when the session is signed in."
     },
     {
       "name": "neus_secret_revoke",
-      "description": "Revoke a stored secret proof by qHash. Removes the proof and cleans up any agent bindings. Requires authenticated ownership."
+      "description": "Permanently delete a stored secret by its receipt id. Uses your signed-in wallet by default; pass a wallet or agent wallet only when deleting a secret held under a delegated agent you control."
     }
   ],
   "license": "Apache-2.0",

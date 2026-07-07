@@ -8,6 +8,8 @@ import { fileURLToPath } from 'node:url';
 import {
   NEUS_MCP_SERVER_NAME,
   NEUS_MCP_URL,
+  buildCursorMcpConfig,
+  buildVsCodeMcpConfig,
   buildNeusMcpHttpConfig
 } from '../mcp-hosts.js';
 import {
@@ -876,11 +878,11 @@ function ensureSafeAuth(command, scope, accessKey) {
 }
 
 function buildCursorServer(accessKey) {
-  return buildNeusMcpHttpConfig(accessKey);
+  return buildCursorMcpConfig(accessKey);
 }
 
 function buildVsCodeServer(accessKey) {
-  return buildNeusMcpHttpConfig(accessKey);
+  return buildVsCodeMcpConfig(accessKey);
 }
 
 function buildClaudeServer(accessKey) {

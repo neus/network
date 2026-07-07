@@ -1,7 +1,0 @@
----
-description: Global always-on project guardrails
-alwaysApply: true
----
-
-Follow .neus/.cursorrules and AGENTS.md for architecture and safety rules.
-Use DESIGN.md before creating or restyling UI components.

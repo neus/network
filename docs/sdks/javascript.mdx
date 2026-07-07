@@ -208,6 +208,32 @@ const privateProofs = await client.getPrivateProofsByWallet(
 await client.revokeOwnProof(qHash, window.ethereum);
 ```
 
+## Catalog and health
+
+List the live verifier ids or fetch the full catalog with metadata and access levels.
+
+```javascript
+const ids = await client.getVerifiers();        // ['ownership-basic', 'token-holding', ...]
+const catalog = await client.getVerifierCatalog(); // full metadata + access levels
+const ok = await client.isHealthy();             // true / false
+```
+
+For private-proof gate access, create a signed private auth payload, then pass it to `gateCheck`:
+
+```javascript
+const privateAuth = await client.createGatePrivateAuth({
+  address: 'YOUR_WALLET',
+  wallet: window.ethereum,
+});
+const res = await client.gateCheck({ gateId: 'gate_your-app-name', privateAuth });
+```
+
+## Public proofs by wallet
+
+```javascript
+const proofs = await client.getProofsByWallet('0x...', { limit: 50 });
+```
+
 ## React widgets
 
 [Widgets overview](../widgets/overview).

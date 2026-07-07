@@ -282,7 +282,6 @@ describe('neus CLI', () => {
       await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
     );
     expect(cursorConfig.mcpServers.neus).toEqual({
-      type: 'http',
       url: 'https://mcp.neus.network/mcp'
     });
 
@@ -450,7 +449,6 @@ describe('neus CLI', () => {
     await writeJson(path.join(context.homeDir, '.cursor', 'mcp.json'), {
       mcpServers: {
         neus: {
-          type: 'http',
           url: 'https://mcp.neus.network/mcp',
           headers: { Authorization: 'Bearer oauth_token_from_ide' }
         }
