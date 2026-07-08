@@ -1,8 +1,6 @@
 # NEUS
 
-Trust infrastructure for agents that act.
-
-Verifiable identity, scoped authority, and receipts for every trusted action.
+Give your assistant trust before it acts — identity, scoped authority, and a receipt for every action.
 
 One setup for Cursor, Claude Code, Codex, and VS Code.
 

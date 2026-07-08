@@ -40,7 +40,7 @@ A trust receipt proves a check already happened: identity, ownership, authority,
 
 ### One command for assistants
 
-Run this in any project. It detects your editor and wires hosted NEUS MCP for Cursor, VS Code, Claude Code, or Codex.
+Run this in any project. Your assistant gets live trust checks — identity, authority, and receipts — without leaving the editor.
 
 ```bash
 npx -y -p @neus/sdk neus setup

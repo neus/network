@@ -10,7 +10,7 @@ NEUS makes trust portable across the internet. Verify once, get a trust receipt,
 - **Gates:** Verified-only content, drops, and member areas with optional USDC or card checkout.
 - **Agent trust:** Verifiable identity, scoped delegation, and receipts for every trusted action an agent takes.
 - **Anti-sybil:** Proof of human and wallet-risk checks reused across a whole product.
-- **MCP for assistants:** One command wires hosted NEUS MCP into Cursor, Claude Code, Codex, or VS Code.
+- **MCP for assistants:** Connect any assistant to live trust checks in one command — no config, no API keys to manage.
 
 ## Quick start
 
