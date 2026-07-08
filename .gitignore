@@ -25,7 +25,6 @@ integrations/
 # Repo-root local tooling (not part of the public surface)
 /scripts/*
 !/scripts/validate-template.mjs
-!/scripts/validate-cursor-mcp.mjs
 !/scripts/validate-cursor-schemas.mjs
 !/scripts/validate-universal-manifests.mjs
 !/scripts/verify-release-versions.mjs

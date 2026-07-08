@@ -29,6 +29,7 @@ const surfaces = {
   'plugins/neus-trust/.codex-plugin/plugin.json': readJson('plugins/neus-trust/.codex-plugin/plugin.json').version,
   '.cursor-plugin/marketplace.json': readJson('.cursor-plugin/marketplace.json').metadata?.version,
   '.claude-plugin/marketplace.json': readJson('.claude-plugin/marketplace.json').metadata?.version,
+  '.agents/plugins/marketplace.json': readJson('.agents/plugins/marketplace.json').metadata?.version,
   'plugins/neus-trust/skills/neus-trust-workflow/SKILL.md': (readRaw('plugins/neus-trust/skills/neus-trust-workflow/SKILL.md').match(/^version:\s*"([^"]+)"$/m) || [])[1],
 };
 

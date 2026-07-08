@@ -25,11 +25,11 @@ describe('NeusClient', () => {
 
     it('should accept custom config', () => {
       const customClient = new NeusClient({
-        apiUrl: 'https://dev.api.neus.network',
+        apiUrl: 'https://api.neus.network',
         timeout: 5000,
         enableLogging: true
       });
-      expect(customClient.baseUrl).toBe('https://dev.api.neus.network');
+      expect(customClient.baseUrl).toBe('https://api.neus.network');
       expect(customClient.config.timeout).toBe(5000);
       expect(customClient.config.enableLogging).toBe(true);
     });

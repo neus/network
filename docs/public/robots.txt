@@ -1,0 +1,31 @@
+# NEUS docs — allow all crawlers, including AI search and citation engines.
+# Blocking AI search bots prevents citation in ChatGPT, Claude, Perplexity, and Google AI Overviews.
+# NEUS opts in to AI citation across all of these.
+
+User-agent: *
+Allow: /
+
+# Explicitly allow AI search and citation crawlers.
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# Sitemap (Mintlify auto-generates one at the hosted edge).
+Sitemap: https://docs.neus.network/sitemap.xml

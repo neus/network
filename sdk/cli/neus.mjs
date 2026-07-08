@@ -2622,14 +2622,6 @@ async function main() {
       await runRefresh(options);
       return;
     }
-    if (command === 'refresh') {
-      await runRefresh(options);
-      return;
-    }
-    if (command === 'refresh') {
-      await runRefresh(options);
-      return;
-    }
     if (command === 'status') {
       runStatus(options);
       return;

@@ -1,8 +1,6 @@
 # Trust receipts showcase
 
-A runnable demo where every card is a real-world trust outcome backed by a NEUS verifier. See the live walkthrough at [neus.network/demo](https://neus.network/demo).
-
-NEUS turns trust decisions into reusable **trust receipts** you can hold, look up, and attach to a claim. This demo uses `VerifyGate` to issue receipts in the browser. In a real app, persist the returned `qHash` in your own record and validate it server-side.
+NEUS turns trust decisions into reusable **trust receipts** you can hold, look up, and attach to a claim. This demo uses `VerifyGate` to issue receipts in the browser. In a real app, persist the returned **receipt ID** (`qHash`) in your own record and validate it server-side.
 
 ## Run it locally
 
@@ -51,6 +49,6 @@ Publish gates in [Hub](https://neus.network/hub) and pass their real `gateId` in
 
 ## Store the receipt
 
-Store the returned `qHash` with your claim record. Before prompting the user again, check whether a valid proof already exists.
+Store the returned **receipt ID** (`qHash`) with your claim record. Before prompting the user again, check whether a valid proof already exists.
 
-A `qHash` is a reusable receipt handle, not a session token. In production, validate it server-side, for example with `gateCheck`.
+A receipt ID is a reusable receipt handle, not a session token. In production, validate it server-side, for example with `gateCheck`.

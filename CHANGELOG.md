@@ -4,7 +4,28 @@ Release notes for **`@neus/sdk`**, **`@neus/mcp-server`**, docs, and examples.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## [1.3.0] - 2026-07-08
+
+### Added
+
+- **`llms.txt` at repo root** — machine-readable summary for ChatGPT, Claude, and Perplexity citation. Covers product summary, quick start, core surfaces, reading order, pricing, verifier catalog, and the CAIP-380 standard.
+- **`pricing.txt` at repo root** — machine-readable pricing for AI agents evaluating NEUS. Free / Pro / Enterprise tiers, x402 pay-per-call, and approximate credit costs.
+- **`docs/public/robots.txt`** — allows AI search and citation crawlers (GPTBot, PerplexityBot, ClaudeBot, Google-Extended) so NEUS docs can be cited by AI search engines.
+- **`.github/PULL_REQUEST_TEMPLATE.md`** — contributor template for builder-visible change, verifier/API alignment, and changelog entry.
+
+### Changed
+
+- **Streamlined public SDK surface** — the public API now exposes only the documented integrator paths. Internal modules remain in the package for CLI use but are no longer importable as public subpaths.
+- **Docs home strengthened** — keyword-rich title and a primary hero CTA on the docs landing page.
+- **Codex marketplace versioning** — the Codex plugin marketplace manifest now carries owner and version metadata, covered by the release version checker alongside Cursor and Claude.
+
+### Fixed
+
+- **SDK type definitions** — TypeScript declarations now match the actual runtime implementations for the mount and adapter modules.
+- **`ai-content-moderation` contentType list** — aligned with the OpenAPI enum; removed unsupported values.
+- **OpenAPI scope notes** — gate endpoints and x402 settlement are now annotated as intentionally outside the OpenAPI reference.
+- **Runtime mount import path** — the SDK sample in the docs now imports from the correct module.
+- **Receipt ID jargon** — the showcase example now uses "receipt ID" instead of the internal field name.
 
 ## [1.2.5] - 2026-07-03
 

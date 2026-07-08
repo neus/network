@@ -308,7 +308,7 @@ export function VerifyGate({
         const data = apiResult?.data || {};
         const matchedQHashes = Array.isArray(data.matchedQHashes)
           ? data.matchedQHashes
-          : (Array.isArray(data.matchedProofIds) ? data.matchedProofIds : []); // Legacy API response field
+          : [];
 
         return {
           verifierId,

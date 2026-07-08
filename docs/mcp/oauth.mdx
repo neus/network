@@ -26,7 +26,7 @@ MCP client discovers NEUS MCP
 
 `/oauth/authorize` validates OAuth parameters. Without a session it redirects to `https://neus.network/verify?intent=login&returnTo=/oauth/authorize?...`. After login it issues a single-use code (10-minute TTL) and redirects to `redirect_uri`.
 
-Token exchange and revocation are public OAuth endpoints on `neus.network` (BFF proxy to protocol). They must not require a pre-existing session.
+Token exchange and revocation are public OAuth endpoints on `neus.network`.
 
 ## Discovery
 

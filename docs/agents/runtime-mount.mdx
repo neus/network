@@ -39,19 +39,17 @@ Suggested order:
 ## SDK
 
 ```javascript
-import {
-  resolveRuntimeBundleFromMcp,
-  applyRuntimeBundle,
-} from '@neus/sdk/runtime-mount';
+import { resolveRuntimeBundleFromMcp } from '@neus/sdk/runtime-mount';
+import { applyRuntimeBundle } from '@neus/sdk/runtime-adapters';
 ```
 
 Use `resolveRuntimeBundleFromMcp` with your MCP transport, then `applyRuntimeBundle('cursor', bundle, cwd)` for project files.
 
-## Zeus vs IDE (honest scope)
+## Hosted agent runtime vs IDE
 
 | Surface | What mount gives you |
 |--------|----------------------|
-| **Zeus agent tab** | Full runtime enforcement via product harness (scope, tools, receipts) |
+| **NEUS agent tab** | Full runtime enforcement via agent runtime (scope, tools, receipts) |
 | **IDE adapters** | Mounted rules + trust layer via NEUS MCP; host must start a new chat |
 | **Workers / backends** | Fetch bundle over MCP or CLI; wrap your own tool loop |
 

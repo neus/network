@@ -554,7 +554,7 @@ export class NeusClient {
 
   _getDefaultBrowserWallet() {
     if (typeof window === 'undefined') return null;
-    // Legacy convenience fallback only. Non-EVM wallets must be passed explicitly
+    // EIP-1193 provider detection. Non-EVM wallets must be passed explicitly
     // with CAIP-2 chain context so the SDK does not route them through EVM RPC.
     return window.ethereum || null;
   }

@@ -69,7 +69,6 @@
     appId?: string;
     /** Advanced server/app sponsor wallet. Published gate checkout resolves billing from gateId. */
     billingWallet?: string;
-    /** Alias for billingWallet. */
     sponsorOrgWallet?: string;
     orgWallet?: string;
     /** Site origin used when issuing billing authorization (defaults to browser origin). */
@@ -1143,130 +1142,77 @@ declare module '@neus/sdk/client' {
   export { NeusClient } from '@neus/sdk';
 }
 
-declare module '@neus/sdk/mcp-hosts' {
-  export type McpInstallClient = 'claude' | 'codex' | 'cursor' | 'vscode';
-  export type McpInstallHost = 'cursor' | 'claude' | 'codex';
-
-  export const NEUS_MCP_SERVER_NAME: string;
-  export const NEUS_MCP_URL: string;
-  export const NEUS_SETUP_CLI: string;
-  export const NEUS_AUTH_CLI: string;
-  export const NEUS_MCP_SETUP_DOCS_URL: string;
-  export const MCP_INSTALL_CLIENTS: McpInstallClient[];
-  export const MCP_INSTALL_HOSTS: McpInstallHost[];
-  export const IDE_HOST_LABELS: Record<McpInstallHost, string>;
-  export const IDE_HOST_BRAND_LOGOS: Record<McpInstallHost, string>;
-
-  export function buildNeusMcpHttpConfig(accessKey?: string | null): {
-    type: 'http';
-    url: string;
-    headers?: { Authorization: string };
-  };
-
-  export function buildCursorMcpConfig(accessKey?: string | null): {
-    url: string;
-    headers?: { Authorization: string };
-  };
-
-  export function buildVsCodeMcpConfig(accessKey?: string | null): {
-    type: 'http';
-    url: string;
-    headers?: { Authorization: string };
-  };
-
-  export function buildCursorMcpInstallUrl(accessKey?: string | null): string;
-  export function buildVsCodeMcpInstallUrl(accessKey?: string | null): string;
-  export function buildAuthCommandForClient(client: McpInstallClient): string;
-  export function buildSetupCommandForClient(client: McpInstallClient, accessKey?: string | null): string;
-  export function buildSetupCommandForHost(host: McpInstallHost, accessKey?: string | null): string;
-  export function supportsMcpInstallDeeplink(host: McpInstallHost): boolean;
+declare module '@neus/sdk/utils' {
+  export const NEUS_CONSTANTS: { API_BASE_URL: string; [key: string]: unknown };
+  export const DEFAULT_HOSTED_VERIFY_URL: string;
+  export const PORTABLE_PROOF_SIGNER_HEADER: string;
+  export function toHexUtf8(input: string): string;
+  export function computeContentHash(input: string): string;
+  export function deriveDid(address: string, chainId?: number): string;
+  export function resolveDID(params: { address?: string; chain?: number; endpoint?: string }, options?: Record<string, unknown>): Promise<{ did: string; data: unknown; raw: unknown }>;
+  export function signMessage(params: { wallet?: unknown; message: string; account?: string }, options?: Record<string, unknown>): Promise<string>;
+  export function standardizeVerificationRequest(params: Record<string, unknown>, options?: Record<string, unknown>): Promise<unknown>;
+  export function resolveZkPassportConfig(params: Record<string, unknown>): unknown;
+  export function validateVerifierPayload(verifierId: string, data: unknown): boolean;
+  export function buildVerificationRequest(params: Record<string, unknown>): Record<string, unknown>;
+  export function createVerificationData(params: Record<string, unknown>): { stableRefId: string; [key: string]: unknown };
+  export function validateSignatureComponents(params: Record<string, unknown>): boolean;
+  export function validateWalletAddress(address: string): boolean;
+  export function validateUniversalAddress(address: string): boolean;
+  export function validateTimestamp(ts: unknown): boolean;
+  export function validateQHash(qHash: string): boolean;
+  export function normalizeAddress(address: string): string;
+  export function isTerminalStatus(status: string): boolean;
+  export function isSuccessStatus(status: string): boolean;
+  export function isFailureStatus(status: string): boolean;
+  export function formatVerificationStatus(status: string): string;
+  export function formatTimestamp(ts: unknown): string;
+  export function isSupportedChain(chainId: number): boolean;
+  export function constructVerificationMessage(params: Record<string, unknown>): string;
+  export function withRetry<T>(fn: () => Promise<T>, options?: { retries?: number; delayMs?: number; isRetryable?: (e: unknown) => boolean }): Promise<T>;
+  export function delay(ms: number): Promise<void>;
+  export function getHostedCheckoutUrl(params: Record<string, unknown>): string;
+  export function toAgentDelegationMaxSpend(amount: string, decimals?: number): string;
+  class StatusPoller {
+    constructor(options?: Record<string, unknown>);
+    poll(options: Record<string, unknown>): Promise<unknown>;
+    stop(): void;
+  }
+  export { StatusPoller };
 }
 
-declare module '@neus/sdk/runtime-mount' {
-  export const RUNTIME_MOUNT_SCHEMA: 'neus.runtime-mount.v1';
-
-  export interface RuntimeBundleTrust {
-    identityQHash?: string;
-    delegationQHash?: string;
-    identityUrl?: string;
-    delegationUrl?: string;
+declare module '@neus/sdk/errors' {
+  export class SDKError extends Error {
+    code: string;
+    details?: unknown;
+    constructor(message: string, code?: string, details?: unknown);
   }
-
-  export interface RuntimeBundleIdentity {
-    agentId: string;
-    agentWallet: string;
-    displayName?: string;
-    capabilities?: string[];
-    identityQHash?: string;
+  export class ApiError extends SDKError {
+    static fromResponse(response: { status: number; statusText?: string }, payload?: unknown): ApiError;
   }
-
-  export interface RuntimeBundleDelegation {
-    delegationQHash?: string;
-    controllerWallet?: string;
-    allowedActions?: string[];
-    deniedActions?: string[];
-    expiresAt?: number | null;
-  }
-
-  export interface RuntimeBundle {
-    schema: typeof RUNTIME_MOUNT_SCHEMA;
-    mountedAt: string;
-    trust: RuntimeBundleTrust;
-    identity: RuntimeBundleIdentity;
-    delegation: RuntimeBundleDelegation;
-    effectiveRuntime?: Record<string, unknown>;
-    tools?: string[];
-    secretBindings?: Array<Record<string, unknown>>;
-    enforce?: Record<string, unknown>;
-    contextPack?: Record<string, unknown>;
-  }
-
-  export function normalizeWallet(value: string | null | undefined): string;
-  export function isDelegationExpired(expiresAt: number | null | undefined): boolean;
-  export function pickIdentity(
-    identities: Array<Record<string, unknown>>,
-    selector: { agentId?: string; agentWallet?: string; identityQHash?: string },
-  ): Record<string, unknown> | null;
-  export function pickActiveDelegation(
-    delegations: Array<Record<string, unknown>>,
-    controllerWallet: string,
-    agentWallet: string,
-    agentId: string,
-  ): Record<string, unknown> | null;
-  export function extractAgentContextFromProofs(proofs: unknown): {
-    identities: Array<Record<string, unknown>>;
-    delegations: Array<Record<string, unknown>>;
-  };
-  export function buildRuntimeBundle(input: Record<string, unknown>): RuntimeBundle;
-  export function resolveRuntimeBundleFromMcp(
-    mcpClient: { callTool: (name: string, args?: Record<string, unknown>) => Promise<unknown> },
-    selector: { agentId?: string; agentWallet?: string; identityQHash?: string }
-  ): Promise<RuntimeBundle>;
-
-  export function evaluateMountFileHealth(
-    manifest: RuntimeBundle | Record<string, unknown> | null | undefined
-  ): {
-    mountFileValid: boolean;
-    missingDelegation: boolean;
-    delegationExpired: boolean;
-    needsRefresh: boolean;
-    reason: string | null;
-  };
+  export class ValidationError extends SDKError {}
+  export class NetworkError extends SDKError {}
+  export class ConfigurationError extends SDKError {}
+  export class VerificationError extends SDKError {}
+  export class AuthenticationError extends SDKError {}
 }
 
-declare module '@neus/sdk/runtime-adapters' {
-  import type { RuntimeBundle } from '@neus/sdk/runtime-mount';
-
-  export type RuntimeAdapterHost = 'cursor' | 'claude' | 'codex';
-
-  export interface ApplyRuntimeBundleResult {
-    mountPath: string;
-    adapterFiles: string[];
-  }
-
-  export function applyRuntimeBundle(
-    host: RuntimeAdapterHost,
-    bundle: RuntimeBundle,
-    projectRoot: string
-  ): Promise<ApplyRuntimeBundleResult>;
+declare module '@neus/sdk/gates' {
+  export const HOUR: number;
+  export const DAY: number;
+  export const WEEK: number;
+  export const MONTH: number;
+  export const YEAR: number;
+  export const GATE_NFT_HOLDER: string;
+  export const GATE_TOKEN_HOLDER: string;
+  export const GATE_CONTRACT_ADMIN: string;
+  export const GATE_DOMAIN_OWNER: string;
+  export const GATE_LINKED_WALLETS: string;
+  export const GATE_AGENT_IDENTITY: string;
+  export const GATE_AGENT_DELEGATION: string;
+  export const GATE_CONTENT_MODERATION: string;
+  export const GATE_WALLET_RISK: string;
+  export const GATE_PSEUDONYM: string;
+  export function createGate(params: Record<string, unknown>): Record<string, unknown>;
+  export function combineGates(...gates: Record<string, unknown>[]): Record<string, unknown>;
 }
