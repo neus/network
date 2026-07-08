@@ -1216,3 +1216,231 @@ declare module '@neus/sdk/gates' {
   export function createGate(params: Record<string, unknown>): Record<string, unknown>;
   export function combineGates(...gates: Record<string, unknown>[]): Record<string, unknown>;
 }
+
+declare module '@neus/sdk/runtime-mount' {
+  export const RUNTIME_MOUNT_SCHEMA: string;
+
+  export interface RuntimeMountBundle {
+    schema: string;
+    mountedAt: string;
+    trust: {
+      identityQHash: string;
+      delegationQHash: string | null;
+      identityProofUrl: string;
+      delegationProofUrl: string | null;
+    };
+    identity: {
+      agentId: string;
+      agentWallet: string;
+      agentLabel: string;
+      agentType: string;
+      description?: string;
+      instructions?: string;
+      capabilities: string[];
+      skills: unknown[];
+      services?: unknown[];
+      defaultRuntime?: { provider?: string; model?: string };
+    };
+    delegation: Record<string, unknown> | null;
+    effectiveRuntime: { provider: string; model: string } | null;
+    tools: unknown[];
+    secretBindings: unknown[];
+    memoryRefs?: unknown[];
+    enforce: {
+      deniedActions: string[];
+      allowedActions?: string[];
+      requiresHumanApproval?: boolean;
+    };
+    contextPack: {
+      identityCount: number;
+      delegationCount: number;
+      activeDelegations: number;
+      capabilitiesSummary: string[];
+      skillsSummary: string[];
+    };
+  }
+
+  export interface AgentIdentityRow {
+    qHash?: string | null;
+    agentId?: string | null;
+    agentWallet?: string | null;
+    agentLabel?: string | null;
+    agentType?: string | null;
+    description?: string | null;
+    capabilities?: string[] | Record<string, boolean>;
+    skills?: unknown[];
+    instructions?: string | null;
+    services?: unknown[];
+    defaultRuntime?: { provider?: string; model?: string } | null;
+  }
+
+  export interface AgentDelegationRow {
+    qHash?: string | null;
+    controllerWallet?: string | null;
+    agentWallet?: string | null;
+    agentId?: string | null;
+    scope?: string | null;
+    allowedActions?: unknown[];
+    deniedActions?: unknown[];
+    runtimePolicy?: { requiresHumanApproval?: boolean } | null;
+    expiresAt?: number | null;
+    isExpired?: boolean;
+    maxSpend?: string | number | null;
+    instructions?: string | null;
+    skills?: unknown[];
+    provider?: string | null;
+    model?: string | null;
+  }
+
+  export interface AgentRoster {
+    identities: AgentIdentityRow[];
+    delegations: AgentDelegationRow[];
+  }
+
+  export function normalizeWallet(value: unknown): string;
+  export function isDelegationExpired(expiresAt: number | null | undefined): boolean;
+  export function pickIdentity(
+    identities: AgentIdentityRow[],
+    selector: { agentId?: string | null; agentWallet?: string | null; identityQHash?: string | null }
+  ): AgentIdentityRow | null;
+  export function pickActiveDelegation(
+    delegations: AgentDelegationRow[],
+    controllerWallet: string,
+    agentWallet: string,
+    agentId: string
+  ): AgentDelegationRow | null;
+  export function resolveEffectiveRuntime(
+    identity: AgentIdentityRow | null,
+    delegation: AgentDelegationRow | null
+  ): { provider: string; model: string } | null;
+  export function extractAgentContextFromProofs(proofs: unknown): AgentRoster;
+  export function buildRuntimeBundle(input: {
+    identity: AgentIdentityRow;
+    delegation: AgentDelegationRow | null;
+    identityQHash?: string | null;
+    delegationQHash?: string | null;
+    tools?: unknown[];
+    secretBindings?: unknown[];
+  }): RuntimeMountBundle;
+  export function buildRuntimeMountFromRoster(
+    roster: AgentRoster,
+    selector: { agentId?: string; agentWallet?: string; identityQHash?: string },
+    controllerWallet: string
+  ): RuntimeMountBundle | { error: string; message: string };
+  export function profileAgentToIdentitySeed(profileAgent: Record<string, unknown>): AgentIdentityRow;
+  export function isRuntimeBundle(value: unknown): boolean;
+  export function evaluateMountFileHealth(manifest: unknown): {
+    mountFileValid: boolean;
+    missingDelegation: boolean;
+    delegationExpired: boolean;
+    needsRefresh: boolean;
+    reason: string | null;
+  };
+  export function resolveRuntimeBundleFromMcp(input: {
+    callMcpTool: (args: { name: string; args?: Record<string, unknown>; accessKey?: string; sessionId?: string; signal?: AbortSignal }) => Promise<{ ok: boolean; payload?: unknown; error?: string }>;
+    initializeMcp?: () => Promise<{ sessionId: string }>;
+    accessKey: string;
+    agentId?: string;
+    agentWallet?: string;
+    identityQHash?: string;
+    signal?: AbortSignal;
+  }): Promise<RuntimeMountBundle>;
+}
+
+declare module '@neus/sdk/runtime-adapters' {
+  export const MOUNT_MANIFEST_RELATIVE: string;
+  export function sanitizeAgentIdForFilename(agentId: string): string;
+  export function bundleToCursorRules(bundle: Record<string, unknown>): string;
+  export function bundleToClaudeMd(bundle: Record<string, unknown>): string;
+  export function bundleToCodexJson(bundle: Record<string, unknown>): string;
+  export function readMountManifest(cwd: string): Record<string, unknown> | null;
+  export function writeMountManifest(bundle: Record<string, unknown>, cwd: string): string;
+  export function applyRuntimeBundle(
+    flavor: 'cursor' | 'claude' | 'codex',
+    bundle: Record<string, unknown>,
+    cwd: string,
+    options?: { dryRun?: boolean }
+  ): { flavor: string; written: string[]; primary: string; manifestPath: string };
+}
+
+declare module '@neus/sdk/mcp-hosts' {
+  export const NEUS_MCP_SERVER_NAME: string;
+  export const NEUS_MCP_URL: string;
+  export const NEUS_MCP_SETUP_DOCS_URL: string;
+  export const MCP_INSTALL_CLIENTS: string[];
+  export const MCP_INSTALL_HOSTS: string[];
+  export const IDE_HOST_LABELS: Record<string, string>;
+  export const IDE_HOST_BRAND_LOGOS: Record<string, string>;
+  export const NEUS_PKG: string;
+  export const NEUS_INSTALL_CLI: string;
+  export const NEUS_NPX: string;
+  export const NEUS_SETUP_CLI: string;
+  export const NEUS_SETUP_NPX: string;
+  export const NEUS_AUTH_CLI: string;
+  export const NEUS_CHECK_CLI: string;
+  export const NEUS_DOCTOR_CLI: string;
+  export const NEUS_EXAMPLES_CLI: string;
+  export const NEUS_AUTH_NPX: string;
+  export const NEUS_CHECK_NPX: string;
+  export const NEUS_DOCTOR_NPX: string;
+  export const NEUS_EXAMPLES_NPX: string;
+  export const NEUS_QUICKSTART_INSTALLED: string;
+  export const NEUS_QUICKSTART_NPX: string;
+  export const NEUS_MOUNT_WORKFLOW: string;
+  export function neusMountApply(agentId: string, host?: 'cursor' | 'claude' | 'codex'): string;
+  export function neusMountApplyNpx(agentId: string, host?: 'cursor' | 'claude' | 'codex'): string;
+  export function neusCmd(subcommand: string): string;
+  export function neusNpx(subcommand: string): string;
+  export function buildNeusMcpHttpConfig(accessKey?: string | null): { type: 'http'; url: string; headers?: { Authorization: string } };
+  export function buildCursorMcpConfig(accessKey?: string | null): { url: string; headers?: { Authorization: string } };
+  export function buildVsCodeMcpConfig(accessKey?: string | null): { type: 'http'; url: string; headers?: { Authorization: string } };
+  export function buildCursorMcpInstallUrl(accessKey?: string | null): string;
+  export function buildVsCodeMcpInstallUrl(accessKey?: string | null): string;
+  export function buildAuthCommandForClient(client: 'claude' | 'codex' | 'cursor' | 'vscode'): string;
+  export function buildSetupCommandForClient(client: 'claude' | 'codex' | 'cursor' | 'vscode', accessKey?: string | null): string;
+  export function buildSetupCommandForHost(host: 'cursor' | 'claude' | 'codex', accessKey?: string | null): string;
+  export function buildSetupNpxOneLiner(client?: 'claude' | 'codex' | 'cursor' | 'vscode'): string;
+  export function supportsMcpInstallDeeplink(host: 'cursor' | 'claude' | 'codex'): boolean;
+}
+
+declare module '@neus/sdk/cli-commands' {
+  export const NEUS_PKG: string;
+  export const NEUS_INSTALL_CLI: string;
+  export const NEUS_NPX: string;
+  export const NEUS_SETUP_CLI: string;
+  export const NEUS_AUTH_CLI: string;
+  export const NEUS_CHECK_CLI: string;
+  export const NEUS_DOCTOR_CLI: string;
+  export const NEUS_EXAMPLES_CLI: string;
+  export const NEUS_SETUP_NPX: string;
+  export const NEUS_AUTH_NPX: string;
+  export const NEUS_CHECK_NPX: string;
+  export const NEUS_DOCTOR_NPX: string;
+  export const NEUS_EXAMPLES_NPX: string;
+  export const NEUS_QUICKSTART_INSTALLED: string;
+  export const NEUS_QUICKSTART_NPX: string;
+  export const NEUS_MOUNT_WORKFLOW: string;
+  export function neusMountApply(agentId: string, host?: 'cursor' | 'claude' | 'codex'): string;
+  export function neusMountApplyNpx(agentId: string, host?: 'cursor' | 'claude' | 'codex'): string;
+  export function neusCmd(subcommand: string): string;
+  export function neusNpx(subcommand: string): string;
+}
+
+declare module '@neus/sdk/sponsor' {
+  export function fetchSponsorGrant(params?: {
+    apiUrl?: string;
+    appId: string;
+    orgWallet: string;
+    verifierIds?: string[];
+    targetChains?: number[];
+    origin?: string;
+    expiresInSeconds?: number;
+    fetchImpl?: typeof fetch;
+  }): Promise<{
+    sponsorGrant: string;
+    exp?: number;
+    orgWallet: string;
+    appId: string;
+    maxCredits?: number;
+  }>;
+}

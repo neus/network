@@ -520,3 +520,43 @@ export function evaluateMountFileHealth(manifest) {
         : null
   };
 }
+
+/**
+ * Build a runtime mount bundle from a roster (identities + delegations extracted from proofs).
+ * Non-throwing: returns { error, message } when identity is missing or the bundle cannot be built.
+ * Selector picks the identity by agentId / agentWallet / identityQHash, then resolves the active
+ * delegation from the roster. This is the convenience wrapper used by protocol MCP and neus BFF.
+ *
+ * @param {{ identities?: Array<Record<string, unknown>>, delegations?: Array<Record<string, unknown>> }} roster
+ * @param {{ agentId?: string, agentWallet?: string, identityQHash?: string }} selector
+ * @param {string} controllerWallet
+ */
+export function buildRuntimeMountFromRoster(roster, selector, controllerWallet) {
+  const identities = Array.isArray(roster?.identities) ? roster.identities : [];
+  const delegations = Array.isArray(roster?.delegations) ? roster.delegations : [];
+  const identity = pickIdentity(identities, selector);
+  if (!identity) {
+    return {
+      error: 'identity_not_found',
+      message: 'No agent-identity proof matches the requested agent.',
+    };
+  }
+  const agentWallet = normalizeWallet(identity.agentWallet);
+  const agentId = asString(identity.agentId);
+  const delegation = pickActiveDelegation(delegations, controllerWallet, agentWallet, agentId);
+  try {
+    return buildRuntimeBundle({
+      identity,
+      delegation,
+      identityQHash: asString(identity.qHash || selector.identityQHash),
+      delegationQHash: delegation ? asString(delegation.qHash) : null,
+      tools: [],
+      secretBindings: []
+    });
+  } catch (err) {
+    return {
+      error: 'mount_incomplete',
+      message: err && err.message ? err.message : 'Runtime mount bundle could not be built.'
+    };
+  }
+}

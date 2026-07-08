@@ -1,6 +1,6 @@
 {
   "name": "@neus/sdk",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.",
   "bin": {
     "neus": "cli/neus.mjs"
@@ -30,6 +30,31 @@
     "./gates": {
       "import": "./gates.js",
       "require": "./cjs/gates.cjs"
+    },
+    "./cli-commands": {
+      "types": "./types.d.ts",
+      "import": "./cli-commands.js",
+      "require": "./cjs/cli-commands.cjs"
+    },
+    "./mcp-hosts": {
+      "types": "./types.d.ts",
+      "import": "./mcp-hosts.js",
+      "require": "./cjs/mcp-hosts.cjs"
+    },
+    "./runtime-mount": {
+      "types": "./types.d.ts",
+      "import": "./runtime-mount.js",
+      "require": "./cjs/runtime-mount.cjs"
+    },
+    "./runtime-adapters": {
+      "types": "./types.d.ts",
+      "import": "./runtime-adapters.js",
+      "require": "./cjs/runtime-adapters.cjs"
+    },
+    "./sponsor": {
+      "types": "./types.d.ts",
+      "import": "./sponsor.js",
+      "require": "./cjs/sponsor.cjs"
     },
     "./widgets": {
       "types": "./types.d.ts",

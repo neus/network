@@ -323,7 +323,7 @@ function VerifyGate({
         }
         const apiResult = await client.gateCheck(gateParams);
         const data = apiResult?.data || {};
-        const matchedQHashes = Array.isArray(data.matchedQHashes) ? data.matchedQHashes : Array.isArray(data.matchedProofIds) ? data.matchedProofIds : [];
+        const matchedQHashes = Array.isArray(data.matchedQHashes) ? data.matchedQHashes : [];
         return {
           verifierId,
           eligible: data.eligible === true,
