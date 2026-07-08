@@ -4,6 +4,18 @@ Release notes for **`@neus/sdk`**, **`@neus/mcp-server`**, docs, and examples.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.1] - 2026-07-08
+
+### Changed
+
+- **Runtime mount moved into the SDK** — the `runtime-mount` module now lives in `@neus/sdk` (`@neus/sdk/runtime-mount`). The protocol hosted MCP server imports `buildRuntimeMountFromRoster` from the SDK instead of a bundled copy. The old `protocol/src/mcp/runtime-mount-bundle.js` was deleted; the Dockerfile and unit test were updated to use the SDK export.
+- **MCP server card aligned to 1.3.1** — `protocol/mcp/server.json` and `protocol/public/.well-known/mcp/server-card.json` now report `1.3.1`, matching the published `@neus/mcp-server@1.3.1` npm card. The hosted runtime and the npm distribution card are lockstep again.
+
+### Fixed
+
+- **Docker build** — removed stale `COPY src/mcp/runtime-mount-bundle.js` from `protocol/mcp/Dockerfile` (the file was deleted; the import now resolves from the `@neus/sdk` package dependency).
+- **Unit test** — `protocol/tests/unit/mcp-agent-mount.test.js` now imports from `@neus/sdk/runtime-mount` and uses the canonical `buildRuntimeBundle` export name.
+
 ## [1.3.0] - 2026-07-08
 
 ### Added
