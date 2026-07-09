@@ -428,6 +428,38 @@
     intent?: string;
     origin?: string;
     oauthProvider?: string;
+    /** Advanced sponsor-grant attribution. Omit when gateId is present. */
+    appId?: string;
+    /** Advanced sponsor wallet. Omit when gateId is present. */
+    billingWallet?: string;
+    baseUrl?: string;
+  }): string;
+
+  export function getHostedAgentCreateUrl(opts: {
+    agentId: string;
+    agentWallet: string;
+    controllerWallet?: string;
+    /** Existing agent-identity receipt. When set, Hosted Verify requests delegation only. */
+    identityQHash?: string;
+    returnUrl?: string;
+    agentLabel?: string;
+    agentType?: 'ai' | 'bot' | 'service' | 'automation' | 'agent' | string;
+    scope?: string;
+    expiresAt?: number;
+    maxSpend?: string;
+    permissions?: string[];
+    allowedActions?: string[];
+    deniedActions?: string[];
+    runtimePolicy?: {
+      allowedProviders?: string[];
+      allowedModelClasses?: string[];
+      requiresHumanApproval?: boolean;
+      secretsExposedToReceipt?: boolean;
+    };
+    approvalPolicy?: {
+      humanApprovalRequiredForNewClaims?: boolean;
+      preApprovedContentOnly?: boolean;
+    };
     baseUrl?: string;
   }): string;
 
@@ -1172,6 +1204,7 @@ declare module '@neus/sdk/utils' {
   export function withRetry<T>(fn: () => Promise<T>, options?: { retries?: number; delayMs?: number; isRetryable?: (e: unknown) => boolean }): Promise<T>;
   export function delay(ms: number): Promise<void>;
   export function getHostedCheckoutUrl(params: Record<string, unknown>): string;
+  export function getHostedAgentCreateUrl(params: Record<string, unknown>): string;
   export function toAgentDelegationMaxSpend(amount: string, decimals?: number): string;
   class StatusPoller {
     constructor(options?: Record<string, unknown>);
@@ -1250,6 +1283,10 @@ declare module '@neus/sdk/runtime-mount' {
       deniedActions: string[];
       allowedActions?: string[];
       requiresHumanApproval?: boolean;
+      approvalPolicy?: {
+        humanApprovalRequiredForNewClaims?: boolean;
+        preApprovedContentOnly?: boolean;
+      };
     };
     contextPack: {
       identityCount: number;
@@ -1282,7 +1319,16 @@ declare module '@neus/sdk/runtime-mount' {
     scope?: string | null;
     allowedActions?: unknown[];
     deniedActions?: unknown[];
-    runtimePolicy?: { requiresHumanApproval?: boolean } | null;
+    runtimePolicy?: {
+      allowedProviders?: string[];
+      allowedModelClasses?: string[];
+      requiresHumanApproval?: boolean;
+      secretsExposedToReceipt?: boolean;
+    } | null;
+    approvalPolicy?: {
+      humanApprovalRequiredForNewClaims?: boolean;
+      preApprovedContentOnly?: boolean;
+    } | null;
     expiresAt?: number | null;
     isExpired?: boolean;
     maxSpend?: string | number | null;

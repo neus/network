@@ -1,83 +1,64 @@
 ---
 title: Team agents
-description: One controller, many scoped agents — how to structure a team on NEUS.
+description: Use one approving account to manage several agents with different permissions.
 icon: users
 ---
 
-A NEUS profile can run **multiple agents** under one controller account. Each agent gets its own identity and scoped delegation — same wallet, different authority. This is how teams, orgs, and multi-agent systems share trust without sharing keys.
+A NEUS profile can manage **multiple agents** under one approving account. Each agent gets its own identity and permission receipt. Agents may share an operating wallet while keeping different limits.
 
 ## The model
 
-One controller account delegates scoped authority to multiple agents. All agents share the same operational wallet, but each has a separate delegation receipt with its own `allowedActions`, `deniedActions`, and `scope`.
+One account approves multiple agents. Each agent has a separate permission receipt with its own `allowedActions`, `deniedActions`, and `scope`.
 
 ```text
-Controller account
-  ├── sales-agent       → read, create, run, jobs, send
-  ├── creative-agent     → read, create, run, jobs
-  ├── marketing-agent    → read, create, run, jobs, send
-  └── ops-agent         → read, create, run, jobs, manage_runtime
+Approving account
+  ├── agent-a   → reporting permissions
+  ├── agent-b   → content permissions
+  └── agent-c   → operations permissions
 ```
 
-Separation is **delegation scope**, not key material. Every agent signs with the same wallet, but the delegation receipt controls what each one is allowed to do at any gate.
+The permission receipt, not the shared key, separates the agents. Each integration checks the receipt before allowing an action.
 
-## Why one wallet, many delegations
+## Why one wallet can support several agents
 
 - **No key sprawl.** One wallet to manage, secure, and rotate.
-- **Per-agent scope.** Each agent has a narrow delegation; a compromised creative agent cannot send messages or modify secrets.
-- **Audit trail.** Every action is tied to a delegation receipt, so you always know which agent did what.
-- **Instant revocation.** Revoke a single delegation to disable one agent without touching the others.
-
-## Action matrix
-
-| Action | Sales | Creative | Marketing | Ops |
-|--------|-------|----------|-----------|-----|
-| `read_context` | yes | yes | yes | yes |
-| `read_proofs` | yes | yes | yes | yes |
-| `create_proof` | yes | yes | yes | yes |
-| `run_command` | yes | yes | yes | yes |
-| `execute_jobs` | yes | yes | yes | yes |
-| `send_message` | yes | — | yes | — |
-| `manage_runtime` | — | — | — | yes |
-| `modify_secrets` | denied | denied | denied | denied |
-| `manage_delegations` | denied | denied | denied | denied |
-| `manage_proofs` | denied | denied | denied | denied |
-| `access_secret` | denied | denied | denied | denied |
-
-Denied actions always win over allowed actions. Whether an agent sends immediately or drafts for review is a per-delegation policy decision (see `runtimePolicy`), not a fixed property of the role.
+- **Per-agent limits.** Give each agent only the actions, spending cap, and time window it needs.
+- **Traceable approvals.** Each permission receipt identifies the agent, approving account, and limits.
+- **Focused revocation.** Revoke one agent&apos;s permissions without changing the others.
 
 ## Set it up
 
 <Steps>
   <Step title="Create each agent">
-    Call **`neus_agent_create`** for each team agent. Pass `agentId`, `scope`, `delegationAllowedActions`, `delegationDeniedActions`, `skills`, and `instructions`. The controller wallet signs the delegation.
+    Call **`neus_agent_create`** for each team agent. Pass `agentId`, `scope`, `delegationAllowedActions`, `delegationDeniedActions`, `skills`, and `instructions`. The approving account signs the permission receipt.
   </Step>
   <Step title="Confirm each agent">
     Call **`neus_agent_link`** for each agent until **`linked: true`**.
   </Step>
-  <Step title="Mount per project">
-    In each project repo where the agent should operate:
+  <Step title="Connect each project">
+    In each project where the agent should operate:
     ```bash
     neus mount <agentId> --apply cursor
     ```
-    Binds identity, delegation, and scoped policy to the workspace.
+    Loads the agent&apos;s identity, permissions, skills, and context into the project.
   </Step>
   <Step title="Assign jobs">
-    Add recurring jobs to the agent in the job schedule. Each job carries its own `agentId` so the runtime dispatches to the correct agent.
+    Add recurring jobs to the agent schedule. Each job includes an `agentId` so it runs under the correct permissions.
   </Step>
 </Steps>
 
 ## Skills
 
-Each agent carries role-specific skills in its delegation receipt. Skills are metadata — they advertise what the agent can do, but the delegation `allowedActions`/`deniedActions` decide what it is actually permitted to do. Skill catalogs are available to all agents at runtime without bloating the delegation payload.
+Each agent can list role-specific skills in its permission receipt. Skills describe capabilities; `allowedActions` and `deniedActions` determine what the agent may actually do.
 
 ## Next
 
 <CardGroup cols={2}>
-  <Card title="Agent delegation" icon="key" href="./agent-delegation">
+  <Card title="Agent permissions" icon="key" href="./agent-delegation">
     Full field reference for `allowedActions` and `deniedActions`.
   </Card>
-  <Card title="Runtime Mount" icon="layers" href="./runtime-mount">
-    Bind an agent to any repo or runtime.
+  <Card title="Connect agent context" icon="layers" href="./runtime-mount">
+    Load a Trusted Agent into a project or runtime.
   </Card>
   <Card title="Agent cards" icon="cards" href="./named-agent-card">
     Public discovery via `/agent/[id]` and A2A.

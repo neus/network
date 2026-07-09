@@ -1,7 +1,7 @@
 {
   "$id": "https://neus.network/schemas/ownership-pseudonym.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Pseudonymous identity - wallet ↔ handle binding",
+  "description": "Associate an available .neus username with a wallet",
   "properties": {
     "displayName": {
       "description": "Optional display label for UX; omit or minimize PII if you do not need it.",

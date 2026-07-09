@@ -4,7 +4,7 @@ description: Install NEUS with neus setup, OAuth sign-in, access keys, and per-e
 icon: code
 ---
 
-Connect your AI tools to verifiable identity, scoped authority, trust receipts, and Vault with one setup. Reuse receipts across every session.
+Connect your AI tools to NEUS so they can confirm identity and permissions, reuse trust receipts, and access Vault secrets.
 
 Hosted endpoint: **`https://mcp.neus.network/mcp`**
 
@@ -30,8 +30,8 @@ npx -y -p @neus/sdk neus setup
 
 | Step | Command |
 |------|---------|
-| Connect this machine | `neus setup` then `neus auth` |
-| Bind agent to this repo | `neus mount <agentId> --apply cursor` |
+| Connect this machine | `neus setup` |
+| Connect an agent to this project | `neus mount <agentId> --apply cursor` |
 | Health check | `neus doctor --live` |
 | Read trust receipts | `neus_proofs_get` (or `neus proofs` in the CLI) |
 
@@ -46,7 +46,7 @@ export NEUS_ACCESS_KEY=npk_...
 neus setup
 ```
 
-When `NEUS_ACCESS_KEY` is set, `neus setup` and `neus auth` write a durable `Bearer npk_…` credential instead of starting OAuth. Run `neus setup` again after rotating the key. Treat access keys like passwords.
+When `NEUS_ACCESS_KEY` is set, `neus setup` writes a durable `Bearer npk_…` credential instead of starting OAuth. Run `neus setup` again after rotating the key. Treat access keys like passwords.
 
 ## Disconnect
 
@@ -60,18 +60,18 @@ neus disconnect --access-key <token>
 
 | Goal | Command | Output |
 |------|---------|--------|
-| **Bind a trusted agent to this repo** | `neus mount <agentId> --apply cursor` | `.neus/mount.json` + host rules (live proofs) |
+| **Connect a trusted agent to this project** | `neus mount <agentId> --apply cursor` | `.neus/mount.json` + host rules (live receipts) |
 | **Snapshot legacy IDE config** | `neus import` / `neus export` | `.neus/imported/*.json` (local scan, no proofs) |
 
-### Runtime Mount (recommended for agents)
+### Connect a trusted agent
 
 ```bash
-neus auth
+neus setup
 neus mount <agentId> --apply cursor
 neus doctor --live
 ```
 
-See [Runtime Mount](../agents/runtime-mount).
+See [Connect Agent Context](../agents/runtime-mount).
 
 ### Legacy IDE import (migration only)
 

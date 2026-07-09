@@ -1,16 +1,16 @@
 # NEUS
 
-> Trust infrastructure for agents that act. NEUS issues reusable trust receipts that apps, agents, and payment layers check before access, payout, or execution.
+> Portable identity, ownership, and permission receipts for apps, agents, and organizations.
 
-NEUS makes trust portable across the internet. Verify once, get a trust receipt, then reuse it everywhere — at the next gate, app, or agent check. The same loop works for apps, agents, marketplaces, and gates: check → verify → save receipt → reuse.
+NEUS records a completed check as a trust receipt. Supported apps and agents can confirm that receipt later instead of repeating the full process.
 
 ## What NEUS does
 
-- **Trust receipts:** A reusable proof that a check already happened — identity, ownership, authority, or permission. Show it on a profile, attach it to a gate, or validate it through the API.
-- **Gates:** Verified-only content, drops, and member areas with optional USDC or card checkout.
-- **Agent trust:** Verifiable identity, scoped delegation, and receipts for every trusted action an agent takes.
-- **Anti-sybil:** Proof of human and wallet-risk checks reused across a whole product.
-- **MCP for assistants:** Connect any assistant to live trust checks in one command — no config, no API keys to manage.
+- **Trust receipts:** A reusable record of an identity, ownership, or permission check. Show it on a profile, require it for access, or confirm it through the API.
+- **Gates:** Receipt-based access to content, rewards, and member areas, with optional USDC or card checkout.
+- **Agent trust:** Verifiable identity, limited permissions, and reusable receipts.
+- **Unique-person checks:** Reuse proof-of-human and wallet-risk results across a product.
+- **MCP for assistants:** One setup writes supported editor configuration and signs the user in with OAuth.
 
 ## Quick start
 

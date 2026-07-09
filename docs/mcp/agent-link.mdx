@@ -4,21 +4,21 @@ description: Check whether an agent wallet has identity and delegation proofs on
 icon: robot
 ---
 
-Checks **`agentWallet`** before agent work. **`linked: true`** means both **`agent-identity`** and **`agent-delegation`** proofs were found for the default delegated-agent path. If either is missing, you get **`link_required`** with a hosted URL that can finish the remaining steps.
+Checks the exact **`agentWallet`** + **`agentId`** pair before agent work. **`linked: true`** means matching **`agent-identity`** and **`agent-delegation`** proofs were found. If either is missing, you get **`link_required`**, **`missingVerifiers`**, and a hosted URL for only the remaining step.
 
 | State | Meaning |
 |-------|---------|
-| **`linked: true`** | Identity + delegation receipts are on file; continue without browser setup |
+| **`linked: true`** | Identity and permission receipts are on file; continue without browser setup |
 | **`link_required`** | Open **`hostedVerifyUrl`** or follow **`nextSteps`** |
 
-Optional **`principal`** hints the **controller** account (not the agent wallet). [Agent concepts](../agents/concepts)
+**`agentId`** is optional only when the wallet identifies one agent unambiguously. Pass it whenever a wallet hosts several agents. Optional **`principal`** hints the **controller** account (not the agent wallet). [Agent concepts](../agents/concepts)
 
 When you need prepared signing payloads first, see [Agent create](./agent-create).
 
 ## Input
 
 ```json
-{ "agentWallet": "0x…" }
+{ "agentWallet": "0x…", "agentId": "data-analyst" }
 ```
 
 ## Related

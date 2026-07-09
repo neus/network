@@ -34,7 +34,9 @@ window.location.assign(
 );
 ```
 
-`getHostedCheckoutUrl` supports `gateId`, `verifiers`, `preset`, `returnUrl`, `mode`, `intent`, `origin`, `oauthProvider`, `appId`, `billingWallet`, and `baseUrl`. The hosted page also accepts `returnTo` and `connect=1` (append manually). [Hosted Verify](../cookbook/auth-hosted-verify).
+`getHostedCheckoutUrl` supports login, a published gate, or direct verifier checks. These are separate recipes: `intent: 'login'` removes checkout parameters, and `gateId` owns the gate policy instead of mixing with `verifiers` or `preset`. Shared handoff options are `returnUrl`, `mode`, `origin`, and `oauthProvider`; advanced sponsor options are `appId` and `billingWallet`.
+
+For agent identity + delegation, use `getHostedAgentCreateUrl` so dedicated-wallet identity and controller approval stay in the correct order. [Agent create](../mcp/agent-create) · [Hosted Verify](../cookbook/auth-hosted-verify).
 
 React: [Widgets](../widgets/overview).
 

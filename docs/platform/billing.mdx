@@ -51,6 +51,20 @@ A gate can charge visitors directly. Turn it on in the gate's pricing step. Your
 
 Payment runs after verification by default and unlocks the reward at fulfillment — the full sequence (snapshot → check → verify → pay → fulfill) is documented in [Hosted Gate Checkout](./hosted-gate-checkout).
 
+## When your app creates agents for users
+
+Agent setup creates two separately signed receipts. Billing follows the signer for each step unless a validated sponsor or pay-per-call receipt is present.
+
+| Step | Default payer |
+|------|---------------|
+| Agent wallet signs `agent-identity` | Agent wallet |
+| Signed-in account signs `agent-delegation` | Signed-in approving account |
+| Partner server signs with its own profile wallet | Partner profile wallet |
+| Valid sponsor grant | Sponsoring organization |
+| Valid pay-per-call receipt | Caller that bought the receipt |
+
+For a dedicated agent wallet, create identity first, then send the user through the delegation-only hosted callback. See [`neus_agent_create`](../mcp/agent-create).
+
 ## When credits run out
 
 Billable calls return **402** with a quote. Complete payment and retry with `PAYMENT-SIGNATURE`.

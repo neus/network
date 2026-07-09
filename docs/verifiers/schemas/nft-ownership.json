@@ -1,7 +1,7 @@
 {
   "$id": "https://neus.network/schemas/nft-ownership.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "NFT ownership verification (EVM or Solana)",
+  "description": "Check whether an EVM or Solana wallet owns an NFT",
   "oneOf": [
     {
       "required": [

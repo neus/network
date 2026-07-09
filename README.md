@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  NEUS makes trust portable across the internet, so people, apps, and AI agents can prove what is real before access, payout, or execution.
+  Create identity, ownership, and permission receipts that connected apps and agents can check.
 </p>
 
 <p align="center">
@@ -24,23 +24,23 @@
 
 ## Why NEUS
 
-Every app, marketplace, workflow, and agent stack rebuilds trust from zero. NEUS turns trust decisions into **reusable trust receipts** that apps, agents, gates, and audit systems can check before access, payment, or action.
+Most apps repeat the same identity, ownership, and permission checks. NEUS turns those results into **reusable trust receipts** that other systems can check before access, payment, or action.
 
-A trust receipt proves a check already happened: identity, ownership, authority, or permission. Show it on a profile, attach it to a gate, or validate it through the API. Trusted actors move across surfaces; unknown or risky actors hit policy gates.
+A trust receipt records a completed identity, ownership, or permission check. Show it on a profile, require it for access, or confirm its current status through the API.
 
 | Need | What you get with NEUS |
 | ---- | ------------------------ |
 | Stop rebuilding verification in every product | One receipt you can save, check, and reuse across apps |
 | Gate access, rewards, or content | Hosted flows, React widgets, and server-side allow/deny checks |
-| Trust agents before they act | Verifiable identity, scoped delegation, and receipts for every action |
-| Audit what happened | Receipt pages, durable references, and a record of passes and denials |
-| Add trust without building the ceremony | Hosted Verify, SDK, API, and MCP on the same trust model |
+| Check agents before they act | Verifiable identity, limited permissions, and reusable receipts |
+| Review trust decisions | Receipt pages, stable references, and current status |
+| Add checks without building each flow | Hosted Verify, SDK, API, and MCP on the same trust model |
 
 ## Start building
 
 ### One command for assistants
 
-Run this in any project. Your assistant gets live trust checks — identity, authority, and receipts — without leaving the editor.
+Run this in any project. Your assistant can check identity, permissions, and receipts without leaving the editor.
 
 ```bash
 npx -y -p @neus/sdk neus setup
@@ -61,13 +61,13 @@ Use Hosted Verify, `VerifyGate`, or the SDK when your app needs a reusable trust
 
 - [Quickstart](https://docs.neus.network/quickstart) — register your app and run the workflow.
 - Follow the pattern: [check, verify, save, reuse](https://docs.neus.network/integration).
-- Use [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) when NEUS should own the browser step.
+- Use [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) for browser-based sign-in and checks.
 
 ### Add trust to an agent
 
-- [Agents overview](https://docs.neus.network/agents/overview) — identity, scoped authority, and receipts for agents that act.
+- [Agents overview](https://docs.neus.network/agents/overview): identity, limited permissions, and reusable receipts.
 - Register identity with [`agent-identity`](https://docs.neus.network/agents/agent-identity).
-- Add scoped authority with [`agent-delegation`](https://docs.neus.network/agents/agent-delegation).
+- Add permissions with [`agent-delegation`](https://docs.neus.network/agents/agent-delegation).
 
 Hosted MCP URL: **`https://mcp.neus.network/mcp`**
 
@@ -82,7 +82,7 @@ Hosted MCP URL: **`https://mcp.neus.network/mcp`**
 | [SDK](https://docs.neus.network/sdks/javascript) | Verification, polling, hosted URLs, and server-side checks |
 | [Widgets](https://docs.neus.network/widgets/overview) | `VerifyGate` and `ProofBadge` for React products |
 | [API](https://docs.neus.network/api/overview) | Server reads, checks, verifier catalog, and verification endpoints |
-| [Agents](https://docs.neus.network/agents/overview) | Agent identity, delegation, stable URLs, and action receipts |
+| [Agents](https://docs.neus.network/agents/overview) | Agent identity, permissions, stable URLs, and trust receipts |
 | [MCP](https://docs.neus.network/mcp/overview) | Live trust context for assistants, tools, and agent workflows |
 
 ## Choose your path

@@ -1,14 +1,14 @@
 ---
 title: MCP Overview
-description: NEUS MCP connects assistants to identity, scoped authority, trust receipts, and Vault.
+description: Connect assistants to verified identity, limited permissions, reusable trust receipts, and Vault.
 icon: plug
 "og:image": "/images/og-mcp.png"
 "twitter:image": "/images/og-mcp.png"
 ---
 
-NEUS MCP gives your assistant trust before it acts — identity, scoped authority, and receipts for every action. No config files, no API keys to manage.
+NEUS MCP lets an assistant check identity and permissions before sensitive actions. Setup writes the editor configuration for you, and normal editor sign-in does not require an API key.
 
-Connect once with OAuth. The same identity, delegation, and receipts work in Cursor, Claude Code, Codex, and VS Code — plus any backend that checks the same receipt.
+Connect once with OAuth to use the same profile and trust receipts in Cursor, Claude Code, Codex, and VS Code. Backends can check those same receipts through the API.
 
 ## Install
 
@@ -30,15 +30,15 @@ Full setup: [MCP setup](./setup). OAuth reference: [MCP OAuth](./oauth).
 
 ## How it works
 
-Assistants call **`neus_context`** once, then follow the **autopilot** workflow returned in context. They read your live trust context, not just the current chat thread — a receipt checked in one session is reusable in another without re-verifying.
+Assistants call **`neus_context`** once to load the signed-in profile, available checks, and recommended order. A valid receipt can be reused in later sessions without repeating the full check.
 
-- **Trust before action** — check existing receipts, then guide the single next step
-- **Show receipts** — read live trust receipt records with **`neus_proofs_get`**
-- **Trusted Agent** — confirm agent identity and delegation before tools run
-- **Runtime Mount** — `neus_agent_mount` or `neus mount` binds an agent to a project
-- **Vault** — list, store, or revoke encrypted secrets when signed in
+- **Check before action**: look for an existing receipt, then guide any missing step
+- **Show receipts**: read current trust receipt records with **`neus_proofs_get`**
+- **Trusted Agent**: confirm agent identity and permissions before tools run
+- **Connect agent context**: use `neus_agent_mount` or `neus mount` to load an agent into a project
+- **Vault**: list, store, or revoke encrypted secrets when signed in
 
-You should see **Trust Result** summaries in chat (Passed / Action needed / Blocked), not raw tool JSON.
+You should see a clear **Passed**, **Action needed**, or **Blocked** summary in chat, not raw tool output.
 
 Journey guide: [MCP journeys](./journeys) · Tool reference: [MCP tools](./tools)
 
@@ -51,15 +51,15 @@ For an agent wallet:
 3. If missing, call `neus_agent_create` and complete the returned hosted or signing steps.
 4. Call `neus_agent_link` again until `linked: true`.
 
-Details: [Agent verification flow](../agents/agent-verification-flow) · [Runtime Mount](../agents/runtime-mount)
+Details: [Agent verification flow](../agents/agent-verification-flow) · [Connect Agent Context](../agents/runtime-mount)
 
-## Bind an agent to a project
+## Connect an agent to a project
 
 ```bash
 neus mount <agentId> --apply cursor
 ```
 
-Writes `.neus/mount.json` and host rules in the **current repo**. Re-run after delegation changes.
+Writes `.neus/mount.json` and host rules in the **current project**. Run it again after permission changes.
 
 ## Migrate legacy IDE config
 
@@ -79,7 +79,7 @@ neus export --to manifest
     OAuth flow and tokens.
   </Card>
   <Card title="Setup" icon="code" href="./setup">
-    Install and auth.
+    Install and sign in.
   </Card>
   <Card title="Tools" icon="wrench" href="./tools">
     Tool reference.

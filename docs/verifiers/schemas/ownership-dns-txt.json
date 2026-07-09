@@ -1,7 +1,7 @@
 {
   "$id": "https://neus.network/schemas/ownership-dns-txt.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Domain ownership verification via DNS TXT records",
+  "description": "Confirm control of a domain with a DNS TXT record",
   "properties": {
     "domain": {
       "description": "Hostname to verify (TXT lookup at _neus.<domain>).",

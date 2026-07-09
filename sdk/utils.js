@@ -1013,18 +1013,156 @@ export function getHostedCheckoutUrl(opts = {}) {
     ? opts.baseUrl.replace(/\/+$/, '')
     : DEFAULT_HOSTED_VERIFY_URL;
   const params = new URLSearchParams();
-  if (opts.gateId) params.set('gateId', String(opts.gateId));
+  const gateId = typeof opts.gateId === 'string' ? opts.gateId.trim() : '';
+  const intent = typeof opts.intent === 'string' ? opts.intent.trim() : '';
+  const isLogin = intent === 'login';
+  if (gateId && !isLogin) params.set('gateId', gateId);
   if (opts.returnUrl) params.set('returnUrl', String(opts.returnUrl));
-  if (Array.isArray(opts.verifiers) && opts.verifiers.length > 0) {
+  if (!isLogin && !gateId && Array.isArray(opts.verifiers) && opts.verifiers.length > 0) {
     params.set('verifiers', opts.verifiers.filter(Boolean).join(','));
   }
-  if (opts.preset) params.set('preset', String(opts.preset));
+  if (!isLogin && !gateId && opts.preset) params.set('preset', String(opts.preset));
   if (opts.mode) params.set('mode', String(opts.mode));
-  if (opts.intent) params.set('intent', String(opts.intent));
+  if (intent) params.set('intent', intent);
   if (opts.origin) params.set('origin', String(opts.origin));
   if (opts.oauthProvider) params.set('oauthProvider', String(opts.oauthProvider));
-  if (opts.appId) params.set('appId', String(opts.appId));
-  if (opts.billingWallet) params.set('billingWallet', String(opts.billingWallet).trim().toLowerCase());
+  if (!isLogin && !gateId && opts.appId) params.set('appId', String(opts.appId));
+  if (!isLogin && !gateId && opts.billingWallet) {
+    params.set('billingWallet', String(opts.billingWallet).trim().toLowerCase());
+  }
   const qs = params.toString();
   return qs ? `${base}?${qs}` : base;
+}
+
+/**
+ * Build the hosted Trusted Agent setup URL without mixing login or gate-checkout semantics.
+ *
+ * Dedicated-wallet flow:
+ * 1. The agent wallet signs agent-identity.
+ * 2. Pass identityQHash here so Hosted Verify requests only agent-delegation from the controller.
+ */
+export function getHostedAgentCreateUrl(opts = {}) {
+  const agentId = typeof opts.agentId === 'string' ? opts.agentId.trim() : '';
+  const agentWallet = typeof opts.agentWallet === 'string' ? opts.agentWallet.trim() : '';
+  const controllerWallet =
+    typeof opts.controllerWallet === 'string' ? opts.controllerWallet.trim() : '';
+  const identityQHash =
+    typeof opts.identityQHash === 'string' ? opts.identityQHash.trim() : '';
+
+  if (!agentId || agentId.length > 128) {
+    throw new ValidationError(
+      'agentId is required and must be 1-128 characters',
+      'agentId',
+      opts.agentId
+    );
+  }
+  if (!agentWallet) {
+    throw new ValidationError('agentWallet is required', 'agentWallet', opts.agentWallet);
+  }
+  if (identityQHash && !validateQHash(identityQHash)) {
+    throw new ValidationError(
+      'identityQHash must be a valid qHash',
+      'identityQHash',
+      opts.identityQHash
+    );
+  }
+  if (
+    controllerWallet &&
+    controllerWallet.toLowerCase() !== agentWallet.toLowerCase() &&
+    !identityQHash
+  ) {
+    throw new ValidationError(
+      'Dedicated agent wallets must sign agent-identity first. Pass its identityQHash to request the controller delegation step.',
+      'identityQHash',
+      opts.identityQHash
+    );
+  }
+
+  let returnUrl = '';
+  if (typeof opts.returnUrl === 'string' && opts.returnUrl.trim()) {
+    try {
+      const parsed = new URL(opts.returnUrl.trim());
+      if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+        throw new Error('unsupported protocol');
+      }
+      returnUrl = parsed.toString();
+    } catch {
+      throw new ValidationError(
+        'returnUrl must be an absolute http(s) URL',
+        'returnUrl',
+        opts.returnUrl
+      );
+    }
+  }
+
+  const url = new URL(
+    getHostedCheckoutUrl({
+      baseUrl: opts.baseUrl,
+      returnUrl: returnUrl || undefined,
+      verifiers: identityQHash
+        ? ['agent-delegation']
+        : ['agent-identity', 'agent-delegation']
+    })
+  );
+  url.searchParams.set('agentId', agentId);
+  url.searchParams.set('agentWallet', agentWallet);
+  if (controllerWallet) url.searchParams.set('controllerWallet', controllerWallet);
+  if (typeof opts.agentLabel === 'string' && opts.agentLabel.trim()) {
+    url.searchParams.set('agentLabel', opts.agentLabel.trim().slice(0, 128));
+  }
+  if (typeof opts.agentType === 'string' && opts.agentType.trim()) {
+    url.searchParams.set('agentType', opts.agentType.trim().slice(0, 32));
+  }
+  if (typeof opts.scope === 'string' && opts.scope.trim()) {
+    url.searchParams.set('scope', opts.scope.trim().slice(0, 128));
+  }
+  if (opts.expiresAt !== undefined && opts.expiresAt !== null) {
+    const expiresAt = Number(opts.expiresAt);
+    if (!Number.isFinite(expiresAt) || expiresAt <= 0) {
+      throw new ValidationError(
+        'expiresAt must be a positive Unix timestamp in milliseconds',
+        'expiresAt',
+        opts.expiresAt
+      );
+    }
+    url.searchParams.set('expiresAt', String(Math.floor(expiresAt)));
+  }
+  if (opts.maxSpend !== undefined && opts.maxSpend !== null && String(opts.maxSpend).trim()) {
+    const maxSpend = String(opts.maxSpend).trim();
+    if (!/^[0-9]{1,78}$/.test(maxSpend)) {
+      throw new ValidationError(
+        'maxSpend must be a whole-number string in token base units',
+        'maxSpend',
+        opts.maxSpend
+      );
+    }
+    url.searchParams.set('maxSpend', maxSpend);
+  }
+
+  const permissions = Array.isArray(opts.permissions)
+    ? opts.permissions.map(String).map(value => value.trim()).filter(Boolean).slice(0, 32)
+    : [];
+  if (permissions.length > 0) {
+    url.searchParams.set('prefillDelegationDefaults', JSON.stringify({ permissions }));
+  }
+  if (Array.isArray(opts.allowedActions) && opts.allowedActions.length > 0) {
+    url.searchParams.set(
+      'prefillAllowedActions',
+      JSON.stringify(opts.allowedActions.map(String).slice(0, 32))
+    );
+  }
+  if (Array.isArray(opts.deniedActions) && opts.deniedActions.length > 0) {
+    url.searchParams.set(
+      'prefillDeniedActions',
+      JSON.stringify(opts.deniedActions.map(String).slice(0, 32))
+    );
+  }
+  if (opts.runtimePolicy && typeof opts.runtimePolicy === 'object' && !Array.isArray(opts.runtimePolicy)) {
+    url.searchParams.set('prefillRuntimePolicy', JSON.stringify(opts.runtimePolicy));
+  }
+  if (opts.approvalPolicy && typeof opts.approvalPolicy === 'object' && !Array.isArray(opts.approvalPolicy)) {
+    url.searchParams.set('prefillApprovalPolicy', JSON.stringify(opts.approvalPolicy));
+  }
+
+  return url.toString();
 }

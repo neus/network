@@ -1,27 +1,27 @@
 ---
 title: "NEUS — Trust Receipts for Apps, Agents, and Payments"
-description: "Portable trust infrastructure for apps, agents, and ecosystems. Verify once, get a trust receipt, then reuse it everywhere."
+description: "Create reusable identity, ownership, and permission receipts for apps and agents."
 icon: house
 "og:image": "/images/og-default.png"
 "twitter:image": "/images/og-default.png"
 ---
 
-NEUS makes trust portable across the internet. We issue **reusable trust receipts** that apps, agents, and payment layers check before access, payment, or action — so trusted actors do not restart from zero at every gate.
+NEUS records completed identity, ownership, risk, and permission checks as **trust receipts**. Connected systems can check a receipt’s current status before access, payment, or another sensitive action.
 
-Verify once, get a **trust receipt**, then reuse it everywhere — at the next gate, app, or agent check.
+Create a receipt once, then reuse it where an integration accepts the same check.
 
-Your trust context — identity, permission, and ownership — lives on your **NEUS profile** and travels with you across apps and agents. You control what is shared.
+Your **NEUS profile** shows the receipts and agents associated with your account. You control which supported receipts are public.
 
-## Start in seconds
+## Choose an integration path
 
 Two drop-in paths cover most products. Pick the one that matches what you are building.
 
 <CardGroup cols={2}>
-  <Card title="Add trust to an app" icon="puzzle-piece" href="./quickstart">
-    Gate content, reward verified users, and stop bots.
+  <Card title="Add receipt checks to an app" icon="puzzle-piece" href="./quickstart">
+    Require specific receipts before content, rewards, or checkout.
   </Card>
-  <Card title="Give an agent trust" icon="robot" href="./install">
-    Verify agent identity, scope what it can do, and prove every action — before it runs.
+  <Card title="Add identity and permissions to an agent" icon="robot" href="./install">
+    Register an agent and grant limits that its connected runtime can check.
   </Card>
 </CardGroup>
 
@@ -32,16 +32,16 @@ Two drop-in paths cover most products. Pick the one that matches what you are bu
     Verified-only content, drops, and member areas — with optional USDC or card checkout.
   </Card>
   <Card title="Portable trust profile" icon="shield-halved" href="./agents/overview">
-    One URL that proves who you are, what you own, and what your agents may do — with receipts any gate can check.
+    Share public identity, ownership, and agent permission receipts from one profile.
   </Card>
-  <Card title="Stop bots and sybils" icon="user-check" href="./cookbook/sybil-resistance">
-    Proof of human and wallet-risk checks reused across your whole product.
+  <Card title="Reduce bots and duplicate accounts" icon="user-check" href="./cookbook/sybil-resistance">
+    Reuse accepted proof-of-human and wallet-risk receipts across connected flows.
   </Card>
 </CardGroup>
 
-## How every integration works
+## Core receipt flow
 
-The same loop everywhere: **check → verify → save receipt → reuse**. See [Integration](./integration).
+Most integrations follow the same loop: **check → verify → save receipt → reuse**. See [Integration](./integration).
 
 Advanced: [metered API billing (x402)](./platform/x402) · [Plans and credits](./platform/pricing)
 
@@ -61,7 +61,7 @@ Advanced: [metered API billing (x402)](./platform/x402) · [Plans and credits](.
     Server-side eligibility checks and receipt reads.
   </Card>
   <Card title="MCP" icon="plug" href="./mcp/overview">
-    Assistants verify before they act — one setup, every editor.
+    Connect supported assistants to receipt checks through one hosted endpoint.
   </Card>
   <Card title="Examples" icon="cube" href="./examples">
     Reference apps and samples.

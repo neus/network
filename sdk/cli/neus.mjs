@@ -813,7 +813,7 @@ function printUsage(exitCode = 0) {
     '  check         Confirm setup and live NEUS connection (alias for doctor --live)',
     '  examples      Show assistant prompts to try after install',
     '  doctor        Deep check: config status, profile connection, and live MCP context',
-    '  mount         Mount proof-backed agent context for any runtime',
+    '  mount         Connect a Trusted Agent to a project or runtime',
     '  import        Detect and package supported assistant context for NEUS portability',
     '  export        Export the latest local NEUS portable agent manifest',
     '  help          Show this message',

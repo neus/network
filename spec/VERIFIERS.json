@@ -6,7 +6,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Content ownership verification with origin lock and optional provenance",
+      "description": "Record content authorship, source, and optional source history",
       "expiry": "permanent",
       "flow": "instant",
       "id": "ownership-basic",
@@ -23,7 +23,7 @@
         "gateCheck": true,
         "verificationRequest": false
       },
-      "description": "Unique human verification for sybil resistance",
+      "description": "Confirm a unique person without publishing identity details",
       "expiry": "expiring",
       "flow": "interactive",
       "id": "proof-of-human",
@@ -40,7 +40,7 @@
         "gateCheck": true,
         "verificationRequest": false
       },
-      "description": "Social media account ownership via OAuth",
+      "description": "Confirm control of a supported social account through sign-in",
       "expiry": "permanent",
       "flow": "interactive",
       "id": "ownership-social",
@@ -57,7 +57,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Pseudonymous identity - wallet ↔ handle binding",
+      "description": "Associate an available .neus username with a wallet",
       "expiry": "expiring",
       "flow": "instant",
       "id": "ownership-pseudonym",
@@ -74,7 +74,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Domain ownership verification via DNS TXT records",
+      "description": "Confirm control of a domain with a DNS TXT record",
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "ownership-dns-txt",
@@ -92,7 +92,7 @@
         "gateCheck": true,
         "verificationRequest": false
       },
-      "description": "Organizational OAuth verification",
+      "description": "Confirm a work or organization account through sign-in",
       "expiry": "permanent",
       "flow": "interactive",
       "id": "ownership-org-oauth",
@@ -109,7 +109,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "NFT ownership verification (EVM or Solana)",
+      "description": "Check whether an EVM or Solana wallet owns an NFT",
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "nft-ownership",
@@ -127,7 +127,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Token holding verification (EVM or Solana)",
+      "description": "Check whether an EVM or Solana wallet meets a token balance requirement",
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "token-holding",
@@ -145,7 +145,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Wallet risk assessment",
+      "description": "Check a wallet for risk signals before allowing an action",
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "wallet-risk",
@@ -163,7 +163,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Link secondary wallet via signature",
+      "description": "Associate a second wallet by signing from that wallet",
       "expiry": "permanent",
       "flow": "instant",
       "id": "wallet-link",
@@ -180,7 +180,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Verifies smart contract ownership (EVM chains)",
+      "description": "Confirm an owner or administrator role on an EVM smart contract",
       "expiry": "point_in_time",
       "flow": "external_lookup",
       "id": "contract-ownership",
@@ -198,7 +198,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Verifies content safety via AI",
+      "description": "Record that content passed the configured safety check",
       "expiry": "permanent",
       "flow": "external_lookup",
       "id": "ai-content-moderation",
@@ -215,7 +215,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Portable agent identity, signed by the agent wallet itself. Use agent-delegation to grant authority from a delegating account.",
+      "description": "Record an agent identity signed by the agent account. Add permissions separately.",
       "expiry": "permanent",
       "flow": "instant",
       "id": "agent-identity",
@@ -232,7 +232,7 @@
         "gateCheck": true,
         "verificationRequest": true
       },
-      "description": "Delegates scoped authority from a delegating account to an agent, ERC-8004 compatible",
+      "description": "Grant an agent specific actions, limits, and an optional expiration date",
       "expiry": "expiring",
       "flow": "instant",
       "id": "agent-delegation",

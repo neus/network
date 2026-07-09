@@ -4,31 +4,24 @@ description: Real assistant workflows — verify before action, reuse receipts, 
 icon: route
 ---
 
-NEUS MCP is built for outcomes. After `neus setup` and `neus check`, ask your assistant in plain language — it runs the trust loop and reports a **Trust Result** (Passed / Action needed / Blocked) instead of raw tool output.
+After `neus setup` and `neus check`, ask your assistant to use NEUS in plain language. It reports the result as **Passed**, **Action needed**, or **Blocked** instead of showing raw tool output.
 
-Signed in? Your assistant uses your profile wallet automatically — you never paste wallet addresses.
+When you are signed in, account-based tools use your current profile automatically.
 
 ## Verify before a sensitive action
 
-The default autopilot: reuse an existing receipt when one fits, run the missing check only when needed, then continue.
+The default workflow reuses a valid receipt when one fits and runs a new check only when needed.
 
 **Try:** "Use NEUS Verify before taking sensitive actions."
 
 ```txt
-NEUS Verify
-Status: Passed
-Requirement: Identity and permission check
-Receipt: Existing trust receipt accepted
-Next: Continue
+NEUS Verify: Passed. The identity and permission receipt is valid. Continue.
 ```
 
 If nothing on file covers the request:
 
 ```txt
-NEUS Verify
-Status: Action needed
-Missing: Sign-in
-Next: Connect NEUS, then retry
+NEUS Verify: Action needed. Sign in, then retry.
 ```
 
 ## Show your trust receipts

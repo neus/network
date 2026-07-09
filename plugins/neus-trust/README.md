@@ -1,6 +1,6 @@
 # NEUS
 
-Give your assistant trust before it acts — identity, scoped authority, and a receipt for every action.
+Stop agents from acting blind. Verified identity, limited permissions, and reusable trust receipts.
 
 One setup for Cursor, Claude Code, Codex, and VS Code.
 
@@ -18,7 +18,6 @@ Codex:
 
 ```bash
 neus setup --client codex
-neus auth --client codex
 ```
 
 Claude Code plugin:

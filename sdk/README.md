@@ -1,8 +1,8 @@
 # @neus/sdk
 
-Create, check, and reuse NEUS trust receipts from apps and backends. Ships the **`neus`** CLI for assistant setup and project mounting.
+Create, check, and reuse NEUS trust receipts from apps and backends. Includes the **`neus`** CLI for assistant setup and agent context.
 
-NEUS makes trust portable across the internet, so people, apps, and AI agents can prove what is real before access, payout, or execution.
+Use receipts for identity, ownership, access, and agent permission checks.
 
 ## Install (library)
 
@@ -25,15 +25,15 @@ Or run without installing: `npx -y -p @neus/sdk neus setup`
 
 Then ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
-## Mount an agent in a project
+## Connect an agent to a project
 
 ```bash
-neus auth
+neus setup
 neus mount <agentId> --apply cursor
 neus doctor --live
 ```
 
-This writes the project mount and editor rules in the current repo. See [Runtime Mount docs](https://docs.neus.network/agents/runtime-mount).
+This writes the agent context and editor rules in the current project. See [Connect Agent Context](https://docs.neus.network/agents/runtime-mount).
 
 ## MCP docs
 
@@ -51,7 +51,7 @@ Prefer `neus setup` over hand-editing config files so every host stays on **`htt
 - Hosted verification flows that return reusable receipts
 - Server checks before access, rewards, payments, or actions
 - React gates with `VerifyGate`
-- Agent identity and scoped delegation
+- Agent identity and limited permissions
 - MCP setup for assistants and agent tools
 
 ## Hosted Verify
@@ -70,6 +70,22 @@ window.location.assign(url);
 ```
 
 After completion, NEUS redirects back with a `qHash`. Store it with your user or record.
+
+Dedicated agent setup keeps the agent-signed identity step separate from the approving account:
+
+```js
+import { getHostedAgentCreateUrl } from '@neus/sdk';
+
+const url = getHostedAgentCreateUrl({
+  agentId: 'data-analyst',
+  agentWallet,
+  controllerWallet,
+  identityQHash,
+  returnUrl: 'https://yourapp.com/agents/callback'
+});
+```
+
+When `identityQHash` is present, Hosted Verify requests only `agent-delegation`.
 
 ## In-app signing
 
@@ -193,7 +209,7 @@ neus check
 
 `neus setup` configures MCP and signs you in: it uses `NEUS_ACCESS_KEY` from the environment when set, otherwise the selected host starts OAuth. Cursor, VS Code, and Claude Code use browser sign-in on NEUS. Pass `--access-key <npk_...>` only to override.
 
-Codex owns its local MCP OAuth session. Use `neus setup --client codex`, then `neus auth --client codex`.
+For Codex, run `neus setup --client codex`; setup starts the host OAuth flow.
 
 No global install? Run `npx -y -p @neus/sdk neus setup` once.
 

@@ -4,9 +4,9 @@ description: Connect assistants to NEUS MCP in one command.
 icon: download
 ---
 
-Give your assistant trust before it acts — identity, scoped authority, and a receipt for every action. One install works across Cursor, Claude Code, Codex, and VS Code.
+Connect your assistant to NEUS so it can check identity and permissions before sensitive actions. One setup works across Cursor, Claude Code, Codex, and VS Code.
 
-Install once. The same trust identity and receipts move with you across editors and runtimes.
+Install once. Use the same profile and trust receipts across supported editors.
 
 ---
 
@@ -26,7 +26,7 @@ Ask your assistant:
 Use NEUS Verify before taking sensitive actions.
 ```
 
-This gives your assistant one public trust loop: check existing trust receipts, guide any missing verification step, then summarize the outcome as **NEUS Verify** (Passed / Action needed / Blocked — not raw tool output).
+Your assistant checks existing trust receipts first, guides any missing verification step, then summarizes the outcome as **NEUS Verify**: Passed, Action needed, or Blocked.
 
 For example prompts, see [MCP journeys](./mcp/journeys).
 
@@ -52,11 +52,10 @@ For example prompts, see [MCP journeys](./mcp/journeys).
 | Access keys (servers / CI) | [MCP setup](./mcp/setup#access-keys) |
 | Trust receipt APIs | [API overview](./api/overview) |
 
-Codex uses its own OAuth step after setup:
+For Codex, target that client during setup. The command starts its OAuth flow:
 
 ```bash
 neus setup --client codex
-neus auth --client codex
 ```
 
 Claude Code plugin (optional):

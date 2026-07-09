@@ -1,7 +1,7 @@
 {
   "$id": "https://neus.network/schemas/ai-content-moderation.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Verifies content safety via AI",
+  "description": "Record that content passed the configured safety check",
   "properties": {
     "content": {
       "maxLength": 13653334,

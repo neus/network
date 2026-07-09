@@ -211,6 +211,21 @@ export function buildRuntimeBundle(input) {
     delegation?.runtimePolicy &&
     typeof delegation.runtimePolicy === 'object' &&
     delegation.runtimePolicy.requiresHumanApproval === true;
+  const approvalPolicy = (() => {
+    if (!delegation?.approvalPolicy || typeof delegation.approvalPolicy !== 'object') {
+      return null;
+    }
+    const normalized = {};
+    if (typeof delegation.approvalPolicy.humanApprovalRequiredForNewClaims === 'boolean') {
+      normalized.humanApprovalRequiredForNewClaims =
+        delegation.approvalPolicy.humanApprovalRequiredForNewClaims;
+    }
+    if (typeof delegation.approvalPolicy.preApprovedContentOnly === 'boolean') {
+      normalized.preApprovedContentOnly =
+        delegation.approvalPolicy.preApprovedContentOnly;
+    }
+    return Object.keys(normalized).length > 0 ? normalized : null;
+  })();
 
   const capabilities = asStringArray(identity.capabilities);
   const skills = Array.isArray(identity.skills) ? identity.skills : [];
@@ -254,6 +269,7 @@ export function buildRuntimeBundle(input) {
           allowedActions,
           deniedActions,
           runtimePolicy: delegation.runtimePolicy,
+          approvalPolicy: approvalPolicy || undefined,
           expiresAt: delegation.expiresAt ?? null,
           isExpired: Boolean(delegation.isExpired),
           maxSpend: delegation.maxSpend,
@@ -270,7 +286,8 @@ export function buildRuntimeBundle(input) {
     enforce: {
       deniedActions,
       ...(allowedActions?.length ? { allowedActions } : {}),
-      ...(requiresHumanApproval ? { requiresHumanApproval: true } : {})
+      ...(requiresHumanApproval ? { requiresHumanApproval: true } : {}),
+      ...(approvalPolicy ? { approvalPolicy } : {})
     },
     contextPack: {
       identityCount: 1,
@@ -323,7 +340,7 @@ export function isRuntimeBundle(value) {
 export async function resolveRuntimeBundleFromMcp(input) {
   const accessKey = asString(input.accessKey);
   if (!accessKey) {
-    throw new Error('NEUS access key or authenticated MCP session is required for runtime mount.');
+    throw new Error('Sign in to NEUS or configure an access key before connecting agent context.');
   }
 
   const selector = {

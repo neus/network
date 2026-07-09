@@ -50,15 +50,15 @@ neus setup
 neus check
 ```
 
-Wires hosted NEUS MCP into Cursor, Codex, VS Code, and Claude Code. Then ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
+Configures hosted NEUS MCP in Cursor, Codex, VS Code, and Claude Code. Then ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
-Codex only: `neus setup --client codex`, then `neus auth --client codex`.
+For Codex only: `neus setup --client codex`.
 
 Details: [Install NEUS](./install) · [Agent verification flow](./agents/agent-verification-flow)
 
 ## Backends: API and access keys
 
-Use the HTTP API from servers, workers, and CI — never from end-user browsers. Eligibility, reads, and verification all return the same trust receipt ID (`qHash`). Server automation uses a profile access key from **Profile → Keys** (`npk_*`).
+Use the HTTP API from servers, workers, and CI, not from end-user browsers. Eligibility, reads, and verification return the trust receipt ID in `qHash`. Server automation uses a profile access key from **Profile → Account**.
 
 Details: [API overview](./api/overview) · [Integrations](./cookbook/integrations)
 

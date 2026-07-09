@@ -43,14 +43,14 @@ export function bundleToCursorRules(bundle) {
     .join('\n');
 
   return `---
-description: NEUS proof-backed agent — ${label}
+description: Verified NEUS agent — ${label}
 globs:
 alwaysApply: true
 ---
 
 # NEUS Agent — ${label}
 
-You are **${label}** (\`${id}\`). This project mounted trust context from NEUS.
+You are **${label}** (\`${id}\`). This project loaded your current NEUS identity and permissions.
 
 ## Identity
 ${bundle.identity.description || bundle.identity.instructions || 'Follow the agent instructions below.'}
@@ -67,18 +67,18 @@ ${skillsBlock || '- None configured'}
 ## Services
 ${services || '- None configured'}
 
-## Scoped policy
-${denied ? `Denied actions (do not perform without new approval):\n${denied}` : '- Follow delegation on file via NEUS MCP.'}
+## Permission limits
+${denied ? `Denied actions (do not perform without new approval):\n${denied}` : '- Follow the current permission receipt through NEUS MCP.'}
 
 ## Trust workflow
 1. Call \`neus_context\` once per session when NEUS MCP is available.
-2. Trust before action: \`neus_proofs_check\` then \`neus_verify_or_guide\`.
-3. Do not invent qHashes, wallets, or receipt fields.
-4. Summarize NEUS outcomes as Trust Result — never dump raw tool JSON.
+2. Before a sensitive action, call \`neus_proofs_check\` and then \`neus_verify_or_guide\` when needed.
+3. Do not invent receipt IDs, accounts, or receipt fields.
+4. Summarize the result as Passed, Action needed, or Blocked. Do not show raw tool output.
 
-## Proof references
+## Receipt references
 - Identity: ${bundle.trust.identityProofUrl}
-${bundle.trust.delegationProofUrl ? `- Delegation: ${bundle.trust.delegationProofUrl}` : '- Delegation: not on file — call `neus_agent_link` before acting as this agent.'}
+${bundle.trust.delegationProofUrl ? `- Permissions: ${bundle.trust.delegationProofUrl}` : '- Permissions: not on file — call `neus_agent_link` before acting as this agent.'}
 `;
 }
 
@@ -90,24 +90,24 @@ export function bundleToClaudeMd(bundle) {
   const label = bundle.identity.agentLabel || id;
   return `# NEUS Agent — ${label}
 
-Mounted from NEUS Runtime Mount (\`${RUNTIME_MOUNT_SCHEMA}\`).
+Loaded from NEUS agent context (\`${RUNTIME_MOUNT_SCHEMA}\`).
 
 ## Identity
 - **Agent ID:** ${id}
 - **Label:** ${label}
 
 ## Description
-${bundle.identity.description || 'Proof-backed agent on NEUS Network.'}
+${bundle.identity.description || 'Verified agent on NEUS Network.'}
 
 ## Instructions
 ${bundle.identity.instructions || 'Use NEUS MCP before sensitive actions.'}
 
 ## Trust receipts
 - Identity: \`${bundle.trust.identityQHash}\` — ${bundle.trust.identityProofUrl}
-${bundle.trust.delegationQHash ? `- Delegation: \`${bundle.trust.delegationQHash}\` — ${bundle.trust.delegationProofUrl}` : ''}
+${bundle.trust.delegationQHash ? `- Permissions: \`${bundle.trust.delegationQHash}\` — ${bundle.trust.delegationProofUrl}` : ''}
 
 ## Policy
-- Do not invent qHashes or verifier outcomes.
+- Do not invent receipt IDs or check outcomes.
 - Call \`neus_context\` once; use profile context when signed in.
 `;
 }

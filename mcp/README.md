@@ -1,8 +1,6 @@
 # NEUS MCP
 
-Trust infrastructure for agents that act.
-
-Verifiable identity, scoped authority, and receipts for every trusted action.
+Verified identity, limited permissions, and reusable trust receipts for AI agents.
 
 **Endpoint:** `https://mcp.neus.network/mcp`
 

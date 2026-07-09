@@ -1,6 +1,6 @@
 {
   "name": "@neus/network",
-  "description": "NEUS makes trust portable across the internet — so people, apps, and AI agents can prove what is real before access, payout, or execution.",
+  "description": "Public NEUS documentation, SDK, plugins, and examples for reusable trust receipts.",
   "private": true,
   "type": "module",
   "engines": {
