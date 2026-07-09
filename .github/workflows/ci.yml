@@ -107,4 +107,5 @@ jobs:
         run: |
           node scripts/validate-template.mjs
           node scripts/validate-cursor-schemas.mjs
+          node scripts/validate-cursor-mcp.mjs
           node scripts/validate-universal-manifests.mjs

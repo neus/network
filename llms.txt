@@ -10,7 +10,8 @@ NEUS records a completed check as a trust receipt. Supported apps and agents can
 - **Gates:** Receipt-based access to content, rewards, and member areas, with optional USDC or card checkout.
 - **Agent trust:** Verifiable identity, limited permissions, and reusable receipts.
 - **Unique-person checks:** Reuse proof-of-human and wallet-risk results across a product.
-- **MCP for assistants:** One setup writes supported editor configuration and signs the user in with OAuth.
+- MCP for assistants: One setup writes supported editor configuration and signs the user in with OAuth.
+- Trust workflow skill: https://github.com/neus/network/blob/main/plugins/neus-trust/skills/neus-trust-workflow/SKILL.md
 
 ## Quick start
 

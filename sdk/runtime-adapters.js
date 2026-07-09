@@ -1,5 +1,5 @@
 /**
- * Runtime Mount adapters — apply proof-backed bundles to host workspaces.
+ * Runtime Mount adapters — write Trusted Agent context into host workspaces.
  */
 
 import fs from 'node:fs';

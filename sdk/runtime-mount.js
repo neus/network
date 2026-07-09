@@ -1,6 +1,6 @@
 /**
- * Runtime Mount — proof-backed agent context bundle (neus.runtime-mount.v1).
- * SSOT for CLI, integrators, and protocol neus_agent_mount response shape.
+ * Runtime Mount — Trusted Agent context bundle (neus.runtime-mount.v1).
+ * Shared shape for CLI, integrators, and the neus_agent_mount response.
  */
 
 export const RUNTIME_MOUNT_SCHEMA = 'neus.runtime-mount.v1';
@@ -542,7 +542,7 @@ export function evaluateMountFileHealth(manifest) {
  * Build a runtime mount bundle from a roster (identities + delegations extracted from proofs).
  * Non-throwing: returns { error, message } when identity is missing or the bundle cannot be built.
  * Selector picks the identity by agentId / agentWallet / identityQHash, then resolves the active
- * delegation from the roster. This is the convenience wrapper used by protocol MCP and neus BFF.
+ * delegation from the roster. Used by hosted MCP and product app consumers.
  *
  * @param {{ identities?: Array<Record<string, unknown>>, delegations?: Array<Record<string, unknown>> }} roster
  * @param {{ agentId?: string, agentWallet?: string, identityQHash?: string }} selector

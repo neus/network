@@ -15,13 +15,13 @@ The default workflow reuses a valid receipt when one fits and runs a new check o
 **Try:** "Use NEUS Verify before taking sensitive actions."
 
 ```txt
-NEUS Verify: Passed. The identity and permission receipt is valid. Continue.
+NEUS Verify: Passed. Requirement satisfied. Receipt on file. Next: Continue.
 ```
 
 If nothing on file covers the request:
 
 ```txt
-NEUS Verify: Action needed. Sign in, then retry.
+NEUS Verify: Action needed. Missing: Sign-in. Next: Complete the secure step, then retry.
 ```
 
 ## Show your trust receipts
@@ -43,10 +43,7 @@ Confirm an agent has both identity and approved authority before it acts.
 **Try:** "Verify this agent is trusted before it runs tools."
 
 ```txt
-NEUS Verify
-Status: Blocked
-Reason: Agent has no approved delegation on file
-Next: Run agent setup, then retry
+NEUS Verify: Blocked. A required trust condition was not satisfied. Next: Do not continue until the check passes.
 ```
 
 When setup is missing, the assistant guides identity + delegation, then re-checks until the agent is linked. See [Agent verification flow](../agents/agent-verification-flow).

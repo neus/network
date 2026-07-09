@@ -1,110 +1,56 @@
 ---
-name: NEUS Trust Workflow
-version: "1.3.1"
-description: Portable identity, context, and permissions, reuse trust receipts, and protect secrets across editors and runtimes.
+name: neus-trust-workflow
+description: Runs the NEUS trust autopilot before sensitive assistant actions — load session context, reuse trust receipts, guide missing checks, connect Trusted Agent context, and protect Vault secrets. Use when verifying identity or permissions, checking trust receipts, mounting a profile agent, storing secrets, or when the user asks for NEUS Verify / trust-before-action.
+license: Apache-2.0
+compatibility: Requires hosted NEUS MCP (https://mcp.neus.network/mcp) in Cursor, Claude Code, Codex, or VS Code.
+metadata:
+  author: NEUS
+  version: "1.3.2"
+  homepage: https://docs.neus.network/install
 ---
 
-NEUS gives agents verifiable identity, limited permissions, and reusable trust receipts. Check trust before an assistant runs sensitive tools.
+# NEUS Trust Workflow
 
-## Setup
+Reuse existing trust receipts first. Run a new check only when needed. Summarize as **NEUS Verify** — Passed, Action needed, or Blocked. Never dump raw tool JSON.
 
-Install the NEUS CLI:
+Use this for verification-sensitive steps. Answer simple questions directly.
 
-```bash
-npm i -g @neus/sdk
-neus setup
-neus check
-```
+## When to use
 
-Or try without installing:
+- Before sensitive tools, spend, publish, secrets, or agent actions
+- When the user asks for NEUS Verify, trust receipts, Vault, or Trusted Agent setup
+- When acting as a registered profile agent in a project
 
-```bash
-npx -y -p @neus/sdk neus setup
-```
+## Autopilot
 
-`neus setup` configures hosted NEUS MCP for Cursor, Codex, VS Code, and Claude Code and starts the selected OAuth flow.
-
-Codex-only:
-
-```bash
-neus setup --client codex
-```
-
-Servers and CI:
-
-```bash
-neus setup --access-key <npk_...>
-```
-
-Create access keys under **Account → Access keys** on [neus.network](https://neus.network/profile?tab=account). Never paste keys into chat or committed files.
-
-Hosted MCP: **`https://mcp.neus.network/mcp`**
-
-Trust receipts persist **offchain by default**. Do not prompt for wallet connection or on-chain anchoring unless the user explicitly asks; only then pass `options.publishToHub: true` on verify.
-
-## Connect an agent to a project
-
-After NEUS is connected on the machine, load a Trusted Agent into a project:
-
-```bash
-neus mount <agentId> --apply cursor
-```
-
-Use `neus mount` only when acting as a registered profile agent in a project. For receipt checks and secrets, `neus setup` plus `neus_context` is enough.
-
-| Layer | Command |
-|-------|---------|
-| **Machine** | `neus setup` (once) |
-| **Project** | `neus mount <agentId> --apply cursor` |
-| **Session** | `neus_context` → `neus_agent_mount` when acting as the agent |
-
-## Default workflow
-
-1. Run **`neus_context`** once. Use the signed-in profile when present; omit wallet fields on check and verify tools.
-2. **Acting as a profile agent:** use **`neus_agent_mount`** (or `neus mount <agentId> --apply cursor` in the project) to load identity, permissions, skills, and context.
-3. **Trust before action:** **`neus_proofs_check`** then **`neus_verify_or_guide`**.
-4. **Trusted Agent:** **`neus_agent_link`** then **`neus_verify_or_guide`** if needed.
-5. **Receipts:** **`neus_proofs_get`** when exact receipt fields are needed.
-6. **Vault:** **`neus_secret_create`** / **`neus_secret_list`** / **`neus_secret_revoke`** when signed in.
+1. **`neus_context`** once per session. Prefer signed-in profile context; omit wallet fields on check/verify tools.
+2. **Profile agent:** **`neus_agent_mount`** (or `neus mount <agentId> --apply cursor`) for identity, permissions, skills, and context.
+3. **Trust before action:** **`neus_proofs_check`** → **`neus_verify_or_guide`**.
+4. **Trusted Agent:** **`neus_agent_link`** → **`neus_verify_or_guide`** if needed.
+5. **Receipts:** **`neus_proofs_get`** for exact fields.
+6. **Vault:** **`neus_secret_list`** / **`neus_secret_create`** / **`neus_secret_revoke`**.
 7. **`neus_me`** only to refresh profile context or look up a wallet/DID.
-8. Summarize outcomes as Passed, Action needed, or Blocked. Do not show raw tool output.
+8. Summarize as **NEUS Verify**.
 
-## Result format
+## NEUS Verify format
 
-Summarize NEUS results in plain language. Do not dump raw tool JSON, MCP details, or implementation field names.
-
-**Passed:**
+Use the Passed / Action needed / Blocked guidance from `neus_context`. Never invent receipt IDs, check IDs, or statuses.
 
 ```txt
-NEUS Verify: Passed. The required receipt is valid. Continue.
+NEUS Verify: Passed. Requirement satisfied. Receipt on file. Next: Continue.
+NEUS Verify: Action needed. Missing: <step>. Next: Complete the secure step, then retry.
+NEUS Verify: Blocked. A required trust condition was not satisfied. Next: Do not continue until the check passes.
 ```
 
-**Action needed:**
+## Hard rules
 
-```txt
-NEUS Verify: Action needed. Sign in, then retry.
-```
+- Receipts stay **offchain by default**. Do not prompt for wallet connection or a blockchain record unless the user asks.
+- Use receipt IDs only from tool responses. Prefer “receipt ID” / “trust receipt” in user text.
+- Store secrets only via **`neus_secret_create`**. Confirm stored name + receipt ID. Never paste tokens into chat.
+- Use live check IDs from **`neus_context`** / **`neus_verifiers_catalog`**. Do not hardcode a second catalog.
 
-**Blocked:**
+## Setup and mount
 
-```txt
-NEUS Verify: Blocked. A required check did not pass. Do not continue.
-```
+Install, OAuth, access keys, and project mount: [references/setup.md](references/setup.md)
 
-## Receipt Links
-
-Use real receipt identifiers only — take them from tool responses, never invent them.
-
-- App: `https://neus.network/proof/<qHash>`
-
-Never invent qHashes, verifier IDs, or receipt fields.
-
-## Secrets
-
-- Store values only through **`neus_secret_create`**. Never paste raw tokens into chat.
-- Confirm with the stored name and receipt ID after creation.
-- **Revoke** and recreate if a value may have leaked.
-
-## Integration source
-
-Use the live verifier catalog for check IDs and required fields. Do not hardcode a second catalog in your app. See [docs.neus.network](https://docs.neus.network).
+Docs: [docs.neus.network](https://docs.neus.network) · Install: [docs.neus.network/install](https://docs.neus.network/install)

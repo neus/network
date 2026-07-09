@@ -26,6 +26,7 @@ integrations/
 /scripts/*
 !/scripts/validate-template.mjs
 !/scripts/validate-cursor-schemas.mjs
+!/scripts/validate-cursor-mcp.mjs
 !/scripts/validate-universal-manifests.mjs
 !/scripts/verify-release-versions.mjs
 

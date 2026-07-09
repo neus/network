@@ -14,6 +14,8 @@ neus check
 
 Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
+It reuses existing trust receipts first, guides any missing check, then summarizes as Passed, Action needed, or Blocked.
+
 Codex:
 
 ```bash

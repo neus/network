@@ -188,6 +188,27 @@ async function validateFrontmatterFile(filePath, componentName, requiredKeys, pl
       addError(`${pluginName}: ${componentName} file missing "${key}" in frontmatter: ${relativeFile}`);
     }
   }
+
+  // agentskills.io / Cursor: skill name must be kebab-case and match the parent folder.
+  if (componentName === "skill" && parsed.name) {
+    const folderName = path.basename(path.dirname(filePath));
+    const kebab = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+    if (!kebab.test(parsed.name.replace(/^"|"$/g, ""))) {
+      addError(
+        `${pluginName}: skill name must be lowercase kebab-case (agentskills.io): ${relativeFile}`
+      );
+    }
+    const bareName = parsed.name.replace(/^"|"$/g, "");
+    if (bareName !== folderName) {
+      addError(
+        `${pluginName}: skill name "${bareName}" must match folder "${folderName}": ${relativeFile}`
+      );
+    }
+    const desc = (parsed.description || "").replace(/^["']|["']$/g, "");
+    if (desc.length > 1024) {
+      addError(`${pluginName}: skill description exceeds 1024 chars: ${relativeFile}`);
+    }
+  }
 }
 
 async function validateComponentFrontmatter(pluginDir, pluginName) {
@@ -352,9 +373,9 @@ async function main() {
       addWarning(`${entry.name}: no hooks/hooks.json file found (only needed when using hooks).`);
     }
 
-    const mcpPath = path.join(pluginDir, ".mcp.json");
-    if (!(await pathExists(mcpPath))) {
-      addWarning(`${entry.name}: no .mcp.json file found (only needed when using MCP servers).`);
+    const cursorMcpPath = path.join(pluginDir, "mcp.json");
+    if (!(await pathExists(cursorMcpPath))) {
+      addWarning(`${entry.name}: no mcp.json file found (Cursor discovers MCP servers from mcp.json).`);
     }
   }
 
