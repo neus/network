@@ -18,7 +18,7 @@
       ]
     }
   ],
-  "description": "Ownership proofs require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep proof receipts linkable and explain origin without storing unnecessary raw content.",
+  "description": "Record content authorship, source, and optional source history",
   "properties": {
     "content": {
       "description": "Exact text/content being claimed (max 50KB inline). Use when you want NEUS to derive the ownership anchor from the submitted content.",

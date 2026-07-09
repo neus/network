@@ -2,7 +2,7 @@
   "$id": "https://neus.network/schemas/agent-delegation.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "additionalProperties": false,
-  "description": "Delegation from a controller account to an agent; the controller signs. Use CAIP-2 chain references per wallet, or set chain or chainId on the verification request when both parties share the same network context. Proof output may include CAIP-10 account identifiers.",
+  "description": "Grant an agent specific actions, limits, and an optional expiration date",
   "properties": {
     "agentAccountId": {
       "description": "Optional CAIP-10 account identifier for agentWallet. May be injected when inputs are normalized from wallet + chain context.",
