@@ -1,17 +1,19 @@
 ---
-title: "NEUS — Trust Receipts for Apps, Agents, and Payments"
+title: "NEUS Network"
 sidebarTitle: "Overview"
-description: "Create reusable identity, ownership, and permission receipts for apps and agents."
+description: "Trust infrastructure for identity verification, authorization, agentic IAM, non-human identity, access control, agents, and payments — with reusable receipts checked before action."
 icon: house
 "og:image": "/images/og-default.png"
 "twitter:image": "/images/og-default.png"
 ---
 
-NEUS records completed identity, ownership, risk, and permission checks as **trust receipts**. Connected systems can check a receipt’s current status before access, payment, or another sensitive action.
+NEUS records completed identity, ownership, risk, and permission checks as **trust receipts**. Connected systems can check a receipt’s current status, scope, and expiration before access, payment, or another sensitive action.
 
 Create a receipt once, then reuse it where an integration accepts the same check.
 
 Your **NEUS profile** shows the receipts and agents associated with your account. You control which supported receipts are public.
+
+NEUS is a portable trust layer. It connects the authentication systems, verification providers, wallet tools, payment processors, policy engines, and agent runtimes you already use. Those systems keep doing their jobs; NEUS carries an accepted result into the next connected gate.
 
 ## Choose an integration path
 
@@ -21,24 +23,35 @@ Two drop-in paths cover most products. Pick the one that matches what you are bu
   <Card title="Add receipt checks to an app" icon="puzzle-piece" href="./quickstart">
     Require specific receipts before content, rewards, or checkout.
   </Card>
-  <Card title="Add identity and permissions to an agent" icon="robot" href="./install">
-    Register an agent and grant limits that its connected runtime can check.
+  <Card title="Add identity and permissions to an agent or assistant" icon="robot" href="./install">
+    Register an agent or assistant and grant limits that its connected runtime can check before action.
   </Card>
 </CardGroup>
 
-## What you can build
+## Products and use cases
 
 <CardGroup cols={2}>
-  <Card title="Gate access or rewards" icon="door-open" href="./platform/hosted-gate-checkout">
-    Verified-only content, drops, and member areas — with optional USDC or card checkout.
+  <Card title="Identity verification and authorization" icon="shield-halved" href="./platform/receipts-and-results">
+    Carry accepted identity, organization, ownership, and permission results into connected access decisions.
   </Card>
-  <Card title="Portable trust profile" icon="shield-halved" href="./agents/overview">
-    Share public identity, ownership, and agent permission receipts from one profile.
+  <Card title="Access control and eligibility" icon="door-open" href="./platform/hosted-gate-checkout">
+    Require current receipts before content, memberships, rewards, API access, or checkout.
   </Card>
-  <Card title="Reduce bots and duplicate accounts" icon="user-check" href="./cookbook/sybil-resistance">
+  <Card title="AI agent and assistant permissions" icon="robot" href="./agents/overview">
+    Register an agent or assistant, connect its controller, and set limits a supported runtime checks before action.
+  </Card>
+  <Card title="Wallet risk and human checks" icon="user-check" href="./cookbook/sybil-resistance">
     Reuse accepted proof-of-human and wallet-risk receipts across connected flows.
   </Card>
+  <Card title="Payments and payouts" icon="coins" href="./platform/x402">
+    Combine receipt requirements with checkout, credits, sponsored access, or supported x402 flows.
+  </Card>
+  <Card title="Partner handoffs and review" icon="route" href="./integration">
+    Preserve the decision record another connected system needs without restarting the full check.
+  </Card>
 </CardGroup>
+
+Common markets include AI and automation, fintech and payments, marketplaces, communities, wallet products, SaaS, and partner ecosystems. See the [solutions overview](https://neus.network/solutions) for buyer-facing examples.
 
 ## Core receipt flow
 
