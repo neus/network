@@ -37,12 +37,19 @@ html {
 /*
   Mintlify decorative overlays only — never match [class*="shadow"] (breaks sidebar links
   with Tailwind text-shadow utilities) or broad gradient/backdrop selectors on <a>.
+  Mintlify moved from bg-gradient-to-* to bg-linear-to-* (Tailwind v4); match both.
 */
 main > span.absolute.inset-0.overflow-hidden.pointer-events-none:not(#background-color),
 #sidebar div[class*="bg-gradient-to-b"].pointer-events-none,
-#sidebar div[class*="bg-gradient-to-t"].pointer-events-none {
+#sidebar div[class*="bg-gradient-to-t"].pointer-events-none,
+#sidebar div[class*="bg-linear-to-b"].pointer-events-none,
+#sidebar div[class*="bg-linear-to-t"].pointer-events-none,
+#sidebar-content > div.sticky.pointer-events-none.h-8,
+#navigation-items > div.sticky.pointer-events-none.h-8 {
   display: none !important;
   pointer-events: none !important;
+  background: none !important;
+  background-image: none !important;
 }
 
 #sidebar,
