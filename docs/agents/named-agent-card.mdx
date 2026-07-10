@@ -4,7 +4,7 @@ description: Public discovery for named agents via /agent/[id], A2A, and EIP-800
 icon: card
 ---
 
-Every registered NEUS agent has a **public card** — a discoverable profile that shows its identity, delegation scope, and capabilities. Other apps, agents, and integrators can check an agent before trusting it.
+Every registered NEUS agent has a **public card** — a discoverable profile that shows its identity, permission scope, and capabilities. Other apps and agents can check an agent before trusting it.
 
 ## Three discovery paths
 
@@ -52,13 +52,13 @@ Returns an A2A-compatible agent card for multi-agent discovery systems.
 | `allowedActions` | agent-delegation proof | Owner-view only |
 | `deniedActions` | agent-delegation proof | Owner-view only |
 
-Sensitive fields (`allowedActions`, `deniedActions`, `approvalPolicy`) are owner-view only — they are not exposed in public card responses. External consumers see the agent's identity, capabilities, and controller, but not the internal permission boundaries.
+Sensitive fields (`allowedActions`, `deniedActions`, `approvalPolicy`) are owner-view only — they are not exposed in public card responses. External consumers see the agent's identity, capabilities, and controller, but not the full permission lists.
 
-## How integrators use it
+## How to use it
 
 1. **Discover** — fetch the agent card to learn what the agent is and who controls it.
-2. **Verify** — check the delegation proof to confirm the controller trusts the agent wallet.
-3. **Delegate** — if building on NEUS, create your own delegation to the agent for your app's scope.
+2. **Verify** — check the permission receipt to confirm the controller trusts the agent wallet.
+3. **Delegate** — if building on NEUS, create your own permission grant to the agent for your app's scope.
 4. **Act** — call the agent through MCP, A2A, or your runtime with confidence in its identity.
 
 ## Next
