@@ -1,43 +1,37 @@
 ---
 title: Cookbook
-description: Short guides for common integration flows.
+description: Short guides for common builder flows — gates, Hosted Verify, agents, and MCP.
 icon: book-open
 ---
 
-## Core
-
-<CardGroup cols={2}>
- <Card title="Get started" icon="book" href="../get-started">
- Account, [pricing](../platform/pricing), credits.
- </Card>
- <Card title="Hosted Verify" icon="key" href="./auth-hosted-verify">
- Browser flow at `/verify`.
- </Card>
- <Card title="Create a portal" icon="building" href="../platform/setup">
- Publish a portal in your profile and embed checkout.
- </Card>
- <Card title="Integrations" icon="server" href="./integrations">
- Backend receipts, approvals, and access keys.
- </Card>
-</CardGroup>
+Playbooks for common flows. For first-time setup, use [Get started](../get-started), [Quickstart](../quickstart), or [Install](../install).
 
 ## Flows
 
 <CardGroup cols={2}>
+ <Card title="Hosted Verify" icon="key" href="./auth-hosted-verify">
+ Hosted sign-in and checks at `/verify` — passkey, OAuth, gates.
+ </Card>
+ <Card title="Abuse and layered access" icon="shield-halved" href="./sybil-resistance">
+ Social + human (+ account) gates.
+ </Card>
+ <Card title="Verifiable agents" icon="robot" href="./verifiable-agents">
+ Register + permissions before tools run.
+ </Card>
  <Card title="Domain" icon="globe" href="./domain-verification">
- DNS / org proof.
- </Card>
- <Card title="NFT gating" icon="image" href="./nft-gating">
- Holder gates.
- </Card>
- <Card title="Sybil" icon="shield-halved" href="./sybil-resistance">
- Human checks.
- </Card>
- <Card title="Agents" icon="robot" href="./verifiable-agents">
- Register + delegate.
+ DNS / org ownership.
  </Card>
  <Card title="Verified handles" icon="at" href="./verified-handles">
  Creator / platform handle verification.
+ </Card>
+ <Card title="Integrations" icon="server" href="./integrations">
+ Backend receipts, approvals, and access keys.
+ </Card>
+ <Card title="NFT gating" icon="image" href="./nft-gating">
+ Holder gates when you need on-chain ownership.
+ </Card>
+ <Card title="Create a portal" icon="building" href="../platform/setup">
+ Publish checks once; embed with one `gateId`.
  </Card>
 </CardGroup>
 
@@ -45,9 +39,12 @@ icon: book-open
 
 <CardGroup cols={2}>
  <Card title="MCP" icon="plug" href="../mcp/overview">
- Agent tools.
+ Assistant tools and verify-or-guide.
  </Card>
- <Card title="Verifiers" icon="list-tree" href="../verification/verifiers">
- Full list.
+ <Card title="Pricing" icon="tags" href="../platform/pricing">
+ Credits, Pro, and what checks cost.
+ </Card>
+ <Card title="Checks catalog" icon="list-tree" href="../verification/verifiers">
+ Full live check catalog.
  </Card>
 </CardGroup>

@@ -1,32 +1,14 @@
 ---
 title: MCP Overview
-description: Connect assistants to verified identity, limited permissions, reusable trust receipts, and Vault.
+description: Connect assistants to identity checks, permission receipts, and optional encrypted secrets.
 icon: plug
 "og:image": "/images/og-mcp.png"
 "twitter:image": "/images/og-mcp.png"
 ---
 
-NEUS MCP lets an assistant check identity and permissions before sensitive actions. Setup writes the editor configuration for you, and normal editor sign-in does not require an API key.
+NEUS MCP lets an assistant check identity and permissions before sensitive actions. Connect once with OAuth to use the same profile and trust receipts in Cursor, Claude Code, Codex, and VS Code. Backends can check those same receipts through the API.
 
-Connect once with OAuth to use the same profile and trust receipts in Cursor, Claude Code, Codex, and VS Code. Backends can check those same receipts through the API.
-
-## Install
-
-```bash
-npm i -g @neus/sdk
-neus setup
-neus check
-```
-
-Or without installing: `npx -y -p @neus/sdk neus setup`
-
-Servers and CI:
-
-```bash
-neus setup --access-key <npk_...>
-```
-
-Full setup: [MCP setup](./setup). OAuth reference: [MCP OAuth](./oauth).
+**First run:** [Install NEUS](../install). Access keys, disconnect, and per-editor paths: [MCP setup](./setup). OAuth reference: [MCP OAuth](./oauth).
 
 ## How it works
 
@@ -35,8 +17,8 @@ Assistants call **`neus_context`** once to load the signed-in profile, available
 - **Check before action**: look for an existing receipt, then guide any missing step
 - **Show receipts**: read current trust receipt records with **`neus_proofs_get`**
 - **Agent readiness**: confirm agent identity and permissions before tools run
-- **Connect agent context**: use `neus_agent_mount` or `neus mount` to load an agent into a project
-- **Vault**: list, store, or revoke encrypted secrets when signed in
+- **Connect agent context**: attach a registered agent to your project — [Connect agent context](../agents/runtime-mount)
+- **Secrets**: list, store, or revoke encrypted secrets when signed in
 
 You should see a clear **Passed**, **Action needed**, or **Blocked** summary in chat, not raw tool output.
 
@@ -51,7 +33,7 @@ For an agent wallet:
 3. If missing, call `neus_agent_create` and complete the returned hosted or signing steps.
 4. Call `neus_agent_link` again until `linked: true`.
 
-Details: [Agent verification flow](../agents/agent-verification-flow) · [Connect Agent Context](../agents/runtime-mount)
+Details: [Agent verification flow](../agents/agent-verification-flow) · [Connect agent context](../agents/runtime-mount)
 
 ## Connect an agent to a project
 
@@ -59,15 +41,9 @@ Details: [Agent verification flow](../agents/agent-verification-flow) · [Connec
 neus mount <agentId> --apply cursor
 ```
 
-Writes `.neus/mount.json` and host rules in the **current project**. Run it again after permission changes.
+Writes project agent config your editor reads on startup. Run it again after permission changes.
 
-## Migrate legacy IDE config
-
-```bash
-neus import --dry-run
-neus import --from auto
-neus export --to manifest
-```
+Migrate older IDE configs with `neus import` / `neus export` — see [MCP setup](./setup).
 
 ## Reference
 

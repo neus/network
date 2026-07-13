@@ -10,19 +10,7 @@ Hosted endpoint: **`https://mcp.neus.network/mcp`**
 
 ## Quick start
 
-**Install once (recommended):**
-
-```bash
-npm i -g @neus/sdk
-neus setup
-neus check
-```
-
-**Or run without installing:**
-
-```bash
-npx -y -p @neus/sdk neus setup
-```
+Run [Install NEUS](../install) first (`neus setup` · `neus check`). Return here for access keys, disconnect, migrate, and per-editor config paths.
 
 `neus setup` detects your editors, configures hosted MCP, and signs you in. By default it uses browser OAuth for Cursor, VS Code, and Claude Code. If you set `NEUS_ACCESS_KEY` first, the CLI uses that key instead. Pass `--access-key <npk_...>` to override, and `--json` for scripted installs.
 

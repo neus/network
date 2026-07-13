@@ -1,44 +1,26 @@
 ---
 title: Examples
-description: Trust receipts showcase, Node, React, and HTTP reference implementations.
+description: Trust receipts demo, Node, React, and HTTP reference implementations.
 icon: code
 ---
 
-Same flow everywhere: check → verify if needed → save **receipt** → reuse. Create a gate and set billing: [Get started](./get-started).
+Working reference apps in the [neus/network](https://github.com/neus/network) repo.
 
-**Showcase:** [trust-receipts-showcase](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) · **Demo:** [neus.network/demo](https://neus.network/demo).
-
-[Quickstart](./quickstart) · [Hosted Verify](./cookbook/auth-hosted-verify). Server-only integration: [Integrations](./cookbook/integrations).
+**Reference:** [trust-receipts-demo](https://github.com/neus/network/tree/main/examples/trust-receipts-demo) · **Live demo:** [neus.network/demo](https://neus.network/demo).
 
 | Example | Use it for |
 |------------|----------|
-| [**trust-receipts-showcase** (default)](https://github.com/neus/network/tree/main/examples/trust-receipts-showcase) | Full **VerifyGate** + **ProofBadge**: each card is a trust outcome and a verifier |
-| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Server key, sign + `gateCheck` |
+| [**trust-receipts-demo** (default)](https://github.com/neus/network/tree/main/examples/trust-receipts-demo) | Full **VerifyGate** + **ProofBadge**: each card is a trust outcome and a check |
 | [verified-handle-react](https://github.com/neus/network/tree/main/examples/verified-handle-react) | Claim a handle, show a **ProofBadge**, and gate creator actions |
+| [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) | Server access key + lower-level verify / `gateCheck` |
 
-Adding trust to an assistant or agent instead? Connect MCP in one command — [Install NEUS](./install) — then run `neus examples`.
+**App path** → [Quickstart](./quickstart) · **Assistant path** → [Install](./install) · **Server path** → [Integrations](./cookbook/integrations)
 
-Raw HTTP signing examples are inline below.
+After Install, run `neus examples` to list local samples.
 
-## React: gate
+## HTTP reference (advanced)
 
-```jsx
-import { VerifyGate } from '@neus/sdk/widgets';
-
-export default function ProtectedPage() {
-  return (
-    <VerifyGate gateId="gate_your-app-name">
-      <ProtectedContent />
-    </VerifyGate>
-  );
-}
-```
-
-## Node
-
-[Integrations](./cookbook/integrations) for backend receipt creation. [nodejs-basic](https://github.com/neus/network/tree/main/examples/nodejs-basic) for lower-level SDK usage.
-
-## HTTP reference
+Server automation that signs locally. Most products never need this — use Hosted Verify or MCP instead.
 
 ```bash
 curl -X POST https://api.neus.network/api/v1/verification/standardize \
@@ -46,14 +28,3 @@ curl -X POST https://api.neus.network/api/v1/verification/standardize \
   -d '{"walletAddress":"0x...","verifierIds":["ownership-basic"],"data":{"content":"Hello NEUS","owner":"0x..."},"signedTimestamp":1713312000000}'
 # Then sign signerString and POST /api/v1/verification with the same body + signature
 ```
-
-## Doc map
-
-| Doc | Purpose |
-|-----|---------|
-| [Get started](./get-started) | Create a gate and billing |
-| [Hosted Verify](./cookbook/auth-hosted-verify) | Browser ceremony on NEUS |
-| [Verified handles](./cookbook/verified-handles) | Creator / platform handle verification |
-| [MCP](./mcp/overview) | Assistants and automation |
-| [Quickstart](./quickstart) | SDK first receipt |
-| [API](./api/overview) | HTTP reference |

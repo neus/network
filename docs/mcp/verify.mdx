@@ -4,31 +4,35 @@ description: "Create a NEUS trust receipt from inside an MCP session."
 icon: circle-check
 ---
 
-Use **`neus_verify`** to create a receipt when the signed-in wallet can complete the check in-session. For steps that need a browser (OAuth, personhood, payment, wallet connect), use **[`neus_verify_or_guide`](./verify-or-guide)** instead — it returns a hosted link.
+Use **`neus_verify`** to create a receipt when the signed-in account can complete the check in-session. For steps that need a browser (OAuth, personhood, payment, wallet connect), use **[`neus_verify_or_guide`](./verify-or-guide)** instead — it returns a hosted link.
 
 Always run **`neus_proofs_check`** first and reuse an existing receipt before creating a new one.
+
+When signed in, **omit `walletAddress`** — the tool uses your profile account from `neus_context`.
 
 ## Input
 
 | Field | Required | Notes |
 |-------|----------|-------|
-| `walletAddress` | Yes | Subject wallet (EVM `0x…`, Solana base58) |
 | `verifierIds` | Yes | One or more verifier ids |
+| `walletAddress` | No | Omit when signed in; required only when acting for another account |
 | `data` | No | Verifier inputs (see each [verifier](../verification/verifiers)) |
-| `chain` | No | CAIP-2 chain for the wallet |
+| `chain` | No | CAIP-2 chain when needed |
 | `signature` | No | Provided in the finalize step |
 | `signedTimestamp` | No | Provided in the finalize step |
 | `options.returnUrl` | No | Where to send the user if a hosted step is needed |
 | `options.publishToHub` | No | Make the receipt discoverable on your profile |
 
 ```json
-{ "walletAddress": "0x...", "verifierIds": ["ownership-basic"], "data": { "content": "Hello NEUS" } }
+{ "verifierIds": ["ownership-basic"], "data": { "content": "Hello NEUS" } }
 ```
 
 ## Signing flow
 
-`neus_verify` is two-phase. The first call returns the exact signing material once; sign it with the bound wallet and submit it back to finalize. Do not restart the preparation step blindly — finalize with the material you were given.
+`neus_verify` is two-phase when a signature is required. The first call returns the exact signing material once; complete it with the bound account and submit it back to finalize. Do not restart the preparation step blindly — finalize with the material you were given.
 
 ## Output
 
 A plain-language **Passed**, **Action needed**, or **Blocked** result. On success, the tool also returns the receipt ID in `qHash` for your server. If a browser step is required, it returns a `next_action` link.
+
+**Prefer verify-or-guide for most assistants:** [`neus_verify_or_guide`](./verify-or-guide).

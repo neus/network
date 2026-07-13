@@ -17,9 +17,9 @@ Profile context can include `profileSummary.proofsSummary`: a compact receipt su
 | Field | Use |
 |-------|-----|
 | `setup.mcpEndpoint` | The hosted MCP endpoint in use (`https://mcp.neus.network/mcp`) |
-| `sessionWallet` | Account used by signed-in tools; omit `wallet` when the tool allows it |
+| `sessionWallet` | Signed-in account address — omit `wallet` on tools when signed in |
 | `runtimeContract` | Recommended tool order and stopping conditions |
-| `autopilot` | Receipt reuse and next-step guidance |
+| `autopilot` | Reuse guidance (check receipts first, then verify-or-guide) |
 | `verifierSummary` | Compact list of available checks |
 | `trustResult` | Passed, Action needed, and Blocked response guidance |
 | `tools` | Map of available NEUS MCP tools |

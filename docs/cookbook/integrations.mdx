@@ -4,7 +4,7 @@ description: Backend receipt creation, user approvals, and access keys when Host
 icon: server
 ---
 
-Most products use [Quickstart](../quickstart): **VerifyGate** or **Hosted Verify**, then **`gateCheck`** on the server. Use this guide when your backend creates receipts directly, or when you automate NEUS as your own profile.
+Most products use [Quickstart](../quickstart): **VerifyGate** or **Hosted Verify**, then **`gateCheck`** on the server with the visitor’s **account address** from the callback. Use this guide when your backend creates receipts directly, or when you automate NEUS as your own profile.
 
 ## When you need this
 
@@ -27,7 +27,7 @@ const client = new NeusClient({
 });
 
 const receipt = await client.verifyFromApp({
-  user: { walletAddress: user.walletAddress },
+  user: { walletAddress: user.accountAddress }, // account subject from Hosted Verify / profile
   verifier: "ownership-basic",
   content: { claim: "User completed onboarding", source: "your-app" },
 });

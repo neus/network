@@ -6,7 +6,7 @@ icon: share-nodes
 
 **Verifier ID:** `ownership-social`
 
-Prove a person controls a social account, then reuse that receipt across your apps. The OAuth ceremony runs on NEUS — you never handle tokens.
+Prove a person controls a social account, then reuse that receipt across your apps. OAuth runs on NEUS — you never handle tokens.
 
 ## Use cases
 
@@ -40,6 +40,6 @@ You get a `qHash`. Store it and reuse it — don't re-run the flow on every visi
 | `internalSocialToken` | Yes (direct submit) | Short-lived token issued by the hosted OAuth step |
 | `walletAddress` | No | Subject override to bind the handle to a wallet |
 
-`internalSocialToken` is produced by the hosted flow — you don't mint it yourself. For almost all integrations, use Hosted Verify or `VerifyGate` and skip direct submission.
+`internalSocialToken` is produced by the hosted flow — your app does not create it. For almost all integrations, use Hosted Verify or `VerifyGate` and skip direct submission.
 
 Full schema: [`ownership-social.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/ownership-social.json).

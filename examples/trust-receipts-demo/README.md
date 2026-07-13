@@ -1,11 +1,11 @@
-# Trust receipts showcase
+# Trust receipts demo
 
 NEUS turns trust decisions into reusable **trust receipts** you can hold, look up, and attach to a claim. This demo uses `VerifyGate` to issue receipts in the browser. In a real app, persist the returned **receipt ID** (`qHash`) in your own record and validate it server-side.
 
 ## Run it locally
 
 ```bash
-cd examples/trust-receipts-showcase
+cd examples/trust-receipts-demo
 npm install
 npm run dev
 ```

@@ -8,20 +8,26 @@ Hosted Verify accepts the checks you want directly in the URL. Three ways, simpl
 
 ## One check
 
-Use `?verifiers=<id>` (or `?preset=<id>` — same result for a single check):
+Use `?verifiers=<id>` (or `?preset=<id>` — same result for a single check). Prefer account and hosted checks for most products:
 
 ```text
-https://neus.network/verify?verifiers=ownership-basic&returnUrl=https://myapp.com/callback
+https://neus.network/verify?verifiers=ownership-social&returnUrl=https://myapp.com/callback
 ```
 
-Any verifier id works: `ownership-basic`, `proof-of-human`, `ownership-social`, `ownership-dns-txt`, `ownership-org-oauth`, `nft-ownership`, `token-holding`, `contract-ownership`, `wallet-link`, `ownership-pseudonym`, `wallet-risk`, `agent-identity`, `agent-delegation`. See [Verifiers](../verification/verifiers).
+Other high-value single checks: `ownership-org-oauth` (work account), `proof-of-human`, `ownership-dns-txt`, `agent-identity`. Wallet-bound checks (`ownership-basic`, `nft-ownership`, `token-holding`, `wallet-risk`, …) remain available when your gate needs them. Full list: [Verifiers](../verification/verifiers).
 
 ## Several checks
 
 Combine checks with a comma — this is the recommended way to run more than one:
 
 ```text
-https://neus.network/verify?verifiers=agent-identity,agent-delegation,wallet-risk
+https://neus.network/verify?verifiers=ownership-social,proof-of-human
+```
+
+Agent delegation example:
+
+```text
+https://neus.network/verify?verifiers=agent-identity,agent-delegation
 ```
 
 ## Ready-made bundles
@@ -31,9 +37,9 @@ A few named bundles resolve for convenience and older links:
 | Bundle | Checks |
 |--------|--------|
 | `agent-pack` | `agent-identity`, `agent-delegation`, `wallet-risk` |
+| `workspace-pack` | `ownership-social`, `ownership-basic`, `agent-identity`, `wallet-link` |
 | `project-pack` | `contract-ownership`, `ownership-dns-txt` |
 | `creator-pack` | `ownership-basic`, `ai-content-moderation` |
-| `workspace-pack` | `ownership-social`, `ownership-basic`, `agent-identity`, `wallet-link` |
 
 ```text
 https://neus.network/verify?preset=agent-pack&returnUrl=https://myapp.com/callback
@@ -48,11 +54,11 @@ Add `returnUrl`, `mode=popup`, or `origin` as needed. Do not combine a preset wi
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';
 
-// One check
-getHostedCheckoutUrl({ verifiers: ['ownership-basic'], returnUrl: 'https://myapp.com/callback' });
+// Account / hosted checks (typical apps)
+getHostedCheckoutUrl({ verifiers: ['ownership-social'], returnUrl: 'https://myapp.com/callback' });
 
-// Several checks
-getHostedCheckoutUrl({ verifiers: ['agent-identity', 'agent-delegation', 'wallet-risk'] });
+// Agent clearance
+getHostedCheckoutUrl({ verifiers: ['agent-identity', 'agent-delegation'], returnUrl: 'https://myapp.com/callback' });
 
 // Named bundle
 getHostedCheckoutUrl({ preset: 'agent-pack', returnUrl: 'https://myapp.com/callback' });
@@ -66,5 +72,8 @@ getHostedCheckoutUrl({ preset: 'agent-pack', returnUrl: 'https://myapp.com/callb
  </Card>
  <Card title="Verifiers" icon="list-tree" href="../verification/verifiers">
  Every check you can run.
+ </Card>
+ <Card title="Create a portal" icon="building" href="./setup">
+ Publish checks once; embed with one gateId.
  </Card>
 </CardGroup>

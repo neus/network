@@ -1,42 +1,47 @@
 ---
-title: Sybil Resistance
-description: Layer verifiers and recency for stronger assurance than wallet-only.
+title: Abuse and layered access
+description: Layer account, social, and human checks for stronger assurance than a single signal.
 icon: shield-halved
 ---
 
-| Layer | Verifier | When |
+One weak check is easy to game. Publish a gate that **layers** hosted account signals so visitors must pass more than one requirement.
+
+| Layer | Check ID | When |
 |-------|----------|------|
-| Wallet | `ownership-basic` | Baseline uniqueness |
-| Social | `ownership-social` | Linked account |
-| Human | `proof-of-human` | Anti-bot |
+| Social / work account | `ownership-social` or `ownership-org-oauth` | Linked identity most products need first |
+| Human | `proof-of-human` | Anti-bot and fair access |
+| Account uniqueness | `ownership-basic` | Baseline uniqueness when you also need a signed account check |
 
-## gateCheck examples
+Prefer social + human for consumer apps. Add `ownership-basic` or `wallet-risk` only when your threat model needs them.
 
-```javascript
-const basic = await client.gateCheck({
-  gateId: 'gate_basic',
-  address: walletAddress,
-});
+## Publish the layered gate
 
-const layered = await client.gateCheck({
-  gateId: 'gate_layered',
-  address: walletAddress,
-});
-```
+In **Profile → Portals**, require the checks above, set pricing, and publish. Visitors never see your API key — they only need your `gateId`.
 
-## Hosted social
+## VerifyGate
 
 ```jsx
 <VerifyGate
-  gateId="gate_social"
+  gateId="gate_layered"
   onVerified={(result) => {
-    // persist qHash for replay protection
+    // persist result.qHash for replay protection
   }}
 >
   <button>Verify to continue</button>
 </VerifyGate>
 ```
 
+## Server eligibility
+
+```javascript
+const layered = await client.gateCheck({
+  gateId: 'gate_layered',
+  address: user.accountAddress, // from Hosted Verify / receipt subject
+});
+```
+
 <Warning>
-Configure recency on the gate for point-in-time checks. Store qHashes where replay matters.
+Configure recency on the gate for point-in-time checks. Store receipt IDs (`qHash`) where replay matters.
 </Warning>
+
+**Next:** [Create a portal](../platform/setup) · [Hosted Verify](./auth-hosted-verify) · [Pricing](../platform/pricing)

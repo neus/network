@@ -47,17 +47,17 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "Trust infrastructure for apps, agents, and ecosystems. Reusable trust receipts before access, payment, delegation, or action.",
-      "og:title": "NEUS Docs | Trust Infrastructure for Apps and Agents",
-      "og:description": "Add reusable trust receipts to apps, agents, and ecosystems before access, payment, delegation, or action.",
+      "description": "Reusable trust receipts before access, payment, or action. Docs for gates, Hosted Verify, SDK, widgets, and MCP.",
+      "og:title": "NEUS Docs",
+      "og:description": "Add reusable trust receipts to apps, agents, and ecosystems before access, payment, or action.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
       "og:type": "website",
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
-      "twitter:title": "NEUS Docs | Trust Infrastructure for Apps and Agents",
-      "twitter:description": "Add reusable trust receipts to apps, agents, and ecosystems before access, payment, delegation, or action.",
+      "twitter:title": "NEUS Docs",
+      "twitter:description": "Add reusable trust receipts to apps, agents, and ecosystems before access, payment, or action.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
@@ -90,14 +90,8 @@
               "get-started",
               "quickstart",
               "install",
-              "integration",
-              "examples",
-              "platform/llm-docs"
+              "examples"
             ]
-          },
-          {
-            "group": "Standards",
-            "pages": ["learn/standards/caip-380", "learn/receipts-as-knowledge"]
           }
         ]
       },
@@ -111,6 +105,7 @@
               "verification/how-it-works",
               "verification/lifecycle",
               "verification/signing-format",
+              "learn/standards/caip-380",
               "verification/verifiers",
               {
                 "group": "Capability Reference",
@@ -136,6 +131,7 @@
             "pages": [
               "platform/overview",
               "platform/trust-stack",
+              "integration",
               "platform/status",
               "platform/setup",
               "platform/receipts-and-results",
@@ -218,6 +214,7 @@
               "mcp/journeys",
               "mcp/setup",
               "mcp/ide-plugin",
+              "platform/llm-docs",
               "mcp/oauth",
               "mcp/auth",
               "mcp/endpoints"
@@ -630,11 +627,11 @@
         "href": "/install"
       },
       {
-        "title": "Quick install",
-        "description": "Run neus setup and neus check",
-        "icon": "terminal",
+        "title": "Ship a gate",
+        "description": "Publish a portal and embed VerifyGate",
+        "icon": "rocket",
         "iconType": "solid",
-        "href": "/mcp/setup"
+        "href": "/quickstart"
       },
       "view"
     ]
