@@ -2741,7 +2741,7 @@
     "/api/v1/proofs/erase-all": {
       "post": {
         "operationId": "eraseAllProofs",
-        "summary": "Erase all proofs for a wallet (GDPR right to erasure)",
+        "summary": "Erase all proofs for a wallet",
         "tags": [
           "Proofs"
         ],
