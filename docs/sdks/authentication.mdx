@@ -4,14 +4,14 @@ description: Hosted sign-in and trust checks — no wallet code in your app by d
 icon: key
 ---
 
-**Default:** no wallet or passkey code in **your** app. Users **sign in** or complete **trust checks** on **`neus.network/verify`** via `VerifyGate`, `getHostedCheckoutUrl`, or MCP OAuth. Credits apply to checks and saved receipts, not to hosted session sign-in.
+**Default:** no wallet or passkey code in **your** app. Visitors sign in or complete checks on **`neus.network/verify`** via `VerifyGate`, `getHostedCheckoutUrl`, or MCP OAuth.
 
 | Where | What | Wallet code in your app |
 |-------|------|---------------------------|
 | Browser — access gate | `VerifyGate` + `gateId` | No |
 | Browser — sign-in | `getHostedCheckoutUrl` + `intent: 'login'` | No |
 | Server | `NeusClient` + `gateCheck` with the same `gateId` | No |
-| Automation | `NeusClient` + `npk_*` access key | No |
+| Automation as your profile | `NeusClient` + profile access key (`npk_*`) | No |
 | Advanced server | `verifyFromApp` after per-user approval | No |
 | Browser (exception) | `client.verify({ wallet })` | Yes — [Signing format](../verification/signing-format) |
 
@@ -38,7 +38,7 @@ const url = getHostedCheckoutUrl({
 });
 ```
 
-**Sign-in only** (return to your app after NEUS session):
+**Sign-in only:**
 
 ```javascript
 const loginUrl = getHostedCheckoutUrl({
@@ -54,15 +54,19 @@ import { NeusClient } from '@neus/sdk';
 
 const client = new NeusClient();
 
-await client.gateCheck({
+const result = await client.gateCheck({
   gateId: 'gate_your-app-name',
-  address: user.walletAddress,
+  address: user.accountAddress,
 });
+
+if (result.data?.gate?.allRequiredSatisfied !== true) {
+  // Send the visitor back to VerifyGate or Hosted Verify
+}
 ```
 
-## Personal access keys
+## Profile access keys
 
-Pass an access key to `NeusClient` server-side — it is sent as `Authorization: Bearer <npk_...>`:
+For servers, CI, and MCP when browser sign-in is unavailable. Create keys under [Profile → Account](https://neus.network/profile?tab=account).
 
 ```javascript
 import { NeusClient } from '@neus/sdk';
@@ -71,35 +75,34 @@ import { NeusClient } from '@neus/sdk';
 const client = new NeusClient({ apiKey: process.env.NEUS_ACCESS_KEY });
 ```
 
-Create keys under [Access keys](https://neus.network/profile?tab=account). Server / MCP only.
+The SDK sends `Authorization: Bearer <npk_...>`.
 
 ## IDE and MCP sign-in
 
-For Cursor, VS Code, or Claude Code, run `neus setup`. It configures MCP and starts OAuth for `https://mcp.neus.network/mcp`. This credential is separate from the browser session cookie on `neus.network`. Use a profile access key for servers and CI when browser sign-in is unavailable.
+Run `neus setup`. Default is browser OAuth. Set `NEUS_ACCESS_KEY` first only for servers and CI.
 
-See [MCP setup](../mcp/setup) and [MCP OAuth](../mcp/oauth).
+See [MCP setup](../mcp/setup).
 
-## App link: `verifyFromApp` (advanced server)
+## Advanced: `verifyFromApp`
 
-After a one-time user approval ([agent delegation app link](../agents/agent-delegation)), your backend can create proofs without a per-request signature. Set the app link on the client and call `verifyFromApp`:
+After one-time user approval ([app link](../agents/agent-delegation)), your backend can create receipts without a per-request signature:
 
 ```javascript
 const client = new NeusClient({
-  apiUrl: 'https://api.neus.network',
   appId: 'acme-web',
-  appLinkQHash: process.env.NEUS_APP_LINK_QHASH, // from the user's approval
+  appOrigin: 'https://yourapp.com',
+  apiKey: process.env.NEUS_ACCESS_KEY, // optional — your builder profile
 });
 
 await client.verifyFromApp({
-  user: '0x...',
+  user: { walletAddress: user.accountAddress },
   verifier: 'ownership-basic',
   content: 'Hello NEUS',
-  data: { reference: { type: 'url', id: 'https://example.com' } },
 });
 ```
 
-Send `x-neus-app: acme-web` and `Origin: https://yourapp.com` so the delegation's `app:` / `origin:` permissions match.
+Full detail: [Integrations](../cookbook/integrations).
 
 ## Advanced
 
-[Integrations](../cookbook/integrations) · [API authentication](../api/authentication)
+[API authentication](../api/authentication)

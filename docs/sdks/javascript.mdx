@@ -176,7 +176,7 @@ const res = await client.gateCheck({
   since: Date.now() - 60 * 60 * 1000
 });
 
-if (!res.data?.eligible) {
+if (res.data?.gate?.allRequiredSatisfied !== true) {
   throw new Error('Access denied');
 }
 ```

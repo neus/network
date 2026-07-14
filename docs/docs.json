@@ -189,17 +189,16 @@
         "tab": "Agents",
         "groups": [
           {
-              "group": "Agent Trust",
-              "pages": [
-                "agents/overview",
-                "agents/concepts",
-                "agents/team-agents",
-                "agents/agent-identity",
-                "agents/agent-delegation",
-                "agents/runtime-mount",
+            "group": "Agent Trust",
+            "pages": [
+              "agents/overview",
+              "agents/concepts",
+              "agents/team-agents",
+              "agents/agent-identity",
+              "agents/agent-delegation",
+              "agents/runtime-mount",
               "agents/agent-verification-flow",
-              "agents/named-agent-card",
-              "agents/a2a"
+              "agents/named-agent-card"
             ]
           }
         ]
@@ -260,6 +259,10 @@
     ]
   },
   "redirects": [
+    {
+      "source": "/agents/a2a",
+      "destination": "/agents/named-agent-card"
+    },
     {
       "source": "/mcp/claude-code-marketplace",
       "destination": "/mcp/ide-plugin"

@@ -45,7 +45,7 @@ The fastest way to add trust to an app: gate content with **`<VerifyGate>`**, sh
       address: user.accountAddress, // from Hosted Verify / stored receipt subject
     });
 
-    if (!result.data?.eligible) {
+    if (!result.data?.gate?.allRequiredSatisfied) {
       // send the user back to VerifyGate or Hosted Verify
     }
     ```

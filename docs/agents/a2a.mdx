@@ -1,84 +1,15 @@
 ---
 title: A2A Agent Cards
-description: Agent-to-Agent Protocol (A2A) discovery and cross-chain agent cards for NEUS.
-icon: cards
+sidebarTitle: A2A (moved)
+description: Moved to Discover agents — public profiles, A2A, and EIP-8004 cards in one place.
+icon: address-card
 ---
 
-NEUS publishes [A2A (Agent-to-Agent Protocol)](https://a2a.dev) agent cards so automation, partner integrations, and multi-agent systems can discover capabilities, endpoints, and trust receipts without hardcoding.
+This page moved to **[Discover agents](./named-agent-card)**.
 
-## Discovery endpoints
+Use that guide for:
 
-| Endpoint | Format | Use |
-|----------|--------|-----|
-| `https://neus.network/.well-known/a2a/agent-card.json` | A2A v1.0.0 | Platform-wide discovery URL |
-| `https://neus.network/api/agent/config?format=a2a` | A2A v1.0.0 | Same platform card (explicit API route) |
-| `https://neus.network/.well-known/agent-card.json` | EIP-8004 | Ethereum-ecosystem platform registration (static) |
-| `https://api.neus.network/.well-known/agent-card.json?agentId={agentId}` | EIP-8004 | Per-agent registration (redirects to agent card API) |
-| `https://neus.network/api/agent/{agentId}?format=a2a` | A2A v1.0.0 | Per-agent dynamic card |
-| `https://neus.network/api/agent/{agentId}?format=json` | NEUS universal | Full identity + delegation + proofs |
-
-Per-agent EIP-8004 cards resolve to `GET https://api.neus.network/api/v1/agents/card/{agentId}`.
-
-## Platform A2A card
-
-```bash
-curl "https://neus.network/.well-known/a2a/agent-card.json"
-```
-
-The live response includes:
-- **Skills** — platform-registered skill IDs (for example `verification`, `mcp-tools`) with A2A descriptions
-- **Interfaces** — MCP (`2025-11-25`), REST (`v1`), x402 payments
-- **Security** — OAuth-first MCP setup, NEUS access keys for servers/CI, and receipt references (`qHash`) for trust-gated endpoints
-- **Networks** — Base Sepolia (`eip155:84532`), Base Mainnet (`eip155:8453`), Solana Mainnet, Solana Devnet
-
-Fetch the card and read the returned **`skills`** array.
-
-## Per-agent card
-
-```bash
-curl "https://neus.network/api/agent/my-agent?format=a2a"
-```
-
-NEUS resolves the agent's latest identity and delegation proofs, then returns an A2A card scoped to that agent's registered skills and capabilities.
-
-## Cross-chain identifiers
-
-NEUS A2A extensions include chain IDs in [CAIP-2](https://github.com/ChainAgnostic/CAIPs/blob/main/CAIPs/caip-2.md) format:
-
-| Network | CAIP-2 |
-|---------|--------|
-| Base Sepolia | `eip155:84532` |
-| Base Mainnet | `eip155:8453` |
-| Solana Mainnet | `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp` |
-| Solana Devnet | `solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1` |
-
-## Format matrix
-
-| Format | Endpoint | When to use |
-|--------|----------|-------------|
-| A2A (platform) | `/.well-known/a2a/agent-card.json` | Google A2A / multi-agent discovery |
-| A2A (platform, API) | `/api/agent/config?format=a2a` | Same card via explicit route |
-| A2A (per agent) | `/api/agent/{id}?format=a2a` | Agent-scoped A2A card |
-| EIP-8004 (platform) | `/.well-known/agent-card.json` | Ethereum registry / ERC-8004 wallets |
-| EIP-8004 (per agent) | `https://api.neus.network/.well-known/agent-card.json?agentId={id}` | Per-agent ERC-8004 bridge |
-| NEUS universal | `/api/agent/{id}?format=json` | Full proof records, identity, delegation |
-
-## CORS and caching
-
-All discovery endpoints return:
-- `Access-Control-Allow-Origin: *` — safe for browser-based agent UIs
-- `Cache-Control: public, max-age=3600, stale-while-revalidate=7200` (platform); `max-age=300` (per-agent)
-
-## Next steps
-
-<CardGroup cols={2}>
- <Card title="Agent identity" icon="badge-check" href="./agent-identity">
- Register an agent so it appears in per-agent discovery.
- </Card>
- <Card title="MCP" icon="plug" href="../mcp/overview">
- Use NEUS MCP tools to check proofs and resolve agents at runtime.
- </Card>
- <Card title="Cookbook" icon="book-open" href="../cookbook/verifiable-agents">
- End-to-end agent setup with identity + delegation.
- </Card>
-</CardGroup>
+- Agent pages and universal JSON
+- Platform and per-agent A2A cards
+- EIP-8004 discovery endpoints
+- CAIP-2 networks and caching notes

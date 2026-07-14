@@ -1,79 +1,94 @@
 ---
-title: Agent cards
-description: Public discovery for named agents via /agent/[id], A2A, and EIP-8004.
-icon: card
+title: Discover agents
+sidebarTitle: Discover agents
+description: Public agent pages, JSON profiles, and A2A / EIP-8004 discovery cards.
+icon: address-card
 ---
 
-Every registered NEUS agent has a **public card** — a discoverable profile that shows its identity, permission scope, and capabilities. Other apps and agents can check an agent before trusting it.
+Every registered NEUS agent has a **public card** — identity, controller, and capabilities other apps can check before they trust it.
 
-## Three discovery paths
+## Discovery paths
 
 | Path | URL | Returns |
 |------|-----|---------|
-| NEUS agent page | `https://neus.network/agent/{agentId}` | Human-readable agent profile |
-| NEUS universal API | `https://neus.network/api/agent/{agentId}?format=json` | Identity + delegation + proofs |
-| A2A / EIP-8004 | `https://neus.network/api/agent/{agentId}?format=a2a` | Agent card per A2A spec |
+| Agent page | `https://neus.network/agent/{agentId}` | Human-readable profile |
+| Universal JSON | `https://neus.network/api/agent/{agentId}?format=json` | Identity + permissions + proofs |
+| A2A (per agent) | `https://neus.network/api/agent/{agentId}?format=a2a` | Agent-to-Agent card |
+| A2A (platform) | `https://neus.network/.well-known/a2a/agent-card.json` | Platform-wide A2A card |
+| EIP-8004 (platform) | `https://neus.network/.well-known/agent-card.json` | Ethereum registry card |
+| EIP-8004 (per agent) | `https://api.neus.network/.well-known/agent-card.json?agentId={agentId}` | Per-agent ERC-8004 bridge |
 
-## Example
+Per-agent EIP-8004 cards resolve to `GET https://api.neus.network/api/v1/agents/card/{agentId}`. The platform A2A card is also available at `/api/agent/config?format=a2a`.
 
-If you registered an agent with `agentId: "my-support-agent"`, you can discover it three ways:
+## Examples
 
-**Agent page:**
-```
-https://neus.network/agent/my-support-agent
-```
-
-**Universal JSON:**
 ```bash
+# Human profile
+# https://neus.network/agent/my-support-agent
+
+# Full NEUS JSON
 curl https://neus.network/api/agent/my-support-agent?format=json
-```
 
-Returns identity proof (agentId, agentWallet, capabilities, skills, instructions) and delegation proof (controller, scope, allowedActions, deniedActions).
-
-**A2A card:**
-```bash
+# A2A card for this agent
 curl https://neus.network/api/agent/my-support-agent?format=a2a
-```
 
-Returns an A2A-compatible agent card for multi-agent discovery systems.
+# Platform A2A card
+curl https://neus.network/.well-known/a2a/agent-card.json
+```
 
 ## What a card shows
 
 | Field | Source | Visible |
 |-------|--------|---------|
-| `agentId` | agent-identity proof | Public |
-| `agentWallet` | agent-identity proof | Public |
-| `agentLabel` | agent-identity proof | Public |
-| `description` | agent-identity proof | Public |
-| `capabilities` | agent-identity proof | Public |
-| `skills` | agent-identity proof | Public |
-| `controllerWallet` | agent-delegation proof | Public |
-| `scope` | agent-delegation proof | Public |
-| `allowedActions` | agent-delegation proof | Owner-view only |
-| `deniedActions` | agent-delegation proof | Owner-view only |
+| `agentId` | Identity receipt | Public |
+| `agentWallet` | Identity receipt | Public |
+| `agentLabel` | Identity receipt | Public |
+| `description` | Identity receipt | Public |
+| `capabilities` | Identity receipt | Public |
+| `skills` | Identity receipt | Public |
+| `controllerWallet` | Permission receipt | Public |
+| `scope` | Permission receipt | Public |
+| `allowedActions` | Permission receipt | Owner-view only |
+| `deniedActions` | Permission receipt | Owner-view only |
 
-Sensitive fields (`allowedActions`, `deniedActions`, `approvalPolicy`) are owner-view only — they are not exposed in public card responses. External consumers see the agent's identity, capabilities, and controller, but not the full permission lists.
+Public cards do not expose full allow/deny lists. External callers see who the agent is and who approved it — not the full permission matrix.
+
+## Platform A2A card
+
+The platform card includes registered skills, MCP / REST / payment interfaces, auth options (OAuth and profile access keys for servers), and supported networks (Base and Solana CAIP-2 ids).
+
+## Cross-chain identifiers
+
+| Network | CAIP-2 |
+|---------|--------|
+| Base Sepolia | `eip155:84532` |
+| Base Mainnet | `eip155:8453` |
+| Solana Mainnet | `solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp` |
+| Solana Devnet | `solana:EtWTRABZaYq6iMfeYKouRu166VU2xqa1` |
+
+## CORS and caching
+
+Discovery endpoints return `Access-Control-Allow-Origin: *`. Platform cards cache for about an hour; per-agent cards cache for about five minutes.
 
 ## How to use it
 
-1. **Discover** — fetch the agent card to learn what the agent is and who controls it.
-2. **Verify** — check the permission receipt to confirm the controller trusts the agent wallet.
-3. **Delegate** — if building on NEUS, create your own permission grant to the agent for your app's scope.
-4. **Act** — call the agent through MCP, A2A, or your runtime with confidence in its identity.
+1. **Discover** — fetch the card for the agent you need.
+2. **Confirm** — check the permission receipt before a sensitive action.
+3. **Connect** — call the agent through MCP, A2A, or your own runtime.
 
 ## Next
 
 <CardGroup cols={2}>
-  <Card title="Team agents" icon="users" href="./team-agents">
-    One controller, many scoped agents.
+  <Card title="Agent identity" icon="id-card" href="./agent-identity">
+    Register an agent so it appears in discovery.
   </Card>
-  <Card title="A2A" icon="cards" href="./a2a">
-    Full A2A and EIP-8004 spec.
+  <Card title="Team agents" icon="user-group" href="./team-agents">
+    One approving account, many agents.
   </Card>
-  <Card title="Agent identity" icon="badge-check" href="./agent-identity">
-    Register an agent.
+  <Card title="Connect agent context" icon="layer-group" href="./runtime-mount">
+    Mount a verified agent into a project.
   </Card>
-  <Card title="Overview" icon="robot" href="./overview">
-    Start here.
+  <Card title="MCP" icon="plug" href="../mcp/overview">
+    Check receipts and resolve agents at runtime.
   </Card>
 </CardGroup>

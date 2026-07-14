@@ -393,6 +393,10 @@ export class NeusClient {
     try {
       if (typeof window !== 'undefined' && window.location && window.location.origin) {
         this.defaultHeaders['X-Client-Origin'] = window.location.origin;
+      } else if (typeof this.config.appOrigin === 'string' && this.config.appOrigin.trim()) {
+        const origin = this.config.appOrigin.trim();
+        this.defaultHeaders['Origin'] = origin;
+        this.defaultHeaders['X-Client-Origin'] = origin;
       }
     } catch {
       void 0;

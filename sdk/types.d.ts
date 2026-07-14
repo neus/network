@@ -71,9 +71,12 @@
     billingWallet?: string;
     sponsorOrgWallet?: string;
     orgWallet?: string;
-    /** Site origin used when issuing billing authorization (defaults to browser origin). */
+    /** Site origin for sponsor grants and server verifyFromApp (sets Origin on Node). */
     appOrigin?: string;
-    /** Advanced server path only; not required for published gate checkout. */
+    /**
+     * Optional. Not required for published gate checkout.
+     * Server auth for unsigned verify uses appId + Origin (appOrigin), not this field.
+     */
     appLinkQHash?: string;
     paymentSignature?: string;
     extraHeaders?: Record<string, string>;

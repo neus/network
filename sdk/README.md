@@ -156,7 +156,7 @@ const result = await client.gateCheck({
   address: '0x...'
 });
 
-if (!result.data?.eligible) {
+if (result.data?.gate?.allRequiredSatisfied !== true) {
   throw new Error('Access denied');
 }
 ```
@@ -169,7 +169,7 @@ Never ship access keys in browser code.
 | ------ | ---------- |
 | `getHostedCheckoutUrl()` | Send a user to Hosted Verify |
 | `client.verify()` | Create a trust receipt (in-app signing) |
-| `client.verifyFromApp()` | Create a receipt when your backend signs |
+| `client.verifyFromApp()` | Create a receipt for an approved user (server; needs appId + origin) |
 | `client.getProof()` | Fetch a public receipt by `qHash` |
 | `client.getPrivateProof()` | Fetch a private receipt (wallet-bound) |
 | `client.pollProofStatus()` | Wait for async verification completion |

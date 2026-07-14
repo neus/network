@@ -1,5 +1,6 @@
 ---
-title: Agent Permissions
+title: Agent permissions
+sidebarTitle: Permissions
 description: Grant an agent specific actions, limits, and an expiration date.
 icon: handshake
 ---
@@ -78,7 +79,7 @@ await client.verify({
 - `origin:<url>` — restrict to your domain
 - `origin:*` — any origin
 
-Send `x-neus-app: your-app-id` and `Origin: https://yourapp.com` on verification requests.
+Send `x-neus-app: your-app-id` and matching site origin on verification requests. On Node, set `appOrigin: 'https://yourapp.com'` on `NeusClient` (or pass `Origin` via `extraHeaders`).
 
 ## Payment limits
 

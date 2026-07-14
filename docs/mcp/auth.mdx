@@ -6,7 +6,7 @@ icon: lock
 
 Sign in once, then let your IDE handle the rest. NEUS MCP uses **OAuth 2.0 with PKCE** by default, so Cursor, Claude Code, VS Code, and Codex can authenticate through a browser flow and refresh your session silently for up to 30 days.
 
-For servers, CI, and other environments that cannot open a browser, use a durable personal access key instead.
+For servers, CI, and other environments that cannot open a browser, use a durable profile access key instead.
 
 ## OAuth sign-in
 
@@ -34,7 +34,7 @@ For full OAuth mechanics, see [MCP OAuth](./oauth).
 
 ## Access key (fallback)
 
-Use a **personal access key** from [Access Keys](https://neus.network/profile?tab=account) when browser OAuth is not available — servers, CI, and automation.
+Use a **profile access key** from [Access Keys](https://neus.network/profile?tab=account) when browser OAuth is not available — servers, CI, and automation.
 
 ```bash
 neus setup --access-key <npk_...>

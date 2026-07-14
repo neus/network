@@ -38,6 +38,15 @@ describe('NeusClient', () => {
       const httpClient = new NeusClient({ apiUrl: 'http://api.neus.network' });
       expect(httpClient.baseUrl).toBe('https://api.neus.network');
     });
+
+    it('sets Origin from appOrigin on Node (no window)', () => {
+      const originClient = new NeusClient({
+        enableLogging: false,
+        appOrigin: 'https://app.example',
+      });
+      expect(originClient.defaultHeaders.Origin).toBe('https://app.example');
+      expect(originClient.defaultHeaders['X-Client-Origin']).toBe('https://app.example');
+    });
   });
 
   describe('verify()', () => {
