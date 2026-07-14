@@ -87,6 +87,8 @@ Per-editor install paths (Cursor, VS Code, Claude Code, and more): **[Install NE
 
 `neus setup` connects **Cursor**, **Codex**, **VS Code**, and **Claude Code** in one command. Other MCP hosts (including Cline) use the same hosted URL — see [IDE plugin](./ide-plugin).
 
+**Cursor:** if you already installed the **neus-trust** plugin, skip Cursor in setup (`neus setup --client vscode,claude,codex`) and leave `~/.cursor/mcp.json` empty so you do not get a duplicate NEUS MCP. Public tools = **13** (correct).
+
 | Host | User scope | Project scope |
 | --- | --- | --- |
 | **Cursor** | `~/.cursor/mcp.json` | `./.cursor/mcp.json` |

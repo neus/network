@@ -34,11 +34,13 @@ neus setup --client claude
   <Tab title="Cursor">
     <Icon icon="/images/brandLogos/cursor.svg" size={18} /> **Cursor**
 
+**One NEUS MCP only.** Prefer the **neus-trust** plugin (OAuth). If the plugin is installed, keep `~/.cursor/mcp.json` without a `neus` entry (`{"mcpServers":{}}`). Do not run `neus setup --client cursor` on top of the plugin — that registers the same host twice.
+
+Without the plugin, use setup **or** URL-only config (not both):
+
 ```bash
 neus setup --client cursor
 ```
-
-Or add to `~/.cursor/mcp.json`:
 
 ```json
 {
@@ -49,6 +51,8 @@ Or add to `~/.cursor/mcp.json`:
   }
 }
 ```
+
+Expected public tool list: **13**. Profile loads via `neus_context` when signed in.
 
 **NEUS plugin** (trust receipts, agent permissions, session workflow):
 

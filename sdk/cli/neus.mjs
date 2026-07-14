@@ -260,11 +260,19 @@ function describeClientResult(command, result) {
 function printBuilderGuidance(command, results) {
   if (!['setup', 'auth', 'check'].includes(command)) return;
   const hasCodex = results.some(result => result.client === 'codex');
+  const cursorConfigured = results.some(
+    result => result.client === 'cursor' && result.configured && !result.error
+  );
   writeCliLine('');
   writeCliLine(paint('Next steps', 'cyan'));
   writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for assistant prompts.');
   if (hasCodex) {
     writeGuidanceLine('Codex OAuth: `neus auth --client codex` or `codex mcp login neus`.');
+  }
+  if (cursorConfigured) {
+    writeGuidanceLine(
+      'Cursor: one NEUS MCP only. If the neus-trust plugin is installed, remove `neus` from ~/.cursor/mcp.json (leave mcpServers empty) to avoid a duplicate.'
+    );
   }
   writeGuidanceLine('Ask your assistant: "Use NEUS Verify before taking sensitive actions."');
 }
