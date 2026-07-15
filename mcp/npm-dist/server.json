@@ -11,11 +11,11 @@
   "websiteUrl": "https://docs.neus.network/install",
   "icons": [
     {
-      "src": "https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-24-hq-vector-glass-v12",
+      "src": "https://neus.network/images/neus-brand-pack/neus-mark-512.png?v=2026-07-14-mcp",
       "sizes": [
-        "128x128"
+        "512x512"
       ],
-      "mimeType": "image/svg+xml"
+      "mimeType": "image/png"
     }
   ],
   "remotes": [

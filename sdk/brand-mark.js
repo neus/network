@@ -1,24 +1,21 @@
 /**
  * NEUS mark + OG URLs hosted on neus.network.
- * Keep NEUS_BRAND_PACK_VERSION aligned with neus/lib/brand/tokens.ts BRAND_PACK_VERSION.
+ * Stable paths — replace assets in place on neus.network (no query-string versions).
  */
-export const NEUS_BRAND_PACK_VERSION = '2026-06-24-hq-vector-glass-v12';
-
 export const NEUS_MARK_CDN_ORIGIN = 'https://neus.network';
 
 const PACK_BASE = `${NEUS_MARK_CDN_ORIGIN}/images/neus-brand-pack`;
-const v = encodeURIComponent(NEUS_BRAND_PACK_VERSION);
 
 /**
  * @param {string} file e.g. `favicon.svg`
  */
-export function withBrandPackVersion(file) {
+export function brandPackUrl(file) {
   const name = file.replace(/^\//, '');
-  return `${PACK_BASE}/${name}?v=${v}`;
+  return `${PACK_BASE}/${name}`;
 }
 
 /** Transparent particle-ring favicon (tabs, badges, VerifyGate). */
-export const NEUS_DEFAULT_MARK_URL = withBrandPackVersion('favicon.svg');
+export const NEUS_DEFAULT_MARK_URL = brandPackUrl('favicon.svg');
 
 /** Default 1200x630 Open Graph card. */
-export const NEUS_DEFAULT_OG_IMAGE_URL = withBrandPackVersion('og-default-1200x630-neus.png');
+export const NEUS_DEFAULT_OG_IMAGE_URL = brandPackUrl('og-default-1200x630-neus.png');

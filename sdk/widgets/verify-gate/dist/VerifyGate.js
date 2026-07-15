@@ -55,16 +55,14 @@ function buildHostedCheckoutRedirectUrl(popupCheckoutUrl) {
 }
 
 // brand-mark.js
-var NEUS_BRAND_PACK_VERSION = "2026-06-24-hq-vector-glass-v12";
 var NEUS_MARK_CDN_ORIGIN = "https://neus.network";
 var PACK_BASE = `${NEUS_MARK_CDN_ORIGIN}/images/neus-brand-pack`;
-var v = encodeURIComponent(NEUS_BRAND_PACK_VERSION);
-function withBrandPackVersion(file) {
+function brandPackUrl(file) {
   const name = file.replace(/^\//, "");
-  return `${PACK_BASE}/${name}?v=${v}`;
+  return `${PACK_BASE}/${name}`;
 }
-var NEUS_DEFAULT_MARK_URL = withBrandPackVersion("favicon.svg");
-var NEUS_DEFAULT_OG_IMAGE_URL = withBrandPackVersion("og-default-1200x630-neus.png");
+var NEUS_DEFAULT_MARK_URL = brandPackUrl("favicon.svg");
+var NEUS_DEFAULT_OG_IMAGE_URL = brandPackUrl("og-default-1200x630-neus.png");
 
 // widgets/verify-gate/VerifyGate.jsx
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
