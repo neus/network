@@ -11,7 +11,7 @@
   "websiteUrl": "https://docs.neus.network/install",
   "icons": [
     {
-      "src": "https://neus.network/images/neus-brand-pack/neus-mark-512.png?v=2026-07-14-mcp",
+      "src": "https://neus.network/images/neus-brand-pack/neus-mark-512.png",
       "sizes": [
         "512x512"
       ],
