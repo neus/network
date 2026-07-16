@@ -10,8 +10,8 @@ on:
         type: string
 
 permissions:
-  contents: read
-  id-token: write   # required for npm Trusted Publishing (OIDC)
+  contents: write
+  id-token: write   # npm Trusted Publishing (OIDC)
 
 concurrency:
   group: release-${{ github.ref }}
@@ -106,3 +106,31 @@ jobs:
             npm publish --access public --provenance --registry https://registry.npmjs.org
           fi
         working-directory: mcp/npm-dist
+
+      # Create/update the GitHub Release for this version. Latest follows npm latest.
+      - name: Create or update GitHub Release
+        if: github.ref_type == 'tag' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          VERSION="${RELEASE_VERSION#v}"
+          TAG="v${VERSION}"
+          NOTES_FILE="$(mktemp)"
+          node scripts/extract-changelog-notes.mjs "${VERSION}" > "${NOTES_FILE}"
+          NPM_LATEST="$(npm view @neus/sdk version --registry https://registry.npmjs.org)"
+          LATEST_ARGS=()
+          if [ "${VERSION}" = "${NPM_LATEST}" ]; then
+            LATEST_ARGS=(--latest)
+          else
+            LATEST_ARGS=(--latest=false)
+          fi
+          if gh release view "${TAG}" >/dev/null 2>&1; then
+            gh release edit "${TAG}" --notes-file "${NOTES_FILE}" "${LATEST_ARGS[@]}"
+          else
+            gh release create "${TAG}" \
+              --title "${TAG}" \
+              --notes-file "${NOTES_FILE}" \
+              "${LATEST_ARGS[@]}"
+          fi
+          echo "GitHub Release ${TAG} ready"
