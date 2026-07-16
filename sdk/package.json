@@ -1,6 +1,6 @@
 {
   "name": "@neus/sdk",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "description": "JavaScript SDK for NEUS trust receipts, access checks, and hosted verification.",
   "bin": {
     "neus": "cli/neus.mjs"

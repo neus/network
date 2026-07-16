@@ -61,3 +61,14 @@ Claude Code:
 ```
 
 Cursor / Codex: add the marketplace from [Install NEUS](https://docs.neus.network/install), then install **neus-trust**.
+
+### Cursor: plugin or CLI, not both
+
+The **neus-trust** plugin already provides the `neus` MCP server in Cursor. If you install the plugin, **do not** also run `neus setup --client cursor` — that writes a second `neus` entry into `~/.cursor/mcp.json` and creates a duplicate NEUS MCP connection.
+
+| Path | When to use |
+|------|-------------|
+| **neus-trust plugin** | You want the plugin's skill + MCP in one install. Leave `~/.cursor/mcp.json` empty. |
+| **`neus setup --client cursor`** | You want MCP only, no plugin. Skip plugin install. |
+
+If both are present, `neus doctor` warns and `neus setup` soft-skips Cursor unless you pass `--client cursor` explicitly.

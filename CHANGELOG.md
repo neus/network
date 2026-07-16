@@ -4,6 +4,28 @@ Release notes for **`@neus/sdk`**, **`@neus/mcp-server`**, docs, and examples.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.3] - 2026-07-16
+
+### Added
+
+- **ZKPassport `0.16`** — `@neus/sdk` optional dependency `@zkpassport/sdk` is now `^0.16.0`, aligning the SDK with the latest hosted verifier runtime.
+- **GitHub Release automation** — tag pushes and `workflow_dispatch` from `main` now create or update the matching GitHub Release with extracted changelog notes; Latest follows npm latest.
+- **CLI dual-install detection** — `neus setup` now warns when both the Cursor **neus-trust** plugin and a `neus` entry in `~/.cursor/mcp.json` are present, and soft-skips writing the Cursor MCP config unless `--client cursor` is explicit. Prevents the duplicate-NEUS-MCP class of break.
+- **CLI identity in `neus doctor --live` / `neus check`** — live diagnostics now report handle, short wallet, trust receipt count, available tool count, and mounted agent label/id with status. No new `neus me` command.
+
+### Changed
+
+- **Plugin and install docs** — `setup.md` and `docs/install` now state the rule explicitly: install the **neus-trust** plugin **or** run `neus setup --client cursor`, not both. Cursor duplicate-MCP guidance consolidated in one place.
+- **`@neus/sdk` and `@neus/mcp-server`** — `1.3.3`.
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.3.3
+# or zero-install
+npx -y -p @neus/sdk@1.3.3 neus doctor --live
+```
+
 ## [1.3.2] - 2026-07-09
 
 ### Fixed

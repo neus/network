@@ -64,3 +64,5 @@ Claude Code plugin (optional):
 /plugin marketplace add https://github.com/neus/network
 /plugin install neus-trust@neus
 ```
+
+**Cursor:** install the **neus-trust** plugin **or** run `neus setup --client cursor` — not both. The plugin already provides the `neus` MCP server; adding a second entry in `~/.cursor/mcp.json` creates a duplicate. If both are present, `neus doctor` warns and `neus setup` soft-skips Cursor unless you pass `--client cursor` explicitly.
