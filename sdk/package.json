@@ -132,7 +132,7 @@
     }
   },
   "optionalDependencies": {
-    "@zkpassport/sdk": "^0.14.0"
+    "@zkpassport/sdk": "^0.16.0"
   },
   "overrides": {
     "ws": "8.21.0",
