@@ -8,7 +8,7 @@
     ".": "./index.mjs"
   },
   "license": "Apache-2.0",
-  "author": "NEUS Network <info@neus.network>",
+  "author": "NEUS Network <dev@neus.network>",
   "homepage": "https://docs.neus.network/mcp/overview",
   "bugs": {
     "url": "https://github.com/neus/network/issues"
