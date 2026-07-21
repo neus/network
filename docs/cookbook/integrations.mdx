@@ -1,33 +1,37 @@
 ---
 title: Integrations
-description: Backend receipt creation, user approvals, and access keys when Hosted Verify is not enough.
+description: Backend receipt creation and profile access keys when Hosted Verify is not enough.
 icon: server
 ---
 
-Most products use [Quickstart](../quickstart): **VerifyGate** or **Hosted Verify**, then **`gateCheck`** on the server. Use this guide when your backend creates receipts directly, or when you automate NEUS as your own profile.
+Most products use [Quickstart](../quickstart): **VerifyGate** or **Hosted Verify**, then **`gateCheck`** on the server with the visitor’s **account address**. Use this page only when your backend creates receipts directly, or when you automate NEUS as your own profile.
 
 ## When you need this
 
 | Need | Use |
 |------|-----|
-| User verifies in the browser; you only check later | [Quickstart](../quickstart) — no access key |
-| Backend creates receipts without opening NEUS in the browser | `verifyFromApp` + per-user approval |
-| MCP, CI, or raw HTTP as **your** NEUS profile | Profile **access key** (`npk_*`) |
+| Visitor verifies in the browser; you only check later | [Quickstart](../quickstart) — no access key |
+| Your server creates receipts for an approved user | `verifyFromApp` after one-time approval |
+| MCP, CI, or raw HTTP as **your** NEUS profile | Profile access key (`npk_*`) |
 
 ## Backend receipt creation (`verifyFromApp`)
 
-After a user approves your product once, your server can create receipts on their behalf with **`verifyFromApp`**. This is **not** the same as creating a **portal** under profile → **Portals**, which bills hosted checks to your account.
+After a user approves your product once (app-link permission), your server can create receipts for them without a per-request signature.
 
 ```javascript
 import { NeusClient } from "@neus/sdk";
 
+// Server only — never put this config in a browser bundle
 const client = new NeusClient({
   appId: process.env.NEUS_APP_ID,
+  // Must match the origin the user approved (or use origin:* on the approval)
+  appOrigin: process.env.NEUS_APP_ORIGIN, // e.g. https://yourapp.com
+  // Optional: bills/automates as your builder profile
   apiKey: process.env.NEUS_ACCESS_KEY,
 });
 
 const receipt = await client.verifyFromApp({
-  user: { walletAddress: user.walletAddress },
+  user: { walletAddress: user.accountAddress },
   verifier: "ownership-basic",
   content: { claim: "User completed onboarding", source: "your-app" },
 });
@@ -35,22 +39,26 @@ const receipt = await client.verifyFromApp({
 
 Requirements:
 
-- Active user approval for your `appId` and site origin
-- Matching app context on the request (`X-Neus-App` and origin)
+- Active user approval for your `appId` and site origin ([Agent permissions — App link](../agents/agent-delegation))
+- `X-Neus-App` (from `appId`) and matching `Origin` on the request (`appOrigin` sets both for Node)
 
 If approval is missing, send the user through [Hosted Verify](./auth-hosted-verify) first.
 
+This is **not** the same as creating a **portal** under Profile → **Portals**, which bills hosted checks to your account.
+
 ## Profile access keys
 
-Create keys under [Profile → Account](https://neus.network/profile?tab=account). Use **`Authorization: Bearer npk_...`** on server and MCP calls only. Never ship keys in browser bundles.
+Create keys under [Profile → Account](https://neus.network/profile?tab=account).
+
+Pass the key to `NeusClient` as `apiKey` on the **server**. The SDK sends `Authorization: Bearer npk_...`. Never ship keys in browser bundles.
 
 Access keys identify **your builder profile** for automation. They do not replace per-user approval for backend receipt creation.
 
 ## Billing
 
-Published gates are the default billing source. Hosted checkout and server eligibility checks should pass **`gateId`**; NEUS resolves the gate owner, usage billing, sponsor precedence, and x402 fallback from that gate.
+Published gates are the default billing source. Pass **`gateId`** on hosted checkout and `gateCheck`; NEUS resolves owner, usage, and payment from that gate.
 
-`appId` is public attribution for advanced server/app flows. It does not bill your account, and published gate checkout does not require `appId` or `billingWallet`.
+`appId` is public attribution for advanced server flows. It does not bill your account by itself.
 
 See [Billing](../platform/billing).
 

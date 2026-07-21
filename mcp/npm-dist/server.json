@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.neus/neus-mcp",
   "title": "NEUS MCP",
-  "description": "NEUS MCP: identity, authority, trust receipts, and Vault secrets before sensitive AI actions.",
-  "version": "1.2.5",
+  "description": "Portable identity, authority, trust receipts, and Vault secrets before sensitive AI actions.",
+  "version": "1.3.3",
   "repository": {
     "url": "https://github.com/neus/network",
     "source": "github"
@@ -11,11 +11,11 @@
   "websiteUrl": "https://docs.neus.network/install",
   "icons": [
     {
-      "src": "https://neus.network/images/neus-brand-pack/favicon.svg?v=2026-06-24-hq-vector-glass-v12",
+      "src": "https://neus.network/images/neus-brand-pack/neus-mark-512.png",
       "sizes": [
-        "128x128"
+        "512x512"
       ],
-      "mimeType": "image/svg+xml"
+      "mimeType": "image/png"
     }
   ],
   "remotes": [
@@ -40,61 +40,61 @@
   "tools": [
     {
       "name": "neus_context",
-      "description": "Load the NEUS session context: trust workflow, verifier summary, signed-in Profile, and how to phrase Trust Results. Call this first each session before other NEUS tools."
+      "description": "Start here. Load the signed-in profile, available trust checks, and recommended workflow for this session."
     },
     {
       "name": "neus_verifiers_catalog",
-      "description": "List the verifiers NEUS supports, with their IDs, chains, and required input fields. Call this after neus_context when a verifier needs data you do not have yet."
+      "description": "List available trust checks, supported networks, and required inputs. Use this when a check needs details that are not already in the session context."
     },
     {
       "name": "neus_proofs_check",
-      "description": "Check whether existing proof receipts already satisfy one or more verifiers for a wallet or DID. This only checks eligibility — it never creates proofs. Omit the wallet when the session is signed in."
+      "description": "Check whether existing trust receipts meet the requested requirements. This is read-only and never creates a receipt. Omit the wallet when signed in."
     },
     {
       "name": "neus_verify",
-      "description": "Create or refresh a reusable Proof Receipt for a wallet or DID against one or more verifiers. Omit the wallet when the session is signed in — your session authorizes the request. Reuse existing receipts first; only run a new verification when neus_proofs_check shows one is missing."
+      "description": "Create or refresh a trust receipt after checking that one is needed. Omit the wallet when signed in; the session authorizes the request."
     },
     {
       "name": "neus_verify_or_guide",
-      "description": "Trust autopilot: reuse existing receipts when they already satisfy a verifier, or return the single next step needed to complete verification (signed-in session, hosted link, or missing input). Omit the wallet when signed in."
+      "description": "Reuse a qualifying trust receipt or return the one next step needed to complete the check. Omit the wallet when signed in."
     },
     {
       "name": "neus_proofs_get",
-      "description": "Read proof receipt records for a wallet or DID: titles, tags, status, and content. Use this for live proof inventory — never assume proof state from memory. Omit the wallet when the session is signed in."
+      "description": "Read current trust receipt details for a wallet or DID, including titles, tags, status, and content. Omit the wallet when signed in."
     },
     {
       "name": "neus_me",
-      "description": "Refresh signed-in Profile context, or look up a public Profile by wallet/DID."
+      "description": "Refresh the signed-in profile or look up a public profile by wallet or DID."
     },
     {
       "name": "neus_agent_link",
-      "description": "Check whether a Trusted Agent is ready to act — returns ready, or the single missing setup step. When setup is missing and the caller is signed in, call neus_agent_create next."
+      "description": "Check whether a Trusted Agent has the identity and permission needed to act. Returns ready or one setup step."
     },
     {
       "name": "neus_agent_create",
-      "description": "Prepare a Trusted Agent: its identity, what it may do, and the limits on its actions. NEUS signs for you when you are signed in; only fall back to the hosted flow when the session cannot complete a required step. Pick a meaningful agentId (e.g. \"my-ai-assistant\"). Confirm readiness with neus_agent_link when done."
+      "description": "Create or finish a Trusted Agent’s identity and permissions. Keep the same agentId and agentWallet on retries, follow the returned next step, then use neus_agent_link to confirm readiness."
     },
     {
       "name": "neus_agent_mount",
-      "description": "Load a Trusted Agent’s identity, permissions, skills, and context in one call, so the agent can act in this chat or job. Use this at the start of any agent-scoped turn."
+      "description": "Connect agent context by loading a Trusted Agent’s identity, permissions, skills, and current settings."
     },
     {
       "name": "neus_secret_create",
-      "description": "Store a secret (such as an API key) as an encrypted record only you can read. NEUS seals the value and never returns the plaintext through tools."
+      "description": "Store a secret, such as an API key, as an encrypted record. Tools never return the saved value."
     },
     {
       "name": "neus_secret_list",
-      "description": "List the encrypted secrets stored for a wallet — name, type, and last-updated time only. The secret values themselves are never returned. Omit the wallet when the session is signed in."
+      "description": "List saved secret names, types, and update times without exposing their values."
     },
     {
       "name": "neus_secret_revoke",
-      "description": "Permanently delete a stored secret by its receipt id. Uses your signed-in wallet by default; pass a wallet or agent wallet only when deleting a secret held under a delegated agent you control."
+      "description": "Revoke a saved secret so it can no longer be used."
     }
   ],
   "license": "Apache-2.0",
   "author": {
     "name": "NEUS",
-    "email": "info@neus.network",
+    "email": "dev@neus.network",
     "url": "https://neus.network"
   },
   "keywords": [

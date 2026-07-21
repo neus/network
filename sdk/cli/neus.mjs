@@ -186,6 +186,23 @@ function truncateDetail(text) {
   return `${raw.slice(0, Math.max(0, max - 3))}...`;
 }
 
+// Shorten a wallet/DID for human display: 0x1234…abcd for EVM, truncated base58
+// for Solana, and a pass-through for DIDs and unknown formats.
+function shortWallet(value) {
+  const raw = String(value || '').trim();
+  if (!raw) return '';
+  if (raw.startsWith('0x') && raw.length >= 10) {
+    return `${raw.slice(0, 6)}…${raw.slice(-4)}`;
+  }
+  if (raw.startsWith('did:')) {
+    return raw.length > 24 ? `${raw.slice(0, 21)}…` : raw;
+  }
+  if (raw.length > 16) {
+    return `${raw.slice(0, 8)}…${raw.slice(-4)}`;
+  }
+  return raw;
+}
+
 function cliSymbols() {
   return { ok: 'ok', warn: '!', next: '>', skip: '-' };
 }
@@ -239,6 +256,7 @@ function writeGuidanceLine(text) {
 }
 
 function describeClientResult(command, result) {
+  if (result.skippedReason) return result.skippedReason;
   if (result.dryRun && result.changed) {
     if (result.client === 'codex') {
       return `would update ${result.targetPath || '~/.codex/config.toml'}`;
@@ -260,11 +278,26 @@ function describeClientResult(command, result) {
 function printBuilderGuidance(command, results) {
   if (!['setup', 'auth', 'check'].includes(command)) return;
   const hasCodex = results.some(result => result.client === 'codex');
+  const cursorSkipped = results.some(
+    result => result.client === 'cursor' && result.skippedReason
+  );
+  const cursorConfigured = results.some(
+    result => result.client === 'cursor' && result.configured && !result.error && !result.skippedReason
+  );
   writeCliLine('');
   writeCliLine(paint('Next steps', 'cyan'));
   writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for assistant prompts.');
   if (hasCodex) {
     writeGuidanceLine('Codex OAuth: `neus auth --client codex` or `codex mcp login neus`.');
+  }
+  if (cursorSkipped) {
+    writeGuidanceLine(
+      'Cursor: neus-trust plugin detected — skipped ~/.cursor/mcp.json. Use `neus setup --client cursor` to override (not recommended: duplicate NEUS MCP).'
+    );
+  } else if (cursorConfigured) {
+    writeGuidanceLine(
+      'Cursor: one NEUS MCP only. If you later install the neus-trust plugin, remove `neus` from ~/.cursor/mcp.json to avoid a duplicate.'
+    );
   }
   writeGuidanceLine('Ask your assistant: "Use NEUS Verify before taking sensitive actions."');
 }
@@ -660,6 +693,31 @@ function cursorInstalled() {
   ].some(fileExists);
 }
 
+// Detect the Cursor neus-trust plugin install. Cursor caches installed plugins
+// under ~/.cursor/plugins/cache/<marketplace-owner>/<plugin-name>/<commit>/.mcp.json
+// with a .cache-complete marker once the plugin is fully fetched. When present,
+// the plugin already provides the `neus` MCP server — writing a second `neus`
+// entry into ~/.cursor/mcp.json creates a duplicate NEUS MCP connection.
+function cursorNeusTrustPluginInstalled() {
+  const homeDir = os.homedir();
+  const pluginCacheRoot = path.join(homeDir, '.cursor', 'plugins', 'cache', 'neus', 'neus-trust');
+  if (!fileExists(pluginCacheRoot)) return false;
+  try {
+    return fs
+      .readdirSync(pluginCacheRoot, { withFileTypes: true })
+      .filter(entry => entry.isDirectory())
+      .some(entry => fileExists(path.join(pluginCacheRoot, entry.name, '.cache-complete')));
+  } catch {
+    return false;
+  }
+}
+
+// Cursor was explicitly requested via --client cursor. Used to decide whether to
+// soft-skip writing ~/.cursor/mcp.json when the plugin is already installed.
+function cursorExplicitlyRequested(options) {
+  return Boolean(options?.clients?.includes('cursor'));
+}
+
 function defaultUserClients() {
   const detected = [];
   if (commandExists('claude')) detected.push('claude');
@@ -813,7 +871,7 @@ function printUsage(exitCode = 0) {
     '  check         Confirm setup and live NEUS connection (alias for doctor --live)',
     '  examples      Show assistant prompts to try after install',
     '  doctor        Deep check: config status, profile connection, and live MCP context',
-    '  mount         Mount proof-backed agent context for any runtime',
+    '  mount         Connect a Trusted Agent to a project or runtime',
     '  import        Detect and package supported assistant context for NEUS portability',
     '  export        Export the latest local NEUS portable agent manifest',
     '  help          Show this message',
@@ -921,7 +979,28 @@ function codexConfigPath() {
   return path.join(os.homedir(), '.codex', 'config.toml');
 }
 
-function installCursor(scope, accessKey, dryRun, cwd) {
+function installCursor(scope, accessKey, dryRun, cwd, options = {}) {
+  // Dual-install guard: when the Cursor neus-trust plugin is installed, it already
+  // provides the `neus` MCP server. Writing a second `neus` entry into
+  // ~/.cursor/mcp.json creates a duplicate NEUS MCP connection. Soft-skip unless
+  // the operator explicitly requested cursor via --client cursor.
+  const pluginInstalled = cursorNeusTrustPluginInstalled();
+  const cursorExplicit = cursorExplicitlyRequested(options);
+  if (pluginInstalled && !cursorExplicit) {
+    const targetPath = cursorConfigPath(scope, cwd);
+    return {
+      client: 'cursor',
+      scope,
+      configured: true,
+      authConfigured: null,
+      changed: false,
+      targetPath,
+      backupPath: null,
+      dryRun,
+      skippedReason: 'neus-trust plugin installed; use --client cursor to override',
+      error: null
+    };
+  }
   const targetPath = cursorConfigPath(scope, cwd);
   const doc = readJsonFile(targetPath, { mcpServers: {} });
   const serverConfig = buildCursorServer(accessKey);
@@ -1100,8 +1179,8 @@ function authCodex(scope, dryRun, cwd, cliOptions = {}) {
   };
 }
 
-function installClient(client, scope, accessKey, dryRun, cwd) {
-  if (client === 'cursor') return installCursor(scope, accessKey, dryRun, cwd);
+function installClient(client, scope, accessKey, dryRun, cwd, options = {}) {
+  if (client === 'cursor') return installCursor(scope, accessKey, dryRun, cwd, options);
   if (client === 'vscode') return installVsCode(scope, accessKey, dryRun, cwd);
   if (client === 'claude') return installClaude(scope, accessKey, dryRun, cwd);
   if (client === 'codex') return installCodex(scope, accessKey, dryRun, cwd);
@@ -1110,6 +1189,7 @@ function installClient(client, scope, accessKey, dryRun, cwd) {
 
 function inspectCursor(scope, cwd) {
   const targetPath = cursorConfigPath(scope, cwd);
+  const pluginInstalled = cursorNeusTrustPluginInstalled();
   if (!fileExists(targetPath)) {
     return {
       client: 'cursor',
@@ -1117,17 +1197,22 @@ function inspectCursor(scope, cwd) {
       configured: false,
       authConfigured: false,
       targetPath,
+      pluginInstalled,
+      dualInstall: false,
       error: null
     };
   }
   const doc = readJsonFile(targetPath, {});
   const server = doc.mcpServers?.[NEUS_MCP_SERVER_NAME];
+  const configured = Boolean(server && server.url === NEUS_MCP_URL);
   return {
     client: 'cursor',
     scope,
-    configured: Boolean(server && server.url === NEUS_MCP_URL),
+    configured,
     authConfigured: Boolean(server?.headers?.Authorization),
     targetPath,
+    pluginInstalled,
+    dualInstall: configured && pluginInstalled,
     error: null
   };
 }
@@ -1577,6 +1662,7 @@ async function evaluateAgentMountDoctor(accessKey, cwd, signal) {
     if (link.ok) {
       out.agentLinkStatus = link.payload?.status || (link.payload?.linked ? 'ok' : 'link_required');
       out.agentVerified = Boolean(link.payload?.linked);
+      out.mountAgentLabel = link.payload?.agentLabel || link.payload?.identity?.agentLabel || null;
     }
   } else if (agentId) {
     try {
@@ -1588,6 +1674,7 @@ async function evaluateAgentMountDoctor(accessKey, cwd, signal) {
       });
       out.agentVerified = Boolean(bundle?.trust?.identityQHash && bundle?.delegation);
       out.mountAgentId = bundle.identity?.agentId || agentId;
+      out.mountAgentLabel = bundle.identity?.agentLabel || null;
     } catch {
       out.agentVerified = false;
     }
@@ -1826,7 +1913,7 @@ function runInit(options) {
   ensureClientSelection(scope, clients);
 
   const results = runClientOperations(clients, scope, cwd, options.dryRun, client =>
-    installClient(client, scope, accessKey, options.dryRun, cwd)
+    installClient(client, scope, accessKey, options.dryRun, cwd, options)
   );
   const payload = {
     command: 'init',
@@ -1966,7 +2053,7 @@ async function runAuthBrowser(options) {
           res.end('<html><body><h2>Authenticated</h2><p>You can close this tab and return to your terminal.</p></body></html>');
 
           const results = runClientOperations(browserManagedClients, scope, cwd, options.dryRun, client =>
-            installClient(client, scope, accessToken, options.dryRun, cwd)
+            installClient(client, scope, accessToken, options.dryRun, cwd, options)
           );
           results.push(
             ...runClientOperations(hostManagedClients, scope, cwd, options.dryRun, () =>
@@ -2061,7 +2148,7 @@ function runAuth(options) {
   }
 
   const results = runClientOperations(clients, scope, cwd, options.dryRun, client =>
-    installClient(client, scope, accessKey, options.dryRun, cwd)
+    installClient(client, scope, accessKey, options.dryRun, cwd, options)
   );
   const payload = {
     command: 'auth',
@@ -2159,7 +2246,7 @@ async function runSetup(options) {
   const clients = resolveClients(scope, options.clients);
   ensureClientSelection(scope, clients);
   const initResults = runClientOperations(clients, scope, cwd, options.dryRun, client =>
-    installClient(client, scope, accessKey, options.dryRun, cwd)
+    installClient(client, scope, accessKey, options.dryRun, cwd, options)
   );
 
   const payload = {
@@ -2394,6 +2481,7 @@ async function runDoctor(options) {
         payload.mountNeedsRefresh = agentDoctor.mountNeedsRefresh;
         payload.mountRefreshReason = agentDoctor.mountRefreshReason;
         payload.mountAgentId = agentDoctor.mountAgentId;
+        payload.mountAgentLabel = agentDoctor.mountAgentLabel || null;
         payload.agentLinkStatus = agentDoctor.agentLinkStatus;
         payload.delegationExpired = agentDoctor.delegationExpired;
         payload.missingDelegation = agentDoctor.missingDelegation;
@@ -2437,6 +2525,12 @@ async function runDoctor(options) {
 
   printFlowSummary(displayCommand, scope, inspected, { cliOptions: options });
   const hasCodex = inspected.some(result => result.client === 'codex');
+  const cursorDualInstall = inspected.some(result => result.client === 'cursor' && result.dualInstall);
+  if (cursorDualInstall) {
+    writeCliLine(paint('Cursor', 'cyan'));
+    logStep('warn', 'cursor', 'neus-trust plugin + ~/.cursor/mcp.json both have NEUS MCP — remove `neus` from mcp.json to avoid a duplicate');
+    payload.hasErrors = true;
+  }
   writeCliLine(paint('Profile connection', 'cyan'));
   if (options.live && payload.mcp) {
     if (!liveAccessKey) {
@@ -2465,13 +2559,17 @@ async function runDoctor(options) {
     } else {
       if (payload.mcp.authenticated) {
         const handle = payload.mcp.profileHandle ? ` as ${payload.mcp.profileHandle}` : '';
+        const wallet = payload.mcp.sessionWallet ? ` · ${shortWallet(payload.mcp.sessionWallet)}` : '';
         const receipts =
           payload.mcp.proofsTotal != null ? ` · ${payload.mcp.proofsTotal} trust receipts on file` : '';
-        logStep('ok', 'profile', `connected${handle}${receipts}`);
+        const tools = payload.mcp.toolsCount ? ` · ${payload.mcp.toolsCount} tools` : '';
+        logStep('ok', 'profile', `connected${handle}${wallet}${receipts}${tools}`);
         writeGuidanceLine('NEUS Verify is ready. Ask your assistant to verify trust before sensitive actions.');
         writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for starter prompts.');
         if (payload.mountFilePresent) {
-          logStep('ok', 'mount', payload.mountAgentId ? `project mount: ${payload.mountAgentId}` : 'project mount on file');
+          const agentLabel = payload.mountAgentLabel || payload.mountAgentId || 'project mount';
+          const agentStatus = payload.agentVerified ? ' (verified)' : payload.agentLinkStatus ? ` (${payload.agentLinkStatus})` : '';
+          logStep('ok', 'mount', payload.mountAgentId ? `project mount: ${agentLabel}${agentStatus}` : 'project mount on file');
         }
         if (payload.mountNeedsRefresh) {
           const reason =
@@ -2561,7 +2659,7 @@ async function runDisconnect(options) {
   ensureClientSelection(scope, clients);
 
   const results = runClientOperations(clients, scope, cwd, options.dryRun, client =>
-    installClient(client, scope, '', options.dryRun, cwd)
+    installClient(client, scope, '', options.dryRun, cwd, options)
   );
 
   const payload = {
@@ -2616,14 +2714,6 @@ async function main() {
           process.exitCode = 1;
         }
       }
-      return;
-    }
-    if (command === 'refresh') {
-      await runRefresh(options);
-      return;
-    }
-    if (command === 'refresh') {
-      await runRefresh(options);
       return;
     }
     if (command === 'refresh') {

@@ -1,7 +1,8 @@
 ---
-title: Agent Verification Flow
-description: Register identity, add delegation, then reuse receipts.
-icon: arrow-progress
+title: Verification flow
+sidebarTitle: Verification flow
+description: Register identity, add permissions, then reuse receipts.
+icon: diagram-project
 ---
 
 The result is a portable identity and authority context the agent carries across MCP hosts and backend gates.
@@ -10,7 +11,7 @@ The result is a portable identity and authority context the agent carries across
 
 <Steps>
   <Step title="Check">
-    **`neus_context`** → **`neus_agent_link`** with the agent address.
+    **`neus_context`** → **`neus_agent_link`** with the agent address and stable agent id.
   </Step>
   <Step title="Register">
     Missing identity? Create **`agent-identity`** (agent address signs).
@@ -26,10 +27,10 @@ The result is a portable identity and authority context the agent carries across
 ## MCP sequence
 
 1. **`neus_context`**
-2. **`neus_agent_link`** with **`agentWallet`**
+2. **`neus_agent_link`** with **`agentWallet`** and **`agentId`**
 3. If **`linked: true`**, reuse receipts
-4. If not, **`neus_agent_create`** — finish on NEUS
-5. **`neus_agent_link`** again
+4. If not, **`neus_agent_create`** — follow its **`next_action`**
+5. **`neus_agent_link`** again with the same identifiers
 
 Ready means both **`agent-identity`** and **`agent-delegation`** are present.
 

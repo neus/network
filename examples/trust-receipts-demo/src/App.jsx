@@ -7,7 +7,7 @@ import { applyListScope, filterByQuery } from './viewModel.js';
 import { DetailDrawer } from './components/DetailDrawer.jsx';
 import { OpportunityCard } from './components/OpportunityCard.jsx';
 
-const PENDING_CHECKOUT_KEY = 'neus.trustReceiptsShowcase.pendingCheckout';
+const PENDING_CHECKOUT_KEY = 'neus.trustReceiptsDemo.pendingCheckout';
 
 function withEnvUrl(v, d) {
   if (typeof v === 'string' && v.trim()) return v.trim();
@@ -147,7 +147,7 @@ export default function App() {
           >
             <span className="flex items-center gap-2.5">
               <LayoutGrid size={18} className="shrink-0" />
-              <span className="text-[13px] font-medium">Showcase</span>
+              <span className="text-[13px] font-medium">Receipts</span>
             </span>
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary shadow-[0_0_8px_rgba(152,192,239,0.7)]" />
           </button>

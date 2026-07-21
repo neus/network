@@ -1,14 +1,15 @@
 ---
-title: Agent Delegation
-description: Delegate permissions to agents for scoped operations.
+title: Agent permissions
+sidebarTitle: Permissions
+description: Grant an agent specific actions, limits, and an expiration date.
 icon: handshake
 ---
 
-Grant scoped authority to an agent. Identity alone (`agent-identity`) does not include permissions.
+Grant limited permissions to an agent. Identity alone (`agent-identity`) does not allow the agent to act.
 
-Delegation receipts are the authorization layer for agents: who approved this agent, what it may do, and how much it can spend — all checkable by any gate.
+The permission receipt records who approved the agent, what it may do, how much it may spend, and when access expires.
 
-**Verifier ID:** `agent-delegation`
+**Check ID:** `agent-delegation`
 
 **`controllerWallet`** is the approving account — the address that signs this step. See [Agent concepts](./concepts).
 
@@ -45,15 +46,15 @@ await client.verify({
 });
 ```
 
-Both wallets need a CAIP-2 chain reference (`controllerChainRef`, `agentChainRef`) unless your request already carries `chain` or `chainId`.
+Both accounts need a CAIP-2 network reference (`controllerChainRef`, `agentChainRef`) unless the request already includes `chain` or `chainId`.
 
 ## App link
 
-One-time user approval so your backend can create proofs without asking them to sign every request. This is **not** the same as creating a **portal** in your profile (billing for hosted checks). See [Integrations](../cookbook/integrations).
+One-time user approval lets your backend create receipts without asking for a signature on every request. This is different from creating a **portal** in your profile for hosted checks. See [Integrations](../cookbook/integrations).
 
 1. User signs in on NEUS
-2. User approves delegation once
-3. Your app stores the **`qHash`**
+2. User approves the permissions once
+3. Your app stores the receipt ID in **`qHash`**
 4. Your backend calls verification with **`x-neus-app`** — no per-request signature
 
 ```javascript
@@ -78,9 +79,9 @@ await client.verify({
 - `origin:<url>` — restrict to your domain
 - `origin:*` — any origin
 
-Send `x-neus-app: your-app-id` and `Origin: https://yourapp.com` on verification requests.
+Send `x-neus-app: your-app-id` and matching site origin on verification requests. On Node, set `appOrigin: 'https://yourapp.com'` on `NeusClient` (or pass `Origin` via `extraHeaders`).
 
-## Payment delegation
+## Payment limits
 
 `maxSpend` is a whole-number string in token base units. For USDC (6 decimals), 25 USDC = `"25000000"`. Use `toAgentDelegationMaxSpend('25', 6)` from `@neus/sdk`.
 
@@ -122,14 +123,47 @@ await client.verify({
 | `expiresAt` | No | Expiration (Unix ms) |
 | `instructions` | No | Policy text (16000 chars) |
 | `skills` | No | Up to 48 skill objects |
+| `runtimePolicy` | No | Provider/model limits and human-approval requirement |
+| `approvalPolicy` | No | Approval requirements for new claims or content |
 
 The protocol accepts bounded action strings in **`allowedActions`** and **`deniedActions`**. `deniedActions` always wins over `allowedActions`.
+
+## Human approval pattern
+
+Your application enforces the limits recorded in the permission receipt:
+
+```javascript
+const permissions = {
+  controllerWallet,
+  agentWallet,
+  agentId: 'data-analyst',
+  scope: 'global',
+  allowedActions: ['read_data', 'draft_report'],
+  deniedActions: ['send_message', 'approve_payment'],
+  runtimePolicy: {
+    requiresHumanApproval: true,
+  },
+  approvalPolicy: {
+    humanApprovalRequiredForNewClaims: true,
+    preApprovedContentOnly: true,
+  },
+  maxSpend: '15000000',
+  expiresAt: Date.now() + 30 * 24 * 60 * 60 * 1000,
+};
+```
+
+At runtime:
+
+1. Check the current permission receipt before the tool call.
+2. Apply **`deniedActions`** first.
+3. Pause when the policy requires human approval.
+4. Continue only after approval is confirmed.
 
 Schema: [`agent-delegation.json`](https://github.com/neus/network/blob/main/docs/verifiers/schemas/agent-delegation.json).
 
 ## Result
 
-A **`qHash`** you can check before delegated actions. Use **`neus_agent_link`** or **`neus_proofs_check`**.
+A receipt ID returned in **`qHash`**. Check it with **`neus_agent_link`** or **`neus_proofs_check`** before an action.
 
 ## Revoke
 

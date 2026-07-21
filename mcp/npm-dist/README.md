@@ -1,8 +1,6 @@
 # @neus/mcp-server
 
-Hosted NEUS MCP for agents that act.
-
-Verifiable identity, scoped authority, and receipts for every trusted action.
+Hosted NEUS MCP for verified agent identity, limited permissions, and reusable trust receipts.
 
 Connect Cursor, VS Code, Claude Code, or Codex in one command:
 

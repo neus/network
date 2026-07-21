@@ -2169,7 +2169,7 @@
       "get": {
         "operationId": "proofCheck",
         "summary": "Check gate eligibility or proof criteria (server-side)",
-        "description": "Primary server-side integrator endpoint for access control. Pass gateId from your deployed gate, or explicit verifier/criteria filters. Returns eligible plus matched proof references without exposing private proof payloads.",
+        "description": "Primary server-side integrator and x402 v2 resource for pre-action trust decisions. Pass gateId from your deployed gate, or explicit verifier/criteria filters. Unpaid public calls receive HTTP 402 with base64-encoded PAYMENT-REQUIRED instructions; retry the identical request with PAYMENT-SIGNATURE. Returns eligible plus matched proof references without exposing private proof payloads.",
         "tags": [
           "Proofs",
           "Gates"
@@ -2602,6 +2602,14 @@
                   "$ref": "#/components/schemas/GateCheckResponse"
                 }
               }
+            },
+            "headers": {
+              "PAYMENT-RESPONSE": {
+                "description": "Base64-encoded x402 v2 settlement result when the request was paid with x402",
+                "schema": {
+                  "type": "string"
+                }
+              }
             }
           },
           "400": {
@@ -2620,6 +2628,24 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "x402 v2 payment required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            },
+            "headers": {
+              "PAYMENT-REQUIRED": {
+                "description": "Base64-encoded x402 v2 PaymentRequired object",
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -2741,7 +2767,7 @@
     "/api/v1/proofs/erase-all": {
       "post": {
         "operationId": "eraseAllProofs",
-        "summary": "Erase all proofs for a wallet (GDPR right to erasure)",
+        "summary": "Erase all proofs for a wallet",
         "tags": [
           "Proofs"
         ],

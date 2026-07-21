@@ -1,0 +1,69 @@
+# NEUS
+
+> Portable identity, ownership, and permission receipts for apps, agents, and organizations.
+
+NEUS records a completed check as a trust receipt. Supported apps and agents can confirm that receipt later instead of repeating the full process.
+
+## What NEUS does
+
+- **Trust receipts:** A reusable record of an identity, ownership, or permission check. Show it on a profile, require it for access, or confirm it through the API.
+- **Gates:** Receipt-based access to content, rewards, and member areas, with optional USDC or card checkout.
+- **Agent trust:** Verifiable identity, limited permissions, and reusable receipts.
+- **Unique-person checks:** Reuse proof-of-human and wallet-risk results across a product.
+- MCP for assistants: One setup writes supported editor configuration and signs the user in with OAuth.
+- Trust workflow skill: https://github.com/neus/network/blob/main/plugins/neus-trust/skills/neus-trust-workflow/SKILL.md
+
+## Quick start
+
+Install the SDK and wire MCP for your editor:
+
+```bash
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus check
+```
+
+Then ask your assistant: "Use NEUS Verify before taking sensitive actions."
+
+## Core surfaces
+
+- Hosted Verify: https://neus.network/verify
+- Hosted MCP: https://mcp.neus.network/mcp
+- JavaScript SDK: https://www.npmjs.com/package/@neus/sdk
+- API base: https://api.neus.network
+- Receipt pages: https://neus.network/proof/{qHash}
+
+## Read in order
+
+1. Home: https://docs.neus.network
+2. Get started: https://docs.neus.network/get-started
+3. Quickstart: https://docs.neus.network/quickstart
+4. Integration guide: https://docs.neus.network/integration
+5. JavaScript SDK: https://docs.neus.network/sdks/javascript
+6. MCP tools: https://docs.neus.network/mcp/tools
+7. API overview: https://docs.neus.network/api/overview
+8. Pricing: https://docs.neus.network/platform/pricing
+
+## Pricing summary
+
+- Free (Basic): 500 credits / month
+- Pro: $19.99 / month (or $199.90 / year) — 50,000 credits / month
+- Enterprise: Custom — 500,000+ credits / month. Contact https://neus.network/contact?topic=Enterprise
+- Credit rate: $0.0025 per credit (USD)
+- x402 pay-per-call: when credits run short, NEUS returns HTTP 402 with a signed quote; pay (USDC or native ETH) and retry with one header.
+- Full details: https://neus.network/pricing
+
+## Verifier catalog (14 public checks)
+
+ownership-basic, ownership-social, ownership-pseudonym, ownership-dns-txt, ownership-org-oauth, proof-of-human, wallet-risk, wallet-link, nft-ownership, token-holding, contract-ownership, ai-content-moderation, agent-identity, agent-delegation
+
+## Standard
+
+The receipt envelope is specified as CAIP-380 (Portable Proof), an open ChainAgnostic standard submission. Receipts are verifiable against the spec independently of NEUS infrastructure.
+
+## Optional
+
+- Examples: https://github.com/neus/network/tree/main/examples
+- Verifier schemas: https://github.com/neus/network/tree/main/docs/verifiers/schemas
+- Verifier index (machine-readable): https://github.com/neus/network/blob/main/spec/VERIFIERS.json
+- OpenAPI reference: https://docs.neus.network/api/openapi/public-api.json
+- MCP server card: https://github.com/neus/network/blob/main/mcp/npm-dist/server.json

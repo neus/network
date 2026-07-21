@@ -1,8 +1,6 @@
 # NEUS
 
-Trust infrastructure for agents that act.
-
-Verifiable identity, scoped authority, and receipts for every trusted action.
+Stop agents from acting blind. Verified identity, limited permissions, and reusable trust receipts.
 
 One setup for Cursor, Claude Code, Codex, and VS Code.
 
@@ -16,11 +14,12 @@ neus check
 
 Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
 
+It reuses existing trust receipts first, guides any missing check, then summarizes as Passed, Action needed, or Blocked.
+
 Codex:
 
 ```bash
 neus setup --client codex
-neus auth --client codex
 ```
 
 Claude Code plugin:

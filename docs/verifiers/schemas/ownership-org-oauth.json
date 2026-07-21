@@ -1,7 +1,7 @@
 {
   "$id": "https://neus.network/schemas/ownership-org-oauth.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Organizational OAuth verification",
+  "description": "Confirm a work or organization account through sign-in",
   "properties": {
     "expectedOrgDomain": {
       "description": "Optional DNS hostname for the organization (e.g. company.com) to match against the IdP directory.",

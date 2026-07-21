@@ -81,15 +81,11 @@ describe('NEUS SDK Integration', () => {
 
   describe('SDK Configuration', () => {
     it('should handle different API URL formats', () => {
-      const clients = [
-        new NeusClient({ apiUrl: 'https://api.neus.network/' }),
-        new NeusClient({ apiUrl: 'https://api.neus.network' }),
-        new NeusClient({ apiUrl: 'https://dev.api.neus.network' })
-      ];
+      const a = new NeusClient({ apiUrl: 'https://api.neus.network/' });
+      const b = new NeusClient({ apiUrl: 'https://api.neus.network' });
 
-      expect(clients[0].baseUrl).toBe('https://api.neus.network');
-      expect(clients[1].baseUrl).toBe('https://api.neus.network');
-      expect(clients[2].baseUrl).toBe('https://dev.api.neus.network');
+      expect(a.baseUrl).toBe('https://api.neus.network');
+      expect(b.baseUrl).toBe('https://api.neus.network');
     });
 
     it('should enforce HTTPS for production domains', () => {

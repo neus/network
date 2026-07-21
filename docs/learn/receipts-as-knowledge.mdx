@@ -1,16 +1,16 @@
 ---
-title: Receipts as knowledge
-description: Linkable, verifiable trust receipts that replace siloed notes with portable proof.
+title: Receipt links and versioning
+description: Optional patterns for linking trust receipts with typed references and supersedes tags.
 icon: link
 ---
 
-NEUS receipts are not just audit records — they are **linkable knowledge**. Every proof receipt has a stable `qHash` that can reference other receipts, supersede prior versions, and be discovered by any agent, app, or gate. This replaces siloed note systems (Obsidian, Notion, spreadsheets) with portable, verifiable, receipt-backed context.
+Use these patterns when an integration needs linked receipts, version history, or tag-based lookup.
 
-## Three link primitives
+**Receipt ID** in API responses is `qHash`.
 
-### 1. Typed reference — `reference.type: "qhash"`
+## Typed reference — `reference.type: "qhash"`
 
-The `ownership-basic` verifier accepts a `reference` object with `type: "qhash"` and `id` set to a prior receipt's qHash. This creates a **schema-level typed link** from one receipt to another.
+The `ownership-basic` check accepts a `reference` object with `type: "qhash"` and `id` set to another receipt’s ID. That creates a typed link from one receipt to another.
 
 ```json
 {
@@ -26,11 +26,11 @@ The `ownership-basic` verifier accepts a `reference` object with `type: "qhash"`
 }
 ```
 
-The qHash of the referencing proof is **deterministically derived** from the target qHash — anyone re-issuing for the same target gets the same qHash. This makes links stable, dedup-friendly, and tamper-evident.
+Reference payloads for the same target commonly hash from `qhash:{targetId}` in the signed content. Confirm current behavior in the [ownership-basic](../verification/ownership-basic) capability reference and live API responses — do not invent receipt IDs.
 
-### 2. Version chain — `supersedes:<qHash>` tag
+## Version chain — `supersedes:<qHash>` tag
 
-When you append to or update a memory receipt, NEUS tags the new receipt with `supersedes:<previousQHash>`. This creates a **singly-linked version chain** — newer receipts point back to older ones.
+When you update a memory or instruction receipt, NEUS can tag the new receipt with `supersedes:<previousQHash>`. Newer receipts point back to older ones.
 
 ```text
 Receipt A → supersedes:none
@@ -38,53 +38,15 @@ Receipt B → supersedes:0xA  (replaces A)
 Receipt C → supersedes:0xB  (replaces B)
 ```
 
-Use `neus_proofs_get` to walk the chain backward and find the full history of any concept.
+Use `neus_proofs_get` to walk the chain and read history.
 
-### 3. Multipart hub — `manifest:true` + `part:NNN-of-MMM`
+## Tag prefixes for discovery
 
-For artifacts larger than the 50,000-character inline limit, split content into chunk receipts tagged `part:001-of-004`, then issue a **manifest receipt** that references all chunks. The manifest is the hub node in a one-to-many graph.
+Tag prefixes help you filter related receipts. Common prefixes include subject facets (`topic:`, `domain:`) and review state (`quality:draft` / `quality:approved`). Query tagged receipts with [`neus_proofs_get`](../mcp/proofs-get). To attach an agent profile to a project, see [Connect agent context](../agents/runtime-mount).
 
-## Reuse flow
+## Large content
 
-Tag receipts with semantic prefixes so agents can discover them:
-
-| Tag prefix | Purpose |
-|------------|---------|
-| `memory:` | Durable operating context |
-| `rules:` | Policy or constraint receipts |
-| `instruction:` | Agent operating instructions |
-| `topic:` | Subject-area facets |
-| `domain:` | Knowledge domain |
-| `quality:` | `draft` / `approved` / `pending` |
-
-Agents read tagged receipts via `neus_proofs_get` with tag filters, or mount them via `neus_agent_mount` as part of the runtime bundle.
-
-## Replacing Obsidian
-
-| Obsidian concept | NEUS equivalent |
-|------------------|-----------------|
-| Note | Proof receipt (`ownership-basic`) |
-| `[[wiki link]]` | `reference.type: "qhash"` |
-| Backlinks | Query by `reference.id` or `supersedes:` tag |
-| Tags | Receipt tag prefixes (`memory:`, `topic:`, `domain:`) |
-| Folders | Scope + tag filters |
-| Version history | `supersedes:` chain |
-| Publish | `publicDisplay: true` on the receipt |
-
-The key difference: NEUS receipts are **verifiable**. Every note carries a cryptographic proof of who created it, when, and on which chain. Notes are not just text — they are trust records that any gate, app, or agent can check.
-
-## Artifact promotion
-
-Every meaningful artifact follows this path:
-
-1. Generate or update the artifact
-2. Issue an `ownership-basic` receipt with full content (up to 50 KB)
-3. Attach taxonomy tags (`memory:`, `topic:`, `quality:draft`)
-4. Capture the qHash
-5. Write the qHash back to the source artifact or log
-6. For larger artifacts, use chunk + manifest receipts
-
-Receipts persist offchain by default. No wallet connection or on-chain anchoring is needed unless explicitly requested.
+Inline receipt content has a size limit (about 50,000 characters). For larger artifacts, store the canonical file elsewhere and attach a short receipt that references it (`reference` URL or content hash), or split content across multiple receipts only when your integration explicitly supports that pattern.
 
 ## Next
 
@@ -98,7 +60,7 @@ Receipts persist offchain by default. No wallet connection or on-chain anchoring
   <Card title="Proofs read" icon="search" href="../mcp/proofs-get">
     Query receipts by tag and scope.
   </Card>
-  <Card title="Runtime Mount" icon="layers" href="../agents/runtime-mount">
-    Mount receipts as agent context.
+  <Card title="ownership-basic" icon="file" href="../verification/ownership-basic">
+    Check inputs for content and references.
   </Card>
 </CardGroup>

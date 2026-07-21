@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+﻿#!/usr/bin/env node
 // Validates that plugin mcp.json files use the Cursor-native shape.
 // Cursor's mcp.json schema expects { "mcpServers": { "name": { "url": "...", "headers?": {...} } } }
 // and rejects the spec { type: "http", authorization: {...} } shape that other hosts use.
@@ -37,16 +37,20 @@ function isValidHttpsUrl(value) {
   }
 }
 
-async function validatePluginMcp(pluginDir) {
+async function validatePluginMcp(pluginDir, { requireFile = false } = {}) {
   const mcpPath = path.join(pluginDir, "mcp.json");
-  if (!(await pathExists(mcpPath))) return;
-
   const relative = path.relative(repoRoot, mcpPath);
+  if (!(await pathExists(mcpPath))) {
+    if (requireFile) {
+      addError(`${relative}: missing Cursor-native mcp.json (required when the plugin ships hosted MCP).`);
+    }
+    return;
+  }
   let mcp;
   try {
     mcp = await readJsonFile(mcpPath);
   } catch (error) {
-    addError(`${relative}: invalid JSON — ${error.message}`);
+    addError(`${relative}: invalid JSON ΓÇö ${error.message}`);
     return;
   }
 
@@ -89,9 +93,13 @@ async function main() {
 
   const entries = await fs.readdir(pluginsDir, { withFileTypes: true });
   for (const entry of entries) {
-    if (entry.isDirectory()) {
-      await validatePluginMcp(path.join(pluginsDir, entry.name));
-    }
+    if (!entry.isDirectory()) continue;
+    const pluginDir = path.join(pluginsDir, entry.name);
+    // Dual-host packaging: Cursor discovers mcp.json; Claude/Codex use .mcp.json.
+    // If either file exists (or this is the neus-trust plugin), require Cursor-native mcp.json.
+    const hasSpecMcp = await pathExists(path.join(pluginDir, ".mcp.json"));
+    const requireFile = entry.name === "neus-trust" || hasSpecMcp;
+    await validatePluginMcp(pluginDir, { requireFile });
   }
 
   summarizeAndExit();
@@ -110,3 +118,4 @@ function summarizeAndExit() {
 }
 
 await main();
+

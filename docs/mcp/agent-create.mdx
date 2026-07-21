@@ -1,37 +1,110 @@
 ---
 title: Agent Create (`neus_agent_create`)
-description: Create agent identity and delegation when link shows gaps.
+description: Create an agent with stable identity and scoped permissions.
 icon: robot
 ---
 
-Call after **`neus_agent_link`** when proofs are missing. Returns **`signatures`** and/or **`hostedVerifyUrl`**. Confirm with **`neus_agent_link`** when done.
+Call after **`neus_agent_link`** when identity or delegation is missing. Always reuse the same **`agentId`**, **`agentWallet`**, and approving account when retrying.
 
 | Step | Action |
 |------|--------|
-| 1 | **`neus_agent_link`** with **`agentWallet`** |
-| 2 | **`neus_agent_create`** with **`agentId`** (required; NEUS generates one if omitted) and **`agentWallet`** |
-| 3 | Finish on NEUS via **`hostedVerifyUrl`** or signing steps |
-| 4 | **`neus_agent_link`** until **`linked: true`** |
+| 1 | **`neus_agent_link`** with **`agentWallet`** and **`agentId`** |
+| 2 | **`neus_agent_create`** with the same stable identifiers |
+| 3 | Follow the returned **`next_action`** exactly |
+| 4 | **`neus_agent_link`** with both identifiers until **`linked: true`** |
 
 Leave out **`controllerWallet`** when the signed-in account from **`neus_context`** should approve.
 
 [Agent concepts](../agents/concepts)
 
-## Agent address
+## Choose the wallet model
 
-| Value | Use |
-|-------|-----|
-| EVM or Solana address | You hold the agent key |
-| `"generate"` | NEUS creates a new key — save it in your secrets manager |
+### Separate agent wallet (recommended for production)
 
-## Input
+The agent wallet signs **`agent-identity`**. The approving account signs **`agent-delegation`**. This gives each agent distinct identity, revocation, and audit attribution.
 
 ```json
-{ "agentId": "my-assistant", "agentWallet": "0x..." }
+{
+  "agentId": "data-analyst",
+  "agentWallet": "0xAgent...",
+  "delegationAllowedActions": ["read_context", "read_proofs"],
+  "delegationDeniedActions": ["send_message"],
+  "delegationRuntimePolicy": { "requiresHumanApproval": true },
+  "maxSpend": "15000000",
+  "expiresAt": 1798761600000,
+  "returnUrl": "https://app.example.com/agents/callback"
+}
 ```
 
-- **`agentId`** is required. Provide a meaningful identifier (e.g. `my-assistant`). If omitted, NEUS generates a default like `agent-{walletShort}-{timestamp}`.
-- Optional fields: **`instructions`**, **`skills`**, **`services`**, spend caps, delegation scope. See [Agent identity](../agents/agent-identity) and [Agent delegation](../agents/agent-delegation).
+When the signed-in account does not control the agent key:
+
+1. Sign and submit the returned **`agent-identity`** step with the agent key.
+2. Repeat **`neus_agent_create`** unchanged.
+3. The approving account completes **`agent-delegation`** in-session or through the returned hosted URL.
+
+A controller session cannot self-attest for a different agent wallet, so identity always comes first.
+
+### Shared account wallet
+
+Omitting **`agentWallet`** uses the approving account wallet. This is convenient for a personal assistant, but several agents on one wallet require **`agentId`** on every link and mount call. Use a separate wallet when agents need independent identity or offboarding.
+
+### Generated wallet
+
+**`agentWallet: "generate"`** returns private key material once. Treat it as an advanced bootstrap only. Production apps should generate and store the key in their own key manager; NEUS does not custody agent keys.
+
+## What each result means
+
+Every non-validation result includes **`path`** and **`next_action`**.
+
+| `path` | Meaning | `next_action` |
+|--------|---------|---------------|
+| `already_linked` | Exact identity and permission receipts already exist | `ready` |
+| `session_auto_complete` | Signed-in session completed the missing step(s) | `call_neus_agent_link` |
+| `signatures_required` | A wallet signature is still required | `submit_remaining_signatures` |
+| `hosted_required` | Browser handoff is required | `open_hosted_verify` |
+| `payment_required` | The account paying for the current step needs more credits | `complete_billing_then_retry` |
+
+**`sessionProgress.identityComplete`** and **`sessionProgress.delegationComplete`** show which step is already saved. On **`payment_required`**, add credits and retry the same request. This is an account billing requirement, not a wallet-signature failure.
+
+## Hosted callback
+
+Use the SDK helper instead of assembling query strings:
+
+```javascript
+import { getHostedAgentCreateUrl } from '@neus/sdk';
+
+const url = getHostedAgentCreateUrl({
+  agentId: 'data-analyst',
+  agentWallet,
+  controllerWallet,
+  identityQHash, // required here because the wallets differ
+  allowedActions: ['read_context', 'read_proofs'],
+  deniedActions: ['send_message'],
+  runtimePolicy: { requiresHumanApproval: true },
+  returnUrl: 'https://app.example.com/agents/callback',
+});
+```
+
+With **`identityQHash`**, Hosted Verify requests only delegation. The callback receives the new delegation **`qHash`**, **`agentId`**, and **`agentWallet`**. Keep the identity **`qHash`** from step 1.
+
+Do not combine agent creation with **`gateId`** or **`intent=login`** on one URL:
+
+- Login: **`intent=login&returnUrl=...`**
+- Gate checkout: **`gateId=...&returnUrl=...`**
+- Agent setup: **`getHostedAgentCreateUrl(...)`**
+
+## Billing
+
+Billing follows the signer for each receipt unless a validated sponsor or pay-per-call receipt overrides it:
+
+- Agent identity: the **agent wallet** pays.
+- Delegation: the **approving account** pays.
+- Hosted completion: the signed-in account pays for the step it signs.
+- Sponsor grant or pay-per-call: the validated sponsor/caller pays.
+
+Hosted sign-in itself is free. See [Billing](../platform/billing).
+
+Optional fields include **`instructions`**, **`skills`**, **`services`**, scope, expiry, spend cap, runtime policy, approval policy, and allowed/denied actions. See [Agent identity](../agents/agent-identity) and [Agent delegation](../agents/agent-delegation).
 
 ## Related
 

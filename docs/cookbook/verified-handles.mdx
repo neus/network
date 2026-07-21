@@ -11,7 +11,6 @@ Use NEUS to make creator handles portable and verifiable. A user claims a handle
 - Creator platforms, media networks, or launchpads that need handle ownership proof.
 - Pseudonymous identity without legal identity exposure.
 - Gating drops, founders tables, or premium calls behind a verified handle.
-- Co-marketing moments where the proof itself is the story.
 
 ## What you need
 
@@ -104,7 +103,7 @@ const result = await client.gateCheck({
   address: walletAddress
 });
 
-if (!result.data?.eligible) {
+if (result.data?.gate?.allRequiredSatisfied !== true) {
   throw new Error('Handle not verified');
 }
 ```

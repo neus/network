@@ -32,6 +32,7 @@ export {
   NEUS_CONSTANTS,
   DEFAULT_HOSTED_VERIFY_URL,
   getHostedCheckoutUrl,
+  getHostedAgentCreateUrl,
   toAgentDelegationMaxSpend
 } from './utils.js';
 

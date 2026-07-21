@@ -4,21 +4,11 @@ description: Connect your agent environment to hosted NEUS MCP.
 icon: plug
 ---
 
-Trust infrastructure for agents that act.
-
-Verifiable identity, scoped authority, and receipts for every trusted action.
+Connect assistants to verified identity, limited permissions, reusable trust receipts, and encrypted secrets.
 
 **Hosted endpoint:** `https://mcp.neus.network/mcp`
 
-| | |
-|---|---|
-| **Identity** | Verified |
-| **Authority** | Scoped |
-| **Policy** | Checked |
-| **Receipt** | Recorded |
-| **Endpoint** | `https://mcp.neus.network/mcp` |
-
-Signed in on [neus.network](https://neus.network/profile?tab=account)? Use **Mount in** for Cursor, Claude Code, or Codex — then run the copied `neus mount` command in your project repo.
+To use a profile agent in a project, choose **Connect in** on its agent card, then run the copied `neus mount` command in that project.
 
 <Tabs sync={false}>
   <Tab title="Quick start">
@@ -28,9 +18,9 @@ neus setup
 neus check
 ```
 
-One OAuth sign-in wires hosted NEUS MCP for Cursor, Claude Code, and VS Code.
+One OAuth sign-in configures hosted NEUS MCP for Cursor, Claude Code, and VS Code.
 
-Ask your assistant: **"Use NEUS Verify before taking sensitive actions."** That is trust before action — identity, authority, and receipts checked first.
+Ask your assistant: **"Use NEUS Verify before taking sensitive actions."** It checks identity, permissions, and existing receipts first, then summarizes as Passed, Action needed, or Blocked.
 
 ```bash
 neus setup --client cursor
@@ -44,12 +34,13 @@ neus setup --client claude
   <Tab title="Cursor">
     <Icon icon="/images/brandLogos/cursor.svg" size={18} /> **Cursor**
 
+**One NEUS MCP only.** Prefer the **neus-trust** plugin (OAuth). If the plugin is installed, keep `~/.cursor/mcp.json` without a `neus` entry (`{"mcpServers":{}}`). Do not run `neus setup --client cursor` on top of the plugin — that registers the same host twice.
+
+Without the plugin, use setup **or** URL-only config (not both):
+
 ```bash
 neus setup --client cursor
-neus auth
 ```
-
-Or add to `~/.cursor/mcp.json`:
 
 ```json
 {
@@ -61,7 +52,9 @@ Or add to `~/.cursor/mcp.json`:
 }
 ```
 
-**NEUS plugin** (trust receipts, agent authority, session workflow):
+Expected public tool list: **13**. Profile loads via `neus_context` when signed in.
+
+**NEUS plugin** (trust receipts, agent permissions, session workflow):
 
 <Accordion title="Cursor manual install">
 ```text
@@ -78,14 +71,13 @@ Install: neus-trust
 
 ```bash
 neus setup --client codex
-neus auth --client codex
 ```
 
-Codex handles OAuth separately. Run `neus auth --client codex` after setup, or use `codex mcp login neus`.
+Setup starts Codex OAuth. If your host asks you to sign in again, use `codex mcp login neus`.
 
 Config path: `~/.codex/config.toml`
 
-**NEUS plugin** (trust receipts, agent authority, session workflow):
+**NEUS plugin** (trust receipts, agent permissions, session workflow):
 
 <Accordion title="Codex manual install">
 ```text
@@ -101,7 +93,6 @@ codex plugin install neus-trust
 
 ```bash
 neus setup --client vscode
-neus auth
 ```
 
 | OS | Path |
@@ -119,10 +110,9 @@ Project scope: `./.vscode/mcp.json`
 
 ```bash
 neus setup --client claude
-neus auth
 ```
 
-**NEUS plugin** (trust receipts, agent authority, session workflow):
+**NEUS plugin** (trust receipts, agent permissions, session workflow):
 
 <Accordion title="Claude Code manual install">
 ```text

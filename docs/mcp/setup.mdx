@@ -4,25 +4,13 @@ description: Install NEUS with neus setup, OAuth sign-in, access keys, and per-e
 icon: code
 ---
 
-Connect your AI tools to verifiable identity, scoped authority, trust receipts, and Vault with one setup. Reuse receipts across every session.
+Connect your AI tools to NEUS so they can confirm identity and permissions, reuse trust receipts, and access Vault secrets.
 
 Hosted endpoint: **`https://mcp.neus.network/mcp`**
 
 ## Quick start
 
-**Install once (recommended):**
-
-```bash
-npm i -g @neus/sdk
-neus setup
-neus check
-```
-
-**Or run without installing:**
-
-```bash
-npx -y -p @neus/sdk neus setup
-```
+Run [Install NEUS](../install) first (`neus setup` · `neus check`). Return here for access keys, disconnect, migrate, and per-editor config paths.
 
 `neus setup` detects your editors, configures hosted MCP, and signs you in. By default it uses browser OAuth for Cursor, VS Code, and Claude Code. If you set `NEUS_ACCESS_KEY` first, the CLI uses that key instead. Pass `--access-key <npk_...>` to override, and `--json` for scripted installs.
 
@@ -30,23 +18,23 @@ npx -y -p @neus/sdk neus setup
 
 | Step | Command |
 |------|---------|
-| Connect this machine | `neus setup` then `neus auth` |
-| Bind agent to this repo | `neus mount <agentId> --apply cursor` |
-| Health check | `neus doctor --live` |
-| Read trust receipts | `neus_proofs_get` (or `neus proofs` in the CLI) |
+| Connect this machine | `neus setup` |
+| Connect an agent to this project | `neus mount <agentId> --apply cursor` |
+| Health check | `neus doctor --live` (alias: `neus check`) |
+| Read trust receipts | MCP tool `neus_proofs_get` |
 
 ## Access keys
 
 OAuth is the default for IDE setup. Your MCP host discovers the NEUS OAuth metadata on first use and refreshes your session silently for up to 30 days.
 
-Use a **personal access key** from [Access Keys](https://neus.network/profile?tab=account) only when browser OAuth is not available — servers, CI, and automation. Access keys are durable: once written to the MCP config, they do not expire.
+Use a **profile access key** from [Access Keys](https://neus.network/profile?tab=account) only when browser OAuth is not available — servers, CI, and automation. Access keys are durable: once written to the MCP config, they do not expire.
 
 ```bash
 export NEUS_ACCESS_KEY=npk_...
 neus setup
 ```
 
-When `NEUS_ACCESS_KEY` is set, `neus setup` and `neus auth` write a durable `Bearer npk_…` credential instead of starting OAuth. Run `neus setup` again after rotating the key. Treat access keys like passwords.
+When `NEUS_ACCESS_KEY` is set, `neus setup` writes a durable `Bearer npk_…` credential instead of starting OAuth. Run `neus setup` again after rotating the key. Treat access keys like passwords.
 
 ## Disconnect
 
@@ -60,18 +48,18 @@ neus disconnect --access-key <token>
 
 | Goal | Command | Output |
 |------|---------|--------|
-| **Bind a trusted agent to this repo** | `neus mount <agentId> --apply cursor` | `.neus/mount.json` + host rules (live proofs) |
+| **Connect a trusted agent to this project** | `neus mount <agentId> --apply cursor` | `.neus/mount.json` + host rules (live receipts) |
 | **Snapshot legacy IDE config** | `neus import` / `neus export` | `.neus/imported/*.json` (local scan, no proofs) |
 
-### Runtime Mount (recommended for agents)
+### Connect a trusted agent
 
 ```bash
-neus auth
+neus setup
 neus mount <agentId> --apply cursor
 neus doctor --live
 ```
 
-See [Runtime Mount](../agents/runtime-mount).
+See [Connect agent context](../agents/runtime-mount).
 
 ### Legacy IDE import (migration only)
 
@@ -98,6 +86,8 @@ neus import --from claude-desktop
 Per-editor install paths (Cursor, VS Code, Claude Code, and more): **[Install NEUS](../install)**.
 
 `neus setup` connects **Cursor**, **Codex**, **VS Code**, and **Claude Code** in one command. Other MCP hosts (including Cline) use the same hosted URL — see [IDE plugin](./ide-plugin).
+
+**Cursor:** install the **neus-trust** plugin **or** run `neus setup --client cursor` — not both. The plugin already provides the `neus` MCP server; adding a second entry in `~/.cursor/mcp.json` creates a duplicate. `neus setup` soft-skips Cursor when the plugin is detected (pass `--client cursor` to override). Public tools = **13** (correct).
 
 | Host | User scope | Project scope |
 | --- | --- | --- |

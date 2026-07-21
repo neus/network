@@ -1,5 +1,5 @@
 {
-  "name": "neus-trust-receipts-showcase",
+  "name": "neus-trust-receipts-demo",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@neus/sdk": "^1.2.5",
+    "@neus/sdk": "^1.3.2",
     "lucide-react": "^0.460.0",
     "motion": "^11.15.0",
     "react": "^18.3.1",
@@ -23,7 +23,13 @@
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
-    "vite": "^5.4.11"
+    "vite": "^6.4.3"
+  },
+  "overrides": {
+    "@babel/core": "7.29.6",
+    "esbuild": "0.25.12",
+    "launch-editor": "2.14.1",
+    "ws": "8.21.0"
   },
   "engines": {
     "node": ">=20.0.0"

@@ -10,7 +10,7 @@ Use `@neus/sdk` for `api.neus.network` so headers and paths stay correct.
 
 | Layer | Use |
 |-------|-----|
-| Browser | **`getHostedCheckoutUrl`**, **`VerifyGate`**, polling — default user ceremony on **NEUS** ([Quickstart](../quickstart)) |
+| Browser | **`getHostedCheckoutUrl`**, **`VerifyGate`**, polling — default hosted sign-in on **NEUS** ([Quickstart](../quickstart)) |
 | Server | **`gateCheck`** with `gateId`; advanced: **`verifyFromApp`**, access keys |
 
 Do not put **`npk_*`** or other secrets in browser bundles. If you need calls the SDK does not expose from the client, **proxy through your backend** — [API overview](../api/overview).
@@ -34,7 +34,9 @@ window.location.assign(
 );
 ```
 
-`getHostedCheckoutUrl` supports `gateId`, `verifiers`, `preset`, `returnUrl`, `mode`, `intent`, `origin`, `oauthProvider`, `appId`, `billingWallet`, and `baseUrl`. The hosted page also accepts `returnTo` and `connect=1` (append manually). [Hosted Verify](../cookbook/auth-hosted-verify).
+`getHostedCheckoutUrl` supports login, a published gate, or direct verifier checks. These are separate recipes: `intent: 'login'` removes checkout parameters, and `gateId` owns the gate policy instead of mixing with `verifiers` or `preset`. Shared handoff options are `returnUrl`, `mode`, `origin`, and `oauthProvider`; advanced sponsor options are `appId` and `billingWallet`.
+
+For agent identity + delegation, use `getHostedAgentCreateUrl` so dedicated-wallet identity and controller approval stay in the correct order. [Agent create](../mcp/agent-create) · [Hosted Verify](../cookbook/auth-hosted-verify).
 
 React: [Widgets](../widgets/overview).
 
@@ -174,7 +176,7 @@ const res = await client.gateCheck({
   since: Date.now() - 60 * 60 * 1000
 });
 
-if (!res.data?.eligible) {
+if (res.data?.gate?.allRequiredSatisfied !== true) {
   throw new Error('Access denied');
 }
 ```

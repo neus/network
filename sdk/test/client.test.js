@@ -25,11 +25,11 @@ describe('NeusClient', () => {
 
     it('should accept custom config', () => {
       const customClient = new NeusClient({
-        apiUrl: 'https://dev.api.neus.network',
+        apiUrl: 'https://api.neus.network',
         timeout: 5000,
         enableLogging: true
       });
-      expect(customClient.baseUrl).toBe('https://dev.api.neus.network');
+      expect(customClient.baseUrl).toBe('https://api.neus.network');
       expect(customClient.config.timeout).toBe(5000);
       expect(customClient.config.enableLogging).toBe(true);
     });
@@ -37,6 +37,15 @@ describe('NeusClient', () => {
     it('should enforce HTTPS for neus.network domains', () => {
       const httpClient = new NeusClient({ apiUrl: 'http://api.neus.network' });
       expect(httpClient.baseUrl).toBe('https://api.neus.network');
+    });
+
+    it('sets Origin from appOrigin on Node (no window)', () => {
+      const originClient = new NeusClient({
+        enableLogging: false,
+        appOrigin: 'https://app.example',
+      });
+      expect(originClient.defaultHeaders.Origin).toBe('https://app.example');
+      expect(originClient.defaultHeaders['X-Client-Origin']).toBe('https://app.example');
     });
   });
 

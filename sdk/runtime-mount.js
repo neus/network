@@ -1,6 +1,6 @@
 /**
- * Runtime Mount — proof-backed agent context bundle (neus.runtime-mount.v1).
- * SSOT for CLI, integrators, and protocol neus_agent_mount response shape.
+ * Runtime Mount — Trusted Agent context bundle (neus.runtime-mount.v1).
+ * Shared shape for CLI, integrators, and the neus_agent_mount response.
  */
 
 export const RUNTIME_MOUNT_SCHEMA = 'neus.runtime-mount.v1';
@@ -211,6 +211,21 @@ export function buildRuntimeBundle(input) {
     delegation?.runtimePolicy &&
     typeof delegation.runtimePolicy === 'object' &&
     delegation.runtimePolicy.requiresHumanApproval === true;
+  const approvalPolicy = (() => {
+    if (!delegation?.approvalPolicy || typeof delegation.approvalPolicy !== 'object') {
+      return null;
+    }
+    const normalized = {};
+    if (typeof delegation.approvalPolicy.humanApprovalRequiredForNewClaims === 'boolean') {
+      normalized.humanApprovalRequiredForNewClaims =
+        delegation.approvalPolicy.humanApprovalRequiredForNewClaims;
+    }
+    if (typeof delegation.approvalPolicy.preApprovedContentOnly === 'boolean') {
+      normalized.preApprovedContentOnly =
+        delegation.approvalPolicy.preApprovedContentOnly;
+    }
+    return Object.keys(normalized).length > 0 ? normalized : null;
+  })();
 
   const capabilities = asStringArray(identity.capabilities);
   const skills = Array.isArray(identity.skills) ? identity.skills : [];
@@ -254,6 +269,7 @@ export function buildRuntimeBundle(input) {
           allowedActions,
           deniedActions,
           runtimePolicy: delegation.runtimePolicy,
+          approvalPolicy: approvalPolicy || undefined,
           expiresAt: delegation.expiresAt ?? null,
           isExpired: Boolean(delegation.isExpired),
           maxSpend: delegation.maxSpend,
@@ -270,7 +286,8 @@ export function buildRuntimeBundle(input) {
     enforce: {
       deniedActions,
       ...(allowedActions?.length ? { allowedActions } : {}),
-      ...(requiresHumanApproval ? { requiresHumanApproval: true } : {})
+      ...(requiresHumanApproval ? { requiresHumanApproval: true } : {}),
+      ...(approvalPolicy ? { approvalPolicy } : {})
     },
     contextPack: {
       identityCount: 1,
@@ -323,7 +340,7 @@ export function isRuntimeBundle(value) {
 export async function resolveRuntimeBundleFromMcp(input) {
   const accessKey = asString(input.accessKey);
   if (!accessKey) {
-    throw new Error('NEUS access key or authenticated MCP session is required for runtime mount.');
+    throw new Error('Sign in to NEUS or configure an access key before connecting agent context.');
   }
 
   const selector = {
@@ -519,4 +536,44 @@ export function evaluateMountFileHealth(manifest) {
         ? 'delegation_missing'
         : null
   };
+}
+
+/**
+ * Build a runtime mount bundle from a roster (identities + delegations extracted from proofs).
+ * Non-throwing: returns { error, message } when identity is missing or the bundle cannot be built.
+ * Selector picks the identity by agentId / agentWallet / identityQHash, then resolves the active
+ * delegation from the roster. Used by hosted MCP and product app consumers.
+ *
+ * @param {{ identities?: Array<Record<string, unknown>>, delegations?: Array<Record<string, unknown>> }} roster
+ * @param {{ agentId?: string, agentWallet?: string, identityQHash?: string }} selector
+ * @param {string} controllerWallet
+ */
+export function buildRuntimeMountFromRoster(roster, selector, controllerWallet) {
+  const identities = Array.isArray(roster?.identities) ? roster.identities : [];
+  const delegations = Array.isArray(roster?.delegations) ? roster.delegations : [];
+  const identity = pickIdentity(identities, selector);
+  if (!identity) {
+    return {
+      error: 'identity_not_found',
+      message: 'No agent-identity proof matches the requested agent.',
+    };
+  }
+  const agentWallet = normalizeWallet(identity.agentWallet);
+  const agentId = asString(identity.agentId);
+  const delegation = pickActiveDelegation(delegations, controllerWallet, agentWallet, agentId);
+  try {
+    return buildRuntimeBundle({
+      identity,
+      delegation,
+      identityQHash: asString(identity.qHash || selector.identityQHash),
+      delegationQHash: delegation ? asString(delegation.qHash) : null,
+      tools: [],
+      secretBindings: []
+    });
+  } catch (err) {
+    return {
+      error: 'mount_incomplete',
+      message: err && err.message ? err.message : 'Runtime mount bundle could not be built.'
+    };
+  }
 }

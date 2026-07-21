@@ -24,9 +24,11 @@ Agent verifications produce portable trust context any framework can read.
 
 | Type | How | Examples |
 |------|-----|----------|
-| Instant | Wallet signs | ownership-basic, agent-identity |
-| Interactive | Hosted steps | social, human |
-| Lookup | Live state | NFT, balance |
+| Interactive | Hosted steps on NEUS (passkey, OAuth, human) | ownership-social, ownership-org-oauth, proof-of-human |
+| Instant | Account signs in-session | ownership-basic, agent-identity |
+| Lookup | Live state | NFT, balance, wallet-risk |
+
+Most product gates start with **Interactive** checks. Instant and Lookup are available when your threat model needs them.
 
 ## Terms
 
@@ -34,7 +36,8 @@ Agent verifications produce portable trust context any framework can read.
 |------|---------|
 | qHash | Trust receipt reference — [Results](../platform/receipts-and-results) |
 | Verifier | Rule set applied to the claim |
-| Signing string | Wallet message |
+| Account / subject | The NEUS account the receipt is about (passkey, OAuth, or linked wallet) |
+| Signing string | Message the account signs when a check requires it |
 | Hosted Verify | Browser flow at `neus.network/verify` — [Hosted Verify](../cookbook/auth-hosted-verify) |
 
 Visibility: [Security and trust](../platform/security-and-trust)

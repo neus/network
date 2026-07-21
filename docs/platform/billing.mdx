@@ -6,7 +6,7 @@ icon: credit-card
 
 NEUS bills metered verification usage to a NEUS profile. Credits spend first.
 
-**Hosted sign-in** for your app does not use credits. Credits apply when a trust check runs or a receipt is saved.
+**Hosted sign-in** for your app does not use credits. Credits apply when a trust check runs, a receipt is saved, or Pro hosted AI is used.
 
 Plan amounts and the live credit estimator: [Pricing](./pricing) · [neus.network/pricing](https://neus.network/pricing).
 
@@ -16,9 +16,9 @@ Three lanes cover every flow. Most products only use the first.
 
 | Lane | Who pays | Use it for |
 |------|----------|------------|
-| **You pay for checks** | Your NEUS credits | The default — verifications run through your gate bill your account |
-| **Charge visitors at a gate** | Your visitor | Paid content, drops, and member access — USDC or card at [checkout](./hosted-gate-checkout) |
-| **Charge per call (x402)** | The caller / agent | Metered APIs and autonomous agents that [pay as they go](./x402) |
+| **You pay for checks** | Your NEUS credits | The default — verifications through your gate bill your account |
+| **Charge visitors at a gate** | Your visitor | Paid content and member access — card or USDC at [checkout](./hosted-gate-checkout) |
+| **Charge per API call (metered)** | The caller / agent | Metered APIs and agents that [pay as they go](./x402) (`x402`) |
 
 ## Default: you pay for visitor checks
 
@@ -32,24 +32,44 @@ There is no app ID or billing wallet to copy for this path. The gate carries the
 
 ## Server checks
 
-Confirm eligibility before trusted actions with **`gateCheck`** — pass the same `gateId`:
+Confirm eligibility before trusted actions with **`gateCheck`** — pass the same `gateId` and the visitor’s **account address** (from Hosted Verify / the receipt subject):
 
 ```javascript
 const result = await client.gateCheck({
   gateId: 'gate_your-app-name',
-  address: user.walletAddress,
+  address: user.accountAddress,
 });
+
+if (result.data?.gate?.allRequiredSatisfied !== true) {
+  // Send the visitor back to Hosted Verify
+}
 ```
 
 ## Charge visitors instead
 
 A gate can charge visitors directly. Turn it on in the gate's pricing step. Your NEUS credits still cover the verification checks unless you configure otherwise.
 
-**Checkout (card or crypto):** connect a payout account once from **Treasury → Payouts**. Visitors then pay through one hosted checkout and choose card or crypto there — both settle to your payout account. Until payouts are connected, paid gates offer USDC checkout only.
+**Card:** connect a payout account once from **Treasury → Payouts**. Card payments for your paid gates then settle to that account.
 
-**Custom wallet (USDC):** point the gate's payout at any wallet address and payments settle on-chain straight to it — no setup required. Custom-wallet gates are USDC-only.
+**USDC checkout (optional):** for products that already support stablecoin payers. Not required for account-based products.
 
-Payment runs after verification by default and unlocks the reward at fulfillment — the full sequence (snapshot → check → verify → pay → fulfill) is documented in [Hosted Gate Checkout](./hosted-gate-checkout).
+Until payouts are connected, paid gates may offer USDC checkout only.
+
+Payment runs after verification by default. For the full checkout sequence, see [Hosted Gate Checkout](./hosted-gate-checkout).
+
+## When your app creates agents for users
+
+Agent setup creates two separately signed receipts. Billing follows the signer for each step unless a validated sponsor or pay-per-call receipt is present.
+
+| Step | Default payer |
+|------|---------------|
+| Agent signs `agent-identity` | Agent account |
+| Signed-in account signs `agent-delegation` | Signed-in approving account |
+| Server signs with its own profile | Builder profile account |
+| Valid sponsor grant | Sponsoring organization |
+| Valid pay-per-call receipt | Caller that bought the receipt |
+
+For a dedicated agent account, create identity first, then send the user through the delegation-only hosted callback. See [`neus_agent_create`](../mcp/agent-create).
 
 ## When credits run out
 
@@ -59,4 +79,4 @@ Billable calls return **402** with a quote. Complete payment and retry with `PAY
 
 Server-side receipt creation and per-user approvals use separate flows — see [Integrations](../cookbook/integrations).
 
-**Next:** [x402](./x402)
+**Next:** [Pricing](./pricing) · [x402](./x402)

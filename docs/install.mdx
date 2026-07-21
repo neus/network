@@ -4,11 +4,9 @@ description: Connect assistants to NEUS MCP in one command.
 icon: download
 ---
 
-Trust infrastructure for agents that act.
+Connect your assistant to NEUS once — portable identity, authority, and receipts travel with you across Cursor, Claude Code, Codex, and VS Code.
 
-Verifiable identity, scoped authority, and receipts for every trusted action.
-
-Install once. The same trust identity and receipts move with you across editors and runtimes.
+Install once. Reuse the same profile and trust context in every supported editor.
 
 ---
 
@@ -25,10 +23,10 @@ No global install? Run `npx -y -p @neus/sdk neus setup` once.
 Ask your assistant:
 
 ```txt
-Use NEUS Verify before taking sensitive actions.
+Use NEUS so my identity, permissions, and context travel with me. Reuse receipts when you can, verify when you must, authorize actions against those limits, and leave an audit trail.
 ```
 
-This gives your assistant one public trust loop: check existing trust receipts, guide any missing verification step, then summarize the outcome as **NEUS Verify** (Passed / Action needed / Blocked — not raw tool output).
+Your assistant reuses portable receipts for who you are and what you’re allowed to do, verifies only what’s missing, then summarizes as **Passed**, **Action needed**, or **Blocked**.
 
 For example prompts, see [MCP journeys](./mcp/journeys).
 
@@ -54,11 +52,10 @@ For example prompts, see [MCP journeys](./mcp/journeys).
 | Access keys (servers / CI) | [MCP setup](./mcp/setup#access-keys) |
 | Trust receipt APIs | [API overview](./api/overview) |
 
-Codex uses its own OAuth step after setup:
+For Codex, target that client during setup. The command starts its OAuth flow:
 
 ```bash
 neus setup --client codex
-neus auth --client codex
 ```
 
 Claude Code plugin (optional):
@@ -67,3 +64,5 @@ Claude Code plugin (optional):
 /plugin marketplace add https://github.com/neus/network
 /plugin install neus-trust@neus
 ```
+
+**Cursor:** install the **neus-trust** plugin **or** run `neus setup --client cursor` — not both. The plugin already provides the `neus` MCP server; adding a second entry in `~/.cursor/mcp.json` creates a duplicate. If both are present, `neus doctor` warns and `neus setup` soft-skips Cursor unless you pass `--client cursor` explicitly.

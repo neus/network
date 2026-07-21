@@ -2,17 +2,17 @@
   "name": "neus",
   "owner": {
     "name": "NEUS",
-    "email": "info@neus.network"
+    "email": "dev@neus.network"
   },
   "metadata": {
-    "description": "Trust infrastructure for agents that act. Verify identity, scoped authority, trust receipts, and Vault-backed secrets in Cursor, Claude Code, Codex, and VS Code.",
-    "version": "1.2.5"
+    "description": "Connect assistants to verified identity, limited permissions, trust receipts, and encrypted Vault secrets in Cursor, Claude Code, Codex, and VS Code.",
+    "version": "1.3.3"
   },
   "plugins": [
     {
       "name": "neus-trust",
       "source": "./plugins/neus-trust",
-      "description": "Trust infrastructure for agents that act. Verify identity, scoped authority, trust receipts, and Vault-backed secrets before assistants act. One setup for Cursor, Claude Code, Codex, and VS Code."
+      "description": "Verified identity, limited permissions, reusable trust receipts, and Vault secrets. One setup for Cursor, Claude Code, Codex, and VS Code."
     }
   ]
 }

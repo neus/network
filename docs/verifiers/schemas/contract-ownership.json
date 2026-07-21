@@ -1,7 +1,7 @@
 {
   "$id": "https://neus.network/schemas/contract-ownership.json",
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "description": "Verifies smart contract ownership (EVM chains)",
+  "description": "Confirm an owner or administrator role on an EVM smart contract",
   "properties": {
     "chainId": {
       "minimum": 1,

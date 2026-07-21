@@ -73,22 +73,22 @@ When `gateId` is passed, the response carries a per-requirement `data.gate` bloc
 }
 ```
 
-- `satisfiedVerifierIds` / `missingVerifierIds` — which requirements existing proofs cover.
+- `satisfiedVerifierIds` / `missingVerifierIds` — which requirements existing receipts cover.
 - `reusedVerifierProofs` — verifierId → qHash map (requires `includeQHashes=true`). Pass it as `options.reusedVerifierProofs` on `POST /api/v1/verification` so satisfied checks are not re-run.
 - Re-run the gate check after every interactive step (OAuth grant, personhood session) before treating checkout as complete. Interactive completions only count once the protocol confirms them here.
 
-## Request-time vs proof-backed rules
+## Request-time vs receipt-based rules
 
 Each requirement carries `match` rows (`{ path, op, value }`). They are enforced at two different moments:
 
 | Rule type | Examples | Enforced |
 |-----------|----------|----------|
 | Request-time (`eq` on input fields) | `domain`, `contractAddress`, `chainId`, `minBalance`, `provider` | When the verification request is submitted — the locked value must match exactly |
-| Proof-backed (`traits.*`, `claims.*`, risk fields, `gte`/`lte`) | `claims.age_min`, `claims.liveness_verified`, `riskLevel`, `overallRisk` | After verification, against the verifier's output |
+| Receipt-based (`traits.*`, `claims.*`, risk fields, `gte`/`lte`) | `claims.age_min`, `claims.liveness_verified`, `riskLevel`, `overallRisk` | After verification, against the check result |
 
-Proof-backed rows mean an existing proof can fail a stricter gate. Example: a personhood proof created for a basic gate (personhood + sanctions) will **not** satisfy a gate that also requires `claims.age_min ≥ 21` — the visitor is asked to complete a stronger check, and the new proof carries the extra claims.
+Receipt-based rows mean an existing receipt may not satisfy a stricter gate. For example, a personhood receipt created for a basic gate will not satisfy another gate that also requires `claims.age_min ≥ 21`. The visitor must complete the additional check.
 
-Note for `wallet-risk` gates: any proof-backed row also requires the proof's `policyVerified` to be true — a risk proof that failed its own policy never satisfies a gate.
+For `wallet-risk` gates, any receipt-based row also requires `policyVerified` to be true. A failed risk check never satisfies a gate.
 
 ## Paid gates
 

@@ -1,40 +1,41 @@
 ---
-title: Agents Overview
-description: Identity, scoped authority, and receipts for agents that act.
+title: Overview
+sidebarTitle: Overview
+description: Give AI agents verifiable identity, permissions, spending limits, and checks before action.
 icon: robot
 "og:image": "/images/og-agents.png"
 "twitter:image": "/images/og-agents.png"
 ---
 
-NEUS gives agents a portable identity and **scoped authority** that follows them across tools, IDEs, and apps. Other apps, agents, and payment rails can trust an agent before it acts, not after — because the agent carries its own proof.
+NEUS gives AI agents and assistants a portable identity plus explicit permissions. Connected runtimes check those receipts before granting access or allowing a sensitive action.
 
 | Need | How |
 |------|-----|
-| Identify the agent | `agent-identity` — the agent wallet signs for itself |
-| Set what it can do | `agent-delegation` — a controller account grants scoped authority |
+| Identify the agent | `agent-identity`: the agent account signs its identity |
+| Set what it can do | `agent-delegation`: an approving account grants permissions |
 | Cap what it can spend | `maxSpend` on the delegation (base units) |
 | Check if it is ready | `neus_agent_link` → `linked: true` |
 | Be discoverable | A2A and EIP-8004 agent cards |
-| Reuse trust | `qHash`, proof URL, or DID |
+| Reuse trust | Receipt ID (`qHash`) or receipt URL |
 | Audit later | Receipt reads and proof pages |
 
-Agent frameworks handle reasoning and execution. NEUS handles the trust layer they lack: verifiable identity, enforced scope, and receipts for every action.
+Agent frameworks handle reasoning and execution. NEUS supplies verifiable identity, permission limits, and reusable trust receipts.
 
-## Two proofs make an agent trusted
+## Two receipts make an agent ready in NEUS
 
-- **Identity** (`agent-identity`) — the agent wallet self-attests its name, type, capabilities, and skills. Identity alone grants no authority.
-- **Delegation** (`agent-delegation`) — a **controller** account signs to grant scoped authority to the agent: which actions it may take, spend caps, and an expiry.
+- **Identity** (`agent-identity`): the agent account signs its name, type, capabilities, and skills. Identity alone grants no permission.
+- **Permissions** (`agent-delegation`): an approving account signs the allowed actions, spending cap, and expiration date.
 
 An agent is **ready** only when both are on file.
 
-## Scoped authority
+## Permission limits
 
-A delegation is a hard boundary, not a hint:
+The permission receipt defines a boundary:
 
-- **`allowedActions` / `deniedActions`** — explicit allow/deny lists. A denied action always wins.
-- **`maxSpend`** — a spend cap as a whole-number string in token base units (USDC uses 6 decimals: 25 USDC = `"25000000"`).
-- **`scope`** — e.g. `payments:x402` for metered payments, or `global`.
-- **`expiresAt`** — Unix milliseconds; set it whenever money or high-risk actions are in scope.
+- **`allowedActions` / `deniedActions`**: explicit allow and deny lists. A denied action takes precedence.
+- **`maxSpend`**: a whole-number spending cap in token base units. USDC uses six decimals, so 25 USDC is `"25000000"`.
+- **`scope`**: the area where permissions apply, such as `payments:x402` or `global`.
+- **`expiresAt`**: expiration time in Unix milliseconds. Set it for payments or other sensitive actions.
 
 Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are available through `neus_agent_create`. Full field reference: [Agent delegation](./agent-delegation).
 
@@ -52,45 +53,45 @@ Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are av
     Call **`neus_context`**, then **`neus_agent_link`** with the agent wallet.
   </Step>
   <Step title="Create">
-    If proofs are missing, call **`neus_agent_create`** — the agent wallet signs identity, the controller signs delegation. Finish on NEUS.
+    If identity or permission receipts are missing, call **`neus_agent_create`**. The agent account signs its identity, and the approving account grants permissions.
   </Step>
   <Step title="Confirm">
     Call **`neus_agent_link`** until **`linked: true`**, then reuse receipts.
   </Step>
-  <Step title="Mount">
+  <Step title="Connect">
     In your project repo:
     ```bash
     neus mount <agentId> --apply cursor
     ```
-    Binds identity, delegation, and scoped policy to the workspace. [Runtime Mount](./runtime-mount).
+    Loads the agent&apos;s verified identity, permissions, and rules into the project. [Connect agent context](./runtime-mount).
   </Step>
   <Step title="Act">
-    Check receipts before payments, data access, or other trusted actions.
+    Check receipt status before payments, data access, or other sensitive actions.
   </Step>
 </Steps>
 
 ## Next
 
 <CardGroup cols={2}>
-  <Card title="Verification flow" icon="route" href="./agent-verification-flow">
+  <Card title="Verification flow" icon="diagram-project" href="./agent-verification-flow">
     Step-by-step order.
   </Card>
-  <Card title="Agent identity" icon="badge-check" href="./agent-identity">
+  <Card title="Agent identity" icon="id-card" href="./agent-identity">
     Register an agent.
   </Card>
-  <Card title="Agent delegation" icon="key" href="./agent-delegation">
-    Grant scoped authority and spend caps.
+  <Card title="Agent permissions" icon="handshake" href="./agent-delegation">
+    Grant allowed actions, spending caps, and expiration dates.
   </Card>
-  <Card title="A2A agent cards" icon="cards" href="./a2a">
-    Discovery for multi-agent systems.
+  <Card title="Discover agents" icon="address-card" href="./named-agent-card">
+    Public pages, A2A, and EIP-8004 cards.
   </Card>
   <Card title="Pay per call" icon="coins" href="../platform/x402">
-    Agentic payments with x402.
+    Charge for API requests with HTTP 402.
   </Card>
-  <Card title="Runtime Mount" icon="layers" href="./runtime-mount">
-    Bind a trusted agent to any repo or runtime.
+  <Card title="Connect agent context" icon="layer-group" href="./runtime-mount">
+    Load a verified agent's identity and permissions into a project.
   </Card>
   <Card title="MCP setup" icon="plug" href="../mcp/setup">
-    Hosted MCP, OAuth, and access keys.
+    Connect supported editors with OAuth or an access key.
   </Card>
 </CardGroup>

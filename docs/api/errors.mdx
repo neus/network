@@ -63,7 +63,7 @@ try {
     gateId: 'gate_your-app-name',
     address: subjectAddress,
   });
-  if (!result.data?.eligible) {
+  if (result.data?.gate?.allRequiredSatisfied !== true) {
     throw new Error('Required receipt not found');
   }
 } catch (error) {

@@ -1,30 +1,30 @@
 ---
 title: "Context (neus_context)"
-description: "Session home for NEUS MCP — mode, signed-in profile context, verifier summary, and next steps."
+description: "Start here for the signed-in profile, available checks, and recommended workflow."
 icon: database
 ---
 
 Call **`neus_context`** once at the start of a NEUS MCP session.
 
-It returns the current mode, setup links, session flow, safety rules, compact verifier summary, and **signed-in profile context when the MCP connection is authenticated**.
+It returns setup links, available checks, the recommended workflow, and **profile details when the connection is signed in**.
 
 Use **`neus_me`** only when you need to refresh profile context or look up a public wallet/DID.
 
-Authenticated profile context can include `profileSummary.proofsSummary`: a compact receipt snapshot with total counts, verifier counts, and latest receipt pointers. Use **`neus_proofs_get`** when you need full receipt records or pagination.
+Profile context can include `profileSummary.proofsSummary`: a compact receipt summary with totals, check counts, and recent receipt references. Use **`neus_proofs_get`** for full records or more pages.
 
 ## What it returns
 
 | Field | Use |
 |-------|-----|
 | `setup.mcpEndpoint` | The hosted MCP endpoint in use (`https://mcp.neus.network/mcp`) |
-| `sessionWallet` | Signed-in wallet — omit `wallet` on check/verify tools when present |
-| `runtimeContract` | Canonical intent → tool-sequence map plus execution and stop rules — follow it instead of improvising tool order |
-| `autopilot` | Recommended trust-before-action flow |
+| `sessionWallet` | Signed-in account address — omit `wallet` on tools when signed in |
+| `runtimeContract` | Recommended tool order and stopping conditions |
+| `autopilot` | Reuse guidance (check receipts first, then verify-or-guide) |
 | `verifierSummary` | Compact list of available checks |
-| `trustResult` | Current trust posture for the session |
+| `trustResult` | Passed, Action needed, and Blocked response guidance |
 | `tools` | Map of available NEUS MCP tools |
 | `profileSummary` | Signed-in profile context, including `proofsSummary` |
 
-When signed in, prefer `sessionWallet` and reuse existing receipts before opening any hosted link.
+When signed in, let account-based tools use the current profile and check existing receipts before opening a browser link.
 
 Session flow recap: **[Overview](./overview)**. Reuse existing receipts first; use hosted links only when the next step needs a browser.

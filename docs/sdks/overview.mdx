@@ -24,7 +24,7 @@ Avoid credentialed `fetch` to `api.neus.network` from the browser; use SDK helpe
 
 ## Browser (default)
 
-Ceremony on **NEUS**:
+Hosted sign-in and checks on **NEUS**:
 
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';
@@ -39,7 +39,7 @@ window.location.assign(
 
 React: `VerifyGate` from `@neus/sdk/widgets` — [Quickstart](../quickstart).
 
-After you have **`qHash`**, optional wait: `NeusClient` + `pollProofStatus` — [Verifications](./verifications).
+After you have a **receipt ID** (`qHash`), optional wait: `NeusClient` + `pollProofStatus` — [Verifications](./verifications).
 
 ## In-app signing (optional)
 
@@ -75,9 +75,12 @@ Optional: `timeout` on `NeusClient`.
 
 <CardGroup cols={2}>
   <Card title="JavaScript" icon="code" href="./javascript">
+    Client setup and common methods.
   </Card>
   <Card title="Verifications" icon="list-check" href="./verifications">
+    Create, poll, and read receipts.
   </Card>
   <Card title="Authentication" icon="key" href="./authentication">
+    Access keys and server auth.
   </Card>
 </CardGroup>

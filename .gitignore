@@ -25,10 +25,11 @@ integrations/
 # Repo-root local tooling (not part of the public surface)
 /scripts/*
 !/scripts/validate-template.mjs
-!/scripts/validate-cursor-mcp.mjs
 !/scripts/validate-cursor-schemas.mjs
+!/scripts/validate-cursor-mcp.mjs
 !/scripts/validate-universal-manifests.mjs
 !/scripts/verify-release-versions.mjs
+!/scripts/extract-changelog-notes.mjs
 
 # Vendored official Cursor plugin + marketplace JSON schemas (draft-07) used by
 # scripts/validate-cursor-schemas.mjs. Pinned from cursor/plugins; update deliberately.

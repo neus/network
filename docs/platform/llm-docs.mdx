@@ -8,13 +8,10 @@ This site (`docs.neus.network`) is the standard integration reference. Follow th
 
 ## Read first
 
-1. [Home](../index)
-2. [Get started](../get-started)
-3. [Quickstart](../quickstart)
-4. [Integration](../integration)
-5. [JavaScript SDK](../sdks/javascript)
-6. [MCP tools](../mcp/tools)
-7. [API overview](../api/overview) (server and raw HTTP)
+1. [Get started](../get-started) — pick app, assistant, agent, or backend
+2. [Quickstart](../quickstart) (apps) or [Install](../install) (assistants)
+3. [Trust stack](../platform/trust-stack) — loop and architecture
+4. [MCP tools](../mcp/tools) or [API overview](../api/overview) as needed
 
 ## MCP for assistants
 
@@ -32,10 +29,10 @@ Use **`neus auth`** for OAuth. Profile access keys (`npk_*`) are for servers and
 - **Browser → NEUS:** SDK (`NeusClient`, widgets) or **Hosted Verify**. Do not call `api.neus.network` from the browser with secrets or ad-hoc headers; use a **server proxy** when you need custom server-side calls.
 - **Server → NEUS:** `gateCheck`, eligibility, secrets, raw HTTP — [API overview](../api/overview)
 - Account, gates, and billing: [Get started](../get-started)
-- Default browser ceremony: [Hosted Verify](../cookbook/auth-hosted-verify). Optional in-app signing: [Signing format](../verification/signing-format)
+- Default hosted sign-in: [Hosted Verify](../cookbook/auth-hosted-verify). Optional in-app signing: [Signing format](../verification/signing-format)
 - Do not use wallet **private keys** as MCP credentials. Sign in with **OAuth** or use **Profile access keys** (`npk_*`) for Bearer in MCP or server config only.
 - **402:** use the x402 retry pattern
-- Agents: [Overview](../agents/overview) · [Verification flow](../agents/agent-verification-flow) · [A2A cards](../agents/a2a)
+- Agents: [Overview](../agents/overview) · [Verification flow](../agents/agent-verification-flow) · [Discover agents](../agents/named-agent-card)
 - Use returned receipt URLs or qHashes only when the API/tool response provides them.
 
 ## Exports

@@ -32,6 +32,11 @@ describe('runtime-mount', () => {
     agentId: identity.agentId,
     scope: 'global',
     deniedActions: ['send_message'],
+    runtimePolicy: { requiresHumanApproval: true },
+    approvalPolicy: {
+      humanApprovalRequiredForNewClaims: true,
+      preApprovedContentOnly: true
+    },
     provider: 'openai',
     model: 'gpt-4.1',
     isExpired: false
@@ -43,6 +48,11 @@ describe('runtime-mount', () => {
     expect(bundle.identity.agentId).toBe('demo-agent');
     expect(bundle.trust.identityQHash).toBe(identity.qHash);
     expect(bundle.enforce.deniedActions).toContain('send_message');
+    expect(bundle.enforce.requiresHumanApproval).toBe(true);
+    expect(bundle.enforce.approvalPolicy).toEqual({
+      humanApprovalRequiredForNewClaims: true,
+      preApprovedContentOnly: true
+    });
     expect(bundle.effectiveRuntime).toEqual({ provider: 'openai', model: 'gpt-4.1' });
   });
 

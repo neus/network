@@ -21,6 +21,7 @@ import {
   computeContentHash,
   NEUS_CONSTANTS,
   getHostedCheckoutUrl,
+  getHostedAgentCreateUrl,
   toAgentDelegationMaxSpend
 } from '../utils.js';
 
@@ -320,7 +321,7 @@ describe('Utils', () => {
   });
 
   describe('getHostedCheckoutUrl()', () => {
-    it('should include popup origin when provided', () => {
+    it('keeps login separate from verifier checkout parameters', () => {
       const url = getHostedCheckoutUrl({
         verifiers: ['ownership-basic'],
         mode: 'popup',
@@ -330,7 +331,7 @@ describe('Utils', () => {
       });
 
       expect(url).toBe(
-        'https://neus.network/verify?returnUrl=https%3A%2F%2Fapp.example%2Fcallback&verifiers=ownership-basic&mode=popup&intent=login&origin=https%3A%2F%2Fapp.example'
+        'https://neus.network/verify?returnUrl=https%3A%2F%2Fapp.example%2Fcallback&mode=popup&intent=login&origin=https%3A%2F%2Fapp.example'
       );
     });
 
@@ -348,14 +349,68 @@ describe('Utils', () => {
       );
     });
 
-    it('should omit origin when not provided', () => {
+    it('lets gateId own checkout policy when conflicting preset is provided', () => {
       const url = getHostedCheckoutUrl({
         gateId: 'gate-123',
         preset: 'human'
       });
 
-      expect(url).toBe('https://neus.network/verify?gateId=gate-123&preset=human');
+      expect(url).toBe('https://neus.network/verify?gateId=gate-123');
       expect(url.includes('origin=')).toBe(false);
+    });
+  });
+
+  describe('getHostedAgentCreateUrl()', () => {
+    it('builds the self-wallet identity and delegation flow', () => {
+      const url = new URL(
+        getHostedAgentCreateUrl({
+          agentId: 'self-agent',
+          agentWallet: '0x1111111111111111111111111111111111111111',
+          controllerWallet: '0x1111111111111111111111111111111111111111',
+          returnUrl: 'https://partner.example/callback'
+        })
+      );
+
+      expect(url.searchParams.get('verifiers')).toBe('agent-identity,agent-delegation');
+      expect(url.searchParams.get('agentId')).toBe('self-agent');
+      expect(url.searchParams.get('returnUrl')).toBe('https://partner.example/callback');
+    });
+
+    it('builds a delegation-only callback after dedicated-wallet identity', () => {
+      const url = new URL(
+        getHostedAgentCreateUrl({
+          agentId: 'dedicated-agent',
+          agentWallet: '0x1111111111111111111111111111111111111111',
+          controllerWallet: '0x2222222222222222222222222222222222222222',
+          identityQHash: `0x${'a'.repeat(64)}`,
+          returnUrl: 'https://partner.example/callback',
+          scope: 'global',
+          maxSpend: '15000000',
+          allowedActions: ['read_context'],
+          deniedActions: ['send_message'],
+          runtimePolicy: { requiresHumanApproval: true }
+        })
+      );
+
+      expect(url.searchParams.get('verifiers')).toBe('agent-delegation');
+      expect(url.searchParams.get('scope')).toBe('global');
+      expect(url.searchParams.get('maxSpend')).toBe('15000000');
+      expect(JSON.parse(url.searchParams.get('prefillAllowedActions'))).toEqual([
+        'read_context'
+      ]);
+      expect(JSON.parse(url.searchParams.get('prefillRuntimePolicy'))).toEqual({
+        requiresHumanApproval: true
+      });
+    });
+
+    it('rejects a two-wallet hosted flow before agent identity exists', () => {
+      expect(() =>
+        getHostedAgentCreateUrl({
+          agentId: 'dedicated-agent',
+          agentWallet: '0x1111111111111111111111111111111111111111',
+          controllerWallet: '0x2222222222222222222222222222222222222222'
+        })
+      ).toThrow(/sign agent-identity first/i);
     });
   });
 

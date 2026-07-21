@@ -14,13 +14,13 @@ To bill hosted checks through your product, complete [Quickstart](../quickstart)
 
 <Steps>
  <Step title="Check">
- **`neus_context`** → **`neus_agent_link`**. Done if **`linked: true`**.
+ **`neus_context`** → **`neus_agent_link`** with both **`agentWallet`** and **`agentId`**. Done if **`linked: true`**.
  </Step>
  <Step title="Create">
  **`neus_agent_create`** when proofs are missing.
  </Step>
  <Step title="Finish">
- Complete **`hostedVerifyUrl`** or signing steps from the response.
+ Follow **`next_action`**. Dedicated wallets sign identity first; the approving account finishes delegation.
  </Step>
  <Step title="Confirm">
  **`neus_agent_link`** until **`linked: true`**.
@@ -29,10 +29,28 @@ To bill hosted checks through your product, complete [Quickstart](../quickstart)
 
 ## SDK
 
+For a dedicated agent wallet, keep the identity receipt from the agent-signed step, then build a delegation-only hosted callback:
+
+```javascript
+import { getHostedAgentCreateUrl } from '@neus/sdk';
+
+const hostedUrl = getHostedAgentCreateUrl({
+  agentId: 'workflow-orchestrator',
+  agentWallet,
+  controllerWallet,
+  identityQHash,
+  allowedActions: ['read_context', 'execute_jobs'],
+  deniedActions: ['send_message'],
+  runtimePolicy: { requiresHumanApproval: true },
+  returnUrl: 'https://app.example.com/agents/callback',
+});
+```
+
 | Step | Page |
 |------|------|
 | Register | [Agent identity](../agents/agent-identity) |
 | Delegate | [Agent delegation](../agents/agent-delegation) |
+| Billing | [Billing](../platform/billing) |
 | Check | [Integration](../integration) |
 
 Schemas: **`docs/verifiers/schemas/`**

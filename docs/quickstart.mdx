@@ -6,7 +6,7 @@ icon: rocket
 "twitter:image": "/images/og-quickstart.png"
 ---
 
-The fastest way to add trust to an app: gate content with **`<VerifyGate>`**, show status with **`<ProofBadge>`**, and confirm on your server before trusted actions. Your app never implements verifier logic — a published gate owns the checks, pricing, and checkout.
+The fastest way to add trust to an app: gate content with **`<VerifyGate>`**, show status with **`<ProofBadge>`**, and confirm on your server before trusted actions. Your app never implements check logic — a published gate owns the checks, pricing, and checkout.
 
 **End users never need a NEUS account, an API key, or extra setup in your product.**
 
@@ -30,28 +30,29 @@ The fastest way to add trust to an app: gate content with **`<VerifyGate>`**, sh
     ```jsx
     import { ProofBadge } from '@neus/sdk/widgets';
 
-    <ProofBadge qHash={proof.qHash} showChains />;
+    <ProofBadge qHash={proof.qHash} />;
     ```
+    Optional: pass `showChains` when you want on-chain status in the badge.
   </Step>
   <Step title="Confirm before trusted actions">
-    On your server, check the visitor still satisfies the gate before you act:
+    On your server, check the visitor still satisfies the gate before you act. Pass the **account address** from the Hosted Verify callback or the receipt you stored — every NEUS account has one (passkey and OAuth included). You do not need a separate crypto wallet in your product for this path:
     ```js
     import { NeusClient } from '@neus/sdk';
 
     const client = new NeusClient();
     const result = await client.gateCheck({
       gateId: 'gate_your-app-name',
-      address: user.walletAddress,
+      address: user.accountAddress, // from Hosted Verify / stored receipt subject
     });
 
-    if (!result.data?.eligible) {
+    if (!result.data?.gate?.allRequiredSatisfied) {
       // send the user back to VerifyGate or Hosted Verify
     }
     ```
   </Step>
 </Steps>
 
-The user's receipt is theirs. If they return or visit another gate that needs the same checks, they can reuse it.
+The visitor’s receipt is theirs. If they return or visit another gate that needs the same checks, they can reuse it.
 
 ## Not using React? Send users to Hosted Verify
 
@@ -70,12 +71,7 @@ Read the **receipt ID** (`qHash`) from the callback URL or popup message, then s
 
 ## Adding trust to an agent instead?
 
-```bash
-neus setup
-neus check
-```
-
-Wires NEUS MCP into Cursor, Codex, VS Code, and Claude Code, then ask: **"Use NEUS Verify before taking sensitive actions."** See [Install NEUS](./install).
+[Install NEUS](./install), then ask: **"Use NEUS Verify before taking sensitive actions."**
 
 ## Next
 

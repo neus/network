@@ -4,31 +4,24 @@ description: Real assistant workflows — verify before action, reuse receipts, 
 icon: route
 ---
 
-NEUS MCP is built for outcomes. After `neus setup` and `neus check`, ask your assistant in plain language — it runs the trust loop and reports a **Trust Result** (Passed / Action needed / Blocked) instead of raw tool output.
+After `neus setup` and `neus check`, ask your assistant to use NEUS in plain language. It reports the result as **Passed**, **Action needed**, or **Blocked** instead of showing raw tool output.
 
-Signed in? Your assistant uses your profile wallet automatically — you never paste wallet addresses.
+When you are signed in, account-based tools use your current profile automatically.
 
 ## Verify before a sensitive action
 
-The default autopilot: reuse an existing receipt when one fits, run the missing check only when needed, then continue.
+The default workflow reuses a valid receipt when one fits and runs a new check only when needed.
 
 **Try:** "Use NEUS Verify before taking sensitive actions."
 
 ```txt
-NEUS Verify
-Status: Passed
-Requirement: Identity and permission check
-Receipt: Existing trust receipt accepted
-Next: Continue
+NEUS Verify: Passed. Requirement satisfied. Receipt on file. Next: Continue.
 ```
 
 If nothing on file covers the request:
 
 ```txt
-NEUS Verify
-Status: Action needed
-Missing: Sign-in
-Next: Connect NEUS, then retry
+NEUS Verify: Action needed. Missing: Sign-in. Next: Complete the secure step, then retry.
 ```
 
 ## Show your trust receipts
@@ -39,7 +32,7 @@ Pull the receipt URL, status, tags, or summary behind any prior check.
 
 ## Reuse portable context
 
-Tagged receipts carry prior instructions, rules, or session references — so your assistant picks up where you left off without re-asking.
+Tagged receipts carry prior instructions, rules, or session references — so your assistant picks up where you left off without re-asking. Optional linking patterns: [Receipt links and versioning](../learn/receipts-as-knowledge).
 
 **Try:** "Use my NEUS context from prior receipts before asking me again."
 
@@ -50,10 +43,7 @@ Confirm an agent has both identity and approved authority before it acts.
 **Try:** "Verify this agent is trusted before it runs tools."
 
 ```txt
-NEUS Verify
-Status: Blocked
-Reason: Agent has no approved delegation on file
-Next: Run agent setup, then retry
+NEUS Verify: Blocked. A required trust condition was not satisfied. Next: Do not continue until the check passes.
 ```
 
 When setup is missing, the assistant guides identity + delegation, then re-checks until the agent is linked. See [Agent verification flow](../agents/agent-verification-flow).

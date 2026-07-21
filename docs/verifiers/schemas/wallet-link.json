@@ -16,7 +16,7 @@
       ]
     }
   ],
-  "description": "Link secondary wallet via signature",
+  "description": "Associate a second wallet by signing from that wallet",
   "properties": {
     "chain": {
       "format": "caip2-chain",

@@ -1,28 +1,29 @@
 ---
 title: Agent concepts
-description: How agent identity, scoped permission, and profiles work together on NEUS.
-icon: users
+sidebarTitle: Concepts
+description: How agent identity, permissions, and profiles work together on NEUS.
+icon: book-open
 ---
 
-**Register** the agent on your profile, then **grant** what it may do. Receipts travel with the agent into gates, APIs, and MCP — any surface can check permission before action.
+**Register** the agent on your profile, then **grant** what it may do. Gates, APIs, and connected assistant tools can check those receipts before an action.
 
-The two steps can be the same account (self-delegation) or two accounts (a person or org delegating to an agent).
+The same account can complete both steps, or one account can register the agent while another approves its permissions.
 
 ## Roles
 
 | Role | Does | Signs with |
 |------|------|------------|
 | **Agent** | Registers identity (name, type, capabilities) | Agent wallet |
-| **Controller** | Grants scoped authority and limits | Controller account |
+| **Approver** | Grants permissions and limits | Controller account |
 
-Together, identity and delegation give an agent a portable trust context. Any app or runtime can check who the agent is and what it is allowed to do without trusting your infrastructure.
+Together, the identity and permission receipts tell an integration who the agent is and what it may do.
 
 - **Agent wallet** — identifies the agent in NEUS and self-signs `agent-identity`.
-- **Controller account** — signs `agent-delegation`. It does not need to own the agent wallet.
+- **Controller account**: the approving account that signs `agent-delegation`. It does not need to own the agent wallet.
 
-## Scoped authority
+## Permission limits
 
-A delegation defines exactly what the agent may do:
+A permission receipt defines what the agent may do:
 
 | Concept | Field | Notes |
 |---------|-------|-------|
@@ -32,14 +33,14 @@ A delegation defines exactly what the agent may do:
 | Spend cap | `maxSpend` | Whole-number string in token base units (USDC: 6 decimals) |
 | Expiry | `expiresAt` | Unix milliseconds; set when money or risk is in scope |
 
-Capabilities (`wallet`, `signing`, `spending`, `publishing`, `mcp`, …) describe what an agent *can* do; delegation decides what it is *allowed* to do.
+Capabilities such as `wallet`, `signing`, `spending`, and `publishing` describe what an agent *can* do. The permission receipt decides what it is *allowed* to do.
 
 ## Setup state
 
 | Field | Meaning |
 |-------|---------|
-| `linked` | Identity and delegation both present |
-| `principal` | Signed-in account from your MCP session |
+| `linked` | Identity and permission receipts are both present |
+| `principal` | Signed-in account from the current NEUS session |
 
 ## Next
 
@@ -47,7 +48,7 @@ Capabilities (`wallet`, `signing`, `spending`, `publishing`, `mcp`, …) describ
  <Card title="Overview" icon="robot" href="./overview">
  Start here.
  </Card>
- <Card title="Delegation" icon="key" href="./agent-delegation">
+ <Card title="Permissions" icon="key" href="./agent-delegation">
  Full field reference.
  </Card>
  <Card title="Flow" icon="route" href="./agent-verification-flow">

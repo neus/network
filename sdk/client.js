@@ -393,6 +393,10 @@ export class NeusClient {
     try {
       if (typeof window !== 'undefined' && window.location && window.location.origin) {
         this.defaultHeaders['X-Client-Origin'] = window.location.origin;
+      } else if (typeof this.config.appOrigin === 'string' && this.config.appOrigin.trim()) {
+        const origin = this.config.appOrigin.trim();
+        this.defaultHeaders['Origin'] = origin;
+        this.defaultHeaders['X-Client-Origin'] = origin;
       }
     } catch {
       void 0;
@@ -554,7 +558,7 @@ export class NeusClient {
 
   _getDefaultBrowserWallet() {
     if (typeof window === 'undefined') return null;
-    // Legacy convenience fallback only. Non-EVM wallets must be passed explicitly
+    // EIP-1193 provider detection. Non-EVM wallets must be passed explicitly
     // with CAIP-2 chain context so the SDK does not route them through EVM RPC.
     return window.ethereum || null;
   }

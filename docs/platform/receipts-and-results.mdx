@@ -63,11 +63,14 @@ const qHash = new URL(request.url).searchParams.get('qHash');
 
 const record = await client.getProof(qHash);
 
-const eligible = await client.gateCheck({
+const result = await client.gateCheck({
   address: '0x...',
   gateId: 'gate_your-app-name',
 });
-```
+
+if (result.data?.gate?.allRequiredSatisfied !== true) {
+  // Send the visitor back to Hosted Verify
+}
 
 ## API
 

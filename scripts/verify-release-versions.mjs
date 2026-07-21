@@ -29,7 +29,16 @@ const surfaces = {
   'plugins/neus-trust/.codex-plugin/plugin.json': readJson('plugins/neus-trust/.codex-plugin/plugin.json').version,
   '.cursor-plugin/marketplace.json': readJson('.cursor-plugin/marketplace.json').metadata?.version,
   '.claude-plugin/marketplace.json': readJson('.claude-plugin/marketplace.json').metadata?.version,
-  'plugins/neus-trust/skills/neus-trust-workflow/SKILL.md': (readRaw('plugins/neus-trust/skills/neus-trust-workflow/SKILL.md').match(/^version:\s*"([^"]+)"$/m) || [])[1],
+  '.agents/plugins/marketplace.json': readJson('.agents/plugins/marketplace.json').metadata?.version,
+  'plugins/neus-trust/skills/neus-trust-workflow/SKILL.md': (() => {
+    const raw = readRaw('plugins/neus-trust/skills/neus-trust-workflow/SKILL.md');
+    // agentskills.io: version lives under metadata.version; accept legacy top-level version too.
+    return (
+      (raw.match(/^\s*version:\s*"([^"]+)"\s*$/m) || [])[1] ||
+      (raw.match(/^version:\s*"([^"]+)"$/m) || [])[1] ||
+      null
+    );
+  })(),
 };
 
 const mismatched = Object.entries(surfaces).filter(([, v]) => v !== target);

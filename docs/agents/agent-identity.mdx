@@ -1,5 +1,6 @@
 ---
-title: Agent Identity
+title: Agent identity
+sidebarTitle: Identity
 description: Register and verify AI agent identities.
 icon: id-card
 ---
@@ -17,7 +18,7 @@ Proof `skills` are metadata only — they do not install MCP servers.
     Call **`neus_context`**, then **`neus_agent_link`** with the agent address. If **`linked: true`**, you are done.
   </Step>
   <Step title="Create">
-    Call **`neus_agent_create`** with **`agentId`** (required; NEUS auto-generates one if omitted) and **`agentWallet`**. Finish on NEUS via **`hostedVerifyUrl`** or the returned signing steps.
+    Call **`neus_agent_create`** with a stable **`agentId`** and **`agentWallet`**. Follow the returned **`next_action`**.
   </Step>
   <Step title="Confirm">
     Call **`neus_agent_link`** again until **`linked: true`**.
@@ -28,7 +29,7 @@ Proof `skills` are metadata only — they do not install MCP servers.
 { "agentId": "my-assistant", "agentWallet": "0x..." }
 ```
 
-Set **`agentWallet`** to **`"generate"`** when NEUS should create a new agent key. Save returned key material in your secrets manager.
+Set **`agentWallet`** to **`"generate"`** only for advanced bootstrap. Production apps should generate and store the key in their own key manager; NEUS does not custody agent keys.
 
 [Agent create](../mcp/agent-create) · [Agent verification flow](./agent-verification-flow)
 

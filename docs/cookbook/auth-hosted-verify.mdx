@@ -4,7 +4,9 @@ description: Hosted sign-in and trust checks on NEUS — one browser surface for
 icon: key
 ---
 
-**Hosted Verify** is `https://neus.network/verify`. Use it when a step needs a **browser ceremony** — sign-in, passkey, wallet, OAuth, human check, social proof, or gate checkout. Your app does **not** embed wallet or passkey UI.
+**Hosted Verify** is `https://neus.network/verify`. Use it when a step needs **hosted sign-in and checks in the browser** — passkey, OAuth, human check, social/org proof, or gate checkout. Your app does **not** embed passkey, OAuth, or wallet UI.
+
+Visitors and builders use a **NEUS account**. Wallet steps appear **only** when a published gate or check requires them.
 
 Sign-in and gate checkout use the **same hosted surface**. See [Trust stack](../platform/trust-stack).
 
@@ -12,7 +14,7 @@ Sign-in and gate checkout use the **same hosted surface**. See [Trust stack](../
 
 | Query intent | User completes on NEUS |
 |--------------|-------------------------|
-| `intent=login` | NEUS session: passkey sign-in, wallet sign-in, optional passkey registration |
+| `intent=login` | NEUS session: passkey sign-in (primary), optional wallet attach |
 | `gateId` | Gate checkout; wallet steps **only** if the published gate requires them |
 | Social / org **proof** | OAuth inside a verifier — [ownership-social](../verification/ownership-social), [ownership-org-oauth](../verification/ownership-org-oauth) |
 

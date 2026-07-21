@@ -1,10 +1,12 @@
 ---
-title: Platform Overview
-description: Hosted Verify, explorer, API, MCP, and URLs.
+title: Platform
+description: Hosted verification, reusable trust receipts, access gates, API, SDK, widgets, and assistant integrations.
 icon: globe
 ---
 
-Reference URLs for NEUS products (hosted verify, hub, API, MCP). Setup steps live in [Get started](../get-started).
+NEUS connects completed identity, ownership, risk, and permission checks to the access, payment, and agent decisions that depend on them. Use hosted verification, reusable receipts, profiles, gates, API, SDK, widgets, or the hosted assistant connection without replacing your existing identity, wallet, payment, or agent stack.
+
+Reference URLs and setup paths are below. Step-by-step onboarding lives in [Get started](../get-started).
 
 <Card title="Roadmap" icon="map" href="./status">
   Shipped capabilities, work in progress, and planned milestones.
@@ -16,7 +18,7 @@ Reference URLs for NEUS products (hosted verify, hub, API, MCP). Setup steps liv
 |--|--|
 | Hosted Verify | `/verify` |
 | Proof pages | `/proof/[receipt-id]` (`qHash` in API) |
-| Agent cards | `/agent/[id]` - [Agents](../agents/overview) |
+| Discover agents | `/agent/[id]` — [Discover agents](../agents/named-agent-card) |
 | Platform explorer | Public feed + discovery (`/hub`) |
 | API | Programmatic |
 | MCP | Assistants |
@@ -28,14 +30,14 @@ Reference URLs for NEUS products (hosted verify, hub, API, MCP). Setup steps liv
  <Card title="Proof pages" icon="receipt" href="./receipts-and-results">
  Share links.
  </Card>
- <Card title="Universal agent identity" icon="robot" href="../agents/overview">
- `/agent/[id]` | DID | delegation.
+ <Card title="Agent identity and permissions" icon="robot" href="../agents/overview">
+ `/agent/[id]` — identity, controller, and permission limits.
  </Card>
  <Card title="Platform setup" icon="building" href="./setup">
  Link your app.
  </Card>
  <Card title="Presets" icon="layer-group" href="./presets">
- Verifier bundles.
+ Bundled check sets for common flows.
  </Card>
 </CardGroup>
 
@@ -63,9 +65,12 @@ Reference URLs for NEUS products (hosted verify, hub, API, MCP). Setup steps liv
 
 <CardGroup cols={3}>
   <Card title="Quickstart" icon="rocket" href="../quickstart">
+    Gate content with VerifyGate in a few steps.
   </Card>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
+    Hosted sign-in and checks on NEUS.
   </Card>
   <Card title="Platform setup" icon="building" href="./setup">
+    Publish a portal and connect your app.
   </Card>
 </CardGroup>

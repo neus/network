@@ -7,5 +7,6 @@ describe('package exports', () => {
     expect(Index.ValidationError).toBeTypeOf('function');
     expect(Index.createGate).toBeTypeOf('function');
     expect(Index.getHostedCheckoutUrl).toBeTypeOf('function');
+    expect(Index.getHostedAgentCreateUrl).toBeTypeOf('function');
   });
 });

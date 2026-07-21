@@ -1,65 +1,26 @@
 ---
 title: Get started
-description: Pick your path and set up trust once — drop-in widgets for apps, one command for agents, API for any backend.
+description: Pick your path — gate an app, connect an assistant, or check an agent. Same account, same portable trust receipts.
 icon: book
 ---
 
-Pick your surface — app, agent, or backend. NEUS gives you the same portable trust receipts everywhere.
+Pick your surface — app, assistant, agent, or backend. You sign in once to a **NEUS account**. Receipts travel with that account so every product does not restart verification from zero.
+
+**Glossary:** **Check** is the product term for a trust requirement. In API requests the field is `verifierIds`. **Receipt ID** is the product term for a saved result; in API responses the field is `qHash`.
 
 | You are building | Simplest path | Start |
 | ---------------- | ------------- | ----- |
-| **Sign-in or access for your app** | Hosted Verify — sign-in or gate checkout on NEUS | [Trust stack](./platform/trust-stack) · [Hosted Verify](./cookbook/auth-hosted-verify) |
-| **Gated content or checkout** | `<VerifyGate>` + one published `gateId` | [Quickstart](./quickstart) |
-| **An agent or AI workflow** | One-command MCP setup | [Install NEUS](./install) |
-| **A backend in any language** | HTTP API and server checks | [API overview](./api/overview) |
+| **Gated content, marketplace, or checkout** | Publish a portal → `<VerifyGate>` with one `gateId` | [Quickstart](./quickstart) · [Create a portal](./platform/setup) |
+| **Sign-in without building auth UI** | Hosted Verify (`intent=login`) — passkey / OAuth on NEUS | [Hosted Verify](./cookbook/auth-hosted-verify) · [Trust stack](./platform/trust-stack) |
+| **An assistant in your IDE** | One command: `neus setup` | [Install NEUS](./install) |
+| **Agents with limits before tools run** | Agent identity + permission receipts | [Agent verification flow](./agents/agent-verification-flow) |
+| **A backend in any language** | HTTP API and server `gateCheck` | [API overview](./api/overview) |
 
-## Apps: drop-in widgets
+**How billing works:** visitors complete checks on NEUS and keep the receipt; they can reuse it at your next gate when the checks match. You bill with credits (you pay by default) or charge visitors — [Pricing](./platform/pricing) · [Billing](./platform/billing).
 
-`VerifyGate` and `ProofBadge` are the lowest-friction way to ship trust. Your app never implements verifier logic — the gate owns the checks, pricing, and checkout.
+## Next
 
-<Steps>
-  <Step title="Publish a gate">
-    Sign in at [neus.network](https://neus.network), open your profile → **Portals**, choose the checks visitors must pass, set pricing (you pay by default, or charge visitors), and **Publish**. Copy your `gateId`.
-  </Step>
-  <Step title="Gate your content">
-    ```jsx
-    import { VerifyGate } from '@neus/sdk/widgets';
-
-    <VerifyGate gateId="gate_your-app-name">
-      <ProtectedContent />
-    </VerifyGate>;
-    ```
-    `VerifyGate` reuses an existing receipt, opens Hosted Verify only when one is needed, then renders your content.
-  </Step>
-  <Step title="Show verified status">
-    ```jsx
-    import { ProofBadge } from '@neus/sdk/widgets';
-
-    <ProofBadge qHash={proof.qHash} showChains />;
-    ```
-    The receipt ID in API responses is `qHash` — save it if your server needs to look up the receipt later.
-  </Step>
-</Steps>
-
-End users never need a NEUS account or API key. To confirm eligibility on your server before trusted actions and to use a hosted link instead of React, follow the full [Quickstart](./quickstart).
-
-## Agents and assistants: one command
-
-```bash
-neus setup
-neus check
-```
-
-Wires hosted NEUS MCP into Cursor, Codex, VS Code, and Claude Code. Then ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
-
-Codex only: `neus setup --client codex`, then `neus auth --client codex`.
-
-Details: [Install NEUS](./install) · [Agent verification flow](./agents/agent-verification-flow)
-
-## Backends: API and access keys
-
-Use the HTTP API from servers, workers, and CI — never from end-user browsers. Eligibility, reads, and verification all return the same trust receipt ID (`qHash`). Server automation uses a profile access key from **Profile → Keys** (`npk_*`).
-
-Details: [API overview](./api/overview) · [Integrations](./cookbook/integrations)
-
-**Next:** [Quickstart](./quickstart) · [Integration](./integration)
+- **App / widgets:** [Quickstart](./quickstart) — publish a portal, embed VerifyGate, confirm on your server.
+- **Assistant:** [Install NEUS](./install) — one command for Cursor, Claude Code, Codex, and VS Code.
+- **Architecture:** [Trust stack](./platform/trust-stack) — how profiles, Hosted Verify, checks, and gates fit together.
+- **Server automation:** [API overview](./api/overview) · [Integrations](./cookbook/integrations)
