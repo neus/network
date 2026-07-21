@@ -39,7 +39,7 @@ Send end users through the **[JavaScript SDK](../sdks/javascript)** or **[Hosted
 
 The SDK's `getGate()` / `fulfillGate()` wrap the gate endpoints above.
 
-> **Scope note:** This reference covers the core HTTP proof and verification surface. Gate endpoints (`/api/v1/profile/gates/{gateId}`, `.../fulfill`, `/api/v1/profile/gates/discoverable`) and `POST /api/v1/payments/verify` (x402 pay-per-call settlement) are product checkout endpoints documented in [Hosted Gate Checkout](../platform/hosted-gate-checkout) and [x402](../platform/x402); they are intentionally not included in the OpenAPI reference on the API Reference tab.
+> **Scope note:** This reference covers the core HTTP proof and verification surface. Gate endpoints (`/api/v1/profile/gates/{gateId}`, `.../fulfill`, `/api/v1/profile/gates/discoverable`) are product checkout endpoints documented in [Hosted Gate Checkout](../platform/hosted-gate-checkout). Standards-native x402 v2 payment for `GET /api/v1/proofs/check` is documented in [x402](../platform/x402).
 
 **Same-origin in the product app:** `https://neus.network/api/v1/gates/{gateId}` and `.../fulfill` return the same gate contract for browser calls. Server integrations should call `api.neus.network` paths directly (or use the SDK).
 

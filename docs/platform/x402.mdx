@@ -1,97 +1,94 @@
 ---
 title: x402 pay-per-call
-description: Charge per request for APIs and agents — a signed quote on 402, pay, then retry with one header.
+description: Pay for NEUS trust checks with x402 v2 and USDC on Base — no account or prepaid balance required.
 icon: coins
 ---
 
-x402 turns any billable NEUS call into pay-as-you-go. When prepaid credits cannot cover a request, NEUS returns **HTTP 402** with a signed quote. Pay the quote, then retry the **same request** with one header. It is built for agents and machine-to-machine APIs that settle value as they go — no subscription, no human in the loop.
+NEUS exposes a standards-native x402 v2 resource for agents and server applications that need a trust decision before taking an action. A caller can discover the price, authorize USDC, retry the same request, and receive the result without creating a NEUS account.
 
-## Flow
+## Payable HTTP resource
+
+The canonical x402 resource is:
+
+```text
+GET https://api.neus.network/api/v1/proofs/check
+```
+
+Pass either a deployed `gateId` or explicit receipt criteria. This example checks whether an account has a reusable `ownership-basic` receipt:
+
+```bash
+curl -i --get https://api.neus.network/api/v1/proofs/check \
+  --data-urlencode "address=0xYOUR_ACCOUNT" \
+  --data-urlencode "verifierId=ownership-basic"
+```
+
+<Note>
+  `https://mcp.neus.network/mcp` is the authenticated MCP transport for MCP clients. HTTP x402 clients should use the `api.neus.network` resource above.
+</Note>
+
+## Standards-native v2 flow
 
 <Steps>
-  <Step title="Call the API">
-    Make your normal request (for example `POST /api/v1/verification`).
+  <Step title="Request the resource">
+    Send the final HTTP method, URL, query parameters, and body you intend to use.
   </Step>
-  <Step title="Get a 402 + quote">
-    If credits are short, NEUS responds **402** with a quote in the body and the **`PAYMENT-REQUIRED`** response header.
+  <Step title="Read the payment requirements">
+    An unpaid request returns HTTP `402`. The `PAYMENT-REQUIRED` response header contains a base64-encoded x402 v2 `PaymentRequired` object with `x402Version: 2`, the resource, and an `accepts` array.
   </Step>
-  <Step title="Pay the quote">
-    Settle in USDC (or native ETH) via `POST /api/v1/payments/verify`. NEUS returns a one-time payment receipt.
+  <Step title="Authorize payment">
+    Select the advertised `exact` requirement and let an x402 v2 client create the payment payload. NEUS currently accepts USDC settlement on Base for production.
   </Step>
-  <Step title="Retry with the receipt">
-    Repeat the original call with the receipt in the **`PAYMENT-SIGNATURE`** header. The call now succeeds.
+  <Step title="Retry the identical request">
+    Repeat the same request with the base64-encoded payment payload in `PAYMENT-SIGNATURE`. NEUS verifies it before execution and settles it after a successful call.
+  </Step>
+  <Step title="Keep the settlement receipt">
+    A successful paid response includes `PAYMENT-RESPONSE`, a base64-encoded settlement result containing the network and transaction reference.
   </Step>
 </Steps>
 
-## The 402 response
+The three x402 v2 transport headers are:
 
-The body carries `error.code: "INSUFFICIENT_CREDITS"` and an `x402` block you can act on directly:
+| Header | Direction | Purpose |
+| --- | --- | --- |
+| `PAYMENT-REQUIRED` | NEUS → caller | Base64-encoded price and payment requirements on HTTP 402 |
+| `PAYMENT-SIGNATURE` | Caller → NEUS | Base64-encoded payment payload on the retry |
+| `PAYMENT-RESPONSE` | NEUS → caller | Base64-encoded settlement result |
 
-```json
-{
-  "success": false,
-  "error": { "code": "INSUFFICIENT_CREDITS", "remaining": 0, "required": 4 },
-  "x402": {
-    "scheme": "x402",
-    "requiredCredits": 4,
-    "remainingCredits": 0,
-    "quote": {
-      "quoteId": "…",
-      "amountUSD": 0.01,
-      "amountCents": 1,
-      "creditsNeeded": 4,
-      "exp": 1713312300000
-    },
-    "pay": { "pricing": "/api/v1/payments/pricing" },
-    "receiptHeader": "PAYMENT-SIGNATURE"
-  }
-}
-```
+Do not parse these headers as raw JSON. Use an x402 v2 client or the header helpers from `@x402/core/http`.
 
-The same quote is also sent as JSON in the `PAYMENT-REQUIRED` response header. `exp` is a millisecond timestamp — quotes are short-lived, so pay and retry promptly.
+## Bazaar discovery
 
-## Pay and retry
+The trust-check resource declares the official x402 v2 Bazaar extension with:
 
-```bash
-# 1. Original call returns 402 with the quote above.
-# 2. Settle the quote (USDC or ETH), then retry with the receipt:
-curl -X POST https://api.neus.network/api/v1/verification \
-  -H "Content-Type: application/json" \
-  -H "PAYMENT-SIGNATURE: <receipt-from-payments-verify>" \
-  -d '{ /* the same body as the original request */ }'
-```
+- a semantic description oriented around pre-action trust and authority decisions;
+- a realistic query example;
+- JSON Schema for supported input fields;
+- output metadata, schema, and an example result;
+- an `exact` USDC payment requirement on a CAIP-2 Base network.
 
-Get the receipt by settling the quote through `POST /api/v1/payments/verify` (`type: "x402"`). The successful response returns the receipt token and a `PAYMENT-RESPONSE` header. Each receipt is **single-use** — reusing one is rejected.
-
-## Payment methods
-
-| Rail | Where it settles |
-|------|------------------|
-| **USDC** | Base mainnet (`eip155:8453`), with Ethereum mainnet as fallback |
-| **Native ETH** | NEUS treasury |
-
-Card (Stripe) is **not** used for x402 API billing — it is available for [gate checkout](./hosted-gate-checkout). Live unit, minimum, and maximum pricing: `GET /api/v1/payments/pricing`.
+Compatible facilitators can index the declared resource after a paid call settles. Discovery catalogs refresh asynchronously, so a newly settled resource may not appear immediately.
 
 ## Agents that pay on their own
 
-Pair x402 with an agent permission receipt to set a spending cap. The receipt identifies the agent, records who approved it, and limits how much it may pay.
+Pair x402 with an `agent-delegation` receipt to constrain autonomous spend:
 
-- Grant `agent-delegation` with `scope: "payments:x402"` and a `maxSpend` cap.
-- `maxSpend` is a whole-number string in token base units — for USDC (6 decimals), 25 USDC is `"25000000"`. Use `toAgentDelegationMaxSpend('25', 6)` from `@neus/sdk`.
-- The agent can pay per call up to the cap; spend beyond it is refused.
+- set `scope: "payments:x402"`;
+- restrict `allowedPaymentTypes` to `x402`;
+- store `maxSpend` as a whole-number string in token base units (USDC has 6 decimals);
+- reject payment when the requested amount exceeds the remaining delegated cap.
 
-Details: [Agent permissions](../agents/agent-delegation).
+Use `toAgentDelegationMaxSpend('25', 6)` from `@neus/sdk` to represent a 25 USDC cap as `"25000000"`.
 
 ## Next
 
 <CardGroup cols={3}>
-  <Card title="Billing" icon="credit-card" href="./billing">
-    Credits, who pays, and the 402 fallback.
+  <Card title="API authentication" icon="key" href="../api/authentication">
+    Signing and session rules for raw verification calls.
   </Card>
-  <Card title="Gate checkout" icon="door-open" href="./hosted-gate-checkout">
-    Charge visitors with USDC or card.
+  <Card title="MCP overview" icon="robot" href="../mcp/overview">
+    Connect the separate hosted MCP transport.
   </Card>
-  <Card title="Agent delegation" icon="key" href="../agents/agent-delegation">
-    Spend caps for autonomous agents.
+  <Card title="Agent delegation" icon="shield" href="../agents/agent-delegation">
+    Authority scopes and autonomous spending caps.
   </Card>
 </CardGroup>
