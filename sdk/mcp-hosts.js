@@ -222,12 +222,13 @@ export function buildSetupNpxOneLiner(client) {
 }
 
 /**
- * Cursor supports MCP install deeplinks; Codex uses CLI, not VS Code deeplinks.
- * @param {'cursor' | 'claude' | 'codex'} host
+ * Cursor and VS Code support MCP install deeplinks on desktop browsers.
+ * Claude Code and Codex are CLI-only hosts with no deeplink protocol.
+ * @param {'cursor' | 'claude' | 'codex' | 'vscode'} host
  * @returns {boolean}
  */
 export function supportsMcpInstallDeeplink(host) {
-  if (host !== 'cursor') return false;
+  if (host !== 'cursor' && host !== 'vscode') return false;
   if (typeof navigator === 'undefined') return false;
   const ua = navigator.userAgent || '';
   return !/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);

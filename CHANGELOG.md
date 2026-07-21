@@ -4,6 +4,21 @@ Release notes for **`@neus/sdk`**, **`@neus/mcp-server`**, docs, and examples.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.5] - 2026-07-21
+
+### Changed
+
+- **ZKPassport `0.16.1`** — `@neus/sdk` optional dependency `@zkpassport/sdk` is now `^0.16.1`, aligning the SDK with the latest hosted verifier runtime patch.
+- **`@neus/sdk`** — `1.3.5`.
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.3.5
+# or zero-install
+npx -y -p @neus/sdk@1.3.5 neus doctor --live
+```
+
 ## [1.3.4] - 2026-07-21
 
 ### Added
@@ -19,7 +34,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- **`@neus/sdk`, `@neus/mcp-server`, and plugin metadata** — `1.3.4`.
+- **`@neus/sdk`, `@neus/mcp-server`, and plugin metadata** — `1.3.5`.
 - **Public claims** — documentation distinguishes request integrity and signer authorization from verifier-result correctness.
 
 ### Upgrade
@@ -441,7 +456,8 @@ If you already use a Profile access key for automation, keep `neus setup --acces
 
 - `@neus/sdk` with hosted MCP CLI (`neus setup`, `neus auth`, import/export) and OAuth browser flow.
 
-[Unreleased]: https://github.com/neus/network/compare/v1.3.4...HEAD
+[Unreleased]: https://github.com/neus/network/compare/v1.3.5...HEAD
+[1.3.5]: https://github.com/neus/network/compare/v1.3.4...v1.3.5
 [1.3.4]: https://github.com/neus/network/compare/v1.3.3...v1.3.4
 [1.3.3]: https://github.com/neus/network/compare/v1.3.2...v1.3.3
 [1.1.1]: https://github.com/neus/network/compare/v1.1.0...v1.1.1
