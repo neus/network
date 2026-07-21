@@ -3,6 +3,7 @@ export { NeusClient } from './client.js';
 
 export {
   PORTABLE_PROOF_SIGNER_HEADER,
+  canonicalizePortableProofJson,
   constructVerificationMessage,
   computePortableProofQHash,
   verifyPortableProofEnvelope,

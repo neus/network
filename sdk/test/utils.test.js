@@ -5,6 +5,7 @@ import * as ed25519 from '@noble/ed25519';
 import bs58 from 'bs58';
 import {
   constructVerificationMessage,
+  canonicalizePortableProofJson,
   computePortableProofQHash,
   verifyPortableProofEnvelope,
   validateWalletAddress,
@@ -88,6 +89,16 @@ describe('Utils', () => {
   });
 
   describe('portable proof envelopes', () => {
+    it('uses strict canonical JSON for ordering, Unicode, null, and invalid values', () => {
+      const decomposed = 'e\u0301';
+      expect(canonicalizePortableProofJson({ z: null, nested: { b: 2, a: decomposed } }))
+        .toBe('{"nested":{"a":"é","b":2},"z":null}');
+      expect(canonicalizePortableProofJson({ '\uE000': 1, '😀': 2 }))
+        .toBe('{"":1,"😀":2}');
+      expect(() => canonicalizePortableProofJson({ omitted: undefined })).toThrow(/canonical JSON/);
+      expect(() => canonicalizePortableProofJson([undefined])).toThrow(/canonical JSON/);
+    });
+
     it('verifies a complete EVM envelope offline and binds every data field', async () => {
       const wallet = new Wallet('0x59c6995e998f97a5a0044976f7d3f0f35f0bfa65c1f9f650f72b87c9b0f4f6e8');
       const envelope = {
@@ -126,6 +137,31 @@ describe('Utils', () => {
         chain: 'eip155:1',
         chainId: 1
       })).toThrow(/exactly one/);
+      expect(() => computePortableProofQHash({
+        did: 'did:pkh:eip155:1:0x0000000000000000000000000000000000000000',
+        verifierIds: ['ownership-basic'],
+        data: { content: 'x' },
+        signedTimestamp: 1784582400000
+      })).toThrow(/exactly one/);
+    });
+
+    it('binds every canonical field and ignores envelope extensions', () => {
+      const base = {
+        did: 'did:pkh:eip155:84532:0x2682f1afa9e879dcea444d8d93895c4bcbf55076',
+        walletAddress: '0x2682f1afa9e879dcea444d8d93895c4bcbf55076',
+        verifierIds: ['ownership-basic'],
+        data: { nested: { b: 2, a: 1 } },
+        signedTimestamp: 1784582400000,
+        chainId: 84532
+      };
+      const qHash = computePortableProofQHash(base);
+      expect(computePortableProofQHash({ ...base, note: 'extension' })).toBe(qHash);
+      expect(computePortableProofQHash({ ...base, did: `${base.did}-changed` })).not.toBe(qHash);
+      expect(computePortableProofQHash({ ...base, verifierIds: ['wallet-risk'] })).not.toBe(qHash);
+      expect(computePortableProofQHash({ ...base, data: { nested: { a: 2, b: 2 } } })).not.toBe(qHash);
+      expect(computePortableProofQHash({ ...base, signedTimestamp: base.signedTimestamp + 1 })).not.toBe(qHash);
+      expect(computePortableProofQHash({ ...base, chainId: 1 })).not.toBe(qHash);
+      expect(computePortableProofQHash({ ...base, data: { nested: { a: 1, b: 2 } } })).toBe(qHash);
     });
 
     it('verifies a Solana-style Ed25519 envelope offline', async () => {

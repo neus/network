@@ -4,6 +4,32 @@ Release notes for **`@neus/sdk`**, **`@neus/mcp-server`**, docs, and examples.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.4] - 2026-07-21
+
+### Added
+
+- **Portable proof verification** — `computePortableProofQHash`, `verifyPortableProofEnvelope`, and strict canonical JSON helpers support offline EIP-191 and Ed25519 verification, with provider-backed EIP-1271 checks.
+- **Interoperability fixture** — a deterministic, non-sensitive CAIP-380 EVM envelope and mutation vectors cover chain shape, Unicode normalization, nested ordering, null, invalid JSON values, and every canonical field.
+
+### Fixed
+
+- **Exact signed-data binding** — qualifying wallet-signed envelopes hash the same canonical data used by the six-line signing message; nonces and timestamps inside `data` are no longer removed.
+- **Receipt classification** — only successfully verified wallet signatures with exactly one chain field produce `caip-380-envelope` responses. Session and service authorization continue producing regular `neus-receipt` responses.
+- **Privacy boundary** — complete portable envelopes are returned to their creator but are not persisted or copied into shared status caches by default.
+
+### Changed
+
+- **`@neus/sdk`, `@neus/mcp-server`, and plugin metadata** — `1.3.4`.
+- **Public claims** — documentation distinguishes request integrity and signer authorization from verifier-result correctness.
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.3.4
+# or zero-install
+npx -y -p @neus/sdk@1.3.4 neus doctor --live
+```
+
 ## [1.3.3] - 2026-07-16
 
 ### Added
@@ -415,7 +441,9 @@ If you already use a Profile access key for automation, keep `neus setup --acces
 
 - `@neus/sdk` with hosted MCP CLI (`neus setup`, `neus auth`, import/export) and OAuth browser flow.
 
-[Unreleased]: https://github.com/neus/network/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/neus/network/compare/v1.3.4...HEAD
+[1.3.4]: https://github.com/neus/network/compare/v1.3.3...v1.3.4
+[1.3.3]: https://github.com/neus/network/compare/v1.3.2...v1.3.3
 [1.1.1]: https://github.com/neus/network/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/neus/network/compare/v1.0.12...v1.1.0
 [1.0.12]: https://github.com/neus/network/releases/tag/v1.0.12

@@ -82,6 +82,60 @@ function deterministicStringify(obj) {
   return `{${  pairs.join(',')  }}`;
 }
 
+function compareUnicodeCodePoints(left, right) {
+  const a = Array.from(left, (character) => character.codePointAt(0));
+  const b = Array.from(right, (character) => character.codePointAt(0));
+  const length = Math.min(a.length, b.length);
+  for (let index = 0; index < length; index += 1) {
+    if (a[index] !== b[index]) return a[index] - b[index];
+  }
+  return a.length - b.length;
+}
+
+function canonicalizePortableProofValue(value, path = '$') {
+  if (value === null) return 'null';
+  const valueType = typeof value;
+  if (valueType === 'string') return JSON.stringify(value.normalize('NFC'));
+  if (valueType === 'boolean') return value ? 'true' : 'false';
+  if (valueType === 'number') {
+    if (!Number.isFinite(value)) throw new SDKError(`${path} must contain only finite JSON numbers`, 'INVALID_CANONICAL_JSON');
+    return JSON.stringify(Object.is(value, -0) ? 0 : value);
+  }
+  if (valueType === 'undefined' || valueType === 'function' || valueType === 'symbol' || valueType === 'bigint') {
+    throw new SDKError(`${path} contains a value that is not valid canonical JSON`, 'INVALID_CANONICAL_JSON');
+  }
+  if (valueType !== 'object') throw new SDKError(`${path} is not valid canonical JSON`, 'INVALID_CANONICAL_JSON');
+
+  if (Array.isArray(value)) {
+    const items = [];
+    for (let index = 0; index < value.length; index += 1) {
+      if (!Object.prototype.hasOwnProperty.call(value, index)) {
+        throw new SDKError(`${path}[${index}] is a sparse array entry`, 'INVALID_CANONICAL_JSON');
+      }
+      items.push(canonicalizePortableProofValue(value[index], `${path}[${index}]`));
+    }
+    return `[${items.join(',')}]`;
+  }
+
+  const entries = [];
+  const normalizedKeys = new Set();
+  for (const key of Object.keys(value)) {
+    const normalizedKey = key.normalize('NFC');
+    if (normalizedKeys.has(normalizedKey)) {
+      throw new SDKError(`${path} contains duplicate keys after NFC normalization`, 'INVALID_CANONICAL_JSON');
+    }
+    normalizedKeys.add(normalizedKey);
+    entries.push({ key: normalizedKey, value: value[key], sourceKey: key });
+  }
+  entries.sort((a, b) => compareUnicodeCodePoints(a.key, b.key));
+  return `{${entries.map(({ key, value: entryValue, sourceKey }) =>
+    `${JSON.stringify(key)}:${canonicalizePortableProofValue(entryValue, `${path}.${sourceKey}`)}`).join(',')}}`;
+}
+
+export function canonicalizePortableProofJson(value) {
+  return canonicalizePortableProofValue(value);
+}
+
 function chainLineForPortableProofSigner(chain, chainId) {
   if (typeof chain === 'string' && chain.length > 0) {
     const m = chain.match(/^eip155:(\d+)$/);
@@ -108,13 +162,15 @@ export function constructVerificationMessage({ walletAddress, signedTimestamp, d
     throw new SDKError('verifierIds is required and must be a non-empty array', 'INVALID_VERIFIER_IDS');
   }
 
-  if ((typeof chain !== 'string' || !chain.length) && !(typeof chainId === 'number' && chainId > 0)) {
-    throw new SDKError('chainId is required (or provide chain for universal mode)', 'INVALID_CHAIN_CONTEXT');
+  const hasChain = typeof chain === 'string' && chain.length > 0;
+  const hasChainId = typeof chainId === 'number' && Number.isFinite(chainId) && chainId > 0;
+  if (hasChain === hasChainId) {
+    throw new SDKError('provide exactly one of chain or chainId', 'INVALID_CHAIN_CONTEXT');
   }
   if (typeof chain === 'string' && chain.length > 0 && (!chain.includes(':'))) {
     throw new SDKError('chain must be a "namespace:reference" string', 'INVALID_CHAIN');
   }
-  if ((!chain || !chain.length) && typeof chainId !== 'number') {
+  if (!hasChain && typeof chainId !== 'number') {
     throw new SDKError('chainId must be a number when provided', 'INVALID_CHAIN_ID');
   }
 
@@ -123,7 +179,7 @@ export function constructVerificationMessage({ walletAddress, signedTimestamp, d
   const namespace = (typeof chain === 'string' && chain.includes(':')) ? chain.split(':')[0] : 'eip155';
   const normalizedWalletAddress = namespace === 'eip155' ? walletAddress.toLowerCase() : walletAddress;
 
-  const dataString = deterministicStringify(data);
+  const dataString = canonicalizePortableProofJson(data);
 
   const messageComponents = [
     PORTABLE_PROOF_SIGNER_HEADER,
@@ -169,7 +225,7 @@ function portableProofCanonicalSubset(envelope) {
 
 /** Compute the CAIP-380 SHAKE-256 anchor for a complete portable proof envelope. */
 export function computePortableProofQHash(envelope) {
-  const canonical = deterministicStringify(portableProofCanonicalSubset(envelope));
+  const canonical = canonicalizePortableProofJson(portableProofCanonicalSubset(envelope));
   return `0x${shake256(canonical, 256)}`;
 }
 

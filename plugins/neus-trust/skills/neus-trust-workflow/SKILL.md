@@ -5,7 +5,7 @@ license: Apache-2.0
 compatibility: Requires hosted NEUS MCP (https://mcp.neus.network/mcp) in Cursor, Claude Code, Codex, or VS Code.
 metadata:
   author: NEUS
-  version: "1.3.3"
+  version: "1.3.4"
   homepage: https://docs.neus.network/install
 ---
 

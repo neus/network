@@ -377,7 +377,7 @@
           "format": {
             "type": "string",
             "enum": [
-              "caip-380",
+              "caip-380-envelope",
               "neus-receipt"
             ]
           },

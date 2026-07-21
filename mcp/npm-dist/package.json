@@ -1,6 +1,6 @@
 {
   "name": "@neus/mcp-server",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "Hosted NEUS MCP registry for agent identity, limited permissions, trust receipts, and Vault.",
   "type": "module",
   "main": "./index.mjs",

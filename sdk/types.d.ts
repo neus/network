@@ -314,6 +314,7 @@
   }): string;
 
   export const PORTABLE_PROOF_SIGNER_HEADER: string;
+  export function canonicalizePortableProofJson(value: unknown): string;
 
   export function computePortableProofQHash(envelope: Record<string, any>): string;
 
@@ -1222,6 +1223,7 @@ declare module '@neus/sdk/utils' {
   export function formatTimestamp(ts: unknown): string;
   export function isSupportedChain(chainId: number): boolean;
   export function constructVerificationMessage(params: Record<string, unknown>): string;
+  export function canonicalizePortableProofJson(value: unknown): string;
   export function computePortableProofQHash(envelope: Record<string, unknown>): string;
   export function verifyPortableProofEnvelope(envelope: Record<string, unknown>, options?: Record<string, unknown>): Promise<Record<string, unknown>>;
   export function withRetry<T>(fn: () => Promise<T>, options?: { retries?: number; delayMs?: number; isRetryable?: (e: unknown) => boolean }): Promise<T>;

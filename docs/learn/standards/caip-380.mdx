@@ -33,6 +33,8 @@ Rule of thumb: EVM browser flows can rely on hosted verify or pass an explicit E
 
 Account + chain, `verifierIds`, `data` (canonical JSON), `signedTimestamp`, EVM `chainId` or non-EVM `chain` (CAIP-2).
 
+Canonical JSON normalizes strings and keys to NFC, sorts object keys by Unicode code point, preserves array order and `null`, and rejects `undefined`, sparse arrays, non-finite numbers, functions, symbols, and bigint values. An envelope must contain exactly one of `chainId` or `chain`.
+
 ## Signer string
 
 Six-line UTF-8, LF. The wallet must sign these exact bytes. **`POST /api/v1/verification/standardize`** returns **`signerString`** for raw HTTP and debugging; the SDK **`verify()`** path builds the same message client-side (or use **`standardizeVerificationRequest`** when you need the API round-trip).
@@ -52,7 +54,7 @@ Same as [Signing format](../../verification/signing-format).
 
 The wallet signature and `qHash` prove the integrity and signer authorization of the request envelope. They do not, by themselves, prove that a particular verifier ran or that NEUS produced a result. A NEUS trust receipt adds verifier results and status around that request anchor.
 
-Session-authorized and service-authorized verification can still produce NEUS trust receipts, but those receipts are not CAIP-380 envelopes because they do not contain a wallet signature. Creation responses label the distinction in `receipt.format` and `receipt.portable`.
+Session-authorized and service-authorized verification can still produce NEUS trust receipts, but those receipts are not CAIP-380 envelopes because they do not contain a verified wallet signature. Creation responses use `receipt.format: "caip-380-envelope"` only for qualifying envelopes and `receipt.format: "neus-receipt"` otherwise.
 
 ## Offline verification
 
