@@ -122,7 +122,7 @@ Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widge
 
 ## Open standard
 
-The receipt envelope is specified as [CAIP-380 (Portable Proof)](https://github.com/ChainAgnostic/CAIPs/pull/380), an open ChainAgnostic standard submission. Receipts are verifiable against the spec independently of NEUS infrastructure — see the [CAIP-380 PR](https://github.com/ChainAgnostic/CAIPs/pull/380), [JSON schemas](./docs/verifiers/schemas/), and [NEUS docs](https://docs.neus.network/learn/standards/caip-380).
+Wallet-signed request envelopes follow the [CAIP-380 (Portable Proof)](https://github.com/ChainAgnostic/CAIPs/pull/380) ChainAgnostic draft. Their hash, DID binding, and signature can be checked without NEUS; verifier outcomes remain part of the NEUS trust receipt. See the [offline fixture](./examples/caip-380/minimal-evm.json) and [NEUS docs](https://docs.neus.network/learn/standards/caip-380).
 
 ## Support
 

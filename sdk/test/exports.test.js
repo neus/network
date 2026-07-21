@@ -8,5 +8,7 @@ describe('package exports', () => {
     expect(Index.createGate).toBeTypeOf('function');
     expect(Index.getHostedCheckoutUrl).toBeTypeOf('function');
     expect(Index.getHostedAgentCreateUrl).toBeTypeOf('function');
+    expect(Index.computePortableProofQHash).toBeTypeOf('function');
+    expect(Index.verifyPortableProofEnvelope).toBeTypeOf('function');
   });
 });

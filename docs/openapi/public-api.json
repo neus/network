@@ -314,6 +314,12 @@
               "proofUrl": {
                 "type": "string",
                 "description": "Standardized URL to fetch the proof record (GET /api/v1/proofs/{qHash})"
+              },
+              "receipt": {
+                "$ref": "#/components/schemas/ReceiptDescriptor"
+              },
+              "portableProof": {
+                "$ref": "#/components/schemas/PortableProofEnvelope"
               }
             },
             "additionalProperties": true
@@ -344,6 +350,14 @@
           },
           "data": {
             "type": "object",
+            "properties": {
+              "receipt": {
+                "$ref": "#/components/schemas/ReceiptDescriptor"
+              },
+              "portableProof": {
+                "$ref": "#/components/schemas/PortableProofEnvelope"
+              }
+            },
             "additionalProperties": true
           },
           "creditInfo": {
@@ -352,6 +366,78 @@
           }
         },
         "additionalProperties": true
+      },
+      "ReceiptDescriptor": {
+        "type": "object",
+        "required": [
+          "format",
+          "portable"
+        ],
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": [
+              "caip-380",
+              "neus-receipt"
+            ]
+          },
+          "portable": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PortableProofEnvelope": {
+        "type": "object",
+        "description": "Complete wallet-signed request envelope returned to the creator. Retain it for offline verification; it is not available from public proof lookup by default.",
+        "required": [
+          "qHash",
+          "did",
+          "walletAddress",
+          "verifierIds",
+          "data",
+          "signedTimestamp",
+          "signature",
+          "signatureMethod"
+        ],
+        "properties": {
+          "qHash": {
+            "type": "string",
+            "pattern": "^0x[a-fA-F0-9]{64}$"
+          },
+          "did": {
+            "type": "string"
+          },
+          "walletAddress": {
+            "type": "string"
+          },
+          "verifierIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "signedTimestamp": {
+            "type": "number"
+          },
+          "chainId": {
+            "type": "number"
+          },
+          "chain": {
+            "type": "string"
+          },
+          "signature": {
+            "type": "string"
+          },
+          "signatureMethod": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
       },
       "ProofRecordResponse": {
         "type": "object",

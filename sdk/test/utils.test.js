@@ -1,7 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { createRequire } from 'module';
+import { Wallet } from 'ethers';
+import * as ed25519 from '@noble/ed25519';
+import bs58 from 'bs58';
 import {
   constructVerificationMessage,
+  computePortableProofQHash,
+  verifyPortableProofEnvelope,
   validateWalletAddress,
   validateTimestamp,
   validateQHash,
@@ -79,6 +84,70 @@ describe('Utils', () => {
 
       expect(cjsMessage).toBe(esmMessage);
       expect(cjsMessage).toContain('Portable Proof Verification Request');
+    });
+  });
+
+  describe('portable proof envelopes', () => {
+    it('verifies a complete EVM envelope offline and binds every data field', async () => {
+      const wallet = new Wallet('0x59c6995e998f97a5a0044976f7d3f0f35f0bfa65c1f9f650f72b87c9b0f4f6e8');
+      const envelope = {
+        did: deriveDid(wallet.address, 84532),
+        walletAddress: wallet.address.toLowerCase(),
+        verifierIds: ['ownership-basic'],
+        data: { content: 'CAIP-380 interoperability fixture', nonce: 'example-1' },
+        signedTimestamp: 1784582400000,
+        chainId: 84532,
+        signatureMethod: 'eip191'
+      };
+      envelope.qHash = computePortableProofQHash(envelope);
+      envelope.signature = await wallet.signMessage(constructVerificationMessage(envelope));
+
+      const result = await verifyPortableProofEnvelope(envelope, { now: envelope.signedTimestamp });
+      expect(result).toMatchObject({
+        valid: true,
+        qHashValid: true,
+        didValid: true,
+        signatureValid: true,
+        fresh: true,
+        requiresChainState: false
+      });
+
+      const changed = { ...envelope, data: { ...envelope.data, nonce: 'example-2' } };
+      expect(computePortableProofQHash(changed)).not.toBe(envelope.qHash);
+      expect((await verifyPortableProofEnvelope(changed, { now: envelope.signedTimestamp })).valid).toBe(false);
+    });
+
+    it('requires exactly one chain representation', () => {
+      expect(() => computePortableProofQHash({
+        did: 'did:pkh:eip155:1:0x0000000000000000000000000000000000000000',
+        verifierIds: ['ownership-basic'],
+        data: { content: 'x' },
+        signedTimestamp: 1784582400000,
+        chain: 'eip155:1',
+        chainId: 1
+      })).toThrow(/exactly one/);
+    });
+
+    it('verifies a Solana-style Ed25519 envelope offline', async () => {
+      const privateKey = Uint8Array.from({ length: 32 }, (_, index) => index + 1);
+      const walletAddress = bs58.encode(ed25519.getPublicKey(privateKey));
+      const envelope = {
+        did: deriveDid(walletAddress, 'solana:mainnet'),
+        walletAddress,
+        verifierIds: ['ownership-basic'],
+        data: { content: 'universal portable proof' },
+        signedTimestamp: 1784582400000,
+        chain: 'solana:mainnet',
+        signatureMethod: 'ed25519'
+      };
+      envelope.qHash = computePortableProofQHash(envelope);
+      envelope.signature = bs58.encode(ed25519.sign(
+        new TextEncoder().encode(constructVerificationMessage(envelope)),
+        privateKey
+      ));
+
+      await expect(verifyPortableProofEnvelope(envelope, { now: envelope.signedTimestamp }))
+        .resolves.toMatchObject({ valid: true, signatureValid: true, qHashValid: true });
     });
   });
 

@@ -314,6 +314,24 @@
   }): string;
 
   export const PORTABLE_PROOF_SIGNER_HEADER: string;
+
+  export function computePortableProofQHash(envelope: Record<string, any>): string;
+
+  export function verifyPortableProofEnvelope(
+    envelope: Record<string, any>,
+    options?: { provider?: unknown; now?: number; maxAgeMs?: number; maxFutureMs?: number }
+  ): Promise<{
+    valid: boolean;
+    qHashValid: boolean;
+    didValid?: boolean;
+    signatureValid: boolean;
+    requiresChainState?: boolean;
+    computedQHash?: string;
+    signer?: string | null;
+    fresh?: boolean;
+    ageMs?: number;
+    errors: string[];
+  }>;
   
   export function validateWalletAddress(address: string): boolean;
 
@@ -1183,7 +1201,7 @@ declare module '@neus/sdk/utils' {
   export const PORTABLE_PROOF_SIGNER_HEADER: string;
   export function toHexUtf8(input: string): string;
   export function computeContentHash(input: string): string;
-  export function deriveDid(address: string, chainId?: number): string;
+  export function deriveDid(address: string, chainIdOrChain?: number | string): string;
   export function resolveDID(params: { address?: string; chain?: number; endpoint?: string }, options?: Record<string, unknown>): Promise<{ did: string; data: unknown; raw: unknown }>;
   export function signMessage(params: { wallet?: unknown; message: string; account?: string }, options?: Record<string, unknown>): Promise<string>;
   export function standardizeVerificationRequest(params: Record<string, unknown>, options?: Record<string, unknown>): Promise<unknown>;
@@ -1204,6 +1222,8 @@ declare module '@neus/sdk/utils' {
   export function formatTimestamp(ts: unknown): string;
   export function isSupportedChain(chainId: number): boolean;
   export function constructVerificationMessage(params: Record<string, unknown>): string;
+  export function computePortableProofQHash(envelope: Record<string, unknown>): string;
+  export function verifyPortableProofEnvelope(envelope: Record<string, unknown>, options?: Record<string, unknown>): Promise<Record<string, unknown>>;
   export function withRetry<T>(fn: () => Promise<T>, options?: { retries?: number; delayMs?: number; isRetryable?: (e: unknown) => boolean }): Promise<T>;
   export function delay(ms: number): Promise<void>;
   export function getHostedCheckoutUrl(params: Record<string, unknown>): string;

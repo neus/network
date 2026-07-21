@@ -1,0 +1,16 @@
+{
+  "did": "did:pkh:eip155:84532:0x2682f1afa9e879dcea444d8d93895c4bcbf55076",
+  "walletAddress": "0x2682f1afa9e879dcea444d8d93895c4bcbf55076",
+  "verifierIds": [
+    "ownership-basic"
+  ],
+  "data": {
+    "content": "CAIP-380 interoperability fixture",
+    "nonce": "example-1"
+  },
+  "signedTimestamp": 1784582400000,
+  "chainId": 84532,
+  "signatureMethod": "eip191",
+  "qHash": "0x49d2b224750608f4f5844f6846edb1ac859524e57f674a78b168113699d6d293",
+  "signature": "0xc448d5edda53b46f673d26ebf2476d4955945364af25641d18bbef0428870d533d56a5a2524a046190bf44ad97058050a26a9c0a60d78cdad3a858c5974c0c9d1b"
+}

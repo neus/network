@@ -4,7 +4,7 @@ description: Wallet-signed envelope and NEUS verification anchor (qHash).
 icon: file-signature
 ---
 
-NEUS is driving the [CAIP-380](https://github.com/ChainAgnostic/CAIPs/pull/380) proposal on GitHub. **This page matches how NEUS signs and hashes proofs in production** (the CAIP text may still say “draft”).
+CAIP-380 is an open [ChainAgnostic draft](https://github.com/ChainAgnostic/CAIPs/pull/380). This page describes the portable envelope emitted for wallet-signed NEUS verification requests.
 
 ## Scope of the proposal
 
@@ -27,11 +27,11 @@ Rule of thumb: EVM browser flows can rely on hosted verify or pass an explicit E
 
 ## NEUS anchor
 
-**`qHash`** (0x…) is SHAKE-256 (256-bit) **of the standardized proof request fields** (fixed encoding and field order). [Verification results](../../platform/receipts-and-results)
+**`qHash`** (0x…) is SHAKE-256 (256-bit) of the canonical subset `did`, `verifierIds`, `data`, `signedTimestamp`, and exactly one of `chainId` or `chain`. Every field inside `data`, including a nonce or timestamp, remains bound to the hash. [Verification results](../../platform/receipts-and-results)
 
 ## Inputs (conceptual)
 
-Account + chain, `verifierIds`, `data` (JSON; **use `/standardize` so field order matches what was signed**), `signedTimestamp`, EVM `chainId` or non-EVM `chain` (CAIP-2).
+Account + chain, `verifierIds`, `data` (canonical JSON), `signedTimestamp`, EVM `chainId` or non-EVM `chain` (CAIP-2).
 
 ## Signer string
 
@@ -48,6 +48,28 @@ Timestamp: <unix-ms>
 
 Same as [Signing format](../../verification/signing-format).
 
+## What the envelope proves
+
+The wallet signature and `qHash` prove the integrity and signer authorization of the request envelope. They do not, by themselves, prove that a particular verifier ran or that NEUS produced a result. A NEUS trust receipt adds verifier results and status around that request anchor.
+
+Session-authorized and service-authorized verification can still produce NEUS trust receipts, but those receipts are not CAIP-380 envelopes because they do not contain a wallet signature. Creation responses label the distinction in `receipt.format` and `receipt.portable`.
+
+## Offline verification
+
+Keep `portableProof` from the verification creation response. NEUS does not persist the complete request envelope by default.
+
+```javascript
+import { verifyPortableProofEnvelope } from '@neus/sdk';
+import envelope from '../../../examples/caip-380/minimal-evm.json' with { type: 'json' };
+
+const result = await verifyPortableProofEnvelope(envelope);
+if (!result.valid) throw new Error(result.errors.join('; '));
+```
+
+The helper recomputes `qHash`, checks the DID and chain binding, reconstructs the six-line message, and verifies EIP-191 or Ed25519 locally. EIP-1271 smart accounts require chain state; pass an ethers provider as `options.provider`.
+
+Use the [small EVM fixture](https://github.com/neus/network/blob/main/examples/caip-380/minimal-evm.json) for adapter tests. Its timestamp is historical, so `fresh` can be false while its hash and signature remain valid.
+
 ## Profiles
 
 | | Chain | Signature |
@@ -58,7 +80,7 @@ Same as [Signing format](../../verification/signing-format).
 
 ## Freshness
 
-Reject `signedTimestamp` if older than 5 minutes or more than 60 seconds in the future.
+NEUS rejects a new request if `signedTimestamp` is older than 5 minutes or more than 60 seconds in the future. Historical offline verification reports freshness separately from cryptographic validity.
 
 ## Spec
 

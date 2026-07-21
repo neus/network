@@ -58,7 +58,7 @@ ownership-basic, ownership-social, ownership-pseudonym, ownership-dns-txt, owner
 
 ## Standard
 
-The receipt envelope is specified as CAIP-380 (Portable Proof), an open ChainAgnostic standard submission. Receipts are verifiable against the spec independently of NEUS infrastructure.
+Wallet-signed request envelopes follow the CAIP-380 (Portable Proof) ChainAgnostic draft. Their hash, DID binding, and signature can be verified without NEUS. Verifier outcomes remain part of the NEUS trust receipt; session-authorized receipts are not CAIP-380 envelopes.
 
 ## Optional
 

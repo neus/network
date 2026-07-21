@@ -1,4 +1,11 @@
 import { SDKError, ApiError, ValidationError } from './errors.js';
+import * as ed25519 from '@noble/ed25519';
+import { sha512 } from '@noble/hashes/sha512';
+import bs58 from 'bs58';
+import sha3Package from 'js-sha3';
+
+const { shake256 } = sha3Package;
+ed25519.etc.sha512Sync = (...messages) => sha512(ed25519.etc.concatBytes(...messages));
 
 export const PORTABLE_PROOF_SIGNER_HEADER = 'Portable Proof Verification Request';
 
@@ -128,6 +135,141 @@ export function constructVerificationMessage({ walletAddress, signedTimestamp, d
   ];
 
   return messageComponents.join('\n').normalize('NFC');
+}
+
+function portableProofCanonicalSubset(envelope) {
+  if (!envelope || typeof envelope !== 'object' || Array.isArray(envelope)) {
+    throw new SDKError('portable proof envelope must be an object', 'INVALID_PORTABLE_PROOF');
+  }
+  const hasChain = typeof envelope.chain === 'string' && envelope.chain.length > 0;
+  const hasChainId = typeof envelope.chainId === 'number' && Number.isFinite(envelope.chainId) && envelope.chainId > 0;
+  if (hasChain === hasChainId) {
+    throw new SDKError('portable proof must contain exactly one of chain or chainId', 'INVALID_CHAIN_CONTEXT');
+  }
+  if (typeof envelope.did !== 'string' || !envelope.did) {
+    throw new SDKError('portable proof did is required', 'INVALID_PORTABLE_PROOF');
+  }
+  if (!Array.isArray(envelope.verifierIds) || envelope.verifierIds.length === 0) {
+    throw new SDKError('portable proof verifierIds are required', 'INVALID_VERIFIER_IDS');
+  }
+  if (!envelope.data || typeof envelope.data !== 'object') {
+    throw new SDKError('portable proof data is required', 'INVALID_DATA');
+  }
+  if (typeof envelope.signedTimestamp !== 'number' || !Number.isFinite(envelope.signedTimestamp)) {
+    throw new SDKError('portable proof signedTimestamp is required', 'INVALID_TIMESTAMP');
+  }
+  return {
+    did: envelope.did,
+    verifierIds: envelope.verifierIds,
+    data: envelope.data,
+    signedTimestamp: envelope.signedTimestamp,
+    ...(hasChain ? { chain: envelope.chain } : { chainId: envelope.chainId })
+  };
+}
+
+/** Compute the CAIP-380 SHAKE-256 anchor for a complete portable proof envelope. */
+export function computePortableProofQHash(envelope) {
+  const canonical = deterministicStringify(portableProofCanonicalSubset(envelope));
+  return `0x${shake256(canonical, 256)}`;
+}
+
+/**
+ * Verify a portable proof without calling NEUS.
+ * EOA and Ed25519 signatures are fully offline. Smart-account signatures return
+ * `requiresChainState` unless a provider is supplied for an EIP-1271 lookup.
+ */
+export async function verifyPortableProofEnvelope(envelope, options = {}) {
+  const errors = [];
+  let computedQHash = null;
+  try {
+    computedQHash = computePortableProofQHash(envelope);
+  } catch (error) {
+    return { valid: false, qHashValid: false, signatureValid: false, errors: [error.message] };
+  }
+
+  const qHashValid = typeof envelope.qHash === 'string' &&
+    envelope.qHash.toLowerCase() === computedQHash.toLowerCase();
+  if (!qHashValid) errors.push('qHash does not match the canonical envelope');
+
+  const chainContext = envelope.chain ?? envelope.chainId;
+  const expectedDid = deriveDid(envelope.walletAddress, chainContext);
+  const didValid = expectedDid === envelope.did;
+  if (!didValid) errors.push('did does not match walletAddress and chain context');
+
+  const message = constructVerificationMessage(envelope);
+  const method = String(envelope.signatureMethod || (envelope.chain ? 'ed25519' : 'eip191')).toLowerCase();
+  let signatureValid = false;
+  let signer = null;
+  let requiresChainState = false;
+
+  if (method === 'ed25519') {
+    try {
+      const namespace = String(envelope.chain || '').split(':')[0];
+      const publicKeyText = namespace === 'near' && envelope.walletAddress.startsWith('ed25519:')
+        ? envelope.walletAddress.slice(8)
+        : envelope.walletAddress;
+      const publicKey = bs58.decode(publicKeyText);
+      const signatureText = String(envelope.signature || '').replace(/^ed25519:/, '');
+      const signature = /^(0x)?[a-fA-F0-9]{128}$/.test(signatureText)
+        ? Uint8Array.from(signatureText.replace(/^0x/, '').match(/.{2}/g).map((byte) => Number.parseInt(byte, 16)))
+        : bs58.decode(signatureText);
+      signatureValid = await ed25519.verify(signature, new TextEncoder().encode(message), publicKey);
+      signer = signatureValid ? envelope.walletAddress : null;
+    } catch (error) {
+      errors.push(`Ed25519 signature verification failed: ${error.message}`);
+    }
+  } else {
+    let evmError = null;
+    try {
+      const { verifyMessage } = await import('ethers');
+      signer = verifyMessage(message, envelope.signature);
+      signatureValid = signer.toLowerCase() === envelope.walletAddress.toLowerCase();
+    } catch (error) {
+      evmError = error;
+    }
+
+    if (!signatureValid && options.provider) {
+      try {
+        const { Contract, hashMessage } = await import('ethers');
+        const contract = new Contract(
+          envelope.walletAddress,
+          ['function isValidSignature(bytes32,bytes) view returns (bytes4)'],
+          options.provider
+        );
+        const magic = await contract.isValidSignature(hashMessage(message), envelope.signature);
+        signatureValid = String(magic).toLowerCase() === '0x1626ba7e';
+        signer = signatureValid ? envelope.walletAddress : signer;
+      } catch (error) {
+        evmError = error;
+      }
+    } else if (!signatureValid) {
+      requiresChainState = true;
+    }
+
+    if (!signatureValid && options.provider && evmError) {
+      errors.push(`EVM signature verification failed: ${evmError.message}`);
+    }
+  }
+
+  if (!signatureValid && !requiresChainState) errors.push('signature is invalid');
+  const now = Number.isFinite(options.now) ? options.now : Date.now();
+  const maxAgeMs = Number.isFinite(options.maxAgeMs) ? options.maxAgeMs : 300_000;
+  const maxFutureMs = Number.isFinite(options.maxFutureMs) ? options.maxFutureMs : 60_000;
+  const ageMs = now - envelope.signedTimestamp;
+  const fresh = ageMs <= maxAgeMs && ageMs >= -maxFutureMs;
+
+  return {
+    valid: qHashValid && didValid && signatureValid,
+    qHashValid,
+    didValid,
+    signatureValid,
+    requiresChainState,
+    computedQHash,
+    signer,
+    fresh,
+    ageMs,
+    errors
+  };
 }
 
 export function validateWalletAddress(address) {

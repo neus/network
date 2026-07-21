@@ -4,6 +4,8 @@ export { NeusClient } from './client.js';
 export {
   PORTABLE_PROOF_SIGNER_HEADER,
   constructVerificationMessage,
+  computePortableProofQHash,
+  verifyPortableProofEnvelope,
   validateWalletAddress,
   validateUniversalAddress,
   validateTimestamp,
