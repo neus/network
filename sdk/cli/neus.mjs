@@ -1,5 +1,5 @@
 ﻿#!/usr/bin/env node
-import { exec, spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -2098,13 +2098,22 @@ async function runAuthBrowser(options) {
         logStep('next', 'wait', 'finish sign-in in the browser');
       }
 
-      const openCommand = process.platform === 'win32'
-        ? `cmd /c start "" "${authUrl.replace(/"/g, '\\"')}"`
-        : process.platform === 'darwin'
-          ? `open "${authUrl.replace(/"/g, '\\"')}"`
-          : `xdg-open "${authUrl.replace(/"/g, '\\"')}"`;
-      exec(openCommand, { shell: true }, err => {
-        if (err && !options.json) {
+      // shell:false + argv array passes authUrl as a single argv element with no
+      // shell re-parse, so URL metacharacters (& | ; etc.) cannot be interpreted
+      // as shell control — eliminates the command-injection sink.
+      const opener =
+        process.platform === 'win32'
+          ? { command: 'explorer', args: [authUrl] }
+          : process.platform === 'darwin'
+            ? { command: 'open', args: [authUrl] }
+            : { command: 'xdg-open', args: [authUrl] };
+      const browser = spawn(opener.command, opener.args, {
+        shell: false,
+        stdio: 'ignore',
+        windowsHide: true
+      });
+      browser.on('error', () => {
+        if (!options.json) {
           logStep('warn', 'browser', 'open the URL above manually');
         }
       });

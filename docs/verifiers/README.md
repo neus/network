@@ -1,6 +1,6 @@
 # Verifier JSON Schemas
 
-Request shapes for the public verifier catalog. Guides for people integrating NEUS live under **[Verification](../verification/verifiers)**.
+Request shapes for the public verifier catalog. Guides for people integrating NEUS live under **[Verification](../verification/verifiers.mdx)**.
 
 ## Source of truth
 
