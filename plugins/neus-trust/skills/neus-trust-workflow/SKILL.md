@@ -13,7 +13,7 @@ metadata:
 
 Reuse existing trust receipts first. Run a new check only when needed. Summarize as **NEUS Verify** — Passed, Action needed, or Blocked. Never dump raw tool JSON.
 
-Use this for verification-sensitive steps. Answer simple questions directly.
+Use this before an assistant runs sensitive tools or takes another verification-sensitive step. Answer simple questions directly.
 
 ## When to use
 
