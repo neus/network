@@ -59,7 +59,9 @@ Use an [x402 buyer client](https://docs.cdp.coinbase.com/x402/quickstart-for-buy
 | Scheme | `exact` |
 | Network | Base mainnet (`eip155:8453`) |
 | Asset | USDC on Base |
-| Trust-check price | 0.01 USDC |
+| Trust-check price | 0.0025 USDC (1 credit at $0.0025/credit) |
+
+NEUS uses **exact sub-cent pricing** for x402 pay-per-call. A single gate check (1 credit) settles at **0.0025 USDC** — not a rounded-up minimum. This matches the x402 v2 / Base mainnet USDC micropayment standard, which natively supports 6-decimal atomic-unit settlement down to $0.001.
 
 Always enforce a client-side maximum before signing. Treat the decoded `PAYMENT-REQUIRED` header as the source of truth for the current amount, asset, recipient, and timeout.
 
