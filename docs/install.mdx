@@ -42,27 +42,38 @@ For example prompts, see [MCP journeys](./mcp/journeys).
 
 ---
 
+## Bring your own agent
+
+Already have agents in Cursor, Claude Code, or Claude Desktop? NEUS does not replace them — it adds identity, permissions, and receipts on top.
+
+**Import existing IDE config:**
+
+```bash
+neus import --from auto
+```
+
+Detects Cursor, Claude Code, and Claude Desktop workspaces and snapshots their config into a portable NEUS manifest. Use `--from cursor`, `--from claude-code`, or `--from claude-desktop` to target one.
+
+**Connect a registered agent to a project:**
+
+```bash
+neus mount <agentId> --apply cursor
+```
+
+Writes `.neus/mount.json` with the agent's verified identity, permissions, and host rules. Run it again after permission changes. See [Connect agent context](./agents/runtime-mount).
+
+**Agent frameworks:** NEUS works with any agent that can sign with a wallet or complete a hosted step. LangGraph, CrewAI, AutoGen, and MCP-native agents all register the same way — `agent-identity` for who they are, `agent-delegation` for what they may do. The receipts are portable across runtimes. See [Agent verification flow](./agents/agent-verification-flow).
+
+---
+
 ## Advanced
 
 | Topic | Link |
 | ----- | ---- |
-| NEUS MCP setup | [MCP setup](./mcp/setup) |
-| Assistant journeys | [MCP journeys](./mcp/journeys) |
-| NEUS SDK | [JavaScript SDK](./sdks/javascript) |
 | Access keys (servers / CI) | [MCP setup](./mcp/setup#access-keys) |
+| Per-editor config paths | [MCP setup](./mcp/setup#client-setup) |
+| Codex setup (`--client codex`) | [MCP setup](./mcp/setup) |
+| Claude Code plugin | `/plugin marketplace add https://github.com/neus/network` then `/plugin install neus-trust@neus` |
+| Cursor: plugin or `neus setup`, not both | The **neus-trust** plugin already provides the `neus` MCP server; adding a second entry in `~/.cursor/mcp.json` creates a duplicate. `neus setup` soft-skips Cursor when the plugin is detected. |
+| Assistant journeys | [MCP journeys](./mcp/journeys) |
 | Trust receipt APIs | [API overview](./api/overview) |
-
-For Codex, target that client during setup. The command starts its OAuth flow:
-
-```bash
-neus setup --client codex
-```
-
-Claude Code plugin (optional):
-
-```text
-/plugin marketplace add https://github.com/neus/network
-/plugin install neus-trust@neus
-```
-
-**Cursor:** install the **neus-trust** plugin **or** run `neus setup --client cursor` — not both. The plugin already provides the `neus` MCP server; adding a second entry in `~/.cursor/mcp.json` creates a duplicate. If both are present, `neus doctor` warns and `neus setup` soft-skips Cursor unless you pass `--client cursor` explicitly.

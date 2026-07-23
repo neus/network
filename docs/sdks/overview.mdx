@@ -1,14 +1,10 @@
 ---
 title: SDK Overview
-description: JavaScript SDK - verify, poll, gate, hosted links.
+description: JavaScript SDK — verify, poll, gate, and build hosted links.
 icon: code
 "og:image": "/images/og-sdk.png"
 "twitter:image": "/images/og-sdk.png"
 ---
-
-```bash
-npm install @neus/sdk
-```
 
 The JavaScript SDK does four things: build hosted verify URLs, create receipts, poll status, and run server-side gate checks. Use as much or as little as you need — a hosted link and a server check are enough for most apps. MCP calls the same APIs: [MCP](../mcp/overview).
 
@@ -22,40 +18,6 @@ The JavaScript SDK does four things: build hosted verify URLs, create receipts, 
 
 Avoid credentialed `fetch` to `api.neus.network` from the browser; use SDK helpers or your backend.
 
-## Browser (default)
-
-Hosted sign-in and checks on **NEUS**:
-
-```javascript
-import { getHostedCheckoutUrl } from '@neus/sdk';
-
-window.location.assign(
-  getHostedCheckoutUrl({
-    gateId: 'gate_your-app-name',
-    returnUrl: 'https://myapp.com/callback',
-  }),
-);
-```
-
-React: `VerifyGate` from `@neus/sdk/widgets` — [Quickstart](../quickstart).
-
-After you have a **receipt ID** (`qHash`), optional wait: `NeusClient` + `pollProofStatus` — [Verifications](./verifications).
-
-## In-app signing (optional)
-
-`client.verify({ wallet: ... })` only if signing stays in **your** page. Pass the wallet/provider explicitly. Non-EVM signing also needs `chain` as CAIP-2. [CAIP-380 Portable Proof](../learn/standards/caip-380) · [Signing format](../verification/signing-format).
-
-## Eligibility on your server
-
-```javascript
-const client = new NeusClient();
-
-const gate = await client.gateCheck({
-  gateId: 'gate_your-app-name',
-  address: '0x...',
-});
-```
-
 ## API mapping
 
 | Need | Method |
@@ -65,11 +27,11 @@ const gate = await client.gateCheck({
 | Wait | `pollProofStatus()` |
 | Allow / deny | `gateCheck()` (server) |
 
-Optional: `timeout` on `NeusClient`.
+Full reference, install, and code examples: [JavaScript SDK](./javascript).
 
 ## Defaults
 
-`client.verify()` defaults **private**. [Security](./security). `VerifyGate` create also defaults **private**. [Security and trust](../platform/security-and-trust)
+`client.verify()` and `VerifyGate` create both default **private**. [Security](./security) · [Security and trust](../platform/security-and-trust)
 
 ## Next
 

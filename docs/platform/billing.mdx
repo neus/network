@@ -1,14 +1,12 @@
 ---
 title: Billing
-description: How gate checks bill your NEUS account and what happens when credits run out.
+description: Credits, visitor checkout, and pay-per-call — who pays for what on NEUS.
 icon: credit-card
 ---
 
-NEUS bills metered verification usage to a NEUS profile. Credits spend first.
+Checks cost credits. Your credits spend first; visitors only pay when you turn on visitor checkout. [Pricing](./pricing) has the per-check amounts and the live estimator.
 
-**Hosted sign-in** for your app does not use credits. Credits apply when a trust check runs, a receipt is saved, or Pro hosted AI is used.
-
-Plan amounts and the live credit estimator: [Pricing](./pricing) · [neus.network/pricing](https://neus.network/pricing).
+**Hosted sign-in** never costs credits they apply when a trust check runs, a receipt is saved, or Pro hosted AI is used.
 
 ## How money moves on NEUS
 
@@ -32,7 +30,7 @@ There is no app ID or billing wallet to copy for this path. The gate carries the
 
 ## Server checks
 
-Confirm eligibility before trusted actions with **`gateCheck`** — pass the same `gateId` and the visitor’s **account address** (from Hosted Verify / the receipt subject):
+Confirm eligibility before trusted actions with **`gateCheck`** — pass the same `gateId` and the visitor's **account address** (from Hosted Verify / the receipt subject):
 
 ```javascript
 const result = await client.gateCheck({
@@ -47,13 +45,13 @@ if (result.data?.gate?.allRequiredSatisfied !== true) {
 
 ## Charge visitors instead
 
-A gate can charge visitors directly. Turn it on in the gate's pricing step. Your NEUS credits still cover the verification checks unless you configure otherwise.
+A gate can charge visitors directly. Turn it on in the gate's pricing step.
 
-**Card:** connect a payout account once from **Treasury → Payouts**. Card payments for your paid gates then settle to that account.
+**Card:** connect a payout account once from **Profile → Payouts**. Card payments for your paid gates then settle to that account.
 
 **USDC checkout (optional):** for products that already support stablecoin payers. Not required for account-based products.
 
-Until payouts are connected, paid gates may offer USDC checkout only.
+Until payouts are connected, paid gates offer USDC checkout only.
 
 Payment runs after verification by default. For the full checkout sequence, see [Hosted Gate Checkout](./hosted-gate-checkout).
 
@@ -73,7 +71,7 @@ For a dedicated agent account, create identity first, then send the user through
 
 ## When credits run out
 
-Billable calls return **402** with a quote. Complete payment and retry with `PAYMENT-SIGNATURE`.
+Billable calls return **402** with a quote. Pay per call with x402 (no account needed — see [x402](./x402)) or complete payment and retry with `PAYMENT-SIGNATURE`.
 
 ## Advanced server integration
 

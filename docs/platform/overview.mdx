@@ -6,40 +6,21 @@ icon: globe
 
 NEUS connects completed identity, ownership, risk, and permission checks to the access, payment, and agent decisions that depend on them. Use hosted verification, reusable receipts, profiles, gates, API, SDK, widgets, or the hosted assistant connection without replacing your existing identity, wallet, payment, or agent stack.
 
-Reference URLs and setup paths are below. Step-by-step onboarding lives in [Get started](../get-started).
+Step-by-step onboarding: [Get started](../get-started). How it fits together: [Trust stack](./trust-stack).
 
 <Card title="Roadmap" icon="map" href="./status">
   Shipped capabilities, work in progress, and planned milestones.
 </Card>
 
-## Surfaces
+## URLs
 
-| | |
-|--|--|
-| Hosted Verify | `/verify` |
-| Proof pages | `/proof/[receipt-id]` (`qHash` in API) |
-| Discover agents | `/agent/[id]` — [Discover agents](../agents/named-agent-card) |
-| Platform explorer | Public feed + discovery (`/hub`) |
-| API | Programmatic |
-| MCP | Assistants |
-
-<CardGroup cols={2}>
- <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
- `/verify`
- </Card>
- <Card title="Proof pages" icon="receipt" href="./receipts-and-results">
- Share links.
- </Card>
- <Card title="Agent identity and permissions" icon="robot" href="../agents/overview">
- `/agent/[id]` — identity, controller, and permission limits.
- </Card>
- <Card title="Platform setup" icon="building" href="./setup">
- Link your app.
- </Card>
- <Card title="Presets" icon="layer-group" href="./presets">
- Bundled check sets for common flows.
- </Card>
-</CardGroup>
+| Service | URL |
+|---------|-----|
+| Hosted Verify | `https://neus.network/verify` |
+| Proof page | `https://neus.network/proof/[receipt-id]` (receipt ID: `qHash` in API) |
+| Product app | `https://neus.network` |
+| API | `https://api.neus.network` |
+| MCP | `https://mcp.neus.network/mcp` |
 
 ## Flow
 
@@ -50,16 +31,6 @@ Reference URLs and setup paths are below. Step-by-step onboarding lives in [Get 
  alt="NEUS hosted verify, Proof API, proof page; app reusing proofs"
  />
 </Frame>
-
-## URLs
-
-| Service | URL |
-|---------|-----|
-| Hosted Verify | `https://neus.network/verify` |
-| Proof page | `https://neus.network/proof/[receipt-id]` (`qHash` in API) |
-| Product app | `https://neus.network` |
-| API | `https://api.neus.network` |
-| MCP | `https://mcp.neus.network/mcp` |
 
 ## Next
 

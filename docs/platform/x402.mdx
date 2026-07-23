@@ -1,22 +1,24 @@
 ---
 title: x402 pay-per-call
-description: Pay for a trust check with standard x402 v2 headers and USDC on Base.
+description: Pay per call with x402 v2 headers and USDC on Base — no account required.
 icon: coins
 ---
 
-x402 lets an application or agent pay for a NEUS trust check without creating an account or API key. The canonical paid resource is:
+x402 lets an application or agent pay for a NEUS operation without creating an account or API key. Three resources support pay-per-call:
 
-```http
-GET https://api.neus.network/api/v1/proofs/check
-```
+| Resource | Method | What it does | Base cost |
+|----------|--------|--------------|-----------|
+| `/api/v1/proofs/check` | GET | Evaluate existing receipts at a gate | 1 credit ($0.0025) |
+| `/api/v1/verification` | POST | Create a new trust receipt | 3+ credits (gate + verifier + proof write) |
+| `/api/v1/verification/access/grant` | POST | Create a signed private-proof sharing capability | 2 credits |
 
-Use it to evaluate reusable trust receipts before granting access, releasing a payment, or allowing an agent action.
+The exact price for each request is in the `PAYMENT-REQUIRED` header — it scales with the number of verifiers, query complexity, and optional add-ons (IPFS pinning, extra chains).
 
 ## Flow
 
 <Steps>
-  <Step title="Request the trust check">
-    Send the normal request with a wallet or account address and the proof criteria to evaluate.
+  <Step title="Request the resource">
+    Send the normal request with the required parameters (address, verifier IDs, or gate ID).
   </Step>
   <Step title="Read the payment requirements">
     An unpaid request returns **HTTP 402**. Decode the base64 **`PAYMENT-REQUIRED`** response header as an x402 v2 `PaymentRequired` object.
@@ -28,11 +30,17 @@ Use it to evaluate reusable trust receipts before granting access, releasing a p
     Repeat the identical method, URL, query, and body with the base64 **`PAYMENT-SIGNATURE`** request header.
   </Step>
   <Step title="Confirm settlement">
-    A successful paid call returns **HTTP 200**, the trust-check result, and a base64 **`PAYMENT-RESPONSE`** settlement header.
+    A successful paid call returns **HTTP 200**, the result, and a base64 **`PAYMENT-RESPONSE`** settlement header.
   </Step>
 </Steps>
 
-## Inspect the challenge
+## Proof check
+
+Check existing receipts before granting access, releasing a payment, or allowing an agent action:
+
+```http
+GET https://api.neus.network/api/v1/proofs/check
+```
 
 ```bash
 curl --include --get \
@@ -41,16 +49,38 @@ curl --include --get \
   --data-urlencode "verifierId=ownership-basic"
 ```
 
-The response is `402 Payment Required`. Payment instructions are delivered in the **`PAYMENT-REQUIRED` header**, not a custom quote in the response body.
+A single-verifier gate check costs **1 credit (0.0025 USDC)**. The price scales with the number of verifier IDs requested, query complexity, and result limit:
 
-The decoded header includes:
+| Parameter | Effect on price |
+|-----------|----------------|
+| `verifierId` | Base check (1 credit) |
+| `verifierIds=a,b,c` | 1 credit + 1 per additional verifier |
+| `gateId` | Uses the gate's check policy (creator pays by default) |
+| `traitPath`, `contentHash`, `contractAddress`, `domain`, `riskLevel`, `sanctioned`, `poisoned` | +2 credits (complex query surcharge) |
+| `sinceDays` or `since` | +1 credit (time-window surcharge) |
+| `limit` > 50 | +1 credit per 50 additional results |
 
-- `x402Version: 2`
-- the exact HTTPS resource URL
-- supported payment requirements under `accepts`
-- Bazaar input and output metadata for agent discovery
+The `PAYMENT-REQUIRED` header always carries the exact amount for that request.
 
-Use an [x402 buyer client](https://docs.cdp.coinbase.com/x402/quickstart-for-buyers) to decode, authorize, and retry the request. Do not construct or sign payment payloads by hand.
+## Proof creation
+
+Create a new trust receipt by paying per call:
+
+```http
+POST https://api.neus.network/api/v1/verification
+```
+
+Cost = gate check (1 credit) + each verifier's weight + proof write (2 credits) + optional add-ons. Verifier weights range from 1 (ownership-basic) to 70 (wallet-risk). See [Verifiers](../verification/verifiers) for per-verifier credit amounts.
+
+## Access grant
+
+Create a signed capability for private-proof sharing:
+
+```http
+POST https://api.neus.network/api/v1/verification/access/grant
+```
+
+Base cost: 2 credits. No per-hour surcharge.
 
 ## Settlement
 
@@ -59,9 +89,8 @@ Use an [x402 buyer client](https://docs.cdp.coinbase.com/x402/quickstart-for-buy
 | Scheme | `exact` |
 | Network | Base mainnet (`eip155:8453`) |
 | Asset | USDC on Base |
-| Trust-check price | 0.0025 USDC (1 credit at $0.0025/credit) |
 
-NEUS uses **exact sub-cent pricing** for x402 pay-per-call. A single gate check (1 credit) settles at **0.0025 USDC** — not a rounded-up minimum. This matches the x402 v2 / Base mainnet USDC micropayment standard, which natively supports 6-decimal atomic-unit settlement down to $0.001.
+Pricing is exact and sub-cent. A 1-credit gate check settles at its unit cost — not a rounded-up minimum. No settlement cap; pay for exactly the credits used. Per-credit price: see [Pricing](./pricing).
 
 Always enforce a client-side maximum before signing. Treat the decoded `PAYMENT-REQUIRED` header as the source of truth for the current amount, asset, recipient, and timeout.
 
@@ -71,7 +100,7 @@ After payment, validate all of the following before accepting the result:
 - `PAYMENT-RESPONSE` is present and decodes successfully
 - settlement reports success on the selected network
 - the payer and transaction are present
-- the response body reports a completed trust check
+- the response body reports a completed operation
 
 ## Discovery
 

@@ -3,11 +3,11 @@
   "name": "NEUS",
   "theme": "mint",
   "logo": {
-    "light": "/images/favicon.svg",
-    "dark": "/images/favicon.svg",
+    "light": "/images/neus-mark.svg",
+    "dark": "/images/neus-mark.svg",
     "href": "https://neus.network"
   },
-  "favicon": "/images/favicon.svg",
+  "favicon": "/images/neus-mark.svg",
   "colors": {
     "primary": "#98C0EF",
     "light": "#98C0EF",
@@ -626,7 +626,7 @@
       {
         "title": "Set up trust MCP",
         "description": "Install the live NEUS server (mcp.neus.network) in Cursor, VS Code, or Claude Code",
-        "icon": "/images/favicon.svg",
+        "icon": "plug",
         "href": "/install"
       },
       {

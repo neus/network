@@ -6,11 +6,11 @@ icon: receipt
 
 After verification, NEUS returns a **trust receipt** identified by its `qHash`. Save the `qHash` — it is how you reference, retrieve, and reuse the proof across your app.
 
-A wallet-signed creation response also includes `portableProof`, a CAIP-380 request envelope that another system can verify without calling NEUS. Save that envelope if portability matters; NEUS does not persist the complete request payload by default. Session-authorized receipts have `receipt.portable: false` and remain reusable through NEUS receipt APIs.
+A wallet-signed creation response also includes `portableProof`, a [CAIP-380](../learn/standards/caip-380) portable-proof envelope that another system can verify without calling NEUS. Save that envelope if portability matters; NEUS does not persist the complete request payload by default. Session-authorized receipts have `receipt.portable: false` and remain reusable through NEUS receipt APIs.
 
-**Default storage is offchain** — you get a durable receipt without a blockchain transaction. Opt in to an on-chain hub anchor only when you explicitly set `options.publishToHub: true` (SDK/API) or enable cross-chain spokes via `targetChains`.
+Default storage is offchain — you get a durable receipt without a blockchain transaction. Opt in to an on-chain hub anchor only when you explicitly set `options.publishToHub: true` (SDK/API) or enable cross-chain spokes via `targetChains`.
 
-Details in one place: [Integration](../integration).
+See [Integration](../integration) for the full surface.
 
 ## `qHash`
 

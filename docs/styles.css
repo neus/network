@@ -506,21 +506,6 @@ footer {
   border: 1px solid var(--neus-border-faint);
 }
 
-/*
-  Contextual menu (TOC): NEUS particle-ring favicon.
-*/
-#table-of-contents img[src*="/images/favicon.svg"],
-#table-of-contents [src*="/images/favicon.svg"] {
-  display: inline-block !important;
-  width: 1.125rem !important;
-  height: 1.125rem !important;
-  min-width: 1.125rem !important;
-  min-height: 1.125rem !important;
-  object-fit: contain !important;
-  flex-shrink: 0;
-  border-radius: 4px;
-}
-
 #search-input,
 #navbar button[class*="group/search"] {
   background: rgb(12 14 18 / 0.72);

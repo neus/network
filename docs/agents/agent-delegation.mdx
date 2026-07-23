@@ -85,6 +85,8 @@ Send `x-neus-app: your-app-id` and matching site origin on verification requests
 
 `maxSpend` is a whole-number string in token base units. For USDC (6 decimals), 25 USDC = `"25000000"`. Use `toAgentDelegationMaxSpend('25', 6)` from `@neus/sdk`.
 
+When `scope: "payments:x402"` and `allowedPaymentTypes: ["x402"]` are set, the agent can settle metered API calls via x402 without a NEUS account. The calling application enforces the `maxSpend` cap client-side before signing each payment — the protocol does not decrement `maxSpend` server-side. When the cap is exhausted, the application stops signing payments and the agent is refused. See [x402 pay-per-call](../platform/x402) for the full settlement flow.
+
 ```javascript
 import { toAgentDelegationMaxSpend } from '@neus/sdk';
 

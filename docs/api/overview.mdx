@@ -33,13 +33,14 @@ Send end users through the **[JavaScript SDK](../sdks/javascript)** or **[Hosted
 | `/api/v1/proofs/{qHash}` | GET | Fetch by `qHash` |
 | `/api/v1/proofs/revoke-self/{qHash}` | POST | Owner revokes their own proof |
 | `/api/v1/verification` | POST | Create proof (server) |
+| `/api/v1/verification/access/grant` | POST | Create a signed private-proof sharing capability |
 | `/api/v1/verification/standardize` | POST | Phase 1 of raw HTTP: returns `signerString` for the exact body you will submit |
 | `/api/v1/verification/verifiers` | GET | Verifier catalog |
 | `/api/v1/health` | GET | Service health |
 
 The SDK's `getGate()` / `fulfillGate()` wrap the gate endpoints above.
 
-> **Scope note:** This reference covers the core HTTP proof and verification surface. Gate endpoints (`/api/v1/profile/gates/{gateId}`, `.../fulfill`, `/api/v1/profile/gates/discoverable`) and `POST /api/v1/payments/verify` (x402 pay-per-call settlement) are product checkout endpoints documented in [Hosted Gate Checkout](../platform/hosted-gate-checkout) and [x402](../platform/x402); they are intentionally not included in the OpenAPI reference on the API Reference tab.
+> **Scope note:** This reference covers the core HTTP proof and verification surface. Gate endpoints (`/api/v1/profile/gates/{gateId}`, `.../fulfill`, `/api/v1/profile/gates/discoverable`) and `POST /api/v1/payments/verify` (x402 pay-per-call settlement) are product checkout endpoints documented in [Hosted Gate Checkout](../platform/hosted-gate-checkout) and [x402](../platform/x402). Three resources support x402 pay-per-call: `GET /api/v1/proofs/check`, `POST /api/v1/verification`, and `POST /api/v1/verification/access/grant`.
 
 **Same-origin in the product app:** `https://neus.network/api/v1/gates/{gateId}` and `.../fulfill` return the same gate contract for browser calls. Server integrations should call `api.neus.network` paths directly (or use the SDK).
 
