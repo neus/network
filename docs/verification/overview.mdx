@@ -1,12 +1,13 @@
 ---
-title: Verification Overview
-description: Verifier types, terms, and verification responses.
+title: Checks
+sidebarTitle: Overview
+description: What NEUS can check and what you get back.
 icon: file-signature
 "og:image": "/images/og-verification.png"
 "twitter:image": "/images/og-verification.png"
 ---
 
-Verification is how NEUS evaluates a claim and returns a **trust receipt** you can reuse. Mechanics: [How it works](./how-it-works). Placement in your product: [Integration](../integration).
+NEUS runs a check and returns a **result** you can reuse before access, payment, or action. Details: [How it works](./how-it-works). Where to plug it in: [Integration](../integration).
 
 ## Outcomes
 
@@ -16,11 +17,11 @@ Verification is how NEUS evaluates a claim and returns a **trust receipt** you c
 | Ownership | Content, files, authorship |
 | Access | NFT, token thresholds |
 | Abuse | Human, wallet safety |
-| Agents | Identity, delegation |
+| Agents | Identity, authority |
 
-Agent verifications produce portable trust context any framework can read.
+Agent checks produce identity and authority any connected runtime can read.
 
-## Verifier types
+## Check types
 
 | Type | How | Examples |
 |------|-----|----------|
@@ -34,13 +35,13 @@ Most product gates start with **Interactive** checks. Instant and Lookup are ava
 
 | Term | Meaning |
 |------|---------|
-| qHash | Trust receipt reference — [Results](../platform/receipts-and-results) |
-| Verifier | Rule set applied to the claim |
-| Account / subject | The NEUS account the receipt is about (passkey, OAuth, or linked wallet) |
+| Receipt ID (`qHash`) | Saved result reference. [Results](../platform/receipts-and-results) |
+| Check | Rule set applied to a claim |
+| Account / subject | The NEUS account the result is about |
 | Signing string | Message the account signs when a check requires it |
-| Hosted Verify | Browser flow at `neus.network/verify` — [Hosted Verify](../cookbook/auth-hosted-verify) |
+| Hosted Verify | Browser flow at `neus.network/verify`. [Hosted Verify](../cookbook/auth-hosted-verify) |
 
-Visibility: [Security and trust](../platform/security-and-trust)
+Visibility: [Privacy](../platform/security-and-trust)
 
 ## Response
 

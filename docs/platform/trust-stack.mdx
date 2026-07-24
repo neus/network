@@ -1,63 +1,40 @@
 ---
 title: Trust stack
-description: How profiles, hosted sign-in, checks, gates, and agents fit together on NEUS.
+description: Who they are and what they may do. One profile. Every gate.
 icon: layer-group
 ---
 
-NEUS is one hosted surface for **sign-in**, **checks**, **gates**, and **agents** — sharing the same browser, the same receipts, and the same profile. You do not stitch separate auth and verification products.
+Sign-in, gates, saved results, and agent authority share one account. Do not restart from zero in the next product.
 
 ## The loop
 
 | Step | What happens |
 | ---- | ------------ |
-| 1 | **Check** whether a valid trust receipt already exists |
-| 2 | **Verify** only when the receipt is missing, stale, or needs a stronger decision |
-| 3 | **Save** the receipt on a person, org, or agent profile |
-| 4 | **Reuse** before access, payment, delegation, or action |
+| 1 | Look up a saved result |
+| 2 | Run a new check only if needed |
+| 3 | Save it on a profile |
+| 4 | Reuse before access, payment, or action |
 
-Same loop in your app (`VerifyGate`), on your server (`gateCheck`), in MCP, and on NEUS itself.
+## Building blocks
 
-## Four pieces builders should know
+| Piece | What it is |
+| ----- | ---------- |
+| **Profile** | Your NEUS account: identity, results, agents |
+| **Hosted Verify** | Sign-in and checks in the browser |
+| **Check** | One trust decision ([catalog](../verification/verifiers)) |
+| **Gate** | Published checks you embed with one ID |
 
-| Piece | Plain language | Where it lives |
-| ----- | -------------- | -------------- |
-| **Profile** | Your portable home on NEUS — identity, receipts, agents, and what you choose to show publicly | [neus.network/profile](https://neus.network/profile) |
-| **Hosted Verify** | Browser sign-in and trust checks NEUS runs for you — passkey, wallet, OAuth, human, social | `neus.network/verify` |
-| **Check** | One atomic trust decision (identity, ownership, human, wallet safety, agent permission, …) | [Verifier catalog](../verification/verifiers) |
-| **Portal / gate** | A published bundle of checks (and optional visitor pricing) you embed with one `gateId` | Profile → **Portals** · [Create a portal](./setup) |
+## Where to start
 
-**Sign-in** (`intent=login`) creates a NEUS session for Hub and profile work. **Gate checkout** (`gateId`) creates or reuses **trust receipts** for your product. Both run on Hosted Verify — no wallet or passkey code in your app.
+| You want | Start |
+| -------- | ----- |
+| Sign-in | [Hosted Verify](../cookbook/auth-hosted-verify) |
+| Access gate | [Quickstart](../quickstart) |
+| IDE assistant | [Install](../install) |
+| Server checks | [API](../api/overview) |
 
-## Who needs what
+## Related
 
-| You are building | Start here | Credits apply to |
-| ---------------- | ---------- | ---------------- |
-| Sign-in for your app | [Hosted login](../cookbook/auth-hosted-verify) with `intent=login` | Trust **checks** and saved receipts — not session sign-in |
-| Access before content or payout | [Quickstart](../quickstart) — publish a portal, embed `VerifyGate` | Checks through your gate |
-| AI assistant in the IDE | [Install NEUS](../install) — OAuth + MCP | Checks when the assistant verifies or saves receipts |
-| Server automation | Profile → **Keys** + [Integrations](../cookbook/integrations) | API checks and receipt creation |
-
-## Profiles, agents, and access
-
-- **People and orgs** sign in once, collect receipts on their profile, and reuse them at gates.
-- **Agents** register identity, receive **scoped permission** from a controller account, and carry the same receipts into production gates and MCP.
-- **Builders** publish **portals** from their profile; visitors only need your public `gateId` — not a NEUS account, unless your gate requires it.
-
-Denials leave receipts too, so partners and auditors see a complete record.
-
-## Next
-
-<CardGroup cols={2}>
-  <Card title="Integration loop" icon="compass" href="../integration">
-    Check, verify, save, reuse.
-  </Card>
-  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    Sign-in and checkout in the browser.
-  </Card>
-  <Card title="Pricing" icon="tags" href="./pricing">
-    Plans and credit costs.
-  </Card>
-  <Card title="Agent concepts" icon="users" href="../agents/concepts">
-    Identity, permission, and delegation.
-  </Card>
-</CardGroup>
+- [Integration](../integration)
+- [Agents](../agents/overview)
+- [Pricing](./pricing)

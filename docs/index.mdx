@@ -1,93 +1,66 @@
 ---
 title: "NEUS Docs"
 sidebarTitle: "Home"
-description: "Verify once. Reuse the receipt. Portable identity, ownership, and permission checks before access, payment, or action."
+description: "Login gets them in. Authority decides what they do next."
 icon: house
 "og:image": "/images/og-default.png"
 "twitter:image": "/images/og-default.png"
 ---
 
-NEUS turns completed identity, ownership, risk, and permission checks into **trust receipts**. Connected apps and agents can check a receipt’s current status, scope, and expiration before access, payment, or another sensitive action.
-
-**Check once. Reuse the receipt.** Your NEUS **account** holds the receipts and agents you control. Visitors and agents do not rebuild the same checks in every product.
-
-NEUS sits beside the auth, verification, payment, and agent stacks you already use. Those systems keep doing their jobs; NEUS carries an accepted result into the next gate.
-
-## Choose an integration path
-
-Three drop-in paths cover most products. Pick the one that matches what you are building.
+## Start here
 
 <CardGroup cols={3}>
-  <Card title="Gate an app or marketplace" icon="puzzle-piece" href="./quickstart">
-    Publish a portal, embed VerifyGate, reuse receipts at checkout.
+  <Card title="Gate an app" icon="puzzle-piece" href="./quickstart">
+    Stop unpaid or untrusted access at checkout.
   </Card>
   <Card title="Connect an assistant" icon="plug" href="./install">
-    One command: `neus setup` — same account and receipts in Cursor, Claude Code, Codex, and VS Code.
+    One command. Your assistant uses your NEUS account.
   </Card>
-  <Card title="Check agents before action" icon="robot" href="./agents/agent-verification-flow">
-    Agent identity and permission receipts a runtime can check before tools run.
-  </Card>
-</CardGroup>
-
-## What NEUS handles
-
-| Job | What you ship | Where to start |
-|-----|---------------|----------------|
-| Access without rebuilding KYC/OAuth | Hosted Verify + published gate | [Quickstart](./quickstart) · [Create a portal](./platform/setup) |
-| Assistants that respect limits | MCP with hosted sign-in + verify-or-guide | [Install](./install) · [MCP journeys](./mcp/journeys) |
-| Agents with scoped authority | Identity + permission receipts | [Agent verification](./agents/agent-verification-flow) |
-| Monetize checks | You-pay credits, visitor checkout, or pay-per-call | [Pricing](./platform/pricing) · [Billing](./platform/billing) |
-
-Free **Basic** includes monthly credits for hosted sign-in, portals, and API checks. **Pro** adds 10,000 monthly credits, Zeus, hosted AI (or your own model key), higher API throughput, and priority support. [Plans](./platform/pricing).
-
-## Products and use cases
-
-<CardGroup cols={2}>
-  <Card title="AI agent and assistant permissions" icon="robot" href="./agents/overview">
-    Register an agent, set limits, check them before action in a connected runtime.
-  </Card>
-  <Card title="Identity and account checks" icon="shield-halved" href="./platform/receipts-and-results">
-    Passkey, OAuth, social, org, and domain results as reusable receipts.
-  </Card>
-  <Card title="Access gates and eligibility" icon="door-open" href="./platform/hosted-gate-checkout">
-    Require current receipts before content, memberships, rewards, or API access.
-  </Card>
-  <Card title="Human and abuse checks" icon="user-check" href="./cookbook/sybil-resistance">
-    Layer human and account checks so one weak signal is not enough.
-  </Card>
-  <Card title="Credits and checkout" icon="credit-card" href="./platform/billing">
-    You pay for checks by default — or charge visitors at the gate.
-  </Card>
-  <Card title="Reuse across apps" icon="route" href="./integration">
-    Check → verify → save → reuse — one loop for widgets, API, and MCP.
+  <Card title="Control agents" icon="robot" href="./agents/agent-verification-flow">
+    Set what they may do before tools run.
   </Card>
 </CardGroup>
 
-Browse [solutions](https://neus.network/solutions) for industry examples.
-
-## Core receipt flow
-
-Most integrations follow the same loop: **check → verify → save receipt → reuse**. See [Integration](./integration).
+All paths: [Start here](./get-started).
 
 ## Build with
 
 <CardGroup cols={3}>
   <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Hosted sign-in and checks on NEUS — passkey, OAuth, and gates. No wallet UI in your app.
+    Sign-in and verify on NEUS. No auth UI to build.
   </Card>
   <Card title="MCP" icon="plug" href="./mcp/overview">
-    Connect assistants to receipt checks through one hosted endpoint.
+    Use agents with your NEUS account.
   </Card>
   <Card title="Widgets" icon="square-check" href="./widgets/overview">
-    Drop-in gates and badges for React.
+    Drop-in gates for React.
   </Card>
   <Card title="SDK" icon="code" href="./sdks/overview">
-    Create, check, and reuse receipts from any server or app.
+    Hosted links and gate checks.
   </Card>
   <Card title="API" icon="terminal" href="./api/overview">
-    Server-side eligibility checks and receipt reads.
+    Call from your backend.
   </Card>
   <Card title="Examples" icon="cube" href="./examples">
-    Working reference apps and samples.
+    Working sample apps.
   </Card>
 </CardGroup>
+
+## What you get
+
+<CardGroup cols={2}>
+  <Card title="Access that holds" icon="door-open" href="./platform/hosted-gate-checkout">
+    Require a current result before content or payouts.
+  </Card>
+  <Card title="Agents you can trust" icon="robot" href="./agents/overview">
+    Identity, spend caps, and revoke.
+  </Card>
+  <Card title="Identity that travels" icon="shield-halved" href="./platform/receipts-and-results">
+    Passkey, social, org, domain. Reuse it.
+  </Card>
+  <Card title="Clear pricing" icon="credit-card" href="./platform/pricing">
+    Free tier. Pro credits. Or charge at the gate.
+  </Card>
+</CardGroup>
+
+[Solutions](https://neus.network/solutions) · [How it fits](./integration)

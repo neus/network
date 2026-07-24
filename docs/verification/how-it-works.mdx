@@ -1,14 +1,15 @@
 ---
-title: How Verification Works
-description: From request to saved trust receipt.
+title: How it works
+sidebarTitle: How it works
+description: From request to a saved result you can reuse.
 icon: shield-check
 ---
 
-<Frame caption="Save the trust receipt | reuse checks and gates without repeat friction.">
+<Frame caption="One saved result. Reuse it at the next gate.">
   <img
     className="neus-how-it-works-diagram"
     src="/images/how-it-works.png"
-    alt="Flow: one trust receipt | reused across apps and APIs"
+    alt="Flow: one saved result reused across apps and APIs"
   />
 </Frame>
 
@@ -16,13 +17,13 @@ icon: shield-check
 
 <Steps>
   <Step title="Start">
-    Hosted `/verify`, SDK, or API.
+    Hosted Verify, SDK, or API.
   </Step>
   <Step title="Finish">
-    Per verifier: sign, hosted step, lookup, etc.
+    Per check: sign, hosted step, or lookup.
   </Step>
-  <Step title="Save receipt">
-    Store **`qHash`** - [Verification results](../platform/receipts-and-results).
+  <Step title="Save result">
+    Store the receipt ID. [Results](../platform/receipts-and-results).
   </Step>
 </Steps>
 
@@ -30,32 +31,32 @@ icon: shield-check
 
 | Mode | When |
 |------|------|
-| Hosted `/verify` | Login, OAuth, human, org |
+| Hosted Verify | Login, OAuth, human, org |
 | SDK | Product-controlled flows |
 | Raw HTTP | Advanced / server-only |
 | Gate check | `GET /api/v1/proofs/check` |
-| Pay per call | `x402` — no account needed ([x402](../platform/x402)) |
+| Pay per call | No account needed. [Pay per call](../platform/x402) |
 
 ## You get
 
-- Response + status
-- **`hostedVerifyUrl`** when a browser step is required
-- Poll when async
-- **`qHash`** to store
+- Response and status
+- A hosted link when a browser step is required
+- Poll when the check is async
+- A receipt ID to store
 
 ## Related
 
 <CardGroup cols={2}>
   <Card title="Integration" icon="compass" href="../integration">
-    Check, verify, save, reuse.
+    Browser, server, and assistant paths.
   </Card>
-  <Card title="Verification results" icon="receipt" href="../platform/receipts-and-results">
-    The trust receipt reference.
+  <Card title="Results" icon="receipt" href="../platform/receipts-and-results">
+    Save and reuse a result.
   </Card>
   <Card title="Lifecycle" icon="rotate" href="./lifecycle">
     Poll, reuse, revoke.
   </Card>
-  <Card title="Verifiers" icon="list-tree" href="./verifiers">
-    Pick capability.
+  <Card title="Check catalog" icon="list-tree" href="./verifiers">
+    Pick a check by outcome.
   </Card>
 </CardGroup>

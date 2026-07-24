@@ -1,10 +1,11 @@
 ---
-title: Domain Verification
-description: DNS TXT at _neus — prove domain control with ownership-dns-txt.
+title: Domain
+sidebarTitle: Domain
+description: Confirm domain control with a DNS TXT record.
 icon: globe
 ---
 
-Verifier: [`ownership-dns-txt`](../verification/ownership-dns-txt). Optional — not required to [create a gate](../platform/setup) or run VerifyGate.
+Check: [`ownership-dns-txt`](../verification/ownership-dns-txt). Optional. Not required to [create a gate](../platform/setup) or run VerifyGate.
 
 ## Steps
 
@@ -20,9 +21,9 @@ Verifier: [`ownership-dns-txt`](../verification/ownership-dns-txt). Optional —
    wallet=0x...
    ```
 
-   The verifier reads **`wallet=`** only (not `neus=` or other prefixes).
+   The check reads **`wallet=`** only (not `neus=` or other prefixes).
 
-2. **Proof** — include at least `domain` in `data`. You may omit `data.walletAddress` when the same request carries a verified **top-level** `walletAddress` (typical signed proof); the service fills in that signer address before the DNS check. The TXT line must use the same wallet or account address NEUS uses for the proof.
+2. **Request:** include at least `domain` in `data`. You may omit `data.walletAddress` when the same request carries a verified **top-level** `walletAddress` (typical signed flow); the service fills in that signer address before the DNS check. The TXT line must use the same wallet or account address NEUS uses for the check.
 
    ```javascript
    const proof = await client.verify({

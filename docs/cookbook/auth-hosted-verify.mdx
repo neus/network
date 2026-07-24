@@ -1,14 +1,12 @@
 ---
 title: Hosted Verify
-description: Hosted sign-in and trust checks on NEUS — one browser surface for your app.
+description: Passkey, OAuth, and gate checkout on NEUS. No sign-in UI in your app.
 icon: key
 ---
 
-**Hosted Verify** is `https://neus.network/verify`. Use it when a step needs **hosted sign-in and checks in the browser** — passkey, OAuth, human check, social/org proof, or gate checkout. Your app does **not** embed passkey, OAuth, or wallet UI.
+Send users to `https://neus.network/verify` for sign-in, human checks, social links, or gate checkout. You never embed passkey, OAuth, or wallet UI.
 
-Visitors and builders use a **NEUS account**. Wallet steps appear **only** when a published gate or check requires them.
-
-Sign-in and gate checkout use the **same hosted surface**. See [Trust stack](../platform/trust-stack).
+Wallet steps appear only when a published gate requires them. Sign-in and gate checkout share one surface. See [Trust stack](../platform/trust-stack).
 
 ## What runs here
 
@@ -16,7 +14,7 @@ Sign-in and gate checkout use the **same hosted surface**. See [Trust stack](../
 |--------------|-------------------------|
 | `intent=login` | NEUS session: passkey sign-in (primary), optional wallet attach |
 | `gateId` | Gate checkout; wallet steps **only** if the published gate requires them |
-| Social / org **proof** | OAuth inside a verifier — [ownership-social](../verification/ownership-social), [ownership-org-oauth](../verification/ownership-org-oauth) |
+| Social / org check | OAuth inside a check. [ownership-social](../verification/ownership-social), [ownership-org-oauth](../verification/ownership-org-oauth) |
 
 ## Login vs verification
 

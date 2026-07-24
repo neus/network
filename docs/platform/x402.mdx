@@ -1,10 +1,11 @@
 ---
-title: x402 pay-per-call
-description: Pay per call with x402 v2 headers and USDC on Base — no account required.
+title: Pay per call
+sidebarTitle: Pay per call
+description: Pay for a single check without creating an account.
 icon: coins
 ---
 
-x402 lets an application or agent pay for a NEUS operation without creating an account or API key. Three resources support pay-per-call:
+Pay for a single NEUS check without creating an account or API key. Three endpoints support this:
 
 | Resource | Method | What it does | Base cost |
 |----------|--------|--------------|-----------|
@@ -12,13 +13,13 @@ x402 lets an application or agent pay for a NEUS operation without creating an a
 | `/api/v1/verification` | POST | Create a new trust receipt | 3+ credits (gate + verifier + proof write) |
 | `/api/v1/verification/access/grant` | POST | Create a signed private-proof sharing capability | 2 credits |
 
-The exact price for each request is in the `PAYMENT-REQUIRED` header — it scales with the number of verifiers, query complexity, and optional add-ons (IPFS pinning, extra chains).
+The exact price for each request is in the `PAYMENT-REQUIRED` header. It scales with the number of checks, query complexity, and optional add-ons (IPFS pinning, extra chains).
 
 ## Flow
 
 <Steps>
   <Step title="Request the resource">
-    Send the normal request with the required parameters (address, verifier IDs, or gate ID).
+    Send the normal request with the required parameters (address, check IDs, or gate ID).
   </Step>
   <Step title="Read the payment requirements">
     An unpaid request returns **HTTP 402**. Decode the base64 **`PAYMENT-REQUIRED`** response header as an x402 v2 `PaymentRequired` object.

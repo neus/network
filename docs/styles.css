@@ -1,11 +1,7 @@
 /* NEUS Mintlify skin — tokens colocated in docs/ (Mintlify CDN does not resolve ../examples imports). */
 @import url('./neus-tokens.css');
 
-/* Doc-only card elevation — shell rails use solid tokens from neus-tokens.css (match app). */
-:root {
-  --neus-docs-card-bg: rgb(var(--neus-rgb-surface-card) / 1);
-  --neus-docs-card-hover: rgb(var(--neus-rgb-surface-card-hover) / 1);
-}
+/* Docs cards use app neus-card surface (sheen + glass gradient). */
 
 /*
   Marketing page wash (neus/app/globals.css --neus-page-bg).
@@ -99,24 +95,31 @@ main > span.absolute.inset-0.overflow-hidden.pointer-events-none:not(#background
 }
 
 /*
-  Header logo — primary neus-mark.svg only (full particle depth).
-  Mintlify renders .nav-logo at h-7; keep square mark sharp and non-collapsing.
+  Header logo — primary mark only (full particle depth).
+  Mintlify h-7 (28px) makes the ring/particles sub-pixel mush.
+  docs.json serves a trim-cropped supersampled primary PNG; display at 48px.
 */
 #navbar a.select-none {
   display: inline-flex !important;
   align-items: center !important;
+  justify-content: center !important;
   flex: 0 0 auto !important;
   min-width: 0;
+  line-height: 0 !important;
 }
 
 #navbar img.nav-logo {
-  height: 1.75rem !important;
-  width: 1.75rem !important;
-  max-width: 1.75rem !important;
-  max-height: 1.75rem !important;
-  min-width: 1.75rem !important;
+  height: 3rem !important;
+  width: 3rem !important;
+  max-width: 3rem !important;
+  max-height: 3rem !important;
+  min-width: 3rem !important;
   object-fit: contain !important;
   flex-shrink: 0 !important;
+  image-rendering: auto !important;
+  /* Hairline halo so fine particles read on the glass bar — does not alter geometry. */
+  filter: drop-shadow(0 0 0.6px rgb(152 192 239 / 0.85)) !important;
+  transform: translateZ(0);
 }
 
 html.dark #navbar img.nav-logo[alt="dark logo"] {
@@ -146,7 +149,7 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
     flex: 0 0 auto !important;
     width: auto !important;
     max-width: 4rem;
-    min-width: 2rem;
+    min-width: 3rem;
   }
 
   #navbar .flex.items-center.lg\:px-12.h-16 > .h-full.relative.flex-1 > .relative.hidden.lg\:flex.items-center.flex-1.z-20.justify-center {
@@ -175,10 +178,11 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
     white-space: nowrap;
   }
 
-  /* Tab strip: full-width under main bar, tied to the same glass plate */
+  /* Tab strip — no full-width rule (design: spacing only, never section dividers). */
   #navbar .hidden.lg\:flex.px-12.h-12 {
     width: 100% !important;
-    border-top: 1px solid var(--neus-border-faint);
+    border-top: none !important;
+    align-items: center !important;
   }
 
   #navbar .nav-tabs {
@@ -186,37 +190,72 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
     max-width: 100% !important;
     flex-wrap: nowrap;
     row-gap: 0;
-    align-items: stretch;
+    align-items: center !important;
+    gap: 0.25rem !important;
+  }
+
+  /* Kill Mintlify hairline underlines — selected state is fill + accent text. */
+  #navbar .nav-tabs a.nav-tabs-item > div.absolute.bottom-0,
+  #navbar .nav-tabs a.nav-tabs-item > div.h-\[1\.5px\] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    pointer-events: none !important;
   }
 
   #navbar .nav-tabs a.nav-tabs-item {
     position: relative !important;
     display: inline-flex !important;
     align-items: center !important;
+    justify-content: center !important;
+    align-self: center !important;
     width: auto !important;
     flex: 0 0 auto !important;
+    /* Kill Mintlify h-full — full-row height makes any rim read as an underline. */
+    height: 2rem !important;
+    max-height: 2rem !important;
+    min-height: 2rem !important;
+    padding: 0 0.75rem !important;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0.5rem !important;
+    background: transparent !important;
+    box-shadow: none !important;
     color: var(--neus-text-muted) !important;
+    font-size: var(--neus-text-body-sm) !important;
+    font-weight: var(--neus-weight-label) !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    text-shadow: none !important;
+    transition: color 120ms ease, background-color 120ms ease;
   }
 
   #navbar .nav-tabs a.nav-tabs-item:hover {
     color: var(--neus-text-secondary) !important;
+    background: rgb(255 255 255 / 0.05) !important;
   }
 
+  /*
+    Selected tab — graphite fill + white text. No blue wash (Linear/Cursor).
+  */
+  #navbar .nav-tabs a.nav-tabs-item[aria-current],
+  #navbar .nav-tabs a.nav-tabs-item[data-active="true"],
   #navbar .nav-tabs a.nav-tabs-item.text-primary,
-  #navbar .nav-tabs a.nav-tabs-item[aria-current="page"],
   #navbar .nav-tabs a.nav-tabs-item.dark\:text-gray-200 {
     color: var(--neus-text-primary) !important;
+    font-weight: var(--neus-weight-heading) !important;
+    background: rgb(255 255 255 / 0.08) !important;
+    border: none !important;
+    box-shadow: none !important;
   }
 
-  /* Active underline = text width only (Mintlify uses absolute w-full child). */
-  #navbar .nav-tabs a.nav-tabs-item > div.absolute.bottom-0 {
-    left: 0 !important;
-    right: auto !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    height: 1.5px !important;
-    border-radius: 999px;
-    background: var(--neus-accent) !important;
+  #navbar .nav-tabs a.nav-tabs-item[aria-current]:hover,
+  #navbar .nav-tabs a.nav-tabs-item[data-active="true"]:hover,
+  #navbar .nav-tabs a.nav-tabs-item.text-primary:hover {
+    color: var(--neus-text-primary) !important;
+    background: rgb(255 255 255 / 0.1) !important;
   }
 }
 
@@ -226,6 +265,58 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto !important;
+  color: var(--neus-text-muted) !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+}
+
+#navigation-items a svg,
+#navigation-items a i,
+#navigation-items a [class*="icon"],
+#navigation-items a .text-primary,
+#navigation-items a [class*="text-primary"] {
+  color: var(--neus-text-muted) !important;
+  fill: currentColor !important;
+}
+
+#navigation-items a:hover {
+  color: var(--neus-text-secondary) !important;
+  background: rgb(255 255 255 / 0.04) !important;
+}
+
+/*
+  Active sidebar item — Linear/Cursor style: quiet graphite fill, no accent blue.
+  Match app selected-row soft fill without primary wash.
+*/
+#navigation-items a[aria-current="page"],
+#navigation-items a[aria-current="true"],
+#navigation-items a[data-active="true"],
+#navigation-items a[data-state="active"],
+#sidebar a[aria-current="page"],
+#sidebar a[aria-current="true"],
+#sidebar a[data-active="true"] {
+  color: var(--neus-text-primary) !important;
+  background: rgb(255 255 255 / 0.07) !important;
+  box-shadow: none !important;
+  font-weight: var(--neus-weight-label) !important;
+}
+
+#navigation-items a[aria-current="page"] svg,
+#navigation-items a[aria-current="true"] svg,
+#navigation-items a[data-active="true"] svg,
+#navigation-items a[aria-current="page"] .text-primary,
+#navigation-items a[aria-current="true"] .text-primary,
+#navigation-items a[data-active="true"] .text-primary,
+#navigation-items a[aria-current="page"] [class*="text-primary"],
+#navigation-items a[aria-current="true"] [class*="text-primary"],
+#navigation-items a[data-active="true"] [class*="text-primary"],
+#sidebar a[aria-current="page"] svg,
+#sidebar a[aria-current="true"] svg,
+#sidebar a[data-active="true"] svg {
+  color: var(--neus-text-secondary) !important;
+  fill: currentColor !important;
 }
 
 body {
@@ -446,22 +537,37 @@ button,
 
 .mdx-content table th,
 .mdx-content table td {
-  border-color: var(--neus-border-subtle) !important;
+  border-color: transparent !important;
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+  vertical-align: top !important;
 }
 
-.mdx-content hr,
 .mdx-content table,
 .mdx-content thead,
 .mdx-content tbody tr {
-  border-color: var(--neus-border-subtle) !important;
+  border-color: transparent !important;
+}
+
+/* No section <hr> (DESIGN.md); keep structural table chrome quiet. */
+.mdx-content hr {
+  display: none !important;
 }
 
 .mdx-content li::marker {
   color: var(--neus-text-muted) !important;
 }
 
+/* No zebra rows — flat spacing only (match app lists). */
 .mdx-content tbody tr:nth-child(even) {
-  background: rgb(var(--neus-rgb-surface-card) / 0.4) !important;
+  background: transparent !important;
+}
+
+.mdx-content thead th {
+  font-size: var(--neus-text-label) !important;
+  font-weight: var(--neus-weight-heading) !important;
+  color: var(--neus-text-muted) !important;
+  letter-spacing: 0.02em;
 }
 
 .mdx-content a:not([class*="button"]):focus-visible {
@@ -518,12 +624,8 @@ footer {
 
   #navbar .nav-tabs {
     padding-bottom: 0 !important;
-    height: 100%;
-  }
-
-  #navbar .nav-tabs a.nav-tabs-item {
-    height: 100% !important;
-    padding-bottom: 0 !important;
+    height: auto !important;
+    min-height: 100%;
   }
 }
 
@@ -714,18 +816,111 @@ a#topbar-cta-button:focus-visible,
   }
 }
 
+/*
+  Mintlify .card → app .neus-card treatment:
+  graphite glass plate, diagonal sheen, hover corner highlight. No hard rim.
+*/
 .card,
 .card-group .card {
+  position: relative !important;
+  isolation: isolate !important;
   width: 100% !important;
   min-width: 0 !important;
   min-height: 8.5rem !important;
   height: auto !important;
-  overflow: visible !important;
-  padding: 1rem 1.125rem !important;
-  background: var(--neus-docs-card-bg);
-  border: 1px solid var(--neus-border-faint);
-  border-radius: var(--neus-radius-lg);
-  box-shadow: var(--neus-shadow-card);
+  overflow: hidden !important;
+  padding: 1.25rem 1.25rem !important;
+  border: none !important;
+  border-radius: var(--neus-radius-card) !important;
+  background: var(--neus-surface-glass) !important;
+  box-shadow: var(--neus-shadow-glass) !important;
+  transition: background 300ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.card::before,
+.card-group .card::before {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  opacity: 0.42 !important;
+  background:
+    linear-gradient(
+      135deg,
+      var(--neus-glass-sheen-1) 0%,
+      transparent 30%,
+      var(--neus-glass-sheen-2) 60%,
+      transparent 100%
+    ),
+    radial-gradient(90% 80% at 20% 0%, rgba(90, 90, 90, 0.18) 0%, transparent 72%) !important;
+}
+
+/* Hover highlight — gray only (DESIGN.md: blue is scarce; no accent wash on cards). */
+.card::after,
+.card-group .card::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: inherit !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+  opacity: 0 !important;
+  background: linear-gradient(
+    135deg,
+    rgba(90, 90, 90, 0.14) 0%,
+    transparent 38%,
+    rgba(90, 90, 90, 0.06) 100%
+  ) !important;
+  transition: opacity 300ms ease !important;
+}
+
+.card > *,
+.card-group .card > * {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/*
+  Mintlify paints card icons with theme --primary (blue).
+  Force muted graphite on every SVG/path/icon layer.
+*/
+.card svg,
+.card-group .card svg,
+.card svg *,
+.card-group .card svg *,
+.card i,
+.card-group .card i,
+.card [class*="icon"],
+.card-group .card [class*="icon"],
+.card .text-primary,
+.card-group .card .text-primary,
+.card [class*="text-primary"],
+.card-group .card [class*="text-primary"],
+.card [style*="color"],
+.card-group .card [style*="color"] {
+  color: var(--neus-text-muted) !important;
+  fill: currentColor !important;
+  stroke: currentColor !important;
+}
+
+.card:hover svg,
+.card-group .card:hover svg,
+.card:hover svg *,
+.card-group .card:hover svg *,
+.card:hover i,
+.card-group .card:hover i,
+.card:hover [class*="icon"],
+.card-group .card:hover [class*="icon"] {
+  color: var(--neus-text-secondary) !important;
+}
+
+.card code,
+.card-group .card code {
+  color: var(--neus-text-secondary) !important;
+  background: rgb(var(--neus-rgb-surface-card-hover) / 0.8) !important;
+  border-color: var(--neus-border-faint) !important;
 }
 
 .card h2,
@@ -739,11 +934,49 @@ a#topbar-cta-button:focus-visible,
   word-break: normal !important;
 }
 
+.card,
+.card-group .card,
+a.card,
+a.card:hover {
+  color: var(--neus-text-primary) !important;
+  text-decoration: none !important;
+}
+
+.card h2,
+.card h3,
+.card-group .card h2,
+.card-group .card h3,
+.card a,
+.card-group .card a {
+  font-size: var(--neus-text-title-sm) !important;
+  font-weight: var(--neus-weight-heading) !important;
+  line-height: 1.35 !important;
+  color: var(--neus-text-primary) !important;
+  text-decoration: none !important;
+}
+
+.card p,
+.card-group .card p {
+  font-size: var(--neus-text-body-sm) !important;
+  line-height: 1.5 !important;
+  color: var(--neus-text-muted) !important;
+}
+
 .card:hover,
 .card-group .card:hover {
-  background: var(--neus-docs-card-hover);
-  border-color: var(--neus-border);
-  box-shadow: var(--neus-shadow-card-hover);
+  background: linear-gradient(
+    180deg,
+    rgb(var(--neus-rgb-surface-rail) / 0.86) 0%,
+    rgb(var(--neus-rgb-surface-card) / 0.48) 42%,
+    rgb(var(--neus-rgb-surface-rail) / 0.64) 100%
+  ) !important;
+  border: none !important;
+  box-shadow: var(--neus-shadow-glass) !important;
+}
+
+.card:hover::after,
+.card-group .card:hover::after {
+  opacity: 0.4 !important;
 }
 
 .card-group.cols-2 > div:only-child,

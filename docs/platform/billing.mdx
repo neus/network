@@ -1,12 +1,12 @@
 ---
 title: Billing
-description: Credits, visitor checkout, and pay-per-call — who pays for what on NEUS.
+description: Who pays for checks, gate checkout, and metered API calls.
 icon: credit-card
 ---
 
-Checks cost credits. Your credits spend first; visitors only pay when you turn on visitor checkout. [Pricing](./pricing) has the per-check amounts and the live estimator.
+Checks cost credits. Your credits spend first. Visitors only pay when you turn on visitor checkout. [Pricing](./pricing) has the amounts and the live estimator.
 
-**Hosted sign-in** never costs credits they apply when a trust check runs, a receipt is saved, or Pro hosted AI is used.
+Hosted sign-in never costs credits. Credits apply when a check runs, a result is saved, or Pro hosted AI is used.
 
 ## How money moves on NEUS
 
@@ -14,13 +14,13 @@ Three lanes cover every flow. Most products only use the first.
 
 | Lane | Who pays | Use it for |
 |------|----------|------------|
-| **You pay for checks** | Your NEUS credits | The default — verifications through your gate bill your account |
+| **You pay for checks** | Your NEUS credits | Default. Checks through your gate bill your account |
 | **Charge visitors at a gate** | Your visitor | Paid content and member access — card or USDC at [checkout](./hosted-gate-checkout) |
 | **Charge per API call (metered)** | The caller / agent | Metered APIs and agents that [pay as they go](./x402) (`x402`) |
 
 ## Default: you pay for visitor checks
 
-When you publish a gate, you own it — so verifications through that gate bill **your** NEUS account by default. Visitors embed or link your checkout with one public `gateId`:
+When you publish a gate, you own it, so checks through that gate bill **your** NEUS account by default. Visitors embed or link your checkout with one public `gateId`:
 
 ```jsx
 <VerifyGate gateId="gate_your-app-name" />
@@ -30,7 +30,7 @@ There is no app ID or billing wallet to copy for this path. The gate carries the
 
 ## Server checks
 
-Confirm eligibility before trusted actions with **`gateCheck`** — pass the same `gateId` and the visitor's **account address** (from Hosted Verify / the receipt subject):
+Confirm eligibility before you grant access with **`gateCheck`**. Pass the same `gateId` and the visitor's **account address** (from Hosted Verify or the saved result):
 
 ```javascript
 const result = await client.gateCheck({

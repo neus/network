@@ -1,36 +1,35 @@
 ---
-title: Overview
-sidebarTitle: Overview
-description: Give AI agents verifiable identity, permissions, spending limits, and checks before action.
+title: Agents
+sidebarTitle: Agents
+description: Your agents have the keys. Set what they are allowed to do.
 icon: robot
 "og:image": "/images/og-agents.png"
 "twitter:image": "/images/og-agents.png"
 ---
 
-NEUS gives AI agents and assistants a portable identity plus explicit permissions. Connected runtimes check those receipts before granting access or allowing a sensitive action.
+Name the agent. Set what it may do and how much it may spend. Connected runtimes enforce that authority before access or a sensitive tool runs.
 
 | Need | How |
 |------|-----|
-| Identify the agent | `agent-identity`: the agent account signs its identity |
-| Set what it can do | `agent-delegation`: an approving account grants permissions |
-| Cap what it can spend | `maxSpend` on the delegation (base units) |
-| Check if it is ready | `neus_agent_link` → `linked: true` |
-| Be discoverable | A2A and EIP-8004 agent cards |
-| Reuse trust | Receipt ID (`qHash`) or receipt URL |
-| Audit later | Receipt reads and proof pages |
+| Identify the agent | Agent signs its identity |
+| Set what it may do | Approving account grants authority |
+| Cap spend | `maxSpend` in base units |
+| Ready to act? | `neus_agent_link` → `linked: true` |
+| Reuse later | Receipt ID or receipt URL |
+| Audit | Receipt reads and proof pages |
 
-Agent frameworks handle reasoning and execution. NEUS supplies verifiable identity, permission limits, and reusable trust receipts.
+Frameworks run tools. NEUS sets who the agent is and what it may do first.
 
-## Two receipts make an agent ready in NEUS
+## Two results make an agent ready
 
-- **Identity** (`agent-identity`): the agent account signs its name, type, capabilities, and skills. Identity alone grants no permission.
-- **Permissions** (`agent-delegation`): an approving account signs the allowed actions, spending cap, and expiration date.
+- **Identity:** the agent account signs its name, type, and skills. Identity alone grants no permission.
+- **Authority:** an approving account signs allowed actions, spend cap, and expiration.
 
 An agent is **ready** only when both are on file.
 
-## Permission limits
+## Authority
 
-The permission receipt defines a boundary:
+The authority record defines a boundary:
 
 - **`allowedActions` / `deniedActions`**: explicit allow and deny lists. A denied action takes precedence.
 - **`maxSpend`**: a whole-number spending cap in token base units. USDC uses six decimals, so 25 USDC is `"25000000"`.
@@ -53,7 +52,7 @@ Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are av
     Call **`neus_context`**, then **`neus_agent_link`** with the agent wallet.
   </Step>
   <Step title="Create">
-    If identity or permission receipts are missing, call **`neus_agent_create`**. The agent account signs its identity, and the approving account grants permissions.
+    If identity or authority is missing, call **`neus_agent_create`**. The agent account signs its identity, and the approving account grants authority.
   </Step>
   <Step title="Confirm">
     Call **`neus_agent_link`** until **`linked: true`**, then reuse receipts.
@@ -73,7 +72,7 @@ Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are av
 ## Next
 
 <CardGroup cols={2}>
-  <Card title="Verification flow" icon="diagram-project" href="./agent-verification-flow">
+  <Card title="Agent setup" icon="diagram-project" href="./agent-verification-flow">
     Step-by-step order.
   </Card>
   <Card title="Agent identity" icon="id-card" href="./agent-identity">

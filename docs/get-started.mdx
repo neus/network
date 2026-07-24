@@ -1,26 +1,36 @@
 ---
-title: Get started
-description: Pick your path — gate an app, connect an assistant, or check an agent. Same account, same portable trust receipts.
-icon: book
+title: Start here
+sidebarTitle: Paths
+description: Gate an app, connect an assistant, or wire your backend.
+icon: route
 ---
 
-Pick your surface — app, assistant, agent, or backend. You sign in once to a **NEUS account**. Receipts travel with that account so every product does not restart verification from zero.
+Pick the job. Each path is the smallest working setup.
 
-**Glossary:** **Check** is the product term for a trust requirement. In API requests the field is `verifierIds`. **Receipt ID** is the product term for a saved result; in API responses the field is `qHash`.
-
-| You are building | Simplest path | Start |
-| ---------------- | ------------- | ----- |
-| **Gated content, marketplace, or checkout** | Publish a portal → `<VerifyGate>` with one `gateId` | [Quickstart](./quickstart) · [Create a portal](./platform/setup) |
-| **Sign-in without building auth UI** | Hosted Verify (`intent=login`) — passkey / OAuth on NEUS | [Hosted Verify](./cookbook/auth-hosted-verify) · [Trust stack](./platform/trust-stack) |
-| **An assistant in your IDE** | One command: `neus setup` | [Install NEUS](./install) |
-| **Agents with limits before tools run** | Agent identity + permission receipts | [Agent verification flow](./agents/agent-verification-flow) |
-| **A backend in any language** | HTTP API and server `gateCheck` | [API overview](./api/overview) |
-
-**How billing works:** visitors complete checks on NEUS and keep the receipt; they can reuse it at your next gate when the checks match. You bill with credits (you pay by default) or charge visitors — [Pricing](./platform/pricing) · [Billing](./platform/billing).
+<CardGroup cols={2}>
+  <Card title="Gated content" icon="puzzle-piece" href="./quickstart">
+    Publish a portal. Embed a gate.
+  </Card>
+  <Card title="Hosted sign-in" icon="key" href="./cookbook/auth-hosted-verify">
+    Passkey or social login. No auth UI.
+  </Card>
+  <Card title="IDE assistant" icon="plug" href="./install">
+    One command. Same NEUS account in every editor.
+  </Card>
+  <Card title="Agent authority" icon="robot" href="./agents/agent-verification-flow">
+    Set what an agent may do before it acts.
+  </Card>
+  <Card title="HTTP API" icon="terminal" href="./api/overview">
+    Server checks in any language.
+  </Card>
+  <Card title="Pricing" icon="credit-card" href="./platform/pricing">
+    Credits, or charge visitors at the gate.
+  </Card>
+</CardGroup>
 
 ## Next
 
-- **App / widgets:** [Quickstart](./quickstart) — publish a portal, embed VerifyGate, confirm on your server.
-- **Assistant:** [Install NEUS](./install) — one command for Cursor, Claude Code, Codex, and VS Code.
-- **Architecture:** [Trust stack](./platform/trust-stack) — how profiles, Hosted Verify, checks, and gates fit together.
-- **Server automation:** [API overview](./api/overview) · [Integrations](./cookbook/integrations)
+- [Quickstart](./quickstart)
+- [Install](./install)
+- [Trust stack](./platform/trust-stack)
+- [API](./api/overview)

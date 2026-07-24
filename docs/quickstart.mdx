@@ -1,20 +1,18 @@
 ---
 title: Quickstart
-description: Ship trust in your app with drop-in widgets — VerifyGate, ProofBadge, and a server check.
+description: Publish a gate. Drop in VerifyGate. Confirm on your server.
 icon: rocket
 "og:image": "/images/og-quickstart.png"
 "twitter:image": "/images/og-quickstart.png"
 ---
 
-The fastest way to add trust to an app: gate content with **`<VerifyGate>`**, show status with **`<ProofBadge>`**, and confirm on your server before trusted actions. Your app never implements check logic — a published gate owns the checks, pricing, and checkout.
-
-**End users never need a NEUS account, an API key, or extra setup in your product.**
+One hosted gate owns the checks, pricing, and hosted sign-in. Your app never runs the check logic. Visitors need no NEUS account and no API key.
 
 ## Build it
 
 <Steps>
   <Step title="Publish a gate">
-    Sign in at [neus.network](https://neus.network), open your profile → **Portals**, choose the checks visitors must pass, set pricing (you pay by default, or charge visitors), and **Publish**. Copy your `gateId` — visitors only ever need that.
+    Sign in at [neus.network](https://neus.network), open your profile → **Portals**, choose the checks visitors must pass, set pricing (you pay by default, or charge visitors), and **Publish**. Copy your `gateId`. Visitors only ever need that.
   </Step>
   <Step title="Gate content with VerifyGate">
     ```jsx
@@ -24,7 +22,7 @@ The fastest way to add trust to an app: gate content with **`<VerifyGate>`**, sh
       <ProtectedContent />
     </VerifyGate>;
     ```
-    `VerifyGate` looks for an existing receipt, opens **Hosted Verify** only when a new one is needed, then renders your content. Wallet, passkey, and OAuth all happen on NEUS — not inside your app.
+    `VerifyGate` looks for an existing receipt, opens **Hosted Verify** only when a new one is needed, then renders your content. Wallet, passkey, and OAuth all happen on NEUS, not inside your app.
   </Step>
   <Step title="Show status with ProofBadge">
     ```jsx
@@ -34,8 +32,8 @@ The fastest way to add trust to an app: gate content with **`<VerifyGate>`**, sh
     ```
     Optional: pass `showChains` when you want on-chain status in the badge.
   </Step>
-  <Step title="Confirm before trusted actions">
-    On your server, check the visitor still satisfies the gate before you act. Pass the **account address** from the Hosted Verify callback or the receipt you stored — every NEUS account has one (passkey and OAuth included). You do not need a separate crypto wallet in your product for this path:
+  <Step title="Confirm on your server">
+    Before you grant access or pay out, confirm the visitor still satisfies the gate. Pass the **account address** from Hosted Verify or the saved result. Every NEUS account has one (passkey and OAuth included). No separate crypto wallet required:
     ```js
     import { NeusClient } from '@neus/sdk';
 
@@ -69,9 +67,9 @@ window.location.assign(
 
 Read the **receipt ID** (`qHash`) from the callback URL or popup message, then store it. Details: [Hosted Verify](./cookbook/auth-hosted-verify).
 
-## Adding trust to an agent instead?
+## Adding an assistant instead?
 
-[Install NEUS](./install), then ask: **"Use NEUS Verify before taking sensitive actions."**
+[Install NEUS](./install), then ask: **"Before I take a sensitive action, use NEUS. Reuse what I already have."**
 
 ## Next
 
@@ -83,7 +81,7 @@ Read the **receipt ID** (`qHash`) from the callback URL or popup message, then s
     The browser flow on NEUS.
   </Card>
   <Card title="Integration" icon="compass" href="./integration">
-    Check, verify, save, reuse.
+    Browser, server, and assistant paths.
   </Card>
 </CardGroup>
 

@@ -1,46 +1,36 @@
 ---
 title: Integration
-description: Where browser, server, and assistant code run in the NEUS trust loop.
+description: Browser, server, or assistant. One saved result travels with the user.
 icon: compass
 ---
 
-Every integration follows the loop in [Trust stack](./platform/trust-stack#the-loop). Terms: [Get started](./get-started).
+Login gets them in. Authority decides what they do next. Pick where you plug in.
 
-The same trust receipt works in a React widget, a server gate, an MCP assistant, or a partner app — because the **receipt** is the trust context, not a session flag in your database.
+## Where
 
-## Where code runs
+| Place | Use |
+| ----- | --- |
+| Browser | Hosted Verify or VerifyGate |
+| Server | SDK or API |
+| Assistant | Install NEUS in your IDE |
 
-| Layer     | Use                                                                       |
-| --------- | ------------------------------------------------------------------------- |
-| Browser   | `VerifyGate`, `getHostedCheckoutUrl`, hosted `/verify`                    |
-| Server    | `gateCheck` with `gateId`                                                 |
-| Assistant | NEUS MCP — reuse receipts before action ([Install](./install)) |
+Keep sign-in on NEUS hosted pages. Never put access keys in browser code.
 
-Passkey, wallet, and OAuth flows should run on NEUS hosted pages by default. Do not ship access keys or server secrets in browser bundles.
-
-Backend receipt creation and access keys: [Integrations](./cookbook/integrations).
-
-## Integration options
+## Start here
 
 <CardGroup cols={2}>
-  <Card
-    title="Hosted Verify"
-    icon="shield-check"
-    href="./cookbook/auth-hosted-verify"
-  >
-    Browser flow owned by NEUS.
+  <Card title="Hosted Verify" icon="shield-check" href="./cookbook/auth-hosted-verify">
+    Sign-in and checks on NEUS.
   </Card>
   <Card title="SDK" icon="code" href="./sdks/javascript">
-    JavaScript helpers for app and server flows.
+    App and server helpers.
   </Card>
   <Card title="VerifyGate" icon="square-check" href="./widgets/verifygate">
-    React access gates.
+    React access gate.
   </Card>
   <Card title="Agents" icon="robot" href="./agents/agent-verification-flow">
-    Agent identity and permissions.
+    Identity and authority before tools.
   </Card>
 </CardGroup>
 
-Receipt fields and URLs: [Receipts and results](./platform/receipts-and-results).
-
-**Next:** [Quickstart](./quickstart) · [Hosted Verify](./cookbook/auth-hosted-verify)
+**Next:** [Quickstart](./quickstart)

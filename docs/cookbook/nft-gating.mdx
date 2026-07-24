@@ -1,10 +1,10 @@
 ---
-title: NFT Gating
-description: Published gate checkout for nft-ownership.
+title: NFT gating
+description: Require NFT ownership before content or rewards.
 icon: image
 ---
 
-Verifier: [`nft-ownership`](../verification/nft-ownership). Ownership is **point-in-time**. Configure the NFT contract, token policy, and recency in your published gate.
+Use the [NFT ownership](../verification/nft-ownership) check. Ownership is point-in-time. Set the contract, token policy, and recency in your published gate.
 
 ## Widget
 
@@ -13,26 +13,15 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 export function NFTGatedContent() {
   return (
-    <VerifyGate
-      gateId="gate_your-app-name"
-    >
-      <div>Exclusive content</div>
+    <VerifyGate gateId="gate_your-nft-gate">
+      <ProtectedContent />
     </VerifyGate>
   );
 }
 ```
 
-## Server: gateCheck
+## Next
 
-```javascript
-const result = await client.gateCheck({
-  gateId: 'gate_your-app-name',
-  address: '0x...',
-});
-
-if (result.data?.gate?.allRequiredSatisfied !== true) {
-  throw new Error('Access denied');
-}
-```
-
-For multiple token policies, publish one gate per policy or model the accepted alternatives in the gate owner UI, then check the resulting `gateId`.
+- [Quickstart](../quickstart)
+- [Create a portal](../platform/setup)
+- [NFT ownership check](../verification/nft-ownership)

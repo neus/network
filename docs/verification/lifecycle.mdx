@@ -1,6 +1,7 @@
 ---
-title: Verification Lifecycle
-description: Create, poll, reuse, revoke.
+title: Lifecycle
+sidebarTitle: Lifecycle
+description: Create, wait, reuse, or revoke a result.
 icon: rotate
 ---
 
@@ -10,8 +11,8 @@ icon: rotate
 |-------|---------|
 | Start | Hosted, SDK, or API |
 | Accepted | Request in flight |
-| Processing | Async verifier |
-| Complete | qHash ready |
+| Processing | Async check |
+| Complete | Receipt ID ready |
 | Reused | Checks / gates / MCP |
 | Stale / revoked | Policy or user revoke |
 
@@ -19,14 +20,14 @@ icon: rotate
 
 | Strategy | Use |
 |----------|-----|
-| `reuse-or-create` | Default - reuse if valid |
+| `reuse-or-create` | Default. Reuse if valid |
 | `reuse` | Read-only checks |
-| `fresh` | Force new proof |
+| `fresh` | Force a new result |
 
 ## Freshness
 
-- Point-in-time verifiers (balance, risk): respect recency. 
-- Prefer cheap checks + `since` / `sinceDays`; verify only when policy needs it.
+- Point-in-time checks (balance, risk): respect recency.
+- Prefer cheap checks + `since` / `sinceDays`. Run a new check only when policy needs it.
 
 ## Revoke (owner)
 

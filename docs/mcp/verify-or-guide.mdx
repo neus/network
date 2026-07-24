@@ -1,10 +1,11 @@
 ---
-title: Verify or guide (`neus_verify_or_guide`)
-description: Reuse trust receipts or return the single next verification step.
+title: Check or guide (`neus_verify_or_guide`)
+sidebarTitle: Check or guide
+description: Reuse a saved result, or return the next hosted step.
 icon: signs-post
 ---
 
-**Default reuse-or-verify tool** — checks existing receipts first, then returns the next hosted step when a new check is required.
+**Default reuse-or-check tool.** Looks up existing results first, then returns the next hosted step when a new check is required.
 
 When signed in, **omit `walletAddress`** to use your profile wallet from `neus_context`.
 
@@ -14,7 +15,7 @@ When signed in, **omit `walletAddress`** to use your profile wallet from `neus_c
 2. If satisfied → `already_verified` (continue silently)
 3. If not → returns one next step (hosted verify link or in-MCP verify path)
 
-Summarize the outcome for users as **NEUS Verify** (Passed / Action needed / Blocked).
+Summarize the outcome for users as **Passed**, **Action needed**, or **Blocked**.
 
 ## Input
 

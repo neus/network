@@ -1,10 +1,11 @@
 ---
-title: Install NEUS
-description: Connect your agent environment to hosted NEUS MCP.
+title: IDE plugin
+sidebarTitle: IDE plugin
+description: Connect Cursor, Claude Code, Codex, or VS Code to hosted NEUS.
 icon: plug
 ---
 
-Connect assistants to verified identity, limited permissions, reusable trust receipts, and encrypted secrets.
+Connect assistants to identity, authority, saved results, and encrypted secrets.
 
 **Hosted endpoint:** `https://mcp.neus.network/mcp`
 
@@ -20,7 +21,7 @@ neus check
 
 One OAuth sign-in configures hosted NEUS MCP for Cursor, Claude Code, and VS Code.
 
-Ask your assistant: **"Use NEUS Verify before taking sensitive actions."** It checks identity, permissions, and existing receipts first, then summarizes as Passed, Action needed, or Blocked.
+Ask your assistant: **"Before I take a sensitive action, use NEUS. Reuse what I already have."** It looks up identity, authority, and saved results first, then summarizes as Passed, Action needed, or Blocked.
 
 ```bash
 neus setup --client cursor

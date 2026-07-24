@@ -1,35 +1,36 @@
 ---
-title: Verifiable Agents
-description: Register agents, connect apps, and consume proofs.
+title: Agent setup
+sidebarTitle: Agent setup
+description: Set who the agent is and what it may do. Then reuse the results.
 icon: robot
 ---
 
-Two proofs: **`agent-identity`** (agent signs) and **`agent-delegation`** (approving account signs). Same person or two accounts.
+Two results: **`agent-identity`** (agent signs) and **`agent-delegation`** (approving account signs). Same person or two accounts.
 
-Instead of every app rebuilding agent identity and permissions, NEUS agents carry their own proof.
+Instead of every app rebuilding agent identity and authority, NEUS agents carry their own results.
 
-To bill hosted checks through your product, complete [Quickstart](../quickstart) (create a **portal** under profile → **Portals**). For backend receipt creation after user approval, see [Integrations](../cookbook/integrations). Agent concepts: [Agent concepts](../agents/concepts)
+To bill hosted checks through your product, complete [Quickstart](../quickstart) (create a **portal** under profile → **Portals**). For backend receipt creation after user approval, see [Integrations](./integrations). Agent concepts: [Agent concepts](../agents/concepts)
 
 ## MCP
 
 <Steps>
- <Step title="Check">
- **`neus_context`** → **`neus_agent_link`** with both **`agentWallet`** and **`agentId`**. Done if **`linked: true`**.
- </Step>
- <Step title="Create">
- **`neus_agent_create`** when proofs are missing.
- </Step>
- <Step title="Finish">
- Follow **`next_action`**. Dedicated wallets sign identity first; the approving account finishes delegation.
- </Step>
- <Step title="Confirm">
- **`neus_agent_link`** until **`linked: true`**.
- </Step>
+  <Step title="Check">
+    **`neus_context`** → **`neus_agent_link`** with both **`agentWallet`** and **`agentId`**. Done if **`linked: true`**.
+  </Step>
+  <Step title="Create">
+    **`neus_agent_create`** when results are missing.
+  </Step>
+  <Step title="Finish">
+    Follow **`next_action`**. Dedicated wallets sign identity first; the approving account finishes authority.
+  </Step>
+  <Step title="Confirm">
+    **`neus_agent_link`** until **`linked: true`**.
+  </Step>
 </Steps>
 
 ## SDK
 
-For a dedicated agent wallet, keep the identity receipt from the agent-signed step, then build a delegation-only hosted callback:
+For a dedicated agent wallet, keep the identity result from the agent-signed step, then build a delegation-only hosted callback:
 
 ```javascript
 import { getHostedAgentCreateUrl } from '@neus/sdk';
@@ -48,30 +49,30 @@ const hostedUrl = getHostedAgentCreateUrl({
 
 | Step | Page |
 |------|------|
-| Register | [Agent identity](../agents/agent-identity) |
-| Delegate | [Agent delegation](../agents/agent-delegation) |
+| Identity | [Agent identity](../agents/agent-identity) |
+| Authority | [Agent authority](../agents/agent-delegation) |
 | Billing | [Billing](../platform/billing) |
-| Check | [Integration](../integration) |
+| Integration | [Integration](../integration) |
 
 Schemas: **`docs/verifiers/schemas/`**
 
 ## Agent that pays
 
-To let an agent pay for metered APIs autonomously, give its delegation a spend cap and the payments scope, then let it settle pay-per-call requests:
+To let an agent pay for metered APIs on its own, give its authority a spend cap and the payments scope, then let it settle pay-per-call requests:
 
-1. Delegate with `scope: 'payments:x402'`, `allowedPaymentTypes: ['x402']`, and a `maxSpend` cap — see [Agent delegation](../agents/agent-delegation).
+1. Grant authority with `scope: 'payments:x402'`, `allowedPaymentTypes: ['x402']`, and a `maxSpend` cap. See [Agent authority](../agents/agent-delegation).
 2. The agent calls your priced endpoint; a `402` returns the price.
-3. The agent pays and retries with a `PAYMENT-SIGNATURE` header — full flow in [x402 pay-per-call](../platform/x402).
+3. The agent pays and retries with a `PAYMENT-SIGNATURE` header. Full flow: [Pay per call](../platform/x402).
 
-The `maxSpend` cap is enforced as a hard limit, so the agent can never exceed its budget.
+The `maxSpend` cap is enforced as a hard stop, so the agent cannot exceed its budget.
 
 ## Related
 
 <CardGroup cols={2}>
- <Card title="Agents overview" icon="robot" href="../agents/overview">
- Start here.
- </Card>
- <Card title="MCP overview" icon="plug" href="../mcp/overview">
- Tool list and auth.
- </Card>
+  <Card title="Agents overview" icon="robot" href="../agents/overview">
+    Start here.
+  </Card>
+  <Card title="MCP overview" icon="plug" href="../mcp/overview">
+    Tool list and auth.
+  </Card>
 </CardGroup>

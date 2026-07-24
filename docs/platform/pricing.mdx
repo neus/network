@@ -1,12 +1,10 @@
 ---
 title: Pricing
-description: Plans, credits, and what each trust check costs.
+description: Free tier. Pro credits. Or charge visitors at the gate.
 icon: tags
 ---
 
-NEUS is **credits-based**. Start free, then scale checks and saved receipts as your product grows.
-
-**Hosted sign-in** for your app (`intent=login`) is included — credits apply when a **trust check runs** or a **receipt is saved** (gates, API, MCP), not when someone signs in to NEUS.
+Credits pay for checks and saved results. Hosted sign-in is included. Credits apply when a check runs or a result is saved, not when someone signs in.
 
 ## Plans
 
@@ -21,11 +19,11 @@ NEUS is **credits-based**. Start free, then scale checks and saved receipts as y
 Every action on NEUS costs **1 credit = $0.0025**. The difference is in how many credits an action requires:
 
 - **Check an existing receipt (gate check):** 1 credit — **$0.0025** per check.
-- **Create and save a new receipt (verification + persist):** 4–73 credits — **$0.01 to $0.18** depending on the verifier.
+- **Create and save a new result:** 4–73 credits (**$0.01 to $0.18**) depending on the check type.
 
-The economics favor reuse: creating a wallet-risk receipt costs $0.18, but checking it at any gate costs $0.0025 — 72× cheaper to reuse than to rebuild.
+Reuse wins: creating a wallet-risk result costs $0.18. Checking it at any gate costs $0.0025. About 72× cheaper to reuse than to rebuild.
 
-Use the live estimator on **[neus.network/pricing](https://neus.network/pricing)** for per-verifier credit amounts. Heavier checks (human verification, agent permissions, wallet risk) use more credits than a simple ownership check.
+Live estimator: **[neus.network/pricing](https://neus.network/pricing)**. Heavier checks (human, agent authority, wallet risk) use more credits than a simple ownership check.
 
 How credits apply to gates, visitors, and APIs: [Billing](./billing).
 

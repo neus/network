@@ -1,13 +1,14 @@
 ---
-title: Verifier Catalog
-description: Pick a verification by outcome.
+title: Check catalog
+sidebarTitle: Check catalog
+description: Pick a check by what you need to know before you grant access.
 icon: list-tree
 ---
 
 ## By outcome
 
-| Need | Verifier | Type |
-|------|----------|------|
+| Need | Check | Type |
+|------|-------|------|
 | Content ownership | [ownership-basic](./ownership-basic) | Instant |
 | Social link | [ownership-social](./ownership-social) | Interactive |
 | Domain | [ownership-dns-txt](./ownership-dns-txt) | Lookup |
@@ -20,8 +21,8 @@ icon: list-tree
 | Human | [proof-of-human](./proof-of-human) | Interactive |
 | Wallet risk | [wallet-risk](./wallet-risk) | Lookup |
 | Content safety | [ai-content-moderation](./ai-content-moderation) | Lookup |
-| Agent register | [agent-identity](../agents/agent-identity) | Instant |
-| Agent delegate | [agent-delegation](../agents/agent-delegation) | Instant |
+| Agent identity | [agent-identity](../agents/agent-identity) | Instant |
+| Agent authority | [agent-delegation](../agents/agent-delegation) | Instant |
 
 ## Types
 
@@ -35,7 +36,7 @@ icon: list-tree
 
 ### Identity
 
-| Verifier | Proves |
+| Check | Confirms |
 |----------|--------|
 | [ownership-social](./ownership-social) | Social account |
 | [ownership-dns-txt](./ownership-dns-txt) | Domain |
@@ -45,21 +46,21 @@ icon: list-tree
 
 ### Ownership
 
-| Verifier | Proves |
+| Check | Confirms |
 |----------|--------|
 | [ownership-basic](./ownership-basic) | Content / claim |
 | [contract-ownership](./contract-ownership) | Contract control |
 
 ### Access
 
-| Verifier | Proves |
+| Check | Confirms |
 |----------|--------|
 | [nft-ownership](./nft-ownership) | NFT holder |
 | [token-holding](./token-holding) | Balance threshold |
 
 ### Abuse
 
-| Verifier | Proves |
+| Check | Confirms |
 |----------|--------|
 | [proof-of-human](./proof-of-human) | Human |
 | [wallet-risk](./wallet-risk) | Risk signal |
@@ -67,16 +68,16 @@ icon: list-tree
 
 ### Agents
 
-| Verifier | Proves |
+| Check | Confirms |
 |----------|--------|
-| [agent-identity](../agents/agent-identity) | Registration |
-| [agent-delegation](../agents/agent-delegation) | Delegation |
+| [agent-identity](../agents/agent-identity) | Who the agent is |
+| [agent-delegation](../agents/agent-delegation) | What the agent may do |
 
 ## Bundles
 
-Ready-made `?preset=` bundles, or combine any checks with `?verifiers=id1,id2` — see [Presets](../platform/presets).
+Ready-made `?preset=` bundles, or combine checks with `?verifiers=id1,id2`. See [Presets](../platform/presets).
 
-| Preset | Verifiers | For |
+| Preset | Checks | For |
 |--------|-----------|-----|
 | `agent-pack` | agent-identity + agent-delegation + wallet-risk | Scoped agents |
 | `project-pack` | contract-ownership + ownership-dns-txt | Project trust |

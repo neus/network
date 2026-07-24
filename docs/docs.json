@@ -3,8 +3,8 @@
   "name": "NEUS",
   "theme": "mint",
   "logo": {
-    "light": "/images/neus-mark.svg",
-    "dark": "/images/neus-mark.svg",
+    "light": "/images/neus-mark-256.png",
+    "dark": "/images/neus-mark-256.png",
     "href": "https://neus.network"
   },
   "favicon": "/images/neus-mark.svg",
@@ -47,9 +47,9 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "Reusable trust receipts before access, payment, or action. Docs for gates, Hosted Verify, SDK, widgets, and MCP.",
+      "description": "Verify and trust receipts before access, payment, or action. Docs for gates, Hosted Verify, SDK, widgets, and MCP.",
       "og:title": "NEUS Docs",
-      "og:description": "Add reusable trust receipts to apps, agents, and ecosystems before access, payment, or action.",
+      "og:description": "Portable trust infrastructure for humans and agents, verify authority before access or action.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
@@ -57,7 +57,7 @@
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
       "twitter:title": "NEUS Docs",
-      "twitter:description": "Add reusable trust receipts to apps, agents, and ecosystems before access, payment, or action.",
+      "twitter:description": "Portable trust infrastructure for humans and agents, verify authority before access or action.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
@@ -81,10 +81,10 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "Get started",
+        "tab": "Build",
         "groups": [
           {
-            "group": "Essentials",
+            "group": "Overview",
             "pages": [
               "index",
               "get-started",
@@ -92,14 +92,9 @@
               "install",
               "examples"
             ]
-          }
-        ]
-      },
-      {
-        "tab": "Build",
-        "groups": [
+          },
           {
-            "group": "Verification",
+            "group": "Checks",
             "pages": [
               "verification/overview",
               "verification/how-it-works",
@@ -108,7 +103,7 @@
               "learn/standards/caip-380",
               "verification/verifiers",
               {
-                "group": "Capability Reference",
+                "group": "Catalog",
                 "pages": [
                   "verification/ownership-basic",
                   "verification/ownership-social",
@@ -158,7 +153,7 @@
             ]
           },
           {
-            "group": "Widget UI",
+            "group": "Widgets",
             "pages": ["widgets/overview", "widgets/verifygate"]
           },
           {
@@ -189,7 +184,7 @@
         "tab": "Agents",
         "groups": [
           {
-            "group": "Agent Trust",
+            "group": "Agents",
             "pages": [
               "agents/overview",
               "agents/concepts",
@@ -207,7 +202,7 @@
         "tab": "MCP",
         "groups": [
           {
-            "group": "MCP Basics",
+            "group": "Start",
             "pages": [
               "mcp/overview",
               "mcp/journeys",
@@ -253,7 +248,7 @@
         ]
       },
       {
-        "tab": "API Reference",
+        "tab": "API",
         "openapi": "openapi/public-api.json"
       }
     ]
@@ -624,13 +619,13 @@
     "display": "toc",
     "options": [
       {
-        "title": "Set up trust MCP",
-        "description": "Install the live NEUS server (mcp.neus.network) in Cursor, VS Code, or Claude Code",
+        "title": "Connect an assistant",
+        "description": "Install NEUS in your IDE",
         "icon": "plug",
         "href": "/install"
       },
       {
-        "title": "Ship a gate",
+        "title": "Add a gate",
         "description": "Publish a portal and embed VerifyGate",
         "icon": "rocket",
         "iconType": "solid",

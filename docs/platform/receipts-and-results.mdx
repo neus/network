@@ -1,98 +1,36 @@
 ---
-title: Verification results
-description: Save the receipt, reuse it for access, provenance, and policy gates.
+title: Results
+sidebarTitle: Results
+description: Save who they are and what was allowed. Reuse it at the next gate.
 icon: receipt
 ---
 
-After verification, NEUS returns a **trust receipt** identified by its `qHash`. Save the `qHash` — it is how you reference, retrieve, and reuse the proof across your app.
+When a check finishes, NEUS returns a **saved result**. Store the receipt ID. That is how you look it up, share it, and reuse it.
 
-A wallet-signed creation response also includes `portableProof`, a [CAIP-380](../learn/standards/caip-380) portable-proof envelope that another system can verify without calling NEUS. Save that envelope if portability matters; NEUS does not persist the complete request payload by default. Session-authorized receipts have `receipt.portable: false` and remain reusable through NEUS receipt APIs.
+In API responses the field is `qHash`. On product pages, call it the receipt ID.
 
-Default storage is offchain — you get a durable receipt without a blockchain transaction. Opt in to an on-chain hub anchor only when you explicitly set `options.publishToHub: true` (SDK/API) or enable cross-chain spokes via `targetChains`.
+Wallet-signed creates can also return a portable envelope another system can check without calling NEUS. See [Portable proofs](../learn/standards/caip-380). Session-authorized results stay reusable through NEUS APIs.
 
-See [Integration](../integration) for the full surface.
+Default storage is offchain. You get a durable result without a blockchain transaction. Opt in to an on-chain record only when you set `options.publishToHub: true` or add `targetChains`.
 
-## `qHash`
+See [Integration](../integration).
+
+## Receipt ID
 
 | | Role |
 |--|--|
-| `qHash` | Trust receipt reference in SDK responses, API paths, and URLs |
+| Receipt ID (`qHash`) | Reference in SDK responses, API paths, and URLs |
 
-`contentHash` identifies the proven content or artifact and is not the receipt reference.
+`contentHash` identifies the content or artifact. It is not the receipt ID.
 
-Visibility: [Security and trust](./security-and-trust)
+Visibility: [Privacy](./security-and-trust)
 
-## Save / don’t
+## What to store
 
-| Save | Skip as sole record |
-|------|---------------------|
-| qHash | Signature string only |
-| Status | Private payloads in public caches |
-| Verifier ids used | User secrets |
-| `portableProof` when returned | Complete private payloads in public storage |
+Save the receipt ID and any fields your product needs for access, display, or audit. Do not rebuild the full check on every request. Look up the current result instead.
 
-## Use it
+## Related
 
-| Goal | How |
-|------|-----|
-| Show | `/proof/[qHash]` |
-| Gate | VerifyGate |
-| Check | `GET /api/v1/proofs/check` |
-| Policy | Your server |
-
-## Proof URL
-
-```
-https://neus.network/proof/[qHash]
-```
-
-## SDK
-
-```javascript
-import { getHostedCheckoutUrl } from '@neus/sdk';
-
-const verifyUrl = getHostedCheckoutUrl({
-  gateId: 'gate_your-app-name',
-  returnUrl: 'https://myapp.com/callback',
-});
-
-window.location.assign(verifyUrl);
-```
-
-After the redirect, read the `qHash` from your callback URL and verify it on your server:
-
-```javascript
-const qHash = new URL(request.url).searchParams.get('qHash');
-
-const record = await client.getProof(qHash);
-
-const result = await client.gateCheck({
-  address: '0x...',
-  gateId: 'gate_your-app-name',
-});
-
-if (result.data?.gate?.allRequiredSatisfied !== true) {
-  // Send the visitor back to Hosted Verify
-}
-```
-
-## API
-
-```bash
-GET /api/v1/proofs/{qHash}
-GET /api/v1/proofs/check?address=0x...&gateId=gate_your-app-name
-```
-
-## Next
-
-<CardGroup cols={2}>
-  <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    Create via UI.
-  </Card>
-  <Card title="Security and trust" icon="lock" href="./security-and-trust">
-    Public / private.
-  </Card>
-  <Card title="API" icon="terminal" href="../api/overview">
-    HTTP.
-  </Card>
-</CardGroup>
+- [How it works](../verification/how-it-works)
+- [Lifecycle](../verification/lifecycle)
+- [Hosted Verify](../cookbook/auth-hosted-verify)

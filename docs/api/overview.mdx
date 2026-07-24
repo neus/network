@@ -1,12 +1,13 @@
 ---
-title: API Overview
-description: REST proof checks, reads, and HTTP verification for servers and tools.
+title: API
+sidebarTitle: API
+description: HTTP from your backend. Same results as the SDK. Not for browsers.
 icon: terminal
 "og:image": "/images/og-api.png"
 "twitter:image": "/images/og-api.png"
 ---
 
-Use the HTTP API from **servers, workers, CLIs, and MCP**—not from end-user browsers. Responses return the same **trust receipt** ID (`qHash`) as the SDK. For product checkout, publish a gate and pass its **`gateId`**; NEUS resolves the check policy, billing, and checkout server-side.
+Call NEUS from servers, workers, and CLIs. Publish a gate, pass its `gateId`, and NEUS resolves policy and billing. Receipt IDs match the SDK (`qHash` in responses).
 
 **Base URL:** `https://api.neus.network`
 
@@ -100,8 +101,8 @@ curl https://api.neus.network/api/v1/verification/verifiers
 ## Next
 
 <CardGroup cols={2}>
- <Card title="Get started" icon="book" href="../get-started">
-   Account, app, billing.
+ <Card title="Choose a path" icon="book" href="../get-started">
+   App, assistant, agent, or API — pick one.
  </Card>
  <Card title="Authentication" icon="key" href="./authentication">
    Keys, delegation, signing.

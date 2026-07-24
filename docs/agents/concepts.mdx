@@ -1,29 +1,29 @@
 ---
 title: Agent concepts
 sidebarTitle: Concepts
-description: How agent identity, permissions, and profiles work together on NEUS.
+description: Identity, authority, and profiles. How they fit together.
 icon: book-open
 ---
 
-**Register** the agent on your profile, then **grant** what it may do. Gates, APIs, and connected assistant tools can check those receipts before an action.
+Create the agent on your profile, then set what it may do. Gates, APIs, and connected assistants can read those results before an action.
 
-The same account can complete both steps, or one account can register the agent while another approves its permissions.
+The same account can complete both steps, or one account can create the agent while another grants authority.
 
 ## Roles
 
 | Role | Does | Signs with |
 |------|------|------------|
-| **Agent** | Registers identity (name, type, capabilities) | Agent wallet |
-| **Approver** | Grants permissions and limits | Controller account |
+| **Agent** | Creates identity (name, type, capabilities) | Agent wallet |
+| **Approver** | Grants authority and spend caps | Controller account |
 
-Together, the identity and permission receipts tell an integration who the agent is and what it may do.
+Together, identity and authority tell an integration who the agent is and what it may do.
 
-- **Agent wallet** — identifies the agent in NEUS and self-signs `agent-identity`.
-- **Controller account**: the approving account that signs `agent-delegation`. It does not need to own the agent wallet.
+- **Agent wallet:** identifies the agent in NEUS and self-signs `agent-identity`.
+- **Controller account:** the approving account that signs `agent-delegation`. It does not need to own the agent wallet.
 
-## Permission limits
+## Authority
 
-A permission receipt defines what the agent may do:
+An authority record defines what the agent may do:
 
 | Concept | Field | Notes |
 |---------|-------|-------|
@@ -33,13 +33,13 @@ A permission receipt defines what the agent may do:
 | Spend cap | `maxSpend` | Whole-number string in token base units (USDC: 6 decimals) |
 | Expiry | `expiresAt` | Unix milliseconds; set when money or risk is in scope |
 
-Capabilities such as `wallet`, `signing`, `spending`, and `publishing` describe what an agent *can* do. The permission receipt decides what it is *allowed* to do.
+Capabilities such as `wallet`, `signing`, `spending`, and `publishing` describe what an agent *can* do. The authority record decides what it is *allowed* to do.
 
 ## Setup state
 
 | Field | Meaning |
 |-------|---------|
-| `linked` | Identity and permission receipts are both present |
+| `linked` | Identity and authority are both present |
 | `principal` | Signed-in account from the current NEUS session |
 
 ## Next

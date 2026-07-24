@@ -1,14 +1,10 @@
 ---
 title: Install NEUS
-description: Connect assistants to NEUS MCP in one command.
+description: One command. Your assistant uses your NEUS account in Cursor, Claude Code, Codex, and VS Code.
 icon: download
 ---
 
-Connect your assistant to NEUS once — portable identity, authority, and receipts travel with you across Cursor, Claude Code, Codex, and VS Code.
-
-Install once. Reuse the same profile and trust context in every supported editor.
-
----
+Connect once. Your assistant carries who you are and what it may do across editors. It reuses saved results when it can, then reports **Passed**, **Action needed**, or **Blocked**.
 
 ## Install
 
@@ -23,14 +19,10 @@ No global install? Run `npx -y -p @neus/sdk neus setup` once.
 Ask your assistant:
 
 ```txt
-Use NEUS so my identity, permissions, and context travel with me. Reuse receipts when you can, verify when you must, authorize actions against those limits, and leave an audit trail.
+Use NEUS for my identity and what I allow. Reuse saved results when you can.
 ```
 
-Your assistant reuses portable receipts for who you are and what you’re allowed to do, verifies only what’s missing, then summarizes as **Passed**, **Action needed**, or **Blocked**.
-
-For example prompts, see [MCP journeys](./mcp/journeys).
-
----
+Example prompts: [MCP journeys](./mcp/journeys).
 
 ## Supported tools
 
@@ -40,11 +32,9 @@ For example prompts, see [MCP journeys](./mcp/journeys).
 - VS Code
 - MCP-compatible clients
 
----
-
 ## Bring your own agent
 
-Already have agents in Cursor, Claude Code, or Claude Desktop? NEUS does not replace them — it adds identity, permissions, and receipts on top.
+Already have agents in Cursor, Claude Code, or Claude Desktop? NEUS does not replace them. It adds identity, authority, and saved results on top.
 
 **Import existing IDE config:**
 
@@ -62,9 +52,7 @@ neus mount <agentId> --apply cursor
 
 Writes `.neus/mount.json` with the agent's verified identity, permissions, and host rules. Run it again after permission changes. See [Connect agent context](./agents/runtime-mount).
 
-**Agent frameworks:** NEUS works with any agent that can sign with a wallet or complete a hosted step. LangGraph, CrewAI, AutoGen, and MCP-native agents all register the same way — `agent-identity` for who they are, `agent-delegation` for what they may do. The receipts are portable across runtimes. See [Agent verification flow](./agents/agent-verification-flow).
-
----
+**Agent frameworks:** Any agent that can sign with a wallet or complete a hosted step works the same way: identity for who they are, authority for what they may do. Results travel across runtimes. See [Agent verification flow](./agents/agent-verification-flow).
 
 ## Advanced
 

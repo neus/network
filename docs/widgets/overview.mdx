@@ -1,15 +1,16 @@
 ---
-title: Widgets Overview
-description: "React widgets — VerifyGate and ProofBadge."
+title: Widgets
+sidebarTitle: Widgets
+description: React gates and status badges. One gate ID. No check logic in your app.
 icon: puzzle-piece
 "og:image": "/images/og-widgets.png"
 "twitter:image": "/images/og-widgets.png"
 ---
 
-The fastest way to add trust to a React app: **`VerifyGate`** gates content behind a check, and **`ProofBadge`** shows verified status. Your app uses the same checks your server already trusts — no check logic in the browser.
+Put **VerifyGate** in front of protected content. Put **ProofBadge** where you show status. Same results your server trusts.
 
-- **`VerifyGate`** reuses an existing receipt, opens Hosted Verify only when needed, then renders your content. It runs on a published gate — pass one **`gateId`**.
-- **`ProofBadge`** displays status for any receipt — pass a **`qHash`**, no gate required.
+- **VerifyGate** reuses a saved result, opens Hosted Verify only when needed, then shows your content. Pass one `gateId`.
+- **ProofBadge** shows status for any saved result. Pass a receipt ID.
 
 ## Install
 
@@ -20,16 +21,14 @@ npm install @neus/sdk react react-dom
 | Export | For |
 |--------|-----|
 | `VerifyGate` | Gate content behind a check |
-| `ProofBadge` | Status badge with chains popover |
+| `ProofBadge` | Status badge |
 | `SimpleProofBadge` | Minimal verified badge |
-| `NeusPillLink` | "Verified on NEUS" pill linking to the receipt |
-| `VerifiedIcon` | Standalone verified icon |
+| `NeusPillLink` | Link to the result page |
+| `VerifiedIcon` | Standalone icon |
 
-All are imported from `@neus/sdk/widgets`.
+Import from `@neus/sdk/widgets`.
 
 ## VerifyGate
-
-Create mode opens **Hosted Verify**. The published gate owns check inputs, pricing, and checkout policy. [Security and trust](../platform/security-and-trust)
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -43,6 +42,8 @@ export default function ProtectedPage() {
 }
 ```
 
+The published gate owns check inputs, pricing, and checkout. [Privacy](../platform/security-and-trust)
+
 ## ProofBadge
 
 ```jsx
@@ -51,8 +52,6 @@ import { ProofBadge } from '@neus/sdk/widgets';
 <ProofBadge qHash={proof.qHash} showChains />
 ```
 
-`ProofBadge` also accepts `showLabel`, `logoUrl`, `onClick`, and `className`. See the [VerifyGate](./verifygate) page for props (`gateId`, `strategy`, `mode`, and advanced options).
-
 ## Next
 
 <CardGroup cols={2}>
@@ -60,6 +59,6 @@ import { ProofBadge } from '@neus/sdk/widgets';
     Props, modes, and Hosted Verify handoff.
   </Card>
   <Card title="Integration" icon="compass" href="../integration">
-    Check → verify → save → reuse.
+    Browser, server, and assistant paths.
   </Card>
 </CardGroup>

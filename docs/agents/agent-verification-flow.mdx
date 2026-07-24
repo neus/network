@@ -1,11 +1,11 @@
 ---
-title: Verification flow
-sidebarTitle: Verification flow
-description: Register identity, add permissions, then reuse receipts.
+title: Agent setup
+sidebarTitle: Agent setup
+description: Set who the agent is and what it may do. Then reuse the results.
 icon: diagram-project
 ---
 
-The result is a portable identity and authority context the agent carries across MCP hosts and backend gates.
+The agent carries identity and authority across MCP hosts and backend gates.
 
 ## Setup order
 
@@ -13,11 +13,11 @@ The result is a portable identity and authority context the agent carries across
   <Step title="Check">
     **`neus_context`** → **`neus_agent_link`** with the agent address and stable agent id.
   </Step>
-  <Step title="Register">
+  <Step title="Identity">
     Missing identity? Create **`agent-identity`** (agent address signs).
   </Step>
-  <Step title="Delegate">
-    Missing permissions? Create **`agent-delegation`** with scope, caps, and expiry.
+  <Step title="Authority">
+    Missing authority? Create **`agent-delegation`** with scope, caps, and expiry.
   </Step>
   <Step title="Confirm">
     **`neus_agent_link`** until **`linked: true`**.
@@ -40,9 +40,9 @@ Ready means both **`agent-identity`** and **`agent-delegation`** are present.
 
 <CardGroup cols={2}>
   <Card title="Agent identity" icon="robot" href="./agent-identity">
-    Register the agent.
+    Who the agent is.
   </Card>
-  <Card title="Delegation" icon="key" href="./agent-delegation">
+  <Card title="Authority" icon="key" href="./agent-delegation">
     Grant permissions.
   </Card>
   <Card title="MCP setup" icon="plug" href="../mcp/setup">

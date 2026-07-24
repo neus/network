@@ -116,11 +116,11 @@ curl "https://api.neus.network/api/v1/proofs/check?gateId=gate_acme-handles&addr
 
 ## Namespace policy
 
-Namespaces other than `neus` require the namespace owner to prove DNS control with `ownership-dns-txt`, or NEUS admin approval. Contact NEUS to reserve a production namespace for your platform.
+Namespaces other than `neus` require the namespace owner to confirm DNS control with `ownership-dns-txt`, or NEUS admin approval. Contact NEUS to reserve a production namespace for your platform.
 
 ## Optional: link social accounts
 
-Layer `ownership-social` to also prove a linked X, Discord, Telegram, GitHub, or other social account. Social verification is interactive and hosted-only, so it is typically run through `VerifyGate` or Hosted Verify rather than direct signing.
+Layer `ownership-social` to also confirm a linked X, Discord, Telegram, GitHub, or other social account. Social checks are interactive and hosted-only, so they usually run through `VerifyGate` or Hosted Verify rather than direct signing.
 
 ```jsx
 import { VerifyGate } from '@neus/sdk/widgets';
@@ -141,7 +141,7 @@ See the [verified-handle-react example](https://github.com/neus/network/tree/mai
 
 ## Next
 
-- [Username and Namespace Claims](../verification/ownership-pseudonym)
+- [Username](../verification/ownership-pseudonym)
 - [SDK Quickstart](../quickstart)
 - [Hosted Verify](./auth-hosted-verify)
 - [API: GET /proofs/check](../api/overview)

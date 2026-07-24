@@ -1,37 +1,34 @@
 ---
-title: MCP Overview
-description: Connect assistants to identity checks, permission receipts, and optional encrypted secrets.
+title: MCP
+sidebarTitle: MCP
+description: Connect your editor assistant once. Same NEUS account in every editor.
 icon: plug
 "og:image": "/images/og-mcp.png"
 "twitter:image": "/images/og-mcp.png"
 ---
 
-NEUS MCP lets an assistant check identity and permissions before sensitive actions. Connect once with OAuth to use the same profile and trust receipts in Cursor, Claude Code, Codex, and VS Code. Backends can check those same receipts through the API.
+OAuth once. Your assistant loads your profile and what it may do in Cursor, Claude Code, Codex, and VS Code. Your backend can read the same saved results through the API.
 
-**First run:** [Install NEUS](../install). Access keys, disconnect, and per-editor paths: [MCP setup](./setup). OAuth reference: [MCP OAuth](./oauth).
+**First run:** [Install NEUS](../install). Access keys: [MCP setup](./setup). OAuth details: [MCP OAuth](./oauth).
 
 ## How it works
 
-Assistants call **`neus_context`** once to load the signed-in profile, available checks, and recommended order. A valid receipt can be reused in later sessions without repeating the full check.
+Assistants load your signed-in profile once, then reuse saved results when they can.
 
-- **Check before action**: look for an existing receipt, then guide any missing step
-- **Show receipts**: read current trust receipt records with **`neus_proofs_get`**
-- **Agent readiness**: confirm agent identity and permissions before tools run
-- **Connect agent context**: attach a registered agent to your project — [Connect agent context](../agents/runtime-mount)
-- **Secrets**: list, store, or revoke encrypted secrets when signed in
-- **Pay per call**: agents can settle metered API calls without an account via [x402](../platform/x402)
+- Look up a saved result before a sensitive action
+- Guide any missing step
+- Confirm agent identity and authority before tools run
+- Store or revoke secrets when signed in
 
-You should see a clear **Passed**, **Action needed**, or **Blocked** summary in chat, not raw tool output.
+You see **Passed**, **Action needed**, or **Blocked** in chat. Not raw tool output.
 
-Journey guide: [MCP journeys](./journeys) · Tool reference: [MCP tools](./tools)
+Journeys: [MCP journeys](./journeys) · Tools: [MCP tools](./tools)
 
 ## Agent setup
 
-For an agent wallet:
-
 1. Call `neus_agent_link`.
-2. If linked, reuse the receipts.
-3. If missing, call `neus_agent_create` and complete the returned hosted or signing steps.
+2. If linked, reuse the results.
+3. If missing, call `neus_agent_create` and finish the hosted steps.
 4. Call `neus_agent_link` again until `linked: true`.
 
 Details: [Agent verification flow](../agents/agent-verification-flow) · [Connect agent context](../agents/runtime-mount)
@@ -42,23 +39,21 @@ Details: [Agent verification flow](../agents/agent-verification-flow) · [Connec
 neus mount <agentId> --apply cursor
 ```
 
-Writes project agent config your editor reads on startup. Run it again after permission changes.
-
-Migrate older IDE configs with `neus import` / `neus export` — see [MCP setup](./setup).
+Writes project config your editor reads on startup. Run again after permission changes.
 
 ## Reference
 
 <CardGroup cols={4}>
   <Card title="Install NEUS" icon="plug" href="../install">
-    Install in Cursor, Claude Code, Codex, and other MCP hosts.
+    Cursor, Claude Code, Codex, VS Code.
   </Card>
   <Card title="OAuth" icon="shield-check" href="./oauth">
-    OAuth flow and tokens.
+    Sign-in flow and tokens.
   </Card>
   <Card title="Setup" icon="code" href="./setup">
     Install and sign in.
   </Card>
-  <Card title="Tools" icon="wrench" href="./tools">
-    Tool reference.
+  <Card title="Pay per call" icon="coins" href="../platform/x402">
+    Metered API calls without an account.
   </Card>
 </CardGroup>

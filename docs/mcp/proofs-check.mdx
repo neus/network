@@ -1,14 +1,15 @@
 ---
-title: Proof Check (`neus_proofs_check`)
-description: Yes/no eligibility without proof details or hosted links.
+title: Result check (`neus_proofs_check`)
+sidebarTitle: Result check
+description: Yes/no eligibility. No result details. No hosted links.
 icon: shield-check
 ---
 
-**Yes/no lookup only.** Use this before verification or hosted handoff. It never creates proofs and never opens hosted flows.
+**Yes/no lookup only.** Use this before a new check or hosted handoff. It never creates results and never opens hosted flows.
 
-Private proofs count only with that user's **Bearer** ([Auth](./auth)).
+Private results count only with that user's **Bearer** ([Auth](./auth)).
 
-If **`eligible`** is true, continue silently. If false, use **`neus_proofs_get`** when you need exact proof state, or **`neus_verify_or_guide`** when setup or browser-only consent is missing.
+If **`eligible`** is true, continue silently. If false, use **`neus_proofs_get`** when you need exact state, or **`neus_verify_or_guide`** when setup or browser-only consent is missing.
 
 ## Input
 

@@ -1,12 +1,13 @@
 ---
-title: SDK Overview
-description: JavaScript SDK — verify, poll, gate, and build hosted links.
+title: SDK
+sidebarTitle: SDK
+description: Hosted links in the browser. Gate checks on your server.
 icon: code
 "og:image": "/images/og-sdk.png"
 "twitter:image": "/images/og-sdk.png"
 ---
 
-The JavaScript SDK does four things: build hosted verify URLs, create receipts, poll status, and run server-side gate checks. Use as much or as little as you need — a hosted link and a server check are enough for most apps. MCP calls the same APIs: [MCP](../mcp/overview).
+Most apps need a hosted handoff plus a server gate check. Assistants use the same APIs through [MCP](../mcp/overview).
 
 ## Default placement
 
@@ -31,7 +32,7 @@ Full reference, install, and code examples: [JavaScript SDK](./javascript).
 
 ## Defaults
 
-`client.verify()` and `VerifyGate` create both default **private**. [Security](./security) · [Security and trust](../platform/security-and-trust)
+`client.verify()` and `VerifyGate` create results as **private** by default. [Security](./security) · [Privacy](../platform/security-and-trust)
 
 ## Next
 

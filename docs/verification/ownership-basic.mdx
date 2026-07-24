@@ -1,10 +1,11 @@
 ---
-title: Ownership and Provenance
-description: Prove you own your words, files, or releases—and turn them into a reusable NEUS trust receipt.
+title: Content ownership
+sidebarTitle: Content ownership
+description: Confirm you own the words, files, or releases. Reuse the result later.
 icon: wallet
 ---
 
-**Verifier ID:** `ownership-basic`
+**Check ID:** `ownership-basic`
 
 ## Use cases
 
@@ -14,23 +15,23 @@ Release notes, policy text, agent outputs, licensing claims, bounty submissions,
 
 1. The owning wallet signs.
 2. Attach **`content`** (full text, up to 50,000 characters) and/or **`reference`** (`{ type, id }` — NEUS does not fetch URLs for you).
-3. NEUS issues a durable trust receipt for check, link, and reuse.
+3. NEUS saves a durable result for check, link, and reuse.
 
-Visibility: private vault, link-only, or public — [Security and trust](../platform/security-and-trust).
+Visibility: private vault, link-only, or public. [Privacy](../platform/security-and-trust).
 
 ## Content and storage
 
 | Field | Required | Notes |
 |-------|----------|-------|
 | `owner` | Yes | Must match the signer wallet |
-| `content` | No | Text being proven |
+| `content` | No | Text to bind to the account |
 | `reference` | No | Stable pointer `{ type, id }` — not a bare string |
 | `contentHash` | No | NEUS verifier hash (`0x` + 64 hex) only if precomputed; otherwise omit and send `content` |
 | `provenance` | No | Advisory human / AI / mixed metadata |
 
 Send at least one of `content`, `contentHash`, or `reference.id`.
 
-To store the exact string on the receipt, set **`storeOriginalContent: true`** when you need to override defaults. Read back with **`proof.publicContent.content`**. [Security and trust](../platform/security-and-trust) covers privacy defaults.
+To store the exact string on the receipt, set **`storeOriginalContent: true`** when you need to override defaults. Read back with **`proof.publicContent.content`**. [Privacy](../platform/security-and-trust) covers defaults.
 
 **Pre-hash:** Do not paste a generic SHA256 as `contentHash`. Send `content`, verify, and use the returned verifier hash from NEUS.
 

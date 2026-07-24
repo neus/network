@@ -1,37 +1,37 @@
 ---
 title: Team agents
 sidebarTitle: Team agents
-description: Use one approving account to manage several agents with different permissions.
+description: One approving account. Many agents. Different authority for each.
 icon: user-group
 ---
 
-A NEUS profile can manage **multiple agents** under one approving account. Each agent gets its own identity and permission receipt. Agents may share an operating wallet while keeping different limits.
+A NEUS profile can manage **multiple agents** under one approving account. Each agent gets its own identity and authority. Agents may share an operating wallet while keeping different permissions.
 
 ## The model
 
-One account approves multiple agents. Each agent has a separate permission receipt with its own `allowedActions`, `deniedActions`, and `scope`.
+One account approves multiple agents. Each agent has a separate authority record with its own `allowedActions`, `deniedActions`, and `scope`.
 
 ```text
 Approving account
-  ├── agent-a   → reporting permissions
-  ├── agent-b   → content permissions
-  └── agent-c   → operations permissions
+  ├── agent-a   → reporting
+  ├── agent-b   → content
+  └── agent-c   → operations
 ```
 
-The permission receipt, not the shared key, separates the agents. Each integration checks the receipt before allowing an action.
+The authority record, not the shared key, separates the agents. Each integration checks that record before allowing an action.
 
 ## Why one wallet can support several agents
 
 - **No key sprawl.** One wallet to manage, secure, and rotate.
-- **Per-agent limits.** Give each agent only the actions, spending cap, and time window it needs.
-- **Traceable approvals.** Each permission receipt identifies the agent, approving account, and limits.
-- **Focused revocation.** Revoke one agent&apos;s permissions without changing the others.
+- **Per-agent authority.** Give each agent only the actions, spending cap, and time window it needs.
+- **Traceable approvals.** Each record identifies the agent, approving account, and permissions.
+- **Focused revocation.** Revoke one agent's authority without changing the others.
 
 ## Set it up
 
 <Steps>
   <Step title="Create each agent">
-    Call **`neus_agent_create`** for each team agent. Pass `agentId`, `scope`, `delegationAllowedActions`, `delegationDeniedActions`, `skills`, and `instructions`. The approving account signs the permission receipt.
+    Call **`neus_agent_create`** for each team agent. Pass `agentId`, `scope`, `delegationAllowedActions`, `delegationDeniedActions`, `skills`, and `instructions`. The approving account signs the authority record.
   </Step>
   <Step title="Confirm each agent">
     Call **`neus_agent_link`** for each agent until **`linked: true`**.
@@ -41,30 +41,30 @@ The permission receipt, not the shared key, separates the agents. Each integrati
     ```bash
     neus mount <agentId> --apply cursor
     ```
-    Loads the agent&apos;s identity, permissions, skills, and context into the project.
+    Loads the agent's identity, authority, skills, and context into the project.
   </Step>
   <Step title="Run under the right agent">
-    Point each project or product workflow at the matching `agentId` so actions run under that agent’s permission receipt. Scheduled jobs live in the product UI when enabled for your account — they are not part of the thirteen public MCP tools.
+    Point each project or product workflow at the matching `agentId` so actions run under that agent's authority. Scheduled jobs live in the product UI when enabled for your account. They are not part of the thirteen public MCP tools.
   </Step>
 </Steps>
 
 ## Skills
 
-Each agent can list role-specific skills in its permission receipt. Skills describe capabilities; `allowedActions` and `deniedActions` determine what the agent may actually do.
+Each agent can list role-specific skills in its authority record. Skills describe capabilities. `allowedActions` and `deniedActions` determine what the agent may actually do.
 
 ## Next
 
 <CardGroup cols={2}>
-  <Card title="Agent permissions" icon="handshake" href="./agent-delegation">
+  <Card title="Agent authority" icon="handshake" href="./agent-delegation">
     Full field reference for `allowedActions` and `deniedActions`.
   </Card>
   <Card title="Connect agent context" icon="layer-group" href="./runtime-mount">
-    Load a verified agent's identity and permissions into a project.
+    Load a verified agent's identity and authority into a project.
   </Card>
   <Card title="Discover agents" icon="address-card" href="./named-agent-card">
     Public pages, A2A, and EIP-8004 cards.
   </Card>
-  <Card title="Verification flow" icon="diagram-project" href="./agent-verification-flow">
+  <Card title="Agent setup" icon="diagram-project" href="./agent-verification-flow">
     Step-by-step setup order.
   </Card>
 </CardGroup>

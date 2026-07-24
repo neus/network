@@ -1,22 +1,23 @@
 ---
-title: "Verify (`neus_verify`)"
-description: "Create a NEUS trust receipt from inside an MCP session."
+title: "Create result (`neus_verify`)"
+sidebarTitle: "Create result"
+description: "Create a saved result from inside an MCP session."
 icon: circle-check
 ---
 
-Use **`neus_verify`** to create a receipt when the signed-in account can complete the check in-session. For steps that need a browser (OAuth, personhood, payment, wallet connect), use **[`neus_verify_or_guide`](./verify-or-guide)** instead — it returns a hosted link.
+Use **`neus_verify`** to create a result when the signed-in account can complete the check in-session. For steps that need a browser (OAuth, personhood, payment, wallet connect), use **[`neus_verify_or_guide`](./verify-or-guide)** instead. It returns a hosted link.
 
-Always run **`neus_proofs_check`** first and reuse an existing receipt before creating a new one.
+Always run **`neus_proofs_check`** first and reuse an existing result before creating a new one.
 
-When signed in, **omit `walletAddress`** — the tool uses your profile account from `neus_context`.
+When signed in, **omit `walletAddress`**. The tool uses your profile account from `neus_context`.
 
 ## Input
 
 | Field | Required | Notes |
 |-------|----------|-------|
-| `verifierIds` | Yes | One or more verifier ids |
+| `verifierIds` | Yes | One or more check IDs |
 | `walletAddress` | No | Omit when signed in; required only when acting for another account |
-| `data` | No | Verifier inputs (see each [verifier](../verification/verifiers)) |
+| `data` | No | Check inputs (see each [check](../verification/verifiers)) |
 | `chain` | No | CAIP-2 chain when needed |
 | `signature` | No | Provided in the finalize step |
 | `signedTimestamp` | No | Provided in the finalize step |
