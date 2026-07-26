@@ -1,74 +1,194 @@
 ---
 title: Privacy Policy
-description: Data handling practices, privacy protections, and regulatory compliance for NEUS.
+description: How NEUS collects, uses, protects, and shares personal information.
 icon: shield
 ---
 
-This Privacy Policy explains how NEUS Network, Inc. ("NEUS," "we," "us," or "our") handles data for our docs, APIs, hosted verification flows, and related NEUS products and services.
+Effective date: July 26, 2026. Last updated: July 26, 2026.
 
-## What We Collect
+This Privacy Policy explains how NEUS Network, Inc. ("NEUS," "we," "us," or "our") handles personal information when you use the NEUS website, application, APIs, hosted Model Context Protocol (MCP) service, verification services, and related products (collectively, the "Service").
 
-We may collect the following categories of data:
+NEUS Network, Inc. is the company responsible for the personal information covered by this policy. This policy does not govern public blockchains, third-party websites, wallets, artificial-intelligence providers, or accounts that you connect to NEUS. Those services have their own privacy practices.
 
-- Wallet addresses and public blockchain identifiers
-- Verification request metadata such as timestamps, verifier IDs, success or failure status, and related technical logs
-- Optional profile data that a user chooses to publish or connect, such as public social handles, profile images, bios, and display names
-- Billing and payment records needed to deliver paid services
-- Support and security-report information that users send to us directly
+## Information We Collect
 
-## What We Do Not Ask For
+| Category | Examples |
+| --- | --- |
+| Account and authentication | Wallet address, decentralized identifier, passkey public credential, email address or a protected email-derived identifier, third-party account identifier, name, username, profile image, authentication method, and session information |
+| Profile and workspace | Display name, biography, avatar, public handles, organization domain, workspace membership, preferences, and information you choose to publish |
+| Proof and verification | Information you submit for verification, proof results, verifier used, status, timestamps, hashes, signatures, visibility choices, and related records |
+| Connected accounts | Provider, account identifier, granted permissions, connection status, encrypted access or refresh token, and information returned when you ask NEUS to use the connection |
+| Assistant and agent content | Prompts, messages, files, tool requests and results, agent instructions, jobs, outputs, and private chat or execution receipts |
+| Payments | Plan, credits, transaction identifiers, wallet transactions, purchase and payout status, and limited billing records. Payment-card and payout onboarding details are collected by Stripe, not NEUS |
+| Device and service activity | IP address or a protected derivative, browser and device information, page or feature used, referring page, performance data, request time, error details, and security events |
+| Communications | Contact requests, support messages, newsletter subscription, security reports, and related correspondence |
+| Public and third-party sources | Public blockchain records, public profile or repository information, domain records, and information returned by a provider you ask us to use |
 
-We do not ask users to send us:
+Do not send NEUS a private key, seed phrase, account password, or information that is not needed for the feature you are using.
 
-- Private keys or seed phrases
-- Government identity documents unless a separate third-party flow clearly requires them
-- Passwords for third-party services
+Some identity checks use a third-party service to create a privacy-preserving proof. In those flows, the provider may inspect an identity document, while NEUS is designed to receive the proof result or derived identifier rather than the document itself. The provider's notice applies to its processing.
 
-## Cookies and Session Data
+## How We Use Information
 
-NEUS may use cookies or similar session mechanisms where needed to operate hosted login, hosted verification, or account features. These technologies are used for service operation, security, and user session continuity.
+We use personal information only for the following purposes:
 
-## How We Use Data
+| Purpose | Legal basis where required |
+| --- | --- |
+| Provide accounts, profiles, proofs, connected accounts, assistants, agents, APIs, payments, and support | Perform our contract with you |
+| Authenticate users, protect private information, prevent fraud and abuse, enforce limits, and investigate incidents | Perform our contract and pursue our legitimate interest in securing the Service |
+| Process a provider connection or optional communication you request | Your direction or consent |
+| Maintain reliability, diagnose errors, measure feature performance, and improve the Service | Our legitimate interest in operating a reliable product |
+| Process purchases, maintain financial records, and meet legal requests | Perform our contract and comply with law |
+| Send product or policy notices and, where you request them, newsletters | Perform our contract, pursue our legitimate interest in service communications, or obtain your consent, as applicable |
 
-We use data to:
+We do not use personal information for advertising profiles, targeted advertising, or data-broker services. We do not sell personal information or share it for cross-context behavioral advertising, and we have not done so in the preceding 12 months.
 
-- deliver verification and proof services
-- operate docs, APIs, profiles, and hosted product flows
-- protect the service against abuse and security incidents
-- provide billing, support, and service administration
-- comply with legal obligations
+We use account credentials and other sensitive personal information only to provide and secure the feature you request. We do not use it to infer personal characteristics.
 
-## Public and Private Content
+## Google User Data
 
-- Some proofs or references may point to public networks or public content systems.
-- Some product features allow users to choose whether proof-related content is public, private, or limited in visibility.
-- Public blockchain or public network data may remain publicly accessible outside NEUS even if NEUS changes how that data appears in our products.
+Signing in with Google and connecting Google as an agent capability are separate choices:
 
-## Retention
+- **Google sign-in** requests basic identity information, such as your Google account identifier, name, profile image, and email address, to authenticate you and link the sign-in method to your NEUS account.
+- **Google connection** requests `Gmail read-only` and `Google Drive read-only` access. This permits NEUS to retrieve Gmail messages and Drive files, including Google Sheets files, only when you ask an assistant or agent to use that connection. NEUS does not request permission to send email, modify mail, or edit or delete Drive files through this connection.
 
-We keep data for as long as needed to operate the service, meet legal obligations, resolve disputes, and protect the platform. Retention may vary by data type, service logs, billing records, support requests, and user-controlled profile or proof settings.
+NEUS handles Google user data as follows:
 
-## Third-Party Services
+- **Access:** NEUS accesses data only through the permissions you approve and only to provide the user-facing feature you request.
+- **Use:** Retrieved data is used to answer your request, perform the tool action, and show or save the result in your private NEUS session or receipt when that feature is enabled.
+- **Storage:** OAuth tokens are stored as encrypted private records. Retrieved content may be retained in a private chat, job, or execution receipt if it forms part of that record.
+- **Sharing:** Data may be processed by the NEUS hosting stack and, when needed to answer your request, by the hosted AI provider or the AI provider you selected. It is not shared for advertising or unrelated purposes.
+- **AI training:** NEUS does not use raw or derived Google Workspace data to train or improve a generalized artificial-intelligence or machine-learning model.
+- **Control:** You can disconnect Google in NEUS. NEUS removes the local connection and attempts provider-side revocation. You can also revoke access from your [Google Account connections](https://myaccount.google.com/connections).
 
-NEUS may rely on third-party infrastructure, payment providers, storage providers, and identity or verification providers where needed to operate the service. Those providers may process data according to their own terms and policies.
+NEUS's use and transfer of information received from Google APIs adheres to the [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including its Limited Use requirements.
 
-## Your Choices
+## Other Connected Providers
 
-Depending on which NEUS product you use, you may be able to:
+NEUS may offer sign-in or connected-account access from providers such as Microsoft and GitHub.
 
-- update or delete profile information
-- disconnect optional linked accounts
-- choose whether certain proof-related information is public
-- stop using the service at any time
+- A **Microsoft connection** may request basic identity information plus read-only access to Outlook mail and OneDrive files.
+- A **GitHub connection** may request profile, organization, repository, and file access. GitHub's `repo` permission can cover private repositories when you approve it.
+- Other sign-in providers may supply the account identifier and basic profile information shown on their consent screen.
 
-Requests for access, deletion, or other privacy questions can be sent to `info@neus.network`.
+NEUS stores the granted permissions and encrypted connection credential. It uses the connection only when you request the related feature. Disconnecting removes the NEUS connection and, where supported, requests revocation from the provider. You can also revoke access in the provider's account settings.
+
+You may add a remote MCP service or your own API key for an AI or tool provider. In that case, NEUS sends the information needed for your request directly to the service you selected. That provider's terms and privacy policy apply.
+
+## AI and Automated Processing
+
+NEUS sends prompts, relevant conversation context, and requested tool results to an AI provider when you use assistant or agent features.
+
+- NEUS-hosted inference uses RedPill, which routes supported models through confidential-computing infrastructure.
+- If you provide your own key, NEUS sends the request to the provider you selected, such as OpenAI, Anthropic, Google Gemini, OpenRouter, or another configured provider.
+- Information from Gmail, Drive, Outlook, OneDrive, GitHub, or another connected service is included in model context only when needed to complete the action you requested.
+
+NEUS may retain private chat and agent execution receipts in your account. Do not include sensitive information in a prompt unless it is necessary for the task.
+
+Some verification and access features automatically compare submitted, public, or provider-confirmed information with the rules selected for a proof or access gate. The result may be a pass or fail receipt that a user or third party relies on to allow access or continue a transaction. You can contact us if you believe an automated result is incorrect. NEUS does not use automated processing to make employment, credit, housing, insurance, or similarly significant decisions about you.
+
+## When We Disclose Information
+
+We disclose personal information only as needed:
+
+- to service providers that host, secure, support, or process the Service;
+- to a connected provider or AI provider when you direct the interaction;
+- to another user or the public when you choose public visibility or submit information to a public network;
+- to an organization administering a workspace you join;
+- to comply with law, enforce our agreements, or protect users, NEUS, and others; or
+- as part of a merger, financing, acquisition, or sale, subject to appropriate confidentiality protections.
+
+Our principal provider roles are:
+
+| Provider or system | Role and information processed |
+| --- | --- |
+| **Microsoft Azure** | Protocol API hosting, account and proof database, cache and job coordination, operational logs, monitoring, and incident response |
+| **Vercel** | Web application hosting, server-side assistant execution, request logs, and public or private file storage |
+| **Cloudflare** | Domain and network protection and, on forms where enabled, Turnstile abuse prevention |
+| **RedPill and its confidential-computing infrastructure** | NEUS-hosted AI inference for prompts and relevant context |
+| **Google, Microsoft, GitHub, and user-selected providers** | Authentication or connected-account data requested by the user |
+| **Stripe** | Card payments, subscriptions, creator payout onboarding, fraud controls, and legally required payment records |
+| **Resend** | Transactional email, support delivery, and newsletters requested by the user |
+| **Reown / WalletConnect and wallet providers** | Wallet connection and wallet-request routing |
+| **Alchemy and public blockchains** | Blockchain reads, transactions, addresses, and public proof references |
+| **Pinata / IPFS and Vercel Blob** | Public content selected for publication and private file storage, respectively |
+| **context.dev** | Web search or webpage retrieval requested through assistant tools |
+| **Verification providers** | Information needed to perform an optional proof, subject to the provider notice shown for that flow |
+
+Providers may process information in the United States and other countries. Those countries may have different privacy laws. Where applicable law requires a transfer safeguard, we use the safeguard available for the relevant provider arrangement. Contact us if you need information about a transfer that affects you.
+
+## Public Networks and Visibility
+
+You control whether supported profile, proof, and file content is private or public. Before publishing:
+
+- public proof references, wallet addresses, transaction records, and smart-contract events may be permanently visible on a blockchain;
+- public files may be stored through IPFS or public object storage and copied by others; and
+- deleting your NEUS profile cannot erase data already written to a public blockchain or copied outside NEUS.
+
+Deleting or revoking a public proof removes or limits it in NEUS-controlled views where technically possible. It does not rewrite a public network.
+
+## Cookies and Similar Storage
+
+NEUS uses first-party cookies and local browser storage that are necessary for authentication, security, wallet connection, preferences, and continuity of a requested flow. The primary authentication cookie is protected from browser-script access and is sent only with qualifying requests.
+
+Connected providers may set their own cookies when you visit their sign-in or consent pages. NEUS does not use third-party advertising cookies. Because we do not sell data or use it for targeted advertising, the Service does not currently respond differently to browser "Do Not Track" signals.
+
+## Retention and Deletion
+
+We keep information only for the period needed for the purposes described above:
+
+- account, profile, private proof, connection, chat, and agent records remain until you delete or revoke them, delete your profile, or they are no longer needed;
+- connected-provider credentials remain until you disconnect, reconnect and replace them, the provider invalidates them, or you delete your profile;
+- authentication and OAuth transaction data expires after the applicable security period;
+- service, security, and diagnostic records remain for the period needed to operate, secure, and audit the Service; and
+- payment, dispute, and compliance records remain as required by tax, accounting, fraud-prevention, and other laws.
+
+When you delete your profile, NEUS deletes the profile record and revokes associated proofs from NEUS-controlled access where technically possible. We may retain limited records when required by law, needed to protect the Service, or present on a public network that NEUS cannot alter.
+
+## Security
+
+NEUS uses administrative, technical, and organizational measures designed to protect personal information. These include:
+
+- encrypted network connections;
+- server-side credentials and protected authentication cookies;
+- encryption of connected-account tokens and user-provided secrets;
+- authenticated access to private files and private proof content;
+- signed service-to-service requests and scoped access controls;
+- rate limits, abuse controls, security monitoring, and incident logging; and
+- separation of public and private storage paths.
+
+No system can guarantee absolute security. If you believe your account or information is at risk, contact us promptly.
+
+## Your Privacy Rights
+
+Depending on where you live, you may have the right to:
+
+- access or receive a copy of your personal information;
+- correct inaccurate information;
+- delete personal information;
+- restrict or object to certain processing;
+- withdraw consent, without affecting earlier lawful processing;
+- receive portable data;
+- appeal our response to a request; and
+- complain to your local data-protection authority.
+
+You may update or delete profile information in the Service and disconnect providers from your account. You may also email `info@neus.network`. We may need to verify your account, wallet control, or identity before completing a request. An authorized agent may submit a request where local law permits. We will not discriminate against you for exercising a privacy right.
+
+NEUS does not offer an opt-out of sale or targeted advertising because NEUS does not engage in those activities.
+
+## Children
+
+The Service is not directed to children under 13, and we do not knowingly collect personal information from a child under 13. If you believe a child has provided personal information to NEUS, contact us so we can investigate and delete it where required. Users must also meet any higher minimum age required by local law or by a connected provider.
+
+## Changes to This Policy
+
+We may update this policy when the Service or legal requirements change. We will post the updated policy with a new date. If a change materially affects how we use information already collected, we will provide additional notice and obtain consent where required before using that information for the new purpose.
 
 ## Contact
 
-For privacy questions or data requests, contact:
+For privacy questions or requests:
 
-- Email: `info@neus.network`
+- **Email:** `info@neus.network`
+- **Mail:** NEUS Network, Inc., 1111B S Governors Ave STE 39950, Dover, DE 19904, USA
 
-<Info>
-This policy is provided for general information only and is not legal advice.
-</Info>
+If applicable, you may also complain to the privacy or data-protection regulator where you live.

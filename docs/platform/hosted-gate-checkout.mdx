@@ -91,6 +91,14 @@ Receipt-based rows mean an existing receipt may not satisfy a stricter gate. For
 
 For `wallet-risk` gates, any receipt-based row also requires `policyVerified` to be true. A failed risk check never satisfies a gate.
 
+### Verification links
+
+In the gate builder, choose **Verification link**. The visitor pastes their own HTTPS URL; NEUS reads JSON from that URL or its conventional `.json` form and checks whether `verified` is `true`.
+
+Builders do not configure fetch targets, callbacks, or provider-specific connectors. The saved gate contains the portable match rows `reference.type = url` and `resolved.verified = true`. API clients can use other `resolved.*` output matches when a source exposes a different public JSON contract. Resolved-link receipts default to five-minute freshness so checkout does not silently reuse old source status.
+
+See [Content ownership](../verification/ownership-basic#verification-links-in-hosted-gates) for the wire shape and resolver safeguards.
+
 ## Paid gates
 
 The snapshot's `monetization.charge` describes pricing:
