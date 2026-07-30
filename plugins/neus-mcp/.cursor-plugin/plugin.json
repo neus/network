@@ -2,7 +2,7 @@
   "name": "neus-mcp",
   "displayName": "NEUS",
   "description": "Connect your assistant to verified identity, scoped permissions, and reusable trust receipts.",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "author": {
     "name": "NEUS",
     "email": "dev@neus.network"
