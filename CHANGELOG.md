@@ -8,13 +8,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
-- **One MCP owner — CLI, not the plugin.** `neus setup` / `neus auth` / `neus doctor` are now the single registration owner for hosted MCP. The public CLI writes one user-level `neus` entry per installed host and **installs the `neus-trust-workflow` skill** from the shipped package. Marketplace plugins (`neus-mcp`) are skill-only discovery/setup helpers and no longer register MCP.
-- **Skill SSOT moved into the package.** The canonical trust-workflow skill now lives at `sdk/skills/neus-trust-workflow/` (shipped in `@neus/sdk`) instead of `plugins/neus-trust/skills/`, so the CLI installs it as part of setup. The `plugins/neus-mcp` bundle keeps only the `neus-setup` helper.
+- **Cursor plugin owns MCP registration.** The `neus-mcp` Cursor plugin ships a Cursor-native `.mcp.json` so clicking **Install** in the marketplace registers NEUS and signs you in — the same one-click experience as Linear, Stripe, and other marketplace plugins.
+- **CLI defers to the plugin in Cursor.** When `neus setup` detects the `neus-mcp` plugin is installed in Cursor, it soft-skips writing `~/.cursor/mcp.json` (so there is no duplicate `neus` entry) and points you to the plugin's Connect button. For Codex, VS Code, Claude Code, and automation/CI, the CLI remains the MCP registration owner.
+- **Skill SSOT moved into the package.** The canonical trust-workflow skill now lives at `sdk/skills/neus-trust-workflow/` (shipped in `@neus/sdk`) instead of `plugins/neus-trust/skills/`, so the CLI installs it as part of setup. The `plugins/neus-mcp` bundle keeps the `neus-setup` helper alongside its `.mcp.json`.
 - **Plugin rename** — `neus-trust@neus` → **`neus-mcp@neus`** across all three marketplace manifests and plugin manifests.
 
 ### Fixed
 
-- **Duplicate NEUS MCP in Cursor** — the legacy plugin cache that bundled a second `mcpServers.neus` is detected; `neus setup` / `neus doctor` now hard-fail with a clear uninstall message instead of soft-skipping, leaving exactly one registration.
+- **Duplicate NEUS MCP in Cursor** — resolved by making the plugin and CLI cooperative, not mutually exclusive: the plugin owns Cursor MCP registration + OAuth; the CLI defers when the plugin is present and owns registration for every other host.
 
 ### Upgrade
 
@@ -25,7 +26,7 @@ npx -y -p @neus/sdk@1.3.6 neus setup
 npx -y -p @neus/sdk@1.3.6 neus doctor --live
 ```
 
-After the CLI writes the single user-level registration, uninstall any legacy `neus-trust` / MCP-bundling `neus-mcp` marketplace plugin and restart your editor so only the CLI-owned entry remains.
+In Cursor, install the `neus-mcp` plugin from the marketplace and click Connect — no CLI needed. If you previously ran `neus setup` and have a `neus` entry in `~/.cursor/mcp.json`, the CLI will now detect the plugin and skip writing a duplicate; you can delete the manual entry or leave it (the plugin takes precedence).
 
 ## [1.3.5] - 2026-07-21
 

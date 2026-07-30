@@ -154,7 +154,7 @@ async function validateCodexMarketplace() {
       addError(`${entry.name}: .codex-plugin/plugin.json interface.displayName is required for marketplace rendering.`);
     }
     if (entry.name === "neus-mcp" && manifest.mcpServers !== undefined) {
-      addError(`${entry.name}: Codex manifest must be skill-only; the public NEUS CLI owns MCP registration.`);
+      addError(`${entry.name}: Codex manifest must be skill-only; MCP registration for Codex is owned by \`neus setup --client codex\` (Codex uses \`codex mcp login\`, not a plugin-bundled mcp.json).`);
     }
   }
 }
@@ -172,7 +172,12 @@ async function main() {
 
   const entries = await fs.readdir(pluginsDir, { withFileTypes: true });
   for (const entry of entries) {
-    if (entry.isDirectory() && await pathExists(path.join(pluginsDir, entry.name, ".mcp.json"))) {
+    if (!entry.isDirectory()) continue;
+    // neus-mcp ships a Cursor-native .mcp.json (no "type" field) validated by
+    // validate-cursor-mcp.mjs. The spec-compliant shape (type: "http") is for
+    // Claude Code / Codex, which consume the plugin as skill-only via the CLI.
+    if (entry.name === "neus-mcp") continue;
+    if (await pathExists(path.join(pluginsDir, entry.name, ".mcp.json"))) {
       await validateSpecMcp(path.join(pluginsDir, entry.name), entry.name);
     }
   }

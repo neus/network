@@ -1,7 +1,7 @@
 {
   "name": "neus-mcp",
   "version": "1.3.6",
-  "description": "NEUS setup helper. The public NEUS CLI installs the runtime trust skill and owns MCP registration.",
+  "description": "Connect your assistant to verified identity, scoped permissions, and reusable trust receipts.",
   "author": {
     "name": "NEUS",
     "email": "dev@neus.network"
@@ -32,7 +32,7 @@
   "interface": {
     "displayName": "NEUS",
     "shortDescription": "Verify identity and permissions before agents act.",
-    "longDescription": "Install or repair NEUS through one public CLI path. The CLI installs the runtime trust skill and owns the single hosted MCP registration for every supported IDE.",
+    "longDescription": "Connect your assistant to verified identity, scoped permissions, and reusable trust receipts. In Cursor, installing this plugin registers NEUS and signs you in. For Codex, VS Code, and Claude Code, use the public CLI.",
     "developerName": "NEUS",
     "category": "Security",
     "capabilities": [

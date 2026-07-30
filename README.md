@@ -69,7 +69,7 @@ Then ask your assistant:
 | Server / API | [API overview](https://docs.neus.network/api/overview) |
 | Agent trust | [Agents overview](https://docs.neus.network/agents/overview) |
 
-Optional setup shortcut: install **`neus-mcp@neus`** from this repo’s marketplace. See [Install NEUS](https://docs.neus.network/install).
+Install **`neus-mcp`** from this repo's marketplace to connect Cursor in one click. See [Install NEUS](https://docs.neus.network/install).
 
 ### Add trust to an app
 
@@ -118,7 +118,7 @@ The live verifier catalog is documented at [docs.neus.network/verification/verif
 
 ## This repository
 
-Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widgets, examples, specs, and the **`neus-mcp`** Claude Code / Cursor setup helper ([install](https://docs.neus.network/install)).
+Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widgets, examples, specs, and the **`neus-mcp`** editor plugin ([install](https://docs.neus.network/install)).
 
 ## Open standard
 

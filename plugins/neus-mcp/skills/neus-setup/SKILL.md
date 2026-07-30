@@ -1,24 +1,22 @@
 ---
 name: neus-setup
-description: Install or repair NEUS for the current IDE using the single public setup command. Use when a user wants NEUS MCP, OAuth sign-in, the NEUS trust workflow skill, or duplicate/stale connector cleanup.
+description: Connect an IDE to NEUS. Use when a user wants NEUS in their editor, needs to sign in, or wants to verify their setup is healthy.
 license: Apache-2.0
 compatibility: Requires Node.js 20 or newer and an MCP-capable IDE.
 ---
 
-# Set up NEUS
-
-Use the public CLI as the only setup owner:
+# Connect NEUS
 
 ```bash
 npx -y -p @neus/sdk neus setup
 ```
 
-Then verify the endpoint, OAuth profile, skill, and duplicate state:
+Then verify the connection, sign-in, and skill are healthy:
 
 ```bash
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Do not create manual MCP JSON, install another NEUS connector, paste an OAuth token into configuration, or use a workspace-specific bootstrap script.
+For a single editor, add `--client cursor`, `--client codex`, `--client claude`, or `--client vscode`.
 
-For a single host, add `--client cursor`, `--client codex`, `--client claude`, or `--client vscode` to the setup command.
+In Cursor, installing the `neus-mcp` plugin from the marketplace also registers NEUS and signs you in — no CLI needed. If both are present, the CLI defers to the plugin.

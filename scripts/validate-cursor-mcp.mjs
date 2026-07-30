@@ -95,18 +95,10 @@ async function main() {
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
     const pluginDir = path.join(pluginsDir, entry.name);
-    // NEUS marketplace plugins are skill-only. The public CLI is the sole MCP
-    // registration owner, so shipping mcp.json here would recreate dual installs.
-    if (entry.name === "neus-mcp") {
-      for (const fileName of ["mcp.json", ".mcp.json"]) {
-        if (await pathExists(path.join(pluginDir, fileName))) {
-          addError(
-            `${path.relative(repoRoot, path.join(pluginDir, fileName))}: must not exist; run the public NEUS CLI to register MCP.`
-          );
-        }
-      }
-      continue;
-    }
+    // The neus-mcp Cursor plugin ships a Cursor-native mcp.json so click-install
+    // auto-registers NEUS MCP and fires Cursor's OAuth flow (Linear-style). The
+    // CLI defers to the plugin when present. Validate the mcp.json shape instead
+    // of rejecting its existence.
     const hasSpecMcp = await pathExists(path.join(pluginDir, ".mcp.json"));
     await validatePluginMcp(pluginDir, { requireFile: hasSpecMcp });
   }

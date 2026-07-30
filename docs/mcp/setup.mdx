@@ -4,7 +4,7 @@ description: OAuth, access keys, and per-editor config after neus setup.
 icon: code
 ---
 
-Connect your editors to NEUS so they can load your account, reuse saved results, and use Vault secrets.
+Connect your editors to NEUS so they can load your account, reuse saved results, and use encrypted secrets.
 
 Hosted endpoint: **`https://mcp.neus.network/mcp`**
 
@@ -16,7 +16,7 @@ Run one command:
 npx -y -p @neus/sdk neus setup
 ```
 
-Installs the trust skill, detects your editors, and signs you in with OAuth. Marketplace plugins are an optional shortcut — they never register another MCP server.
+Installs the trust skill, detects your editors, and signs you in. In Cursor, you can also install the `neus-mcp` plugin from the marketplace — it registers NEUS and runs sign-in in one click.
 
 ## Daily commands
 

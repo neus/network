@@ -19,7 +19,7 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Installs the trust skill and configures hosted MCP for Cursor, Claude Code, Codex, and VS Code in one command. Marketplace plugins are an optional setup shortcut — never a second MCP registration.
+Installs the trust skill and configures hosted MCP for Cursor, Claude Code, Codex, and VS Code in one command. In Cursor, installing the **neus-mcp** marketplace plugin is the fastest path — it auto-registers NEUS MCP and runs OAuth in one click (the CLI then defers to the plugin).
 
 Ask your assistant: **"Before I take a sensitive action, use NEUS. Reuse what I already have."** It looks up identity, authority, and saved results first, then summarizes as Passed, Action needed, or Blocked.
 
@@ -35,11 +35,23 @@ npx -y -p @neus/sdk neus setup --client claude
   <Tab title="Cursor">
     <Icon icon="/images/brandLogos/cursor.svg" size={18} /> **Cursor**
 
+**Option 1 — Marketplace (recommended, one-click OAuth):**
+
+```text
+Cursor → Settings → Cursor Plugins → Add marketplace
+Marketplace URL: https://github.com/neus/network
+Install: neus-mcp
+```
+
+Clicking **Install** auto-registers NEUS MCP and starts OAuth. After install, click **Connect** to sign in. No CLI needed.
+
+**Option 2 — CLI:**
+
 ```bash
 npx -y -p @neus/sdk neus setup --client cursor
 ```
 
-Writes the single user-level registration at `~/.cursor/mcp.json`:
+Writes the user-level registration at `~/.cursor/mcp.json`:
 
 ```json
 {
@@ -51,17 +63,9 @@ Writes the single user-level registration at `~/.cursor/mcp.json`:
 }
 ```
 
+When both are present, the CLI detects the plugin and skips writing a duplicate entry — use one or the other, not both.
+
 Expected public tool list: **13**. Profile loads via `neus_context` when signed in.
-
-**Optional marketplace setup helper** (no MCP registration):
-
-<Accordion title="Cursor manual install">
-```text
-Cursor → Settings → Cursor Plugins → Add marketplace
-Marketplace URL: https://github.com/neus/network
-Install: neus-mcp
-```
-</Accordion>
 
   </Tab>
 
@@ -76,7 +80,7 @@ Setup starts Codex OAuth. If your host asks you to sign in again, use `codex mcp
 
 Config path: `~/.codex/config.toml`
 
-**Optional marketplace setup helper** (no MCP registration):
+**Or install the plugin** (bundles the setup skill; MCP registration runs via the CLI above):
 
 <Accordion title="Codex manual install">
 ```text
@@ -111,7 +115,7 @@ Project scope: `./.vscode/mcp.json`
 npx -y -p @neus/sdk neus setup --client claude
 ```
 
-**Optional marketplace setup helper** (no MCP registration):
+**Or install the plugin from the marketplace** (bundles the setup skill):
 
 <Accordion title="Claude Code manual install">
 ```text

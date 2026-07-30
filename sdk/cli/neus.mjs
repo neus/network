@@ -802,8 +802,10 @@ function cursorInstalled() {
   ].some(fileExists);
 }
 
-// Marketplace plugins are skill-only. Detect legacy caches that still bundle
-// MCP so setup and doctor can identify the conflicting owner explicitly.
+// The Cursor marketplace plugin ships its own .mcp.json so click-install registers
+// NEUS MCP and fires Cursor's native OAuth flow (the Linear-style one-click path).
+// When the plugin is present, the CLI defers to it instead of writing a second
+// user-level entry — that avoids the duplicate-MCP class without killing click-install.
 function cursorBundledMcpPlugins() {
   const homeDir = os.homedir();
   const conflicts = [];
@@ -1087,11 +1089,26 @@ function codexConfigPath() {
 }
 
 function installCursor(scope, accessKey, dryRun, cwd, options = {}) {
-  const pluginMcpConflicts = cursorBundledMcpPlugins();
-  if (pluginMcpConflicts.length > 0) {
-    throw new Error(
-      `Cursor has a legacy marketplace plugin that bundles NEUS MCP (${pluginMcpConflicts.join(', ')}). Uninstall that plugin, restart Cursor, then rerun setup. The marketplace plugin is skill-only now; the CLI is the sole MCP owner.`
-    );
+  // When the neus-mcp marketplace plugin is installed in Cursor, it owns MCP
+  // registration (its bundled .mcp.json auto-registers NEUS MCP on install and
+  // triggers Cursor's native OAuth flow — the same one-click experience Linear,
+  // Stripe, etc. ship). Defer to it instead of writing a competing user-level
+  // entry, which is what caused the duplicate-NEUS-MCP bug.
+  const pluginOwners = cursorBundledMcpPlugins();
+  if (pluginOwners.length > 0) {
+    return {
+      client: 'cursor',
+      scope,
+      configured: true,
+      authConfigured: false,
+      changed: false,
+      targetPath: cursorConfigPath(scope, cwd),
+      backupPath: null,
+      dryRun,
+      deferredToPlugin: pluginOwners,
+      note: `Cursor plugin (${pluginOwners.join(', ')}) is installed. Use the plugin's Connect button to sign in.`,
+      error: null
+    };
   }
   const targetPath = cursorConfigPath(scope, cwd);
   const doc = readJsonFile(targetPath, { mcpServers: {} });
@@ -1115,6 +1132,7 @@ function installCursor(scope, accessKey, dryRun, cwd, options = {}) {
     targetPath,
     backupPath: writeResult.backupPath,
     dryRun,
+    deferredToPlugin: null,
     error: null
   };
 }
@@ -1294,16 +1312,16 @@ function installClient(client, scope, accessKey, dryRun, cwd, options = {}) {
 
 function inspectCursor(scope, cwd) {
   const targetPath = cursorConfigPath(scope, cwd);
-  const pluginMcpConflicts = cursorBundledMcpPlugins();
+  const pluginOwners = cursorBundledMcpPlugins();
   if (!fileExists(targetPath)) {
     return {
       client: 'cursor',
       scope,
-      configured: false,
+      configured: pluginOwners.length > 0,
       authConfigured: false,
       targetPath,
-      pluginMcpConflicts,
-      duplicateOwner: pluginMcpConflicts.length > 0,
+      pluginOwners,
+      pluginOwned: pluginOwners.length > 0,
       error: null
     };
   }
@@ -1313,11 +1331,11 @@ function inspectCursor(scope, cwd) {
   return {
     client: 'cursor',
     scope,
-    configured,
+    configured: configured || pluginOwners.length > 0,
     authConfigured: Boolean(server?.headers?.Authorization),
     targetPath,
-    pluginMcpConflicts,
-    duplicateOwner: pluginMcpConflicts.length > 0,
+    pluginOwners,
+    pluginOwned: pluginOwners.length > 0,
     error: null
   };
 }
@@ -2539,11 +2557,11 @@ async function runDoctor(options) {
   const skills = inspectTrustSkill(clients);
   const configuredClients = inspected.filter(r => r.configured);
   const liveAccessKey = await resolveLiveAccessKeyWithRefresh(options, scope, cwd);
-  const duplicateClients = inspected
-    .filter(result => result.duplicateOwner)
+  const pluginOwnedClients = inspected
+    .filter(result => result.pluginOwned)
     .map(result => ({
       client: result.client,
-      owners: result.pluginMcpConflicts || []
+      owners: result.pluginOwners || []
     }));
   const hasUrlOnlyOAuth = inspected.some(
     result => result.configured && result.authConfigured === false
@@ -2556,9 +2574,9 @@ async function runDoctor(options) {
     scope,
     clients: inspected,
     skills,
-    duplicateConfig: {
-      found: duplicateClients.length > 0,
-      clients: duplicateClients
+    pluginOwnedConfig: {
+      found: pluginOwnedClients.length > 0,
+      clients: pluginOwnedClients
     },
     configuredCount: configuredClients.length,
     accessKeyPresent: Boolean(liveAccessKey),
@@ -2570,8 +2588,7 @@ async function runDoctor(options) {
     summary: '',
     hasErrors:
       inspected.some(result => result.error) ||
-      skills.some(skill => !skill.installed || !skill.current) ||
-      duplicateClients.length > 0
+      skills.some(skill => !skill.installed || !skill.current)
   };
 
   if (options.live) {
@@ -2658,17 +2675,16 @@ async function runDoctor(options) {
     );
   }
   const hasCodex = inspected.some(result => result.client === 'codex');
-  const cursorDuplicateOwner = inspected.find(
-    result => result.client === 'cursor' && result.duplicateOwner
+  const cursorPluginOwner = inspected.find(
+    result => result.client === 'cursor' && result.pluginOwned
   );
-  if (cursorDuplicateOwner) {
+  if (cursorPluginOwner) {
     writeCliLine(paint('Cursor', 'cyan'));
     logStep(
-      'warn',
+      'ok',
       'cursor',
-      `legacy plugin bundles MCP (${cursorDuplicateOwner.pluginMcpConflicts.join(', ')}) — uninstall it; the CLI is the sole MCP owner`
+      `Cursor plugin is installed (${cursorPluginOwner.pluginOwners.join(', ')}) — use the plugin's Connect button to sign in`
     );
-    payload.hasErrors = true;
   }
   writeCliLine(paint('Profile connection', 'cyan'));
   if (options.live && payload.mcp) {

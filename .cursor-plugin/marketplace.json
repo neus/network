@@ -12,7 +12,7 @@
     {
       "name": "neus-mcp",
       "source": "./plugins/neus-mcp",
-      "description": "Install or repair NEUS through one public CLI path without creating a duplicate MCP connector."
+      "description": "Connect your assistant to verified identity, scoped permissions, and reusable trust receipts."
     }
   ]
 }

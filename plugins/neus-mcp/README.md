@@ -1,8 +1,8 @@
 # NEUS
 
-Stop agents from acting blind. Verified identity, limited permissions, and reusable trust receipts.
+Verified identity, scoped permissions, and reusable trust receipts for your assistant.
 
-This plugin contains the NEUS setup skill. It routes every host to the same public CLI and does not register MCP.
+In Cursor, install this plugin and click **Connect** — NEUS signs you in automatically. For Codex, VS Code, and Claude Code, use the public CLI.
 
 **[Install →](https://docs.neus.network/install)**
 
@@ -11,7 +11,7 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
+Ask your assistant: **"Use NEUS to check identity and permissions before sensitive actions."**
 
 It reuses existing trust receipts first, guides any missing check, then summarizes as Passed, Action needed, or Blocked.
 
