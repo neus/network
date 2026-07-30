@@ -4,6 +4,24 @@ Release notes for **`@neus/sdk`**, **`@neus/mcp-server`**, docs, and examples.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.7] - 2026-07-30
+
+### Fixed
+
+- **Restored marketplace click-install for Cursor.** The `neus-mcp` plugin ships a Cursor-native `.mcp.json` again, so clicking **Install** registers NEUS and signs you in — the same one-click experience as Linear, Stripe, and other marketplace plugins. The CLI defers to the plugin when present (no duplicate entry, no hard-fail).
+- **OAuth `invalid_target` on hosted MCP.** Normalized the RFC 8707 `resource` parameter in the authorize and token endpoints so clients that canonicalize the URL (adding a trailing slash) are accepted instead of rejected.
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.3.7
+# or zero-install
+npx -y -p @neus/sdk@1.3.7 neus setup
+npx -y -p @neus/sdk@1.3.7 neus doctor --live
+```
+
+In Cursor, install the `neus-mcp` plugin from the marketplace and click **Connect**.
+
 ## [1.3.6] - 2026-07-30
 
 ### Changed
