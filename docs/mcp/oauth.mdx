@@ -46,7 +46,10 @@ GET https://mcp.neus.network/.well-known/oauth-protected-resource
     "neus:secrets",
     "offline_access"
   ],
-  "resource_documentation": "https://docs.neus.network/mcp/overview"
+  "resource_documentation": "https://docs.neus.network/mcp/overview",
+  "resource_indicators_supported": true,
+  "resource_parameter_supported": true,
+  "resource_parameter_values": ["https://mcp.neus.network/mcp"]
 }
 ```
 
@@ -79,7 +82,11 @@ GET https://neus.network/.well-known/oauth-authorization-server
     "neus:profile",
     "neus:secrets",
     "offline_access"
-  ]
+  ],
+  "resource_indicators_supported": true,
+  "resource_parameter_supported": true,
+  "resource": "https://mcp.neus.network/mcp",
+  "authorization_response_iss_parameter_supported": true
 }
 ```
 
@@ -107,6 +114,7 @@ GET https://neus.network/oauth/authorize
 | `state` | Yes | CSRF protection — returned verbatim |
 | `scope` | No | Default: `neus:core neus:profile neus:secrets offline_access` |
 | `resource` | Yes | Must be `https://mcp.neus.network/mcp` |
+| `iss` | Returned | The AS returns `iss=https://neus.network` on the callback. Clients MUST validate it matches the expected issuer (RFC 9207). |
 
 ## Token exchange
 
@@ -204,6 +212,7 @@ Hosted MCP clients (Cursor, VS Code, Claude Code, OpenAI) should use a **URL-onl
 | Exact redirect_uri match | Prevents open redirect attacks |
 | State parameter preserved | CSRF protection |
 | Resource indicator required | Prevents token misuse across services |
+| Issuer validation (RFC 9207) | Client confirms `iss` on auth response matches expected AS — closes IdP mix-up |
 | Token audience validated | MCP tokens cannot be used for other NEUS services |
 | Refresh token rotation | Old refresh token invalidated on each use |
 | Tokens never in query strings | Bearer header only |

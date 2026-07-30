@@ -4,6 +4,23 @@ Release notes for **`@neus/sdk`**, **`@neus/mcp-server`**, docs, and examples.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.8] - 2026-07-30
+
+### Fixed
+
+- **RFC 9207 issuer validation in `neus setup`/`neus auth`.** The CLI now validates the `iss` parameter returned in the OAuth authorization response against the expected NEUS issuer (`https://neus.network`), preventing authorization-code interception via a malicious authorization server spoof. Paired with the protocol's `authorization_response_iss_parameter_supported` advertisement in authorization-server metadata.
+- **Builder guidance rebalanced across all IDEs.** `neus setup` output now gives accurate, client-specific next steps for Cursor, Codex, Claude Code, and VS Code — no more Cursor-only bias in the post-setup instructions.
+- **Removed legacy `neus-trust` plugin fallback detection.** The CLI no longer probes for the retired `neus-trust` plugin name.
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.3.8
+# or zero-install
+npx -y -p @neus/sdk@1.3.8 neus setup
+npx -y -p @neus/sdk@1.3.8 neus doctor --live
+```
+
 ## [1.3.7] - 2026-07-30
 
 ### Fixed

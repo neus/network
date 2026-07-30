@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import {
   NEUS_MCP_SERVER_NAME,
   NEUS_MCP_URL,
+  IDE_HOST_LABELS,
   buildCursorMcpConfig,
   buildVsCodeMcpConfig,
   buildNeusMcpHttpConfig
@@ -61,6 +62,9 @@ const SUPPORTED_EXPORT_FORMATS = ['manifest', 'json'];
 const NEUS_HOME_DIR = path.join(os.homedir(), '.neus');
 const NEUS_TOKEN_STORE_PATH = path.join(NEUS_HOME_DIR, 'mcp-tokens.json');
 const NEUS_OAUTH_CLIENT_ID = 'neus-cli';
+// RFC 9207 — the expected issuer returned in the authorization response `iss`
+// parameter. Matches the `issuer` field in /.well-known/oauth-authorization-server.
+const NEUS_OAUTH_ISSUER = 'https://neus.network';
 const NEUS_MCP_RESOURCE = 'https://mcp.neus.network/mcp';
 
 function readTokenStore() {
@@ -277,18 +281,21 @@ function describeClientResult(command, result) {
 
 function printBuilderGuidance(command, results) {
   if (!['setup', 'auth', 'doctor'].includes(command)) return;
-  const hasCodex = results.some(result => result.client === 'codex');
-  const cursorConfigured = results.some(
-    result => result.client === 'cursor' && result.configured && !result.error
-  );
+  const ok = results.filter(result => result.configured && !result.error);
+  const cursorOk = ok.find(result => result.client === 'cursor');
+  const label = (client) => IDE_HOST_LABELS[client] || client;
   writeCliLine('');
   writeCliLine(paint('Next steps', 'cyan'));
   writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for assistant prompts.');
-  if (hasCodex) {
+  if (ok.some(result => result.client === 'codex')) {
     writeGuidanceLine('Codex OAuth: `neus auth --client codex` or `codex mcp login neus`.');
   }
-  if (cursorConfigured) {
-    writeGuidanceLine('Cursor: the NEUS CLI owns the single user-level MCP registration.');
+  const cliOwned = ok.filter(result => !result.deferredToPlugin).map(result => result.client);
+  if (cliOwned.length > 0) {
+    writeGuidanceLine(`NEUS MCP registered for ${cliOwned.map(label).join(', ')}.`);
+  }
+  if (cursorOk?.deferredToPlugin?.length) {
+    writeGuidanceLine(`Cursor: neus-mcp plugin owns registration — sign in via the plugin's Connect button.`);
   }
   writeGuidanceLine('Ask your assistant: "Use NEUS Verify before taking sensitive actions."');
 }
@@ -802,14 +809,16 @@ function cursorInstalled() {
   ].some(fileExists);
 }
 
-// The Cursor marketplace plugin ships its own .mcp.json so click-install registers
-// NEUS MCP and fires Cursor's native OAuth flow (the Linear-style one-click path).
-// When the plugin is present, the CLI defers to it instead of writing a second
+// The Cursor marketplace plugin (neus-mcp) ships its own .mcp.json so click-install
+// registers NEUS MCP and fires Cursor's native OAuth flow (the Linear-style one-click
+// path). When the plugin is present, the CLI defers to it instead of writing a second
 // user-level entry — that avoids the duplicate-MCP class without killing click-install.
+// One plugin name only (neus-mcp): the legacy neus-trust plugin carries no current
+// manifests and is not consulted.
 function cursorBundledMcpPlugins() {
   const homeDir = os.homedir();
   const conflicts = [];
-  for (const pluginName of ['neus-mcp', 'neus-trust']) {
+  for (const pluginName of ['neus-mcp']) {
     const pluginCacheRoot = path.join(homeDir, '.cursor', 'plugins', 'cache', 'neus', pluginName);
     if (!fileExists(pluginCacheRoot)) continue;
     try {
@@ -2090,6 +2099,19 @@ async function runAuthBrowser(options) {
         res.writeHead(403, { 'Content-Type': 'text/html' });
         res.end('<html><body><h2>Security check failed</h2><p>Invalid request. Try again.</p></body></html>');
         finish(new Error('CSRF state mismatch'));
+        return;
+      }
+
+      // RFC 9207 issuer validation — 2026-07-28 MCP auth hardening headline.
+      // When the AS returns `iss`, the client MUST confirm it matches the expected
+      // issuer (https://neus.network). A mismatch indicates an IdP mix-up attack.
+      // When the AS omits `iss` (e.g. older deployments), we fail closed too,
+      // because the AS metadata advertises authorization_response_iss_parameter_supported.
+      const returnedIss = url.searchParams.get('iss');
+      if (!returnedIss || returnedIss !== NEUS_OAUTH_ISSUER) {
+        res.writeHead(403, { 'Content-Type': 'text/html' });
+        res.end('<html><body><h2>Security check failed</h2><p>Issuer mismatch. Try again.</p></body></html>');
+        finish(new Error(`OAuth issuer mismatch: expected ${NEUS_OAUTH_ISSUER}, got ${returnedIss || '(missing)'}`));
         return;
       }
 
