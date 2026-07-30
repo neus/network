@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env node
+#!/usr/bin/env node
 import { exec, spawnSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import fs from 'node:fs';
@@ -276,13 +276,10 @@ function describeClientResult(command, result) {
 }
 
 function printBuilderGuidance(command, results) {
-  if (!['setup', 'auth', 'check'].includes(command)) return;
+  if (!['setup', 'auth', 'doctor'].includes(command)) return;
   const hasCodex = results.some(result => result.client === 'codex');
-  const cursorSkipped = results.some(
-    result => result.client === 'cursor' && result.skippedReason
-  );
   const cursorConfigured = results.some(
-    result => result.client === 'cursor' && result.configured && !result.error && !result.skippedReason
+    result => result.client === 'cursor' && result.configured && !result.error
   );
   writeCliLine('');
   writeCliLine(paint('Next steps', 'cyan'));
@@ -290,14 +287,8 @@ function printBuilderGuidance(command, results) {
   if (hasCodex) {
     writeGuidanceLine('Codex OAuth: `neus auth --client codex` or `codex mcp login neus`.');
   }
-  if (cursorSkipped) {
-    writeGuidanceLine(
-      'Cursor: neus-trust plugin detected — skipped ~/.cursor/mcp.json. Use `neus setup --client cursor` to override (not recommended: duplicate NEUS MCP).'
-    );
-  } else if (cursorConfigured) {
-    writeGuidanceLine(
-      'Cursor: one NEUS MCP only. If you later install the neus-trust plugin, remove `neus` from ~/.cursor/mcp.json to avoid a duplicate.'
-    );
+  if (cursorConfigured) {
+    writeGuidanceLine('Cursor: the NEUS CLI owns the single user-level MCP registration.');
   }
   writeGuidanceLine('Ask your assistant: "Use NEUS Verify before taking sensitive actions."');
 }
@@ -326,7 +317,9 @@ function printStatusGuidance(results) {
   writeGuidanceLine(NEUS_MCP_URL);
   writeCliLine(paint('Profile connection', 'cyan'));
   if (results.some(result => result.configured)) {
-    writeGuidanceLine('Saved config found. Run `npx -y -p @neus/sdk neus check` to confirm live connection.');
+    writeGuidanceLine(
+      'Saved config found. Run `npx -y -p @neus/sdk neus doctor --live` to confirm the connection.'
+    );
   } else {
     writeGuidanceLine(`No selected MCP host is configured yet. Run \`${preferredSetupCommand(results)}\`.`);
   }
@@ -526,6 +519,96 @@ function writeJsonFile(targetPath, nextValue, dryRun) {
   };
 }
 
+function directoryDigest(targetPath) {
+  if (!fileExists(targetPath)) return null;
+  const files = [];
+  const visit = current => {
+    for (const entry of fs
+      .readdirSync(current, { withFileTypes: true })
+      .sort((a, b) => a.name.localeCompare(b.name))) {
+      const fullPath = path.join(current, entry.name);
+      if (entry.isDirectory()) visit(fullPath);
+      else if (entry.isFile()) {
+        files.push(
+          `${path.relative(targetPath, fullPath).replaceAll(path.sep, '/')}\0${fs.readFileSync(fullPath, 'utf8')}`
+        );
+      }
+    }
+  };
+  visit(targetPath);
+  return sha256(files.join('\0'));
+}
+
+function trustSkillTargets(clients) {
+  const targets = [];
+  if (clients.some(client => ['cursor', 'codex', 'vscode'].includes(client))) {
+    targets.push({
+      hosts: clients.filter(client => ['cursor', 'codex', 'vscode'].includes(client)),
+      targetPath: path.join(os.homedir(), '.agents', 'skills', 'neus-trust-workflow')
+    });
+  }
+  if (clients.includes('claude')) {
+    targets.push({
+      hosts: ['claude'],
+      targetPath: path.join(os.homedir(), '.claude', 'skills', 'neus-trust-workflow')
+    });
+  }
+  return targets;
+}
+
+function installTrustSkill(clients, dryRun) {
+  const sourcePath = path.join(__cliDir, '..', 'skills', 'neus-trust-workflow');
+  if (!fileExists(path.join(sourcePath, 'SKILL.md'))) {
+    throw new Error(`Packaged NEUS trust skill is missing: ${sourcePath}`);
+  }
+  const sourceDigest = directoryDigest(sourcePath);
+  return trustSkillTargets(clients).map(({ hosts, targetPath }) => {
+    const changed = directoryDigest(targetPath) !== sourceDigest;
+    const backupPath =
+      changed && fileExists(targetPath) ? `${targetPath}.bak-${Date.now()}` : null;
+    if (!dryRun && changed) {
+      fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+      if (backupPath) fs.renameSync(targetPath, backupPath);
+      try {
+        fs.cpSync(sourcePath, targetPath, { recursive: true });
+      } catch (error) {
+        if (backupPath && fileExists(backupPath) && !fileExists(targetPath)) {
+          fs.renameSync(backupPath, targetPath);
+        }
+        throw error;
+      }
+    }
+    return {
+      name: 'neus-trust-workflow',
+      hosts,
+      installed: true,
+      changed,
+      targetPath: portablePath(targetPath),
+      backupPath: backupPath ? portablePath(backupPath) : null,
+      version: CLI_PACKAGE_VERSION,
+      sha256: sourceDigest,
+      dryRun
+    };
+  });
+}
+
+function inspectTrustSkill(clients) {
+  const sourcePath = path.join(__cliDir, '..', 'skills', 'neus-trust-workflow');
+  const sourceDigest = directoryDigest(sourcePath);
+  return trustSkillTargets(clients).map(({ hosts, targetPath }) => {
+    const installedDigest = directoryDigest(targetPath);
+    return {
+      name: 'neus-trust-workflow',
+      hosts,
+      installed: Boolean(installedDigest),
+      current: Boolean(installedDigest && sourceDigest && installedDigest === sourceDigest),
+      targetPath: portablePath(targetPath),
+      version: CLI_PACKAGE_VERSION,
+      sha256: installedDigest
+    };
+  });
+}
+
 function readTextFile(targetPath) {
   if (!fileExists(targetPath)) return '';
   return fs.readFileSync(targetPath, 'utf8');
@@ -636,7 +719,31 @@ function readMcpServers(targetPath, source, warnings) {
     }));
 }
 
+function resolveCodexAppBinary() {
+  if (process.platform !== 'win32') return null;
+  const localAppData = process.env.LOCALAPPDATA || '';
+  const binRoot = path.join(localAppData, 'OpenAI', 'Codex', 'bin');
+  if (!fileExists(binRoot)) return null;
+  try {
+    return (
+      fs
+        .readdirSync(binRoot, { withFileTypes: true })
+        .filter(entry => entry.isDirectory())
+        .map(entry => path.join(binRoot, entry.name, 'codex.exe'))
+        .filter(fileExists)
+        .map(candidate => ({ candidate, modified: fs.statSync(candidate).mtimeMs }))
+        .sort((a, b) => b.modified - a.modified)[0]?.candidate || null
+    );
+  } catch {
+    return null;
+  }
+}
+
 function resolveCommand(command) {
+  if (command === 'codex') {
+    const appBinary = resolveCodexAppBinary();
+    if (appBinary) return appBinary;
+  }
   const checker = process.platform === 'win32' ? 'where' : 'which';
   const result = spawnSync(checker, [command], {
     encoding: 'utf8',
@@ -650,20 +757,22 @@ function resolveCommand(command) {
   return firstMatch || null;
 }
 
-function runCommand(command, args, cwd, tolerateFailure = false) {
+function runCommand(command, args, cwd, tolerateFailure = false, timeout = 30_000) {
   const resolvedCommand = resolveCommand(command) || command;
   const isWindowsScript = process.platform === 'win32' && /\.(cmd|bat)$/i.test(resolvedCommand);
   const result = isWindowsScript
     ? spawnSync(process.env.ComSpec || 'cmd.exe', ['/d', '/s', '/c', resolvedCommand, ...args], {
-        cwd,
-        encoding: 'utf8',
-        stdio: ['ignore', 'pipe', 'pipe']
-      })
-    : spawnSync(resolvedCommand, args, {
-        cwd,
-        encoding: 'utf8',
-        stdio: ['ignore', 'pipe', 'pipe']
-      });
+         cwd,
+         encoding: 'utf8',
+         stdio: ['ignore', 'pipe', 'pipe'],
+         timeout
+       })
+     : spawnSync(resolvedCommand, args, {
+         cwd,
+         encoding: 'utf8',
+         stdio: ['ignore', 'pipe', 'pipe'],
+         timeout
+       });
 
   if (result.error && !tolerateFailure) {
     throw result.error;
@@ -693,29 +802,29 @@ function cursorInstalled() {
   ].some(fileExists);
 }
 
-// Detect the Cursor neus-trust plugin install. Cursor caches installed plugins
-// under ~/.cursor/plugins/cache/<marketplace-owner>/<plugin-name>/<commit>/.mcp.json
-// with a .cache-complete marker once the plugin is fully fetched. When present,
-// the plugin already provides the `neus` MCP server — writing a second `neus`
-// entry into ~/.cursor/mcp.json creates a duplicate NEUS MCP connection.
-function cursorNeusTrustPluginInstalled() {
+// Marketplace plugins are skill-only. Detect legacy caches that still bundle
+// MCP so setup and doctor can identify the conflicting owner explicitly.
+function cursorBundledMcpPlugins() {
   const homeDir = os.homedir();
-  const pluginCacheRoot = path.join(homeDir, '.cursor', 'plugins', 'cache', 'neus', 'neus-trust');
-  if (!fileExists(pluginCacheRoot)) return false;
-  try {
-    return fs
-      .readdirSync(pluginCacheRoot, { withFileTypes: true })
-      .filter(entry => entry.isDirectory())
-      .some(entry => fileExists(path.join(pluginCacheRoot, entry.name, '.cache-complete')));
-  } catch {
-    return false;
+  const conflicts = [];
+  for (const pluginName of ['neus-mcp', 'neus-trust']) {
+    const pluginCacheRoot = path.join(homeDir, '.cursor', 'plugins', 'cache', 'neus', pluginName);
+    if (!fileExists(pluginCacheRoot)) continue;
+    try {
+      const bundlesMcp = fs
+        .readdirSync(pluginCacheRoot, { withFileTypes: true })
+        .filter(entry => entry.isDirectory())
+        .some(
+          entry =>
+            fileExists(path.join(pluginCacheRoot, entry.name, 'mcp.json')) ||
+            fileExists(path.join(pluginCacheRoot, entry.name, '.mcp.json'))
+        );
+      if (bundlesMcp) conflicts.push(pluginName);
+    } catch {
+      conflicts.push(pluginName);
+    }
   }
-}
-
-// Cursor was explicitly requested via --client cursor. Used to decide whether to
-// soft-skip writing ~/.cursor/mcp.json when the plugin is already installed.
-function cursorExplicitlyRequested(options) {
-  return Boolean(options?.clients?.includes('cursor'));
+  return conflicts;
 }
 
 function defaultUserClients() {
@@ -863,12 +972,10 @@ function printUsage(exitCode = 0) {
     '',
     'Commands:',
     '  setup         Configure hosted NEUS MCP for supported clients',
-    '  init          Configure supported MCP clients automatically',
     '  auth          Sign in (browser, or NEUS_ACCESS_KEY / --access-key when set)',
     '  refresh       Rotate the stored OAuth token using the saved refresh token',
     '  disconnect    Disconnect NEUS MCP (revoke the stored OAuth token or access key)',
     '  status        Show current NEUS MCP setup',
-    '  check         Confirm setup and live NEUS connection (alias for doctor --live)',
     '  examples      Show assistant prompts to try after install',
     '  doctor        Deep check: config status, profile connection, and live MCP context',
     '  mount         Connect a Trusted Agent to a project or runtime',
@@ -980,26 +1087,11 @@ function codexConfigPath() {
 }
 
 function installCursor(scope, accessKey, dryRun, cwd, options = {}) {
-  // Dual-install guard: when the Cursor neus-trust plugin is installed, it already
-  // provides the `neus` MCP server. Writing a second `neus` entry into
-  // ~/.cursor/mcp.json creates a duplicate NEUS MCP connection. Soft-skip unless
-  // the operator explicitly requested cursor via --client cursor.
-  const pluginInstalled = cursorNeusTrustPluginInstalled();
-  const cursorExplicit = cursorExplicitlyRequested(options);
-  if (pluginInstalled && !cursorExplicit) {
-    const targetPath = cursorConfigPath(scope, cwd);
-    return {
-      client: 'cursor',
-      scope,
-      configured: true,
-      authConfigured: null,
-      changed: false,
-      targetPath,
-      backupPath: null,
-      dryRun,
-      skippedReason: 'neus-trust plugin installed; use --client cursor to override',
-      error: null
-    };
+  const pluginMcpConflicts = cursorBundledMcpPlugins();
+  if (pluginMcpConflicts.length > 0) {
+    throw new Error(
+      `Cursor has a legacy marketplace plugin that bundles NEUS MCP (${pluginMcpConflicts.join(', ')}). Uninstall that plugin, restart Cursor, then rerun setup. The marketplace plugin is skill-only now; the CLI is the sole MCP owner.`
+    );
   }
   const targetPath = cursorConfigPath(scope, cwd);
   const doc = readJsonFile(targetPath, { mcpServers: {} });
@@ -1135,7 +1227,7 @@ function installCodex(scope, accessKey, dryRun, cwd) {
   const bearerTokenEnvVar = envAccessKey() ? 'NEUS_ACCESS_KEY' : '';
 
   if (!dryRun) {
-    runCommand('codex', ['mcp', 'remove', NEUS_MCP_SERVER_NAME], cwd, true);
+    runCommand('codex', ['mcp', 'remove', NEUS_MCP_SERVER_NAME], cwd, true, 10_000);
     const addArgs = [
       'mcp',
       'add',
@@ -1150,7 +1242,20 @@ function installCodex(scope, accessKey, dryRun, cwd) {
     if (bearerTokenEnvVar) {
       addArgs.push('--bearer-token-env-var', bearerTokenEnvVar);
     }
-    runCommand('codex', addArgs, cwd);
+    const addResult = runCommand('codex', addArgs, cwd, true, 15_000);
+    if (addResult.status !== 0 || addResult.error) {
+      const inspected = inspectCodex(scope, cwd);
+      if (!inspected.configured) {
+        const detail =
+          [addResult.stderr, addResult.stdout].find(
+            value => typeof value === 'string' && value.trim()
+          ) || '';
+        throw new Error(
+          detail.trim() ||
+            'Codex did not finish MCP registration. Close other Codex windows and rerun setup.'
+        );
+      }
+    }
   }
 
   return {
@@ -1189,7 +1294,7 @@ function installClient(client, scope, accessKey, dryRun, cwd, options = {}) {
 
 function inspectCursor(scope, cwd) {
   const targetPath = cursorConfigPath(scope, cwd);
-  const pluginInstalled = cursorNeusTrustPluginInstalled();
+  const pluginMcpConflicts = cursorBundledMcpPlugins();
   if (!fileExists(targetPath)) {
     return {
       client: 'cursor',
@@ -1197,8 +1302,8 @@ function inspectCursor(scope, cwd) {
       configured: false,
       authConfigured: false,
       targetPath,
-      pluginInstalled,
-      dualInstall: false,
+      pluginMcpConflicts,
+      duplicateOwner: pluginMcpConflicts.length > 0,
       error: null
     };
   }
@@ -1211,8 +1316,8 @@ function inspectCursor(scope, cwd) {
     configured,
     authConfigured: Boolean(server?.headers?.Authorization),
     targetPath,
-    pluginInstalled,
-    dualInstall: configured && pluginInstalled,
+    pluginMcpConflicts,
+    duplicateOwner: pluginMcpConflicts.length > 0,
     error: null
   };
 }
@@ -1314,7 +1419,7 @@ function inspectCodex(scope, cwd) {
     };
   }
 
-  const result = runCommand('codex', ['mcp', 'get', NEUS_MCP_SERVER_NAME], cwd, true);
+  const result = runCommand('codex', ['mcp', 'get', NEUS_MCP_SERVER_NAME], cwd, true, 10_000);
   const configured =
     result.status === 0 &&
     result.stdout.split(/\r?\n/).some(line => line.trim() === `url: ${NEUS_MCP_URL}`);
@@ -1350,7 +1455,7 @@ function createEmptyManifest(source) {
     proofHints: {
       status: 'not-issued',
       qHashes: [],
-      next: ['neus setup', 'neus auth', 'neus check']
+      next: ['neus setup', 'neus auth', 'neus doctor --live']
     }
   };
 }
@@ -1903,42 +2008,6 @@ function printExportSummary(payload, cliOptions = {}) {
   writeCliLine('');
 }
 
-function runInit(options) {
-  const scope = resolveScope(options);
-  const accessKey = resolveAccessKey(options);
-  ensureSafeAuth('init', scope, accessKey);
-  const cwd = process.cwd();
-
-  const clients = resolveClients(scope, options.clients);
-  ensureClientSelection(scope, clients);
-
-  const results = runClientOperations(clients, scope, cwd, options.dryRun, client =>
-    installClient(client, scope, accessKey, options.dryRun, cwd, options)
-  );
-  const payload = {
-    command: 'init',
-    scope,
-    detectedClients: defaultUserClients(),
-    clients,
-    accessKeyConfigured: Boolean(accessKey),
-    results,
-    hasErrors: results.some(result => result.error)
-  };
-
-  if (options.json) {
-    printJson(payload);
-  } else {
-    printFlowSummary('init', scope, results, {
-      nextStep: accessKey ? '' : 'neus auth',
-      cliOptions: options
-    });
-  }
-
-  if (payload.hasErrors) {
-    process.exitCode = 1;
-  }
-}
-
 function base64url(buffer) {
   return Buffer.from(buffer)
     .toString('base64')
@@ -2248,6 +2317,15 @@ async function runSetup(options) {
   const initResults = runClientOperations(clients, scope, cwd, options.dryRun, client =>
     installClient(client, scope, accessKey, options.dryRun, cwd, options)
   );
+  let skills = [];
+  let skillError = null;
+  if (!initResults.some(result => result.error)) {
+    try {
+      skills = installTrustSkill(clients, options.dryRun);
+    } catch (error) {
+      skillError = errorMessage(error);
+    }
+  }
 
   const payload = {
     command: 'setup',
@@ -2256,7 +2334,9 @@ async function runSetup(options) {
     clients,
     accessKeyConfigured: Boolean(accessKey),
     results: initResults,
-    hasErrors: initResults.some(result => result.error)
+    skills,
+    skillError,
+    hasErrors: initResults.some(result => result.error) || Boolean(skillError)
   };
 
   if (payload.hasErrors) {
@@ -2270,8 +2350,8 @@ async function runSetup(options) {
     payload.authRequired = !accessKey && !options.dryRun;
     if (payload.authRequired) {
       payload.nextCommand = clients.length === 1 && clients[0] === 'codex'
-        ? 'neus auth --client codex'
-        : 'neus auth';
+        ? 'npx -y -p @neus/sdk neus auth --client codex'
+        : 'npx -y -p @neus/sdk neus auth';
     }
     printJson(payload);
     return payload;
@@ -2281,6 +2361,15 @@ async function runSetup(options) {
     nextStep: accessKey ? 'Run `neus examples`, then ask your assistant to use NEUS Verify.' : '',
     cliOptions: options
   });
+  writeCliLine(paint('Trust workflow skill', 'cyan'));
+  for (const skill of skills) {
+    logStep(
+      'ok',
+      skill.hosts.join(','),
+      `${skill.targetPath}${skill.changed ? ' (installed)' : ' (current)'}`
+    );
+  }
+  writeCliLine('');
 
   if (!accessKey && !options.dryRun) {
     const authResult = await runAuth(options);
@@ -2422,7 +2511,7 @@ async function resolveLiveAccessKeyWithRefresh(options, scope, cwd) {
   const liveAccessKey = resolveLiveAccessKey(options, scope, cwd);
   const store = readTokenStore();
   // If the CLI is using a stored OAuth access token that has expired, rotate
-  // it silently so `doctor --live` and `check` stay useful without forcing a
+  // it silently so `doctor --live` stays useful without forcing a
   // full re-auth. Access keys (npk_…) and IDE-native OAuth never hit this path.
   if (store?.refreshToken && store?.accessToken && liveAccessKey === store.accessToken && isTokenExpired(store)) {
     try {
@@ -2447,20 +2536,42 @@ async function runDoctor(options) {
   const inspected = runClientOperations(clients, scope, cwd, options.dryRun, client =>
     inspectClient(client, scope, cwd)
   );
+  const skills = inspectTrustSkill(clients);
   const configuredClients = inspected.filter(r => r.configured);
   const liveAccessKey = await resolveLiveAccessKeyWithRefresh(options, scope, cwd);
+  const duplicateClients = inspected
+    .filter(result => result.duplicateOwner)
+    .map(result => ({
+      client: result.client,
+      owners: result.pluginMcpConflicts || []
+    }));
+  const hasUrlOnlyOAuth = inspected.some(
+    result => result.configured && result.authConfigured === false
+  );
   const payload = {
     command: displayCommand,
+    package: '@neus/sdk',
+    packageVersion: CLI_PACKAGE_VERSION,
+    endpoint: NEUS_MCP_URL,
     scope,
     clients: inspected,
+    skills,
+    duplicateConfig: {
+      found: duplicateClients.length > 0,
+      clients: duplicateClients
+    },
     configuredCount: configuredClients.length,
     accessKeyPresent: Boolean(liveAccessKey),
+    authState: liveAccessKey ? 'access-key-or-cli-oauth' : hasUrlOnlyOAuth ? 'client-oauth' : 'not-connected',
     profileConnectable: false,
     agentVerified: false,
     live: options.live,
     mcp: null,
     summary: '',
-    hasErrors: inspected.some(result => result.error)
+    hasErrors:
+      inspected.some(result => result.error) ||
+      skills.some(skill => !skill.installed || !skill.current) ||
+      duplicateClients.length > 0
   };
 
   if (options.live) {
@@ -2515,20 +2626,48 @@ async function runDoctor(options) {
     writeCliLine('');
     writeCliLine(paint('MCP endpoint', 'cyan'));
     writeGuidanceLine(NEUS_MCP_URL);
+    writeCliLine(paint('Trust workflow skill', 'cyan'));
+    for (const skill of skills) {
+      logStep(
+        skill.current ? 'ok' : 'warn',
+        skill.hosts.join(','),
+        skill.current ? skill.targetPath : `${skill.targetPath} (missing or outdated)`
+      );
+    }
     writeCliLine(paint('Profile connection', 'cyan'));
     writeGuidanceLine(`No selected MCP host is configured yet. Run \`${preferredSetupCommand(inspected)}\`.`);
-    writeGuidanceLine(`Then run \`${preferredAuthCommand(inspected)}\` and re-check with \`npx -y -p @neus/sdk neus check\`.`);
+    writeGuidanceLine(
+      `Then run \`${preferredAuthCommand(inspected)}\` and re-check with \`npx -y -p @neus/sdk neus doctor --live\`.`
+    );
     writeCliLine('');
     process.exitCode = 1;
     return;
   }
 
   printFlowSummary(displayCommand, scope, inspected, { cliOptions: options });
+  writeCliLine(paint('Package', 'cyan'));
+  writeGuidanceLine(`@neus/sdk@${CLI_PACKAGE_VERSION}`);
+  writeCliLine(paint('MCP endpoint', 'cyan'));
+  writeGuidanceLine(NEUS_MCP_URL);
+  writeCliLine(paint('Trust workflow skill', 'cyan'));
+  for (const skill of skills) {
+    logStep(
+      skill.current ? 'ok' : 'warn',
+      skill.hosts.join(','),
+      skill.current ? skill.targetPath : `${skill.targetPath} (missing or outdated)`
+    );
+  }
   const hasCodex = inspected.some(result => result.client === 'codex');
-  const cursorDualInstall = inspected.some(result => result.client === 'cursor' && result.dualInstall);
-  if (cursorDualInstall) {
+  const cursorDuplicateOwner = inspected.find(
+    result => result.client === 'cursor' && result.duplicateOwner
+  );
+  if (cursorDuplicateOwner) {
     writeCliLine(paint('Cursor', 'cyan'));
-    logStep('warn', 'cursor', 'neus-trust plugin + ~/.cursor/mcp.json both have NEUS MCP — remove `neus` from mcp.json to avoid a duplicate');
+    logStep(
+      'warn',
+      'cursor',
+      `legacy plugin bundles MCP (${cursorDuplicateOwner.pluginMcpConflicts.join(', ')}) — uninstall it; the CLI is the sole MCP owner`
+    );
     payload.hasErrors = true;
   }
   writeCliLine(paint('Profile connection', 'cyan'));
@@ -2538,15 +2677,14 @@ async function runDoctor(options) {
       // the config, but the IDE handles OAuth natively). This is a valid auth
       // path — the credential lives in the IDE's OAuth lifecycle, not in a
       // static header. Don't say "No account credential found" when OAuth is set up.
-      const hasUrlOnlyOAuth = inspected.some(
-        result => result.configured && !result.authConfigured
-      );
       if (hasUrlOnlyOAuth) {
         writeGuidanceLine('IDE-native OAuth configured. The MCP server handles authentication through your IDE session.');
         if (payload.mcp.reachable) {
           writeGuidanceLine('MCP server is reachable. Ask your assistant to use NEUS tools.');
         } else {
-          writeGuidanceLine('MCP server was not reachable. Check your network or run `neus check` again.');
+          writeGuidanceLine(
+            'MCP server was not reachable. Check your network or run `neus doctor --live` again.'
+          );
           payload.hasErrors = true;
         }
       } else {
@@ -2597,7 +2735,7 @@ async function runDoctor(options) {
       }
     }
   } else if (liveAccessKey) {
-    writeGuidanceLine('Saved credential found. Run `neus check` to confirm live connection.');
+    writeGuidanceLine('Saved credential found. Run `neus doctor --live` to confirm live connection.');
   } else {
     writeGuidanceLine(
       hasCodex
@@ -2690,10 +2828,6 @@ async function main() {
       printUsage(0);
       return;
     }
-    if (command === 'init') {
-      runInit(options);
-      return;
-    }
     if (command === 'auth') {
       const result = await runAuth(options);
       if (result) {
@@ -2729,10 +2863,6 @@ async function main() {
       if (setupResult?.hasErrors) {
         process.exitCode = 1;
       }
-      return;
-    }
-    if (command === 'check') {
-      await runDoctor({ ...options, live: true, displayCommand: 'check' });
       return;
     }
     if (command === 'doctor') {

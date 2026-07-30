@@ -2,14 +2,13 @@
 
 Stop agents from acting blind. Verified identity, limited permissions, and reusable trust receipts.
 
-One setup for Cursor, Claude Code, Codex, and VS Code.
+This plugin contains the NEUS setup skill. It routes every host to the same public CLI and does not register MCP.
 
 **[Install →](https://docs.neus.network/install)**
 
 ```bash
-npm i -g @neus/sdk
-neus setup
-neus check
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus doctor --live
 ```
 
 Ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
@@ -19,14 +18,14 @@ It reuses existing trust receipts first, guides any missing check, then summariz
 Codex:
 
 ```bash
-neus setup --client codex
+npx -y -p @neus/sdk neus setup --client codex
 ```
 
 Claude Code plugin:
 
 ```text
 /plugin marketplace add https://github.com/neus/network
-/plugin install neus-trust@neus
+/plugin install neus-mcp@neus
 ```
 
-Skill: `/neus-trust:neus-trust-workflow`
+Skill: `/neus-mcp:neus-setup`

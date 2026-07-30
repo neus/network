@@ -1448,14 +1448,11 @@ declare module '@neus/sdk/mcp-hosts' {
   export const NEUS_SETUP_CLI: string;
   export const NEUS_SETUP_NPX: string;
   export const NEUS_AUTH_CLI: string;
-  export const NEUS_CHECK_CLI: string;
   export const NEUS_DOCTOR_CLI: string;
   export const NEUS_EXAMPLES_CLI: string;
   export const NEUS_AUTH_NPX: string;
-  export const NEUS_CHECK_NPX: string;
   export const NEUS_DOCTOR_NPX: string;
   export const NEUS_EXAMPLES_NPX: string;
-  export const NEUS_QUICKSTART_INSTALLED: string;
   export const NEUS_QUICKSTART_NPX: string;
   export const NEUS_MOUNT_WORKFLOW: string;
   export function neusMountApply(agentId: string, host?: 'cursor' | 'claude' | 'codex'): string;
@@ -1465,13 +1462,10 @@ declare module '@neus/sdk/mcp-hosts' {
   export function buildNeusMcpHttpConfig(accessKey?: string | null): { type: 'http'; url: string; headers?: { Authorization: string } };
   export function buildCursorMcpConfig(accessKey?: string | null): { url: string; headers?: { Authorization: string } };
   export function buildVsCodeMcpConfig(accessKey?: string | null): { type: 'http'; url: string; headers?: { Authorization: string } };
-  export function buildCursorMcpInstallUrl(accessKey?: string | null): string;
-  export function buildVsCodeMcpInstallUrl(accessKey?: string | null): string;
   export function buildAuthCommandForClient(client: 'claude' | 'codex' | 'cursor' | 'vscode'): string;
   export function buildSetupCommandForClient(client: 'claude' | 'codex' | 'cursor' | 'vscode', accessKey?: string | null): string;
   export function buildSetupCommandForHost(host: 'cursor' | 'claude' | 'codex', accessKey?: string | null): string;
   export function buildSetupNpxOneLiner(client?: 'claude' | 'codex' | 'cursor' | 'vscode'): string;
-  export function supportsMcpInstallDeeplink(host: 'cursor' | 'claude' | 'codex'): boolean;
 }
 
 declare module '@neus/sdk/cli-commands' {
@@ -1480,15 +1474,12 @@ declare module '@neus/sdk/cli-commands' {
   export const NEUS_NPX: string;
   export const NEUS_SETUP_CLI: string;
   export const NEUS_AUTH_CLI: string;
-  export const NEUS_CHECK_CLI: string;
   export const NEUS_DOCTOR_CLI: string;
   export const NEUS_EXAMPLES_CLI: string;
   export const NEUS_SETUP_NPX: string;
   export const NEUS_AUTH_NPX: string;
-  export const NEUS_CHECK_NPX: string;
   export const NEUS_DOCTOR_NPX: string;
   export const NEUS_EXAMPLES_NPX: string;
-  export const NEUS_QUICKSTART_INSTALLED: string;
   export const NEUS_QUICKSTART_NPX: string;
   export const NEUS_MOUNT_WORKFLOW: string;
   export function neusMountApply(agentId: string, host?: 'cursor' | 'claude' | 'codex'): string;

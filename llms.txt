@@ -1,17 +1,17 @@
 # NEUS
 
-> Portable identity, ownership, and permission receipts for apps, agents, and organizations.
+> Portable identity, context, authority, and receipts for humans and AI agents.
 
-NEUS records a completed check as a trust receipt. Supported apps and agents can confirm that receipt later instead of repeating the full process.
+NEUS is the persistent trust layer. It turns identity, ownership, risk, and permission checks into reusable trust receipts — so people, apps, and agents stop re-proving the same facts and connected gates check current state before access, payment, or execution.
 
 ## What NEUS does
 
-- **Trust receipts:** A reusable record of an identity, ownership, or permission check. Show it on a profile, require it for access, or confirm it through the API.
+- **Trust receipts:** A reusable record of an identity, ownership, or permission check. Show it on a profile, require it for access, or confirm it through the API — same receipt, every surface.
 - **Gates:** Receipt-based access to content, rewards, and member areas, with optional USDC or card checkout.
-- **Agent trust:** Verifiable identity, limited permissions, and reusable receipts.
+- **Agent trust:** Verifiable agent identity, controller-approved authority, spend caps, and expiration — checked before tools run.
 - **Unique-person checks:** Reuse proof-of-human and wallet-risk results across a product.
-- MCP for assistants: One setup writes supported editor configuration and signs the user in with OAuth.
-- Trust workflow skill: https://github.com/neus/network/blob/main/plugins/neus-trust/skills/neus-trust-workflow/SKILL.md
+- **MCP for assistants:** One setup writes supported editor configuration and signs the user in with OAuth — same identity, context, and authority in Cursor, Claude Code, Codex, and VS Code.
+- **Trust workflow skill:** https://github.com/neus/network/blob/main/sdk/skills/neus-trust-workflow/SKILL.md
 
 ## Quick start
 
@@ -19,7 +19,7 @@ Install the SDK and wire MCP for your editor:
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
+npx -y -p @neus/sdk neus doctor --live
 ```
 
 Then ask your assistant: "Use NEUS Verify before taking sensitive actions."

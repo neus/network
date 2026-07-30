@@ -24,14 +24,14 @@ const surfaces = {
   'sdk/package-lock.json': readJson('sdk/package-lock.json').version,
   'mcp/npm-dist/package.json': readJson('mcp/npm-dist/package.json').version,
   'mcp/npm-dist/server.json': readJson('mcp/npm-dist/server.json').version,
-  'plugins/neus-trust/.cursor-plugin/plugin.json': readJson('plugins/neus-trust/.cursor-plugin/plugin.json').version,
-  'plugins/neus-trust/.claude-plugin/plugin.json': readJson('plugins/neus-trust/.claude-plugin/plugin.json').version,
-  'plugins/neus-trust/.codex-plugin/plugin.json': readJson('plugins/neus-trust/.codex-plugin/plugin.json').version,
+  'plugins/neus-mcp/.cursor-plugin/plugin.json': readJson('plugins/neus-mcp/.cursor-plugin/plugin.json').version,
+  'plugins/neus-mcp/.claude-plugin/plugin.json': readJson('plugins/neus-mcp/.claude-plugin/plugin.json').version,
+  'plugins/neus-mcp/.codex-plugin/plugin.json': readJson('plugins/neus-mcp/.codex-plugin/plugin.json').version,
   '.cursor-plugin/marketplace.json': readJson('.cursor-plugin/marketplace.json').metadata?.version,
   '.claude-plugin/marketplace.json': readJson('.claude-plugin/marketplace.json').metadata?.version,
   '.agents/plugins/marketplace.json': readJson('.agents/plugins/marketplace.json').metadata?.version,
-  'plugins/neus-trust/skills/neus-trust-workflow/SKILL.md': (() => {
-    const raw = readRaw('plugins/neus-trust/skills/neus-trust-workflow/SKILL.md');
+  'sdk/skills/neus-trust-workflow/SKILL.md': (() => {
+    const raw = readRaw('sdk/skills/neus-trust-workflow/SKILL.md');
     // agentskills.io: version lives under metadata.version; accept legacy top-level version too.
     return (
       (raw.match(/^\s*version:\s*"([^"]+)"\s*$/m) || [])[1] ||

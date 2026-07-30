@@ -10,17 +10,21 @@ Hosted endpoint: **`https://mcp.neus.network/mcp`**
 
 ## Quick start
 
-Run [Install NEUS](../install) first (`neus setup` · `neus check`). Return here for access keys, disconnect, migrate, and per-editor config paths.
+Run one command:
 
-`neus setup` detects your editors, configures hosted MCP, and signs you in. By default it uses browser OAuth for Cursor, VS Code, and Claude Code. If you set `NEUS_ACCESS_KEY` first, the CLI uses that key instead. Pass `--access-key <npk_...>` to override, and `--json` for scripted installs.
+```bash
+npx -y -p @neus/sdk neus setup
+```
+
+Installs the trust skill, detects your editors, and signs you in with OAuth. Marketplace plugins are an optional shortcut — they never register another MCP server.
 
 ## Daily commands
 
 | Step | Command |
 |------|---------|
-| Connect this machine | `neus setup` |
+| Connect this machine | `npx -y -p @neus/sdk neus setup` |
 | Connect an agent to this project | `neus mount <agentId> --apply cursor` |
-| Health check | `neus doctor --live` (alias: `neus check`) |
+| Health check | `npx -y -p @neus/sdk neus doctor --live` |
 | Read trust receipts | MCP tool `neus_proofs_get` |
 
 ## Access keys
@@ -85,9 +89,7 @@ neus import --from claude-desktop
 
 Per-editor install paths (Cursor, VS Code, Claude Code, and more): **[Install NEUS](../install)**.
 
-`neus setup` connects **Cursor**, **Codex**, **VS Code**, and **Claude Code** in one command. Other MCP hosts (including Cline) use the same hosted URL — see [IDE plugin](./ide-plugin).
-
-**Cursor:** install the **neus-trust** plugin **or** run `neus setup --client cursor` — not both. The plugin already provides the `neus` MCP server; adding a second entry in `~/.cursor/mcp.json` creates a duplicate. `neus setup` soft-skips Cursor when the plugin is detected (pass `--client cursor` to override). Public tools = **13** (correct).
+The setup command connects **Cursor**, **Codex**, **VS Code**, and **Claude Code** and installs the trust workflow skill. Other MCP hosts use the same hosted URL — see [IDE plugin](./ide-plugin).
 
 | Host | User scope | Project scope |
 | --- | --- | --- |

@@ -153,6 +153,9 @@ async function validateCodexMarketplace() {
     if (!manifest.interface || typeof manifest.interface.displayName !== "string") {
       addError(`${entry.name}: .codex-plugin/plugin.json interface.displayName is required for marketplace rendering.`);
     }
+    if (entry.name === "neus-mcp" && manifest.mcpServers !== undefined) {
+      addError(`${entry.name}: Codex manifest must be skill-only; the public NEUS CLI owns MCP registration.`);
+    }
   }
 }
 
@@ -169,7 +172,7 @@ async function main() {
 
   const entries = await fs.readdir(pluginsDir, { withFileTypes: true });
   for (const entry of entries) {
-    if (entry.isDirectory()) {
+    if (entry.isDirectory() && await pathExists(path.join(pluginsDir, entry.name, ".mcp.json"))) {
       await validateSpecMcp(path.join(pluginsDir, entry.name), entry.name);
     }
   }

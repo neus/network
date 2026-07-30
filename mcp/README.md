@@ -1,13 +1,12 @@
 # NEUS MCP
 
-Verified identity, limited permissions, and reusable trust receipts for AI agents.
+Portable identity, trusted context, scoped authority, and reusable receipts for AI agents — checked before sensitive actions.
 
 **Endpoint:** `https://mcp.neus.network/mcp`
 
 ```bash
-npm i -g @neus/sdk
-neus setup
-neus check
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus doctor --live
 ```
 
 [docs.neus.network/install](https://docs.neus.network/install)

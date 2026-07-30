@@ -5,15 +5,8 @@ Load this file only when the user needs install, sign-in, access keys, or projec
 ## Install
 
 ```bash
-npm i -g @neus/sdk
-neus setup
-neus check
-```
-
-Or without installing:
-
-```bash
 npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus doctor --live
 ```
 
 `neus setup` configures hosted NEUS MCP for Cursor, Codex, VS Code, and Claude Code and starts the selected OAuth flow.
@@ -50,25 +43,4 @@ neus mount <agentId> --apply cursor
 
 Use `neus mount` only when acting as a registered profile agent. For receipt checks and secrets, `neus setup` plus `neus_context` is enough.
 
-## Plugin install (optional)
-
-Claude Code:
-
-```text
-/plugin marketplace add https://github.com/neus/network
-/plugin install neus-trust@neus
-/neus-trust:neus-trust-workflow
-```
-
-Cursor / Codex: add the marketplace from [Install NEUS](https://docs.neus.network/install), then install **neus-trust**.
-
-### Cursor: plugin or CLI, not both
-
-The **neus-trust** plugin already provides the `neus` MCP server in Cursor. If you install the plugin, **do not** also run `neus setup --client cursor` — that writes a second `neus` entry into `~/.cursor/mcp.json` and creates a duplicate NEUS MCP connection.
-
-| Path | When to use |
-|------|-------------|
-| **neus-trust plugin** | You want the plugin's skill + MCP in one install. Leave `~/.cursor/mcp.json` empty. |
-| **`neus setup --client cursor`** | You want MCP only, no plugin. Skip plugin install. |
-
-If both are present, `neus doctor` warns and `neus setup` soft-skips Cursor unless you pass `--client cursor` explicitly.
+The setup command installs this workflow skill together with the single hosted MCP registration.

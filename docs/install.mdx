@@ -4,25 +4,29 @@ description: One command. Your assistant uses your NEUS account in Cursor, Claud
 icon: download
 ---
 
-Connect once. Your assistant carries who you are and what it may do across editors. It reuses saved results when it can, then reports **Passed**, **Action needed**, or **Blocked**.
+Connect once. Your assistant carries your identity, trusted context, and scoped authority across editors — reusing what's already verified, enforcing limits before sensitive actions, and leaving a receipt for every result. It reports **Passed**, **Action needed**, or **Blocked**.
 
 ## Install
 
 ```bash
-npm i -g @neus/sdk
-neus setup
-neus check
+npx -y -p @neus/sdk neus setup
 ```
 
-No global install? Run `npx -y -p @neus/sdk neus setup` once.
+Installs the trust skill, detects Cursor, Claude Code, Codex, and VS Code, and signs you in. One command per editor — no manual MCP config. Your assistant can now check who is acting, what trusted context it carries, and what it's authorized to do before it acts.
 
-Ask your assistant:
+Confirm it works:
+
+```bash
+npx -y -p @neus/sdk neus doctor --live
+```
+
+Then ask your assistant:
 
 ```txt
-Use NEUS for my identity and what I allow. Reuse saved results when you can.
+Use NEUS for my identity and what I allow. Reuse saved receipts when you can, verify when you must, and check authority before sensitive actions.
 ```
 
-Example prompts: [MCP journeys](./mcp/journeys).
+More prompts: [MCP journeys](./mcp/journeys).
 
 ## Supported tools
 
@@ -34,7 +38,7 @@ Example prompts: [MCP journeys](./mcp/journeys).
 
 ## Bring your own agent
 
-Already have agents in Cursor, Claude Code, or Claude Desktop? NEUS does not replace them. It adds identity, authority, and saved results on top.
+Already have agents in Cursor, Claude Code, or Claude Desktop? NEUS does not replace them. It adds identity, trusted context, authority, and reusable receipts on top — so every action is provable and auditable.
 
 **Import existing IDE config:**
 
@@ -61,7 +65,6 @@ Writes `.neus/mount.json` with the agent's verified identity, permissions, and h
 | Access keys (servers / CI) | [MCP setup](./mcp/setup#access-keys) |
 | Per-editor config paths | [MCP setup](./mcp/setup#client-setup) |
 | Codex setup (`--client codex`) | [MCP setup](./mcp/setup) |
-| Claude Code plugin | `/plugin marketplace add https://github.com/neus/network` then `/plugin install neus-trust@neus` |
-| Cursor: plugin or `neus setup`, not both | The **neus-trust** plugin already provides the `neus` MCP server; adding a second entry in `~/.cursor/mcp.json` creates a duplicate. `neus setup` soft-skips Cursor when the plugin is detected. |
+| Marketplace helper (optional) | Install **neus-mcp** in Cursor or Claude Code for a setup shortcut. The CLI remains the source of truth for MCP registration. |
 | Assistant journeys | [MCP journeys](./mcp/journeys) |
 | Trust receipt APIs | [API overview](./api/overview) |

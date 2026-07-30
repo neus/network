@@ -95,11 +95,20 @@ async function main() {
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
     const pluginDir = path.join(pluginsDir, entry.name);
-    // Dual-host packaging: Cursor discovers mcp.json; Claude/Codex use .mcp.json.
-    // If either file exists (or this is the neus-trust plugin), require Cursor-native mcp.json.
+    // NEUS marketplace plugins are skill-only. The public CLI is the sole MCP
+    // registration owner, so shipping mcp.json here would recreate dual installs.
+    if (entry.name === "neus-mcp") {
+      for (const fileName of ["mcp.json", ".mcp.json"]) {
+        if (await pathExists(path.join(pluginDir, fileName))) {
+          addError(
+            `${path.relative(repoRoot, path.join(pluginDir, fileName))}: must not exist; run the public NEUS CLI to register MCP.`
+          );
+        }
+      }
+      continue;
+    }
     const hasSpecMcp = await pathExists(path.join(pluginDir, ".mcp.json"));
-    const requireFile = entry.name === "neus-trust" || hasSpecMcp;
-    await validatePluginMcp(pluginDir, { requireFile });
+    await validatePluginMcp(pluginDir, { requireFile: hasSpecMcp });
   }
 
   summarizeAndExit();
@@ -118,4 +127,3 @@ function summarizeAndExit() {
 }
 
 await main();
-

@@ -1,8 +1,8 @@
 # @neus/sdk
 
-Create, check, and reuse NEUS trust receipts from apps and backends. Includes the **`neus`** CLI for assistant setup and agent context.
+Build with portable trust receipts. Create, check, and reuse verified identity, ownership, and authority from apps and backends. Includes the **`neus`** CLI for assistant setup and agent context.
 
-Use receipts for identity, ownership, access, and agent permission checks.
+Receipts carry identity, trusted context, and scoped authority — so connected gates check current state before access, payment, or execution instead of re-proving the same facts every time.
 
 ## Install (library)
 
@@ -12,18 +12,15 @@ npm install @neus/sdk
 
 ## Connect editors and assistants
 
-Install once, then use short commands:
+No install needed:
 
 ```bash
-npm i -g @neus/sdk
-neus setup
-neus check
-neus examples
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus doctor --live
+npx -y -p @neus/sdk neus examples
 ```
 
-Or run without installing: `npx -y -p @neus/sdk neus setup`
-
-Then ask your assistant: **"Use NEUS Verify before taking sensitive actions."**
+Then ask your assistant: **"Use NEUS before sensitive actions. Reuse my saved receipts, check authority, and keep an audit trail."**
 
 ## Connect an agent to a project
 
@@ -33,7 +30,7 @@ neus mount <agentId> --apply cursor
 neus doctor --live
 ```
 
-This writes the agent context and editor rules in the current project. See [Connect Agent Context](https://docs.neus.network/agents/runtime-mount).
+Loads the agent's verified identity, scoped authority, and host rules into the project. See [Connect Agent Context](https://docs.neus.network/agents/runtime-mount).
 
 ## MCP docs
 
@@ -48,11 +45,11 @@ Prefer `neus setup` over hand-editing config files so every host stays on **`htt
 
 ## What you can ship
 
-- Hosted verification flows that return reusable receipts
+- Hosted verification flows that return reusable trust receipts
 - Server checks before access, rewards, payments, or actions
 - React gates with `VerifyGate`
-- Agent identity and limited permissions
-- MCP setup for assistants and agent tools
+- Agent identity, controller-approved authority, and spend caps
+- MCP setup so assistants carry identity, context, and authority across editors
 
 ## Hosted Verify
 
@@ -202,24 +199,23 @@ const client = new NeusClient({
 ## MCP step-by-step
 
 ```bash
-npm i -g @neus/sdk
-neus setup
-neus check
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus doctor --live
 ```
 
-`neus setup` configures MCP and signs you in: it uses `NEUS_ACCESS_KEY` from the environment when set, otherwise the selected host starts OAuth. Cursor, VS Code, and Claude Code use browser sign-in on NEUS. Pass `--access-key <npk_...>` only to override.
+`neus setup` configures MCP and signs you in. It uses `NEUS_ACCESS_KEY` from the environment when set; otherwise the selected host starts OAuth. Pass `--access-key <npk_...>` only to override.
 
-For Codex, run `neus setup --client codex`; setup starts the host OAuth flow.
+For Codex, run `neus setup --client codex`.
 
 No global install? Run `npx -y -p @neus/sdk neus setup` once.
 
 Embed install UX with **`@neus/sdk/mcp-hosts`** (setup commands, deeplinks, host labels).
 
-Claude Code users can install **`neus-trust@neus`** for the bundled session workflow:
+Claude Code users can install **`neus-mcp@neus`** for a setup shortcut:
 
 ```text
 /plugin marketplace add https://github.com/neus/network
-/plugin install neus-trust@neus
+/plugin install neus-mcp@neus
 ```
 
 Other hosts: [Install NEUS](https://docs.neus.network/install).

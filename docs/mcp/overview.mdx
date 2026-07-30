@@ -7,15 +7,15 @@ icon: plug
 "twitter:image": "/images/og-mcp.png"
 ---
 
-OAuth once. Your assistant loads your profile and what it may do in Cursor, Claude Code, Codex, and VS Code. Your backend can read the same saved results through the API.
+OAuth once. Your assistant loads your identity, trusted context, and authority across Cursor, Claude Code, Codex, and VS Code — then reuses saved receipts before sensitive actions, confirms agent limits before tools run, and keeps an auditable record. Your backend reads the same receipts through the API.
 
 **First run:** [Install NEUS](../install). Access keys: [MCP setup](./setup). OAuth details: [MCP OAuth](./oauth).
 
 ## How it works
 
-Assistants load your signed-in profile once, then reuse saved results when they can.
+Assistants load your signed-in profile once, then reuse saved receipts when they can.
 
-- Look up a saved result before a sensitive action
+- Look up a saved receipt before a sensitive action
 - Guide any missing step
 - Confirm agent identity and authority before tools run
 - Store or revoke secrets when signed in
@@ -27,7 +27,7 @@ Journeys: [MCP journeys](./journeys) · Tools: [MCP tools](./tools)
 ## Agent setup
 
 1. Call `neus_agent_link`.
-2. If linked, reuse the results.
+2. If linked, reuse the receipts.
 3. If missing, call `neus_agent_create` and finish the hosted steps.
 4. Call `neus_agent_link` again until `linked: true`.
 
@@ -39,7 +39,7 @@ Details: [Agent verification flow](../agents/agent-verification-flow) · [Connec
 neus mount <agentId> --apply cursor
 ```
 
-Writes project config your editor reads on startup. Run again after permission changes.
+Loads the agent's verified identity, scoped authority, and host rules into the project. Run again after permission changes.
 
 ## Reference
 

@@ -5,11 +5,11 @@
 </p>
 
 <p align="center">
-  <strong>The trust layer for people and AI.</strong> Portable identity, ownership, and authorization that travels.
+  <strong>Portable Trust Infrastructure for Humans and AI.</strong>
 </p>
 
 <p align="center">
-  Prove once. Reuse everywhere — shared context, clear authority, and an audit trail for every action.
+  Stop people and agents from the wrong action. Set what they may do, and check it before access, payment, or execution.
 </p>
 
 <p align="center">
@@ -48,28 +48,28 @@ A receipt is something you already earned: who someone is, what they own, what t
 
 ### One command for assistants
 
-Connect once. Your assistant gets portable trust context — identity, authority, and receipts — so it can reuse what’s already proven, authorize actions against real limits, and keep an audit trail without leaving the editor.
+Connect once. Your assistant carries your identity, trusted context, and scoped authority across editors — reusing what's verified, checking limits before sensitive actions, and leaving a receipt for every result.
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus check
+npx -y -p @neus/sdk neus doctor --live
 ```
 
 Then ask your assistant:
 
-> Use NEUS so my identity, permissions, and context travel with me. Reuse receipts when you can, verify when you must, authorize actions against those limits, and leave an audit trail.
+> Use NEUS so my identity, context, and authority travel with me. Reuse receipts when you can, verify when you must, and check authority before sensitive actions.
 
 | Path | Next step |
 | ---- | --------- |
 | AI assistants (Cursor, Claude Code, Codex, VS Code) | [Install NEUS](https://docs.neus.network/install) |
 | MCP setup | [MCP setup](https://docs.neus.network/mcp/setup) · Hosted URL: `https://mcp.neus.network/mcp` |
 | First app integration | [Quickstart](https://docs.neus.network/quickstart) |
-| Prove once, reuse everywhere | [Integration guide](https://docs.neus.network/integration) |
+| Reuse everywhere | [Integration guide](https://docs.neus.network/integration) |
 | React gate | [VerifyGate](https://docs.neus.network/widgets/verifygate) |
 | Server / API | [API overview](https://docs.neus.network/api/overview) |
 | Agent trust | [Agents overview](https://docs.neus.network/agents/overview) |
 
-Optional IDE plugin: install **`neus-trust@neus`** from this repo’s marketplace — see [Install NEUS](https://docs.neus.network/install).
+Optional setup shortcut: install **`neus-mcp@neus`** from this repo’s marketplace. See [Install NEUS](https://docs.neus.network/install).
 
 ### Add trust to an app
 
@@ -118,7 +118,7 @@ The live verifier catalog is documented at [docs.neus.network/verification/verif
 
 ## This repository
 
-Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widgets, examples, specs, and the **`neus-trust`** Claude Code / Cursor plugin ([install](https://docs.neus.network/install)).
+Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widgets, examples, specs, and the **`neus-mcp`** Claude Code / Cursor setup helper ([install](https://docs.neus.network/install)).
 
 ## Open standard
 

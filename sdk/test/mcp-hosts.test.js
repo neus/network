@@ -5,12 +5,10 @@ import {
   NEUS_MCP_URL,
   buildAuthCommandForClient,
   buildCursorMcpConfig,
-  buildCursorMcpInstallUrl,
   buildNeusMcpHttpConfig,
   buildSetupCommandForClient,
   buildSetupCommandForHost,
   buildVsCodeMcpConfig,
-  buildVsCodeMcpInstallUrl
 } from '../mcp-hosts.js';
 
 describe('mcp-hosts', () => {
@@ -56,28 +54,13 @@ describe('mcp-hosts', () => {
     });
   });
 
-  it('builds Cursor install deeplink', () => {
-    const url = buildCursorMcpInstallUrl();
-    expect(url.startsWith('cursor://anysphere.cursor-deeplink/mcp/install?')).toBe(true);
-    expect(url).toContain(`name=${encodeURIComponent(NEUS_MCP_SERVER_NAME)}`);
-    expect(url).toContain('config=');
-  });
-
-  it('builds VS Code install deeplink', () => {
-    const url = buildVsCodeMcpInstallUrl();
-    expect(url.startsWith('vscode:mcp/install?')).toBe(true);
-    const payload = JSON.parse(decodeURIComponent(url.replace('vscode:mcp/install?', '')));
-    expect(payload.name).toBe(NEUS_MCP_SERVER_NAME);
-    expect(payload.url).toBe(NEUS_MCP_URL);
-  });
-
   it('builds setup commands per client', () => {
     expect(buildSetupCommandForClient('cursor')).toContain('--client cursor');
     expect(buildSetupCommandForClient('codex')).toContain('--client codex');
     expect(buildSetupCommandForClient('vscode')).toContain('--client vscode');
     expect(buildSetupCommandForClient('claude')).toContain('--client claude');
     expect(buildSetupCommandForClient('codex', 'npk_x')).toBe(
-      'npm i -g @neus/sdk\nneus setup --client codex --access-key npk_x'
+      'npx -y -p @neus/sdk neus setup --client codex --access-key npk_x'
     );
   });
 
@@ -88,7 +71,9 @@ describe('mcp-hosts', () => {
 
   it('maps product hosts to CLI clients', () => {
     expect(buildSetupCommandForHost('codex')).toContain('--client codex');
-    expect(buildSetupCommandForHost('codex')).toContain('neus auth --client codex');
+    expect(buildSetupCommandForHost('codex')).toBe(
+      'npx -y -p @neus/sdk neus setup --client codex'
+    );
   });
 
 });

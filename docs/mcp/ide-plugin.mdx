@@ -15,19 +15,19 @@ To use a profile agent in a project, choose **Connect in** on its agent card, th
   <Tab title="Quick start">
 
 ```bash
-neus setup
-neus check
+npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus doctor --live
 ```
 
-One OAuth sign-in configures hosted NEUS MCP for Cursor, Claude Code, and VS Code.
+Installs the trust skill and configures hosted MCP for Cursor, Claude Code, Codex, and VS Code in one command. Marketplace plugins are an optional setup shortcut — never a second MCP registration.
 
 Ask your assistant: **"Before I take a sensitive action, use NEUS. Reuse what I already have."** It looks up identity, authority, and saved results first, then summarizes as Passed, Action needed, or Blocked.
 
 ```bash
-neus setup --client cursor
-neus setup --client codex
-neus setup --client vscode
-neus setup --client claude
+npx -y -p @neus/sdk neus setup --client cursor
+npx -y -p @neus/sdk neus setup --client codex
+npx -y -p @neus/sdk neus setup --client vscode
+npx -y -p @neus/sdk neus setup --client claude
 ```
 
   </Tab>
@@ -35,13 +35,11 @@ neus setup --client claude
   <Tab title="Cursor">
     <Icon icon="/images/brandLogos/cursor.svg" size={18} /> **Cursor**
 
-**One NEUS MCP only.** Prefer the **neus-trust** plugin (OAuth). If the plugin is installed, keep `~/.cursor/mcp.json` without a `neus` entry (`{"mcpServers":{}}`). Do not run `neus setup --client cursor` on top of the plugin — that registers the same host twice.
-
-Without the plugin, use setup **or** URL-only config (not both):
-
 ```bash
-neus setup --client cursor
+npx -y -p @neus/sdk neus setup --client cursor
 ```
+
+Writes the single user-level registration at `~/.cursor/mcp.json`:
 
 ```json
 {
@@ -55,13 +53,13 @@ neus setup --client cursor
 
 Expected public tool list: **13**. Profile loads via `neus_context` when signed in.
 
-**NEUS plugin** (trust receipts, agent permissions, session workflow):
+**Optional marketplace setup helper** (no MCP registration):
 
 <Accordion title="Cursor manual install">
 ```text
 Cursor → Settings → Cursor Plugins → Add marketplace
 Marketplace URL: https://github.com/neus/network
-Install: neus-trust
+Install: neus-mcp
 ```
 </Accordion>
 
@@ -71,19 +69,19 @@ Install: neus-trust
     <Icon icon="/images/brandLogos/openai.svg" size={18} /> **Codex**
 
 ```bash
-neus setup --client codex
+npx -y -p @neus/sdk neus setup --client codex
 ```
 
 Setup starts Codex OAuth. If your host asks you to sign in again, use `codex mcp login neus`.
 
 Config path: `~/.codex/config.toml`
 
-**NEUS plugin** (trust receipts, agent permissions, session workflow):
+**Optional marketplace setup helper** (no MCP registration):
 
 <Accordion title="Codex manual install">
 ```text
 codex plugin marketplace add https://github.com/neus/network
-codex plugin install neus-trust
+codex plugin install neus-mcp
 ```
 </Accordion>
 
@@ -93,7 +91,7 @@ codex plugin install neus-trust
     <Icon icon="/images/brandLogos/microsoft.svg" size={18} /> **VS Code**
 
 ```bash
-neus setup --client vscode
+npx -y -p @neus/sdk neus setup --client vscode
 ```
 
 | OS | Path |
@@ -110,16 +108,16 @@ Project scope: `./.vscode/mcp.json`
     <Icon icon="/images/brandLogos/anthropic.svg" size={18} /> **Claude Code**
 
 ```bash
-neus setup --client claude
+npx -y -p @neus/sdk neus setup --client claude
 ```
 
-**NEUS plugin** (trust receipts, agent permissions, session workflow):
+**Optional marketplace setup helper** (no MCP registration):
 
 <Accordion title="Claude Code manual install">
 ```text
 /plugin marketplace add https://github.com/neus/network
-/plugin install neus-trust@neus
-/neus-trust:neus-trust-workflow
+/plugin install neus-mcp@neus
+/neus-mcp:neus-setup
 ```
 </Accordion>
 
@@ -138,7 +136,7 @@ Add remote MCP URL **`https://mcp.neus.network/mcp`** in the host settings, or t
 | Gemini CLI | `~/.gemini/settings.json` or `gemini mcp add --transport http neus https://mcp.neus.network/mcp` |
 | ChatGPT | Remote MCP URL in client settings |
 
-For servers and CI, use Profile access keys in bearer headers: [Auth](./auth). Install **neus-trust@neus** for the bundled trust workflow skill in hosts that support plugins.
+For servers and CI, use Profile access keys in bearer headers: [Auth](./auth).
 
 ```json
 {
@@ -154,7 +152,7 @@ For servers and CI, use Profile access keys in bearer headers: [Auth](./auth). I
 ## Servers and CI
 
 ```bash
-neus setup --access-key <npk_...>
+npx -y -p @neus/sdk neus setup --access-key <npk_...>
 ```
 
 Keys: [Profile -> Account](https://neus.network/profile?tab=account). Never paste keys into chat.

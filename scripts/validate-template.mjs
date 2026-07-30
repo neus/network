@@ -373,10 +373,6 @@ async function main() {
       addWarning(`${entry.name}: no hooks/hooks.json file found (only needed when using hooks).`);
     }
 
-    const cursorMcpPath = path.join(pluginDir, "mcp.json");
-    if (!(await pathExists(cursorMcpPath))) {
-      addWarning(`${entry.name}: no mcp.json file found (Cursor discovers MCP servers from mcp.json).`);
-    }
   }
 
   summarizeAndExit();

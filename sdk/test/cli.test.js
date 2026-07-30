@@ -270,11 +270,11 @@ describe('neus CLI', () => {
   it('configures detected clients in user scope by default', async () => {
     const context = await makeCliContext();
 
-    const { stdout, stderr } = await runCli(['init', '--json'], context);
+    const { stdout, stderr } = await runCli(['setup', '--json'], context);
     const payload = JSON.parse(stdout);
 
     expect(stderr).toBe('');
-    expect(payload.command).toBe('init');
+    expect(payload.command).toBe('setup');
     expect(payload.scope).toBe('user');
     expect(payload.detectedClients.sort()).toEqual(['claude', 'codex', 'cursor', 'vscode']);
 
@@ -409,7 +409,7 @@ describe('neus CLI', () => {
 
     expect(payload.accessKeyConfigured).toBe(false);
     expect(payload.authRequired).toBe(true);
-    expect(payload.nextCommand).toBe('neus auth');
+    expect(payload.nextCommand).toBe('npx -y -p @neus/sdk neus auth');
 
     const cursorConfig = JSON.parse(
       await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
@@ -544,7 +544,7 @@ describe('neus CLI', () => {
     await fs.mkdir(path.dirname(vscodeConfigPath), { recursive: true });
     await fs.writeFile(vscodeConfigPath, '{"servers":', 'utf8');
 
-    await expect(runCli(['init', '--json'], context)).rejects.toMatchObject({
+    await expect(runCli(['setup', '--json'], context)).rejects.toMatchObject({
       code: 1
     });
 
@@ -622,12 +622,33 @@ describe('neus CLI', () => {
     expect(payload.prompts).toHaveLength(6);
   });
 
-  it('runs check as doctor --live', async () => {
+  it('rejects removed command aliases', async () => {
     const context = await makeCliContext();
-    const { stdout } = await runCli(['check', '--json'], context);
-    const payload = JSON.parse(stdout);
 
-    expect(payload.command).toBe('check');
-    expect(payload.live).toBe(true);
+    await expect(runCli(['init', '--json'], context)).rejects.toMatchObject({ code: 1 });
+    await expect(runCli(['check', '--json'], context)).rejects.toMatchObject({ code: 1 });
+  });
+
+  it('refuses to create a Cursor duplicate when a legacy plugin bundles MCP', async () => {
+    const context = await makeCliContext();
+    const legacyPluginDir = path.join(
+      context.homeDir,
+      '.cursor',
+      'plugins',
+      'cache',
+      'neus',
+      'neus-mcp',
+      'legacy-commit'
+    );
+    await fs.mkdir(legacyPluginDir, { recursive: true });
+    await fs.writeFile(
+      path.join(legacyPluginDir, 'mcp.json'),
+      JSON.stringify({ mcpServers: { neus: { url: 'https://mcp.neus.network/mcp' } } }),
+      'utf8'
+    );
+
+    await expect(
+      runCli(['setup', '--client', 'cursor', '--json'], context)
+    ).rejects.toMatchObject({ code: 1 });
   });
 });
