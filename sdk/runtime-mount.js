@@ -264,20 +264,20 @@ export function buildRuntimeBundle(input) {
     },
     delegation: delegation
       ? {
-          controllerWallet: normalizeWallet(delegation.controllerWallet) || asString(delegation.controllerWallet),
-          scope: asString(delegation.scope) || undefined,
-          allowedActions,
-          deniedActions,
-          runtimePolicy: delegation.runtimePolicy,
-          approvalPolicy: approvalPolicy || undefined,
-          expiresAt: delegation.expiresAt ?? null,
-          isExpired: Boolean(delegation.isExpired),
-          maxSpend: delegation.maxSpend,
-          instructions: asString(delegation.instructions) || undefined,
-          skills: Array.isArray(delegation.skills) ? delegation.skills : undefined,
-          provider: asString(delegation.provider) || undefined,
-          model: asString(delegation.model) || undefined
-        }
+        controllerWallet: normalizeWallet(delegation.controllerWallet) || asString(delegation.controllerWallet),
+        scope: asString(delegation.scope) || undefined,
+        allowedActions,
+        deniedActions,
+        runtimePolicy: delegation.runtimePolicy,
+        approvalPolicy: approvalPolicy || undefined,
+        expiresAt: delegation.expiresAt ?? null,
+        isExpired: Boolean(delegation.isExpired),
+        maxSpend: delegation.maxSpend,
+        instructions: asString(delegation.instructions) || undefined,
+        skills: Array.isArray(delegation.skills) ? delegation.skills : undefined,
+        provider: asString(delegation.provider) || undefined,
+        model: asString(delegation.model) || undefined
+      }
       : null,
     effectiveRuntime,
     tools: Array.isArray(input.tools) ? input.tools : [],
@@ -450,24 +450,24 @@ export async function resolveRuntimeBundleFromMcp(input) {
     }),
     controllerWallet
       ? input.callMcpTool({
-          name: 'neus_proofs_get',
-          args: { identifier: controllerWallet, verifierId: 'agent-delegation', limit: 50 },
-          accessKey,
-          sessionId,
-          signal: input.signal
-        })
+        name: 'neus_proofs_get',
+        args: { identifier: controllerWallet, verifierId: 'agent-delegation', limit: 50 },
+        accessKey,
+        sessionId,
+        signal: input.signal
+      })
       : Promise.resolve({ ok: false })
   ]);
 
   const identityProofs = identityPage.ok
     ? /** @type {unknown[]} */ (
-        identityPage.payload?.data?.proofs || identityPage.payload?.proofs || []
-      )
+      identityPage.payload?.data?.proofs || identityPage.payload?.proofs || []
+    )
     : [];
   const delegationProofs = delegationPage.ok
     ? /** @type {unknown[]} */ (
-        delegationPage.payload?.data?.proofs || delegationPage.payload?.proofs || []
-      )
+      delegationPage.payload?.data?.proofs || delegationPage.payload?.proofs || []
+    )
     : [];
 
   const idCtx = extractAgentContextFromProofs(identityProofs);
@@ -555,7 +555,7 @@ export function buildRuntimeMountFromRoster(roster, selector, controllerWallet) 
   if (!identity) {
     return {
       error: 'identity_not_found',
-      message: 'No agent-identity proof matches the requested agent.',
+      message: 'No agent-identity proof matches the requested agent.'
     };
   }
   const agentWallet = normalizeWallet(identity.agentWallet);

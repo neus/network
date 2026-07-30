@@ -22,7 +22,7 @@ export {
   neusMountApply,
   neusMountApplyNpx,
   neusCmd,
-  neusNpx,
+  neusNpx
 } from './cli-commands.js';
 
 export const NEUS_MCP_SERVER_NAME = 'neus';
@@ -39,14 +39,14 @@ export const IDE_HOST_LABELS = {
   cursor: 'Cursor',
   claude: 'Claude Code',
   codex: 'Codex',
-  vscode: 'VS Code',
+  vscode: 'VS Code'
 };
 
 export const IDE_HOST_BRAND_LOGOS = {
   cursor: '/images/brandLogos/cursor.svg',
   claude: '/images/brandLogos/anthropic.svg',
   codex: '/images/brandLogos/openai.svg',
-  vscode: '/images/brandLogos/microsoft.svg',
+  vscode: '/images/brandLogos/microsoft.svg'
 };
 
 /**
@@ -96,7 +96,7 @@ export function buildNeusMcpHttpConfig(accessKey) {
   return {
     type: 'http',
     url: NEUS_MCP_URL,
-    ...(key ? { headers: { Authorization: `Bearer ${key}` } } : {}),
+    ...(key ? { headers: { Authorization: `Bearer ${key}` } } : {})
   };
 }
 
@@ -115,7 +115,7 @@ export function buildCursorMcpConfig(accessKey) {
   const key = normalizeAccessKey(accessKey);
   return {
     url: NEUS_MCP_URL,
-    ...(key ? { headers: { Authorization: `Bearer ${key}` } } : {}),
+    ...(key ? { headers: { Authorization: `Bearer ${key}` } } : {})
   };
 }
 

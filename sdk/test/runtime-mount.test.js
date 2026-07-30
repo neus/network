@@ -14,7 +14,7 @@ import path from 'node:path';
 
 describe('runtime-mount', () => {
   const identity = {
-    qHash: '0x' + 'a'.repeat(64),
+    qHash: `0x${  'a'.repeat(64)}`,
     agentId: 'demo-agent',
     agentWallet: '0x1111111111111111111111111111111111111111',
     agentLabel: 'Demo Agent',
@@ -26,7 +26,7 @@ describe('runtime-mount', () => {
   };
 
   const delegation = {
-    qHash: '0x' + 'b'.repeat(64),
+    qHash: `0x${  'b'.repeat(64)}`,
     controllerWallet: '0x2222222222222222222222222222222222222222',
     agentWallet: identity.agentWallet,
     agentId: identity.agentId,

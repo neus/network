@@ -112,7 +112,7 @@ export {
   buildSetupNpxOneLiner,
   buildAuthCommandForClient,
   neusMountApply,
-  neusMountApplyNpx,
+  neusMountApplyNpx
 } from './mcp-hosts.js';
 
 export {
@@ -122,10 +122,10 @@ export {
   NEUS_AUTH_NPX,
   NEUS_DOCTOR_NPX,
   neusCmd,
-  neusNpx,
+  neusNpx
 } from './cli-commands.js';
 
 export default {
   NeusClient: () => import('./client.js').then((m) => m.NeusClient),
-  toString: () => '[neus/sdk]',
+  toString: () => '[neus/sdk]'
 };

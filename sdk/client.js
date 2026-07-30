@@ -1538,7 +1538,7 @@ export class NeusClient {
         typeof response.data?.nextCursor === 'string' && response.data.nextCursor.trim()
           ? response.data.nextCursor.trim()
           : null,
-      facets: response.data?.facets || null,
+      facets: response.data?.facets || null
     };
   }
 

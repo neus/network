@@ -1,14 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
   MCP_INSTALL_HOSTS,
-  NEUS_MCP_SERVER_NAME,
   NEUS_MCP_URL,
   buildAuthCommandForClient,
   buildCursorMcpConfig,
   buildNeusMcpHttpConfig,
   buildSetupCommandForClient,
   buildSetupCommandForHost,
-  buildVsCodeMcpConfig,
+  buildVsCodeMcpConfig
 } from '../mcp-hosts.js';
 
 describe('mcp-hosts', () => {

@@ -42,7 +42,7 @@ describe('NeusClient', () => {
     it('sets Origin from appOrigin on Node (no window)', () => {
       const originClient = new NeusClient({
         enableLogging: false,
-        appOrigin: 'https://app.example',
+        appOrigin: 'https://app.example'
       });
       expect(originClient.defaultHeaders.Origin).toBe('https://app.example');
       expect(originClient.defaultHeaders['X-Client-Origin']).toBe('https://app.example');
