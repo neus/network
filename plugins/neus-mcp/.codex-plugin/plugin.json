@@ -4,29 +4,24 @@
   "description": "Connect your assistant to verified identity, scoped permissions, and reusable trust receipts.",
   "author": {
     "name": "NEUS",
-    "email": "dev@neus.network"
+    "email": "dev@neus.network",
+    "url": "https://neus.network"
   },
   "homepage": "https://docs.neus.network/install",
   "repository": "https://github.com/neus/network",
   "license": "Apache-2.0",
   "keywords": [
     "trust-receipts",
-    "proof-receipts",
     "agent-identity",
-    "trusted-agents",
     "identity-verification",
     "ai-assistant",
-    "ai-builders",
-    "code-assistant",
     "cursor",
     "vscode",
     "codex",
     "claude-code",
-    "neus-verify",
-    "neus-vault",
     "oauth",
     "mcp",
-    "secrets-management"
+    "security"
   ],
   "skills": "./skills/",
   "interface": {

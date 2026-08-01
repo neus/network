@@ -92,6 +92,7 @@ if (typeof document !== "undefined") {
 }
 var DEFAULT_HOSTED_CHECKOUT_URL = "https://neus.network/verify";
 var VERIFY_GATE_DEFAULT_ERROR = "Something went wrong. Please try again.";
+var VERIFY_GATE_CHECK_FAILED_ERROR = "We could not check your existing proofs. Try again.";
 function getVerifyGateUserError(err) {
   const c = err && err.code;
   const msg = String(err && err.message || "");
@@ -108,6 +109,31 @@ function getVerifyGateUserError(err) {
     return "Connect a wallet and try again.";
   }
   return null;
+}
+function isCheckInfrastructureError(err) {
+  if (!err) return false;
+  const code = String(err && err.code || "").toUpperCase();
+  if (code === "INSUFFICIENT_CREDITS" || code === "NETWORK_ERROR" || code === "API_ERROR") return true;
+  const status = Number(err && err.statusCode);
+  if (Number.isFinite(status) && (status >= 500 || status === 401 || status === 402 || status === 429)) return true;
+  const name = String(err && err.name || "");
+  if (name === "NetworkError" || name === "ApiError" || name === "AuthenticationError") return true;
+  return false;
+}
+function getCheckFailedUserMessage(err) {
+  const code = String(err && err.code || "").toUpperCase();
+  if (code === "INSUFFICIENT_CREDITS") {
+    const status = Number(err && err.statusCode);
+    if (status === 402) {
+      return "This gate is temporarily unavailable. The publisher needs to add credits.";
+    }
+    return "Insufficient credits. Add credits to continue.";
+  }
+  const name = String(err && err.name || "");
+  if (name === "NetworkError" || code === "NETWORK_ERROR") {
+    return "Network issue. Check your connection and try again.";
+  }
+  return VERIFY_GATE_CHECK_FAILED_ERROR;
 }
 function dispatchNeusProofCreatedForHost({ qHash, walletAddress }) {
   try {
@@ -387,6 +413,7 @@ function VerifyGate({
       );
       if (!popup) {
         window.location.assign(buildHostedCheckoutRedirectUrl(url));
+        resolve({ redirected: true });
         return;
       }
       let completed = false;
@@ -444,14 +471,25 @@ function VerifyGate({
         });
         setExistingProofs(gateResult);
         applySatisfiedGateResult(gateResult, address);
-      } catch (_err) {
+      } catch (err) {
+        if (isCheckInfrastructureError(err)) {
+          const userMsg = getCheckFailedUserMessage(err);
+          setError(userMsg);
+          setState("error");
+          onError?.(err);
+        }
       }
     };
     checkExistingProofs();
     const provider = wallet || (typeof window !== "undefined" ? window.ethereum : null);
     if (provider && typeof provider.on === "function" && typeof provider.removeListener === "function") {
-      const handleAccountsChanged = () => {
-        setWalletAddress(null);
+      const handleAccountsChanged = (nextAccounts) => {
+        const next = Array.isArray(nextAccounts) && nextAccounts[0] ? String(nextAccounts[0]) : "";
+        const current = walletAddress ? String(walletAddress) : "";
+        if (next && current && next.toLowerCase() === current.toLowerCase()) {
+          return;
+        }
+        setWalletAddress(next || null);
         setExistingProofs(null);
         if (state === "verified") setState("idle");
         checkExistingProofs();
@@ -459,7 +497,7 @@ function VerifyGate({
       provider.on("accountsChanged", handleAccountsChanged);
       return () => provider.removeListener("accountsChanged", handleAccountsChanged);
     }
-  }, [shouldCheckExisting, mode, client, buildGateRequirements, applySatisfiedGateResult, state, wallet]);
+  }, [shouldCheckExisting, mode, client, buildGateRequirements, applySatisfiedGateResult, state, wallet, walletAddress, onError]);
   const handleClick = useCallback(async () => {
     if (disabled || isProcessing) return;
     if (state === "verified" && existingProofs?.satisfied) {
@@ -474,7 +512,14 @@ function VerifyGate({
           requirements: buildGateRequirements()
         });
         if (applySatisfiedGateResult(gateResult, walletAddress)) return;
-      } catch (_err) {
+      } catch (err) {
+        if (isCheckInfrastructureError(err)) {
+          const userMsg = getVerifyGateUserError(err) ?? getCheckFailedUserMessage(err);
+          setError(userMsg);
+          setState("error");
+          onError?.(err);
+          return;
+        }
       }
     }
     try {
@@ -516,6 +561,9 @@ function VerifyGate({
         setState("interactive-checkout");
         onStateChange?.("interactive-checkout");
         const checkoutResult = await launchHostedCheckout();
+        if (checkoutResult?.redirected === true) {
+          return;
+        }
         const checkoutQHash = checkoutResult?.qHash || null;
         const handoffWallet = typeof checkoutResult?.walletAddress === "string" && checkoutResult.walletAddress.trim() || walletAddress && String(walletAddress).trim() || "";
         setState("verified");

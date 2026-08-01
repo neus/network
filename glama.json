@@ -1,6 +1,3 @@
 {
-  "$schema": "https://glama.ai/mcp/schemas/server.json",
-  "maintainers": [
-    "chrisjleal"
-  ]
+  "$schema": "https://glama.ai/mcp/schemas/server.json"
 }

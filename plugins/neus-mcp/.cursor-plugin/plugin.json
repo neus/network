@@ -14,36 +14,15 @@
   "category": "security",
   "keywords": [
     "trust-receipts",
-    "proof-receipts",
     "agent-identity",
-    "trusted-agents",
     "identity-verification",
     "ai-assistant",
-    "ai-builders",
-    "code-assistant",
     "cursor",
     "vscode",
     "codex",
     "claude-code",
-    "neus-verify",
-    "neus-vault",
     "oauth",
     "mcp",
-    "secrets-management"
-  ],
-  "tags": [
-    "trust-receipts",
-    "agent-identity",
-    "agent-delegation",
-    "mcp",
-    "cursor",
-    "vscode",
-    "codex",
-    "claude-code",
-    "agent-runtime",
-    "windsurf",
-    "gemini",
-    "oauth",
     "security"
   ]
 }

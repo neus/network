@@ -5,7 +5,8 @@
   "version": "1.3.8",
   "author": {
     "name": "NEUS",
-    "email": "dev@neus.network"
+    "email": "dev@neus.network",
+    "url": "https://neus.network"
   },
   "homepage": "https://docs.neus.network/install",
   "repository": "https://github.com/neus/network",
@@ -13,21 +14,15 @@
   "logo": "./assets/icon.svg",
   "keywords": [
     "trust-receipts",
-    "proof-receipts",
     "agent-identity",
-    "trusted-agents",
     "identity-verification",
     "ai-assistant",
-    "ai-builders",
-    "code-assistant",
     "cursor",
     "vscode",
     "codex",
     "claude-code",
-    "neus-verify",
-    "neus-vault",
     "oauth",
     "mcp",
-    "secrets-management"
+    "security"
   ]
 }

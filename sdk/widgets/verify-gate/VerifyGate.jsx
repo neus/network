@@ -39,8 +39,16 @@ if (typeof document !== 'undefined') {
 
 const DEFAULT_HOSTED_CHECKOUT_URL = 'https://neus.network/verify';
 const VERIFY_GATE_DEFAULT_ERROR = 'Something went wrong. Please try again.';
+const VERIFY_GATE_CHECK_FAILED_ERROR = 'We could not check your existing proofs. Try again.';
 
 /**
+ * Map a gate-check error to user-safe copy. Returns null when the error is
+ * not actionable in the widget context (caller uses its own default).
+ *
+ * Distinguishes "no proof yet" (not an error — handled by the satisfied flag)
+ * from "check failed" (network, 402, sponsor grant expired, etc.) so the
+ * auto-check path never silently swallows infrastructure failures.
+ *
  * @param {unknown} err
  * @returns {string | null} User-safe copy, or null to use caller default.
  */
@@ -60,6 +68,50 @@ function getVerifyGateUserError(err) {
     return 'Connect a wallet and try again.';
   }
   return null;
+}
+
+/**
+ * True for errors that mean the eligibility check itself broke (network,
+ * auth, billing) — not "no matching proof", which is a normal `satisfied:false`
+ * result. Used to decide whether the auto-check path should surface an error
+ * vs. stay silent and let the user proceed to verify.
+ *
+ * @param {unknown} err
+ * @returns {boolean}
+ */
+function isCheckInfrastructureError(err) {
+  if (!err) return false;
+  const code = String((err && err.code) || '').toUpperCase();
+  if (code === 'INSUFFICIENT_CREDITS' || code === 'NETWORK_ERROR' || code === 'API_ERROR') return true;
+  const status = Number(err && err.statusCode);
+  if (Number.isFinite(status) && (status >= 500 || status === 401 || status === 402 || status === 429)) return true;
+  const name = String((err && err.name) || '');
+  if (name === 'NetworkError' || name === 'ApiError' || name === 'AuthenticationError') return true;
+  return false;
+}
+
+/**
+ * User-safe copy for a failed eligibility check. Mirrors the parity helper
+ * in the hosted app (`neus/utils/insufficientCreditsError.ts`) but kept
+ * self-contained for the public SDK — no internal imports.
+ *
+ * @param {unknown} err
+ * @returns {string}
+ */
+function getCheckFailedUserMessage(err) {
+  const code = String((err && err.code) || '').toUpperCase();
+  if (code === 'INSUFFICIENT_CREDITS') {
+    const status = Number(err && err.statusCode);
+    if (status === 402) {
+      return 'This gate is temporarily unavailable. The publisher needs to add credits.';
+    }
+    return 'Insufficient credits. Add credits to continue.';
+  }
+  const name = String((err && err.name) || '');
+  if (name === 'NetworkError' || code === 'NETWORK_ERROR') {
+    return 'Network issue. Check your connection and try again.';
+  }
+  return VERIFY_GATE_CHECK_FAILED_ERROR;
 }
 
 function dispatchNeusProofCreatedForHost({ qHash, walletAddress }) {
@@ -382,7 +434,12 @@ export function VerifyGate({
       );
 
       if (!popup) {
+        // Popup blocked → top-level redirect. The page navigates away, so the
+        // hosted checkout completes out-of-band. Resolve with a redirect
+        // sentinel instead of leaving the Promise pending forever (which would
+        // pin isProcessing=true and freeze the widget state).
         window.location.assign(buildHostedCheckoutRedirectUrl(url));
+        resolve({ redirected: true });
         return;
       }
 
@@ -458,8 +515,18 @@ export function VerifyGate({
 
         setExistingProofs(gateResult);
         applySatisfiedGateResult(gateResult, address);
-      } catch (_err) {
-        // intentional: existing-proof check is best-effort; errors are silently ignored
+      } catch (err) {
+        // "No matching proof" is a normal `satisfied:false` result, not an
+        // error. Only surface infrastructure failures (network, 402, auth,
+        // rate limit) so an integrator's user isn't left staring at a stalled
+        // idle state with no signal when their sponsor grant expired or the
+        // network blipped.
+        if (isCheckInfrastructureError(err)) {
+          const userMsg = getCheckFailedUserMessage(err);
+          setError(userMsg);
+          setState('error');
+          onError?.(err);
+        }
       }
     };
 
@@ -469,8 +536,18 @@ export function VerifyGate({
       wallet ||
       (typeof window !== 'undefined' ? window.ethereum : null);
     if (provider && typeof provider.on === 'function' && typeof provider.removeListener === 'function') {
-      const handleAccountsChanged = () => {
-        setWalletAddress(null);
+      const handleAccountsChanged = (nextAccounts) => {
+        const next = Array.isArray(nextAccounts) && nextAccounts[0]
+          ? String(nextAccounts[0])
+          : '';
+        const current = walletAddress ? String(walletAddress) : '';
+        // Only reset when the account actually changed. Some providers fire
+        // `accountsChanged` with the same address on chain/network events;
+        // resetting there would drop a verified state the user still holds.
+        if (next && current && next.toLowerCase() === current.toLowerCase()) {
+          return;
+        }
+        setWalletAddress(next || null);
         setExistingProofs(null);
         if (state === 'verified') setState('idle');
         checkExistingProofs();
@@ -479,7 +556,7 @@ export function VerifyGate({
       provider.on('accountsChanged', handleAccountsChanged);
       return () => provider.removeListener('accountsChanged', handleAccountsChanged);
     }
-  }, [shouldCheckExisting, mode, client, buildGateRequirements, applySatisfiedGateResult, state, wallet]);
+  }, [shouldCheckExisting, mode, client, buildGateRequirements, applySatisfiedGateResult, state, wallet, walletAddress, onError]);
 
   const handleClick = useCallback(async () => {
     if (disabled || isProcessing) return;
@@ -499,8 +576,16 @@ export function VerifyGate({
         });
 
         if (applySatisfiedGateResult(gateResult, walletAddress)) return;
-      } catch (_err) {
-        // intentional: pre-check is best-effort; errors fall through to main flow
+      } catch (err) {
+        // Only block on infrastructure failures; a missing proof is the normal
+        // "needs verify" path and falls through to the main flow.
+        if (isCheckInfrastructureError(err)) {
+          const userMsg = getVerifyGateUserError(err) ?? getCheckFailedUserMessage(err);
+          setError(userMsg);
+          setState('error');
+          onError?.(err);
+          return;
+        }
       }
     }
 
@@ -554,6 +639,13 @@ export function VerifyGate({
         onStateChange?.('interactive-checkout');
 
         const checkoutResult = await launchHostedCheckout();
+        // Popup blocked → top-level redirect already underway. Do not treat as
+        // a verification result; the page is navigating to hosted checkout and
+        // will return via returnUrl. Keep isProcessing true so the button does
+        // not flicker to idle mid-navigation.
+        if (checkoutResult?.redirected === true) {
+          return;
+        }
         const checkoutQHash = checkoutResult?.qHash || null;
         const handoffWallet =
           (typeof checkoutResult?.walletAddress === 'string' && checkoutResult.walletAddress.trim()) ||
