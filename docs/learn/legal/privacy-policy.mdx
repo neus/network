@@ -4,7 +4,7 @@ description: How NEUS collects, uses, protects, and shares personal information.
 icon: shield
 ---
 
-Effective date: July 26, 2026. Last updated: July 26, 2026.
+Effective date: July 26, 2026. Last updated: August 3, 2026.
 
 This Privacy Policy explains how NEUS Network, Inc. ("NEUS," "we," "us," or "our") handles personal information when you use the NEUS website, application, APIs, hosted Model Context Protocol (MCP) service, verification services, and related products (collectively, the "Service").
 
@@ -59,9 +59,12 @@ NEUS handles Google user data as follows:
 - **Storage:** OAuth tokens are stored as encrypted private records. Retrieved content may be retained in a private chat, job, or execution receipt if it forms part of that record.
 - **Sharing:** Data may be processed by the NEUS hosting stack and, when needed to answer your request, by the hosted AI provider or the AI provider you selected. It is not shared for advertising or unrelated purposes.
 - **AI training:** NEUS does not use raw or derived Google Workspace data to train or improve a generalized artificial-intelligence or machine-learning model.
+- **Hosted model isolation:** When you use NEUS-hosted assistant inference (the Default and Advanced tiers, served through RedPill), your prompt, conversation context, and any connected-account data — including Google Workspace content — are processed inside a confidential-computing enclave (a trusted execution environment). RedPill routes these turns to TEE-attested open-weight models that currently run in Intel TDX or NVIDIA Confidential Computing enclaves, and NEUS resolves a per-turn attestation report you can verify. Inside the enclave, the open-weight model processes your data to answer your request; the inputs are not transmitted to the model's author (the organization that developed the open-weight model) for training, retention, or any secondary purpose. NEUS-side retention of the conversation or receipt is separate and described above. This guarantee applies only to NEUS-hosted turns served by a TEE-attested model. When you supply your own AI provider key (bring-your-own-key), NEUS sends your request directly to the provider you selected, that turn is not processed in the NEUS-hosted enclave, and that provider's terms and privacy policy apply instead.
 - **Control:** You can disconnect Google in NEUS. NEUS removes the local connection and attempts provider-side revocation. You can also revoke access from your [Google Account connections](https://myaccount.google.com/connections).
 
-NEUS's use and transfer of information received from Google APIs adheres to the [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including its Limited Use requirements.
+## Limited Use Compliance
+
+The use of raw or derived user data received from Google Workspace APIs will adhere to the [Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy), including its Limited Use requirements. NEUS does not use, transfer, or sell Google user data — including raw, aggregated, or derived data — to create, train, or improve foundational or generalized artificial-intelligence or machine-learning models. This commitment applies to both NEUS-hosted inference and any third-party AI provider integration described in this policy.
 
 ## Other Connected Providers
 
@@ -73,19 +76,29 @@ NEUS may offer sign-in or connected-account access from providers such as Micros
 
 NEUS stores the granted permissions and encrypted connection credential. It uses the connection only when you request the related feature. Disconnecting removes the NEUS connection and, where supported, requests revocation from the provider. You can also revoke access in the provider's account settings.
 
-You may add a remote MCP service or your own API key for an AI or tool provider. In that case, NEUS sends the information needed for your request directly to the service you selected. That provider's terms and privacy policy apply.
+You may add a remote MCP service or your own API key for an AI or tool provider. In that case, NEUS sends the information needed for your request directly to the service you selected. When you connect a provider with your own key and then ask an assistant to use Google Workspace data in that turn, you direct the transfer of that data to the provider you selected. That provider's terms and privacy policy apply, and you are responsible for confirming the provider's terms permit your intended use of the data. NEUS does not control and is not responsible for how a third-party provider processes data you send to it with your own key.
 
 ## AI and Automated Processing
 
 NEUS sends prompts, relevant conversation context, and requested tool results to an AI provider when you use assistant or agent features.
 
-- NEUS-hosted inference uses RedPill, which routes supported models through confidential-computing infrastructure.
+- NEUS-hosted inference uses RedPill, which routes Default and Advanced tier turns to TEE-attested open-weight models running in confidential-computing enclaves (Intel TDX or NVIDIA Confidential Computing). When a TEE-attested model serves the turn, NEUS can resolve a per-turn attestation report for it.
 - If you provide your own key, NEUS sends the request to the provider you selected, such as OpenAI, Anthropic, Google Gemini, OpenRouter, or another configured provider.
 - Information from Gmail, Drive, Outlook, OneDrive, GitHub, or another connected service is included in model context only when needed to complete the action you requested.
 
 NEUS may retain private chat and agent execution receipts in your account. Do not include sensitive information in a prompt unless it is necessary for the task.
 
 Some verification and access features automatically compare submitted, public, or provider-confirmed information with the rules selected for a proof or access gate. The result may be a pass or fail receipt that a user or third party relies on to allow access or continue a transaction. You can contact us if you believe an automated result is incorrect. NEUS does not use automated processing to make employment, credit, housing, insurance, or similarly significant decisions about you.
+
+## Third-Party AI Providers
+
+NEUS offers two inference paths with different data-isolation guarantees.
+
+**NEUS-hosted inference (Default and Advanced tiers).** When you use the included NEUS assistant without supplying your own key, your prompt, conversation context, and any connected-account data — including Google Workspace content — are processed inside a confidential-computing enclave. The open-weight models that serve these turns run in Intel TDX or NVIDIA Confidential Computing enclaves and do not transmit your inputs to the model's author for training, retention, or any secondary purpose. This is an isolated processing environment: data enters the enclave to answer your request and is not sent to the model developer. NEUS can resolve a per-turn attestation report you can verify. NEUS-side retention of the conversation or receipt is separate and described above.
+
+**Bring-your-own-key inference.** When you supply your own AI provider key, NEUS sends your request directly to the provider you selected. That turn is not processed in the NEUS-hosted enclave, and that provider's terms and privacy policy apply. If you connect Google Workspace and then select a BYOK provider for a turn that uses Google data, you direct the transfer of that data to the provider, and you are responsible for confirming the provider's terms permit your use.
+
+The following third-party AI providers may be available as BYOK integrations, each governed by the provider's own terms: OpenRouter, OpenAI, Google Gemini, Anthropic, DeepSeek, Groq, RedPill, Ollama Cloud, NEAR AI, Alibaba DashScope, Featherless AI, Mistral, Together, xAI, NVIDIA NIM, and Fireworks AI. NEUS does not control how a BYOK provider processes data you send to it with your own key. The NEUS-hosted path uses RedPill as its sole platform-managed provider and routes exclusively to TEE-attested open-weight models.
 
 ## When We Disclose Information
 
