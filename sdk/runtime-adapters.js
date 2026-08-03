@@ -56,7 +56,7 @@ You are **${label}** (\`${id}\`). This project loaded your current NEUS identity
 ${bundle.identity.description || bundle.identity.instructions || 'Follow the agent instructions below.'}
 
 ## Instructions
-${bundle.identity.instructions || 'Use NEUS MCP for trust checks before sensitive actions.'}
+${bundle.identity.instructions || 'Use NEUS MCP for checks before sensitive actions.'}
 
 ## Capabilities
 ${capabilities || '- General purpose'}

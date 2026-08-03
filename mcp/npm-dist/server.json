@@ -40,11 +40,11 @@
   "tools": [
     {
       "name": "neus_context",
-      "description": "Start here. Load the signed-in profile, available trust checks, and recommended workflow for this session."
+      "description": "Start here. Load the signed-in profile, available checks, and recommended workflow for this session."
     },
     {
       "name": "neus_verifiers_catalog",
-      "description": "List available trust checks, supported networks, and required inputs. Use this when a check needs details that are not already in the session context."
+      "description": "List available checks, supported networks, and required inputs. Use this when a check needs details that are not already in the session context."
     },
     {
       "name": "neus_proofs_check",
