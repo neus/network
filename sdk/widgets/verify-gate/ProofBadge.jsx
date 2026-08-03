@@ -61,6 +61,7 @@ export function ProofBadge({
     let cancelled = false;
 
     async function checkStatus() {
+      if (!/^0x[0-9a-fA-F]{64}$/.test(resolvedQHash)) { setStatus('failed'); return; }
       try {
         const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedQHash}`, {
           headers: { Accept: 'application/json' }
@@ -193,6 +194,7 @@ export function SimpleProofBadge({
     let cancelled = false;
 
     async function checkStatus() {
+      if (!/^0x[0-9a-fA-F]{64}$/.test(resolvedQHash)) { setStatus('failed'); return; }
       try {
         const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedQHash}`, {
           headers: { Accept: 'application/json' }
