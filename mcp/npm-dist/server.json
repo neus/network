@@ -72,7 +72,7 @@
     },
     {
       "name": "neus_agent_create",
-      "description": "Create or finish a Trusted Agent’s identity and permissions. Keep the same agentId and agentWallet on retries, follow the returned next step, then use neus_agent_link to confirm readiness."
+      "description": "Create a Trusted Agent in one call: pick a wallet (generate a new one only when asked, otherwise use the signed-in user wallet), create the agent-identity proof, create the agent-delegation proof, and link the delegation to the identity. On success the agent is ready to mount. Keep the same agentId and agentWallet on retries."
     },
     {
       "name": "neus_agent_mount",
