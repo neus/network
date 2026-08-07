@@ -19,10 +19,14 @@ Sign-in, gates, saved results, and agent authority share one account. Do not res
 
 | Piece | What it is |
 | ----- | ---------- |
-| **Profile** | Your NEUS account: identity, results, agents |
-| **Hosted Verify** | Sign-in and checks in the browser |
+| **Profile** | Your NEUS account: identity, proofs, agents |
+| **Hosted Verify** | Sign-in and checks in the browser (creates or refreshes a proof) |
 | **Check** | One trust decision ([catalog](../verification/verifiers)) |
-| **Gate** | Published checks you embed with one ID |
+| **Proof** | Portable reusable verification asset (`qHash` in the API) |
+| **Portal** | Access surface you publish from Profile → Portals |
+| **Gate** | Published policy + checkout ID (`gateId`) you embed; enforced with `gateCheck` |
+
+API paths, MCP tool names, and SDK exports keep their existing identifiers (`/proofs/`, `neus_proofs_*`, `VerifyGate`). Buyer and docs prose use the terms above.
 
 ## Where to start
 

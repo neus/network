@@ -25,7 +25,7 @@ Use NEUS to make creator handles portable and verifiable. A user claims a handle
 3. NEUS returns a `qHash` and a proof URL.
 4. Your app stores the `qHash` with the user record.
 5. Surface a verified badge that links to the public proof page.
-6. Before any privileged action, check the receipt on your server.
+6. Before any privileged action, check the proof on your server.
 
 ## Direct verification (in-app signing)
 
@@ -91,7 +91,7 @@ The badge links to `https://neus.network/proof/{qHash}` and shows live proof sta
 
 ## Gate creator actions on the server
 
-Always check the receipt server-side before allowing privileged actions.
+Always check the proof server-side before allowing privileged actions.
 
 ```js
 import { NeusClient } from '@neus/sdk';

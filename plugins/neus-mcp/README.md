@@ -1,6 +1,6 @@
 # NEUS
 
-Verified identity, scoped permissions, and reusable trust receipts for your assistant.
+Verified identity, scoped permissions, and reusable portable proofs for your assistant.
 
 In Cursor, install this plugin and click **Connect** — NEUS signs you in automatically. For Codex, VS Code, and Claude Code, use the public CLI.
 
@@ -13,7 +13,7 @@ npx -y -p @neus/sdk neus doctor --live
 
 Ask your assistant: **"Use NEUS to check identity and permissions before sensitive actions."**
 
-It reuses existing trust receipts first, guides any missing check, then summarizes as Passed, Action needed, or Blocked.
+It reuses existing proofs first, guides any missing check, then summarizes as Passed, Action needed, or Blocked.
 
 Codex:
 

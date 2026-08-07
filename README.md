@@ -17,7 +17,7 @@
   <a href="https://www.npmjs.com/package/@neus/mcp-server"><img src="https://img.shields.io/npm/v/%40neus%2Fmcp-server?logo=npm&label=%40neus%2Fmcp-server&color=98C0EF" alt="@neus/mcp-server on npm" /></a>
   <a href="./LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-blue.svg" alt="License" /></a>
   <a href="https://github.com/neus/network/discussions"><img src="https://img.shields.io/badge/community-discussions-98C0EF?logo=github" alt="Discussions" /></a>
-  <a href="https://neus.network/proof/0x1487d0d9826ffc2c415b33745a058711f1c4d8928d64df5c7104752ed6d62cc0"><img src="https://img.shields.io/badge/NEUS-Verified%20Receipt-98C0EF?style=flat&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSI%2BPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iNy41IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjE2LjAwIiBjeT0iNS4wMCIgcj0iMS4zNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjIxLjUwIiBjeT0iNi40NyIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjI1LjUzIiBjeT0iMTAuNTAiIHI9IjEuMzUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIyNy4wMCIgY3k9IjE2LjAwIiByPSIxLjM1IiBmaWxsPSIjZmZmIi8%2BPGNpcmNsZSBjeD0iMjUuNTMiIGN5PSIyMS41MCIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjIxLjUwIiBjeT0iMjUuNTMiIHI9IjEuMzUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIxNi4wMCIgY3k9IjI3LjAwIiByPSIxLjM1IiBmaWxsPSIjZmZmIi8%2BPGNpcmNsZSBjeD0iMTAuNTAiIGN5PSIyNS41MyIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjYuNDciIGN5PSIyMS41MCIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjUuMDAiIGN5PSIxNi4wMCIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjYuNDciIGN5PSIxMC41MCIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjEwLjUwIiBjeT0iNi40NyIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjwvc3ZnPg%3D%3D" alt="NEUS verified trust receipt" /></a>
+  <a href="https://neus.network/proof/0x1487d0d9826ffc2c415b33745a058711f1c4d8928d64df5c7104752ed6d62cc0"><img src="https://img.shields.io/badge/NEUS-Verified%20Proof-98C0EF?style=flat&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSI%2BPGNpcmNsZSBjeD0iMTYiIGN5PSIxNiIgcj0iNy41IiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIvPjxjaXJjbGUgY3g9IjE2LjAwIiBjeT0iNS4wMCIgcj0iMS4zNSIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjIxLjUwIiBjeT0iNi40NyIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjI1LjUzIiBjeT0iMTAuNTAiIHI9IjEuMzUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIyNy4wMCIgY3k9IjE2LjAwIiByPSIxLjM1IiBmaWxsPSIjZmZmIi8%2BPGNpcmNsZSBjeD0iMjUuNTMiIGN5PSIyMS41MCIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjIxLjUwIiBjeT0iMjUuNTMiIHI9IjEuMzUiIGZpbGw9IiNmZmYiLz48Y2lyY2xlIGN4PSIxNi4wMCIgY3k9IjI3LjAwIiByPSIxLjM1IiBmaWxsPSIjZmZmIi8%2BPGNpcmNsZSBjeD0iMTAuNTAiIGN5PSIyNS41MyIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjYuNDciIGN5PSIyMS41MCIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjUuMDAiIGN5PSIxNi4wMCIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjYuNDciIGN5PSIxMC41MCIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjxjaXJjbGUgY3g9IjEwLjUwIiBjeT0iNi40NyIgcj0iMS4zNSIgZmlsbD0iI2ZmYiIvPjwvc3ZnPg%3D%3D" alt="NEUS verified portable proof" /></a>
 </p>
 
 <p align="center">
@@ -31,24 +31,24 @@
 
 ## Why NEUS
 
-Every new app, agent, and partner usually starts from zero — no shared context about identity, ownership, or authority. NEUS turns those checks into **portable trust receipts** so people and AI keep context as they move, act under clear limits, and leave an audit trail behind.
+Every new app, agent, and partner usually starts from zero — no shared context about identity, ownership, or authority. NEUS turns those checks into **portable proofs** so people and AI keep context as they move, act under clear limits, and leave an audit trail behind.
 
-A receipt is something you already earned: who someone is, what they own, what they’re allowed to do. Put it on a profile, require it at a gate, or check it from your API — same receipt, every surface.
+A proof is something you already earned: who someone is, what they own, what they’re allowed to do. Put it on a profile, require it at a gate, or check it from your API — same proof, every surface.
 
 | Need | What you get with NEUS |
 | ---- | ------------------------ |
-| Stop re-proving the same facts in every product | One portable receipt apps and agents can reuse |
+| Stop re-proving the same facts in every product | One portable proof apps and agents can reuse |
 | Carry identity and ownership with the actor | Profiles and ownership proofs that travel across gates |
 | Authorize actions with clear limits | Scoped permissions, current status, and enforce-before-act checks |
 | Keep shared context for people and AI | Live trust context in the editor, product, and API |
-| Audit who did what — and under which authority | Receipt pages, stable references, and reviewable history |
+| Audit who did what — and under which authority | Proof pages, stable references, and reviewable history |
 | Ship trust without rebuilding each flow | Hosted Verify, widgets, SDK, and MCP on one model |
 
 ## Start building
 
 ### One command for assistants
 
-Connect once. Your assistant carries your identity, trusted context, and scoped authority across editors — reusing what's verified, checking limits before sensitive actions, and leaving a receipt for every result.
+Connect once. Your assistant carries your identity, trusted context, and scoped authority across editors — reusing what's verified, checking limits before sensitive actions, and leaving a proof for every result.
 
 ```bash
 npx -y -p @neus/sdk neus setup
@@ -57,7 +57,7 @@ npx -y -p @neus/sdk neus doctor --live
 
 Then ask your assistant:
 
-> Use NEUS so my identity, context, and authority travel with me. Reuse receipts when you can, verify when you must, and check authority before sensitive actions.
+> Use NEUS so my identity, context, and authority travel with me. Reuse proofs when you can, verify when you must, and check authority before sensitive actions.
 
 | Path | Next step |
 | ---- | --------- |
@@ -73,17 +73,17 @@ Install **`neus-mcp`** from this repo's marketplace to connect Cursor in one cli
 
 ### Add trust to an app
 
-Drop in Hosted Verify, `VerifyGate`, or the SDK when your app needs portable trust — shared context at the gate, authority before access, receipts you can audit later.
+Drop in Hosted Verify, `VerifyGate`, or the SDK when your app needs portable trust — shared context at the gate, authority before access, proofs you can audit later.
 
-- [Quickstart](https://docs.neus.network/quickstart) — register your app and ship the first receipt.
+- [Quickstart](https://docs.neus.network/quickstart) — register your app and ship the first proof.
 - Pattern: [prove once, reuse everywhere](https://docs.neus.network/integration).
 - [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) for browser sign-in and checks.
 
 ### Add trust to an agent
 
-Give agents identity and scoped authority as receipts — so tools run under real limits, and every action stays auditable.
+Give agents identity and scoped authority as proofs — so tools run under real limits, and every action stays auditable.
 
-- [Agents overview](https://docs.neus.network/agents/overview): identity, permissions, and reusable receipts.
+- [Agents overview](https://docs.neus.network/agents/overview): identity, permissions, and reusable proofs.
 - Register identity with [`agent-identity`](https://docs.neus.network/agents/agent-identity).
 - Add permissions with [`agent-delegation`](https://docs.neus.network/agents/agent-delegation).
 
@@ -95,11 +95,11 @@ Give agents identity and scoped authority as receipts — so tools run under rea
 | ------- | ---------- |
 | [Product](https://neus.network) | Profiles, gates, and hosted product UX |
 | [Hosted Verify](https://neus.network/verify) | Browser verification for people and orgs |
-| [Trust receipts](https://docs.neus.network/platform/receipts-and-results) | Portable records of identity, authority, and outcomes |
-| [SDK](https://docs.neus.network/sdks/javascript) · [@neus/sdk](https://www.npmjs.com/package/@neus/sdk) | Issue, poll, and check receipts from your app |
+| [Proofs and results](https://docs.neus.network/platform/receipts-and-results) | Portable records of identity, authority, and outcomes |
+| [SDK](https://docs.neus.network/sdks/javascript) · [@neus/sdk](https://www.npmjs.com/package/@neus/sdk) | Issue, poll, and check proofs from your app |
 | [Widgets](https://docs.neus.network/widgets/overview) | `VerifyGate` and `ProofBadge` for React products |
 | [API](https://docs.neus.network/api/overview) | Server reads, checks, verifier catalog, and verification endpoints |
-| [Agents](https://docs.neus.network/agents/overview) | Agent identity, scoped authority, and audit-ready receipts |
+| [Agents](https://docs.neus.network/agents/overview) | Agent identity, scoped authority, and audit-ready proofs |
 | [MCP](https://docs.neus.network/mcp/overview) | Portable trust context in the editor — `neus setup`; registry metadata: [`@neus/mcp-server`](https://www.npmjs.com/package/@neus/mcp-server) |
 | [Examples](./examples) | Runnable app and agent samples |
 | [Verifier catalog](https://docs.neus.network/verification/verifiers) | Live check IDs and inputs |
@@ -122,7 +122,7 @@ Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widge
 
 ## Open standard
 
-Wallet-signed request envelopes follow the [CAIP-380 (Portable Proof)](https://github.com/ChainAgnostic/CAIPs/pull/380) ChainAgnostic draft. Their hash, DID binding, and signature can be checked without NEUS; verifier outcomes remain part of the NEUS trust receipt. See the [offline fixture](./examples/caip-380/minimal-evm.json) and [NEUS docs](https://docs.neus.network/learn/standards/caip-380).
+Wallet-signed request envelopes follow the [CAIP-380 (Portable Proof)](https://github.com/ChainAgnostic/CAIPs/pull/380) ChainAgnostic draft. Their hash, DID binding, and signature can be checked without NEUS; verifier outcomes remain part of the NEUS portable proof. See the [offline fixture](./examples/caip-380/minimal-evm.json) and [NEUS docs](https://docs.neus.network/learn/standards/caip-380).
 
 ## Support
 

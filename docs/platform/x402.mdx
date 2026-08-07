@@ -9,8 +9,8 @@ Pay for a single NEUS check without creating an account or API key. Three endpoi
 
 | Resource | Method | What it does | Base cost |
 |----------|--------|--------------|-----------|
-| `/api/v1/proofs/check` | GET | Evaluate existing receipts at a gate | 1 credit ($0.0025) |
-| `/api/v1/verification` | POST | Create a new trust receipt | 3+ credits (gate + verifier + proof write) |
+| `/api/v1/proofs/check` | GET | Evaluate existing proofs at a gate | 1 credit ($0.0025) |
+| `/api/v1/verification` | POST | Create a new proof | 3+ credits (gate + verifier + proof write) |
 | `/api/v1/verification/access/grant` | POST | Create a signed private-proof sharing capability | 2 credits |
 
 The exact price for each request is in the `PAYMENT-REQUIRED` header. It scales with the number of checks, query complexity, and optional add-ons (IPFS pinning, extra chains).
@@ -37,7 +37,7 @@ The exact price for each request is in the `PAYMENT-REQUIRED` header. It scales 
 
 ## Proof check
 
-Check existing receipts before granting access, releasing a payment, or allowing an agent action:
+Check existing proofs before granting access, releasing a payment, or allowing an agent action:
 
 ```http
 GET https://api.neus.network/api/v1/proofs/check
@@ -65,7 +65,7 @@ The `PAYMENT-REQUIRED` header always carries the exact amount for that request.
 
 ## Proof creation
 
-Create a new trust receipt by paying per call:
+Create a new proof by paying per call:
 
 ```http
 POST https://api.neus.network/api/v1/verification
@@ -111,7 +111,7 @@ There is no separate Bazaar registration step. See [x402 Bazaar discovery](https
 
 ## Agent spending limits
 
-Pair x402 with an agent permission receipt to limit autonomous spending.
+Pair x402 with an agent permission proof to limit autonomous spending.
 
 - Grant `agent-delegation` with `scope: "payments:x402"` and a `maxSpend` cap.
 - `maxSpend` is a whole-number string in token base units. For USDC, 25 USDC is `"25000000"`.

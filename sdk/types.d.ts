@@ -557,7 +557,7 @@
 
   export interface FulfillGateParams {
     gateId: string;
-    /** Verified proof receipt id for this checkout. */
+    /** Verified proof id for this checkout. */
     qHash: string;
     /** Required when no session cookie binds the wallet. */
     walletAddress?: string;

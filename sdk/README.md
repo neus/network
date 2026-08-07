@@ -1,8 +1,8 @@
 # @neus/sdk
 
-Build with portable trust receipts. Create, check, and reuse verified identity, ownership, and authority from apps and backends. Includes the **`neus`** CLI for assistant setup and agent context.
+Build with portable proofs. Create, check, and reuse verified identity, ownership, and authority from apps and backends. Includes the **`neus`** CLI for assistant setup and agent context.
 
-Receipts carry identity, trusted context, and scoped authority — so connected gates check current state before access, payment, or execution instead of re-proving the same facts every time.
+Proofs carry identity, trusted context, and scoped authority — so connected gates check current state before access, payment, or execution instead of re-proving the same facts every time.
 
 ## Install (library)
 
@@ -20,7 +20,7 @@ npx -y -p @neus/sdk neus doctor --live
 npx -y -p @neus/sdk neus examples
 ```
 
-Then ask your assistant: **"Use NEUS before sensitive actions. Reuse my saved receipts, check authority, and keep an audit trail."**
+Then ask your assistant: **"Use NEUS before sensitive actions. Reuse my saved proofs, check authority, and keep an audit trail."**
 
 ## Connect an agent to a project
 
@@ -45,7 +45,7 @@ Prefer `neus setup` over hand-editing config files so every host stays on **`htt
 
 ## What you can ship
 
-- Hosted verification flows that return reusable trust receipts
+- Hosted verification flows that return reusable portable proofs
 - Server checks before access, rewards, payments, or actions
 - React gates with `VerifyGate`
 - Agent identity, controller-approved authority, and spend caps
@@ -139,7 +139,7 @@ export function Page() {
 }
 ```
 
-## Check receipts
+## Check proofs
 
 Use `gateCheck` from trusted server code when you need allow/deny before access:
 
@@ -165,19 +165,19 @@ Never ship access keys in browser code.
 | Method | Use it for |
 | ------ | ---------- |
 | `getHostedCheckoutUrl()` | Send a user to Hosted Verify |
-| `client.verify()` | Create a trust receipt (in-app signing) |
-| `client.verifyFromApp()` | Create a receipt for an approved user (server; needs appId + origin) |
-| `client.getProof()` | Fetch a public receipt by `qHash` |
-| `client.getPrivateProof()` | Fetch a private receipt (wallet-bound) |
+| `client.verify()` | Create a proof (in-app signing) |
+| `client.verifyFromApp()` | Create a proof for an approved user (server; needs appId + origin) |
+| `client.getProof()` | Fetch a public proof by `qHash` |
+| `client.getPrivateProof()` | Fetch a private proof (wallet-bound) |
 | `client.pollProofStatus()` | Wait for async verification completion |
-| `client.getProofsByWallet()` | List a wallet's public receipts |
-| `client.getPrivateProofsByWallet()` | List a wallet's private receipts |
+| `client.getProofsByWallet()` | List a wallet's public proofs |
+| `client.getPrivateProofsByWallet()` | List a wallet's private proofs |
 | `client.gateCheck()` | Server-side eligibility check before access |
 | `client.checkGate()` | Local preview against already-loaded proofs |
 | `client.getGate()` | Read a published gate's requirements and charge |
 | `client.fulfillGate()` | Deliver a post-verify reward for hosted checkout |
 | `client.createGatePrivateAuth()` | Signed proof for private gate access |
-| `client.revokeOwnProof()` | Revoke a receipt you own |
+| `client.revokeOwnProof()` | Revoke a proof you own |
 | `client.createWalletLinkData()` | Wallet-link payloads |
 | `client.getVerifiers()` | List live verifier ids |
 | `client.getVerifierCatalog()` | Full verifier catalog with access levels |

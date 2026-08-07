@@ -1,7 +1,7 @@
 ---
 title: Gate checkout
 sidebarTitle: Gate checkout
-description: Publish a gate, check visitors, collect payment, deliver access.
+description: Publish a portal, check visitors, collect payment, deliver access.
 icon: door-open
 ---
 
@@ -74,28 +74,28 @@ When `gateId` is passed, the response carries a per-requirement `data.gate` bloc
 }
 ```
 
-- `satisfiedVerifierIds` / `missingVerifierIds` — which requirements existing receipts cover.
+- `satisfiedVerifierIds` / `missingVerifierIds` — which requirements existing proofs cover.
 - `reusedVerifierProofs` — verifierId → qHash map (requires `includeQHashes=true`). Pass it as `options.reusedVerifierProofs` on `POST /api/v1/verification` so satisfied checks are not re-run.
 - Re-run the gate check after every interactive step (OAuth grant, personhood session) before treating checkout as complete. Interactive completions only count once the protocol confirms them here.
 
-## Request-time vs receipt-based rules
+## Request-time vs proof-based rules
 
 Each requirement carries `match` rows (`{ path, op, value }`). They are enforced at two different moments:
 
 | Rule type | Examples | Enforced |
 |-----------|----------|----------|
 | Request-time (`eq` on input fields) | `domain`, `contractAddress`, `chainId`, `minBalance`, `provider` | When the verification request is submitted — the locked value must match exactly |
-| Receipt-based (`traits.*`, `claims.*`, risk fields, `gte`/`lte`) | `claims.age_min`, `claims.liveness_verified`, `riskLevel`, `overallRisk` | After verification, against the check result |
+| Proof-based (`traits.*`, `claims.*`, risk fields, `gte`/`lte`) | `claims.age_min`, `claims.liveness_verified`, `riskLevel`, `overallRisk` | After verification, against the check result |
 
-Receipt-based rows mean an existing receipt may not satisfy a stricter gate. For example, a personhood receipt created for a basic gate will not satisfy another gate that also requires `claims.age_min ≥ 21`. The visitor must complete the additional check.
+Proof-based rows mean an existing proof may not satisfy a stricter gate. For example, a personhood proof created for a basic gate will not satisfy another gate that also requires `claims.age_min ≥ 21`. The visitor must complete the additional check.
 
-For `wallet-risk` gates, any receipt-based row also requires `policyVerified` to be true. A failed risk check never satisfies a gate.
+For `wallet-risk` gates, any proof-based row also requires `policyVerified` to be true. A failed risk check never satisfies a gate.
 
 ### Verification links
 
 In the gate builder, choose **Verification link**. The visitor pastes their own HTTPS URL; NEUS reads JSON from that URL or its conventional `.json` form and checks whether `verified` is `true`.
 
-Builders do not configure fetch targets, callbacks, or provider-specific connectors. The saved gate contains the portable match rows `reference.type = url` and `resolved.verified = true`. API clients can use other `resolved.*` output matches when a source exposes a different public JSON contract. Resolved-link receipts default to five-minute freshness so checkout does not silently reuse old source status.
+Builders do not configure fetch targets, callbacks, or provider-specific connectors. The saved gate contains the portable match rows `reference.type = url` and `resolved.verified = true`. API clients can use other `resolved.*` output matches when a source exposes a different public JSON contract. Resolved-link proofs default to five-minute freshness so checkout does not silently reuse old source status.
 
 See [Content ownership](../verification/ownership-basic#verification-links-in-hosted-gates) for the wire shape and resolver safeguards.
 

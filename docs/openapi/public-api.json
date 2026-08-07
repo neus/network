@@ -246,11 +246,11 @@
           },
           "options": {
             "type": "object",
-            "description": "Optional verification options. By default the trust receipt persists offchain with no on-chain transaction.",
+            "description": "Optional verification options. By default the proof persists offchain with no on-chain transaction.",
             "properties": {
               "publishToHub": {
                 "type": "boolean",
-                "description": "Opt in to an on-chain hub registry transaction when targetChains is empty. Default false: offchain receipt only."
+                "description": "Opt in to an on-chain hub registry transaction when targetChains is empty. Default false: offchain proof only."
               },
               "targetChains": {
                 "type": "array",
@@ -603,11 +603,77 @@
             ]
           },
           "data": {
-            "type": "object",
-            "additionalProperties": true
+            "$ref": "#/components/schemas/GateCheckData"
           },
           "timestamp": {
             "$ref": "#/components/schemas/Timestamp"
+          }
+        },
+        "additionalProperties": true
+      },
+      "GateCheckData": {
+        "type": "object",
+        "description": "Gate eligibility result. The gate block is the readiness contract — allRequiredSatisfied is the only signal that authorizes submit/fulfill.",
+        "properties": {
+          "gate": {
+            "type": "object",
+            "description": "Gate evaluation against the caller's proof inventory.",
+            "properties": {
+              "allRequiredSatisfied": {
+                "type": "boolean",
+                "description": "True when every gate requirement row is satisfied by an existing or reused proof. This is the only signal that authorizes submit/fulfill."
+              },
+              "satisfiedVerifierIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Verifier IDs whose requirement rows are satisfied."
+              },
+              "missingVerifierIds": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Verifier IDs that still need a proof to satisfy the gate."
+              },
+              "reusedVerifierProofs": {
+                "type": "object",
+                "description": "Map of verifierId to qHash (or qHash array) of existing proofs that can be reused instead of re-running a check.",
+                "additionalProperties": true
+              },
+              "matchedQHashes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "qHashes of proofs that matched gate requirements."
+              },
+              "rows": {
+                "type": "array",
+                "description": "Per-requirement row evaluation results.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "verifierId": {
+                      "type": "string"
+                    },
+                    "satisfied": {
+                      "type": "boolean"
+                    },
+                    "qHash": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "reused": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              }
+            },
+            "additionalProperties": true
           }
         },
         "additionalProperties": true
@@ -657,7 +723,7 @@
       },
       "VerifierData_ownership_basic": {
         "type": "object",
-        "description": "Ownership proofs require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep proof receipts linkable and explain origin without storing unnecessary raw content.",
+        "description": "Ownership proofs require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep proofs linkable and explain origin without storing unnecessary raw content.",
         "required": [
           "owner"
         ],
@@ -706,7 +772,7 @@
               "type",
               "id"
             ],
-            "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proof receipts, or external records.",
+            "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proofs, or external records.",
             "properties": {
               "type": {
                 "type": "string",
@@ -733,7 +799,7 @@
               "id": {
                 "type": "string",
                 "maxLength": 2048,
-                "description": "Stable reference identifier such as a URL, CID, transaction hash, repository path, file key, or prior receipt qHash."
+                "description": "Stable reference identifier such as a URL, CID, transaction hash, repository path, file key, or prior proof qHash."
               },
               "title": {
                 "type": "string",
@@ -1649,7 +1715,7 @@
               },
               "secretsExposedToReceipt": {
                 "type": "boolean",
-                "description": "Whether the delegation policy allows secrets to appear in action receipts (default false)."
+                "description": "Whether the delegation policy allows secrets to appear in action proofs (default false)."
               }
             },
             "additionalProperties": false
@@ -2053,8 +2119,10 @@
             "schema": {
               "type": "integer",
               "minimum": 1,
-              "maximum": 1000
-            }
+              "maximum": 1000,
+              "default": 50
+            },
+            "description": "Max results per page (default: 50 for public, 1000 for authenticated owner vault; maximum: 1000). Use cursor or offset pagination for larger sets."
           },
           {
             "name": "offset",

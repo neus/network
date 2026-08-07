@@ -5,14 +5,14 @@
     "email": "dev@neus.network"
   },
   "metadata": {
-    "description": "Connect assistants to verified identity, limited permissions, trust receipts, and encrypted Vault secrets in Cursor, Claude Code, Codex, and VS Code.",
+    "description": "Connect assistants to verified identity, limited permissions, proofs, and encrypted Vault secrets in Cursor, Claude Code, Codex, and VS Code.",
     "version": "1.3.8"
   },
   "plugins": [
     {
       "name": "neus-mcp",
       "source": "./plugins/neus-mcp",
-      "description": "Connect your assistant to verified identity, scoped permissions, and reusable trust receipts."
+      "description": "Connect your assistant to verified identity, scoped permissions, and reusable portable proofs."
     }
   ]
 }

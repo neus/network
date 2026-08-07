@@ -1,6 +1,6 @@
 ---
 title: Quickstart
-description: Publish a gate. Drop in VerifyGate. Confirm on your server.
+description: Publish a portal. Drop in VerifyGate. Confirm on your server.
 icon: rocket
 "og:image": "/images/og-quickstart.png"
 "twitter:image": "/images/og-quickstart.png"
@@ -11,7 +11,7 @@ One hosted gate owns the checks, pricing, and hosted sign-in. Your app never run
 ## Build it
 
 <Steps>
-  <Step title="Publish a gate">
+  <Step title="Publish a portal">
     Sign in at [neus.network](https://neus.network), open your profile → **Portals**, choose the checks visitors must pass, set pricing (you pay by default, or charge visitors), and **Publish**. Copy your `gateId`. Visitors only ever need that.
   </Step>
   <Step title="Gate content with VerifyGate">
@@ -22,7 +22,7 @@ One hosted gate owns the checks, pricing, and hosted sign-in. Your app never run
       <ProtectedContent />
     </VerifyGate>;
     ```
-    `VerifyGate` looks for an existing receipt, opens **Hosted Verify** only when a new one is needed, then renders your content. Wallet, passkey, and OAuth all happen on NEUS, not inside your app.
+    `VerifyGate` looks for an existing proof, opens **Hosted Verify** only when a new one is needed, then renders your content. Wallet, passkey, and OAuth all happen on NEUS, not inside your app.
   </Step>
   <Step title="Show status with ProofBadge">
     ```jsx
@@ -40,7 +40,7 @@ One hosted gate owns the checks, pricing, and hosted sign-in. Your app never run
     const client = new NeusClient();
     const result = await client.gateCheck({
       gateId: 'gate_your-app-name',
-      address: user.accountAddress, // from Hosted Verify / stored receipt subject
+      address: user.accountAddress, // from Hosted Verify / stored proof subject
     });
 
     if (!result.data?.gate?.allRequiredSatisfied) {
@@ -50,7 +50,7 @@ One hosted gate owns the checks, pricing, and hosted sign-in. Your app never run
   </Step>
 </Steps>
 
-The visitor’s receipt is theirs. If they return or visit another gate that needs the same checks, they can reuse it.
+The visitor’s proof is theirs. If they return or visit another gate that needs the same checks, they can reuse it.
 
 ## Not using React? Send users to Hosted Verify
 
@@ -65,7 +65,7 @@ window.location.assign(
 );
 ```
 
-Read the **receipt ID** (`qHash`) from the callback URL or popup message, then store it. Details: [Hosted Verify](./cookbook/auth-hosted-verify).
+Read the **proof ID** (`qHash`) from the callback URL or popup message, then store it. Details: [Hosted Verify](./cookbook/auth-hosted-verify).
 
 ## Adding an assistant instead?
 
@@ -85,4 +85,4 @@ Read the **receipt ID** (`qHash`) from the callback URL or popup message, then s
   </Card>
 </CardGroup>
 
-Backend-created receipts after a one-time approval: [Integrations](./cookbook/integrations).
+Backend-created proofs after a one-time approval: [Integrations](./cookbook/integrations).

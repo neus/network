@@ -1,6 +1,6 @@
 # NEUS MCP
 
-Portable identity, trusted context, scoped authority, and reusable receipts for AI agents — checked before sensitive actions.
+Portable identity, trusted context, scoped authority, and reusable proofs for AI agents — checked before sensitive actions.
 
 **Endpoint:** `https://mcp.neus.network/mcp`
 

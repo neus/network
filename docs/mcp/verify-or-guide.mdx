@@ -11,7 +11,7 @@ When signed in, **omit `walletAddress`** to use your profile wallet from `neus_c
 
 ## What it does
 
-1. Checks existing trust receipts for the required checks
+1. Checks existing proofs for the required checks
 2. If satisfied → `already_verified` (continue silently)
 3. If not → returns one next step (hosted verify link or in-MCP verify path)
 
@@ -31,6 +31,6 @@ Summarize the outcome for users as **Passed**, **Action needed**, or **Blocked**
 
 `action` (`already_verified` | `verification_required`), `eligible`, `hostedVerifyUrl` when a browser step is required.
 
-After hosted completion, read receipt state with **`neus_proofs_get`**.
+After hosted completion, read proof state with **`neus_proofs_get`**.
 
 Journeys: [MCP journeys](./journeys)

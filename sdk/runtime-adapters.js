@@ -68,15 +68,15 @@ ${skillsBlock || '- None configured'}
 ${services || '- None configured'}
 
 ## Permission limits
-${denied ? `Denied actions (do not perform without new approval):\n${denied}` : '- Follow the current permission receipt through NEUS MCP.'}
+${denied ? `Denied actions (do not perform without new approval):\n${denied}` : '- Follow the current permission proof through NEUS MCP.'}
 
 ## Trust workflow
 1. Call \`neus_context\` once per session when NEUS MCP is available.
 2. Before a sensitive action, call \`neus_proofs_check\` and then \`neus_verify_or_guide\` when needed.
-3. Do not invent receipt IDs, accounts, or receipt fields.
+3. Do not invent proof IDs, accounts, or proof fields.
 4. Summarize the result as Passed, Action needed, or Blocked. Do not show raw tool output.
 
-## Receipt references
+## Proof references
 - Identity: ${bundle.trust.identityProofUrl}
 ${bundle.trust.delegationProofUrl ? `- Permissions: ${bundle.trust.delegationProofUrl}` : '- Permissions: not on file — call `neus_agent_link` before acting as this agent.'}
 `;
@@ -102,12 +102,12 @@ ${bundle.identity.description || 'Verified agent on NEUS Network.'}
 ## Instructions
 ${bundle.identity.instructions || 'Use NEUS MCP before sensitive actions.'}
 
-## Trust receipts
+## Portable proofs
 - Identity: \`${bundle.trust.identityQHash}\` — ${bundle.trust.identityProofUrl}
 ${bundle.trust.delegationQHash ? `- Permissions: \`${bundle.trust.delegationQHash}\` — ${bundle.trust.delegationProofUrl}` : ''}
 
 ## Policy
-- Do not invent receipt IDs or check outcomes.
+- Do not invent proof IDs or check outcomes.
 - Call \`neus_context\` once; use profile context when signed in.
 `;
 }

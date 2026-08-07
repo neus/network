@@ -1,6 +1,6 @@
 {
   "name": "@neus/network",
-  "description": "Public NEUS documentation, SDK, plugins, and examples for reusable trust receipts.",
+  "description": "Public NEUS documentation, SDK, plugins, and examples for portable proofs.",
   "private": true,
   "type": "module",
   "engines": {

@@ -50,11 +50,11 @@ Both accounts need a CAIP-2 network reference (`controllerChainRef`, `agentChain
 
 ## App link
 
-One-time user approval lets your backend create receipts without asking for a signature on every request. This is different from creating a **portal** in your profile for hosted checks. See [Integrations](../cookbook/integrations).
+One-time user approval lets your backend create proofs without asking for a signature on every request. This is different from creating a **portal** in your profile for hosted checks. See [Integrations](../cookbook/integrations).
 
 1. User signs in on NEUS
 2. User approves the permissions once
-3. Your app stores the receipt ID in **`qHash`**
+3. Your app stores the proof ID in **`qHash`**
 4. Your backend calls verification with **`x-neus-app`** — no per-request signature
 
 ```javascript
@@ -96,7 +96,7 @@ await client.verify({
     controllerWallet: '0x...',
     agentWallet: '0x...',
     scope: 'payments:x402',
-    permissions: ['execute', 'read'],
+    allowedActions: ['execute_payments', 'read_proofs'],
     maxSpend: toAgentDelegationMaxSpend('100.50', 6),
     allowedPaymentTypes: ['x402'],
     receiptDisclosure: 'summary',
@@ -116,7 +116,7 @@ await client.verify({
 | `agentChainRef` | Yes* | CAIP-2 chain for the agent wallet. *Optional if the request supplies `chain` or `chainId` |
 | `agentId` | No | Linked identity id |
 | `scope` | No | Permission scope (default: `global`) |
-| `permissions` | No | Allowed actions |
+| `permissions` | No | App-link scope tags (e.g. `app:<id>`, `origin:<url>`). For action allow/deny lists, use `allowedActions`/`deniedActions` instead. |
 | `allowedActions` | No | Explicit action allowlist |
 | `deniedActions` | No | Explicit action denylist |
 | `maxSpend` | No | Spend cap in token base units |
@@ -128,11 +128,11 @@ await client.verify({
 | `runtimePolicy` | No | Provider/model limits and human-approval requirement |
 | `approvalPolicy` | No | Approval requirements for new claims or content |
 
-The protocol accepts bounded action strings in **`allowedActions`** and **`deniedActions`**. `deniedActions` always wins over `allowedActions`.
+The protocol accepts bounded action strings in **`allowedActions`** and **`deniedActions`**. `deniedActions` always wins over `allowedActions`. Use **`permissions`** only for app-link scope tags (`app:<id>`, `origin:<url>`).
 
 ## Human approval pattern
 
-Your application enforces the limits recorded in the permission receipt:
+Your application enforces the limits recorded in the permission proof:
 
 ```javascript
 const permissions = {
@@ -156,7 +156,7 @@ const permissions = {
 
 At runtime:
 
-1. Check the current permission receipt before the tool call.
+1. Check the current permission proof before the tool call.
 2. Apply **`deniedActions`** first.
 3. Pause when the policy requires human approval.
 4. Continue only after approval is confirmed.
@@ -165,7 +165,7 @@ Schema: [`agent-delegation.json`](https://github.com/neus/network/blob/main/docs
 
 ## Result
 
-A receipt ID returned in **`qHash`**. Check it with **`neus_agent_link`** or **`neus_proofs_check`** before an action.
+A proof ID returned in **`qHash`**. Check it with **`neus_agent_link`** or **`neus_proofs_check`** before an action.
 
 ## Revoke
 

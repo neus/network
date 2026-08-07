@@ -17,7 +17,7 @@ icon: wrench
 |------|---------------|---------------------|
 | `neus_proofs_check` | `wallet` | `verifiers` |
 | `neus_verify`, `neus_verify_or_guide` | `walletAddress` | `verifierIds` |
-| `neus_proofs_get` | `identifier` | optional `tags` (comma-separated receipt tags) |
+| `neus_proofs_get` | `identifier` | optional `tags` (comma-separated proof tags) |
 
 EVM `0x…`, Solana base58, or `did:pkh:…`. Delegated reads: **`agentWallet`** on **`neus_proofs_get`** (**`x-agent-wallet`** on the API).
 
@@ -27,7 +27,7 @@ EVM `0x…`, Solana base58, or `did:pkh:…`. Delegated reads: **`agentWallet`**
 |-------|--------|
 | Default | Connect → **`neus_context`** → **`neus_agent_link`** for agents → **`neus_proofs_check`** → continue if satisfied |
 | Project agent | **`neus_agent_mount`** or `neus mount <agentId> --apply <host>` in the repo |
-| Details | **`neus_proofs_get`** for receipt records, tags, delegated context, and receipt fields |
+| Details | **`neus_proofs_get`** for proof records, tags, delegated context, and proof fields |
 | Secrets | **`neus_secret_list`** / **`neus_secret_create`** / **`neus_secret_revoke`** when auth is configured ([Secrets](./secrets)) |
 | Fallback | **`neus_verify_or_guide`** only when something is missing |
 | Catalog | **`neus_verifiers_catalog`** only when you need raw schemas beyond context |
@@ -48,13 +48,13 @@ Same flow as [Overview](./overview).
     Reuse existing receipts before verifying.
   </Card>
   <Card title="Verify" icon="circle-plus" href="./verify">
-    Create a receipt in-session when possible.
+    Create a proof in-session when possible.
   </Card>
   <Card title="Verify or guide" icon="signs-post" href="./verify-or-guide">
-    Reuse a receipt or return the next hosted step.
+    Reuse a proof or return the next hosted step.
   </Card>
   <Card title="Proofs get" icon="receipt" href="./proofs-get">
-    Read receipt records and current status.
+    Read proof records and current status.
   </Card>
   <Card title="Me" icon="user" href="./me">
     Refresh profile context or look up an account.

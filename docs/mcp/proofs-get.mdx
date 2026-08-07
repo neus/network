@@ -1,26 +1,26 @@
 ---
-title: Read Trust Receipts (`neus_proofs_get`)
-description: Receipt records, profile summary, tags, and portable context for a wallet or DID.
+title: Read proofs (`neus_proofs_get`)
+description: Proof records, profile summary, tags, and portable context for a wallet or DID.
 icon: receipt
 ---
 
-Use when you have an **`identifier`** and need receipt records, receipt fields, tags, profile summary, or delegated context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility.
+Use when you have an **`identifier`** and need proof records, proof fields, tags, profile summary, or delegated context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility.
 
-In MCP, **Proof Receipt** is the tool-facing trust receipt record. In user-facing replies, summarize the result in plain language and link only real receipt URLs returned by NEUS.
+In user-facing replies, summarize the result in plain language and link only real proof URLs returned by NEUS.
 
 | Auth | Visibility |
 |------|------------|
 | None | Public-scope view |
-| Bearer | Can include **private** receipts for that account ([Auth](./auth)) |
+| Bearer | Can include **private** proofs for that account ([Auth](./auth)) |
 
 ## Common Reads
 
 | Need | Use |
 |------|-----|
-| Show prior checks | Read recent receipts for the account |
+| Show prior checks | Read recent proofs for the account |
 | Reuse assistant context | Filter by tags such as `memory`, `rules`, or `instruction` |
 | Confirm an agent handoff | Include `agentWallet` for delegated reads |
-| Continue a session | Filter by the tags your app saved on earlier receipts |
+| Continue a session | Filter by the tags your app saved on earlier proofs |
 
 Keep tag values short and product-facing in your own app. Avoid exposing private workflow names in assistant replies.
 
@@ -39,28 +39,28 @@ Keep tag values short and product-facing in your own app. Avoid exposing private
 | Field | Notes |
 |-------|-------|
 | `identifier` | EVM, Solana base58, **`did:pkh:...`** |
-| `tags` | Comma-separated receipt tag filter |
+| `tags` | Comma-separated proof tag filter |
 | `agentWallet` | Delegation (**`x-agent-wallet`**) |
 
 When `identifier` is a DID, NEUS resolves the DID to its native account. Non-EVM signing and account context still use CAIP-2 `chain`; see [CAIP-380 Portable Proof](../learn/standards/caip-380).
 
 ## Response
 
-Receipt records, receipt fields, **`profileSummary`**, and pagination. Follow the live tool response. Tags and receipt bodies come from this call.
+Proof records, proof fields, **`profileSummary`**, and pagination. Follow the live tool response. Tags and proof bodies come from this call.
 
 `profileSummary.proofsSummary` uses the same compact summary shape as the hosted profile context:
 
 | Field | Meaning |
 |-------|---------|
-| `total` | Total receipts known for the profile summary |
-| `embeddedCount` | Receipt references included in the profile document |
-| `isTruncated` | `true` when more receipts exist than the embedded profile references |
+| `total` | Total proofs known for the profile summary |
+| `embeddedCount` | Proof references included in the profile document |
+| `isTruncated` | `true` when more proofs exist than the embedded profile references |
 | `byVerifier` | Counts by verifier id |
-| `latestByVerifier` | Latest receipt pointer by verifier id |
-| `latestByCategory` | Latest receipt pointer grouped by verifier category |
-| `latestByScope` | Latest receipt pointer grouped by verifier id and scope |
+| `latestByVerifier` | Latest proof pointer by verifier id |
+| `latestByCategory` | Latest proof pointer grouped by verifier category |
+| `latestByScope` | Latest proof pointer grouped by verifier id and scope |
 
-Use the paginated `proofs` list for full receipt history. Treat the summary as a fast profile snapshot, not a replacement for pagination.
+Use the paginated `proofs` list for full proof history. Treat the summary as a fast profile snapshot, not a replacement for pagination.
 
 ## Assistant Output
 
@@ -70,13 +70,13 @@ Do:
 NEUS: Passed. Requirement satisfied. Result on file. Next: Continue.
 ```
 
-Avoid raw JSON, private implementation tags, or guessed receipt URLs.
+Avoid raw JSON, private implementation tags, or guessed proof URLs.
 
 ## Next
 
 <CardGroup cols={2}>
   <Card title="Proof check" icon="circle-check" href="./proofs-check">
-    Confirm existing receipts before creating new ones.
+    Confirm existing proofs before creating new ones.
   </Card>
   <Card title="MCP overview" icon="plug" href="./overview">
     Install, session flow, and tool map.

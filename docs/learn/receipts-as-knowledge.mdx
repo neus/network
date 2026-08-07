@@ -1,16 +1,16 @@
 ---
-title: Receipt links and versioning
-description: Optional patterns for linking trust receipts with typed references and supersedes tags.
+title: Proof links and versioning
+description: Optional patterns for linking portable proofs with typed references and supersedes tags.
 icon: link
 ---
 
-Use these patterns when an integration needs linked receipts, version history, or tag-based lookup.
+Use these patterns when an integration needs linked proofs, version history, or tag-based lookup.
 
-**Receipt ID** in API responses is `qHash`.
+**Proof ID** in API responses is `qHash`.
 
 ## Typed reference — `reference.type: "qhash"`
 
-The `ownership-basic` check accepts a `reference` object with `type: "qhash"` and `id` set to another receipt’s ID. That creates a typed link from one receipt to another.
+The `ownership-basic` check accepts a `reference` object with `type: "qhash"` and `id` set to another proof's ID. That creates a typed link from one proof to another.
 
 ```json
 {
@@ -20,45 +20,45 @@ The `ownership-basic` check accepts a `reference` object with `type: "qhash"` an
     "reference": {
       "type": "qhash",
       "id": "0xe1a2b3c4d5e6f7081920212232425262728292a2b2c2d2e2f303132333435363",
-      "title": "Agent identity receipt"
+      "title": "Agent identity proof"
     }
   }
 }
 ```
 
-Reference payloads for the same target commonly hash from `qhash:{targetId}` in the signed content. Confirm current behavior in the [ownership-basic](../verification/ownership-basic) capability reference and live API responses — do not invent receipt IDs.
+Reference payloads for the same target commonly hash from `qhash:{targetId}` in the signed content. Confirm current behavior in the [ownership-basic](../verification/ownership-basic) capability reference and live API responses — do not invent proof IDs.
 
 ## Version chain — `supersedes:<qHash>` tag
 
-When you update a memory or instruction receipt, NEUS can tag the new receipt with `supersedes:<previousQHash>`. Newer receipts point back to older ones.
+When you update a memory or instruction proof, NEUS can tag the new proof with `supersedes:<previousQHash>`. Newer proofs point back to older ones.
 
 ```text
-Receipt A → supersedes:none
-Receipt B → supersedes:0xA  (replaces A)
-Receipt C → supersedes:0xB  (replaces B)
+Proof A → supersedes:none
+Proof B → supersedes:0xA  (replaces A)
+Proof C → supersedes:0xB  (replaces B)
 ```
 
 Use `neus_proofs_get` to walk the chain and read history.
 
 ## Tag prefixes for discovery
 
-Tag prefixes help you filter related receipts. Common prefixes include subject facets (`topic:`, `domain:`) and review state (`quality:draft` / `quality:approved`). Query tagged receipts with [`neus_proofs_get`](../mcp/proofs-get). To attach an agent profile to a project, see [Connect agent context](../agents/runtime-mount).
+Tag prefixes help you filter related proofs. Common prefixes include subject facets (`topic:`, `domain:`) and review state (`quality:draft` / `quality:approved`). Query tagged proofs with [`neus_proofs_get`](../mcp/proofs-get). To attach an agent profile to a project, see [Connect agent context](../agents/runtime-mount).
 
 ## Large content
 
-Inline receipt content has a size limit (about 50,000 characters). For larger artifacts, store the canonical file elsewhere and attach a short receipt that references it (`reference` URL or content hash), or split content across multiple receipts only when your integration explicitly supports that pattern.
+Inline proof content has a size limit (about 50,000 characters). For larger artifacts, store the canonical file elsewhere and attach a short proof that references it (`reference` URL or content hash), or split content across multiple proofs only when your integration explicitly supports that pattern.
 
 ## Next
 
 <CardGroup cols={2}>
-  <Card title="Proof receipts" icon="receipt" href="../platform/receipts-and-results">
-    How receipts work on NEUS.
+  <Card title="Proofs and results" icon="receipt" href="../platform/receipts-and-results">
+    How proofs work on NEUS.
   </Card>
   <Card title="Reuse portable context" icon="refresh-cw" href="../mcp/journeys">
     MCP journeys for context reuse.
   </Card>
   <Card title="Proofs read" icon="search" href="../mcp/proofs-get">
-    Query receipts by tag and scope.
+    Query proofs by tag and scope.
   </Card>
   <Card title="ownership-basic" icon="file" href="../verification/ownership-basic">
     Check inputs for content and references.

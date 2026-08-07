@@ -70,12 +70,12 @@ Pass these under `options` on `client.verify(...)`:
 
 | Option | When to use |
 |--------|-------------|
-| `privacyLevel: 'public' \| 'unlisted' \| 'private'` | Control who can read the receipt |
+| `privacyLevel: 'public' \| 'unlisted' \| 'private'` | Control who can read the proof |
 | `enableIpfs: true` | Pin proof data to IPFS |
 | `storeOriginalContent: true` | Keep the original content with the proof |
 | `targetChains: [...]` | Anchor/publish to specific chains |
-| `publishToHub: true` | Make the receipt discoverable on your profile |
-| `publicDisplay: true` | Allow public display of the receipt |
+| `publishToHub: true` | Make the proof discoverable on your profile |
+| `publicDisplay: true` | Allow public display of the proof |
 | `meta`, `verifierOptions` | App metadata and per-verifier options |
 
 Reuse-vs-create is a **widget** concern: the `strategy` prop (`reuse-or-create` default, `fresh`, `reuse`) lives on [`VerifyGate`](../widgets/verifygate), not on `client.verify()`. [Verification patterns](./verifications) for privacy and widget options.

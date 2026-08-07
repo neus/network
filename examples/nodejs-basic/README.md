@@ -1,6 +1,6 @@
 # Node.js example
 
-Use this example when your backend already holds a wallet key or signer and you want to create NEUS trust receipts server-side.
+Use this example when your backend already holds a wallet key or signer and you want to create NEUS portable proofs server-side.
 
 For product flows with user signing, prefer [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) or browser `client.verify()`.
 

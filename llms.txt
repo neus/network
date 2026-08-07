@@ -1,13 +1,13 @@
 # NEUS
 
-> Portable identity, context, authority, and receipts for humans and AI agents.
+> Portable identity, context, authority, and proofs for humans and AI agents.
 
-NEUS is the persistent trust layer. It turns identity, ownership, risk, and permission checks into reusable trust receipts — so people, apps, and agents stop re-proving the same facts and connected gates check current state before access, payment, or execution.
+NEUS is the persistent trust layer. It turns identity, ownership, risk, and permission checks into reusable portable proofs — so people, apps, and agents stop re-proving the same facts and connected gates check current state before access, payment, or execution.
 
 ## What NEUS does
 
-- **Trust receipts:** A reusable record of an identity, ownership, or permission check. Show it on a profile, require it for access, or confirm it through the API — same receipt, every surface.
-- **Gates:** Receipt-based access to content, rewards, and member areas, with optional USDC or card checkout.
+- **Portable proofs:** A reusable verification asset for identity, ownership, or permission. Show it on a profile, require it for access, or confirm it through the API — same proof, every surface.
+- **Gates:** Proof-based access to content, rewards, and member areas, with optional USDC or card checkout.
 - **Agent trust:** Verifiable agent identity, controller-approved authority, spend caps, and expiration — checked before tools run.
 - **Unique-person checks:** Reuse proof-of-human and wallet-risk results across a product.
 - **MCP for assistants:** One setup writes supported editor configuration and signs the user in with OAuth — same identity, context, and authority in Cursor, Claude Code, Codex, and VS Code.
@@ -30,7 +30,7 @@ Then ask your assistant: "Use NEUS Verify before taking sensitive actions."
 - Hosted MCP: https://mcp.neus.network/mcp
 - JavaScript SDK: https://www.npmjs.com/package/@neus/sdk
 - API base: https://api.neus.network
-- Receipt pages: https://neus.network/proof/{qHash}
+- Proof pages: https://neus.network/proof/{qHash}
 
 ## Read in order
 
@@ -58,7 +58,7 @@ ownership-basic, ownership-social, ownership-pseudonym, ownership-dns-txt, owner
 
 ## Standard
 
-Wallet-signed request envelopes follow the CAIP-380 (Portable Proof) ChainAgnostic draft. Their hash, DID binding, and signature can be verified without NEUS. Verifier outcomes remain part of the NEUS trust receipt; session-authorized receipts are not CAIP-380 envelopes.
+Wallet-signed request envelopes follow the CAIP-380 (Portable Proof) ChainAgnostic draft. Their hash, DID binding, and signature can be verified without NEUS. Verifier outcomes remain part of the NEUS portable proof; session-authorized proofs are not CAIP-380 envelopes.
 
 ## Optional
 

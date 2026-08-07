@@ -48,7 +48,7 @@ A hosted gate can evaluate current JSON returned by a visitor-supplied HTTPS URL
 
 The visitor supplies only the URL. Resolver rules and expected output remain server-controlled. Ordinary URL references without `resolved.*` gate matches are not fetched.
 
-To store the exact string on the receipt, set **`storeOriginalContent: true`** when you need to override defaults. Read back with **`proof.publicContent.content`**. [Privacy](../platform/security-and-trust) covers defaults.
+To store the exact string on the proof, set **`storeOriginalContent: true`** when you need to override defaults. Read back with **`proof.publicContent.content`**. [Privacy](../platform/security-and-trust) covers defaults.
 
 **Pre-hash:** Do not paste a generic SHA256 as `contentHash`. Send `content`, verify, and use the returned verifier hash from NEUS.
 

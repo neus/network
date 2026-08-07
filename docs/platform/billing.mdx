@@ -57,7 +57,7 @@ Payment runs after verification by default. For the full checkout sequence, see 
 
 ## When your app creates agents for users
 
-Agent setup creates two separately signed receipts. Billing follows the signer for each step unless a validated sponsor or pay-per-call receipt is present.
+Agent setup creates two separately signed proofs. Billing follows the signer for each step unless a validated sponsor or pay-per-call proof is present.
 
 | Step | Default payer |
 |------|---------------|
@@ -65,7 +65,7 @@ Agent setup creates two separately signed receipts. Billing follows the signer f
 | Signed-in account signs `agent-delegation` | Signed-in approving account |
 | Server signs with its own profile | Builder profile account |
 | Valid sponsor grant | Sponsoring organization |
-| Valid pay-per-call receipt | Caller that bought the receipt |
+| Valid pay-per-call proof | Caller that bought the proof |
 
 For a dedicated agent account, create identity first, then send the user through the delegation-only hosted callback. See [`neus_agent_create`](../mcp/agent-create).
 
@@ -75,6 +75,6 @@ Billable calls return **402** with a quote. Pay per call with x402 (no account n
 
 ## Advanced server integration
 
-Server-side receipt creation and per-user approvals use separate flows — see [Integrations](../cookbook/integrations).
+Server-side proof creation and per-user approvals use separate flows — see [Integrations](../cookbook/integrations).
 
 **Next:** [Pricing](./pricing) · [x402](./x402)

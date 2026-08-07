@@ -1,6 +1,6 @@
 # @neus/mcp-server
 
-Hosted NEUS MCP — portable identity, trusted context, scoped authority, and reusable receipts for AI agents, checked before sensitive actions.
+Hosted NEUS MCP — portable identity, trusted context, scoped authority, and reusable proofs for AI agents, checked before sensitive actions.
 
 Connect Cursor, VS Code, Claude Code, or Codex in one command:
 

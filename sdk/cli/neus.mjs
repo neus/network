@@ -1865,9 +1865,9 @@ async function runMount(options) {
     emitCliBanner(options);
     writeCliLine(paint('mount', 'green'));
     logStep('ok', 'agent', bundle.identity.agentLabel || bundle.identity.agentId);
-    writeGuidanceLine(`Identity receipt: ${bundle.trust.identityProofUrl}`);
+    writeGuidanceLine(`Identity proof: ${bundle.trust.identityProofUrl}`);
     if (bundle.trust.delegationProofUrl) {
-      writeGuidanceLine(`Delegation receipt: ${bundle.trust.delegationProofUrl}`);
+      writeGuidanceLine(`Delegation proof: ${bundle.trust.delegationProofUrl}`);
     } else {
       writeGuidanceLine('Delegation not on file — run agent setup on neus.network before scoped actions.');
     }
@@ -2517,11 +2517,11 @@ function runExport(options) {
 
 const ASSISTANT_EXAMPLE_PROMPTS = [
   'Use NEUS Verify before taking sensitive actions.',
-  'Check whether I already have the required trust receipt.',
+  'Check whether I already have the required proof.',
   'Verify this agent is trusted before it runs tools.',
   'Mount my NEUS agent context with neus_agent_mount, then follow its scoped policy.',
   'Use NEUS Vault before storing or using secrets.',
-  'Show the receipt for this verification.'
+  'Show the proof for this verification.'
 ];
 
 function runExamples(options) {
@@ -2737,7 +2737,7 @@ async function runDoctor(options) {
         const handle = payload.mcp.profileHandle ? ` as ${payload.mcp.profileHandle}` : '';
         const wallet = payload.mcp.sessionWallet ? ` · ${shortWallet(payload.mcp.sessionWallet)}` : '';
         const receipts =
-          payload.mcp.proofsTotal != null ? ` · ${payload.mcp.proofsTotal} trust receipts on file` : '';
+          payload.mcp.proofsTotal != null ? ` · ${payload.mcp.proofsTotal} proofs on file` : '';
         const tools = payload.mcp.toolsCount ? ` · ${payload.mcp.toolsCount} tools` : '';
         logStep('ok', 'profile', `connected${handle}${wallet}${receipts}${tools}`);
         writeGuidanceLine('NEUS Verify is ready. Ask your assistant to verify trust before sensitive actions.');

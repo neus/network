@@ -47,7 +47,7 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "Verify and trust receipts before access, payment, or action. Docs for gates, Hosted Verify, SDK, widgets, and MCP.",
+      "description": "Verify once. Carry the proof. Docs for gates, Hosted Verify, SDK, widgets, and MCP.",
       "og:title": "NEUS Docs",
       "og:description": "Portable trust infrastructure for humans and agents, verify authority before access or action.",
       "og:image": "https://docs.neus.network/images/og-default.png",

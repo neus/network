@@ -54,10 +54,10 @@ Billing and check policy come from the gate. You do not register an app or pass 
 | `gateId` | Published gate handle (default) |
 | `strategy` | Reuse, reuse-or-create, or fresh proofs |
 | `mode` | Create vs access behavior |
-| `qHash` | Existing receipt for access mode |
+| `qHash` | Existing proof for access mode |
 | `hostedCheckoutUrl` | Override hosted verify base URL |
 | `oauthProvider` | Pre-select social or org sign-in on hosted verify |
-| `wallet` | Optional signer for private receipt reuse or access mode |
+| `wallet` | Optional signer for private proof reuse or access mode |
 
 ## Default create behavior
 
@@ -72,20 +72,20 @@ Allowed values:
 - **Social:** `x`, `twitter`, `github`, `discord`, `facebook`, `linkedin`, `telegram`
 - **Org:** `google`, `microsoft`
 
-## Advanced server receipts
+## Advanced server proofs
 
-For backend-created receipts after a one-time user approval, use the server-side `verifyFromApp` flow in [Integrations](../cookbook/integrations). Keep browser checkout on `gateId`.
+For backend-created proofs after a one-time user approval, use the server-side `verifyFromApp` flow in [Integrations](../cookbook/integrations). Keep browser checkout on `gateId`.
 
 ## Next
 
 <CardGroup cols={2}>
-  <Card title="Verify Checkout" icon="door-open" href="../platform/hosted-gate-checkout">
+  <Card title="Gate checkout" icon="door-open" href="../platform/hosted-gate-checkout">
     Server eligibility and paid gate checkout.
   </Card>
   <Card title="Integration" icon="compass" href="../integration">
     Browser, server, and assistant paths.
   </Card>
   <Card title="SDK verifications" icon="list-check" href="../sdks/verifications">
-    Create and poll receipts from code.
+    Create and poll proofs from code.
   </Card>
 </CardGroup>

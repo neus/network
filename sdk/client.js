@@ -1784,7 +1784,7 @@ export class NeusClient {
    *
    * @param {object} params
    * @param {string} params.gateId Published gate handle
-   * @param {string} params.qHash Verified proof receipt id
+   * @param {string} params.qHash Verified proof id
    * @param {string} [params.walletAddress] Wallet bound to the proof (required without a session cookie)
    * @param {string} [params.paymentCheckoutSessionId] Stripe checkout session id (card rail)
    * @param {string} [params.paymentTxHash] USDC payment transaction hash (wallet rail)

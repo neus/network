@@ -4,7 +4,7 @@ description: Layer account, social, and human checks for stronger assurance than
 icon: shield-halved
 ---
 
-One weak check is easy to game. Publish a gate that **layers** hosted account signals so visitors must pass more than one requirement.
+One weak check is easy to game. Publish a portal that **layers** hosted account signals so visitors must pass more than one requirement.
 
 | Layer | Check ID | When |
 |-------|----------|------|
@@ -36,12 +36,12 @@ In **Profile → Portals**, require the checks above, set pricing, and publish. 
 ```javascript
 const layered = await client.gateCheck({
   gateId: 'gate_layered',
-  address: user.accountAddress, // from Hosted Verify / receipt subject
+  address: user.accountAddress, // from Hosted Verify / proof subject
 });
 ```
 
 <Warning>
-Configure recency on the gate for point-in-time checks. Store receipt IDs (`qHash`) where replay matters.
+Configure recency on the gate for point-in-time checks. Store proof IDs (`qHash`) where replay matters.
 </Warning>
 
 **Next:** [Create a portal](../platform/setup) · [Hosted Verify](./auth-hosted-verify) · [Pricing](../platform/pricing)

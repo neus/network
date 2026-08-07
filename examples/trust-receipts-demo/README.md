@@ -1,6 +1,6 @@
-# Trust receipts demo
+# Portable proofs demo
 
-NEUS turns trust decisions into reusable **trust receipts** you can hold, look up, and attach to a claim. This demo uses `VerifyGate` to issue receipts in the browser. In a real app, persist the returned **receipt ID** (`qHash`) in your own record and validate it server-side.
+NEUS turns trust decisions into reusable **portable proofs** you can hold, look up, and attach to a claim. This demo uses `VerifyGate` for gate checkout in the browser (it opens Hosted Verify when a check is missing). In a real app, persist the returned **proof ID** (`qHash`) and confirm with server-side `gateCheck`.
 
 ## Run it locally
 
@@ -45,10 +45,10 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 ## Use real gates
 
-Publish gates in [Hub](https://neus.network/hub) and pass their real `gateId` into `VerifyGate` and `gateCheck`. The demo uses sample gate ids derived from each claim; replace them before connecting to the live API.
+Publish portals in [Profile → Portals](https://neus.network/profile?tab=portals) and pass the real `gateId` into `VerifyGate` and `gateCheck`. The demo uses sample gate ids derived from each claim; replace them before connecting to the live API.
 
-## Store the receipt
+## Store the proof
 
-Store the returned **receipt ID** (`qHash`) with your claim record. Before prompting the user again, check whether a valid proof already exists.
+Store the returned **proof ID** (`qHash`) with your claim record. Before prompting the user again, check whether a valid proof already exists.
 
-A receipt ID is a reusable receipt handle, not a session token. In production, validate it server-side, for example with `gateCheck`.
+A proof ID is a portable proof handle, not a session token. In production, validate it server-side, for example with `gateCheck`.

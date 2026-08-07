@@ -40,16 +40,16 @@ curl https://neus.network/.well-known/a2a/agent-card.json
 
 | Field | Source | Visible |
 |-------|--------|---------|
-| `agentId` | Identity receipt | Public |
-| `agentWallet` | Identity receipt | Public |
-| `agentLabel` | Identity receipt | Public |
-| `description` | Identity receipt | Public |
-| `capabilities` | Identity receipt | Public |
-| `skills` | Identity receipt | Public |
-| `controllerWallet` | Permission receipt | Public |
-| `scope` | Permission receipt | Public |
-| `allowedActions` | Permission receipt | Owner-view only |
-| `deniedActions` | Permission receipt | Owner-view only |
+| `agentId` | Identity proof | Public |
+| `agentWallet` | Identity proof | Public |
+| `agentLabel` | Identity proof | Public |
+| `description` | Identity proof | Public |
+| `capabilities` | Identity proof | Public |
+| `skills` | Identity proof | Public |
+| `controllerWallet` | Permission proof | Public |
+| `scope` | Permission proof | Public |
+| `allowedActions` | Permission proof | Owner-view only |
+| `deniedActions` | Permission proof | Owner-view only |
 
 Public cards do not expose full allow/deny lists. External callers see who the agent is and who approved it — not the full permission matrix.
 
@@ -73,7 +73,7 @@ Discovery endpoints return `Access-Control-Allow-Origin: *`. Platform cards cach
 ## How to use it
 
 1. **Discover** — fetch the card for the agent you need.
-2. **Confirm** — check the permission receipt before a sensitive action.
+2. **Confirm** — check the permission proof before a sensitive action.
 3. **Connect** — call the agent through MCP, A2A, or your own runtime.
 
 ## Next

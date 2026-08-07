@@ -1,13 +1,13 @@
 ---
-title: "Create result (`neus_verify`)"
-sidebarTitle: "Create result"
-description: "Create a saved result from inside an MCP session."
+title: "Create proof (`neus_verify`)"
+sidebarTitle: "Create proof"
+description: "Create a saved proof from inside an MCP session."
 icon: circle-check
 ---
 
-Use **`neus_verify`** to create a result when the signed-in account can complete the check in-session. For steps that need a browser (OAuth, personhood, payment, wallet connect), use **[`neus_verify_or_guide`](./verify-or-guide)** instead. It returns a hosted link.
+Use **`neus_verify`** to create a proof when the signed-in account can complete the check in-session. For steps that need a browser (OAuth, personhood, payment, wallet connect), use **[`neus_verify_or_guide`](./verify-or-guide)** instead. It returns a hosted link.
 
-Always run **`neus_proofs_check`** first and reuse an existing result before creating a new one.
+Always run **`neus_proofs_check`** first and reuse an existing proof before creating a new one.
 
 When signed in, **omit `walletAddress`**. The tool uses your profile account from `neus_context`.
 
@@ -22,7 +22,7 @@ When signed in, **omit `walletAddress`**. The tool uses your profile account fro
 | `signature` | No | Provided in the finalize step |
 | `signedTimestamp` | No | Provided in the finalize step |
 | `options.returnUrl` | No | Where to send the user if a hosted step is needed |
-| `options.publishToHub` | No | Make the receipt discoverable on your profile |
+| `options.publishToHub` | No | Make the proof discoverable on your profile |
 
 ```json
 { "verifierIds": ["ownership-basic"], "data": { "content": "Hello NEUS" } }
@@ -34,6 +34,6 @@ When signed in, **omit `walletAddress`**. The tool uses your profile account fro
 
 ## Output
 
-A plain-language **Passed**, **Action needed**, or **Blocked** result. On success, the tool also returns the receipt ID in `qHash` for your server. If a browser step is required, it returns a `next_action` link.
+A plain-language **Passed**, **Action needed**, or **Blocked** result. On success, the tool also returns the proof ID in `qHash` for your server. If a browser step is required, it returns a `next_action` link.
 
 **Prefer verify-or-guide for most assistants:** [`neus_verify_or_guide`](./verify-or-guide).

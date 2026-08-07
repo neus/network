@@ -11,7 +11,7 @@ The `neus mount` command loads a verified agent&apos;s current context into one 
 - granted permissions
 - current settings
 - skills and tools
-- trust receipt links
+- portable proof links
 
 Use it when an assistant or worker should act as a specific profile agent. One command replaces several separate lookups.
 
@@ -31,7 +31,7 @@ Start a **new** Agent chat in Cursor so the project rules load.
 
 ## Assistant tool
 
-When signed in, call **`neus_agent_mount`** with `agentId`. You can also use `agentWallet` or the identity receipt ID in `identityQHash`.
+When signed in, call **`neus_agent_mount`** with `agentId`. You can also use `agentWallet` or the identity proof ID in `identityQHash`.
 
 The tool returns the same bundle as the command-line interface and is available on every plan.
 
@@ -54,7 +54,7 @@ Use `resolveRuntimeBundleFromMcp` with your MCP transport, then `applyRuntimeBun
 
 | Surface | What NEUS provides |
 |--------|----------------------|
-| **NEUS agent tab** | Enforces permissions, tool access, and receipt checks |
+| **NEUS agent tab** | Enforces permissions, tool access, and proof checks |
 | **Cursor and other editors** | Loads project rules and trust context; start a new chat after connecting |
 | **Workers and backends** | Returns the bundle for your application to enforce in its own tool loop |
 

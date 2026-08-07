@@ -41,6 +41,6 @@ neus mount <agentId> --apply cursor
 | **Project** | `neus mount <agentId> --apply cursor` |
 | **Session** | `neus_context` → `neus_agent_mount` when acting as the agent |
 
-Use `neus mount` only when acting as a registered profile agent. For receipt checks and secrets, `neus setup` plus `neus_context` is enough.
+Use `neus mount` only when acting as a registered profile agent. For proof checks and secrets, `neus setup` plus `neus_context` is enough.
 
 The setup command installs this workflow skill together with the single hosted MCP registration.

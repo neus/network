@@ -53,9 +53,9 @@ Same as [Signing format](../../verification/signing-format).
 
 ## What the envelope proves
 
-The wallet signature and `qHash` prove the integrity and signer authorization of the request envelope. They do not, by themselves, prove that a particular verifier ran or that NEUS produced a result. A NEUS trust receipt adds verifier results and status around that request anchor.
+The wallet signature and `qHash` prove the integrity and signer authorization of the request envelope. They do not, by themselves, prove that a particular verifier ran or that NEUS produced a result. A NEUS portable proof adds verifier results and status around that request anchor.
 
-Session-authorized and service-authorized verification can still produce NEUS trust receipts, but those receipts are not CAIP-380 envelopes because they do not contain a verified wallet signature. Creation responses use `receipt.format: "caip-380-envelope"` only for qualifying envelopes and `receipt.format: "neus-receipt"` otherwise.
+Session-authorized and service-authorized verification can still produce NEUS proofs, but those results are not CAIP-380 envelopes because they do not contain a verified wallet signature. Creation responses use `receipt.format: "caip-380-envelope"` only for qualifying envelopes and `receipt.format: "neus-receipt"` otherwise (legacy response field retained for compatibility).
 
 ## Offline verification
 

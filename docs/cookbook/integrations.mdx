@@ -1,6 +1,6 @@
 ---
 title: Integrations
-description: Backend receipt creation and profile access keys when Hosted Verify is not enough.
+description: Backend proof creation and profile access keys when Hosted Verify is not enough.
 icon: server
 ---
 
@@ -14,7 +14,7 @@ Most products use [Quickstart](../quickstart): **VerifyGate** or **Hosted Verify
 | Your server creates receipts for an approved user | `verifyFromApp` after one-time approval |
 | MCP, CI, or raw HTTP as **your** NEUS profile | Profile access key (`npk_*`) |
 
-## Backend receipt creation (`verifyFromApp`)
+## Backend proof creation (`verifyFromApp`)
 
 After a user approves your product once (app-link permission), your server can create receipts for them without a per-request signature.
 
@@ -52,7 +52,7 @@ Create keys under [Profile → Account](https://neus.network/profile?tab=account
 
 Pass the key to `NeusClient` as `apiKey` on the **server**. The SDK sends `Authorization: Bearer npk_...`. Never ship keys in browser bundles.
 
-Access keys identify **your builder profile** for automation. They do not replace per-user approval for backend receipt creation.
+Access keys identify **your builder profile** for automation. They do not replace per-user approval for backend proof creation.
 
 ## Billing
 

@@ -3,7 +3,7 @@
 | Example | Use it for |
 | ------- | ---------- |
 | [trust-receipts-demo](./trust-receipts-demo/README.md) | End-to-end **VerifyGate** + gate check demo |
-| [nodejs-basic](./nodejs-basic/README.md) | Server-side receipt creation and checks |
+| [nodejs-basic](./nodejs-basic/README.md) | Server-side proof creation and checks |
 
 Run the demo locally, then follow the [Quickstart](https://docs.neus.network/quickstart) to add the same trust loop to your app.
 
