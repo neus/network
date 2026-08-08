@@ -48,19 +48,19 @@
     },
     {
       "name": "neus_proofs_check",
-      "description": "Check whether existing proofs meet the requested requirements. This is read-only and never creates a proof. Omit the wallet when signed in."
+      "description": "Check whether existing portable proofs meet the requested requirements. This is read-only and never creates a proof. Omit the wallet when signed in."
     },
     {
       "name": "neus_verify",
-      "description": "Create or refresh a proof after checking that one is needed. Omit the wallet when signed in; the session authorizes the request."
+      "description": "Create or refresh a portable proof after checking that one is needed. Omit the wallet when signed in; the session authorizes the request."
     },
     {
       "name": "neus_verify_or_guide",
-      "description": "Reuse a qualifying proof or return the one next step needed to complete the check. Omit the wallet when signed in."
+      "description": "Reuse a qualifying portable proof or return the one next step needed to complete the check. Omit the wallet when signed in."
     },
     {
       "name": "neus_proofs_get",
-      "description": "Read current proof details for a wallet or DID, including titles, tags, status, and content. Omit the wallet when signed in."
+      "description": "Read current portable proof details for a wallet or DID, including titles, tags, status, and content. Omit the wallet when signed in."
     },
     {
       "name": "neus_me",

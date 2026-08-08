@@ -246,11 +246,11 @@
           },
           "options": {
             "type": "object",
-            "description": "Optional verification options. By default the proof persists offchain with no on-chain transaction.",
+            "description": "Optional verification options. By default the proof receipt persists offchain with no on-chain transaction.",
             "properties": {
               "publishToHub": {
                 "type": "boolean",
-                "description": "Opt in to an on-chain hub registry transaction when targetChains is empty. Default false: offchain proof only."
+                "description": "Opt in to an on-chain hub registry transaction when targetChains is empty. Default false: offchain receipt only."
               },
               "targetChains": {
                 "type": "array",
@@ -723,7 +723,7 @@
       },
       "VerifierData_ownership_basic": {
         "type": "object",
-        "description": "Ownership proofs require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep proofs linkable and explain origin without storing unnecessary raw content.",
+        "description": "Ownership proofs require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep proof receipts linkable and explain origin without storing unnecessary raw content.",
         "required": [
           "owner"
         ],
@@ -772,7 +772,7 @@
               "type",
               "id"
             ],
-            "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proofs, or external records.",
+            "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proof receipts, or external records.",
             "properties": {
               "type": {
                 "type": "string",
@@ -799,7 +799,7 @@
               "id": {
                 "type": "string",
                 "maxLength": 2048,
-                "description": "Stable reference identifier such as a URL, CID, transaction hash, repository path, file key, or prior proof qHash."
+                "description": "Stable reference identifier such as a URL, CID, transaction hash, repository path, file key, or prior receipt qHash."
               },
               "title": {
                 "type": "string",
@@ -1715,7 +1715,7 @@
               },
               "secretsExposedToReceipt": {
                 "type": "boolean",
-                "description": "Whether the delegation policy allows secrets to appear in action proofs (default false)."
+                "description": "Whether the delegation policy allows secrets to appear in action receipts (default false)."
               }
             },
             "additionalProperties": false
