@@ -47,9 +47,9 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "Verify once. Carry the proof. Docs for gates, Hosted Verify, SDK, widgets, and MCP.",
+      "description": "Set agent identity, permissions, and spend limits before tools run. One-command setup for every major AI coding assistant.",
       "og:title": "NEUS Docs",
-      "og:description": "Portable trust infrastructure for humans and agents, verify authority before access or action.",
+      "og:description": "Give agents verified identity and enforceable permissions before they act.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
@@ -57,7 +57,7 @@
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
       "twitter:title": "NEUS Docs",
-      "twitter:description": "Portable trust infrastructure for humans and agents, verify authority before access or action.",
+      "twitter:description": "Give agents verified identity and enforceable permissions before they act.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
@@ -84,18 +84,9 @@
         "tab": "Build",
         "groups": [
           {
-            "group": "Overview",
+            "group": "Home",
             "pages": [
               "index",
-              "get-started",
-              "quickstart",
-              "install",
-              "examples"
-            ]
-          },
-          {
-            "group": "Checks",
-            "pages": [
               "verification/overview",
               "verification/how-it-works",
               "verification/lifecycle",
@@ -120,45 +111,6 @@
                 ]
               }
             ]
-          },
-          {
-            "group": "Platform",
-            "pages": [
-              "platform/overview",
-              "platform/trust-stack",
-              "integration",
-              "platform/status",
-              "platform/setup",
-              "platform/receipts-and-results",
-              "platform/pricing",
-              "platform/billing",
-              "platform/x402",
-              "platform/hosted-gate-checkout",
-              "platform/presets",
-              "platform/environments",
-              "platform/rate-limits-and-retries",
-              "platform/security-and-trust",
-              "brand-kit"
-            ]
-          },
-          {
-            "group": "SDK",
-            "pages": [
-              "sdks/overview",
-              "sdks/javascript",
-              "sdks/authentication",
-              "sdks/verifications",
-              "sdks/error-handling",
-              "sdks/security"
-            ]
-          },
-          {
-            "group": "Widgets",
-            "pages": ["widgets/overview", "widgets/verifygate"]
-          },
-          {
-            "group": "API",
-            "pages": ["api/overview", "api/authentication", "api/errors"]
           }
         ]
       },
@@ -168,6 +120,7 @@
           {
             "group": "Playbooks",
             "pages": [
+              "quickstart",
               "cookbook/overview",
               "cookbook/auth-hosted-verify",
               "cookbook/integrations",
@@ -233,10 +186,39 @@
         ]
       },
       {
-        "tab": "Legal",
+        "tab": "SDK",
         "groups": [
           {
-            "group": "Policies",
+            "group": "SDK",
+            "pages": [
+              "sdks/overview",
+              "sdks/javascript",
+              "sdks/authentication",
+              "sdks/verifications",
+              "sdks/error-handling",
+              "sdks/security",
+              {
+                "group": "React widgets",
+                "pages": ["widgets/overview", "widgets/verifygate"]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Ecosystem",
+        "groups": [
+          {
+            "group": "Ecosystem",
+            "pages": [
+              "platform/overview",
+              "platform/setup",
+              "platform/proofs",
+              "platform/security-and-trust"
+            ]
+          },
+          {
+            "group": "Legal",
             "pages": [
               "learn/legal/index",
               "learn/legal/privacy-policy",
@@ -264,11 +246,11 @@
     },
     {
       "source": "/integrations",
-      "destination": "/install"
+      "destination": "/"
     },
     {
       "source": "/integrations/:path*",
-      "destination": "/install"
+      "destination": "/"
     },
     {
       "source": "/choose-an-integration-path",
@@ -276,7 +258,7 @@
     },
     {
       "source": "/onboarding",
-      "destination": "/get-started"
+      "destination": "/"
     },
     {
       "source": "/privacy",
@@ -364,11 +346,11 @@
     },
     {
       "source": "/get-started/examples",
-      "destination": "/examples"
+      "destination": "/"
     },
     {
       "source": "/content/get-started/examples",
-      "destination": "/examples"
+      "destination": "/"
     },
     {
       "source": "/http-api",
@@ -392,7 +374,7 @@
     },
     {
       "source": "/content/platform/receipts-and-results",
-      "destination": "/platform/receipts-and-results"
+      "destination": "/platform/proofs"
     },
     {
       "source": "/platform/hub",
@@ -596,7 +578,7 @@
     },
     {
       "source": "/learn-more",
-      "destination": "/get-started"
+      "destination": "/"
     },
     {
       "source": "/learn/manifesto",
@@ -604,7 +586,7 @@
     },
     {
       "source": "/learn/support-and-contact",
-      "destination": "/get-started"
+      "destination": "/"
     },
     {
       "source": "/how-to-prove-whats-real",
@@ -613,6 +595,26 @@
     {
       "source": "/cookbook/server-advanced",
       "destination": "/cookbook/integrations"
+    },
+    {
+      "source": "/install",
+      "destination": "/"
+    },
+    {
+      "source": "/get-started",
+      "destination": "/"
+    },
+    {
+      "source": "/examples",
+      "destination": "/"
+    },
+    {
+      "source": "/platform/status",
+      "destination": "/platform/overview"
+    },
+    {
+      "source": "/platform/receipts-and-results",
+      "destination": "/platform/proofs"
     }
   ],
   "contextual": {
@@ -620,9 +622,9 @@
     "options": [
       {
         "title": "Connect an assistant",
-        "description": "Install NEUS in your IDE",
+        "description": "Run the setup command",
         "icon": "plug",
-        "href": "/install"
+        "href": "/"
       },
       {
         "title": "Add a gate",

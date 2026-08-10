@@ -1,13 +1,13 @@
 ---
-title: Checks
-sidebarTitle: Overview
-description: What NEUS can check and what you get back.
+title: Trust
+sidebarTitle: Trust
+description: Check identity, ownership, permissions, and safety before an action.
 icon: file-signature
 "og:image": "/images/og-verification.png"
 "twitter:image": "/images/og-verification.png"
 ---
 
-NEUS runs a check and returns a **result** you can reuse before access, payment, or action. Details: [How it works](./how-it-works). Where to plug it in: [Integration](../integration).
+NEUS checks identity, ownership, permissions, or safety and saves the outcome as a proof. Reuse that proof before access, payment, or an agent action.
 
 ## Outcomes
 
@@ -17,9 +17,9 @@ NEUS runs a check and returns a **result** you can reuse before access, payment,
 | Ownership | Content, files, authorship |
 | Access | NFT, token thresholds |
 | Abuse | Human, wallet safety |
-| Agents | Identity, authority |
+| Agents | Identity, permissions |
 
-Agent checks produce identity and authority any connected runtime can read.
+Agent checks record who an agent is and what it may do.
 
 ## Check types
 
@@ -35,7 +35,7 @@ Most product gates start with **Interactive** checks. Instant and Lookup are ava
 
 | Term | Meaning |
 |------|---------|
-| Proof ID (`qHash`) | Saved result reference. [Results](../platform/receipts-and-results) |
+| Proof ID (`qHash`) | Saved proof reference. [Proofs](../platform/proofs) |
 | Check | Rule set applied to a claim |
 | Account / subject | The NEUS account the result is about |
 | Signing string | Message the account signs when a check requires it |

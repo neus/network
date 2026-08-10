@@ -7,16 +7,16 @@ icon: plug
 "twitter:image": "/images/og-mcp.png"
 ---
 
-OAuth once. Your assistant loads your identity, trusted context, and authority across Cursor, Claude Code, Codex, and VS Code — then reuses saved receipts before sensitive actions, confirms agent limits before tools run, and keeps an auditable record. Your backend reads the same receipts through the API.
+Sign in once. Your assistant loads your identity, trusted context, and permissions across Cursor, Claude Code, Codex, and VS Code. It reuses saved proofs before sensitive actions and checks agent limits before tools run.
 
-**First run:** [Install NEUS](../install). Access keys: [MCP setup](./setup). OAuth details: [MCP OAuth](./oauth).
+**First run:** [Run setup](/). Access keys: [MCP setup](./setup). OAuth details: [MCP OAuth](./oauth).
 
 ## How it works
 
-Assistants load your signed-in profile once, then reuse saved receipts when they can.
+Assistants load your signed-in profile once, then reuse saved proofs when they can.
 
 - Look up a saved proof before a sensitive action
-- Read your receipts and saved context with `neus_proofs_get`
+- Read proofs and saved context with `neus_proofs_get`
 - Guide any missing step
 - Confirm agent identity and authority before tools run
 - Store or revoke secrets when signed in
@@ -28,7 +28,7 @@ Journeys: [MCP journeys](./journeys) · Tools: [MCP tools](./tools), [neus_proof
 ## Agent setup
 
 1. Call `neus_agent_link`.
-2. If linked, reuse the receipts.
+2. If linked, reuse the proofs.
 3. If missing, call `neus_agent_create` and finish the hosted steps.
 4. Call `neus_agent_link` again until `linked: true`.
 
@@ -44,8 +44,8 @@ Loads the agent's verified identity, scoped authority, and host rules into the p
 
 ## Reference
 
-<CardGroup cols={4}>
-  <Card title="Install NEUS" icon="plug" href="../install">
+<CardGroup cols={3}>
+  <Card title="Run setup" icon="plug" href="/">
     Cursor, Claude Code, Codex, VS Code.
   </Card>
   <Card title="OAuth" icon="shield-check" href="./oauth">
@@ -53,8 +53,5 @@ Loads the agent's verified identity, scoped authority, and host rules into the p
   </Card>
   <Card title="Setup" icon="code" href="./setup">
     Install and sign in.
-  </Card>
-  <Card title="Pay per call" icon="coins" href="../platform/x402">
-    Metered API calls without an account.
   </Card>
 </CardGroup>

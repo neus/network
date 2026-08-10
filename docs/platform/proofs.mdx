@@ -1,0 +1,29 @@
+---
+title: Proofs
+sidebarTitle: Proofs
+description: Save a completed check and reuse it at the next gate.
+icon: shield-check
+---
+
+A proof is the saved result of a completed check. Keep its proof ID so your app can read its current status, share it, or reuse it without repeating the full check.
+
+The API field for the proof ID is `qHash`.
+
+## What to store
+
+Store the proof ID and the fields your product needs for access or display. Read the current proof before a protected action instead of rebuilding the original check.
+
+`contentHash` identifies the checked content or artifact. It is not the proof ID.
+
+## Storage
+
+Proofs are private and offchain by default. A blockchain record is optional and must be requested explicitly with `options.publishToHub: true` or `targetChains`.
+
+Wallet-signed creates can also return a portable envelope that another system can check without calling NEUS. See [Portable proofs](../learn/standards/caip-380).
+
+## Next
+
+- [How checks work](../verification/how-it-works)
+- [Proof lifecycle](../verification/lifecycle)
+- [Hosted Verify](../cookbook/auth-hosted-verify)
+- [Privacy](./security-and-trust)

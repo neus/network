@@ -1,66 +1,70 @@
 ---
-title: "NEUS Docs"
+title: "Your agents have the keys."
 sidebarTitle: "Home"
-description: "Login gets them in. Authority decides what they do next."
+description: "Set what they may do and spend before a tool runs. Carry the same trusted identity and permissions into every runtime."
 icon: house
 "og:image": "/images/og-default.png"
 "twitter:image": "/images/og-default.png"
 ---
 
-## Start here
+## Connect NEUS in one command
+
+<Tabs sync={false}>
+  <Tab title="All editors">
+
+```bash
+npx -y -p @neus/sdk neus setup
+```
+
+  </Tab>
+  <Tab title="Cursor">
+
+```bash
+npx -y -p @neus/sdk neus setup --client cursor
+```
+
+  </Tab>
+  <Tab title="Claude Code">
+
+```bash
+npx -y -p @neus/sdk neus setup --client claude
+```
+
+  </Tab>
+  <Tab title="Codex">
+
+```bash
+npx -y -p @neus/sdk neus setup --client codex
+```
+
+  </Tab>
+  <Tab title="VS Code">
+
+```bash
+npx -y -p @neus/sdk neus setup --client vscode
+```
+
+  </Tab>
+</Tabs>
+
+Check the connection:
+
+```bash
+npx -y -p @neus/sdk neus doctor --live
+```
+
+## Start with the outcome
 
 <CardGroup cols={3}>
-  <Card title="Gate an app" icon="puzzle-piece" href="./quickstart">
-    Stop unpaid or untrusted access at checkout.
+  <Card title="Control an agent" icon="robot" href="./agents/agent-verification-flow">
+    Set identity, permissions, spend limits, expiry, and revoke.
   </Card>
-  <Card title="Connect an assistant" icon="plug" href="./install">
-    One command. Your assistant uses your NEUS account.
+  <Card title="Protect access" icon="puzzle-piece" href="./quickstart">
+    Require identity, ownership, or permission before access and payment.
   </Card>
-  <Card title="Control agents" icon="robot" href="./agents/agent-verification-flow">
-    Set what they may do before tools run.
-  </Card>
-</CardGroup>
-
-All paths: [Start here](./get-started).
-
-## Build with
-
-<CardGroup cols={3}>
-  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
-    Sign-in and verify on NEUS. No auth UI to build.
-  </Card>
-  <Card title="MCP" icon="plug" href="./mcp/overview">
-    Use agents with your NEUS account.
-  </Card>
-  <Card title="Widgets" icon="square-check" href="./widgets/overview">
-    Drop-in gates for React.
-  </Card>
-  <Card title="SDK" icon="code" href="./sdks/overview">
-    Hosted links and gate checks.
-  </Card>
-  <Card title="API" icon="terminal" href="./api/overview">
-    Call from your backend.
-  </Card>
-  <Card title="Examples" icon="cube" href="./examples">
-    Working sample apps.
+  <Card title="Build with the SDK" icon="code" href="./sdks/overview">
+    Add hosted flows, server enforcement, and React gates.
   </Card>
 </CardGroup>
 
-## What you get
-
-<CardGroup cols={2}>
-  <Card title="Access that holds" icon="door-open" href="./platform/hosted-gate-checkout">
-    Require a current result before content or payouts.
-  </Card>
-  <Card title="Agents you can trust" icon="robot" href="./agents/overview">
-    Identity, spend caps, and revoke.
-  </Card>
-  <Card title="Identity that travels" icon="shield-halved" href="./platform/receipts-and-results">
-    Passkey, social, org, domain. Reuse it.
-  </Card>
-  <Card title="Clear pricing" icon="credit-card" href="./platform/pricing">
-    Free tier. Pro credits. Or charge at the gate.
-  </Card>
-</CardGroup>
-
-[Solutions](https://neus.network/solutions) · [How it fits](./integration)
+See how teams put this to work: [Solutions](https://neus.network/solutions).

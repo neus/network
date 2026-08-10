@@ -246,7 +246,7 @@
           },
           "options": {
             "type": "object",
-            "description": "Optional verification options. By default the proof receipt persists offchain with no on-chain transaction.",
+            "description": "Optional verification options. By default the trust receipt persists offchain with no on-chain transaction.",
             "properties": {
               "publishToHub": {
                 "type": "boolean",

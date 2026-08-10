@@ -1,26 +1,27 @@
 ---
-title: LLM Docs
-description: Reading order, MCP URL, llms.txt, and integration rules.
+title: LLM and agent docs
+description: Machine-readable entry points, MCP setup, and the shortest reading order.
 icon: sparkles
 ---
 
-This site (`docs.neus.network`) is the standard integration reference. Follow the order below so fields, tools, and billing context stay consistent.
+Start with the smallest source that answers the task. Use the text export for model context and the linked reference page for exact fields.
 
 ## Read first
 
-1. [Choose a path](../get-started) — pick app, assistant, agent, or backend
-2. [Quickstart](../quickstart) (apps) or [Install](../install) (assistants)
-3. [Trust stack](../platform/trust-stack) — loop and architecture
-4. [MCP tools](../mcp/tools) or [API overview](../api/overview) as needed
+1. [Home](/) — install NEUS or choose an agent, app, or SDK path
+2. [MCP overview](../mcp/overview) — connect an assistant
+3. [Agent setup](../agents/agent-verification-flow) — set identity and permissions
+4. [MCP tools](../mcp/tools) — exact tool behavior
+5. [Trust](../verification/overview) — checks and reusable proofs
 
 ## MCP for assistants
 
 **Product server:** `https://mcp.neus.network/mcp` — identity, proofs, delegation, verify.  
 **Not the product:** `https://docs.neus.network/mcp` — documentation search only (Mintlify).
 
-1. Install: [Install NEUS](../install) — `neus setup` → `neus doctor --live`
-2. Session flow: [MCP overview](../mcp/overview) — reuse receipts before new verification
-3. Example prompts: [MCP journeys](../mcp/journeys)
+1. Run `npx -y -p @neus/sdk neus setup`.
+2. Confirm with `npx -y -p @neus/sdk neus doctor --live`.
+3. Follow the [MCP workflow](../mcp/overview) and reuse proofs before starting a new check.
 
 Use **`neus auth`** for OAuth. Profile access keys (`npk_*`) are for servers and CI only.
 
@@ -28,7 +29,7 @@ Use **`neus auth`** for OAuth. Profile access keys (`npk_*`) are for servers and
 
 - **Browser → NEUS:** SDK (`NeusClient`, widgets) or **Hosted Verify**. Do not call `api.neus.network` from the browser with secrets or ad-hoc headers; use a **server proxy** when you need custom server-side calls.
 - **Server → NEUS:** `gateCheck`, eligibility, secrets, raw HTTP — [API overview](../api/overview)
-- Account, gates, and billing: [Choose a path](../get-started)
+- Profiles, agents, portals, gates, and proofs: [Ecosystem](../platform/overview)
 - Default hosted sign-in: [Hosted Verify](../cookbook/auth-hosted-verify). Optional in-app signing: [Signing format](../verification/signing-format)
 - Do not use wallet **private keys** as MCP credentials. Sign in with **OAuth** or use **Profile access keys** (`npk_*`) for Bearer in MCP or server config only.
 - **402:** use the x402 retry pattern
@@ -38,8 +39,11 @@ Use **`neus auth`** for OAuth. Profile access keys (`npk_*`) are for servers and
 ## Exports
 
 ```bash
-# Plain text summary (same content as https://neus.network/llms.txt)
-curl https://neus.network/llms.txt
+# Page index for discovery
+curl https://docs.neus.network/llms.txt
+
+# Full documentation context
+curl https://docs.neus.network/llms-full.txt
 ```
 
 ## MCP JSON

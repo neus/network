@@ -1,47 +1,42 @@
 ---
-title: Platform
-description: Add authority to the stack you already run. Auth and payments stay put.
+title: Ecosystem
+sidebarTitle: Ecosystem
+description: One account across assistants, agents, apps, and proofs.
 icon: globe
 ---
 
-NEUS carries who someone is and what they may do to the next gate, payment, or agent action. Your auth, KYC, wallets, and agents keep their jobs.
+Connect an assistant, set agent limits, enforce them in an app, and carry the resulting proof forward.
 
-[Start here](../get-started) · [Trust stack](./trust-stack)
+## Use NEUS
 
-<Card title="Roadmap" icon="map" href="./status">
-  Shipped, in progress, and planned.
-</Card>
-
-## URLs
-
-| Service | URL |
-|---------|-----|
-| Hosted Verify | `https://neus.network/verify` |
-| Result page | `https://neus.network/proof/[proof-id]` |
-| Product app | `https://neus.network` |
-| API | `https://api.neus.network` |
-| MCP | `https://mcp.neus.network/mcp` |
-
-## Flow
-
-<Frame caption="Hosted Verify to API to result page. Your app reuses the same saved result.">
- <img
- className="neus-docs-flow-diagram"
- src="/images/diagrams/platform-flow.svg"
- alt="NEUS hosted verify, API, result page; app reusing results"
- />
-</Frame>
-
-## Next
-
-<CardGroup cols={3}>
-  <Card title="Quickstart" icon="rocket" href="../quickstart">
-    Gate content in a few steps.
+<CardGroup cols={2}>
+  <Card title="Profile" icon="user" href="https://neus.network/profile">
+    Manage your account, proofs, agents, and portals.
   </Card>
+  <Card title="Agents" icon="robot" href="https://neus.network/profile?tab=agents">
+    Connect agents and set what each one may do.
+  </Card>
+  <Card title="Portals" icon="window" href="https://neus.network/profile?tab=portals">
+    Publish protected content and access rules.
+  </Card>
+  <Card title="Proofs" icon="shield-check" href="https://neus.network/profile?tab=proofs">
+    Review, share, and revoke completed checks.
+  </Card>
+</CardGroup>
+
+## Build on NEUS
+
+<CardGroup cols={2}>
   <Card title="Hosted Verify" icon="key" href="../cookbook/auth-hosted-verify">
-    Sign-in and checks on NEUS.
+    Send people through a hosted sign-in and check flow.
   </Card>
   <Card title="Create a portal" icon="building" href="./setup">
-    Publish once. Embed with one ID.
+    Choose requirements, publish, and copy the embed.
+  </Card>
+  <Card title="Protect an app" icon="door-closed" href="../quickstart">
+    Add a gate and require a current proof before access.
+  </Card>
+  <Card title="Use proofs" icon="shield-check" href="./proofs">
+    Store a proof ID and read its current status.
   </Card>
 </CardGroup>
