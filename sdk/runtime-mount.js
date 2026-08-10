@@ -419,7 +419,11 @@ export async function resolveRuntimeBundleFromMcp(input) {
   if (!agentWallet && selector.identityQHash) {
     const idProof = await input.callMcpTool({
       name: 'neus_proofs_get',
-      args: { qHash: selector.identityQHash, verifierId: 'agent-identity' },
+      args: {
+        qHash: selector.identityQHash,
+        verifierId: 'agent-identity',
+        include: 'content',
+      },
       accessKey,
       sessionId,
       signal: input.signal
@@ -443,7 +447,12 @@ export async function resolveRuntimeBundleFromMcp(input) {
   const [identityPage, delegationPage] = await Promise.all([
     input.callMcpTool({
       name: 'neus_proofs_get',
-      args: { identifier: agentWallet, verifierId: 'agent-identity', limit: 25 },
+      args: {
+        identifier: agentWallet,
+        verifierId: 'agent-identity',
+        limit: 25,
+        include: 'content',
+      },
       accessKey,
       sessionId,
       signal: input.signal
@@ -451,7 +460,12 @@ export async function resolveRuntimeBundleFromMcp(input) {
     controllerWallet
       ? input.callMcpTool({
         name: 'neus_proofs_get',
-        args: { identifier: controllerWallet, verifierId: 'agent-delegation', limit: 50 },
+        args: {
+          identifier: controllerWallet,
+          verifierId: 'agent-delegation',
+          limit: 50,
+          include: 'content',
+        },
         accessKey,
         sessionId,
         signal: input.signal

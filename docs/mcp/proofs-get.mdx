@@ -1,10 +1,10 @@
 ---
 title: Read proofs (`neus_proofs_get`)
-description: Proof records, profile summary, tags, and portable context for a wallet or DID.
+description: Filtered proof records, tags, status, and optional content for a wallet or DID.
 icon: receipt
 ---
 
-Use when you have an **`identifier`** and need proof records, proof fields, tags, profile summary, or delegated context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility.
+Use when you have an **`identifier`** and need proof records, fields, tags, or delegated context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility. Profile totals and account context come from **`neus_context`** or **`neus_me`**.
 
 In user-facing replies, summarize the result in plain language and link only real proof URLs returned by NEUS.
 
@@ -32,7 +32,8 @@ Keep tag values short and product-facing in your own app. Avoid exposing private
   "limit": 25,
   "offset": 0,
   "tags": "memory,rules,instruction",
-  "agentWallet": "0x..."
+  "agentWallet": "0x...",
+  "include": "metadata"
 }
 ```
 
@@ -41,26 +42,15 @@ Keep tag values short and product-facing in your own app. Avoid exposing private
 | `identifier` | EVM, Solana base58, **`did:pkh:...`** |
 | `tags` | Comma-separated proof tag filter |
 | `agentWallet` | Delegation (**`x-agent-wallet`**) |
+| `include` | `metadata` for the minimal index; `content` only when full proof bodies are required |
 
 When `identifier` is a DID, NEUS resolves the DID to its native account. Non-EVM signing and account context still use CAIP-2 `chain`; see [CAIP-380 Portable Proof](../learn/standards/caip-380).
 
 ## Response
 
-Proof records, proof fields, **`profileSummary`**, and pagination. Follow the live tool response. Tags and proof bodies come from this call.
+`include: "metadata"` returns a compact paginated proof index: proof id, status, check ids and outcomes, title, tags, timestamps, and content length when known. It does not include proof bodies, profile summary, or agent context.
 
-`profileSummary.proofsSummary` uses the same compact summary shape as the hosted profile context:
-
-| Field | Meaning |
-|-------|---------|
-| `total` | Total proofs known for the profile summary |
-| `embeddedCount` | Proof references included in the profile document |
-| `isTruncated` | `true` when more proofs exist than the embedded profile references |
-| `byVerifier` | Counts by verifier id |
-| `latestByVerifier` | Latest proof pointer by verifier id |
-| `latestByCategory` | Latest proof pointer grouped by verifier category |
-| `latestByScope` | Latest proof pointer grouped by verifier id and scope |
-
-Use the paginated `proofs` list for full proof history. Treat the summary as a fast profile snapshot, not a replacement for pagination.
+Use `include: "content"` for a specific proof or tightly filtered page when the body is required. Use the paginated `proofs` list for history and the profile summary from `neus_context` or `neus_me` for aggregate totals. Never infer a total or absence from one page.
 
 ## Assistant Output
 

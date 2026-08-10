@@ -3,6 +3,7 @@ import {
   buildRuntimeBundle,
   pickActiveDelegation,
   pickIdentity,
+  resolveRuntimeBundleFromMcp,
   resolveEffectiveRuntime,
   RUNTIME_MOUNT_SCHEMA,
   evaluateMountFileHealth
@@ -73,6 +74,71 @@ describe('runtime-mount', () => {
       identity.agentId
     );
     expect(del?.scope).toBe('global');
+  });
+
+  it('requests explicit proof content when the mount fallback reads identity records', async () => {
+    const calls = [];
+    const callMcpTool = async request => {
+      calls.push(request);
+      if (request.name === 'neus_agent_mount') return { ok: false, error: 'unavailable' };
+      if (request.name === 'neus_me') {
+        return {
+          ok: true,
+          payload: {
+            principal: { primaryAccount: delegation.controllerWallet },
+            agents: [{ agentId: identity.agentId, agentWallet: identity.agentWallet }]
+          }
+        };
+      }
+      if (request.name === 'neus_proofs_get' && request.args.verifierId === 'agent-identity') {
+        return {
+          ok: true,
+          payload: {
+            data: {
+              proofs: [{
+                qHash: identity.qHash,
+                walletAddress: identity.agentWallet,
+                verifiedVerifiers: [{
+                  verifierId: 'agent-identity',
+                  verified: true,
+                  data: identity
+                }]
+              }]
+            }
+          }
+        };
+      }
+      if (request.name === 'neus_proofs_get' && request.args.verifierId === 'agent-delegation') {
+        return {
+          ok: true,
+          payload: {
+            data: {
+              proofs: [{
+                qHash: delegation.qHash,
+                walletAddress: identity.agentWallet,
+                verifiedVerifiers: [{
+                  verifierId: 'agent-delegation',
+                  verified: true,
+                  data: delegation
+                }]
+              }]
+            }
+          }
+        };
+      }
+      return { ok: false, error: 'unexpected call' };
+    };
+
+    const bundle = await resolveRuntimeBundleFromMcp({
+      callMcpTool,
+      accessKey: 'test-access-key',
+      agentId: identity.agentId
+    });
+
+    expect(bundle.identity.agentId).toBe(identity.agentId);
+    const proofReads = calls.filter(call => call.name === 'neus_proofs_get');
+    expect(proofReads).toHaveLength(2);
+    expect(proofReads.every(call => call.args.include === 'content')).toBe(true);
   });
 
   it('writes cursor adapter files', () => {
