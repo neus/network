@@ -1,6 +1,6 @@
 ---
-title: Trust stack
-description: Who they are and what they may do. One profile. Every gate.
+title: How NEUS fits together
+description: One account for identity, checks, agents, and access. Do not restart from zero in the next app.
 icon: layer-group
 ---
 
@@ -20,11 +20,11 @@ Sign-in, gates, saved results, and agent authority share one account. Do not res
 | Piece | What it is |
 | ----- | ---------- |
 | **Profile** | Your NEUS account: identity, proofs, agents |
-| **Hosted Verify** | Sign-in and checks in the browser (creates or refreshes a proof) |
+| **Sign-in and checks** | Runs on NEUS in the browser — creates or refreshes a proof |
 | **Check** | One trust decision ([catalog](../verification/verifiers)) |
 | **Proof** | Portable reusable verification asset (`qHash` in the API) |
-| **Portal** | Access surface you publish from Profile → Portals |
-| **Gate** | Published policy + checkout ID (`gateId`) you embed; enforced with `gateCheck` |
+| **Listing** | The access page you publish from Profile → Listings |
+| **Gate** | The published access rule (`gateId`) you embed; enforced with `gateCheck` |
 
 API paths, MCP tool names, and SDK exports keep their existing identifiers (`/proofs/`, `neus_proofs_*`, `VerifyGate`). Buyer and docs prose use the terms above.
 
@@ -32,7 +32,7 @@ API paths, MCP tool names, and SDK exports keep their existing identifiers (`/pr
 
 | You want | Start |
 | -------- | ----- |
-| Sign-in | [Hosted Verify](../cookbook/auth-hosted-verify) |
+| Sign-in | [Hosted sign-in](../cookbook/auth-hosted-verify) |
 | Access gate | [Quickstart](../quickstart) |
 | IDE assistant | [Run setup](/) |
 | Server checks | [API](../api/overview) |

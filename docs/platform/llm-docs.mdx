@@ -29,7 +29,7 @@ Use **`neus auth`** for OAuth. Profile access keys (`npk_*`) are for servers and
 
 - **Browser → NEUS:** SDK (`NeusClient`, widgets) or **Hosted Verify**. Do not call `api.neus.network` from the browser with secrets or ad-hoc headers; use a **server proxy** when you need custom server-side calls.
 - **Server → NEUS:** `gateCheck`, eligibility, secrets, raw HTTP — [API overview](../api/overview)
-- Profiles, agents, portals, gates, and proofs: [Ecosystem](../platform/overview)
+- Profiles, agents, listings, gates, and proofs: [Ecosystem](../platform/overview)
 - Default hosted sign-in: [Hosted Verify](../cookbook/auth-hosted-verify). Optional in-app signing: [Signing format](../verification/signing-format)
 - Do not use wallet **private keys** as MCP credentials. Sign in with **OAuth** or use **Profile access keys** (`npk_*`) for Bearer in MCP or server config only.
 - **402:** use the x402 retry pattern

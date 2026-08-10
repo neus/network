@@ -3128,6 +3128,94 @@
         }
       }
     },
+    "/api/v1/profile/gates/discoverable": {
+      "get": {
+        "operationId": "listDiscoverableGates",
+        "summary": "List public, discoverable marketplace gates",
+        "description": "Returns public gates that are active, deployed, and tagged as marketplace listings. Bounded scan; a dedicated gate index is the post-launch optimization if listing volume grows.",
+        "tags": [
+          "Gates"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of discoverable gates"
+          }
+        }
+      }
+    },
+    "/api/v1/profile/gates/{gateId}": {
+      "get": {
+        "operationId": "getGate",
+        "summary": "Get a published gate snapshot (checkout contract)",
+        "description": "Returns the public gate snapshot: requirements, monetization charge, schedule, checkout plan, and artifact metadata. Never includes the secret reward value.",
+        "tags": [
+          "Gates"
+        ],
+        "parameters": [
+          {
+            "name": "gateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9:_-]+$",
+              "maxLength": 80
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Gate snapshot"
+          },
+          "404": {
+            "description": "Gate not found or not published"
+          }
+        }
+      }
+    },
+    "/api/v1/profile/gates/{gateId}/fulfill": {
+      "post": {
+        "operationId": "fulfillGate",
+        "summary": "Deliver the gate reward after verification and payment",
+        "description": "Post-verify reward delivery. Requires a verified proof (qHash) for the caller wallet. Paid gates also require paymentCheckoutSessionId (Stripe) or paymentTxHash (USDC). Returns the fulfillment payload and optional rewardProof / rewardPack. Payments are bound to a single gateId + qHash pair — reuse returns 409 PAYMENT_ALREADY_USED.",
+        "tags": [
+          "Gates"
+        ],
+        "parameters": [
+          {
+            "name": "gateId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9:_-]+$",
+              "maxLength": 80
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fulfillment result"
+          },
+          "400": {
+            "description": "Invalid request, proof not verified, or gate misconfigured"
+          },
+          "402": {
+            "description": "Payment required"
+          },
+          "404": {
+            "description": "Gate or proof not found"
+          },
+          "409": {
+            "description": "Payment already used for a different checkout"
+          },
+          "503": {
+            "description": "Fulfillment temporarily unavailable"
+          }
+        }
+      }
+    },
     "/api/v1/payments/pricing": {
       "get": {
         "operationId": "getPaymentPricing",

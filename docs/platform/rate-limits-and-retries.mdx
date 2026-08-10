@@ -1,14 +1,43 @@
 ---
 title: Rate limits
 sidebarTitle: Rate limits
-description: What to do when requests are throttled.
+description: Per-tier request limits and what to do when you hit them.
 icon: clock
 ---
 
-APIs may return **429** or transient errors.
+NEUS enforces per-minute and per-window limits to keep the API fast and fair. Higher tiers get higher limits. Most apps never hit them.
 
-- Exponential backoff; honor **Retry-After** when present.
-- **Creates:** do not blind-retry - confirm the first request did not succeed.
-- **Polling:** wait a few seconds between polls; back off on errors.
+## Limits by tier
 
-**Next:** [SDK errors](../sdks/error-handling)
+Limits scale with your plan. Verification and sign-in have tighter windows because they run real checks.
+
+| Surface | Free | Pro | Enterprise |
+|---------|------|-----|------------|
+| API calls (burst) | 60 / min | 240 / min | 600 / min |
+| API calls (sustained) | 30 / min | 120 / min | 300 / min |
+| Verification (new proof) | 50 / 15 min | 50 / 15 min | 50 / 15 min |
+| Sign-in attempts | 10 / 15 min | 10 / 15 min | 10 / 15 min |
+| Status reads | 100 / min | 100 / min | 100 / min |
+| Admin actions | 20 / min | 20 / min | 20 / min |
+
+Verification and sign-in limits are the same across tiers — a check is a check regardless of plan. API call throughput is where higher tiers scale.
+
+## When you hit a limit
+
+APIs return **429 Too Many Requests** with a **`Retry-After`** header (seconds). Honor it before retrying.
+
+- **Exponential backoff:** wait, then double the wait on each retry.
+- **Creates:** do not blind-retry. Confirm the first request did not succeed before sending another — a duplicate proof costs credits.
+- **Polling:** wait a few seconds between polls. Back off on errors.
+
+## Tips
+
+- **Reuse proofs.** A gate check (1 credit) reads an existing proof. Creating a new one (4–73 credits) is heavier and counts against the verification window. Cache the proof ID and check it instead.
+- **Gate checks, not raw verification.** Use `gateCheck` with your `gateId` for access decisions — it reads saved results first and only creates a new proof when needed.
+- **Need higher limits?** Pro raises API throughput 4×. Enterprise raises it 10× with SLAs and custom packages. See [Pricing](./pricing).
+
+## 402 and credits
+
+When credits run out, billable calls return **402 Payment Required** with a quote — not 429. Pay per call with [Pay per call](./x402) (no account needed) or top up credits and retry.
+
+**Next:** [SDK errors](../sdks/error-handling) · [Pricing](./pricing)

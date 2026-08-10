@@ -1,18 +1,18 @@
 ---
 title: Quickstart
-description: Publish a portal. Drop in VerifyGate. Confirm on your server.
+description: Sell access, drop in VerifyGate, and confirm on your server.
 icon: rocket
 "og:image": "/images/og-quickstart.png"
 "twitter:image": "/images/og-quickstart.png"
 ---
 
-One hosted gate owns the checks, pricing, and hosted sign-in. Your app never runs the check logic. Visitors need no NEUS account and no API key.
+One access link owns the checks, price, and sign-in. Your app never runs the check logic. Visitors need no NEUS account and no API key.
 
 ## Build it
 
 <Steps>
-  <Step title="Publish a portal">
-    Sign in at [neus.network](https://neus.network), open your profile → **Portals**, choose the checks visitors must pass, set pricing (you pay by default, or charge visitors), and **Publish**. Copy your `gateId`. Visitors only ever need that.
+  <Step title="Publish a listing">
+    Sign in at [neus.network](https://neus.network), open your profile → **Listings**, choose the checks visitors must pass, set pricing (you pay by default, or charge visitors), and **Publish**. Copy your `gateId`. Visitors only ever need that.
   </Step>
   <Step title="Gate content with VerifyGate">
     ```jsx
@@ -22,7 +22,7 @@ One hosted gate owns the checks, pricing, and hosted sign-in. Your app never run
       <ProtectedContent />
     </VerifyGate>;
     ```
-    `VerifyGate` looks for an existing proof, opens **Hosted Verify** only when a new one is needed, then renders your content. Wallet, passkey, and OAuth all happen on NEUS, not inside your app.
+    `VerifyGate` looks for an existing proof, opens hosted sign-in on NEUS only when a new one is needed, then renders your content. Wallet, passkey, and OAuth all happen on NEUS, not inside your app.
   </Step>
   <Step title="Show status with ProofBadge">
     ```jsx
@@ -33,7 +33,7 @@ One hosted gate owns the checks, pricing, and hosted sign-in. Your app never run
     Optional: pass `showChains` when you want on-chain status in the badge.
   </Step>
   <Step title="Confirm on your server">
-    Before you grant access or pay out, confirm the visitor still satisfies the gate. Pass the **account address** from Hosted Verify or the saved result. Every NEUS account has one (passkey and OAuth included). No separate crypto wallet required:
+    Before you grant access or pay out, confirm the visitor still satisfies the gate. Pass the **account address** from the NEUS sign-in flow or the saved result. Every NEUS account has one (passkey and OAuth included). No separate crypto wallet required:
     ```js
     import { NeusClient } from '@neus/sdk';
 
@@ -44,7 +44,7 @@ One hosted gate owns the checks, pricing, and hosted sign-in. Your app never run
     });
 
     if (!result.data?.gate?.allRequiredSatisfied) {
-      // send the user back to VerifyGate or Hosted Verify
+      // send the user back to VerifyGate or NEUS sign-in
     }
     ```
   </Step>
@@ -52,7 +52,7 @@ One hosted gate owns the checks, pricing, and hosted sign-in. Your app never run
 
 The visitor’s proof is theirs. If they return or visit another gate that needs the same checks, they can reuse it.
 
-## Not using React? Send users to Hosted Verify
+## Not using React? Send users to NEUS for sign-in
 
 ```js
 import { getHostedCheckoutUrl } from '@neus/sdk';
@@ -65,7 +65,7 @@ window.location.assign(
 );
 ```
 
-Read the **proof ID** (`qHash`) from the callback URL or popup message, then store it. Details: [Hosted Verify](./cookbook/auth-hosted-verify).
+Read the **proof ID** (`qHash`) from the callback URL or popup message, then store it. Details: [Hosted sign-in](./cookbook/auth-hosted-verify).
 
 ## Adding an assistant instead?
 
@@ -77,7 +77,7 @@ Read the **proof ID** (`qHash`) from the callback URL or popup message, then sto
   <Card title="VerifyGate" icon="square-check" href="./widgets/verifygate">
     Props, modes, and OAuth.
   </Card>
-  <Card title="Hosted Verify" icon="key" href="./cookbook/auth-hosted-verify">
+  <Card title="Hosted sign-in" icon="key" href="./cookbook/auth-hosted-verify">
     The browser flow on NEUS.
   </Card>
   <Card title="Integration" icon="compass" href="./integration">

@@ -218,6 +218,16 @@
             ]
           },
           {
+            "group": "Pricing & billing",
+            "pages": [
+              "platform/pricing",
+              "platform/billing",
+              "platform/hosted-gate-checkout",
+              "platform/x402",
+              "platform/rate-limits-and-retries"
+            ]
+          },
+          {
             "group": "Legal",
             "pages": [
               "learn/legal/index",
@@ -628,7 +638,7 @@
       },
       {
         "title": "Add a gate",
-        "description": "Publish a portal and embed VerifyGate",
+        "description": "Publish a listing and embed VerifyGate",
         "icon": "rocket",
         "iconType": "solid",
         "href": "/quickstart"

@@ -7,8 +7,8 @@ icon: key
 
 Default: no wallet or passkey code in your app. Visitors sign in or complete checks on `neus.network/verify` via `VerifyGate`, `getHostedCheckoutUrl`, or MCP OAuth.
 
-| Where | What | Wallet code in your app |
-|-------|------|---------------------------|
+| Where | What | Wallets or keys in your app |
+|-------|------|------------------------------|
 | Browser — access gate | `VerifyGate` + `gateId` | No |
 | Browser — sign-in | `getHostedCheckoutUrl` + `intent: 'login'` | No |
 | Server | `NeusClient` + `gateCheck` with the same `gateId` | No |
@@ -26,9 +26,9 @@ import { VerifyGate } from '@neus/sdk/widgets';
 </VerifyGate>;
 ```
 
-## Hosted Verify (browser)
+## Hosted sign-in (browser)
 
-[Hosted Verify](../cookbook/auth-hosted-verify).
+[Hosted sign-in](../cookbook/auth-hosted-verify).
 
 ```javascript
 import { getHostedCheckoutUrl } from '@neus/sdk';
@@ -61,7 +61,7 @@ const result = await client.gateCheck({
 });
 
 if (result.data?.gate?.allRequiredSatisfied !== true) {
-  // Send the visitor back to VerifyGate or Hosted Verify
+  // Send the visitor back to VerifyGate or NEUS sign-in
 }
 ```
 

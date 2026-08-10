@@ -6,7 +6,7 @@ icon: credit-card
 
 Checks cost credits. Your credits spend first. Visitors only pay when you turn on visitor checkout. [Pricing](./pricing) has the amounts and the live estimator.
 
-Hosted sign-in never costs credits. Credits apply when a check runs, a result is saved, or Pro hosted AI is used.
+Sign-in never costs credits. Credits apply when a check runs, a result is saved, or hosted AI is used.
 
 ## How money moves on NEUS
 
@@ -30,7 +30,7 @@ There is no app ID or billing wallet to copy for this path. The gate carries the
 
 ## Server checks
 
-Confirm eligibility before you grant access with **`gateCheck`**. Pass the same `gateId` and the visitor's **account address** (from Hosted Verify or the saved result):
+Confirm eligibility before you grant access with **`gateCheck`**. Pass the same `gateId` and the visitor's **account address** (from NEUS sign-in or the saved result):
 
 ```javascript
 const result = await client.gateCheck({
@@ -39,7 +39,7 @@ const result = await client.gateCheck({
 });
 
 if (result.data?.gate?.allRequiredSatisfied !== true) {
-  // Send the visitor back to Hosted Verify
+  // Send the visitor back to NEUS sign-in
 }
 ```
 
