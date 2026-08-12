@@ -19,6 +19,7 @@
   "overrides": {
     "ws": "8.21.0",
     "esbuild": "0.25.12",
-    "launch-editor": "2.14.1"
+    "launch-editor": "2.14.1",
+    "postcss": ">=8.5.23"
   }
 }

@@ -137,7 +137,8 @@
     "vite": "8.0.16",
     "js-yaml": "4.3.1",
     "brace-expansion": "5.0.9",
-    "launch-editor": "2.14.1"
+    "launch-editor": "2.14.1",
+    "postcss": ">=8.5.23"
   },
   "dependencies": {
     "@noble/ed25519": "^2.3.0",
