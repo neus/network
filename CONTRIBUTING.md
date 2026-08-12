@@ -30,8 +30,6 @@ These paths are local-only or generated elsewhere (see `.gitignore`):
 - `integrations/` (removed; install docs are the SSOT)
 - `sdk/cjs/` and other build artifacts
 
-Verifier schemas ship from **`protocol`** (`npm run verifier:sync`); keep `spec/VERIFIERS.json` and `docs/verifiers/schemas/` in sync when you change verifiers.
-
 ## Describing your change
 
 Explain **what builders or end users will experience differently** (for example new fields, new errors, or renamed concepts). If you adjust verifiers or any documented HTTP surface, keep the written API reference and examples aligned with the live product.
