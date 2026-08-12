@@ -24,7 +24,7 @@ External lookup. NEUS screens the content with a moderation provider and records
 | Field | Required | Notes |
 |------|----------|-------|
 | `content` | Yes | Raw text, base64, or an `ipfs://` / CID reference |
-| `contentType` | Yes | MIME type — see supported types below |
+| `contentType` | Yes | MIME type. See supported types below |
 | `provider` | No | Defaults by content: text → `google-perspective`, images → `google-vision` |
 
 **Supported `contentType` values:** `text/plain`, `text/markdown`, `text/x-markdown`, `application/json`, `application/xml`, `image/jpeg`, `image/png`, `image/gif`, `image/webp`.

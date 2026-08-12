@@ -8,7 +8,7 @@ Hosted Verify accepts the checks you want directly in the URL. Three ways, simpl
 
 ## One check
 
-Use `?verifiers=<id>` (or `?preset=<id>` — same result for a single check). Prefer account and hosted checks for most products:
+Use `?verifiers=<id>` (or `?preset=<id>` for the same result with a single check). Prefer account and hosted checks for most products:
 
 ```text
 https://neus.network/verify?verifiers=ownership-social&returnUrl=https://myapp.com/callback
@@ -18,7 +18,7 @@ Other high-value single checks: `ownership-org-oauth` (work account), `proof-of-
 
 ## Several checks
 
-Combine checks with a comma — this is the recommended way to run more than one:
+Combine checks with a comma. This is the recommended way to run more than one:
 
 ```text
 https://neus.network/verify?verifiers=ownership-social,proof-of-human
@@ -73,7 +73,7 @@ getHostedCheckoutUrl({ preset: 'agent-pack', returnUrl: 'https://myapp.com/callb
  <Card title="Verifiers" icon="list-tree" href="../verification/verifiers">
  Every check you can run.
  </Card>
- <Card title="Create a listing" icon="building" href="./setup">
- Publish checks once; embed with one gateId.
+ <Card title="Sell access" icon="building" href="./setup">
+  Set checks and price once, embed one link.
  </Card>
 </CardGroup>

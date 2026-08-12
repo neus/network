@@ -20,24 +20,24 @@ Limits scale with your plan. Verification and sign-in have tighter windows becau
 | Status reads | 100 / min | 100 / min | 100 / min |
 | Admin actions | 20 / min | 20 / min | 20 / min |
 
-Verification and sign-in limits are the same across tiers — a check is a check regardless of plan. API call throughput is where higher tiers scale.
+Verification and sign-in limits are the same across tiers. A check is a check regardless of plan. API call throughput is where higher tiers scale.
 
 ## When you hit a limit
 
 APIs return **429 Too Many Requests** with a **`Retry-After`** header (seconds). Honor it before retrying.
 
 - **Exponential backoff:** wait, then double the wait on each retry.
-- **Creates:** do not blind-retry. Confirm the first request did not succeed before sending another — a duplicate proof costs credits.
+- **Creates:** do not blind-retry. Confirm the first request did not succeed before sending another. A duplicate proof costs credits.
 - **Polling:** wait a few seconds between polls. Back off on errors.
 
 ## Tips
 
 - **Reuse proofs.** A gate check (1 credit) reads an existing proof. Creating a new one (4–73 credits) is heavier and counts against the verification window. Cache the proof ID and check it instead.
-- **Gate checks, not raw verification.** Use `gateCheck` with your `gateId` for access decisions — it reads saved results first and only creates a new proof when needed.
+- **Gate checks, not raw verification.** Use `gateCheck` with your `gateId` for access decisions. It reads saved results first and only creates a new proof when needed.
 - **Need higher limits?** Pro raises API throughput 4×. Enterprise raises it 10× with SLAs and custom packages. See [Pricing](./pricing).
 
 ## 402 and credits
 
-When credits run out, billable calls return **402 Payment Required** with a quote — not 429. Pay per call with [Pay per call](./x402) (no account needed) or top up credits and retry.
+When credits run out, billable calls return **402 Payment Required** with a quote, not 429. Pay per call with [Pay per call](./x402) (no account needed) or top up credits and retry.
 
 **Next:** [SDK errors](../sdks/error-handling) · [Pricing](./pricing)

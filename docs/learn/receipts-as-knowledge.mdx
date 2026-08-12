@@ -8,7 +8,7 @@ Use these patterns when an integration needs linked proofs, version history, or 
 
 **Proof ID** in API responses is `qHash`.
 
-## Typed reference — `reference.type: "qhash"`
+## Typed reference: `reference.type: "qhash"`
 
 The `ownership-basic` check accepts a `reference` object with `type: "qhash"` and `id` set to another proof's ID. That creates a typed link from one proof to another.
 
@@ -26,9 +26,9 @@ The `ownership-basic` check accepts a `reference` object with `type: "qhash"` an
 }
 ```
 
-Reference payloads for the same target commonly hash from `qhash:{targetId}` in the signed content. Confirm current behavior in the [ownership-basic](../verification/ownership-basic) capability reference and live API responses — do not invent proof IDs.
+Reference payloads for the same target commonly hash from `qhash:{targetId}` in the signed content. Confirm current behavior in the [ownership-basic](../verification/ownership-basic) capability reference and live API responses. Do not invent proof IDs.
 
-## Version chain — `supersedes:<qHash>` tag
+## Version chain: `supersedes:<qHash>` tag
 
 When you update a memory or instruction proof, NEUS can tag the new proof with `supersedes:<previousQHash>`. Newer proofs point back to older ones.
 

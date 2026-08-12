@@ -4,6 +4,7 @@
 | ------- | ---------- |
 | [trust-receipts-demo](./trust-receipts-demo/README.md) | End-to-end **VerifyGate** + gate check demo |
 | [nodejs-basic](./nodejs-basic/README.md) | Server-side proof creation and checks |
+| [private-cloud-agent](./private-cloud-agent/README.md) | Trust state (identity, permissions, proofs, Vault) across any environment — laptop, VPS, on-prem, or a confidential VM |
 
 Run the demo locally, then follow the [Quickstart](https://docs.neus.network/quickstart) to add the same trust loop to your app.
 

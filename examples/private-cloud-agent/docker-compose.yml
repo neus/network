@@ -1,0 +1,25 @@
+# Agent definition for a private cloud agent + NEUS MCP.
+#
+# Run this compose file anywhere: laptop, VPS, on-prem, or inside a
+# TEE-attested confidential VM. The trust state lives in NEUS and travels
+# with the agent regardless of environment.
+#
+# Optional: a confidential compute runtime (e.g. Phala dstack) attests the
+# full app hash before releasing keys. That proves the environment matches
+# what you expect. The trust harness works without it.
+#
+# Example deploy with Phala dstack: npx phala deploy
+
+services:
+  agent:
+    image: node:22-slim
+    working_dir: /app
+    command: node agent.mjs
+    environment:
+      # NEUS MCP endpoint (same for every client)
+      NEUS_MCP_URL: https://mcp.neus.network/mcp
+      # Profile access key (headless environments only)
+      # Get one at https://neus.network/profile?tab=account
+      NEUS_ACCESS_KEY: ${NEUS_ACCESS_KEY}
+    volumes:
+      - ./agent.mjs:/app/agent.mjs:ro

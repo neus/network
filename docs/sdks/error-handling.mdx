@@ -21,11 +21,11 @@ All SDK errors extend `SDKError` and carry a `.code` and `.details`. Import them
 
 | Class | `isRetryable` | Use it for |
 |-------|---------------|------------|
-| `ApiError` | `true` on 5xx / 429 | HTTP failures — also has `.statusCode`, `.isClientError`, `.isServerError`, `.response` |
-| `ValidationError` | `false` | Bad request shape — has `.field`, `.value` |
+| `ApiError` | `true` on 5xx / 429 | HTTP failures. Also has `.statusCode`, `.isClientError`, `.isServerError`, `.response` |
+| `ValidationError` | `false` | Bad request shape. Has `.field`, `.value` |
 | `NetworkError` | `true` | Transport / DNS / timeout |
-| `ConfigurationError` | `false` | Missing/invalid client config — has `.configKey` |
-| `VerificationError` | `true` | Verifier failure — has `.verifierId` |
+| `ConfigurationError` | `false` | Missing/invalid client config. Has `.configKey` |
+| `VerificationError` | `true` | Verifier failure. Has `.verifierId` |
 | `AuthenticationError` | `false` | Owner/session/key not allowed |
 
 ```javascript

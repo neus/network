@@ -127,6 +127,9 @@ async function validateCodexMarketplace() {
   }
 
   const marketplace = await readJsonFile(marketplacePath);
+  if (typeof marketplace.name !== "string" || marketplace.name.length === 0) {
+    addError(".agents/plugins/marketplace.json: top-level name is required (Codex CLI rejects the marketplace without it).");
+  }
   if (!Array.isArray(marketplace.plugins) || marketplace.plugins.length === 0) {
     addError(".agents/plugins/marketplace.json: plugins must be a non-empty array.");
     return;
@@ -173,9 +176,9 @@ async function main() {
   const entries = await fs.readdir(pluginsDir, { withFileTypes: true });
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
-    // neus-mcp ships a Cursor-native .mcp.json (no "type" field) validated by
-    // validate-cursor-mcp.mjs. The spec-compliant shape (type: "http") is for
-    // Claude Code / Codex, which consume the plugin as skill-only via the CLI.
+    // neus-mcp ships a Cursor-native mcp.json (no "type" field) validated by
+    // validate-cursor-mcp.mjs. The spec-compliant .mcp.json (type: "http") is
+    // for Claude Code / Codex, which consume the plugin as skill-only via the CLI.
     if (entry.name === "neus-mcp") continue;
     if (await pathExists(path.join(pluginsDir, entry.name, ".mcp.json"))) {
       await validateSpecMcp(path.join(pluginsDir, entry.name), entry.name);

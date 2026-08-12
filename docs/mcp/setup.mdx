@@ -1,10 +1,10 @@
 ---
 title: Setup
-description: OAuth, access keys, and per-editor config after neus setup.
+description: Connect any MCP client to NEUS: identity, permissions, proofs, and Vault.
 icon: code
 ---
 
-Connect your editors to NEUS so they can load your account, reuse saved results, and use encrypted secrets.
+Connect any MCP client to NEUS: agents, editors, servers, CI, APIs. One endpoint loads your identity, permissions, proofs, and Vault.
 
 Hosted endpoint: **`https://mcp.neus.network/mcp`**
 
@@ -16,7 +16,7 @@ Run one command:
 npx -y -p @neus/sdk neus setup
 ```
 
-Installs the trust skill, detects your editors, and signs you in. In Cursor, you can also install the `neus-mcp` plugin from the marketplace — it registers NEUS and runs sign-in in one click.
+Installs the NEUS skill and configures hosted MCP for your clients. It does not launch a browser. Sign in by clicking **Connect** in your host or run `neus auth` separately.
 
 ## Daily commands
 
@@ -29,9 +29,9 @@ Installs the trust skill, detects your editors, and signs you in. In Cursor, you
 
 ## Access keys
 
-OAuth is the default for IDE setup. Your MCP host discovers the NEUS OAuth metadata on first use and refreshes your session silently for up to 30 days.
+OAuth is the default for client setup. Your MCP host discovers the NEUS OAuth metadata on first use and refreshes your session silently for up to 30 days.
 
-Use a **profile access key** from [Access Keys](https://neus.network/profile?tab=account) only when browser OAuth is not available — servers, CI, and automation. Access keys are durable: once written to the MCP config, they do not expire.
+Use a **profile access key** from [Access Keys](https://neus.network/profile?tab=account) only when browser OAuth is not available: servers, CI, and automation. Access keys are durable: once written to the MCP config, they do not expire.
 
 ```bash
 export NEUS_ACCESS_KEY=npk_...
@@ -48,7 +48,7 @@ neus disconnect --access-key <token>
 
 ## Migrate your workspace
 
-**Two paths — do not mix them up:**
+**Two paths. Do not mix them up:**
 
 | Goal | Command | Output |
 |------|---------|--------|
@@ -87,9 +87,9 @@ neus import --from claude-desktop
 
 ## Client setup
 
-Per-editor setup commands (Cursor, VS Code, Claude Code, and more): **[NEUS Docs home](/)**.
+Per-client setup commands and config paths: [MCP clients](./ide-plugin).
 
-The setup command connects **Cursor**, **Codex**, **VS Code**, and **Claude Code** and installs the trust workflow skill. Other MCP hosts use the same hosted URL — see [IDE plugin](./ide-plugin).
+The setup command installs the NEUS skill and configures hosted MCP. Other MCP clients use the same hosted URL. See [MCP clients](./ide-plugin).
 
 | Host | User scope | Project scope |
 | --- | --- | --- |

@@ -1205,6 +1205,25 @@ function installClaudeUser(scope, accessKey, dryRun, cwd) {
     throw new Error('Claude Code CLI is not installed or not on PATH.');
   }
 
+  // Idempotent: if `claude mcp get` reports the server registered with the
+  // canonical URL and the same auth shape, skip the remove+add so a rerun
+  // never tears down a good Claude OAuth session.
+  const existing = inspectClaude(scope, cwd);
+  const wantsAccessKey = Boolean(accessKey);
+  if (existing.configured && Boolean(existing.authConfigured) === wantsAccessKey) {
+    return {
+      client: 'claude',
+      scope,
+      configured: true,
+      authConfigured: wantsAccessKey,
+      changed: false,
+      targetPath: '~/.claude.json',
+      backupPath: null,
+      dryRun,
+      error: null
+    };
+  }
+
   if (!dryRun) {
     runCommand('claude', ['mcp', 'remove', '--scope', 'user', NEUS_MCP_SERVER_NAME], cwd, true);
     const addArgs = [
@@ -1253,19 +1272,30 @@ function installCodex(scope, accessKey, dryRun, cwd) {
 
   const bearerTokenEnvVar = envAccessKey() ? 'NEUS_ACCESS_KEY' : '';
 
+  // Idempotent: inspect first. If the server is already registered with the
+  // canonical URL, leave it untouched so a rerun never invalidates host-owned
+  // OAuth state (the previous remove+add tore down good Codex sessions).
+  const existing = inspectCodex(scope, cwd);
+  if (existing.configured) {
+    return {
+      client: 'codex',
+      scope,
+      configured: true,
+      authConfigured: bearerTokenEnvVar ? true : null,
+      changed: false,
+      targetPath: portablePath(codexConfigPath()),
+      backupPath: null,
+      dryRun,
+      error: null
+    };
+  }
+
   if (!dryRun) {
-    runCommand('codex', ['mcp', 'remove', NEUS_MCP_SERVER_NAME], cwd, true, 10_000);
-    const addArgs = [
-      'mcp',
-      'add',
-      NEUS_MCP_SERVER_NAME,
-      '--url',
-      NEUS_MCP_URL,
-      '--oauth-client-id',
-      NEUS_OAUTH_CLIENT_ID,
-      '--oauth-resource',
-      NEUS_MCP_RESOURCE
-    ];
+    // URL-only registration. Codex owns its OAuth client via DCR + PKCE on
+    // `codex mcp login neus`; do NOT pin `neus-cli` (that is the CLI's own
+    // loopback client, not a host client) and do NOT pin the resource
+    // (Codex discovers it from the protected-resource metadata).
+    const addArgs = ['mcp', 'add', NEUS_MCP_SERVER_NAME, '--url', NEUS_MCP_URL];
     if (bearerTokenEnvVar) {
       addArgs.push('--bearer-token-env-var', bearerTokenEnvVar);
     }
@@ -2401,7 +2431,7 @@ async function runSetup(options) {
     nextStep: accessKey ? 'Run `neus examples`, then ask your assistant to use NEUS Verify.' : '',
     cliOptions: options
   });
-  writeCliLine(paint('Trust workflow skill', 'cyan'));
+  writeCliLine(paint('NEUS skill', 'cyan'));
   for (const skill of skills) {
     logStep(
       'ok',
@@ -2411,18 +2441,20 @@ async function runSetup(options) {
   }
   writeCliLine('');
 
+  // Setup installs config + skill, then stops. Authentication is owned by the
+  // host (Cursor/Codex/VS Code/Claude native Connect) or by an explicit
+  // `neus auth` run — never auto-launched from setup. This avoids the surprise
+  // browser and the "setup crossed into auth UX" confusion.
   if (!accessKey && !options.dryRun) {
-    const authResult = await runAuth(options);
-    if (authResult && !authResult.hasErrors) {
-      printFlowSummary('auth', authResult.scope, authResult.results, {
-        nextStep: 'Run `neus examples`, then ask your assistant to use NEUS Verify.',
-        cliOptions: options
-      });
-    }
-    if (authResult?.hasErrors) {
-      process.exitCode = 1;
-    }
-    return authResult || payload;
+    const authHint =
+      clients.length === 1 && clients[0] === 'codex'
+        ? 'Run `npx -y -p @neus/sdk neus auth --client codex` to sign in through Codex.'
+        : 'Run `npx -y -p @neus/sdk neus auth` to sign in, or click Connect in your host (Cursor plugin, Codex, VS Code, Claude Code).';
+    writeCliLine(paint(authHint, 'cyan'));
+    payload.authRequired = true;
+    payload.nextCommand = clients.length === 1 && clients[0] === 'codex'
+      ? 'npx -y -p @neus/sdk neus auth --client codex'
+      : 'npx -y -p @neus/sdk neus auth';
   }
 
   if (options.agent && !options.dryRun) {
@@ -2519,8 +2551,8 @@ const ASSISTANT_EXAMPLE_PROMPTS = [
   'Use NEUS Verify before taking sensitive actions.',
   'Check whether I already have the required proof.',
   'Verify this agent is trusted before it runs tools.',
-  'Mount my NEUS agent context with neus_agent_mount, then follow its scoped policy.',
-  'Use NEUS Vault before storing or using secrets.',
+  'Connect my NEUS agent context, then follow its scoped policy.',
+  'Use NEUS Vault to store or revoke secrets.',
   'Show the proof for this verification.'
 ];
 
@@ -2665,7 +2697,7 @@ async function runDoctor(options) {
     writeCliLine('');
     writeCliLine(paint('MCP endpoint', 'cyan'));
     writeGuidanceLine(NEUS_MCP_URL);
-    writeCliLine(paint('Trust workflow skill', 'cyan'));
+    writeCliLine(paint('NEUS skill', 'cyan'));
     for (const skill of skills) {
       logStep(
         skill.current ? 'ok' : 'warn',
@@ -2688,7 +2720,7 @@ async function runDoctor(options) {
   writeGuidanceLine(`@neus/sdk@${CLI_PACKAGE_VERSION}`);
   writeCliLine(paint('MCP endpoint', 'cyan'));
   writeGuidanceLine(NEUS_MCP_URL);
-  writeCliLine(paint('Trust workflow skill', 'cyan'));
+  writeCliLine(paint('NEUS skill', 'cyan'));
   for (const skill of skills) {
     logStep(
       skill.current ? 'ok' : 'warn',
@@ -2740,7 +2772,7 @@ async function runDoctor(options) {
           payload.mcp.proofsTotal != null ? ` · ${payload.mcp.proofsTotal} proofs on file` : '';
         const tools = payload.mcp.toolsCount ? ` · ${payload.mcp.toolsCount} tools` : '';
         logStep('ok', 'profile', `connected${handle}${wallet}${receipts}${tools}`);
-        writeGuidanceLine('NEUS Verify is ready. Ask your assistant to verify trust before sensitive actions.');
+        writeGuidanceLine('NEUS Verify is ready. Ask your assistant to check identity and permissions before sensitive actions.');
         writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for starter prompts.');
         if (payload.mountFilePresent) {
           const agentLabel = payload.mountAgentLabel || payload.mountAgentId || 'project mount';

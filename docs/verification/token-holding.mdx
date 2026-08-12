@@ -22,7 +22,7 @@ Lookup. NEUS checks current token balances.
 | Field | Required | Notes |
 |------|----------|-------|
 | `contractAddress` | Yes | Token contract or mint |
-| `minBalance` | Yes | Human-readable token amount, e.g. `"10.5"` — converted with the token's on-chain decimals, not base units |
+| `minBalance` | Yes | Human-readable token amount, e.g. `"10.5"`. Converted with the token's on-chain decimals, not base units |
 | `chainId` or `chain` | Yes | EVM `chainId` or Solana CAIP-2 chain |
 | `ownerAddress` | No | Wallet to check; defaults to the signer |
 | `blockNumber` | No | Check the balance at a specific block |

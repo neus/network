@@ -1,16 +1,16 @@
 ---
-title: Create a listing
+title: Sell access
 description: Sell access to your content from your NEUS profile. Pick the checks visitors pass, set the price, and embed one link.
 icon: building
 ---
 
-A **listing** is how you sell access from your NEUS profile: choose which checks visitors must pass, set the price, publish once, and embed with one public `gateId`. Sign-in and checks run on NEUS — your app never handles wallets or keys.
+A **listing** is how you sell access from your NEUS profile: choose which checks visitors must pass, set the price, publish once, and embed with one public `gateId`. Sign-in and checks run on NEUS. Your app never handles wallets or keys.
 
 ## Steps
 
 1. Sign in at [neus.network](https://neus.network).
 2. Open your profile → **Listings** ([`?tab=portals`](https://neus.network/profile?tab=portals)) and create a listing.
-3. Choose the checks visitors must pass and set pricing — you pay for checks by default, or charge visitors.
+3. Choose the checks visitors must pass and set pricing. You pay for checks by default, or charge visitors.
 4. **Publish** and copy your **checkout link** or **embed snippet**.
 
 Checks bill your NEUS account automatically because you own the gate. Visitors only need your `gateId`.
@@ -25,7 +25,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 Full walkthrough: [Quickstart](../quickstart).
 
-**Optional:** [Domain verification](../cookbook/domain-verification) confirms DNS control for profile trust and team workspace — it is separate from gates and not required to ship VerifyGate.
+**Optional:** [Domain verification](../cookbook/domain-verification) confirms DNS control for profile trust and team workspace. It is separate from gates and not required to ship VerifyGate.
 
 ## Advanced: server-created receipts
 

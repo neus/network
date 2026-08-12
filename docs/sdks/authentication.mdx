@@ -9,12 +9,12 @@ Default: no wallet or passkey code in your app. Visitors sign in or complete che
 
 | Where | What | Wallets or keys in your app |
 |-------|------|------------------------------|
-| Browser — access gate | `VerifyGate` + `gateId` | No |
-| Browser — sign-in | `getHostedCheckoutUrl` + `intent: 'login'` | No |
+| Browser: access gate | `VerifyGate` + `gateId` | No |
+| Browser: sign-in | `getHostedCheckoutUrl` + `intent: 'login'` | No |
 | Server | `NeusClient` + `gateCheck` with the same `gateId` | No |
 | Automation as your profile | `NeusClient` + profile access key (`npk_*`) | No |
 | Advanced server | `verifyFromApp` after per-user approval | No |
-| Browser (exception) | `client.verify({ wallet })` | Yes — [Signing format](../verification/signing-format) |
+| Browser (exception) | `client.verify({ wallet })` | Yes. [Signing format](../verification/signing-format) |
 
 ## VerifyGate (browser)
 
@@ -72,7 +72,7 @@ For servers, CI, and MCP when browser sign-in is unavailable. Create keys under 
 ```javascript
 import { NeusClient } from '@neus/sdk';
 
-// Server only — never ship npk_* in a browser bundle
+// Server only. Never ship npk_* in a browser bundle
 const client = new NeusClient({ apiKey: process.env.NEUS_ACCESS_KEY });
 ```
 
@@ -92,7 +92,7 @@ After one-time user approval ([app link](../agents/agent-delegation)), your back
 const client = new NeusClient({
   appId: 'acme-web',
   appOrigin: 'https://yourapp.com',
-  apiKey: process.env.NEUS_ACCESS_KEY, // optional — your builder profile
+  apiKey: process.env.NEUS_ACCESS_KEY, // optional. Your builder profile
 });
 
 await client.verifyFromApp({

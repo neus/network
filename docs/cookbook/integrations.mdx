@@ -10,7 +10,7 @@ Most products use [Quickstart](../quickstart): **VerifyGate** or **Hosted Verify
 
 | Need | Use |
 |------|-----|
-| Visitor verifies in the browser; you only check later | [Quickstart](../quickstart) — no access key |
+| Visitor verifies in the browser; you only check later | [Quickstart](../quickstart). No access key |
 | Your server creates receipts for an approved user | `verifyFromApp` after one-time approval |
 | MCP, CI, or raw HTTP as **your** NEUS profile | Profile access key (`npk_*`) |
 
@@ -21,7 +21,7 @@ After a user approves your product once (app-link permission), your server can c
 ```javascript
 import { NeusClient } from "@neus/sdk";
 
-// Server only — never put this config in a browser bundle
+// Server only. Never put this config in a browser bundle
 const client = new NeusClient({
   appId: process.env.NEUS_APP_ID,
   // Must match the origin the user approved (or use origin:* on the approval)
@@ -39,7 +39,7 @@ const receipt = await client.verifyFromApp({
 
 Requirements:
 
-- Active user approval for your `appId` and site origin ([Agent permissions — App link](../agents/agent-delegation))
+- Active user approval for your `appId` and site origin ([Agent permissions: App link](../agents/agent-delegation))
 - `X-Neus-App` (from `appId`) and matching `Origin` on the request (`appOrigin` sets both for Node)
 
 If approval is missing, send the user through [Hosted Verify](./auth-hosted-verify) first.

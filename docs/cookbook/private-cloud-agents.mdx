@@ -1,0 +1,137 @@
+---
+title: Private cloud agents
+sidebarTitle: Private cloud agents
+description: Run agents in any private cloud — laptop, VPS, on-prem, or a TEE-attested confidential VM — and carry the same NEUS identity, permissions, proofs, context, and Vault across every environment.
+icon: shield-check
+---
+
+Compute is already portable. Frameworks make orchestration portable. The trust state has not been. Identity, permissions, and proof history stay trapped in whichever environment the agent was set up in.
+
+NEUS fixes that. The agent connects to the same NEUS endpoint from wherever it runs. Identity, permissions, proofs, context, and Vault travel with it.
+
+## What this is
+
+A private cloud trust harness for agents. One identity, one permission set, one proof history, every environment.
+
+**What NEUS carries across environments:**
+- **Identity** — who the agent is
+- **Permissions** — what it may do (scope, spend cap, expiry, revoke)
+- **Proofs** — reusable verification records
+- **Context** — trusted context that travels with the agent
+- **Vault** — encrypted secrets, listed and revoked through MCP
+
+**What the environment does:**
+- Runs the agent and its tools
+- Can optionally prove the environment itself is genuine (confidential compute; see below)
+
+## Deploy a private cloud agent with NEUS
+
+### 1. Write your agent runtime definition
+
+Package your agent as a Docker Compose file. Include the system prompt, model config, tool list, and environment variables.
+
+```yaml
+# docker-compose.yml
+services:
+  agent:
+    image: your-agent-image:latest
+    environment:
+      - NEUS_MCP_URL=https://mcp.neus.network/mcp
+      - NEUS_ACCESS_KEY=${NEUS_ACCESS_KEY}
+```
+
+`NEUS_ACCESS_KEY` is a profile access key from your NEUS Profile. Use it for agents in headless environments. For interactive agents, use OAuth.
+
+### 2. Deploy anywhere
+
+Run the compose file on a laptop, a VPS, on-prem, or a production cluster. The agent connects to `https://mcp.neus.network/mcp` from wherever it runs. NEUS loads the agent's identity, permissions, and saved proofs. Before any sensitive action, NEUS checks authority and reuses existing proofs.
+
+The agent can call any NEUS MCP tool: `neus_context`, `neus_proofs_check`, `neus_verify`, `neus_agent_mount`, `neus_secret_create`, `neus_secret_list`, `neus_secret_revoke`.
+
+### 3. Move the agent, keep the trust state
+
+Redeploy the same compose file on a different backend. AWS, GCP, Azure, Phala Cloud, bare metal. The trust state is the same. NEUS carries the same identity, permissions, proofs, context, and Vault across all of them.
+
+### 4. Verify the trust chain
+
+- **NEUS** provides the agent identity and permission proofs. Verify with `neus_proofs_get` or `GET /api/v1/proofs/{qHash}`.
+- **The access key** ties the deployed agent to a NEUS Profile. The profile owns the identity, permissions, and proof history.
+- **The environment** can optionally prove it is genuine (see confidential compute below).
+
+## Optional: confidential compute
+
+If you need to prove the environment itself is genuine before it receives keys, run the agent inside a TEE-attested confidential VM. The hardware quote covers the full app hash: system prompt, model digest, tool list, and environment. Keys are sealed against that hash and released only after attestation passes. No host process sees plaintext keys.
+
+The trust state still lives in NEUS and travels with the agent. Confidential compute adds a proof that the environment matches what you expect.
+
+### Phala dstack
+
+[dstack](https://phala.com/dstack) boots a Docker Compose app inside an Intel TDX confidential VM. The TDX quote covers the full compose hash. Keys are sealed against that hash and released only after attestation passes. NEUS already uses Phala-backed TEE inference for hosted AI.
+
+```bash
+npx phala deploy
+```
+
+Verify the TDX quote with `@phala/dcap-qvl` against the Phala PCCS. Proves the compose hash and hardware.
+
+### Other confidential compute runtimes
+
+If your runtime supports Intel TDX, AMD SEV-SNP, or an equivalent TEE with remote attestation over the app image, point the agent at the NEUS MCP endpoint. The trust chain is the same: hardware quote over the app hash, sealed keys, NEUS identity and authority checked before action.
+
+## Agent framework examples
+
+### Hermes
+
+Hermes ships six terminal backends. Docker is one of them.
+
+```yaml
+# docker-compose.yml
+services:
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    environment:
+      - NEUS_MCP_URL=https://mcp.neus.network/mcp
+      - NEUS_ACCESS_KEY=${NEUS_ACCESS_KEY}
+      - HERMES_MODEL=deepseek/deepseek-v4-flash-0731
+```
+
+Hermes handles planning, memory, and skill creation. NEUS handles identity, permissions, and proof verification before sensitive actions.
+
+### OpenClaw
+
+```yaml
+# docker-compose.yml
+services:
+  openclaw:
+    image: openclaw/runtime:latest
+    environment:
+      - NEUS_MCP_URL=https://mcp.neus.network/mcp
+      - NEUS_ACCESS_KEY=${NEUS_ACCESS_KEY}
+```
+
+OpenClaw orchestrates channels and subagents. NEUS adds the trust layer that checks who is acting and what they are allowed to do.
+
+### Custom agent
+
+Any agent that speaks MCP can connect. Package it as a Docker Compose, deploy anywhere, point it at the NEUS endpoint.
+
+## Portability
+
+A laptop today, a VPS tomorrow, a production cluster next week. The trust state is the same. Identity, permissions, proofs, context, and Vault live in NEUS and travel regardless of environment. Confidential compute can attest each environment on top.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="MCP overview" icon="plug" href="../mcp/overview">
+    The trust layer.
+  </Card>
+  <Card title="MCP setup" icon="code" href="../mcp/setup">
+    Access keys and headless setup.
+  </Card>
+  <Card title="Agent setup" icon="robot" href="./verifiable-agents">
+    Agent identity and authority.
+  </Card>
+  <Card title="Phala dstack" icon="external-link" href="https://phala.com/dstack">
+    A confidential compute runtime.
+  </Card>
+</CardGroup>

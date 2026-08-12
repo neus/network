@@ -1,6 +1,6 @@
 ---
 name: neus-trust-workflow
-description: Runs the NEUS trust autopilot before sensitive assistant actions — load session context, reuse portable proofs, guide missing checks, connect Trusted Agent context, and protect Vault secrets. Use when verifying identity or permissions, checking proofs, mounting a profile agent, storing secrets, or when the user asks for NEUS Verify / trust-before-action.
+description: Runs the NEUS trust autopilot before sensitive assistant actions. Load session context, reuse portable proofs, guide missing checks, connect Trusted Agent context, and protect Vault secrets. Use when verifying identity or permissions, checking proofs, mounting a profile agent, storing secrets, or when the user asks for NEUS Verify / trust-before-action.
 license: Apache-2.0
 compatibility: Requires hosted NEUS MCP (https://mcp.neus.network/mcp) in Cursor, Claude Code, Codex, or VS Code.
 metadata:
@@ -11,7 +11,7 @@ metadata:
 
 # NEUS Trust Workflow
 
-Reuse existing proofs first. Run a new check only when needed. Summarize as **NEUS Verify** — Passed, Action needed, or Blocked. Never dump raw tool JSON.
+Reuse existing proofs first. Run a new check only when needed. Summarize as **NEUS Verify**: Passed, Action needed, or Blocked. Never dump raw tool JSON.
 
 Use this before an assistant runs sensitive tools or takes another verification-sensitive step. Answer simple questions directly.
 

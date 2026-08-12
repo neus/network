@@ -27,7 +27,7 @@ These paths are local-only or generated elsewhere (see `.gitignore`):
 
 - `.env`, `.npmrc`, secrets, and key material
 - `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.neus/`, `.cursor/`, `.claude/settings*.json`
-- `integrations/` (removed — install docs are the SSOT)
+- `integrations/` (removed; install docs are the SSOT)
 - `sdk/cjs/` and other build artifacts
 
 Verifier schemas ship from **`protocol`** (`npm run verifier:sync`); keep `spec/VERIFIERS.json` and `docs/verifiers/schemas/` in sync when you change verifiers.

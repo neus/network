@@ -29,7 +29,7 @@ The agent carries identity and authority across MCP hosts and backend gates.
 1. **`neus_context`**
 2. **`neus_agent_link`** with **`agentWallet`** and **`agentId`**
 3. If **`linked: true`**, reuse receipts
-4. If not, **`neus_agent_create`** — follow its **`next_action`**
+4. If not, **`neus_agent_create`**. Follow its **`next_action`**
 5. **`neus_agent_link`** again with the same identifiers
 
 Ready means both **`agent-identity`** and **`agent-delegation`** are present.

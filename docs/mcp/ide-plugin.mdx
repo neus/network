@@ -1,11 +1,11 @@
 ---
-title: IDE plugin
-sidebarTitle: IDE plugin
-description: Connect Cursor, Claude Code, Codex, or VS Code to hosted NEUS.
+title: MCP clients
+sidebarTitle: MCP clients
+description: Connect any MCP client to the NEUS trust harness: identity, permissions, proofs, context, and Vault.
 icon: plug
 ---
 
-Connect assistants to verified identity, scoped permissions, saved results, and encrypted secrets. One OAuth sign-in, and every assistant checks identity, permissions, and saved results before sensitive tools run — then summarizes as Passed, Action needed, or Blocked.
+NEUS is a portable trust harness. Any MCP client connects to the same identity, permissions, proofs, and Vault. Verify once. Carry the proof. Enforce before action.
 
 **Hosted endpoint:** `https://mcp.neus.network/mcp`
 
@@ -19,7 +19,7 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Installs the trust skill and configures hosted MCP for Cursor, Claude Code, Codex, and VS Code in one command. In Cursor, installing the **neus-mcp** marketplace plugin is the fastest path — it auto-registers NEUS MCP and runs OAuth in one click (the CLI then defers to the plugin).
+Installs the NEUS skill and configures hosted MCP for Cursor, Claude Code, Codex, and VS Code in one command. It does not launch a browser. Sign in by clicking **Connect** in your host, or run `neus auth` separately. In Cursor, installing the **neus-mcp** marketplace plugin is the fastest path: it auto-registers NEUS MCP and runs OAuth in one click.
 
 Ask your assistant: **"Before I take a sensitive action, use NEUS. Reuse what I already have."** It looks up identity, authority, and saved results first, then summarizes as Passed, Action needed, or Blocked.
 
@@ -35,7 +35,7 @@ npx -y -p @neus/sdk neus setup --client claude
   <Tab title="Cursor">
     <Icon icon="/images/brandLogos/cursor.svg" size={18} /> **Cursor**
 
-**Option 1 — Marketplace (recommended, one-click OAuth):**
+**Option 1: Marketplace (recommended, one-click OAuth)**
 
 ```text
 Cursor → Settings → Cursor Plugins → Add marketplace
@@ -45,7 +45,7 @@ Install: neus-mcp
 
 Clicking **Install** auto-registers NEUS MCP and starts OAuth. After install, click **Connect** to sign in. No CLI needed.
 
-**Option 2 — CLI:**
+**Option 2: CLI**
 
 ```bash
 npx -y -p @neus/sdk neus setup --client cursor
@@ -63,9 +63,9 @@ Writes the user-level registration at `~/.cursor/mcp.json`:
 }
 ```
 
-When both are present, the CLI detects the plugin and skips writing a duplicate entry — use one or the other, not both.
+When both are present, the CLI detects the plugin and skips writing a duplicate entry. Use one or the other, not both.
 
-Expected public tool list: **13**. Profile loads via `neus_context` when signed in.
+Profile loads via `neus_context` when signed in.
 
   </Tab>
 
@@ -128,9 +128,9 @@ npx -y -p @neus/sdk neus setup --client claude
   </Tab>
 </Tabs>
 
-## Other MCP hosts
+## Any MCP client
 
-Add remote MCP URL **`https://mcp.neus.network/mcp`** in the host settings, or the JSON below for file-based config.
+Add the NEUS MCP URL **`https://mcp.neus.network/mcp`** in any MCP-compatible client, or use the JSON below for file-based config.
 
 | Host | Config file |
 |------|-------------|
@@ -139,6 +139,8 @@ Add remote MCP URL **`https://mcp.neus.network/mcp`** in the host settings, or t
 | Windsurf | `~/.codeium/windsurf/mcp_config.json` |
 | Gemini CLI | `~/.gemini/settings.json` or `gemini mcp add --transport http neus https://mcp.neus.network/mcp` |
 | ChatGPT | Remote MCP URL in client settings |
+| Hermes Agent | Add `https://mcp.neus.network/mcp` as a remote MCP server in `~/.hermes/config.yaml` |
+| OpenClaw | Add the NEUS MCP URL as a tool source in your OpenClaw agent config |
 
 For servers and CI, use Profile access keys in bearer headers: [Auth](./auth).
 
@@ -162,5 +164,5 @@ npx -y -p @neus/sdk neus setup --access-key <npk_...>
 Keys: [Profile -> Account](https://neus.network/profile?tab=account). Never paste keys into chat.
 
 <Warning>
-  Use **`https://mcp.neus.network/mcp`** for proofs and agent tools. The docs site also offers a **search-only** endpoint at `https://docs.neus.network/mcp` - it cannot verify identity or create proofs.
+  Use **`https://mcp.neus.network/mcp`** for proofs and agent tools. The docs site also offers a **search-only** endpoint at `https://docs.neus.network/mcp`. It cannot verify identity or create proofs.
 </Warning>

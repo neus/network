@@ -128,7 +128,8 @@
               "cookbook/nft-gating",
               "cookbook/sybil-resistance",
               "cookbook/verifiable-agents",
-              "cookbook/verified-handles"
+              "cookbook/verified-handles",
+              "cookbook/private-cloud-agents"
             ]
           }
         ]
@@ -625,6 +626,14 @@
     {
       "source": "/platform/receipts-and-results",
       "destination": "/platform/proofs"
+    },
+    {
+      "source": "/cookbook/phala-dstack",
+      "destination": "/cookbook/private-cloud-agents"
+    },
+    {
+      "source": "/cookbook/confidential-agents",
+      "destination": "/cookbook/private-cloud-agents"
     }
   ],
   "contextual": {
@@ -637,8 +646,8 @@
         "href": "/"
       },
       {
-        "title": "Add a gate",
-        "description": "Publish a listing and embed VerifyGate",
+        "title": "Gate and monetize",
+        "description": "Set checks and price, embed one link",
         "icon": "rocket",
         "iconType": "solid",
         "href": "/quickstart"

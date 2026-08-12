@@ -15,7 +15,7 @@ Three lanes cover every flow. Most products only use the first.
 | Lane | Who pays | Use it for |
 |------|----------|------------|
 | **You pay for checks** | Your NEUS credits | Default. Checks through your gate bill your account |
-| **Charge visitors at a gate** | Your visitor | Paid content and member access — card or USDC at [checkout](./hosted-gate-checkout) |
+| **Charge visitors at a gate** | Your visitor | Paid content and member access. Card or USDC at [checkout](./hosted-gate-checkout) |
 | **Charge per API call (metered)** | The caller / agent | Metered APIs and agents that [pay as they go](./x402) (`x402`) |
 
 ## Default: you pay for visitor checks
@@ -71,10 +71,10 @@ For a dedicated agent account, create identity first, then send the user through
 
 ## When credits run out
 
-Billable calls return **402** with a quote. Pay per call with x402 (no account needed — see [x402](./x402)) or complete payment and retry with `PAYMENT-SIGNATURE`.
+Billable calls return **402** with a quote. Pay per call with x402 (no account needed; see [x402](./x402)) or complete payment and retry with `PAYMENT-SIGNATURE`.
 
 ## Advanced server integration
 
-Server-side proof creation and per-user approvals use separate flows — see [Integrations](../cookbook/integrations).
+Server-side proof creation and per-user approvals use separate flows. See [Integrations](../cookbook/integrations).
 
 **Next:** [Pricing](./pricing) · [x402](./x402)

@@ -91,7 +91,7 @@ Base cost: 2 credits. No per-hour surcharge.
 | Network | Base mainnet (`eip155:8453`) |
 | Asset | USDC on Base |
 
-Pricing is exact and sub-cent. A 1-credit gate check settles at its unit cost — not a rounded-up minimum. No settlement cap; pay for exactly the credits used. Per-credit price: see [Pricing](./pricing).
+Pricing is exact and sub-cent. A 1-credit gate check settles at its unit cost, not a rounded-up minimum. No settlement cap; pay for exactly the credits used. Per-credit price: see [Pricing](./pricing).
 
 Always enforce a client-side maximum before signing. Treat the decoded `PAYMENT-REQUIRED` header as the source of truth for the current amount, asset, recipient, and timeout.
 

@@ -4,7 +4,7 @@ Treat **wallet signatures** and **API keys** as secrets. Do not log them, expose
 
 ## Authentication model
 
-- **Verification requests** are authenticated with a wallet signature over the **CAIP-380 Portable Proof** six-line signing string. Never roll your own message format in production—use the SDK or the hosted preparation step documented for HTTP integrations.
+- **Verification requests** are authenticated with a wallet signature over the **CAIP-380 Portable Proof** six-line signing string. Never roll your own message format in production. Use the SDK or the hosted preparation step documented for HTTP integrations.
 - **Proof lookups by `qHash`** are safe for public proofs. Private proofs return a minimal payload unless the caller proves ownership (authenticated owner or signed request).
 - **Owner-only reads** of private proof payloads require an extra owner-signed request. The SDK attaches the required signed headers for you.
 

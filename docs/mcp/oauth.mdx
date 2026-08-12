@@ -1,6 +1,6 @@
 ---
 title: MCP OAuth
-description: OAuth 2.0 with PKCE for MCP client authentication — discovery, authorization, token exchange, refresh, and revocation.
+description: OAuth 2.0 with PKCE for MCP client authentication: discovery, authorization, token exchange, refresh, and revocation.
 icon: shield-check
 ---
 
@@ -92,6 +92,8 @@ GET https://neus.network/.well-known/oauth-authorization-server
 
 ## Authorization
 
+The example below shows the **NEUS SDK CLI** loopback flow (`neus auth`). Host MCP clients use the same endpoint with the `client_id` issued to them by DCR and their own loopback `redirect_uri`. Never use `neus-cli` for host clients.
+
 ```http
 GET https://neus.network/oauth/authorize
   ?response_type=code
@@ -111,7 +113,7 @@ GET https://neus.network/oauth/authorize
 | `redirect_uri` | Yes | Must exactly match a registered URI |
 | `code_challenge` | Yes | PKCE challenge (BASE64URL of SHA-256 of code_verifier) |
 | `code_challenge_method` | Yes | Must be `S256` |
-| `state` | Yes | CSRF protection — returned verbatim |
+| `state` | Yes | CSRF protection: returned verbatim |
 | `scope` | No | Default: `neus:core neus:profile neus:secrets offline_access` |
 | `resource` | Yes | Must be `https://mcp.neus.network/mcp` |
 | `iss` | Returned | The AS returns `iss=https://neus.network` on the callback. Clients MUST validate it matches the expected issuer (RFC 9207). |
@@ -163,12 +165,12 @@ The MCP access token is a JWT:
 | Claim | Value | Description |
 |-------|-------|-------------|
 | `iss` | `https://neus.network` | Token issuer |
-| `aud` | `https://mcp.neus.network/mcp` | Resource audience — MCP server validates this |
+| `aud` | `https://mcp.neus.network/mcp` | Resource audience: MCP server validates this |
 | `sub` | Profile subject ID | Unique user identifier |
 | `did` | `did:pkh:...` | Decentralized identifier |
 | `azp` | Client ID | Client that requested the token |
 | `scope` | Space-separated | Granted scopes |
-| `token_use` | `mcp_access` | Token type — MCP server rejects other values |
+| `token_use` | `mcp_access` | Token type: MCP server rejects other values |
 | `iat` | Unix seconds | Issued at |
 | `exp` | Unix seconds | Expires at |
 
@@ -200,9 +202,12 @@ Revoking an access token also invalidates all associated refresh tokens.
 
 | `client_id` | Use |
 |-------------|-----|
-| `neus-cli` | NEUS SDK CLI (`neus auth`) — loopback redirect on `127.0.0.1` |
+| `neus-cli` | NEUS SDK CLI (`neus auth`): loopback redirect on `127.0.0.1` only |
+| `neus-mcp-host` | Host MCP clients: issued by DCR for non-loopback flows |
 
-Hosted MCP clients (Cursor, VS Code, Claude Code, OpenAI) should use a **URL-only** MCP config. The host discovers OAuth metadata at `/.well-known/mcp.json` and runs its own DCR + PKCE + silent refresh lifecycle. Use the NEUS SDK CLI (`neus setup`) to generate the correct config.
+Hosted MCP clients use a **URL-only** MCP config. The host discovers OAuth metadata via `/.well-known/oauth-protected-resource`, runs its own Dynamic Client Registration (DCR) against `/oauth/register`, and owns its PKCE + silent-refresh lifecycle. DCR returns `neus-cli` for loopback (`127.0.0.1`) redirects and `neus-mcp-host` for host-managed clients. Do not pin `neus-cli` for host-owned OAuth.
+
+The OAuth examples above show `client_id=neus-cli` because they document the CLI loopback path (`neus auth`). Host clients receive their own `client_id` from DCR and send that instead, plus the same `resource=https://mcp.neus.network/mcp`.
 
 ## Security properties
 
@@ -212,7 +217,7 @@ Hosted MCP clients (Cursor, VS Code, Claude Code, OpenAI) should use a **URL-onl
 | Exact redirect_uri match | Prevents open redirect attacks |
 | State parameter preserved | CSRF protection |
 | Resource indicator required | Prevents token misuse across services |
-| Issuer validation (RFC 9207) | Client confirms `iss` on auth response matches expected AS — closes IdP mix-up |
+| Issuer validation (RFC 9207) | Client confirms `iss` on auth response matches expected AS; closes IdP mix-up |
 | Token audience validated | MCP tokens cannot be used for other NEUS services |
 | Refresh token rotation | Old refresh token invalidated on each use |
 | Tokens never in query strings | Bearer header only |

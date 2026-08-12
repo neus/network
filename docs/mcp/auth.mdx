@@ -4,9 +4,9 @@ description: OAuth 2.0 with PKCE for MCP clients, access key fallback, and token
 icon: lock
 ---
 
-Sign in once, then let your IDE handle the rest. NEUS MCP uses **OAuth 2.0 with PKCE** by default, so Cursor, Claude Code, VS Code, and Codex can authenticate through a browser flow and refresh your session silently for up to 30 days.
+Sign in once. Any MCP client authenticates through **OAuth 2.0 with PKCE** and refreshes your session silently for up to 30 days.
 
-For servers, CI, and other environments that cannot open a browser, use a durable profile access key instead.
+For servers, CI, and environments that cannot open a browser, use a durable profile access key instead.
 
 ## OAuth sign-in
 
@@ -34,7 +34,7 @@ For full OAuth mechanics, see [MCP OAuth](./oauth).
 
 ## Access key (fallback)
 
-Use a **profile access key** from [Access Keys](https://neus.network/profile?tab=account) when browser OAuth is not available — servers, CI, and automation.
+Use a **profile access key** from [Access Keys](https://neus.network/profile?tab=account) when browser OAuth is not available: servers, CI, and automation.
 
 ```bash
 neus setup --access-key <npk_...>
@@ -44,10 +44,10 @@ neus setup --access-key <npk_...>
 
 | Mode | Best for |
 |------|----------|
-| **OAuth** | Cursor, VS Code, Claude Code, OpenAI — browser sign-in, no manual keys, silent refresh for 30 days |
+| **OAuth** | Interactive clients: browser sign-in, no manual keys, silent refresh for 30 days |
 | **Access key (`npk_*`)** | Servers, CI, and automation with stable environment variables. Durable and never expires |
 
-Both modes send the same `Authorization: Bearer <token>` header against the same NEUS Profile and Account. `npk_*` keys are long-lived credentials; OAuth sessions are long-lived too — the IDE refreshes the short-lived access token silently for up to 30 days via the `offline_access` refresh token, exactly like Linear, GitHub, and Notion MCP hosts.
+Both modes send the same `Authorization: Bearer <token>` header against the same NEUS Profile and Account. `npk_*` keys are long-lived credentials. OAuth sessions are long-lived too. Your MCP host refreshes the short-lived access token silently for up to 30 days via the `offline_access` refresh token, exactly like Linear, GitHub, and Notion MCP hosts.
 
 Hosted MCP requires authentication on every request. Anonymous proof checking and verifier catalog reads are available through the web UI and the HTTP API.
 
@@ -88,11 +88,11 @@ Clients that support MCP OAuth follow that metadata to start browser sign-in. Yo
 
 | Topic | Rule |
 | --- | --- |
-| OAuth tokens | Stored by MCP client — never in query strings |
+| OAuth tokens | Stored by MCP client, never in query strings |
 | Access keys | Server or IDE MCP configuration only |
 | Browser exposure | Never expose tokens or access keys in browser code |
 | Rotation | Re-issue access keys from [Access Keys](https://neus.network/profile?tab=account) if exposed |
-| Refresh tokens | Rotated on each use — old token invalidated |
+| Refresh tokens | Rotated on each use, old token invalidated |
 | `hostedVerifyUrl` | Send the user to the returned NEUS hosted flow |
 
 <CardGroup cols={3}>

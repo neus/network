@@ -26,8 +26,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "NEUS",
-    "shortDescription": "Verify identity and permissions before agents act.",
-    "longDescription": "Connect your assistant to verified identity, scoped permissions, and reusable portable proofs. In Cursor, installing this plugin registers NEUS and signs you in. For Codex, VS Code, and Claude Code, use the public CLI.",
+    "shortDescription": "Portable trust for any agent, editor, server, or API. Identity, permissions, proofs, and Vault.",
+    "longDescription": "NEUS gives any agent, editor, server, or API the same portable identity, permissions, proofs, context, and Vault. Verify once. Carry the proof. Enforce before action. For servers, CI, or automation, use the public CLI.",
     "developerName": "NEUS",
     "category": "Security",
     "capabilities": [
@@ -38,8 +38,8 @@
     "privacyPolicyURL": "https://neus.network/privacy",
     "termsOfServiceURL": "https://neus.network/terms",
     "defaultPrompt": [
-      "Use NEUS to check identity and permissions before taking action.",
-      "Use NEUS to check trust proofs for this wallet or organization."
+      "Use NEUS to verify identity and permissions before taking action.",
+      "Use NEUS to verify proofs for this wallet or organization."
     ],
     "brandColor": "#98C0EF",
     "composerIcon": "./assets/icon.svg",

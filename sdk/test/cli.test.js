@@ -303,8 +303,8 @@ describe('neus CLI', () => {
     expect(codexState.servers.neus).toEqual({
       url: 'https://mcp.neus.network/mcp',
       bearerTokenEnvVar: null,
-      oauthClientId: 'neus-cli',
-      oauthResource: 'https://mcp.neus.network/mcp'
+      oauthClientId: null,
+      oauthResource: null
     });
 
     await expect(
@@ -329,7 +329,8 @@ describe('neus CLI', () => {
 
     const codexState = JSON.parse(await fs.readFile(context.codexStatePath, 'utf8'));
     expect(codexState.servers.neus.url).toBe('https://mcp.neus.network/mcp');
-    expect(codexState.servers.neus.oauthClientId).toBe('neus-cli');
+    expect(codexState.servers.neus.oauthClientId).toBeNull();
+    expect(codexState.servers.neus.oauthResource).toBeNull();
   });
 
   it('uses Codex-owned OAuth for auth --client codex instead of opening NEUS browser auth', async () => {
