@@ -1,6 +1,6 @@
 # @neus/sdk
 
-Build with portable proofs. Create, check, and reuse verified identity, ownership, and authority from apps and backends. Includes the **`neus`** CLI for assistant setup and agent context.
+SDK for adding portable identity, private context, proofs, and agent permissions to AI apps. Includes the **`neus`** CLI for assistant setup and agent context.
 
 Proofs carry identity, trusted context, and scoped authority. Connected gates check current state before access, payment, or execution instead of re-proving the same facts every time.
 

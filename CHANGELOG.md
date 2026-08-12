@@ -4,6 +4,25 @@ Release notes for **`@neus/sdk`**, **`@neus/mcp-server`**, docs, and examples.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.3.9] - 2026-08-12
+
+### Changed
+
+- **Restored `neus-trust-workflow` skill into the `neus-mcp` plugin bundle.** The trust workflow skill is now bundled in `plugins/neus-mcp/skills/neus-trust-workflow/` alongside `neus-setup`, so marketplace install (Cursor, Claude Code, Codex) delivers the full trust autopilot without requiring a separate `neus setup` CLI run. The SDK copy at `sdk/skills/neus-trust-workflow/` remains the canonical source; `scripts/sync-plugin-skills.mjs` keeps the plugin copy identical and the test suite enforces byte-identity.
+
+- **CLI defers skill install when the plugin is present.** `neus setup` now detects when the `neus-mcp` plugin is installed and already bundles the trust workflow skill, and skips writing a user-level copy to `~/.agents/skills/` or `~/.claude/skills/` for that host — avoiding duplicate skill entries. VS Code and hosts without the plugin still receive the user-level copy.
+
+### Upgrade
+
+```bash
+npm i @neus/sdk@1.3.9
+# or zero-install
+npx -y -p @neus/sdk@1.3.9 neus setup
+npx -y -p @neus/sdk@1.3.9 neus doctor --live
+```
+
+In Cursor, Claude Code, or Codex, install the `neus-mcp` plugin from the marketplace — the trust workflow skill is included.
+
 ## [1.3.8] - 2026-07-30
 
 ### Fixed

@@ -549,16 +549,39 @@ function directoryDigest(targetPath) {
 function trustSkillTargets(clients) {
   const targets = [];
   if (clients.some(client => ['cursor', 'codex', 'vscode'].includes(client))) {
-    targets.push({
-      hosts: clients.filter(client => ['cursor', 'codex', 'vscode'].includes(client)),
-      targetPath: path.join(os.homedir(), '.agents', 'skills', 'neus-trust-workflow')
-    });
+    const pluginHosts = clients.filter(
+      client => ['cursor', 'codex'].includes(client) && hostPluginBundlesTrustSkill(client)
+    );
+    const cliHosts = clients.filter(
+      client => !pluginHosts.includes(client) && ['cursor', 'codex', 'vscode'].includes(client)
+    );
+    if (cliHosts.length) {
+      targets.push({
+        hosts: cliHosts,
+        targetPath: path.join(os.homedir(), '.agents', 'skills', 'neus-trust-workflow')
+      });
+    }
+    if (pluginHosts.length) {
+      targets.push({
+        hosts: pluginHosts,
+        targetPath: null,
+        deferredToPlugin: true
+      });
+    }
   }
   if (clients.includes('claude')) {
-    targets.push({
-      hosts: ['claude'],
-      targetPath: path.join(os.homedir(), '.claude', 'skills', 'neus-trust-workflow')
-    });
+    if (hostPluginBundlesTrustSkill('claude')) {
+      targets.push({
+        hosts: ['claude'],
+        targetPath: null,
+        deferredToPlugin: true
+      });
+    } else {
+      targets.push({
+        hosts: ['claude'],
+        targetPath: path.join(os.homedir(), '.claude', 'skills', 'neus-trust-workflow')
+      });
+    }
   }
   return targets;
 }
@@ -569,7 +592,21 @@ function installTrustSkill(clients, dryRun) {
     throw new Error(`Packaged NEUS trust skill is missing: ${sourcePath}`);
   }
   const sourceDigest = directoryDigest(sourcePath);
-  return trustSkillTargets(clients).map(({ hosts, targetPath }) => {
+  return trustSkillTargets(clients).map(({ hosts, targetPath, deferredToPlugin }) => {
+    if (deferredToPlugin) {
+      return {
+        name: 'neus-trust-workflow',
+        hosts,
+        installed: true,
+        changed: false,
+        targetPath: null,
+        deferredToPlugin: true,
+        backupPath: null,
+        version: CLI_PACKAGE_VERSION,
+        sha256: sourceDigest,
+        dryRun
+      };
+    }
     const changed = directoryDigest(targetPath) !== sourceDigest;
     const backupPath =
       changed && fileExists(targetPath) ? `${targetPath}.bak-${Date.now()}` : null;
@@ -591,6 +628,7 @@ function installTrustSkill(clients, dryRun) {
       installed: true,
       changed,
       targetPath: portablePath(targetPath),
+      deferredToPlugin: false,
       backupPath: backupPath ? portablePath(backupPath) : null,
       version: CLI_PACKAGE_VERSION,
       sha256: sourceDigest,
@@ -602,7 +640,19 @@ function installTrustSkill(clients, dryRun) {
 function inspectTrustSkill(clients) {
   const sourcePath = path.join(__cliDir, '..', 'skills', 'neus-trust-workflow');
   const sourceDigest = directoryDigest(sourcePath);
-  return trustSkillTargets(clients).map(({ hosts, targetPath }) => {
+  return trustSkillTargets(clients).map(({ hosts, targetPath, deferredToPlugin }) => {
+    if (deferredToPlugin) {
+      return {
+        name: 'neus-trust-workflow',
+        hosts,
+        installed: true,
+        current: true,
+        targetPath: null,
+        deferredToPlugin: true,
+        version: CLI_PACKAGE_VERSION,
+        sha256: sourceDigest
+      };
+    }
     const installedDigest = directoryDigest(targetPath);
     return {
       name: 'neus-trust-workflow',
@@ -610,6 +660,7 @@ function inspectTrustSkill(clients) {
       installed: Boolean(installedDigest),
       current: Boolean(installedDigest && sourceDigest && installedDigest === sourceDigest),
       targetPath: portablePath(targetPath),
+      deferredToPlugin: false,
       version: CLI_PACKAGE_VERSION,
       sha256: installedDigest
     };
@@ -809,10 +860,11 @@ function cursorInstalled() {
   ].some(fileExists);
 }
 
-// The Cursor marketplace plugin (neus-mcp) ships its own .mcp.json so click-install
-// registers NEUS MCP and fires Cursor's native OAuth flow (the Linear-style one-click
-// path). When the plugin is present, the CLI defers to it instead of writing a second
-// user-level entry — that avoids the duplicate-MCP class without killing click-install.
+// The neus-mcp marketplace plugin bundles both the .mcp.json (for one-click MCP
+// registration + OAuth) and the neus-trust-workflow skill (so the trust workflow is
+// present without a separate CLI run). When the plugin is installed, the CLI defers
+// to it for both MCP registration and skill delivery — that avoids duplicate-MCP and
+// duplicate-skill entries without killing click-install.
 // One plugin name only (neus-mcp): the legacy neus-trust plugin carries no current
 // manifests and is not consulted.
 function cursorBundledMcpPlugins() {
@@ -836,6 +888,36 @@ function cursorBundledMcpPlugins() {
     }
   }
   return conflicts;
+}
+
+// Detect whether the neus-mcp plugin is installed for a given host and bundles the
+// trust-workflow skill in its skills/ directory. Returns true when the plugin-owned
+// skill is present so the CLI can skip writing a user-level copy (avoids duplicates).
+function hostPluginBundlesTrustSkill(host) {
+  const homeDir = os.homedir();
+  let cacheRoot;
+  if (host === 'cursor') {
+    cacheRoot = path.join(homeDir, '.cursor', 'plugins', 'cache', 'neus', 'neus-mcp');
+  } else if (host === 'claude') {
+    cacheRoot = path.join(homeDir, '.claude', 'plugins', 'cache');
+  } else if (host === 'codex') {
+    cacheRoot = path.join(homeDir, '.codex', 'plugins', 'cache');
+  } else {
+    return false;
+  }
+  if (!fileExists(cacheRoot)) return false;
+  try {
+    return fs
+      .readdirSync(cacheRoot, { withFileTypes: true })
+      .filter(entry => entry.isDirectory())
+      .some(entry =>
+        fileExists(
+          path.join(cacheRoot, entry.name, 'skills', 'neus-trust-workflow', 'SKILL.md')
+        )
+      );
+  } catch {
+    return false;
+  }
 }
 
 function defaultUserClients() {
@@ -2433,11 +2515,19 @@ async function runSetup(options) {
   });
   writeCliLine(paint('NEUS skill', 'cyan'));
   for (const skill of skills) {
-    logStep(
-      'ok',
-      skill.hosts.join(','),
-      `${skill.targetPath}${skill.changed ? ' (installed)' : ' (current)'}`
-    );
+    if (skill.deferredToPlugin) {
+      logStep(
+        'ok',
+        skill.hosts.join(','),
+        'neus-mcp plugin bundles the trust skill — no user-level copy needed'
+      );
+    } else {
+      logStep(
+        'ok',
+        skill.hosts.join(','),
+        `${skill.targetPath}${skill.changed ? ' (installed)' : ' (current)'}`
+      );
+    }
   }
   writeCliLine('');
 

@@ -1,6 +1,6 @@
 # @neus/mcp-server
 
-Hosted NEUS MCP. Portable identity, trusted context, scoped authority, and reusable proofs for AI agents, checked before sensitive actions.
+Portable identity, context, and authority for AI agents across any framework.
 
 Connect any MCP client in one command:
 

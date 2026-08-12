@@ -14,7 +14,7 @@ Credits apply to checks and saved results, not to hosted session sign-in. See [T
 | Access or checkout (default) | `VerifyGate` / Hosted Verify + `gateId` | No |
 | MCP client sign-in | OAuth 2.0 + PKCE | No |
 | Server automation as your profile | Bearer `npk_*` access key | No |
-| Server creates receipts for an approved user | App link + `verifyFromApp` | No |
+| Server creates proofs for an approved user | App link + `verifyFromApp` | No |
 | Sign inside your page | SDK `verify` + `wallet` | Yes. Rare |
 
 Server integration: [Integrations](../cookbook/integrations).
@@ -40,9 +40,9 @@ See [MCP OAuth](../mcp/oauth).
 
 [Access keys](https://neus.network/profile?tab=account) for servers, CI, and MCP automation. Never in browser bundles.
 
-## Backend receipts
+## Backend proofs
 
-For backend-created receipts after a user approves your product once, see [Integrations](../cookbook/integrations). Separate from creating a **listing** under profile → **Listings**, which bills hosted checks to your account.
+For backend-created proofs after a user approves your product once, see [Integrations](../cookbook/integrations). Separate from creating a **listing** under profile → **Listings**, which bills hosted checks to your account.
 
 ## Signing inside your app
 

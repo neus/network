@@ -1,7 +1,7 @@
 {
   "name": "@neus/sdk",
-  "version": "1.3.8",
-  "description": "JavaScript SDK for NEUS portable proofs, access checks, and hosted verification.",
+  "version": "1.3.9",
+  "description": "SDK for adding portable identity, private context, proofs, and agent permissions to AI apps.",
   "bin": {
     "neus": "cli/neus.mjs"
   },
@@ -81,15 +81,13 @@
   },
   "keywords": [
     "neus",
-    "verification",
-    "cryptographic-proofs",
+    "ai-agents",
+    "agent-permissions",
+    "agent-identity",
+    "ai-security",
     "identity",
     "authentication",
-    "blockchain",
-    "cross-chain",
-    "web3",
     "passwordless",
-    "universal-protocol",
     "proof",
     "ownership",
     "sdk",

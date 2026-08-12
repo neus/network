@@ -1,8 +1,8 @@
 {
   "name": "neus-mcp",
   "displayName": "NEUS",
-  "description": "Portable trust for any agent, editor, server, or API. Identity, permissions, proofs, context, and Vault.",
-  "version": "1.3.8",
+  "description": "Add identity, private context, and enforceable permissions to any AI agent.",
+  "version": "1.3.9",
   "author": {
     "name": "NEUS",
     "email": "dev@neus.network"
@@ -13,8 +13,10 @@
   "logo": "./assets/icon.svg",
   "category": "security",
   "keywords": [
-    "trust-receipts",
+    "ai-agents",
+    "agent-permissions",
     "agent-identity",
+    "ai-security",
     "identity-verification",
     "ai-assistant",
     "cursor",

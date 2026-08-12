@@ -1,11 +1,11 @@
 ---
 title: MCP clients
 sidebarTitle: MCP clients
-description: Connect any MCP client to the NEUS trust harness: identity, permissions, proofs, context, and Vault.
+description: Give AI agents verified identity, private context, and enforceable permissions before sensitive actions.
 icon: plug
 ---
 
-NEUS is a portable trust harness. Any MCP client connects to the same identity, permissions, proofs, and Vault. Verify once. Carry the proof. Enforce before action.
+Any MCP client connects to the same identity, permissions, proofs, and Vault. One endpoint. One sign-in. Same authority everywhere.
 
 **Hosted endpoint:** `https://mcp.neus.network/mcp`
 
@@ -19,7 +19,7 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Installs the NEUS skill and configures hosted MCP for Cursor, Claude Code, Codex, and VS Code in one command. It does not launch a browser. Sign in by clicking **Connect** in your host, or run `neus auth` separately. In Cursor, installing the **neus-mcp** marketplace plugin is the fastest path: it auto-registers NEUS MCP and runs OAuth in one click.
+Installs the NEUS skill and configures hosted MCP for Cursor, Claude Code, Codex, and VS Code in one command. It does not launch a browser. Sign in by clicking **Connect** in your host, or run `neus auth` separately. In Cursor, installing the **neus-mcp** marketplace plugin is the fastest path: it auto-registers NEUS MCP, bundles the trust workflow, setup, and integrate skills, and runs OAuth in one click.
 
 Ask your assistant: **"Before I take a sensitive action, use NEUS. Reuse what I already have."** It looks up identity, authority, and saved results first, then summarizes as Passed, Action needed, or Blocked.
 
@@ -80,7 +80,7 @@ Setup starts Codex OAuth. If your host asks you to sign in again, use `codex mcp
 
 Config path: `~/.codex/config.toml`
 
-**Or install the plugin** (bundles the setup skill; MCP registration runs via the CLI above):
+**Or install the plugin** (bundles the trust workflow, setup, and integrate skills; MCP registration runs via the CLI above):
 
 <Accordion title="Codex manual install">
 ```text
@@ -115,7 +115,7 @@ Project scope: `./.vscode/mcp.json`
 npx -y -p @neus/sdk neus setup --client claude
 ```
 
-**Or install the plugin from the marketplace** (bundles the setup skill):
+**Or install the plugin from the marketplace** (bundles the trust workflow, setup, and integrate skills):
 
 <Accordion title="Claude Code manual install">
 ```text
