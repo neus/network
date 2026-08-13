@@ -25,7 +25,7 @@ The exact price for each request is in the `PAYMENT-REQUIRED` header. It scales 
     An unpaid request returns **HTTP 402**. Decode the base64 **`PAYMENT-REQUIRED`** response header as an x402 v2 `PaymentRequired` object.
   </Step>
   <Step title="Authorize payment">
-    Use an x402-compatible client to select the supported payment method and sign the payment payload. The private key stays in the client or wallet.
+    Use an x402-compatible client to select the payment method and sign the payload. Private key stays in the client or wallet.
   </Step>
   <Step title="Retry the same request">
     Repeat the identical method, URL, query, and body with the base64 **`PAYMENT-SIGNATURE`** request header.

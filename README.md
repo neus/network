@@ -1,15 +1,19 @@
-<h1 align="center">NEUS Network · Portable Trust Infrastructure</h1>
+<h1 align="center">NEUS · Portable Trust Harness for AI</h1>
 
 <p align="center">
   <img src="./docs/images/neus-social-card.png" alt="NEUS Network social card" width="640" />
 </p>
 
 <p align="center">
-  <strong>Portable Trust Infrastructure for Humans and AI.</strong>
+  <strong>Your AI has access. NEUS gives it authority.</strong>
 </p>
 
 <p align="center">
-  Stop people and agents from the wrong action. Set what they may do, and check it before access, payment, or execution.
+  Give agents verifiable identity, provenance, and authority before they access data, move money, or take action.
+</p>
+
+<p align="center">
+  <em>Prove once. Verify anywhere.</em>
 </p>
 
 <p align="center">
@@ -31,7 +35,7 @@
 
 ## Why NEUS
 
-Every new app, agent, and partner usually starts from zero. No shared context about identity, ownership, or authority. NEUS turns those checks into **portable proofs** so people and AI keep context as they move, act under clear limits, and leave an audit trail behind.
+Identity. Provenance. Authority. Every new app, agent, and transaction rebuilds all three from zero. NEUS turns those checks into **portable proofs** so people and AI carry verified state as they move, act under clear limits, and leave an audit trail behind.
 
 A proof is something you already earned: who someone is, what they own, what they are allowed to do. Put it on a profile, require it at a gate, or check it from your API. Same proof, every surface.
 
@@ -40,7 +44,7 @@ A proof is something you already earned: who someone is, what they own, what the
 | Stop re-proving the same facts in every product | One portable proof apps and agents can reuse |
 | Carry identity and ownership with the actor | Profiles and ownership proofs that travel across gates |
 | Authorize actions with clear limits | Scoped permissions, current status, and enforce-before-act checks |
-| Keep shared context for people and AI | Live trust context in the editor, product, and API |
+| Keep provenance with people and AI | Live proofs in the editor, product, and API |
 | Audit who did what, and under which authority | Proof pages, stable references, and reviewable history |
 | Ship trust without rebuilding each flow | Hosted Verify, widgets, SDK, and MCP on one model |
 
@@ -48,7 +52,7 @@ A proof is something you already earned: who someone is, what they own, what the
 
 ### One command for assistants
 
-Connect once. Your assistant carries your identity, trusted context, and scoped authority across editors, reusing what's verified, checking limits before sensitive actions, and leaving a proof for every result.
+Connect once. Your assistant carries your identity, provenance, and scoped authority across editors, reusing what's verified, checking limits before sensitive actions, and leaving a proof for every result.
 
 ```bash
 npx -y -p @neus/sdk neus setup
@@ -57,7 +61,7 @@ npx -y -p @neus/sdk neus doctor --live
 
 Then ask your assistant:
 
-> Use NEUS so my identity, context, and authority travel with me. Reuse proofs when you can, verify when you must, and check authority before sensitive actions.
+> Use NEUS so my identity, provenance, and authority travel with me. Reuse proofs when you can, verify when you must, and check authority before sensitive actions.
 
 | Path | Next step |
 | ---- | --------- |
@@ -73,7 +77,7 @@ Install **`neus-mcp`** from this repo's marketplace to connect Cursor in one cli
 
 ### Add trust to an app
 
-Drop in Hosted Verify, `VerifyGate`, or the SDK when your app needs portable trust: shared context at the gate, authority before access, proofs you can audit later.
+Drop in Hosted Verify, `VerifyGate`, or the SDK when your app needs portable trust: provenance at the gate, authority before access, proofs you can audit later.
 
 - [Quickstart](https://docs.neus.network/quickstart) to register your app and ship the first proof.
 - Pattern: [prove once, reuse everywhere](https://docs.neus.network/integration).
@@ -100,7 +104,7 @@ Give agents identity and scoped authority as proofs so tools run under real limi
 | [Widgets](https://docs.neus.network/widgets/overview) | `VerifyGate` and `ProofBadge` for React products |
 | [API](https://docs.neus.network/api/overview) | Server reads, checks, verifier catalog, and verification endpoints |
 | [Agents](https://docs.neus.network/agents/overview) | Agent identity, scoped authority, and audit-ready proofs |
-| [MCP](https://docs.neus.network/mcp/overview) | Portable trust context for any client. `neus setup`; registry metadata: [`@neus/mcp-server`](https://www.npmjs.com/package/@neus/mcp-server) |
+| [MCP](https://docs.neus.network/mcp/overview) | Portable identity, provenance, and authority for any client. `neus setup`; registry metadata: [`@neus/mcp-server`](https://www.npmjs.com/package/@neus/mcp-server) |
 | [Examples](./examples) | Runnable app and agent samples |
 | [Verifier catalog](https://docs.neus.network/verification/verifiers) | Live check IDs and inputs |
 

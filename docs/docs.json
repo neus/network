@@ -47,17 +47,17 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "Set agent identity, permissions, and spend limits before tools run. One-command setup for every major AI coding assistant.",
-      "og:title": "NEUS Docs",
-      "og:description": "Give agents verified identity and enforceable permissions before they act.",
+      "description": "Give agents verifiable identity, provenance, and authority before they access data, move money, or take action.",
+      "og:title": "NEUS Docs | Portable Trust Harness for AI",
+      "og:description": "Verifiable identity, provenance, and authority for AI agents. Private by default.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
       "og:type": "website",
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
-      "twitter:title": "NEUS Docs",
-      "twitter:description": "Give agents verified identity and enforceable permissions before they act.",
+      "twitter:title": "NEUS Docs | Portable Trust Harness for AI",
+      "twitter:description": "Verifiable identity, provenance, and authority for AI agents. Private by default.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },

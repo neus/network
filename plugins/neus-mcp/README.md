@@ -1,6 +1,8 @@
 # NEUS
 
-Add identity, private context, and enforceable permissions to any AI agent.
+Verifiable identity, provenance, and authority for AI agents. Private by default.
+
+**Portable Trust Harness for AI.**
 
 Install the **neus-mcp** plugin from your host's marketplace, then click **Connect**. NEUS signs you in automatically. For servers, CI, or automation, use the public CLI.
 

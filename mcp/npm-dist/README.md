@@ -1,6 +1,6 @@
 # @neus/mcp-server
 
-Portable identity, context, and authority for AI agents across any framework.
+Portable identity, provenance, and authority for AI agents across any framework.
 
 Connect any MCP client in one command:
 

@@ -1,8 +1,8 @@
 # NEUS
 
-> Portable identity, context, and authority for AI agents across any framework.
+> Portable identity, provenance, and authority for AI agents. Private by default.
 
-NEUS is the persistent trust layer for agents that act. It turns identity, ownership, risk, and permission checks into reusable portable proofs, so people, apps, and agents stop re-proving the same facts and connected gates check current state before access, payment, or execution.
+Your AI has access. NEUS gives it authority. NEUS turns identity, provenance, and permission checks into reusable portable proofs, so people, apps, and agents stop re-proving the same facts and connected gates check current state before access, payment, or execution.
 
 ## What NEUS does
 
@@ -10,7 +10,7 @@ NEUS is the persistent trust layer for agents that act. It turns identity, owner
 - **Gates:** Proof-based access to content, rewards, and member areas, with optional USDC or card checkout.
 - **Agent trust:** Verifiable agent identity, controller-approved authority, spend caps, and expiration. Checked before tools run.
 - **Unique-person checks:** Reuse proof-of-human and wallet-risk results across a product.
-- **MCP for assistants:** One setup writes supported editor configuration and signs the user in with OAuth. Same identity, context, and authority in Cursor, Claude Code, Codex, and VS Code.
+- **MCP for assistants:** One setup writes supported editor configuration and signs the user in with OAuth. Same identity, provenance, and authority in Cursor, Claude Code, Codex, and VS Code.
 - **Trust workflow skill:** https://github.com/neus/network/blob/main/sdk/skills/neus-trust-workflow/SKILL.md (canonical source, shipped in `@neus/sdk` and bundled in the `neus-mcp` plugin)
 - **Integrate skill:** https://github.com/neus/network/blob/main/sdk/skills/neus-integrate/SKILL.md (add NEUS access control to an app: gate, server check, and test flow)
 

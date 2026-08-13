@@ -1,8 +1,8 @@
 # @neus/sdk
 
-SDK for adding portable identity, private context, proofs, and agent permissions to AI apps. Includes the **`neus`** CLI for assistant setup and agent context.
+SDK for portable identity, provenance, and authority in AI apps. Private proofs. Verifiable anywhere.
 
-Proofs carry identity, trusted context, and scoped authority. Connected gates check current state before access, payment, or execution instead of re-proving the same facts every time.
+Proofs carry identity, provenance, and scoped authority. Connected gates check current state before access, payment, or execution — instead of re-proving the same facts every time.
 
 ## Install (library)
 
@@ -49,7 +49,7 @@ Prefer `neus setup` over hand-editing config files so every host stays on **`htt
 - Server checks before access, rewards, payments, or actions
 - React gates with `VerifyGate`
 - Agent identity, controller-approved authority, and spend caps
-- MCP setup so assistants carry identity, context, and authority across editors
+- MCP setup so assistants carry identity, provenance, and authority across editors
 
 ## Hosted Verify
 

@@ -7,17 +7,13 @@ icon: shield-check
 
 Compute is already portable. Frameworks make orchestration portable. The trust state has not been. Identity, permissions, and proof history stay trapped in whichever environment the agent was set up in.
 
-NEUS fixes that. The agent connects to the same NEUS endpoint from wherever it runs. Identity, permissions, proofs, context, and Vault travel with it.
+NEUS fixes that. The agent connects to the same endpoint from wherever it runs.
 
-## What this is
-
-A private cloud trust harness for agents. One identity, one permission set, one proof history, every environment.
-
-**What NEUS carries across environments:**
+**What travels with it:**
 - **Identity** — who the agent is
 - **Permissions** — what it may do (scope, spend cap, expiry, revoke)
 - **Proofs** — reusable verification records
-- **Context** — trusted context that travels with the agent
+- **Context** — provenance and context that travels with the agent
 - **Vault** — encrypted secrets, listed and revoked through MCP
 
 **What the environment does:**
@@ -50,7 +46,7 @@ The agent can call any NEUS MCP tool: `neus_context`, `neus_proofs_check`, `neus
 
 ### 3. Move the agent, keep the trust state
 
-Redeploy the same compose file on a different backend. AWS, GCP, Azure, Phala Cloud, bare metal. The trust state is the same. NEUS carries the same identity, permissions, proofs, context, and Vault across all of them.
+Redeploy the same compose file on a different backend. AWS, GCP, Azure, Phala Cloud, bare metal. The trust state stays the same across all of them.
 
 ### 4. Verify the trust chain
 
@@ -117,7 +113,7 @@ Any agent that speaks MCP can connect. Package it as a Docker Compose, deploy an
 
 ## Portability
 
-A laptop today, a VPS tomorrow, a production cluster next week. The trust state is the same. Identity, permissions, proofs, context, and Vault live in NEUS and travel regardless of environment. Confidential compute can attest each environment on top.
+A laptop today, a VPS tomorrow, a production cluster next week. The trust state stays the same. Confidential compute can attest each environment on top.
 
 ## Related
 

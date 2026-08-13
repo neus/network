@@ -1,15 +1,17 @@
 ---
 title: MCP
 sidebarTitle: MCP
-description: Give AI agents verified identity, private context, and enforceable permissions before sensitive actions.
+description: Verifiable identity, provenance, and enforceable permissions for AI agents. Private by default.
 icon: plug
 "og:image": "/images/og-mcp.png"
 "twitter:image": "/images/og-mcp.png"
 ---
 
-NEUS MCP gives any agent, editor, server, or API the same portable identity, permissions, proofs, context, and Vault. One endpoint. One sign-in. Same authority everywhere.
+One endpoint. One sign-in. Same authority everywhere.
 
 **Endpoint:** `https://mcp.neus.network/mcp`
+
+NEUS MCP gives any agent, editor, server, or API the same portable identity, permissions, proofs, provenance, and Vault.
 
 ### Identity
 
@@ -25,7 +27,7 @@ Reusable verification records. Create once, reuse everywhere. Private by default
 
 ### Context
 
-Portable trusted context that travels with the agent across sessions and environments.
+Provenance that travels with the agent across sessions and environments.
 
 ### Vault
 
@@ -37,9 +39,7 @@ Access rules that require current proof before access, payment, or execution.
 
 ## Works with any MCP client
 
-Any client that speaks MCP can connect. One endpoint. One sign-in. Same identity, permissions, proofs, and Vault everywhere.
-
-Editors, agent frameworks, chat apps, servers, CI, and custom clients all use the same hosted URL. See [MCP clients](./ide-plugin) for per-client setup.
+Any client that speaks MCP can connect. Editors, agent frameworks, chat apps, servers, CI, and custom clients all use the same hosted URL. See [MCP clients](./ide-plugin) for per-client setup.
 
 ## How it works
 
@@ -55,29 +55,23 @@ You see **Passed**, **Action needed**, or **Blocked** in chat. Not raw tool outp
 
 ## Agent frameworks
 
-NEUS works alongside your agent framework, not instead of it. Your framework runs the tools. NEUS checks identity and permission before they run.
+NEUS works alongside your agent framework, not instead of it. Your framework runs the tools; NEUS checks identity and permission before they run.
 
-**Hermes Agent:** Connect NEUS MCP as a tool source. Hermes handles planning, memory, and skill creation. NEUS handles identity, permissions, and proof verification before sensitive actions.
+**Hermes Agent:** Connect NEUS MCP as a tool source. Hermes handles planning, memory, and skill creation. NEUS adds identity, permissions, and proof checks before sensitive actions.
 
-**OpenClaw:** Add the NEUS MCP URL as a remote server. OpenClaw orchestrates channels and subagents. NEUS adds the trust layer that checks who is acting and what they are allowed to do.
+**OpenClaw:** Add the NEUS MCP URL as a remote server. OpenClaw orchestrates channels and subagents; NEUS checks who is acting and what they are allowed to do.
 
-**LangGraph, CrewAI, Microsoft Agent Framework:** Any framework that speaks MCP can connect. Your framework handles orchestration and state. NEUS handles the trust layer.
+**LangGraph, CrewAI, Microsoft Agent Framework:** Any framework that speaks MCP can connect. Your framework handles orchestration and state; NEUS handles the trust layer.
 
-**A2A and EIP-8004:** NEUS publishes per-agent A2A cards and EIP-8004 agent cards for agent-to-agent discovery. Your agents can discover and verify NEUS-registered agents through standard protocols.
+**A2A and EIP-8004:** NEUS publishes per-agent A2A and EIP-8004 cards for agent-to-agent discovery. Your agents can discover and verify NEUS-registered agents through standard protocols.
 
-**ACP:** NEUS permission proofs complement Agent Communication Protocol. ACP handles inter-agent messaging. NEUS handles the identity and authority layer that says whether a message should be trusted.
+**ACP:** NEUS permission proofs complement Agent Communication Protocol. ACP handles inter-agent messaging; NEUS provides the identity and authority layer that says whether a message should be trusted.
 
 ## Private cloud agents
 
-Compute is already portable. Frameworks make orchestration portable. Hermes ships six terminal backends. OpenClaw runs on any self-hosted runtime. CrewAI deploys on AWS, Azure, GCP, or on-prem.
+Identity, permissions, and proof history usually stay trapped in whichever environment the agent was set up in. NEUS makes them portable — the agent connects from wherever it runs, and its trust state travels with it.
 
-The trust state has not been portable. Identity, permissions, and proof history stay trapped in whichever environment the agent was set up in. NEUS fixes that. One identity, one permission set, one proof history, every environment.
-
-**NEUS MCP** is the trust layer. The agent connects from wherever it runs. Identity, permissions, proofs, context, and Vault travel with it.
-
-**The environment** runs the agent and its tools. Optionally, a confidential compute runtime proves the environment itself is genuine — a TEE-attested confidential VM with a hardware quote over the full app hash. [Phala dstack](https://phala.com/dstack) is one such runtime; any TEE that binds the app hash into the quote works the same way. This is an optional hardening layer; NEUS works without it.
-
-NEUS already uses Phala-backed TEE inference for hosted AI. Every hosted model call runs through RedPill's confidential-computing gateway on Phala infrastructure. NEUS verifies the gateway identity, the signed receipt, and the serving path before it shows **TEE verified** in chat.
+Optionally, a confidential compute runtime (such as [Phala dstack](https://phala.com/dstack)) can prove the environment itself is genuine with a TEE-attested hardware quote over the full app hash. This is an optional hardening layer; NEUS works without it.
 
 Full integration guide: [Private cloud agents](../cookbook/private-cloud-agents).
 

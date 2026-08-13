@@ -52,12 +52,12 @@ Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are av
     Call **`neus_context`**, then **`neus_agent_link`** with the agent wallet.
   </Step>
   <Step title="Create">
-    If identity or authority is missing, call **`neus_agent_create`**. The agent account signs its identity, and the approving account grants authority.
+    If missing, call **`neus_agent_create`**. Agent signs identity; approver grants authority.
   </Step>
   <Step title="Confirm">
     Call **`neus_agent_link`** until **`linked: true`**, then reuse proofs.
   </Step>
-  <Step title="Connect">
+  <Step title="Mount">
     In your project repo:
     ```bash
     neus mount <agentId> --apply cursor
@@ -79,18 +79,18 @@ Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are av
     Register an agent.
   </Card>
   <Card title="Agent permissions" icon="handshake" href="./agent-delegation">
-    Grant allowed actions, spending caps, and expiration dates.
+    Actions, spend caps, expiry.
   </Card>
   <Card title="Discover agents" icon="address-card" href="./named-agent-card">
-    Public pages, A2A, and EIP-8004 cards.
+    Public pages, A2A, EIP-8004.
   </Card>
   <Card title="Pay per call" icon="coins" href="../platform/x402">
-    Charge for API requests with HTTP 402.
+    Charge per API request with HTTP 402.
   </Card>
   <Card title="Connect agent context" icon="layer-group" href="./runtime-mount">
-    Load a verified agent's identity and permissions into a project.
+    Load identity and permissions into a project.
   </Card>
   <Card title="MCP setup" icon="plug" href="../mcp/setup">
-    Connect supported editors with OAuth or an access key.
+    OAuth or access key.
   </Card>
 </CardGroup>

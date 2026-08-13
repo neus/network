@@ -1,7 +1,7 @@
 {
   "name": "neus-mcp",
   "displayName": "NEUS",
-  "description": "Add identity, private context, and enforceable permissions to any AI agent.",
+  "description": "Verifiable identity, provenance, and authority for AI agents. Private by default.",
   "version": "1.3.9",
   "author": {
     "name": "NEUS",

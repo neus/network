@@ -1,29 +1,29 @@
 ---
-title: "Overview"
+title: "Portable Trust Harness for AI"
 sidebarTitle: "Home"
-description: "Set agent identity, permissions, and spend limits before tools run. Verify once, carry the proof, and enforce it before access, payment, or execution — across every app and runtime."
+description: "Give agents verifiable identity, provenance, and authority before they access data, move money, or take action."
 icon: house
 "og:image": "/images/og-default.png"
 "twitter:image": "/images/og-default.png"
 ---
 
-Stop people and agents from the wrong action. Set what they may do, and check it before access, payment, or execution.
+Your AI has access. NEUS gives it authority.
 
-NEUS is the persistent trust layer for humans, organizations, and AI agents. Identity, context, and authority — checked before action, reused everywhere.
+Private proofs of identity, provenance, and authority. Checked before action. Reused everywhere.
 
 <CardGroup cols={3}>
   <Card title="Identity" icon="fingerprint">
-    Verified identity for humans, organizations, and agents. Portable across every connected app.
+    Humans, organizations, and agents. Portable across every connected app.
   </Card>
-  <Card title="Context" icon="brackets-curly">
-    Trusted context that travels with the agent across sessions and runtimes.
+  <Card title="Provenance" icon="brackets-curly">
+    Who owns it. Where it came from. Travels with the actor.
   </Card>
   <Card title="Authority" icon="shield-check">
-    Scoped permissions, spend caps, and revocation. Checked before tools run.
+    Spend caps, revocation. Checked before tools run.
   </Card>
 </CardGroup>
 
-## Connect an assistant in one command
+## Connect in one command
 
 <Tabs sync={false}>
   <Tab title="All editors">
@@ -69,31 +69,31 @@ Confirm the connection is live:
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-One setup. Same identity, context, and limits in Cursor, Claude Code, Codex, and production.
+One setup. Same identity, provenance, and limits in Cursor, Claude Code, Codex, and production.
 
-## Build with the highest-value paths
+## Authority before tools
 
 <CardGroup cols={3}>
   <Card title="Control an agent" icon="robot" href="./agents/agent-verification-flow">
-    Give every agent trusted identity, set what it may do and spend, and revoke anytime. Connected runtimes enforce that before a sensitive action runs.
+    Identity, spend caps, revocation. Enforced before action.
   </Card>
   <Card title="Gate and monetize" icon="rocket" href="./quickstart">
-    Require a current check before someone sees content, pays, or runs a tool. One access link owns the checks, price, and sign-in.
+    One link owns checks, price, and sign-in.
   </Card>
   <Card title="Ship with the SDK" icon="code" href="./sdks/overview">
-    Add a hosted check, confirm on your server, and embed a gate in React. Drop-in widgets for verify and proof status.
+    Hosted check, server confirm, React gate.
   </Card>
 </CardGroup>
 
 <CardGroup cols={3}>
   <Card title="Wire MCP tools" icon="plug" href="./mcp/overview">
-    One endpoint gives any agent, editor, or server the same portable identity, permissions, proofs, and Vault.
+    One endpoint. Any agent, editor, or server.
   </Card>
   <Card title="Check before action" icon="shield-check" href="./verification/overview">
-    Run a check once, save the proof, and require it before access, payment, or execution. Reused across apps.
+    Run once, save the proof, reuse everywhere.
   </Card>
   <Card title="Read the API" icon="terminal" href="./api/overview">
-    Hosted checks, saved proofs, agent authority, and payment rules — over HTTP, with OpenAPI.
+    Hosted checks, proofs, authority, billing. OpenAPI.
   </Card>
 </CardGroup>
 
@@ -101,7 +101,7 @@ One setup. Same identity, context, and limits in Cursor, Claude Code, Codex, and
 
 Verify once. Carry the proof. Enforce before action.
 
-Frameworks run tools. Models think. NEUS checks identity, context, and authority before sensitive actions.
+Frameworks run tools. Models think. NEUS checks identity, provenance, and authority before sensitive actions.
 
 1. **Verify once.** Run a check through the hosted screen, MCP, or SDK.
 2. **Carry the proof.** NEUS saves the result with its status, allowed use, and expiration.
@@ -114,7 +114,7 @@ See the full flow: [How verification works](./verification/how-it-works) · [Pro
 Login gets people in. Authority decides what they can do next. NEUS records that authority as a portable proof any connected app can check.
 
 - Keep your sign-in, identity provider, payment, and agent framework.
-- Add NEUS via SDK, API, or MCP — no replacement required.
+- Add NEUS via SDK, API, or MCP. No replacement required.
 - Wallet checks are optional. Work accounts, domains, social accounts, and passkeys all work.
 
 See how teams put this to work: [Solutions](https://neus.network/solutions).
