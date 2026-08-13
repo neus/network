@@ -1,14 +1,14 @@
 {
   "name": "neus-mcp",
   "displayName": "NEUS",
-  "description": "Verifiable identity, provenance, and authority for AI agents. Private by default.",
+  "description": "Check agent identity and permissions before sensitive actions.",
   "version": "1.3.9",
   "author": {
     "name": "NEUS",
     "email": "dev@neus.network",
     "url": "https://neus.network"
   },
-  "homepage": "https://docs.neus.network/install",
+  "homepage": "https://docs.neus.network/mcp/setup",
   "repository": "https://github.com/neus/network",
   "license": "Apache-2.0",
   "logo": "./assets/icon.svg",

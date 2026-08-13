@@ -39,7 +39,7 @@ Access rules that require current proof before access, payment, or execution.
 
 ## Works with any MCP client
 
-Any client that speaks MCP can connect. Editors, agent frameworks, chat apps, servers, CI, and custom clients all use the same hosted URL. See [MCP clients](./ide-plugin) for per-client setup.
+Any client that speaks MCP can connect. Editors, agent frameworks, chat apps, servers, CI, and custom clients all use the same hosted URL. See [MCP setup](./setup) for per-client steps.
 
 ## How it works
 
@@ -84,19 +84,19 @@ npx -y -p @neus/sdk neus doctor --live
 
 Installs the NEUS skill and configures the MCP endpoint. Click **Connect** in your host or run `neus auth` to sign in. For servers, CI, or automation, use a profile access key.
 
-Per-client setup: [MCP clients](./ide-plugin).
+Per-client setup: [MCP setup](./setup).
 
 ## Reference
 
 <CardGroup cols={3}>
-  <Card title="MCP clients" icon="plug" href="./ide-plugin">
-    Per-client setup and config paths.
+  <Card title="MCP setup" icon="plug" href="./setup">
+    Per-client config and access keys.
   </Card>
   <Card title="OAuth" icon="shield-check" href="./oauth">
     Sign-in flow and tokens.
   </Card>
-  <Card title="Setup" icon="code" href="./setup">
-    Install and sign in.
+  <Card title="Guarded action" icon="shield-check" href="./guarded-action">
+    Check permissions before a tool runs.
   </Card>
   <Card title="Private cloud agents" icon="shield-check" href="../cookbook/private-cloud-agents">
     One trust state across every environment.

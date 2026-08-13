@@ -8,7 +8,7 @@
  * Usage: node scripts/verify-release-versions.mjs <version>
  * Exits 1 if any surface is mismatched.
  */
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 
 const target = process.argv[2]?.replace(/^v/, '');
 if (!target) {
@@ -18,12 +18,15 @@ if (!target) {
 
 const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
 const readRaw = (p) => readFileSync(p, 'utf8');
+const mcpPackage = readJson('mcp/npm-dist/package.json');
+const mcpServer = readJson('mcp/npm-dist/server.json');
+const canonicalPlugin = readJson('plugins/neus-mcp/.cursor-plugin/plugin.json');
 
 const surfaces = {
   'sdk/package.json': readJson('sdk/package.json').version,
   'sdk/package-lock.json': readJson('sdk/package-lock.json').version,
-  'mcp/npm-dist/package.json': readJson('mcp/npm-dist/package.json').version,
-  'mcp/npm-dist/server.json': readJson('mcp/npm-dist/server.json').version,
+  'mcp/npm-dist/package.json': mcpPackage.version,
+  'mcp/npm-dist/server.json': mcpServer.version,
   'plugins/neus-mcp/.cursor-plugin/plugin.json': readJson('plugins/neus-mcp/.cursor-plugin/plugin.json').version,
   'plugins/neus-mcp/.claude-plugin/plugin.json': readJson('plugins/neus-mcp/.claude-plugin/plugin.json').version,
   'plugins/neus-mcp/.codex-plugin/plugin.json': readJson('plugins/neus-mcp/.codex-plugin/plugin.json').version,
@@ -32,12 +35,7 @@ const surfaces = {
   '.agents/plugins/marketplace.json': readJson('.agents/plugins/marketplace.json').metadata?.version,
   'sdk/skills/neus-trust-workflow/SKILL.md': (() => {
     const raw = readRaw('sdk/skills/neus-trust-workflow/SKILL.md');
-    // agentskills.io: version lives under metadata.version; accept legacy top-level version too.
-    return (
-      (raw.match(/^\s*version:\s*"([^"]+)"\s*$/m) || [])[1] ||
-      (raw.match(/^version:\s*"([^"]+)"$/m) || [])[1] ||
-      null
-    );
+    return (raw.match(/^\s*version:\s*"([^"]+)"\s*$/m) || [])[1] || null;
   })(),
 };
 
@@ -47,6 +45,37 @@ if (mismatched.length) {
   for (const [file, version] of mismatched) {
     console.error('  ' + file + ': ' + version);
   }
+  process.exit(1);
+}
+
+const metadataErrors = [];
+if (mcpPackage.description !== mcpServer.description) {
+  metadataErrors.push('mcp/npm-dist package and server descriptions must match');
+}
+if (String(mcpServer.description || '').length > 100) {
+  metadataErrors.push('mcp/npm-dist/server.json description must be <=100 characters');
+}
+if (mcpServer.repository?.subfolder !== 'mcp/npm-dist') {
+  metadataErrors.push('mcp/npm-dist/server.json repository.subfolder must be mcp/npm-dist');
+}
+if (!mcpPackage.files?.includes('LICENSE') || !existsSync('mcp/npm-dist/LICENSE')) {
+  metadataErrors.push('mcp/npm-dist must publish its Apache-2.0 LICENSE file');
+}
+const pluginDescriptions = {
+  'plugins/neus-mcp/.claude-plugin/plugin.json': readJson('plugins/neus-mcp/.claude-plugin/plugin.json').description,
+  'plugins/neus-mcp/.codex-plugin/plugin.json': readJson('plugins/neus-mcp/.codex-plugin/plugin.json').description,
+  '.cursor-plugin/marketplace.json': readJson('.cursor-plugin/marketplace.json').plugins?.[0]?.description,
+  '.claude-plugin/marketplace.json': readJson('.claude-plugin/marketplace.json').plugins?.[0]?.description,
+  '.agents/plugins/marketplace.json': readJson('.agents/plugins/marketplace.json').plugins?.[0]?.description,
+};
+for (const [file, description] of Object.entries(pluginDescriptions)) {
+  if (description !== canonicalPlugin.description) {
+    metadataErrors.push(`${file} description must match the canonical Cursor plugin description`);
+  }
+}
+if (metadataErrors.length) {
+  console.error('MCP package metadata failure:');
+  for (const error of metadataErrors) console.error('  ' + error);
   process.exit(1);
 }
 

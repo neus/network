@@ -1,8 +1,6 @@
 # Contributing
 
-Thank you for helping improve NEUS materials in this open project.
-
-**If you are integrating NEUS into a product**, use **[docs.neus.network](https://docs.neus.network)** and the live product first - the table below is for people proposing changes here.
+**If you are integrating NEUS into a product**, use **[docs.neus.network](https://docs.neus.network)** and the live product first — the table below is for people proposing changes here.
 
 | Need | Where |
 | --- | --- |
@@ -15,19 +13,21 @@ Thank you for helping improve NEUS materials in this open project.
 ## What helps
 
 - Bug reports with clear steps to reproduce and no secrets in the thread.
-- Verifier suggestions that spell out the user-visible outcome you want.
+- Verifier proposals that spell out the user-visible outcome you want. Open a [Discussion](https://github.com/neus/network/discussions) first; a PR should include the spec, schema, and docs together.
 - Updates to the SDK, examples, or documentation that match what the live product does today.
 - Tests or examples when you change behavior that builders rely on.
 
 **Do not** share keys, tokens, bearer secrets, or private proof content in public issues or change descriptions.
+
+## Verifier proposals
+
+The public verifier catalog and input schemas live in **this repo**: JSON Schemas under [`docs/verifiers/schemas/`](./docs/verifiers/schemas) and the machine index at [`spec/VERIFIERS.json`](./spec/VERIFIERS.json). A contributor opens a PR here to add a new check; once merged, it propagates to the protocol verifier registry. See [Propose a verifier](https://docs.neus.network/verification/propose-a-verifier) for the full flow.
 
 ## Do not commit
 
 These paths are local-only or generated elsewhere (see `.gitignore`):
 
 - `.env`, `.npmrc`, secrets, and key material
-- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `.neus/`, `.cursor/`, `.claude/settings*.json`
-- `integrations/` (removed; install docs are the SSOT)
 - `sdk/cjs/` and other build artifacts
 
 ## Describing your change

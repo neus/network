@@ -6,7 +6,8 @@ import {
   resolveRuntimeBundleFromMcp,
   resolveEffectiveRuntime,
   RUNTIME_MOUNT_SCHEMA,
-  evaluateMountFileHealth
+  evaluateMountFileHealth,
+  evaluateRuntimeAction
 } from '../runtime-mount.js';
 import { applyRuntimeBundle, bundleToCursorRules, readMountManifest } from '../runtime-adapters.js';
 import fs from 'node:fs';
@@ -183,6 +184,71 @@ describe('runtime-mount', () => {
       expect(health.needsRefresh).toBe(true);
       expect(health.delegationExpired).toBe(true);
       expect(health.reason).toBe('delegation_expired');
+    });
+  });
+
+  describe('evaluateRuntimeAction', () => {
+    it('allows an action in the current allowlist', () => {
+      const bundle = buildRuntimeBundle({
+        identity,
+        delegation: { ...delegation, allowedActions: ['read_proofs'], deniedActions: [] }
+      });
+
+      expect(evaluateRuntimeAction(bundle, 'read_proofs')).toMatchObject({
+        decision: 'allowed',
+        allowed: true,
+        code: 'ACTION_ALLOWED'
+      });
+    });
+
+    it('applies denied actions before allowed actions', () => {
+      const bundle = buildRuntimeBundle({
+        identity,
+        delegation: {
+          ...delegation,
+          allowedActions: ['send_message'],
+          deniedActions: ['send_message']
+        }
+      });
+
+      expect(evaluateRuntimeAction(bundle, 'send_message')).toMatchObject({
+        decision: 'denied',
+        allowed: false,
+        code: 'ACTION_DENIED'
+      });
+    });
+
+    it('denies an action missing from a non-empty allowlist', () => {
+      const bundle = buildRuntimeBundle({
+        identity,
+        delegation: { ...delegation, allowedActions: ['read_proofs'], deniedActions: [] }
+      });
+
+      expect(evaluateRuntimeAction(bundle, 'send_message')).toMatchObject({
+        decision: 'denied',
+        code: 'ACTION_NOT_ALLOWED'
+      });
+    });
+
+    it('fails closed when permission state is missing or expired', () => {
+      const identityOnly = buildRuntimeBundle({ identity });
+      const expired = buildRuntimeBundle({
+        identity,
+        delegation: { ...delegation, isExpired: true }
+      });
+
+      expect(evaluateRuntimeAction(identityOnly, 'read_proofs').code).toBe('PERMISSION_REQUIRED');
+      expect(evaluateRuntimeAction(expired, 'read_proofs').code).toBe('PERMISSION_EXPIRED');
+    });
+
+    it('pauses irreversible actions when human approval is required', () => {
+      const bundle = buildRuntimeBundle({ identity, delegation });
+
+      expect(evaluateRuntimeAction(bundle, 'read_proofs', { irreversible: true })).toMatchObject({
+        decision: 'approval_required',
+        allowed: false,
+        code: 'HUMAN_APPROVAL_REQUIRED'
+      });
     });
   });
 });

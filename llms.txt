@@ -1,6 +1,6 @@
 # NEUS
 
-> Portable identity, provenance, and authority for AI agents. Private by default.
+> Portable Trust Harness for AI. Private proofs for identity, provenance, and authority.
 
 Your AI has access. NEUS gives it authority. NEUS turns identity, provenance, and permission checks into reusable portable proofs, so people, apps, and agents stop re-proving the same facts and connected gates check current state before access, payment, or execution.
 

@@ -1,0 +1,81 @@
+---
+title: Propose a verifier
+sidebarTitle: Propose a verifier
+description: How to add a new NEUS check — spec the schema and catalog here, then wire it into the protocol.
+icon: plus
+---
+
+NEUS verifier schemas and the public catalog index live in **this repo**. A contributor opens a PR here to add a new check; once merged, the definition propagates to the protocol verifier registry. No private infrastructure access required.
+
+## Before you write code
+
+Open a [Discussion](https://github.com/neus/network/discussions) describing:
+
+- **Who** the check is for (buyer, integrator, agent builder).
+- **What** it proves (identity, ownership, permission, safety).
+- **Inputs** the integrator supplies. No PII. Deterministic for identical inputs.
+- **Outcome** the buyer sees (verified, processing, failed) and what it unlocks at a gate.
+
+A reviewer will confirm whether the check belongs in the public catalog or is better handled by composing existing checks.
+
+## What a new verifier needs
+
+All public artifacts live in this repo. The protocol picks up the verifier from here.
+
+| Artifact | Where | What it holds |
+| -------- | ---- | ------------- |
+| Input JSON Schema | `docs/verifiers/schemas/<id>.json` | Request shape an integrator sends |
+| Catalog index entry | `spec/VERIFIERS.json` | ID, description, flow, tier, interaction, API flags, schema path |
+| Capability reference page | `docs/verification/<id>.mdx` | Buyer-facing guide; linked from `docs/verification/verifiers.mdx` |
+| OpenAPI examples | `docs/openapi/public-api.json` | Request and response examples if the shape is new or changed |
+| Changelog entry | `CHANGELOG.md` | Integrator-visible change under `[Unreleased]` |
+
+## Conformance
+
+A public verifier must:
+
+- Return deterministic outputs for identical inputs.
+- Carry no PII in inputs or outputs.
+- Document external API usage with rate limits and error handling.
+- Note gas or performance considerations if it anchors on-chain.
+
+## Submitting a PR
+
+1. Add the input JSON Schema at `docs/verifiers/schemas/<id>.json`.
+2. Add the catalog entry to `spec/VERIFIERS.json` with `tier: "public"`, the schema path, flow, interaction, and API flags.
+3. Add a capability reference page at `docs/verification/<id>.mdx` and link it from `docs/verification/verifiers.mdx`.
+4. Update `docs/openapi/public-api.json` examples if the request or response shape changed.
+5. Add a `[Unreleased]` entry in `CHANGELOG.md` describing the integrator-visible change.
+
+Run the public validators before requesting review:
+
+```bash
+npm run docs:validate
+npm --prefix sdk test
+node scripts/verify-release-versions.mjs
+```
+
+The merged verifier is then wired into the protocol verifier registry.
+
+## What not to include
+
+- No wallet addresses or private env names.
+- No verifier outcomes that the live protocol does not return. Confirm from running code or tests before documenting a result.
+- No parallel verifier catalogs — `spec/VERIFIERS.json` is the single public index.
+
+## Related
+
+<CardGroup cols={2}>
+  <Card title="Verifier catalog" icon="list-tree" href="./verifiers">
+    Current public checks.
+  </Card>
+  <Card title="Verifier schemas" icon="code" href="../verifiers/README.md">
+    Request shapes.
+  </Card>
+  <Card title="Signing format" icon="file-signature" href="./signing-format">
+    How a request is signed.
+  </Card>
+  <Card title="Discussions" icon="comments" href="https://github.com/neus/network/discussions">
+    Propose before you code.
+  </Card>
+</CardGroup>

@@ -723,7 +723,7 @@
       },
       "VerifierData_ownership_basic": {
         "type": "object",
-        "description": "Ownership proofs require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep proof receipts linkable and explain origin without storing unnecessary raw content.",
+        "description": "Ownership proofs require owner plus at least one durable anchor: content, contentHash, or reference.id. Use reference and provenance to keep proofs linkable and explain origin without storing unnecessary raw content.",
         "required": [
           "owner"
         ],
@@ -772,7 +772,7 @@
               "type",
               "id"
             ],
-            "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proof receipts, or external records.",
+            "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proofs, or external records.",
             "properties": {
               "type": {
                 "type": "string",
@@ -799,7 +799,7 @@
               "id": {
                 "type": "string",
                 "maxLength": 2048,
-                "description": "Stable reference identifier such as a URL, CID, transaction hash, repository path, file key, or prior receipt qHash."
+                "description": "Stable reference identifier such as a URL, CID, transaction hash, repository path, file key, or prior proof qHash."
               },
               "title": {
                 "type": "string",
@@ -1604,7 +1604,7 @@
           "maxSpend": {
             "type": "string",
             "pattern": "^[0-9]{1,78}$",
-            "description": "Spend cap as a whole-number string in token base units (no decimal point). USDC (common x402): six decimal places; native ETH-style assets: eighteen."
+            "description": "Maximum amount for one proposed payment, encoded as a whole-number string in token base units. This field is not a cumulative balance. USDC uses six decimal places."
           },
           "allowedPaymentTypes": {
             "type": "array",
@@ -1715,7 +1715,7 @@
               },
               "secretsExposedToReceipt": {
                 "type": "boolean",
-                "description": "Whether the delegation policy allows secrets to appear in action receipts (default false)."
+                "description": "Whether the delegation policy allows secrets to appear in action proofs (default false)."
               }
             },
             "additionalProperties": false
@@ -1727,7 +1727,7 @@
               "maxLength": 128
             },
             "maxItems": 32,
-            "description": "Explicit allowlist of canonical actions the agent may perform (e.g., [\"read_proofs\", \"execute_jobs\", \"publish_content\"]). Owner-view-only: not included in public proof responses."
+            "description": "Explicit allowlist of canonical actions the agent may perform (e.g., [\"read_context\", \"read_proofs\", \"execute_jobs\"]). Owner-view-only: not included in public proof responses."
           },
           "deniedActions": {
             "type": "array",
@@ -1865,6 +1865,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "429": {
+            "description": "Health-check rate limit exceeded"
           },
           "503": {
             "description": "Unhealthy"
@@ -3140,6 +3143,9 @@
         "responses": {
           "200": {
             "description": "List of discoverable gates"
+          },
+          "429": {
+            "description": "Rate limit exceeded"
           }
         }
       }

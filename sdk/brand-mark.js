@@ -14,8 +14,8 @@ export function brandPackUrl(file) {
   return `${PACK_BASE}/${name}`;
 }
 
-/** Transparent particle-ring favicon (tabs, badges, VerifyGate). */
-export const NEUS_DEFAULT_MARK_URL = brandPackUrl('favicon.svg');
+/** Canonical explicit-circle particle-ring vector. */
+export const NEUS_DEFAULT_MARK_URL = brandPackUrl('neus-mark.svg');
 
-/** Default 1200x630 Open Graph card. */
-export const NEUS_DEFAULT_OG_IMAGE_URL = brandPackUrl('og-default-1200x630-neus.png');
+/** Sole art-directed default social and Open Graph card. */
+export const NEUS_DEFAULT_OG_IMAGE_URL = brandPackUrl('social-share-card.png');

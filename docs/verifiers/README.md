@@ -9,4 +9,4 @@ Request shapes for the public verifier catalog. Guides for people integrating NE
 | **`schemas/*.json`** | One JSON Schema per public verifier |
 | **`../../spec/VERIFIERS.json`** | Catalog index; each `inputSchemaPath` is `docs/verifiers/schemas/<id>.json` |
 
-Schemas and the spec are generated from the NEUS protocol verifier registry. Use these files as the current request shapes for API integrations and open a PR against `protocol` if a verifier definition needs to change.
+Schemas and the spec live in this repo as the public verifier registry; the protocol picks up definitions from here. To propose a new public check, see [Propose a verifier](../verification/propose-a-verifier).

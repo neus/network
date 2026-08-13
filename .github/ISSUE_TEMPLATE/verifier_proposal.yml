@@ -3,6 +3,13 @@ description: Propose a new verifier. Prefer starting with a Discussion; PRs shou
 title: "verifier: <id>"
 labels: ["verifier", "needs-spec"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        The public verifier catalog and schemas live in this repo. Open a
+        [Discussion](https://github.com/neus/network/discussions) first; a PR
+        needs the spec, schema, and docs together. See
+        https://docs.neus.network/verification/propose-a-verifier for the flow.
   - type: input
     id: verifierId
     attributes: { label: Verifier ID, placeholder: "ownership-github-repo" }
@@ -46,6 +53,5 @@ body:
     id: examples
     attributes:
       label: Examples & test plan
-      description: "SDK/API sample calls and how you’ll test failure modes. Link related Discussion."
+      description: "SDK/API sample calls and how you'll test failure modes. Link related Discussion."
       render: bash
-

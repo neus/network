@@ -1,37 +1,35 @@
-# NEUS
+# NEUS MCP
 
-Verifiable identity, provenance, and authority for AI agents. Private by default.
+Add identity, private context, and enforceable permissions to any AI agent.
 
-**Portable Trust Harness for AI.**
+## Connect
 
-Install the **neus-mcp** plugin from your host's marketplace, then click **Connect**. NEUS signs you in automatically. For servers, CI, or automation, use the public CLI.
+Install `neus-mcp` from your host's marketplace. The plugin registers `https://mcp.neus.network/mcp` and bundles the NEUS skills. Click **Connect** to sign in.
 
-**[Install](https://docs.neus.network/install)**
+CLI setup is available for Cursor, Codex, VS Code, Claude Code, servers, and CI:
 
 ```bash
 npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Ask your assistant: **"Before I take a sensitive action, use NEUS. Reuse what I already have."**
+Then ask:
 
-It looks up identity, authority, and saved results first, then summarizes as Passed, Action needed, or Blocked.
+> Before this action, use NEUS to check my agent's identity and permissions. Reuse a current proof if one qualifies.
 
-Per-client setup: [MCP clients](https://docs.neus.network/mcp/ide-plugin).
+The assistant should return **Passed**, **Action needed**, or **Blocked**.
 
-Claude Code plugin:
+## Claude Code
 
 ```text
 /plugin marketplace add https://github.com/neus/network
 /plugin install neus-mcp@neus
 ```
 
-Skill: `/neus-mcp:neus-trust-workflow` (trust autopilot) · `/neus-mcp:neus-setup` (connect) · `/neus-mcp:neus-integrate` (add NEUS to an app)
+## Included skills
 
-This plugin bundles three skills:
+- `neus-setup`: connect a host and check the connection
+- `neus-trust-workflow`: reuse or create the proof required before an action
+- `neus-integrate`: add NEUS access checks to an application
 
-- **`neus-setup`**: connect NEUS to your host and verify the setup is healthy.
-- **`neus-trust-workflow`**: the trust autopilot: load session context, reuse portable proofs, guide missing checks, and summarize as Passed, Action needed, or Blocked before sensitive actions.
-- **`neus-integrate`**: add NEUS access control to a host app: install the SDK, drop in VerifyGate, wire the server check, and test the flow.
-
-All skills are the same ones shipped in `@neus/sdk`; installing the plugin is enough, no separate CLI run required for the skills.
+[MCP client setup](https://docs.neus.network/mcp/setup)

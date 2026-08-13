@@ -48,7 +48,7 @@
       "theme-color": "#101113",
       "color-scheme": "dark",
       "description": "Give agents verifiable identity, provenance, and authority before they access data, move money, or take action.",
-      "og:title": "NEUS Docs | Portable Trust Harness for AI",
+      "og:title": "NEUS Docs | Verify once. Carry the proof.",
       "og:description": "Verifiable identity, provenance, and authority for AI agents. Private by default.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
@@ -56,7 +56,7 @@
       "og:type": "website",
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
-      "twitter:title": "NEUS Docs | Portable Trust Harness for AI",
+      "twitter:title": "NEUS Docs | Verify once. Carry the proof.",
       "twitter:description": "Verifiable identity, provenance, and authority for AI agents. Private by default.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
@@ -93,6 +93,7 @@
               "verification/signing-format",
               "learn/standards/caip-380",
               "verification/verifiers",
+              "verification/propose-a-verifier",
               {
                 "group": "Catalog",
                 "pages": [
@@ -159,19 +160,18 @@
             "group": "Start",
             "pages": [
               "mcp/overview",
-              "mcp/journeys",
               "mcp/setup",
-              "mcp/ide-plugin",
-              "platform/llm-docs",
-              "mcp/oauth",
-              "mcp/auth",
-              "mcp/endpoints"
+              "mcp/guarded-action"
             ]
           },
           {
-            "group": "Tool reference",
+            "group": "Reference",
             "pages": [
               "mcp/tools",
+              "mcp/oauth",
+              "mcp/auth",
+              "mcp/endpoints",
+              "platform/llm-docs",
               "mcp/context",
               "mcp/verifiers-catalog",
               "mcp/proofs-check",
@@ -253,7 +253,7 @@
     },
     {
       "source": "/mcp/claude-code-marketplace",
-      "destination": "/mcp/ide-plugin"
+      "destination": "/mcp/setup"
     },
     {
       "source": "/integrations",
@@ -333,7 +333,7 @@
     },
     {
       "source": "/content/get-started/brand-kit",
-      "destination": "/brand-kit"
+      "destination": "https://neus.network/brand"
     },
     {
       "source": "/get-started/overview",
@@ -353,7 +353,11 @@
     },
     {
       "source": "/get-started/brand-kit",
-      "destination": "/brand-kit"
+      "destination": "https://neus.network/brand"
+    },
+    {
+      "source": "/brand-kit",
+      "destination": "https://neus.network/brand"
     },
     {
       "source": "/get-started/examples",
@@ -409,7 +413,11 @@
     },
     {
       "source": "/content/platform/environments",
-      "destination": "/platform/environments"
+      "destination": "/platform/overview"
+    },
+    {
+      "source": "/platform/environments",
+      "destination": "/platform/overview"
     },
     {
       "source": "/content/platform/rate-limits-and-retries",
@@ -609,7 +617,15 @@
     },
     {
       "source": "/install",
-      "destination": "/"
+      "destination": "/mcp/setup"
+    },
+    {
+      "source": "/mcp/ide-plugin",
+      "destination": "/mcp/setup"
+    },
+    {
+      "source": "/mcp/journeys",
+      "destination": "/mcp/guarded-action"
     },
     {
       "source": "/get-started",
@@ -643,7 +659,7 @@
         "title": "Connect an assistant",
         "description": "Run the setup command",
         "icon": "plug",
-        "href": "/"
+        "href": "/mcp/setup"
       },
       {
         "title": "Gate and monetize",

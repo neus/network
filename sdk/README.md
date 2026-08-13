@@ -1,6 +1,6 @@
 # @neus/sdk
 
-SDK for portable identity, provenance, and authority in AI apps. Private proofs. Verifiable anywhere.
+Portable Trust Harness for AI. SDK for checking who controls an agent and what it may do before your app allows an action.
 
 Proofs carry identity, provenance, and scoped authority. Connected gates check current state before access, payment, or execution — instead of re-proving the same facts every time.
 
@@ -16,6 +16,7 @@ No install needed:
 
 ```bash
 npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
 npx -y -p @neus/sdk neus examples
 ```
@@ -38,8 +39,9 @@ Loads the agent's verified identity, scoped authority, and host rules into the p
 | ----- | ---- |
 | Setup, JSON snippets, and headers | [MCP setup](https://docs.neus.network/mcp/setup) |
 | Reuse-first MCP flow | [MCP overview](https://docs.neus.network/mcp/overview) |
+| Host action decision | [First guarded action](https://docs.neus.network/mcp/guarded-action) |
 | Discovery URLs | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints) |
-| Install NEUS | [Install NEUS](https://docs.neus.network/install) |
+| Install NEUS | [MCP setup](https://docs.neus.network/mcp/setup) |
 
 Prefer `neus setup` over hand-editing config files so every host stays on **`https://mcp.neus.network/mcp`**.
 
@@ -48,7 +50,7 @@ Prefer `neus setup` over hand-editing config files so every host stays on **`htt
 - Hosted verification flows that return reusable portable proofs
 - Server checks before access, rewards, payments, or actions
 - React gates with `VerifyGate`
-- Agent identity, controller-approved authority, and spend caps
+- Agent identity, controller-approved authority, and per-payment limits
 - MCP setup so assistants carry identity, provenance, and authority across editors
 
 ## Hosted Verify
@@ -203,9 +205,9 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-`neus setup` configures MCP and signs you in. It uses `NEUS_ACCESS_KEY` from the environment when set; otherwise the selected host starts OAuth. Pass `--access-key <npk_...>` only to override.
+`neus setup` registers MCP and installs the public workflow skill. It does not open a browser. Click **Connect** in your host or run `neus auth` to sign in. When `NEUS_ACCESS_KEY` is set, setup writes that server credential instead.
 
-For Codex, run `neus setup --client codex`.
+For Codex, run `neus setup --client codex`, then `neus auth --client codex`.
 
 No global install? Run `npx -y -p @neus/sdk neus setup` once.
 
@@ -218,7 +220,7 @@ Claude Code users can install **`neus-mcp@neus`** for a setup shortcut:
 /plugin install neus-mcp@neus
 ```
 
-Other hosts: [Install NEUS](https://docs.neus.network/install).
+Other hosts: [MCP setup](https://docs.neus.network/mcp/setup).
 
 ## Docs
 

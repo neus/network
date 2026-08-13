@@ -1,0 +1,71 @@
+---
+title: Run your first guarded action
+sidebarTitle: First guarded action
+description: Load current agent permissions and make one allow or deny decision before a host tool runs.
+icon: shield-check
+---
+
+This flow proves that the host can stop a tool call when the current agent permission does not allow it.
+
+## 1. Create a bounded agent
+
+After [MCP setup](./setup), ask your assistant:
+
+> Create a Trusted Agent named `guarded-demo`. Allow `read_proofs`, deny `send_message`, and require human approval for irreversible actions.
+
+The assistant uses `neus_agent_create` and returns the one required setup step when signing is still needed.
+
+## 2. Load current permissions
+
+Run this in the project where the host will enforce the decision:
+
+```bash
+npx -y -p @neus/sdk neus mount guarded-demo --apply codex
+```
+
+Replace `codex` with `cursor` or `claude` for that host. The command writes the current `neus.runtime-mount.v1` bundle to `.neus/mount.json`.
+
+## 3. Evaluate before the tool call
+
+```javascript
+import fs from 'node:fs';
+import { evaluateRuntimeAction } from '@neus/sdk/runtime-mount';
+
+const bundle = JSON.parse(fs.readFileSync('.neus/mount.json', 'utf8'));
+const decision = evaluateRuntimeAction(bundle, 'send_message', {
+  irreversible: true,
+});
+
+if (!decision.allowed) {
+  throw new Error(`${decision.code}: ${decision.message}`);
+}
+
+await sendMessage();
+```
+
+For the permission above, `send_message` returns:
+
+```json
+{
+  "decision": "denied",
+  "allowed": false,
+  "action": "send_message",
+  "code": "ACTION_DENIED"
+}
+```
+
+`read_proofs` returns `ACTION_ALLOWED`. An expired or missing permission fails closed. An irreversible action returns `HUMAN_APPROVAL_REQUIRED` when the permission requires approval.
+
+## Decision order
+
+`evaluateRuntimeAction` applies the mounted permission in this order:
+
+1. Require a valid runtime mount and current permission proof.
+2. Apply `deniedActions`.
+3. Apply a non-empty `allowedActions` list.
+4. Require approval for an irreversible action when configured.
+5. Allow the host tool call.
+
+The SDK evaluates one action. The host still owns the tool call and must stop when `allowed` is `false`.
+
+Runnable source: [`examples/guarded-agent-action`](https://github.com/neus/network/tree/main/examples/guarded-agent-action).

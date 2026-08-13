@@ -1,12 +1,12 @@
 ---
 name: neus-trust-workflow
-description: Runs the NEUS trust autopilot before sensitive assistant actions. Load session context, reuse portable proofs, guide missing checks, connect Trusted Agent context, and protect Vault secrets. Use when verifying identity or permissions, checking proofs, mounting a profile agent, storing secrets, or when the user asks for NEUS Verify / trust-before-action.
+description: Checks identity, permissions, and reusable proofs before sensitive assistant actions. Use when verifying authority, mounting a Trusted Agent, managing Vault secrets, or when the user asks for NEUS Verify.
 license: Apache-2.0
 compatibility: Requires hosted NEUS MCP (https://mcp.neus.network/mcp) in Cursor, Claude Code, Codex, or VS Code.
 metadata:
   author: NEUS
   version: "1.3.9"
-  homepage: https://docs.neus.network/install
+  homepage: https://docs.neus.network/mcp/setup
 ---
 
 # NEUS Trust Workflow
@@ -21,7 +21,7 @@ Use this before an assistant runs sensitive tools or takes another verification-
 - When the user asks for NEUS Verify, proofs, Vault, or Trusted Agent setup
 - When acting as a registered profile agent in a project
 
-## Autopilot
+## Workflow
 
 1. **`neus_context`** once per session. Prefer signed-in profile context; omit wallet fields on check/verify tools.
 2. **Profile agent:** **`neus_agent_mount`** (or `neus mount <agentId> --apply cursor`) for identity, permissions, skills, and context.
@@ -53,4 +53,4 @@ NEUS Verify: Blocked. A required trust condition was not satisfied. Next: Do not
 
 Install, OAuth, access keys, and project mount: [references/setup.md](references/setup.md)
 
-Docs: [docs.neus.network](https://docs.neus.network) · Install: [docs.neus.network/install](https://docs.neus.network/install)
+Docs: [docs.neus.network](https://docs.neus.network) · Setup: [docs.neus.network/mcp/setup](https://docs.neus.network/mcp/setup)

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { exec, spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createHash, randomBytes } from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -37,14 +37,6 @@ const NEUS_PROFILE_KEY_ENDPOINT = 'https://api.neus.network/api/v1/auth/profile-
 const SUPPORTED_CLIENTS = ['claude', 'codex', 'cursor', 'vscode'];
 const PROJECT_CLIENTS = ['claude', 'cursor', 'vscode'];
 const CODEX_OAUTH_SCOPES = 'neus:core,neus:profile,neus:secrets,offline_access';
-const IMPORT_SCHEMA = 'neus.portable-agent.v1';
-const SUPPORTED_IMPORT_SOURCES = [
-  'auto',
-  'cursor',
-  'claude-code',
-  'claude-desktop'
-];
-const SUPPORTED_EXPORT_FORMATS = ['manifest', 'json'];
 
 // ---------------------------------------------------------------------------
 // OAuth token store (~/.neus/mcp-tokens.json — gitignored user-scope cache)
@@ -667,58 +659,8 @@ function inspectTrustSkill(clients) {
   });
 }
 
-function readTextFile(targetPath) {
-  if (!fileExists(targetPath)) return '';
-  return fs.readFileSync(targetPath, 'utf8');
-}
-
 function sha256(value) {
   return createHash('sha256').update(value).digest('hex');
-}
-
-function statBytes(targetPath) {
-  try {
-    return fs.statSync(targetPath).size;
-  } catch {
-    return 0;
-  }
-}
-
-function listDirectoryNames(targetPath) {
-  if (!fileExists(targetPath)) return [];
-  try {
-    return fs
-      .readdirSync(targetPath, { withFileTypes: true })
-      .filter(entry => entry.isDirectory())
-      .map(entry => entry.name)
-      .sort((a, b) => a.localeCompare(b));
-  } catch {
-    return [];
-  }
-}
-
-function listFileNames(targetPath, extensions) {
-  if (!fileExists(targetPath)) return [];
-  try {
-    return fs
-      .readdirSync(targetPath, { withFileTypes: true })
-      .filter(entry => entry.isFile())
-      .map(entry => entry.name)
-      .filter(name => extensions.some(extension => name.toLowerCase().endsWith(extension)))
-      .sort((a, b) => a.localeCompare(b));
-  } catch {
-    return [];
-  }
-}
-
-function safeReadJson(targetPath, warnings) {
-  if (!fileExists(targetPath)) return null;
-  try {
-    return readJsonFile(targetPath, null);
-  } catch (error) {
-    warnings.push(`Skipped malformed JSON at ${targetPath}: ${errorMessage(error)}`);
-    return null;
-  }
 }
 
 function portablePath(targetPath) {
@@ -734,47 +676,6 @@ function portablePath(targetPath) {
     return cwdRelative.replaceAll(path.sep, '/');
   }
   return normalized.replaceAll(path.sep, '/');
-}
-
-function instructionEntry(targetPath, name) {
-  const raw = readTextFile(targetPath);
-  if (!raw) return null;
-  return {
-    name,
-    path: portablePath(targetPath),
-    bytes: statBytes(targetPath),
-    sha256: sha256(raw)
-  };
-}
-
-function readMcpServers(targetPath, source, warnings) {
-  const doc = safeReadJson(targetPath, warnings);
-  if (!doc) return [];
-  const mcpSection = doc.mcp && typeof doc.mcp === 'object' && !Array.isArray(doc.mcp) ? doc.mcp : null;
-  const servers =
-    doc.mcpServers && typeof doc.mcpServers === 'object' && !Array.isArray(doc.mcpServers)
-      ? doc.mcpServers
-      : mcpSection?.servers &&
-          typeof mcpSection.servers === 'object' &&
-          !Array.isArray(mcpSection.servers)
-        ? mcpSection.servers
-        : doc.servers && typeof doc.servers === 'object' && !Array.isArray(doc.servers)
-          ? doc.servers
-          : {};
-  return Object.keys(servers)
-    .sort((a, b) => a.localeCompare(b))
-    .map(name => ({
-      name,
-      source,
-      path: portablePath(targetPath),
-      type:
-        servers[name]?.type ||
-        (servers[name]?.url ? 'http' : servers[name]?.command ? 'stdio' : 'unknown'),
-      url:
-        typeof servers[name]?.url === 'string' && !servers[name].headers
-          ? servers[name].url
-          : undefined
-    }));
 }
 
 function resolveCodexAppBinary() {
@@ -865,8 +766,6 @@ function cursorInstalled() {
 // present without a separate CLI run). When the plugin is installed, the CLI defers
 // to it for both MCP registration and skill delivery — that avoids duplicate-MCP and
 // duplicate-skill entries without killing click-install.
-// One plugin name only (neus-mcp): the legacy neus-trust plugin carries no current
-// manifests and is not consulted.
 function cursorBundledMcpPlugins() {
   const homeDir = os.homedir();
   const conflicts = [];
@@ -944,9 +843,6 @@ function parseArgs(argv) {
       options: {
         accessKey: '',
         clients: [],
-        source: 'auto',
-        format: 'manifest',
-        output: '',
         live: false,
         json: false,
         dryRun: false,
@@ -959,9 +855,6 @@ function parseArgs(argv) {
   const options = {
     accessKey: '',
     clients: [],
-    source: 'auto',
-    format: 'manifest',
-    output: '',
     live: false,
     json: false,
     dryRun: false,
@@ -988,27 +881,6 @@ function parseArgs(argv) {
     }
     if (token === '--project') {
       options.project = true;
-      continue;
-    }
-    if (token === '--from') {
-      const value = argv[index + 1];
-      if (!value) throw new Error('--from requires a value');
-      options.source = value.trim().toLowerCase();
-      index += 1;
-      continue;
-    }
-    if (token === '--to') {
-      const value = argv[index + 1];
-      if (!value) throw new Error('--to requires a value');
-      options.format = value.trim().toLowerCase();
-      index += 1;
-      continue;
-    }
-    if (token === '--output') {
-      const value = argv[index + 1];
-      if (!value) throw new Error('--output requires a value');
-      options.output = value;
-      index += 1;
       continue;
     }
     if (token === '--client') {
@@ -1072,8 +944,6 @@ function printUsage(exitCode = 0) {
     '  examples      Show assistant prompts to try after install',
     '  doctor        Deep check: config status, profile connection, and live MCP context',
     '  mount         Connect a Trusted Agent to a project or runtime',
-    '  import        Detect and package supported assistant context for NEUS portability',
-    '  export        Export the latest local NEUS portable agent manifest',
     '  help          Show this message',
     '',
     'Options:',
@@ -1081,9 +951,6 @@ function printUsage(exitCode = 0) {
     '  --project                Write shared project config instead of user config',
     '  --access-key <npk_...>   Override profile access key (else uses NEUS_ACCESS_KEY if set)',
     '  --oauth                    Force browser OAuth (ignore NEUS_ACCESS_KEY in the environment)',
-    '  --from <source>          Import source: auto, cursor, claude-code, or claude-desktop',
-    '  --to <format>            Export format: manifest or json',
-    '  --output <path>          Write exported manifest to a specific path',
     '  --live                   Run live MCP checks (uses IDE credential or --access-key)',
     '  --agent <agentId>        Agent id for mount (also: neus mount <agentId>)',
     '  --apply <cursor|claude|codex>  Write mounted agent rules to the current project',
@@ -1580,165 +1447,6 @@ function inspectClient(client, scope, cwd) {
   throw new Error(`Unsupported client: ${client}`);
 }
 
-function createEmptyManifest(source) {
-  return {
-    schema: IMPORT_SCHEMA,
-    source,
-    generatedAt: new Date().toISOString(),
-    instructions: [],
-    memories: [],
-    rules: [],
-    skills: [],
-    mcpServers: [],
-    secretRefs: [],
-    proofHints: {
-      status: 'not-issued',
-      qHashes: [],
-      next: ['neus setup', 'neus auth', 'neus doctor --live']
-    }
-  };
-}
-
-function sourceDetected(source) {
-  if (source === 'cursor') {
-    return (
-      fileExists(path.join(process.cwd(), '.cursor', 'rules')) ||
-      fileExists(path.join(process.cwd(), '.cursor', 'mcp.json'))
-    );
-  }
-  if (source === 'claude-code') {
-    return (
-      fileExists(path.join(os.homedir(), '.claude', 'skills')) ||
-      fileExists(path.join(process.cwd(), '.claude', 'settings.json'))
-    );
-  }
-  if (source === 'claude-desktop') {
-    return fileExists(path.join(os.homedir(), '.claude.json'));
-  }
-  return false;
-}
-
-function detectImportSources() {
-  return SUPPORTED_IMPORT_SOURCES.filter(source => source !== 'auto' && sourceDetected(source)).map(
-    source => ({
-      source,
-      detected: true
-    })
-  );
-}
-
-function chooseImportSource(requestedSource, detectedSources) {
-  if (requestedSource && requestedSource !== 'auto') return requestedSource;
-  const preference = ['claude-code', 'cursor', 'claude-desktop'];
-  return (
-    preference.find(source => detectedSources.some(candidate => candidate.source === source)) ||
-    'cursor'
-  );
-}
-
-function mergeManifest(base, next) {
-  return {
-    ...base,
-    instructions: [...base.instructions, ...next.instructions],
-    memories: [...base.memories, ...next.memories],
-    rules: [...base.rules, ...next.rules],
-    skills: [...base.skills, ...next.skills],
-    mcpServers: [...base.mcpServers, ...next.mcpServers],
-    secretRefs: [...base.secretRefs, ...next.secretRefs]
-  };
-}
-
-function buildCursorManifest(warnings) {
-  const source = 'cursor';
-  const manifest = createEmptyManifest(source);
-  const rulesDir = path.join(process.cwd(), '.cursor', 'rules');
-  for (const fileName of listFileNames(rulesDir, ['.mdc', '.md'])) {
-    const targetPath = path.join(rulesDir, fileName);
-    manifest.rules.push({
-      name: fileName,
-      source,
-      path: portablePath(targetPath),
-      bytes: statBytes(targetPath),
-      sha256: sha256(readTextFile(targetPath))
-    });
-  }
-  manifest.mcpServers.push(
-    ...readMcpServers(path.join(process.cwd(), '.cursor', 'mcp.json'), source, warnings)
-  );
-  return manifest;
-}
-
-function buildClaudeCodeManifest(warnings) {
-  const source = 'claude-code';
-  const manifest = createEmptyManifest(source);
-  const settings = instructionEntry(
-    path.join(process.cwd(), '.claude', 'settings.json'),
-    '.claude/settings.json'
-  );
-  if (settings) manifest.rules.push({ ...settings, source });
-  for (const skillName of listDirectoryNames(path.join(os.homedir(), '.claude', 'skills'))) {
-    manifest.skills.push({
-      name: skillName,
-      kind: 'skill',
-      source,
-      path: portablePath(path.join(os.homedir(), '.claude', 'skills', skillName)),
-      hasSkillMd: fileExists(path.join(os.homedir(), '.claude', 'skills', skillName, 'SKILL.md'))
-    });
-  }
-  manifest.mcpServers.push(
-    ...readMcpServers(path.join(process.cwd(), '.mcp.json'), source, warnings)
-  );
-  return manifest;
-}
-
-function buildClaudeDesktopManifest(warnings) {
-  const source = 'claude-desktop';
-  const manifest = createEmptyManifest(source);
-  manifest.mcpServers.push(
-    ...readMcpServers(path.join(os.homedir(), '.claude.json'), source, warnings)
-  );
-  return manifest;
-}
-
-function buildSourceManifest(source, warnings) {
-  if (source === 'cursor') return buildCursorManifest(warnings);
-  if (source === 'claude-code') return buildClaudeCodeManifest(warnings);
-  if (source === 'claude-desktop') return buildClaudeDesktopManifest(warnings);
-  throw new Error(`Unsupported import source: ${source}`);
-}
-
-function buildPortableManifest(requestedSource) {
-  const warnings = [];
-  const detectedSources = detectImportSources();
-  const selectedSource = chooseImportSource(requestedSource, detectedSources);
-  let manifest = buildSourceManifest(selectedSource, warnings);
-
-  if (requestedSource === 'auto') {
-    for (const candidate of detectedSources) {
-      if (candidate.source === selectedSource) continue;
-      manifest = mergeManifest(manifest, buildSourceManifest(candidate.source, warnings));
-    }
-  }
-
-  manifest.generatedAt = new Date().toISOString();
-  return { manifest, detectedSources, warnings, selectedSource };
-}
-
-function importedManifestPath(source, cwd) {
-  return path.join(cwd, '.neus', 'imported', `${source}.json`);
-}
-
-function latestImportedManifest(cwd) {
-  const dir = path.join(cwd, '.neus', 'imported');
-  if (!fileExists(dir)) return null;
-  const candidates = fs
-    .readdirSync(dir, { withFileTypes: true })
-    .filter(entry => entry.isFile() && entry.name.endsWith('.json'))
-    .map(entry => path.join(dir, entry.name))
-    .sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs);
-  return candidates[0] || null;
-}
-
 function printJson(payload) {
   process.stdout.write(jsonStringify(payload));
 }
@@ -2124,29 +1832,6 @@ function runClientOperations(clients, scope, cwd, dryRun, runner) {
 }
 
 
-function printImportSummary(payload, cliOptions = {}) {
-  emitCliBanner(cliOptions);
-  const manifest = payload.manifest;
-  writeCliLine(paint('import', 'green'));
-  logStep('ok', 'source', `${manifest.source}${payload.dryRun ? ' (dry run)' : ''}`);
-  logStep('ok', 'skills', String(manifest.skills.length));
-  logStep('ok', 'servers', String(manifest.mcpServers.length));
-  writeCliLine('');
-  logStep('next', 'next', 'neus setup | neus auth');
-  writeCliLine('');
-}
-
-function printExportSummary(payload, cliOptions = {}) {
-  emitCliBanner(cliOptions);
-  writeCliLine(paint('export', 'green'));
-  logStep('ok', 'format', payload.format);
-  logStep('ok', 'source', payload.manifest.source);
-  if (payload.outputPath) {
-    logStep('ok', 'output', payload.outputPath);
-  }
-  writeCliLine('');
-}
-
 function base64url(buffer) {
   return Buffer.from(buffer)
     .toString('base64')
@@ -2319,16 +2004,22 @@ async function runAuthBrowser(options) {
         logStep('next', 'wait', 'finish sign-in in the browser');
       }
 
-      const openCommand = process.platform === 'win32'
-        ? `cmd /c start "" "${authUrl.replace(/"/g, '\\"')}"`
+      const browserCommand = process.platform === 'win32'
+        ? { executable: 'rundll32.exe', args: ['url.dll,FileProtocolHandler', authUrl] }
         : process.platform === 'darwin'
-          ? `open "${authUrl.replace(/"/g, '\\"')}"`
-          : `xdg-open "${authUrl.replace(/"/g, '\\"')}"`;
-      exec(openCommand, { shell: true }, err => {
-        if (err && !options.json) {
+          ? { executable: 'open', args: [authUrl] }
+          : { executable: 'xdg-open', args: [authUrl] };
+      const browserProcess = spawn(browserCommand.executable, browserCommand.args, {
+        detached: true,
+        stdio: 'ignore',
+        windowsHide: true
+      });
+      browserProcess.once('error', () => {
+        if (!options.json) {
           logStep('warn', 'browser', 'open the URL above manually');
         }
       });
+      browserProcess.unref();
     });
 
     // Timeout after 5 minutes
@@ -2561,80 +2252,6 @@ async function runSetup(options) {
   }
 
   return payload;
-}
-
-function runImport(options, { emitOutput = true } = {}) {
-  if (!SUPPORTED_IMPORT_SOURCES.includes(options.source)) {
-    throw new Error(`Unsupported import source: ${options.source}`);
-  }
-  const cwd = process.cwd();
-  const { manifest, detectedSources, warnings } = buildPortableManifest(options.source);
-  const targetPath = importedManifestPath(manifest.source, cwd);
-  const writeResult = writeJsonFile(targetPath, manifest, options.dryRun);
-  const payload = {
-    command: 'import',
-    source: options.source,
-    selectedSource: manifest.source,
-    dryRun: options.dryRun,
-    detectedSources,
-    manifest,
-    targetPath,
-    changed: writeResult.changed,
-    warnings,
-    hasErrors:
-      manifest.instructions.length === 0 &&
-      manifest.skills.length === 0 &&
-      manifest.rules.length === 0 &&
-      manifest.mcpServers.length === 0
-  };
-
-  if (emitOutput) {
-    if (options.json) {
-      printJson(payload);
-    } else {
-      printImportSummary(payload, options);
-    }
-  }
-
-  if (emitOutput && payload.hasErrors) {
-    process.exitCode = 1;
-  }
-  return payload;
-}
-
-function runExport(options) {
-  if (!SUPPORTED_EXPORT_FORMATS.includes(options.format)) {
-    throw new Error(`Unsupported export format: ${options.format}`);
-  }
-  const cwd = process.cwd();
-  const sourcePath = latestImportedManifest(cwd);
-  if (!sourcePath) {
-    throw new Error(
-      'No local NEUS portable agent manifest found. Run `neus import --dry-run` first, then `neus import` to write one.'
-    );
-  }
-  const manifest = readJsonFile(sourcePath, null);
-  if (!manifest || manifest.schema !== IMPORT_SCHEMA) {
-    throw new Error(`Invalid NEUS portable agent manifest at ${sourcePath}`);
-  }
-  const outputPath = options.output ? path.resolve(cwd, options.output) : '';
-  if (outputPath && !options.dryRun) {
-    writeJsonFile(outputPath, manifest, false);
-  }
-  const payload = {
-    command: 'export',
-    format: options.format,
-    sourcePath,
-    outputPath,
-    dryRun: options.dryRun,
-    manifest
-  };
-
-  if (options.json) {
-    printJson(payload);
-    return;
-  }
-  printExportSummary(payload, options);
 }
 
 const ASSISTANT_EXAMPLE_PROMPTS = [
@@ -3037,15 +2654,7 @@ async function main() {
       runExamples(options);
       return;
     }
-    if (command === 'import') {
-      runImport(options);
-      return;
-    }
-    if (command === 'export') {
-      runExport(options);
-      return;
-    }
-    if (command === 'disconnect' || command === 'revoke') {
+    if (command === 'disconnect') {
       await runDisconnect(options);
       return;
     }

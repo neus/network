@@ -267,6 +267,17 @@ afterEach(async () => {
 });
 
 describe('neus CLI', () => {
+  it('opens OAuth URLs without a shell command', async () => {
+    const source = await fs.readFile(cliPath, 'utf8');
+
+    expect(source).not.toMatch(/\bexec\s*\(/);
+    expect(source).not.toMatch(/shell\s*:\s*true/);
+    expect(source).not.toContain('cmd /c start');
+    expect(source).toContain('{ executable: \'rundll32.exe\', args: [\'url.dll,FileProtocolHandler\', authUrl] }');
+    expect(source).toContain('{ executable: \'open\', args: [authUrl] }');
+    expect(source).toContain('{ executable: \'xdg-open\', args: [authUrl] }');
+  });
+
   it('configures detected clients in user scope by default', async () => {
     const context = await makeCliContext();
 
@@ -553,57 +564,6 @@ describe('neus CLI', () => {
       await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
     );
     expect(cursorConfig.mcpServers.neus.url).toBe('https://mcp.neus.network/mcp');
-  });
-
-  it('rejects unsupported import sources from the public CLI', async () => {
-    const context = await makeCliContext();
-
-    await expect(runCli(['import', '--from', 'private-runtime', '--dry-run', '--json'], context)).rejects.toMatchObject({
-      code: 1
-    });
-  });
-
-  it('auto-detects portable agent sources when import --from auto is used', async () => {
-    const context = await makeCliContext();
-
-    await fs.mkdir(path.join(context.workspaceDir, '.cursor', 'rules'), { recursive: true });
-    await fs.writeFile(
-      path.join(context.workspaceDir, '.cursor', 'rules', 'neus.mdc'),
-      'alwaysApply: true\n',
-      'utf8'
-    );
-    const { stdout } = await runCli(['import', '--dry-run', '--json'], context);
-    const payload = JSON.parse(stdout);
-
-    expect(payload.source).toBe('auto');
-    expect(payload.detectedSources.map(source => source.source).sort()).toEqual(['cursor']);
-    expect(payload.manifest.source).toBe('cursor');
-    expect(payload.manifest.rules.map(rule => rule.name)).toContain('neus.mdc');
-  });
-
-  it('exports the local imported manifest as a portable NEUS manifest', async () => {
-    const context = await makeCliContext();
-    const importedPath = path.join(context.workspaceDir, '.neus', 'imported', 'cursor.json');
-
-    await writeJson(importedPath, {
-      schema: 'neus.portable-agent.v1',
-      source: 'cursor',
-      generatedAt: '2026-05-22T00:00:00.000Z',
-      rules: [{ name: 'neus.mdc', path: '/tmp/.cursor/rules/neus.mdc', bytes: 12 }],
-      mcpServers: [{ name: 'neus', source: 'cursor' }],
-      secretRefs: [],
-      proofHints: { status: 'not-issued', qHashes: [] }
-    });
-
-    const { stdout, stderr } = await runCli(['export', '--to', 'manifest', '--json'], context);
-    const payload = JSON.parse(stdout);
-
-    expect(stderr).toBe('');
-    expect(payload.command).toBe('export');
-    expect(payload.format).toBe('manifest');
-    expect(payload.manifest.source).toBe('cursor');
-    expect(payload.manifest.proofHints.qHashes).toEqual([]);
-    expect(payload.manifest.secretRefs).toEqual([]);
   });
 
   it('exits non-zero for unknown subcommand', async () => {

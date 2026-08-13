@@ -4,11 +4,19 @@ Release notes for **`@neus/sdk`**, **`@neus/mcp-server`**, docs, and examples.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [1.3.9] - 2026-08-12
+## [1.3.9] - 2026-08-13
+
+### Fixed
+
+- **Removed the OAuth browser command-injection sink.** The CLI now opens authorization URLs with fixed executables and argument arrays, never a shell command.
+- **Scoped registry scanning to the MCP package.** Discovery metadata now points at `mcp/npm-dist`, whose published files include the Apache-2.0 license.
 
 ### Changed
 
-- **Restored `neus-trust-workflow` skill into the `neus-mcp` plugin bundle.** The trust workflow skill is now bundled in `plugins/neus-mcp/skills/neus-trust-workflow/` alongside `neus-setup`, so marketplace install (Cursor, Claude Code, Codex) delivers the full trust autopilot without requiring a separate `neus setup` CLI run. The SDK copy at `sdk/skills/neus-trust-workflow/` remains the canonical source; `scripts/sync-plugin-skills.mjs` keeps the plugin copy identical and the test suite enforces byte-identity.
+- **Removed the retired `neus import`, `neus export`, and `neus revoke` alias paths.** Agent mounting remains the single supported route for connecting verified agent context to a project.
+- **Simplified builder-facing MCP docs and package copy.** Setup, sign-in, validation, and first use now follow one direct path without framework roll calls or migration details.
+- **Removed the docs brand-kit page and stale brand copies.** Brand assets live at [neus.network/brand](https://neus.network/brand); old `/brand-kit` URLs redirect there. Retained public contributor surfaces (`CONTRIBUTING.md`, `verifier_proposal.yml`, new `verification/propose-a-verifier` page) cleaned of non-public paths.
+- **Restored `neus-trust-workflow` in the `neus-mcp` plugin bundle.** Marketplace install delivers the workflow alongside `neus-setup`; the SDK and plugin copies remain byte-identical under test.
 
 - **CLI defers skill install when the plugin is present.** `neus setup` now detects when the `neus-mcp` plugin is installed and already bundles the trust workflow skill, and skips writing a user-level copy to `~/.agents/skills/` or `~/.claude/skills/` for that host — avoiding duplicate skill entries. VS Code and hosts without the plugin still receive the user-level copy.
 

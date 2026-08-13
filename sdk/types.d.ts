@@ -1322,6 +1322,22 @@ declare module '@neus/sdk/runtime-mount' {
     };
   }
 
+  export interface RuntimeActionDecision {
+    decision: 'allowed' | 'denied' | 'approval_required';
+    allowed: boolean;
+    action: string;
+    code:
+      | 'ACTION_ALLOWED'
+      | 'ACTION_REQUIRED'
+      | 'MOUNT_REQUIRED'
+      | 'PERMISSION_REQUIRED'
+      | 'PERMISSION_EXPIRED'
+      | 'ACTION_DENIED'
+      | 'ACTION_NOT_ALLOWED'
+      | 'HUMAN_APPROVAL_REQUIRED';
+    message: string;
+  }
+
   export interface AgentIdentityRow {
     qHash?: string | null;
     agentId?: string | null;
@@ -1407,6 +1423,11 @@ declare module '@neus/sdk/runtime-mount' {
     needsRefresh: boolean;
     reason: string | null;
   };
+  export function evaluateRuntimeAction(
+    bundle: RuntimeMountBundle | Record<string, unknown> | null | undefined,
+    action: string,
+    options?: { irreversible?: boolean }
+  ): RuntimeActionDecision;
   export function resolveRuntimeBundleFromMcp(input: {
     callMcpTool: (args: { name: string; args?: Record<string, unknown>; accessKey?: string; sessionId?: string; signal?: AbortSignal }) => Promise<{ ok: boolean; payload?: unknown; error?: string }>;
     initializeMcp?: () => Promise<{ sessionId: string }>;

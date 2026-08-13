@@ -88,7 +88,7 @@
       "type": "object"
     },
     "reference": {
-      "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proof receipts, or external records.",
+      "description": "Stable pointer to the thing being proven. Use this for files, URLs, releases, repository paths, transactions, prior proofs, or external records.",
       "properties": {
         "description": {
           "description": "Short explanation of what the reference points to.",
@@ -96,7 +96,7 @@
           "type": "string"
         },
         "id": {
-          "description": "Stable reference identifier such as a URL, CID, transaction hash, repository path, file key, or prior receipt qHash.",
+          "description": "Stable reference identifier such as a URL, CID, transaction hash, repository path, file key, or prior proof qHash.",
           "maxLength": 2048,
           "type": "string"
         },

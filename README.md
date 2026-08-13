@@ -65,15 +65,14 @@ Then ask your assistant:
 
 | Path | Next step |
 | ---- | --------- |
-| AI assistants (Cursor, Claude Code, Codex, VS Code) | [Install NEUS](https://docs.neus.network/install) |
-| MCP setup | [MCP setup](https://docs.neus.network/mcp/setup) · Hosted URL: `https://mcp.neus.network/mcp` |
+| AI assistants (Cursor, Claude Code, Codex, VS Code) | [MCP setup](https://docs.neus.network/mcp/setup) · Hosted URL: `https://mcp.neus.network/mcp` |
 | First app integration | [Quickstart](https://docs.neus.network/quickstart) |
 | Reuse everywhere | [Integration guide](https://docs.neus.network/integration) |
 | React gate | [VerifyGate](https://docs.neus.network/widgets/verifygate) |
 | Server / API | [API overview](https://docs.neus.network/api/overview) |
 | Agent trust | [Agents overview](https://docs.neus.network/agents/overview) |
 
-Install **`neus-mcp`** from this repo's marketplace to connect Cursor in one click. See [Install NEUS](https://docs.neus.network/install).
+Install **`neus-mcp`** from this repo's marketplace to connect Cursor in one click. See [MCP setup](https://docs.neus.network/mcp/setup).
 
 ### Add trust to an app
 
@@ -99,7 +98,7 @@ Give agents identity and scoped authority as proofs so tools run under real limi
 | ------- | ---------- |
 | [Product](https://neus.network) | Profiles, gates, and hosted product UX |
 | [Hosted Verify](https://neus.network/verify) | Browser verification for people and orgs |
-| [Proofs and results](https://docs.neus.network/platform/receipts-and-results) | Portable records of identity, authority, and outcomes |
+| [Proofs](https://docs.neus.network/platform/proofs) | Portable records of identity, authority, and outcomes |
 | [SDK](https://docs.neus.network/sdks/javascript) · [@neus/sdk](https://www.npmjs.com/package/@neus/sdk) | Issue, poll, and check proofs from your app |
 | [Widgets](https://docs.neus.network/widgets/overview) | `VerifyGate` and `ProofBadge` for React products |
 | [API](https://docs.neus.network/api/overview) | Server reads, checks, verifier catalog, and verification endpoints |
@@ -122,7 +121,7 @@ The live verifier catalog is documented at [docs.neus.network/verification/verif
 
 ## This repository
 
-Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widgets, examples, specs, and the **`neus-mcp`** editor plugin ([install](https://docs.neus.network/install)).
+Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widgets, examples, specs, and the **`neus-mcp`** editor plugin ([setup](https://docs.neus.network/mcp/setup)).
 
 ## Open standard
 
@@ -134,7 +133,7 @@ Wallet-signed request envelopes follow the [CAIP-380 (Portable Proof)](https://g
 | ------- | ------- |
 | [Docs](https://docs.neus.network) | Product and integration guidance |
 | [Changelog](./CHANGELOG.md) | Release notes and upgrade paths |
-| [Platform status](https://docs.neus.network/platform/status) | Maturity, beta scope, and upgrade expectations |
+| [Platform](https://docs.neus.network/platform/overview) | Hosted product, API, and upgrade path |
 | [Discussions](https://github.com/neus/network/discussions) | Questions and implementation patterns |
 | [Issues](https://github.com/neus/network/issues) | Bugs and requests |
 | [SECURITY.md](./SECURITY.md) · [dev@neus.network](mailto:dev@neus.network) | Vulnerability disclosure |

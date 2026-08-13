@@ -1,7 +1,7 @@
 {
   "name": "@neus/mcp-server",
   "version": "1.3.9",
-  "description": "Verifiable identity, provenance, and authority for AI agents. Private by default.",
+  "description": "Load agent identity and permissions before sensitive actions.",
   "type": "module",
   "main": "./index.mjs",
   "exports": {
@@ -37,6 +37,7 @@
   ],
   "files": [
     "index.mjs",
+    "LICENSE",
     "README.md",
     "server.json"
   ],
@@ -44,7 +45,7 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "prepublishOnly": "node -e \"const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));const s=JSON.parse(fs.readFileSync('server.json','utf8'));if(p.version!==s.version)throw new Error('package.json and server.json version mismatch: '+p.version+' vs '+s.version);if(String(s.description||'').length>100)throw new Error('server.json description must be <=100 chars for MCP Registry (got '+String(s.description).length+')');\""
+    "prepublishOnly": "node -e \"const fs=require('fs');const p=JSON.parse(fs.readFileSync('package.json','utf8'));const s=JSON.parse(fs.readFileSync('server.json','utf8'));if(p.version!==s.version)throw new Error('package.json and server.json version mismatch: '+p.version+' vs '+s.version);if(p.description!==s.description)throw new Error('package.json and server.json descriptions must match');if(String(s.description||'').length>100)throw new Error('server.json description must be <=100 chars for MCP Registry (got '+String(s.description).length+')');if(s.repository?.subfolder!=='mcp/npm-dist')throw new Error('server.json repository.subfolder must be mcp/npm-dist');if(!p.files.includes('LICENSE')||!fs.existsSync('LICENSE'))throw new Error('Apache-2.0 LICENSE must be published');\""
   },
   "publishConfig": {
     "access": "public",

@@ -422,7 +422,7 @@ export async function resolveRuntimeBundleFromMcp(input) {
       args: {
         qHash: selector.identityQHash,
         verifierId: 'agent-identity',
-        include: 'content',
+        include: 'content'
       },
       accessKey,
       sessionId,
@@ -451,7 +451,7 @@ export async function resolveRuntimeBundleFromMcp(input) {
         identifier: agentWallet,
         verifierId: 'agent-identity',
         limit: 25,
-        include: 'content',
+        include: 'content'
       },
       accessKey,
       sessionId,
@@ -464,7 +464,7 @@ export async function resolveRuntimeBundleFromMcp(input) {
           identifier: controllerWallet,
           verifierId: 'agent-delegation',
           limit: 50,
-          include: 'content',
+          include: 'content'
         },
         accessKey,
         sessionId,
@@ -549,6 +549,69 @@ export function evaluateMountFileHealth(manifest) {
       : missingDelegation
         ? 'delegation_missing'
         : null
+  };
+}
+
+/**
+ * Evaluate one host action against the current runtime-mount permission bundle.
+ * Denies when identity or permission state is missing or expired. A denied action
+ * always wins; a non-empty allowlist denies actions it does not include.
+ *
+ * @param {import('./runtime-mount.js').RuntimeMountBundle | Record<string, unknown> | null | undefined} bundle
+ * @param {string} action
+ * @param {{ irreversible?: boolean }} [options]
+ */
+export function evaluateRuntimeAction(bundle, action, options = {}) {
+  const normalizedAction = asString(action).toLowerCase();
+  const deny = (code, message) => ({
+    decision: 'denied',
+    allowed: false,
+    action: normalizedAction,
+    code,
+    message
+  });
+
+  if (!normalizedAction) {
+    return deny('ACTION_REQUIRED', 'Provide the action before evaluating permissions.');
+  }
+  if (!isRuntimeBundle(bundle)) {
+    return deny('MOUNT_REQUIRED', 'Load current agent identity and permissions before this action.');
+  }
+
+  const health = evaluateMountFileHealth(bundle);
+  if (health.delegationExpired) {
+    return deny('PERMISSION_EXPIRED', 'The agent permission proof has expired.');
+  }
+  if (health.missingDelegation) {
+    return deny('PERMISSION_REQUIRED', 'No current agent permission proof is mounted.');
+  }
+
+  const deniedActions = asStringArray(bundle.enforce?.deniedActions).map(value => value.toLowerCase());
+  if (deniedActions.includes(normalizedAction)) {
+    return deny('ACTION_DENIED', `The current permission proof denies ${normalizedAction}.`);
+  }
+
+  const allowedActions = asStringArray(bundle.enforce?.allowedActions).map(value => value.toLowerCase());
+  if (allowedActions.length > 0 && !allowedActions.includes(normalizedAction)) {
+    return deny('ACTION_NOT_ALLOWED', `The current permission proof does not allow ${normalizedAction}.`);
+  }
+
+  if (options.irreversible === true && bundle.enforce?.requiresHumanApproval === true) {
+    return {
+      decision: 'approval_required',
+      allowed: false,
+      action: normalizedAction,
+      code: 'HUMAN_APPROVAL_REQUIRED',
+      message: `Confirm human approval before ${normalizedAction}.`
+    };
+  }
+
+  return {
+    decision: 'allowed',
+    allowed: true,
+    action: normalizedAction,
+    code: 'ACTION_ALLOWED',
+    message: `The current permission proof allows ${normalizedAction}.`
   };
 }
 

@@ -23,6 +23,9 @@
     // Trailing newlines handled by formatters
     "MD047": false,
 
+    // Bold text used as sub-labels inside examples (Mintlify convention)
+    "MD036": false,
+
     // Code blocks without language are valid in MDX
     "MD040": false,
 
@@ -46,6 +49,7 @@
     "sdk/SECURITY.md",
     "sdk/widgets/README.md",
     "examples/README.md",
-    "examples/*/README.md"
+    "examples/*/README.md",
+    "docs/**/*.mdx"
   ]
 }

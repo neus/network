@@ -61,8 +61,8 @@ function brandPackUrl(file) {
   const name = file.replace(/^\//, "");
   return `${PACK_BASE}/${name}`;
 }
-var NEUS_DEFAULT_MARK_URL = brandPackUrl("favicon.svg");
-var NEUS_DEFAULT_OG_IMAGE_URL = brandPackUrl("og-default-1200x630-neus.png");
+var NEUS_DEFAULT_MARK_URL = brandPackUrl("neus-mark.svg");
+var NEUS_DEFAULT_OG_IMAGE_URL = brandPackUrl("social-share-card.png");
 
 // widgets/verify-gate/VerifyGate.jsx
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
