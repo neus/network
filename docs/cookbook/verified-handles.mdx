@@ -1,6 +1,6 @@
 ---
 title: Verified creator handles
-description: Bind a pseudonymous handle to a wallet, display a verified badge, and gate creator actions with NEUS Proof Receipts.
+description: Bind a pseudonymous handle to a wallet, display a verified badge, and gate creator actions with NEUS Proofs.
 icon: badge-check
 ---
 
@@ -39,7 +39,7 @@ const client = new NeusClient();
 const proof = await client.verify({
   verifier: 'ownership-pseudonym',
   data: {
-    pseudonymId: 'alice123',     // 3-32 lowercase chars
+    pseudonymId: 'alice123',     // 3-64 lowercase chars
     namespace: 'acme',         // isolate from default neus namespace
     displayName: 'Alice',
     metadata: { platform: 'acme' }
@@ -51,7 +51,7 @@ const proof = await client.verify({
 // proof.proofUrl === https://neus.network/proof/{qHash}
 ```
 
-`pseudonymId` must match `^[a-z0-9][a-z0-9._-]{1,30}[a-z0-9]$`.
+`pseudonymId` must match `^[a-z0-9._-]{3,64}$` (3–64 lowercase chars).
 
 ## Hosted Verify (no in-app signing)
 

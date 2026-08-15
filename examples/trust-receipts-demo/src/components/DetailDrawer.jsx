@@ -5,7 +5,7 @@ import { NeusClient } from '@neus/sdk/client';
 import { VerifyGate } from '@neus/sdk/widgets';
 import { buildClaimRow } from '../viewModel.js';
 import { CodePreview } from './CodePreview.jsx';
-import { ReceiptPreview } from './ReceiptPreview.jsx';
+import { ProofPreview } from './ProofPreview.jsx';
 
 const surface = { background: 'var(--neus-bg-elevated)' };
 
@@ -60,8 +60,8 @@ export function DetailDrawer({ claim, onClose, apiUrl, hostedCheckoutUrl, qHash,
       const data = res?.data && typeof res.data === 'object' ? res.data : {};
       setEligLine(
         data.eligible === true
-          ? 'Requirements met — a matching receipt is available.'
-          : 'No matching receipt yet. Issue one to continue.'
+          ? 'Requirements met — a matching proof is available.'
+          : 'No matching proof yet. Run a check to continue.'
       );
     } catch (e) {
       setEligLine(e?.message || 'Check failed.');
@@ -245,14 +245,14 @@ export function DetailDrawer({ claim, onClose, apiUrl, hostedCheckoutUrl, qHash,
                               }
                             >
                               {req.satisfied ? <CheckCircle2 size={12} strokeWidth={2.25} /> : <Lock size={12} strokeWidth={2.25} />}
-                              {req.satisfied ? 'Receipt active' : 'Needs receipt'}
+                              {req.satisfied ? 'Proof active' : 'Needs proof'}
                             </div>
                           </div>
                         </div>
                       ))}
                     </div>
                   </section>
-                  <ReceiptPreview claim={claim} qHash={effectiveProof} />
+                  <ProofPreview claim={claim} qHash={effectiveProof} />
                 </div>
                 <div className="mt-auto border-t pt-5" style={{ borderColor: 'var(--neus-border-subtle)' }}>
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
@@ -261,7 +261,7 @@ export function DetailDrawer({ claim, onClose, apiUrl, hostedCheckoutUrl, qHash,
                       className="cm-check-elig w-full sm:w-auto sm:min-w-[9.5rem]"
                       onClick={runEligibilityCheck}
                       disabled={eligBusy}
-                      title="Signed request to the proofs gate. Private matches count when you approve signing in the connected environment. No new receipt is created from this check alone."
+                      title="Signed request to the proofs gate. Private matches count when you approve signing in the connected environment. No new proof is created from this check alone."
                     >
                       <RefreshCw size={16} className={eligBusy ? 'animate-spin' : ''} aria-hidden="true" />
                       Check requirements
@@ -271,7 +271,7 @@ export function DetailDrawer({ claim, onClose, apiUrl, hostedCheckoutUrl, qHash,
                         apiUrl={apiUrl}
                         hostedCheckoutUrl={hostedCheckoutUrl}
                         gateId={claim.gateId || `gate_${claim.id}`}
-                        buttonText="Issue receipt"
+                        buttonText="Create proof"
                         checkExisting
                         allowPrivateReuse
                         strategy="reuse-or-create"

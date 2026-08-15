@@ -11,7 +11,7 @@ export function CodePreview({ claim }) {
   checkExisting
   allowPrivateReuse
   strategy="reuse-or-create"
-  buttonText="Issue receipt"
+  buttonText="Create proof"
 />`;
 
   return (

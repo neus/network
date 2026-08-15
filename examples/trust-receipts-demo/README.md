@@ -26,7 +26,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
   apiUrl={import.meta.env.VITE_NEUS_API_URL}
   hostedCheckoutUrl={import.meta.env.VITE_NEUS_HOSTED_CHECKOUT_URL}
   gateId="gate_fair-airdrop"
-  buttonText="Issue receipt"
+  buttonText="Create proof"
 >
   <button type="button">Get fair airdrop access</button>
 </VerifyGate>
@@ -45,7 +45,7 @@ import { VerifyGate } from '@neus/sdk/widgets';
 
 ## Use real gates
 
-Publish portals in [Profile → Portals](https://neus.network/profile?tab=portals) and pass the real `gateId` into `VerifyGate` and `gateCheck`. The demo uses sample gate ids derived from each claim; replace them before connecting to the live API.
+Publish listings in [Profile → Listings](https://neus.network/profile?tab=portals) and pass the real `gateId` into `VerifyGate` and `gateCheck`. The demo uses sample gate ids derived from each claim; replace them before connecting to the live API.
 
 ## Store the proof
 

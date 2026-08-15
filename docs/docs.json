@@ -92,6 +92,7 @@
               "verification/lifecycle",
               "verification/signing-format",
               "learn/standards/caip-380",
+              "learn/receipts-as-knowledge",
               "verification/verifiers",
               "verification/propose-a-verifier",
               {

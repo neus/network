@@ -1,6 +1,6 @@
 import React from 'react';
 import { NEUS_DEFAULT_MARK_URL } from '../../../../sdk/brand-mark.js';
-import { getReceiptLineDetails } from '../claims.js';
+import { getProofLineDetails } from '../claims.js';
 
 const PLACEHOLDER = '0x7a2f4c9e1b8d0f3a5c6e7d8b9a0f1e2c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0';
 
@@ -9,21 +9,21 @@ function shortId(id) {
   return `${id.slice(0, 6)}…${id.slice(-4)}`;
 }
 
-export function ReceiptPreview({ claim, qHash }) {
+export function ProofPreview({ claim, qHash }) {
   if (!claim) {
     return (
       <div
         className="flex min-h-[3.5rem] items-center rounded-lg px-3.5 py-2.5 text-sm"
         style={{ border: '1px solid var(--neus-border-subtle)', color: 'var(--neus-text-muted)' }}
       >
-        <p className="m-0 w-full text-center text-[0.8125rem]">Select a claim to preview a receipt</p>
+        <p className="m-0 w-full text-center text-[0.8125rem]">Select a claim to preview a proof</p>
       </div>
     );
   }
 
   const isLive = Boolean(qHash);
   const id = qHash || PLACEHOLDER;
-  const d = isLive ? getReceiptLineDetails(claim) : null;
+  const d = isLive ? getProofLineDetails(claim) : null;
   const showRich = Boolean(d);
 
   return (
@@ -42,7 +42,7 @@ export function ReceiptPreview({ claim, qHash }) {
             className="mb-0.5 text-[0.65rem] font-medium uppercase tracking-wide"
             style={{ color: 'var(--neus-text-muted)' }}
           >
-            Receipt
+            Proof
           </p>
           <p className="m-0 text-[0.95rem] font-semibold" style={{ color: 'var(--neus-text-primary)' }}>
             {claim.title}

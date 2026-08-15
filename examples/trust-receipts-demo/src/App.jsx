@@ -7,7 +7,7 @@ import { applyListScope, filterByQuery } from './viewModel.js';
 import { DetailDrawer } from './components/DetailDrawer.jsx';
 import { OpportunityCard } from './components/OpportunityCard.jsx';
 
-const PENDING_CHECKOUT_KEY = 'neus.trustReceiptsDemo.pendingCheckout';
+const PENDING_CHECKOUT_KEY = 'neus.portableProofsDemo.pendingCheckout';
 
 function withEnvUrl(v, d) {
   if (typeof v === 'string' && v.trim()) return v.trim();
@@ -147,7 +147,7 @@ export default function App() {
           >
             <span className="flex items-center gap-2.5">
               <LayoutGrid size={18} className="shrink-0" />
-              <span className="text-[13px] font-medium">Receipts</span>
+              <span className="text-[13px] font-medium">Proofs</span>
             </span>
             <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary shadow-[0_0_8px_rgba(152,192,239,0.7)]" />
           </button>
@@ -206,10 +206,10 @@ export default function App() {
         <header className="mb-6 flex flex-col justify-between gap-4 sm:mb-10 sm:flex-row sm:items-start">
           <div className="max-w-2xl">
             <h1 className="mb-1.5 text-[1.6rem] font-semibold leading-tight tracking-tight sm:text-[1.875rem]">
-              Trust Marketplace
+              Marketplace
             </h1>
             <p className="max-w-xl text-[0.9375rem] leading-relaxed" style={{ color: 'var(--neus-text-secondary)' }}>
-              One receipt for access, rewards, and agents. Works in the browser, on the server, and anywhere you need to show trust.
+              One proof for access, rewards, and agents. Works in the browser, on the server, and anywhere you need to show trust.
             </p>
           </div>
           <div className="min-w-0 max-w-full">

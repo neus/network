@@ -26,7 +26,7 @@ export const claims = [
     verifierId: 'ownership-basic',
     seedDemoProofId: 'qhash:demo:content-owner',
     demoHighlight: true,
-    receiptDetail: {
+    proofDetail: {
       subject: 'Maya Chen',
       claimLine: 'Content owner',
       status: 'Active',
@@ -144,7 +144,7 @@ export const claims = [
     group: 'ownership',
     uiCategory: 'Programs',
     title: 'Project admin',
-    example: 'Protect admin actions with receipts tied to contract authority.',
+    example: 'Protect admin actions with proofs tied to contract authority.',
     whyItMatters: 'Restrict sensitive paths to contract roles you can re-check on demand without sharing keys.',
     requires: 'Contract control',
     unlocks: 'Admin permissions + tooling',
@@ -160,7 +160,7 @@ export const claims = [
     uiCategory: 'Bounties',
     title: 'Safe payout',
     example: 'Move funds with a clear risk read before a payout or transfer.',
-    whyItMatters: 'Combine a transfer risk read with a receipt so your treasury path stays explainable to ops.',
+    whyItMatters: 'Combine a transfer risk read with a proof so your treasury path stays explainable to ops.',
     requires: 'Transfer risk check',
     unlocks: 'Payout or transfer path',
     cardRequires: 'Transfer risk',
@@ -174,7 +174,7 @@ export const claims = [
     group: 'risk',
     uiCategory: 'Tools',
     title: 'Publish approval',
-    example: 'Take moderated content live with a receipt you can show ops and users.',
+    example: 'Take moderated content live with a proof you can show ops and users.',
     whyItMatters: 'Attach a moderation result to a publish step without building a custom audit log.',
     requires: 'Content moderation',
     unlocks: 'Go-live for approved content',
@@ -224,8 +224,8 @@ export function getInitialDemoProofs() {
   return s;
 }
 
-export function getReceiptLineDetails(claim) {
-  if (claim.receiptDetail) return claim.receiptDetail;
+export function getProofLineDetails(claim) {
+  if (claim.proofDetail) return claim.proofDetail;
   return {
     subject: 'Verified holder',
     claimLine: claim.title,

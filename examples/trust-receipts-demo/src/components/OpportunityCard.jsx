@@ -43,7 +43,7 @@ export const OpportunityCard = forwardRef(function OpportunityCard(
           : 'border border-[var(--neus-border-subtle)] bg-[var(--neus-bg-card)] shadow-[var(--neus-shadow-card)] hover:shadow-[var(--neus-shadow-card-hover)] hover:border-[var(--neus-border-hover)]')
       }
     >
-      {/* Top row: Icon & Live Receipt Badge */}
+      {/* Top row: Icon & Live Proof Badge */}
       <div className="mb-4 flex items-start justify-between gap-3">
         <div
           className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[var(--neus-radius-md)] transition-transform duration-300 group-hover:scale-105"
@@ -122,7 +122,7 @@ export const OpportunityCard = forwardRef(function OpportunityCard(
               : 'inline-flex h-9 items-center justify-center rounded-full bg-[var(--neus-primary)] px-5 text-[0.8125rem] font-bold text-[#000] transition-all hover:bg-[var(--neus-primary-hover)] hover:shadow-[0_0_12px_rgba(var(--neus-rgb-accent-primary)/0.3)]'
           }
         >
-          {isReady ? 'View receipt' : isLocked ? 'Unavailable' : 'Open claim'}
+          {isReady ? 'View proof' : isLocked ? 'Unavailable' : 'Open claim'}
         </button>
       </div>
     </motion.div>

@@ -13,13 +13,13 @@ export function buildClaimRow(claim, { qHash = null } = {}) {
   if (claim.readinessLocked) {
     readinessState = 'Unavailable';
   } else if (verified) {
-    readinessState = 'Receipt active';
+    readinessState = 'Proof active';
   } else if (claim.trustStatusWhenPending === 'expired') {
     readinessState = 'Expired';
   } else if (claim.trustStatusWhenPending === 'revoked') {
     readinessState = 'Revoked';
   } else {
-    readinessState = 'Needs receipt';
+    readinessState = 'Needs proof';
   }
 
   return {
