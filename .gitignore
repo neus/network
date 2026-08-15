@@ -28,6 +28,7 @@ integrations/
 !/scripts/validate-cursor-schemas.mjs
 !/scripts/validate-cursor-mcp.mjs
 !/scripts/validate-universal-manifests.mjs
+!/scripts/validate-doc-routes.mjs
 !/scripts/verify-release-versions.mjs
 !/scripts/extract-changelog-notes.mjs
 
