@@ -6,8 +6,7 @@ icon: wrench
 
 | Topic | Detail |
 |-------|--------|
-| Session context | Call **`neus_context`** first. When signed in, it includes the current profile context. |
-| Profile refresh | Use **`neus_me`** only to refresh profile context or look up a public wallet/DID. |
+| Session context | Call **`neus_context`** first. When signed in, it includes the current profile context. Handles signed-in and offline modes. |
 | Create in-session | **`neus_verify`** when the signed-in wallet can complete the check without a browser. |
 | Interactive | **`neus_verify_or_guide`** when a step needs a browser (OAuth, personhood, payment, wallet connect). Returns a hosted link. |
 
@@ -24,14 +23,13 @@ EVM `0x…`, Solana base58, or `did:pkh:…`. Delegated reads: **`agentWallet`**
 ## Order
 
 | Phase | Calls |
-|-------|--------|
+|-------|-------|
 | Default | Connect → **`neus_context`** → **`neus_agent_link`** for agents → **`neus_proofs_check`** → continue if satisfied |
 | Project agent | **`neus_agent_mount`** or `neus mount <agentId> --apply <host>` in the repo |
 | Details | **`neus_proofs_get`** for proof records, tags, delegated context, and proof fields |
 | Secrets | **`neus_secret_list`** / **`neus_secret_create`** / **`neus_secret_revoke`** when auth is configured ([Secrets](./secrets)) |
 | Fallback | **`neus_verify_or_guide`** only when something is missing |
-| Catalog | **`neus_verifiers_catalog`** only when you need raw schemas beyond context |
-| Profile | **`neus_me`** only for refresh or explicit wallet/DID lookup |
+| Catalog | **`neus_verifiers_catalog`** only when you need raw schemas beyond the compact `verifierSummary` in `neus_context` |
 
 Same flow as [Overview](./overview).
 
@@ -39,10 +37,10 @@ Same flow as [Overview](./overview).
 
 <CardGroup cols={2}>
   <Card title="Session start" icon="plug" href="./context">
-    Load profile, checks, and workflow once per session.
+    Load profile, verifiers, and workflow once per session.
   </Card>
   <Card title="Catalog" icon="list-tree" href="./verifiers-catalog">
-    Live check schemas and required inputs.
+    Live verifier schemas and required inputs.
   </Card>
   <Card title="Check" icon="circle-check" href="./proofs-check">
     Reuse existing proofs before verifying.
@@ -55,9 +53,6 @@ Same flow as [Overview](./overview).
   </Card>
   <Card title="Proofs get" icon="receipt" href="./proofs-get">
     Read proof records and current status.
-  </Card>
-  <Card title="Me" icon="user" href="./me">
-    Refresh profile context or look up an account.
   </Card>
   <Card title="Agent create" icon="robot" href="./agent-create">
     Create agent identity and permission proofs.

@@ -29,7 +29,7 @@ Use this before an assistant runs sensitive tools or takes another verification-
 4. **Trusted Agent:** **`neus_agent_link`** → **`neus_verify_or_guide`** if needed.
 5. **Proofs:** **`neus_proofs_get`** for exact fields.
 6. **Vault:** **`neus_secret_list`** / **`neus_secret_create`** / **`neus_secret_revoke`**.
-7. **`neus_me`** only to refresh profile context or look up a wallet/DID.
+7. Reuse existing proofs via **`neus_proofs_check`** before creating new ones. When signed in, `neus_context` returns the current profile context; re-call it only after a profile change.
 8. Summarize as **NEUS Verify**.
 
 ## NEUS Verify format

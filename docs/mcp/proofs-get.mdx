@@ -4,7 +4,7 @@ description: Filtered proof records, tags, status, and optional content for a wa
 icon: receipt
 ---
 
-Use when you have an **`identifier`** and need proof records, fields, tags, or delegated context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility. Profile totals and account context come from **`neus_context`** or **`neus_me`**.
+Use when you have an **`identifier`** and need proof records, fields, tags, or delegated context. In the reuse-first flow, call this after **`neus_proofs_check`** when you need details beyond yes/no eligibility. Profile totals and account context come from **`neus_context`**.
 
 In user-facing replies, summarize the result in plain language and link only real proof URLs returned by NEUS.
 
@@ -50,7 +50,7 @@ When `identifier` is a DID, NEUS resolves the DID to its native account. Non-EVM
 
 `include: "metadata"` returns a compact paginated proof index: proof id, status, check ids and outcomes, title, tags, timestamps, and content length when known. It does not include proof bodies, profile summary, or agent context.
 
-Use `include: "content"` for a specific proof or tightly filtered page when the body is required. Use the paginated `proofs` list for history and the profile summary from `neus_context` or `neus_me` for aggregate totals. Never infer a total or absence from one page.
+Use `include: "content"` for a specific proof or tightly filtered page when the body is required. Use the paginated `proofs` list for history and the profile summary from `neus_context` for aggregate totals. Never infer a total or absence from one page.
 
 ## Assistant Output
 

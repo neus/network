@@ -74,6 +74,7 @@
     "lint": "eslint . --ignore-pattern widgets/verify-gate/dist/**",
     "format": "prettier --write \"**/*.js\"",
     "build": "npm run build:widgets && npm run build:cjs",
+    "neus": "node cli/neus.mjs",
     "build:widgets": "npx esbuild widgets/verify-gate/VerifyGate.jsx widgets/verify-gate/ProofBadge.jsx --bundle --platform=browser --format=esm --outdir=widgets/verify-gate/dist --jsx=automatic --legal-comments=none --external:react --external:react-dom --external:react/jsx-runtime --external:@neus/sdk/client",
     "build:cjs": "npx esbuild index.js client.js utils.js errors.js gates.js cli-commands.js mcp-hosts.js runtime-mount.js runtime-adapters.js sponsor.js --bundle --platform=node --format=cjs --outdir=cjs --out-extension:.js=.cjs --legal-comments=none --external:ethers --external:@zkpassport/sdk --external:react --external:react-dom --external:react/jsx-runtime",
     "prepack": "npm run build",

@@ -116,7 +116,7 @@ function persistOAuthTokens(tokenJson, clientId, resource) {
 async function refreshOAuthToken() {
   const store = readTokenStore();
   if (!store?.refreshToken) {
-    throw new Error('No stored OAuth refresh token. Run `neus auth --oauth` first.');
+    throw new Error('No stored OAuth refresh token. Run `npx -y -p @neus/sdk neus auth --oauth` first.');
   }
   const params = new URLSearchParams();
   params.set('grant_type', 'refresh_token');
@@ -229,7 +229,7 @@ function emitCliBanner(cliOptions = {}) {
   if (!shouldEmitCliBanner(cliOptions)) return;
   const version = readCliVersion();
   const title = paint('NEUS', 'green');
-  const meta = `${paint(`v${version}`, 'dim')}${paint(' | trust that travels', 'dim')}`;
+  const meta = paint(`v${version}`, 'dim');
   writeCliLine('');
   writeCliLine(`  ${title}  ${meta}`);
   writeCliLine('');
@@ -267,8 +267,8 @@ function describeClientResult(command, result) {
   }
   if (result.changed) return 'updated';
   if (result.authConfigured) return 'signed in';
-  if (result.configured) return 'ready';
-  return 'ready';
+  if (result.configured) return 'configured — sign in to connect';
+  return 'not configured';
 }
 
 function printBuilderGuidance(command, results) {
@@ -280,7 +280,7 @@ function printBuilderGuidance(command, results) {
   writeCliLine(paint('Next steps', 'cyan'));
   writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for assistant prompts.');
   if (ok.some(result => result.client === 'codex')) {
-    writeGuidanceLine('Codex OAuth: `neus auth --client codex` or `codex mcp login neus`.');
+    writeGuidanceLine('Codex OAuth: `npx -y -p @neus/sdk neus auth --client codex` or `codex mcp login neus`.');
   }
   const cliOwned = ok.filter(result => !result.deferredToPlugin).map(result => result.client);
   if (cliOwned.length > 0) {
@@ -934,25 +934,26 @@ function parseArgs(argv) {
 function printUsage(exitCode = 0) {
   const lines = [
     'Usage: neus <command> [options]',
+    '       node cli/neus.mjs <command>   (local development without a global install)',
     '',
     'Commands:',
     '  setup         Configure hosted NEUS MCP for supported clients',
     '  auth          Sign in (browser, or NEUS_ACCESS_KEY / --access-key when set)',
-    '  refresh       Rotate the stored OAuth token using the saved refresh token',
+    '  refresh       Rotate the stored OAuth token using the saved refresh token (requires `neus auth --oauth` first)',
     '  disconnect    Disconnect NEUS MCP (revoke the stored OAuth token or access key)',
     '  status        Show current NEUS MCP setup',
     '  examples      Show assistant prompts to try after install',
     '  doctor        Deep check: config status, profile connection, and live MCP context',
-    '  mount         Connect a Trusted Agent to a project or runtime',
+    '  mount <id>    Connect a Trusted Agent to a project or runtime',
     '  help          Show this message',
     '',
     'Options:',
     '  --client <name[,name]>   Limit setup to claude, codex, cursor, or vscode',
     '  --project                Write shared project config instead of user config',
     '  --access-key <npk_...>   Override profile access key (else uses NEUS_ACCESS_KEY if set)',
-    '  --oauth                    Force browser OAuth (ignore NEUS_ACCESS_KEY in the environment)',
+    '  --oauth                  Force browser OAuth (ignore NEUS_ACCESS_KEY in the environment; stores the refresh token that `neus refresh` uses)',
     '  --live                   Run live MCP checks (uses IDE credential or --access-key)',
-    '  --agent <agentId>        Agent id for mount (also: neus mount <agentId>)',
+    '  --agent <agentId>        Agent id for mount (also accepted positionally: `neus mount <agentId>`)',
     '  --apply <cursor|claude|codex>  Write mounted agent rules to the current project',
     '  --json                   Print JSON output',
     '  --dry-run                Preview changes without writing files'
@@ -1643,7 +1644,7 @@ async function runMount(options) {
     throw new Error('Usage: neus mount <agentId> [--apply cursor|claude|codex]');
   }
   if (!accessKey) {
-    throw new Error('Credential required. Run `neus auth` or pass --access-key.');
+    throw new Error('Credential required. Run `npx -y -p @neus/sdk neus auth` or pass --access-key.');
   }
 
   const controller = new AbortController();
@@ -1687,9 +1688,9 @@ async function runMount(options) {
     logStep('ok', 'agent', bundle.identity.agentLabel || bundle.identity.agentId);
     writeGuidanceLine(`Identity proof: ${bundle.trust.identityProofUrl}`);
     if (bundle.trust.delegationProofUrl) {
-      writeGuidanceLine(`Delegation proof: ${bundle.trust.delegationProofUrl}`);
+      writeGuidanceLine(`Permission proof: ${bundle.trust.delegationProofUrl}`);
     } else {
-      writeGuidanceLine('Delegation not on file — run agent setup on neus.network before scoped actions.');
+      writeGuidanceLine('No permission proof yet — set up the agent on neus.network before it takes scoped actions.');
     }
     if (applyResult) {
       for (const filePath of applyResult.written) {
@@ -1698,7 +1699,7 @@ async function runMount(options) {
     } else if (!options.dryRun) {
       logStep('ok', 'wrote', path.join(cwd, '.neus', 'mount.json'));
     }
-    writeGuidanceLine('Start a new Agent chat so mounted rules load. Use NEUS Verify before sensitive actions.');
+    writeGuidanceLine('Ask your assistant: "Use NEUS Verify before taking sensitive actions."');
     writeCliLine('');
     return payload;
   } finally {
@@ -1867,6 +1868,7 @@ async function runAuthBrowser(options) {
 
   return new Promise((resolve, reject) => {
     let settled = false;
+    let callbackReceived = false;
     function finish(error, value) {
       if (settled) return;
       settled = true;
@@ -1888,6 +1890,16 @@ async function runAuthBrowser(options) {
       if (url.pathname !== '/callback') {
         res.writeHead(404);
         res.end();
+        return;
+      }
+
+      // Guard against browser double-redirect: a second /callback (retry,
+      // duplicate tab, preflight) would re-enter the token exchange and burn
+      // the single-use auth code on a second fetch. Once we've accepted a
+      // valid callback, acknowledge and ignore further hits until close.
+      if (callbackReceived) {
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end('<html><body><h2>Already processing</h2><p>You can close this tab and return to your terminal.</p></body></html>');
         return;
       }
 
@@ -1915,7 +1927,12 @@ async function runAuthBrowser(options) {
       const code = url.searchParams.get('code');
       const error = url.searchParams.get('error');
 
+      // We've validated state + issuer: this is the canonical callback. Block
+      // any duplicate redirect from re-entering the token exchange.
+      callbackReceived = true;
+
       if (error) {
+        callbackReceived = true;
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end('<html><body><h2>Authentication failed</h2><p>You can close this tab and try again.</p></body></html>');
         finish(new Error(`Authentication failed: ${error}`));
@@ -2078,14 +2095,14 @@ function runAuth(options) {
 async function runRefresh(options = {}) {
   const store = readTokenStore();
   if (!store?.refreshToken) {
-    const message = 'No stored OAuth refresh token. Run `neus auth --oauth` first.';
+    const message = 'No stored OAuth refresh token. Run `npx -y -p @neus/sdk neus auth --oauth` first.';
     if (options.json) {
       printJson({ command: 'refresh', error: message });
     } else {
       writeCliLine('');
       writeCliLine(`  ${paint('NEUS', 'green')}  ${paint('refresh', 'red')}`);
       writeCliLine('');
-      logStep('!', 'missing', 'no stored refresh token; run `neus auth --oauth` first');
+      logStep('warn', 'missing', 'no stored refresh token; run `npx -y -p @neus/sdk neus auth --oauth` first');
     }
     process.exitCode = 1;
     return null;
@@ -2101,9 +2118,7 @@ async function runRefresh(options = {}) {
       writeCliLine('');
       logStep('ok', 'token', `rotated; valid until ${expiresAtDate}`);
       writeCliLine('');
-      writeCliLine('  IDE MCP clients with their own OAuth lifecycle (Cursor with a URL-only');
-      writeCliLine('  config) do not need this command. It is an escape hatch for clients whose');
-      writeCliLine('  own refresh is absent or buggy. The stored access token is now fresh.');
+      writeGuidanceLine('Skip this if your IDE handles OAuth (Cursor URL-only config). It is an escape hatch for clients whose own refresh is absent or buggy.');
     }
     return refreshed;
   } catch (err) {
@@ -2114,7 +2129,7 @@ async function runRefresh(options = {}) {
       writeCliLine('');
       writeCliLine(`  ${paint('NEUS', 'green')}  ${paint('refresh', 'red')}`);
       writeCliLine('');
-      logStep('!', 'failed', message);
+      logStep('warn', 'failed', message);
     }
     process.exitCode = 1;
     return null;
@@ -2201,10 +2216,10 @@ async function runSetup(options) {
   }
 
   printFlowSummary('setup', scope, initResults, {
-    nextStep: accessKey ? 'Run `neus examples`, then ask your assistant to use NEUS Verify.' : '',
+    nextStep: accessKey ? 'Ask your assistant: "Use NEUS Verify before taking sensitive actions."' : '',
     cliOptions: options
   });
-  writeCliLine(paint('NEUS skill', 'cyan'));
+  writeCliLine(paint('Trust workflow skill', 'cyan'));
   for (const skill of skills) {
     if (skill.deferredToPlugin) {
       logStep(
@@ -2266,7 +2281,7 @@ const ASSISTANT_EXAMPLE_PROMPTS = [
 function runExamples(options) {
   const payload = {
     command: 'examples',
-    intro: 'Try this in your assistant:',
+    intro: 'Try these in your assistant:',
     prompts: ASSISTANT_EXAMPLE_PROMPTS
   };
 
@@ -2277,8 +2292,6 @@ function runExamples(options) {
 
   emitCliBanner(options);
   writeCliLine(paint('examples', 'green'));
-  writeCliLine('');
-  writeCliLine(`  ${paint(payload.intro, 'dim')}`);
   writeCliLine('');
   ASSISTANT_EXAMPLE_PROMPTS.forEach((prompt, index) => {
     writeCliLine(`  ${paint(String(index + 1) + '.', 'cyan')} ${prompt}`);
@@ -2404,7 +2417,7 @@ async function runDoctor(options) {
     writeCliLine('');
     writeCliLine(paint('MCP endpoint', 'cyan'));
     writeGuidanceLine(NEUS_MCP_URL);
-    writeCliLine(paint('NEUS skill', 'cyan'));
+    writeCliLine(paint('Trust workflow skill', 'cyan'));
     for (const skill of skills) {
       logStep(
         skill.current ? 'ok' : 'warn',
@@ -2427,7 +2440,7 @@ async function runDoctor(options) {
   writeGuidanceLine(`@neus/sdk@${CLI_PACKAGE_VERSION}`);
   writeCliLine(paint('MCP endpoint', 'cyan'));
   writeGuidanceLine(NEUS_MCP_URL);
-  writeCliLine(paint('NEUS skill', 'cyan'));
+  writeCliLine(paint('Trust workflow skill', 'cyan'));
   for (const skill of skills) {
     logStep(
       skill.current ? 'ok' : 'warn',
@@ -2455,20 +2468,20 @@ async function runDoctor(options) {
       // path — the credential lives in the IDE's OAuth lifecycle, not in a
       // static header. Don't say "No account credential found" when OAuth is set up.
       if (hasUrlOnlyOAuth) {
-        writeGuidanceLine('IDE-native OAuth configured. The MCP server handles authentication through your IDE session.');
+        writeGuidanceLine('Connected through your IDE session.');
         if (payload.mcp.reachable) {
-          writeGuidanceLine('MCP server is reachable. Ask your assistant to use NEUS tools.');
+          writeGuidanceLine('Ask your assistant: "Use NEUS Verify before taking sensitive actions."');
         } else {
           writeGuidanceLine(
-            'MCP server was not reachable. Check your network or run `neus doctor --live` again.'
+            'MCP server was not reachable. Check your network or run `npx -y -p @neus/sdk neus doctor --live` again.'
           );
           payload.hasErrors = true;
         }
       } else {
         writeGuidanceLine(
           hasCodex
-            ? 'Codex owns OAuth: run `neus auth --client codex` or `codex mcp login neus`.'
-            : 'No account credential found for the configured MCP clients. Run `neus auth`.'
+            ? 'Codex owns OAuth: run `npx -y -p @neus/sdk neus auth --client codex` or `codex mcp login neus`.'
+            : 'No account credential found for the configured MCP clients. Run `npx -y -p @neus/sdk neus auth`.'
         );
       }
     } else {
@@ -2476,30 +2489,30 @@ async function runDoctor(options) {
         const handle = payload.mcp.profileHandle ? ` as ${payload.mcp.profileHandle}` : '';
         const wallet = payload.mcp.sessionWallet ? ` · ${shortWallet(payload.mcp.sessionWallet)}` : '';
         const receipts =
-          payload.mcp.proofsTotal != null ? ` · ${payload.mcp.proofsTotal} proofs on file` : '';
-        const tools = payload.mcp.toolsCount ? ` · ${payload.mcp.toolsCount} tools` : '';
+          payload.mcp.proofsTotal != null ? ` · ${payload.mcp.proofsTotal} proofs` : '';
+        const tools = payload.mcp.toolsCount ? ` · ${payload.mcp.toolsCount} tools available` : '';
         logStep('ok', 'profile', `connected${handle}${wallet}${receipts}${tools}`);
-        writeGuidanceLine('NEUS Verify is ready. Ask your assistant to check identity and permissions before sensitive actions.');
+        writeGuidanceLine('Ask your assistant: "Use NEUS Verify before taking sensitive actions."');
         writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for starter prompts.');
         if (payload.mountFilePresent) {
           const agentLabel = payload.mountAgentLabel || payload.mountAgentId || 'project mount';
           const agentStatus = payload.agentVerified ? ' (verified)' : payload.agentLinkStatus ? ` (${payload.agentLinkStatus})` : '';
-          logStep('ok', 'mount', payload.mountAgentId ? `project mount: ${agentLabel}${agentStatus}` : 'project mount on file');
+          logStep('ok', 'mount', payload.mountAgentId ? `project mount: ${agentLabel}${agentStatus}` : 'project mount saved');
         }
         if (payload.mountNeedsRefresh) {
           const reason =
             payload.delegationExpired
-              ? 'delegation expired'
+              ? 'permissions expired'
               : payload.missingDelegation
-                ? 'delegation missing on file'
+                ? 'permissions missing'
                 : 'mount stale';
-          logStep('warn', 'mount', `${reason} — run \`neus mount ${payload.mountAgentId || '<agentId>'} --apply cursor\``);
+          logStep('warn', 'mount', `${reason} — run \`npx -y -p @neus/sdk neus mount ${payload.mountAgentId || '<agentId>'} --apply cursor\``);
           payload.hasErrors = true;
         } else if (payload.agentVerified) {
-          logStep('ok', 'agent', 'identity and delegation on file');
+          logStep('ok', 'agent', 'identity and permissions linked');
         } else if (payload.mountAgentId || payload.mountFilePresent) {
           writeGuidanceLine(
-            `Mounted agent is not fully linked yet. Run \`neus mount ${payload.mountAgentId || '<agentId>'} --apply cursor\` after auth.`
+            `Mounted agent is not fully linked yet. Run \`npx -y -p @neus/sdk neus mount ${payload.mountAgentId || '<agentId>'} --apply cursor\` after auth.`
           );
           payload.hasErrors = true;
         }
@@ -2507,17 +2520,17 @@ async function runDoctor(options) {
         if (!payload.mcp.reachable) {
           logStep('warn', 'profile', 'MCP server unreachable — check network or try again');
         } else {
-          logStep('warn', 'profile', 'sign-in expired or invalid — run `neus auth` to reconnect');
+          logStep('warn', 'profile', 'sign-in expired or invalid — run `npx -y -p @neus/sdk neus auth` to reconnect');
         }
       }
     }
   } else if (liveAccessKey) {
-    writeGuidanceLine('Saved credential found. Run `neus doctor --live` to confirm live connection.');
+    writeGuidanceLine('Saved credential found. Run `npx -y -p @neus/sdk neus doctor --live` to confirm live connection.');
   } else {
     writeGuidanceLine(
       hasCodex
-        ? 'Codex owns OAuth: run `neus auth --client codex` or `codex mcp login neus`.'
-        : 'No account credential found. Run `neus auth` for browser sign-in.'
+        ? 'Codex owns OAuth: run `npx -y -p @neus/sdk neus auth --client codex` or `codex mcp login neus`.'
+        : 'No account credential found. Run `npx -y -p @neus/sdk neus auth` for browser sign-in.'
     );
   }
   writeCliLine('');
@@ -2533,7 +2546,7 @@ async function runDisconnect(options) {
   const token = resolveLiveAccessKey(options, scope, cwd);
   if (!token) {
     throw new Error(
-      'Credential required. Run `neus disconnect --access-key <token>` or sign in first (`neus auth`).'
+      'Credential required. Run `npx -y -p @neus/sdk neus disconnect --access-key <token>` or sign in first (`npx -y -p @neus/sdk neus auth`).'
     );
   }
 
@@ -2592,7 +2605,7 @@ async function runDisconnect(options) {
     emitCliBanner(options);
     writeCliLine(paint('disconnect', 'green'));
     logStep('ok', 'signed-out', 'MCP configs updated');
-    logStep('next', 'next', 'neus auth');
+    logStep('next', 'next', 'npx -y -p @neus/sdk neus auth');
     writeCliLine('');
   }
 }
@@ -2612,12 +2625,12 @@ async function main() {
           printJson(result);
         } else if (result.authMethod !== 'browser') {
           printFlowSummary('auth', result.scope, result.results, {
-            nextStep: 'Run `neus examples`, then ask your assistant to use NEUS Verify.',
+            nextStep: 'Run `npx -y -p @neus/sdk neus examples`, then ask your assistant to use NEUS Verify.',
             cliOptions: options
           });
         } else {
           printFlowSummary('auth', result.scope, result.results, {
-            nextStep: 'Run `neus examples`, then ask your assistant to use NEUS Verify.',
+            nextStep: 'Run `npx -y -p @neus/sdk neus examples`, then ask your assistant to use NEUS Verify.',
             cliOptions: options
           });
         }

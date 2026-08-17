@@ -382,24 +382,24 @@ export async function resolveRuntimeBundleFromMcp(input) {
     }
   }
 
-  const me = await input.callMcpTool({
-    name: 'neus_me',
+  const ctx = await input.callMcpTool({
+    name: 'neus_context',
     args: {},
     accessKey,
     sessionId,
     signal: input.signal
   });
-  if (!me.ok) {
-    throw new Error(me.error || 'Could not load profile context. Run `neus auth` and retry.');
+  if (!ctx.ok) {
+    throw new Error(ctx.error || 'Could not load profile context. Run `neus auth` and retry.');
   }
-  const mePayload = /** @type {Record<string, unknown>} */ (me.payload || {});
-  if (mePayload.status === 'auth_required') {
+  const ctxPayload = /** @type {Record<string, unknown>} */ (ctx.payload || {});
+  if (ctxPayload.status === 'auth_required') {
     throw new Error('Profile authentication required. Run `neus auth` or set NEUS_ACCESS_KEY.');
   }
 
-  const principal = /** @type {Record<string, unknown>} */ (mePayload.principal || {});
+  const principal = /** @type {Record<string, unknown>} */ (ctxPayload.principal || {});
   const controllerWallet = normalizeWallet(principal.primaryAccount);
-  const profileAgents = Array.isArray(mePayload.agents) ? mePayload.agents : [];
+  const profileAgents = Array.isArray(ctxPayload.agents) ? ctxPayload.agents : [];
 
   let agentWallet = normalizeWallet(selector.agentWallet);
   let agentId = asString(selector.agentId);

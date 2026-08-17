@@ -41,11 +41,11 @@
   "tools": [
     {
       "name": "neus_context",
-      "description": "Start here. Load the signed-in profile, available checks, and recommended workflow for this session."
+      "description": "Start here. Returns the signed-in profile, available verifiers, and the recommended workflow in one call. Handles signed-in and offline modes — no separate profile tool needed."
     },
     {
       "name": "neus_verifiers_catalog",
-      "description": "List available checks, supported networks, and required inputs. Use this when a check needs details that are not already in the session context."
+      "description": "Full verifier catalog: supported networks and required inputs. Use this when a check needs schema details beyond the compact verifierSummary in neus_context."
     },
     {
       "name": "neus_proofs_check",
@@ -64,12 +64,8 @@
       "description": "Read current portable proof details for a wallet or DID, including titles, tags, status, and content. Omit the wallet when signed in."
     },
     {
-      "name": "neus_me",
-      "description": "Refresh the signed-in profile or look up a public profile by wallet or DID."
-    },
-    {
       "name": "neus_agent_link",
-      "description": "Check whether matching Trusted Agent identity and permission proofs are on file. Returns linked or one setup step."
+      "description": "Check whether a Trusted Agent has matching identity and permission proofs. Returns linked status or one setup step."
     },
     {
       "name": "neus_agent_create",
@@ -103,12 +99,12 @@
     "mcp",
     "model-context-protocol",
     "oauth",
-    "ai-agents",
-    "agent-permissions",
-    "agent-identity",
-    "ai-security",
-    "identity-verification",
+    "verification",
+    "portable-proofs",
     "proofs",
+    "agents",
+    "agent-identity",
+    "agent-delegation",
     "cursor",
     "claude-code",
     "codex",
@@ -127,9 +123,9 @@
       "prompt": "Verify this agent is trusted before it runs tools. Use neus_agent_link first; use neus_agent_create only when setup is still missing."
     },
     {
-      "title": "Reuse proofs",
-      "description": "Check existing trust before opening a new verification flow.",
-      "prompt": "Check whether I already have the required proof before verifying again."
+      "title": "Reuse Portable Proofs",
+      "description": "Check existing proofs before opening a new verification flow.",
+      "prompt": "Check whether I already have the required portable proof before verifying again."
     }
   ],
   "compatibility": {

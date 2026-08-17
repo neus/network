@@ -82,7 +82,7 @@ describe('runtime-mount', () => {
     const callMcpTool = async request => {
       calls.push(request);
       if (request.name === 'neus_agent_mount') return { ok: false, error: 'unavailable' };
-      if (request.name === 'neus_me') {
+      if (request.name === 'neus_context') {
         return {
           ok: true,
           payload: {
