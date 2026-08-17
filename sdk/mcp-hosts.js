@@ -42,6 +42,14 @@ export const IDE_HOST_LABELS = {
   vscode: 'VS Code'
 };
 
+/**
+ * IDE host brand logo paths.
+ *
+ * These four paths mirror `FIRST_PARTY_ASSETS.brandLogos.{cursor,anthropic,openai,microsoft}`
+ * in the product `utils/imageUtils.ts`. This file is the shared CLI/SDK source mirrored
+ * in the product repo as `utils/neusSdkMcpHosts.js`. When a logo path changes, update
+ * both files in sync. The product contract test guards against drift.
+ */
 export const IDE_HOST_BRAND_LOGOS = {
   cursor: '/images/brandLogos/cursor.svg',
   claude: '/images/brandLogos/anthropic.svg',
