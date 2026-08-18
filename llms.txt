@@ -1,8 +1,8 @@
 # NEUS
 
-> Portable Trust Harness for AI. Private proofs for identity, provenance, and authority.
+> Portable Trust Infrastructure for people and AI. One private profile for identity, context, permissions, and proof that works across apps, agents, services, and transactions.
 
-Your AI has access. NEUS gives it authority. NEUS turns identity, provenance, and permission checks into reusable portable proofs, so people, apps, and agents stop re-proving the same facts and connected gates check current state before access, payment, or execution.
+Don't restart from zero. Every app makes you reconnect yourself, rebuild context, re-prove ownership, and reconfigure permissions. NEUS changes that with one private profile that travels with you. Prove once, carry it with you, let any system verify it when it matters. Connected gates check current state before access, payment, or execution. Built for people and AI.
 
 ## What NEUS does
 
@@ -36,19 +36,18 @@ Then ask your assistant: "Use NEUS Verify before taking sensitive actions."
 ## Read in order
 
 1. Home: https://docs.neus.network
-2. Get started: https://docs.neus.network/get-started
-3. Quickstart: https://docs.neus.network/quickstart
-4. Integration guide: https://docs.neus.network/integration
-5. JavaScript SDK: https://docs.neus.network/sdks/javascript
-6. MCP tools: https://docs.neus.network/mcp/tools
-7. API overview: https://docs.neus.network/api/overview
-8. Pricing: https://docs.neus.network/platform/pricing
+2. Quickstart: https://docs.neus.network/quickstart
+3. Integration guide: https://docs.neus.network/integration
+4. JavaScript SDK: https://docs.neus.network/sdks/javascript
+5. MCP tools: https://docs.neus.network/mcp/tools
+6. API overview: https://docs.neus.network/api/overview
+7. Pricing: https://docs.neus.network/platform/pricing
 
 ## Pricing summary
 
 - Free (Basic): 500 credits / month
-- Pro: $19.99 / month (or $199.90 / year) — 50,000 credits / month
-- Enterprise: Custom — 500,000+ credits / month. Contact https://neus.network/contact?topic=Enterprise
+- Pro: $19.99 / month (or $199.90 / year), 10,000 credits / month
+- Enterprise: Custom, 500,000+ credits / month. Contact https://neus.network/contact?topic=Enterprise
 - Credit rate: $0.0025 per credit (USD)
 - x402 pay-per-call: when credits run short, NEUS returns HTTP 402 with a signed quote; pay (USDC or native ETH) and retry with one header.
 - Full details: https://neus.network/pricing

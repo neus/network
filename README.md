@@ -1,19 +1,19 @@
-<h1 align="center">NEUS · Portable Trust Harness for AI</h1>
+<h1 align="center">NEUS: Portable Trust Infrastructure</h1>
 
 <p align="center">
   <img src="./docs/images/neus-social-card.png" alt="NEUS Network social card" width="640" />
 </p>
 
 <p align="center">
-  <strong>Your AI has access. NEUS gives it authority.</strong>
+  <strong>Don't restart from zero.</strong>
 </p>
 
 <p align="center">
-  Give agents verifiable identity, provenance, and authority before they access data, move money, or take action.
+  One private profile for your identity, context, permissions, and proof. Portable across apps, agents, services, and transactions.
 </p>
 
 <p align="center">
-  <em>Prove once. Verify anywhere.</em>
+  <em>Built for people and AI.</em>
 </p>
 
 <p align="center">
@@ -35,9 +35,15 @@
 
 ## Why NEUS
 
-Identity. Provenance. Authority. Every new app, agent, and transaction rebuilds all three from zero. NEUS turns those checks into **portable proofs** so people and AI carry verified state as they move, act under clear limits, and leave an audit trail behind.
+Every new app makes you reconnect yourself. Rebuild identity. Re-prove ownership. Reconfigure permissions. Reattach tools. Create another isolated audit trail. Starting over every time is the tax every app, agent, and transaction pays.
 
-A proof is something you already earned: who someone is, what they own, what they are allowed to do. Put it on a profile, require it at a gate, or check it from your API. Same proof, every surface.
+NEUS collapses that cost. One private profile holds what you've proven and what you're allowed to do. Carry it across apps, agents, services, and transactions. Any connected system can check it when it matters.
+
+A proof is something you already earned. Who someone is, what they own, what they are allowed to do. Put it on a profile, require it at a gate, or check it from your API. Same proof, every surface.
+
+### Your AI shouldn't start from zero either
+
+Give any agent the identity, context, tools, permissions, and proofs it needs without rebuilding everything for every model or framework. Same profile. New agent. Your AI has access. NEUS gives it authority.
 
 | Need | What you get with NEUS |
 | ---- | ------------------------ |
@@ -46,7 +52,7 @@ A proof is something you already earned: who someone is, what they own, what the
 | Authorize actions with clear limits | Scoped permissions, current status, and enforce-before-act checks |
 | Keep provenance with people and AI | Live proofs in the editor, product, and API |
 | Audit who did what, and under which authority | Proof pages, stable references, and reviewable history |
-| Ship trust without rebuilding each flow | Hosted Verify, widgets, SDK, and MCP on one model |
+| Gate once. Monetize every qualified visitor | Published gates own the checks, price, and sign-in |
 
 ## Start building
 
@@ -56,7 +62,44 @@ Connect once. Your assistant carries your identity, provenance, and scoped autho
 
 ```bash
 npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
+```
+
+`neus setup` registers MCP and installs the workflow skill. `neus auth` signs you in (or click **Connect** in your host). `neus doctor --live` confirms the connection.
+
+### Or paste this into your agent
+
+Copy the block below into Claude Code, Cursor, Codex, or any coding agent with NEUS MCP. The agent reads it, runs setup, signs you in, and starts carrying your authority.
+
+```text
+# NEUS connect in one prompt
+
+You are connecting this editor to NEUS so my identity, provenance, and
+authority travel with me. Follow these steps exactly.
+
+## 1. Register NEUS
+Run: npx -y -p @neus/sdk neus setup
+This installs the public workflow skill and writes MCP config for every
+supported host in this project. It does not open a browser.
+
+## 2. Sign in
+Run: npx -y -p @neus/sdk neus auth
+Or click Connect in the MCP client. Default sign-in is browser OAuth.
+No wallet required.
+
+## 3. Confirm the connection
+Run: npx -y -p @neus/sdk neus doctor --live
+A healthy result confirms the endpoint, auth, and public tools.
+
+## 4. What to do next
+After setup, reuse my existing proofs before asking me to verify again.
+Before any sensitive action (spend, publish, secrets, agent tool call),
+call neus_context once, then neus_proofs_check. Summarize as
+NEUS Verify: Passed, Action needed, or Blocked.
+
+Canonical endpoint: https://mcp.neus.network/mcp
+Docs: https://docs.neus.network/mcp/setup
 ```
 
 Then ask your assistant:
@@ -65,7 +108,7 @@ Then ask your assistant:
 
 | Path | Next step |
 | ---- | --------- |
-| AI assistants (Cursor, Claude Code, Codex, VS Code) | [MCP setup](https://docs.neus.network/mcp/setup) · Hosted URL: `https://mcp.neus.network/mcp` |
+| AI assistants | [MCP setup](https://docs.neus.network/mcp/setup). Hosted URL `https://mcp.neus.network/mcp` |
 | First app integration | [Quickstart](https://docs.neus.network/quickstart) |
 | Reuse everywhere | [Integration guide](https://docs.neus.network/integration) |
 | React gate | [VerifyGate](https://docs.neus.network/widgets/verifygate) |
@@ -99,7 +142,7 @@ Give agents identity and scoped authority as proofs so tools run under real limi
 | [Product](https://neus.network) | Profiles, gates, and hosted product UX |
 | [Hosted Verify](https://neus.network/verify) | Browser verification for people and orgs |
 | [Proofs](https://docs.neus.network/platform/proofs) | Portable records of identity, authority, and outcomes |
-| [SDK](https://docs.neus.network/sdks/javascript) · [@neus/sdk](https://www.npmjs.com/package/@neus/sdk) | Issue, poll, and check proofs from your app |
+| [SDK](https://docs.neus.network/sdks/javascript) ([@neus/sdk](https://www.npmjs.com/package/@neus/sdk)) | Issue, poll, and check proofs from your app |
 | [Widgets](https://docs.neus.network/widgets/overview) | `VerifyGate` and `ProofBadge` for React products |
 | [API](https://docs.neus.network/api/overview) | Server reads, checks, verifier catalog, and verification endpoints |
 | [Agents](https://docs.neus.network/agents/overview) | Agent identity, scoped authority, and audit-ready proofs |
@@ -136,7 +179,11 @@ Wallet-signed request envelopes follow the [CAIP-380 (Portable Proof)](https://g
 | [Platform](https://docs.neus.network/platform/overview) | Hosted product, API, and upgrade path |
 | [Discussions](https://github.com/neus/network/discussions) | Questions and implementation patterns |
 | [Issues](https://github.com/neus/network/issues) | Bugs and requests |
-| [SECURITY.md](./SECURITY.md) · [dev@neus.network](mailto:dev@neus.network) | Vulnerability disclosure |
+| [SECURITY.md](./SECURITY.md), [dev@neus.network](mailto:dev@neus.network) | Vulnerability disclosure |
+
+## Status
+
+NEUS is under active development. Published APIs and verifier schemas may change between minor versions before the long-term stability freeze. We version everything we ship and document every breaking change in the [changelog](./CHANGELOG.md).
 
 ## License
 

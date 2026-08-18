@@ -47,17 +47,17 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "Give agents verifiable identity, provenance, and authority before they access data, move money, or take action.",
-      "og:title": "NEUS Docs | Verify once. Carry the proof.",
-      "og:description": "Verifiable identity, provenance, and authority for AI agents. Private by default.",
+      "description": "Portable trust infrastructure for people and AI. One private profile for identity, context, permissions, and proof. Don't restart from zero.",
+      "og:title": "NEUS Docs | Don't restart from zero.",
+      "og:description": "Portable trust infrastructure for people and AI. One private profile for identity, context, permissions, and proof.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
       "og:type": "website",
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
-      "twitter:title": "NEUS Docs | Verify once. Carry the proof.",
-      "twitter:description": "Verifiable identity, provenance, and authority for AI agents. Private by default.",
+      "twitter:title": "NEUS Docs | Don't restart from zero.",
+      "twitter:description": "Portable trust infrastructure for people and AI. One private profile for identity, context, permissions, and proof.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
@@ -92,7 +92,7 @@
               "verification/lifecycle",
               "verification/signing-format",
               "learn/standards/caip-380",
-              "learn/receipts-as-knowledge",
+              "learn/proof-links",
               "verification/verifiers",
               "verification/propose-a-verifier",
               {
@@ -126,6 +126,7 @@
               "cookbook/overview",
               "cookbook/auth-hosted-verify",
               "cookbook/integrations",
+              "cookbook/connector-integrations",
               "cookbook/domain-verification",
               "cookbook/nft-gating",
               "cookbook/sybil-resistance",
@@ -179,7 +180,6 @@
               "mcp/verify",
               "mcp/verify-or-guide",
               "mcp/proofs-get",
-              "mcp/me",
               "mcp/agent-link",
               "mcp/agent-create",
               "mcp/secrets"
@@ -651,6 +651,10 @@
     {
       "source": "/cookbook/confidential-agents",
       "destination": "/cookbook/private-cloud-agents"
+    },
+    {
+      "source": "/learn/receipts-as-knowledge",
+      "destination": "/learn/proof-links"
     }
   ],
   "contextual": {

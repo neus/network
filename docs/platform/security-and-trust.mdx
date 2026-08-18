@@ -1,19 +1,87 @@
 ---
-title: Privacy
-sidebarTitle: Privacy
-description: Keep results private by default. Choose what to share.
-icon: user-shield
+title: Trust Center
+sidebarTitle: Trust Center
+description: Zero-trust execution, private by default, minimum disclosure, server-side credentials, auditable actions, optional anchoring.
+icon: shield-check
 ---
 
-Use this page only to choose visibility. Most builders should stay private.
+Verify what is required. Expose only what is necessary. Authorize every action. Record the decision, not the sensitive data.
 
-## Boundaries
+NEUS does not add compliance. It proves the architecture is operating according to its trust model.
+
+## Architecture
+
+### Zero-trust execution
+Every action is authorized against identity, proof, policy, and delegated authority. Identity, ownership, login, or possession never automatically implies authority. Authority is checked against current policy and delegation at execution time.
+
+### Private by default
+Proofs and receipts remain private unless explicitly shared. Public exposure, public indexing, IPFS, and chain anchoring are explicit choices. Off-chain is the default.
+
+### Minimum disclosure
+A check returns the minimum claim or result required for the decision. The proof proves the decision without reproducing the underlying evidence. Apps and agents receive the result they need, not the sensitive source material.
+
+### Server-side credentials
+Agents use connected tools without receiving the user's secrets. Credentials are resolved and injected inside trusted server execution. They are never intentionally handed to the model, exposed in a tool schema, proof, browser response, or public record.
+
+### Auditable actions
+Critical decisions produce proofs that can be inspected, verified, and revoked without publicly exposing the underlying data. Store enough to reconstruct who authorized what, under which policy, against which proof, and what outcome occurred.
+
+### Optional anchoring
+Off-chain is the default. Public or blockchain publication requires explicit intent.
+
+## Invariants
+
+These are NEUS invariants. Deviation from any of them is a bug.
+
+- **No implicit authority.** Identity, ownership, login, or possession never automatically implies authority to perform an action. Authority is checked against current policy and delegation at execution time.
+- **Minimum disclosure.** A check returns the minimum claim or result required for the decision. The proof proves the decision without unnecessarily reproducing the underlying evidence.
+- **Private and off-chain by default.** Public exposure, public indexing, IPFS, and chain anchoring are explicit choices.
+- **Secrets never become agent context.** Credentials are resolved and injected inside trusted server execution. They are never intentionally handed to the LLM, exposed in a tool schema, proof, browser response, or public proof.
+- **Evidence is not public proof.** Private evidence can exist when it is necessary to make a proof auditable, but public consumers get the claim, status, or proof rather than the sensitive source material.
+- **Every privileged action has a policy decision.** Subject plus resource plus action plus policy plus context produces allow, deny, or approval. The proof records the decision and relevant non-sensitive metadata.
+- **Delegation is narrower than ownership.** Agents operate only inside explicitly delegated authority. Spend, secrets, tool access, and high-risk actions remain bounded.
+- **Auditability without surveillance.** Store enough to reconstruct who authorized what, under which policy, against which proof, and what outcome occurred. Do not interpret "audit log" as permission to retain arbitrary request bodies, prompts, OAuth payloads, or provider responses.
+
+NEUS provides evidence of control, not evidence about the person.
+
+That is stronger than calling it "privacy-first."
+
+## A distinction that matters
+
+Zero trust is not zero data.
+
+You sometimes legitimately need private state, encrypted secrets, session state, private evidence, or proofs to provide the product. The standard is purpose-bound, least-privilege, minimum necessary, protected, auditable, and deletable where applicable. Not "the server may never possess data."
+
+For blockchain specifically, the EDPB's final July 2026 guidance makes the off-chain-first and optional-anchor direction especially valuable.
+
+## One data model
+
+Every feature (OAuth, Gmail, Drive, GitHub, payments, identity, ZK proofs, agents, MCP, API keys, AI inference, social connections, jobs) fits into one existing model.
+
+Evidence → Proof → Policy → Authority → Action → Proof
+
+Not a Google system, an AI safety system, a wallet system, a GDPR system, an agent approval system, and an audit system. That fragmentation would destroy the advantage already built.
+
+The complete flow:
+
+1. Sensitive evidence is examined inside the appropriate trusted boundary.
+2. It is minimized into a claim or proof.
+3. It is checked against policy and delegated authority.
+4. The action is allowed, denied, or approved.
+5. The proof records what was decided.
+6. Sensitive evidence remains protected or disappears according to its retention requirement.
+
+## Privacy controls
+
+Use this section only to choose visibility. Most builders should stay private.
+
+### Boundaries
 
 - Proof issuance runs in **NEUS**.
 - Return **only** what your product needs from checks.
 - **Private** reads need the owner signed in (or your sharing rules).
 
-## Modes
+### Modes
 
 | Mode | `privacyLevel` | `publicDisplay` | Use |
 |------|----------------|-----------------|-----|
@@ -25,7 +93,7 @@ Saved **qHashes** follow the visibility you chose.
 
 `privacyLevel` decides private vs public. `publicDisplay` only matters for public proofs. Unlisted public still works for anyone with the id.
 
-## Defaults
+### Defaults
 
 | Surface | Create default |
 |---------|----------------|
@@ -34,9 +102,23 @@ Saved **qHashes** follow the visibility you chose.
 
 For browser checkout, publish a gate and pass `gateId`. Visibility overrides belong in advanced `client.verify()` flows.
 
-## Never ship publicly
+### Never ship publicly
 
 Raw signatures, owner-only payloads, private proof enumeration.
+
+## Diligence material
+
+<CardGroup cols={3}>
+  <Card title="Privacy Policy" icon="file-text" href="../learn/legal/privacy-policy">
+    What NEUS processes and why.
+  </Card>
+  <Card title="Terms of Use" icon="scale" href="../learn/legal/terms-of-use">
+    Service terms.
+  </Card>
+  <Card title="Security disclosure" icon="shield-check" href="../learn/legal/security-disclosure">
+    Report a vulnerability.
+  </Card>
+</CardGroup>
 
 ## Checklist
 

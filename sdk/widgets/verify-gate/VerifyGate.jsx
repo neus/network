@@ -45,7 +45,7 @@ const VERIFY_GATE_CHECK_FAILED_ERROR = 'We could not check your existing proofs.
  * Map a gate-check error to user-safe copy. Returns null when the error is
  * not actionable in the widget context (caller uses its own default).
  *
- * Distinguishes "no proof yet" (not an error — handled by the satisfied flag)
+ * Distinguishes "no proof yet" (not an error , handled by the satisfied flag)
  * from "check failed" (network, 402, sponsor grant expired, etc.) so the
  * auto-check path never silently swallows infrastructure failures.
  *
@@ -72,7 +72,7 @@ function getVerifyGateUserError(err) {
 
 /**
  * True for errors that mean the eligibility check itself broke (network,
- * auth, billing) — not "no matching proof", which is a normal `satisfied:false`
+ * auth, billing), not "no matching proof", which is a normal `satisfied:false`
  * result. Used to decide whether the auto-check path should surface an error
  * vs. stay silent and let the user proceed to verify.
  *
@@ -93,7 +93,7 @@ function isCheckInfrastructureError(err) {
 /**
  * User-safe copy for a failed eligibility check. Mirrors the parity helper
  * in the hosted app (`neus/utils/insufficientCreditsError.ts`) but kept
- * self-contained for the public SDK — no internal imports.
+ * self-contained for the public SDK , no internal imports.
  *
  * @param {unknown} err
  * @returns {string}

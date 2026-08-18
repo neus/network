@@ -68,7 +68,7 @@ export const IDE_HOST_BRAND_LOGOS = {
 function normalizeAccessKey(accessKey) {
   const key = String(accessKey || '').trim();
   // OAuth access tokens are JWTs (three dot-separated base64url segments). Never write
-  // them as a static Bearer header — return URL-only so the IDE runs OAuth itself.
+  // them as a static Bearer header , return URL-only so the IDE runs OAuth itself.
   if (key && !key.startsWith('npk_') && key.split('.').length === 3) {
     return '';
   }
@@ -78,7 +78,7 @@ function normalizeAccessKey(accessKey) {
 /**
  * Build the MCP HTTP server config for an IDE/client.
  *
- * Two paths, one session model — same NEUS Profile/Account either way:
+ * Two paths, one session model , same NEUS Profile/Account either way:
  *
  * - `npk_…` Profile access keys are durable (never expire). Written as a static
  *   `Authorization: Bearer npk_…` header. Used for servers, CI, and automation
@@ -88,7 +88,7 @@ function normalizeAccessKey(accessKey) {
  *   server's `401 + WWW-Authenticate` challenge, then runs its own DCR + PKCE +
  *   silent-refresh lifecycle (matching Linear, GitHub, Notion). The access token
  *   is a short-lived JWT refreshed silently by the host for up to 30 days via the
- *   `offline_access` refresh token — the session is long-lived, the access token
+ *   `offline_access` refresh token , the session is long-lived, the access token
  *   is not
  *
  * A raw OAuth access token (JWT) is never written as a static Bearer header: IDE

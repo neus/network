@@ -146,10 +146,7 @@ function ProofBadge({
       children: [
         /* @__PURE__ */ jsx(NeusLogo, { size: logoSize, logoUrl }),
         showLabel && /* @__PURE__ */ jsx("span", { children: label }),
-        showChains && chainCount > 0 && /* @__PURE__ */ jsxs("span", { style: { opacity: 0.7, fontSize: fontSize - 1 }, children: [
-          "\xB7 ",
-          chainCount
-        ] })
+        showChains && chainCount > 0 && /* @__PURE__ */ jsx("span", { style: { opacity: 0.7, fontSize: fontSize - 1 }, children: chainCount })
       ]
     }
   );

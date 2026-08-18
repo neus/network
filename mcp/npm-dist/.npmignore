@@ -1,4 +1,4 @@
-# Discovery metadata only — exclude everything except the published surface.
+# Discovery metadata only , exclude everything except the published surface.
 *
 !package.json
 !index.mjs

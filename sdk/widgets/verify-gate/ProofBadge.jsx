@@ -159,7 +159,7 @@ export function ProofBadge({
       {showLabel && <span>{label}</span>}
       {showChains && chainCount > 0 && (
         <span style={{ opacity: 0.7, fontSize: fontSize - 1 }}>
-          · {chainCount}
+          {chainCount}
         </span>
       )}
     </a>

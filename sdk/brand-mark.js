@@ -1,6 +1,6 @@
 /**
  * NEUS mark + OG URLs hosted on neus.network.
- * Stable paths — replace assets in place on neus.network (no query-string versions).
+ * Stable paths , replace assets in place on neus.network (no query-string versions).
  */
 export const NEUS_MARK_CDN_ORIGIN = 'https://neus.network';
 

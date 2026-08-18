@@ -1759,7 +1759,7 @@ export class NeusClient {
 
   /**
    * Get the public snapshot of a published gate: requirements, charge, schedule,
-   * checkout plan, and reward presence. Never returns the secret reward value —
+   * checkout plan, and reward presence. Never returns the secret reward value ,
    * that is delivered post-verify via fulfillGate().
    *
    * @param {string} gateId Published gate handle

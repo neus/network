@@ -1,7 +1,7 @@
 /**
  * Shared “ghost / glass” CTA for SDK demos (matches @neus/sdk VerifyGate default).
  * Use class `neus-vg-ghost-cta` for nav links and secondary verify-adjacent actions;
- * VerifyGate may override with inline styles — avoid setting border-radius on its wrapper children.
+ * VerifyGate may override with inline styles. Avoid setting border-radius on its wrapper children.
  */
 .neus-vg-ghost-cta {
   display: inline-flex;

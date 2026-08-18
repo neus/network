@@ -54,7 +54,7 @@ async function validateSpecMcp(pluginDir, hostLabel) {
   try {
     mcp = await readJsonFile(mcpPath);
   } catch (error) {
-    addError(`${relative}: invalid JSON — ${error.message}`);
+    addError(`${relative}: invalid JSON , ${error.message}`);
     return;
   }
 

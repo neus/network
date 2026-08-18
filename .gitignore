@@ -2,7 +2,7 @@
 .DS_Store
 Thumbs.db
 
-# IDE / assistant adapters (generated locally — do not commit)
+# IDE / assistant adapters (generated locally , do not commit)
 AGENTS.md
 CLAUDE.md
 GEMINI.md

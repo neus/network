@@ -18,7 +18,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - **Removed the docs brand-kit page and stale brand copies.** Brand assets live at [neus.network/brand](https://neus.network/brand); old `/brand-kit` URLs redirect there. Retained public contributor surfaces (`CONTRIBUTING.md`, `verifier_proposal.yml`, new `verification/propose-a-verifier` page) cleaned of non-public paths.
 - **Restored `neus-trust-workflow` in the `neus-mcp` plugin bundle.** Marketplace install delivers the workflow alongside `neus-setup`; the SDK and plugin copies remain byte-identical under test.
 
-- **CLI defers skill install when the plugin is present.** `neus setup` now detects when the `neus-mcp` plugin is installed and already bundles the trust workflow skill, and skips writing a user-level copy to `~/.agents/skills/` or `~/.claude/skills/` for that host — avoiding duplicate skill entries. VS Code and hosts without the plugin still receive the user-level copy.
+- **CLI defers skill install when the plugin is present.** `neus setup` now detects when the `neus-mcp` plugin is installed and already bundles the trust workflow skill, and skips writing a user-level copy to `~/.agents/skills/` or `~/.claude/skills/` for that host, avoiding duplicate skill entries. VS Code and hosts without the plugin still receive the user-level copy.
 
 ### Upgrade
 
@@ -29,14 +29,14 @@ npx -y -p @neus/sdk@1.3.9 neus setup
 npx -y -p @neus/sdk@1.3.9 neus doctor --live
 ```
 
-In Cursor, Claude Code, or Codex, install the `neus-mcp` plugin from the marketplace — the trust workflow skill is included.
+In Cursor, Claude Code, or Codex, install the `neus-mcp` plugin from the marketplace, the trust workflow skill is included.
 
 ## [1.3.8] - 2026-07-30
 
 ### Fixed
 
 - **RFC 9207 issuer validation in `neus setup`/`neus auth`.** The CLI now validates the `iss` parameter returned in the OAuth authorization response against the expected NEUS issuer (`https://neus.network`), preventing authorization-code interception via a malicious authorization server spoof. Paired with the protocol's `authorization_response_iss_parameter_supported` advertisement in authorization-server metadata.
-- **Builder guidance rebalanced across all IDEs.** `neus setup` output now gives accurate, client-specific next steps for Cursor, Codex, Claude Code, and VS Code — no more Cursor-only bias in the post-setup instructions.
+- **Builder guidance rebalanced across all IDEs.** `neus setup` output now gives accurate, client-specific next steps for Cursor, Codex, Claude Code, and VS Code, no more Cursor-only bias in the post-setup instructions.
 - **Removed legacy `neus-trust` plugin fallback detection.** The CLI no longer probes for the retired `neus-trust` plugin name.
 
 ### Upgrade
@@ -52,7 +52,7 @@ npx -y -p @neus/sdk@1.3.8 neus doctor --live
 
 ### Fixed
 
-- **Restored marketplace click-install for Cursor.** The `neus-mcp` plugin ships a Cursor-native `.mcp.json` again, so clicking **Install** registers NEUS and signs you in — the same one-click experience as Linear, Stripe, and other marketplace plugins. The CLI defers to the plugin when present (no duplicate entry, no hard-fail).
+- **Restored marketplace click-install for Cursor.** The `neus-mcp` plugin ships a Cursor-native `.mcp.json` again, so clicking **Install** registers NEUS and signs you in, the same one-click experience as Linear, Stripe, and other marketplace plugins. The CLI defers to the plugin when present (no duplicate entry, no hard-fail).
 - **OAuth `invalid_target` on hosted MCP.** Normalized the RFC 8707 `resource` parameter in the authorize and token endpoints so clients that canonicalize the URL (adding a trailing slash) are accepted instead of rejected.
 
 ### Upgrade
@@ -70,14 +70,14 @@ In Cursor, install the `neus-mcp` plugin from the marketplace and click **Connec
 
 ### Changed
 
-- **Cursor plugin owns MCP registration.** The `neus-mcp` Cursor plugin ships a Cursor-native `.mcp.json` so clicking **Install** in the marketplace registers NEUS and signs you in — the same one-click experience as Linear, Stripe, and other marketplace plugins.
+- **Cursor plugin owns MCP registration.** The `neus-mcp` Cursor plugin ships a Cursor-native `.mcp.json` so clicking **Install** in the marketplace registers NEUS and signs you in, the same one-click experience as Linear, Stripe, and other marketplace plugins.
 - **CLI defers to the plugin in Cursor.** When `neus setup` detects the `neus-mcp` plugin is installed in Cursor, it soft-skips writing `~/.cursor/mcp.json` (so there is no duplicate `neus` entry) and points you to the plugin's Connect button. For Codex, VS Code, Claude Code, and automation/CI, the CLI remains the MCP registration owner.
 - **Skill SSOT moved into the package.** The canonical trust-workflow skill now lives at `sdk/skills/neus-trust-workflow/` (shipped in `@neus/sdk`) instead of `plugins/neus-trust/skills/`, so the CLI installs it as part of setup. The `plugins/neus-mcp` bundle keeps the `neus-setup` helper alongside its `.mcp.json`.
-- **Plugin rename** — `neus-trust@neus` → **`neus-mcp@neus`** across all three marketplace manifests and plugin manifests.
+- **Plugin rename**, `neus-trust@neus` → **`neus-mcp@neus`** across all three marketplace manifests and plugin manifests.
 
 ### Fixed
 
-- **Duplicate NEUS MCP in Cursor** — resolved by making the plugin and CLI cooperative, not mutually exclusive: the plugin owns Cursor MCP registration + OAuth; the CLI defers when the plugin is present and owns registration for every other host.
+- **Duplicate NEUS MCP in Cursor**, resolved by making the plugin and CLI cooperative, not mutually exclusive: the plugin owns Cursor MCP registration + OAuth; the CLI defers when the plugin is present and owns registration for every other host.
 
 ### Upgrade
 
@@ -88,14 +88,14 @@ npx -y -p @neus/sdk@1.3.6 neus setup
 npx -y -p @neus/sdk@1.3.6 neus doctor --live
 ```
 
-In Cursor, install the `neus-mcp` plugin from the marketplace and click Connect — no CLI needed. If you previously ran `neus setup` and have a `neus` entry in `~/.cursor/mcp.json`, the CLI will now detect the plugin and skip writing a duplicate; you can delete the manual entry or leave it (the plugin takes precedence).
+In Cursor, install the `neus-mcp` plugin from the marketplace and click Connect, no CLI needed. If you previously ran `neus setup` and have a `neus` entry in `~/.cursor/mcp.json`, the CLI will now detect the plugin and skip writing a duplicate; you can delete the manual entry or leave it (the plugin takes precedence).
 
 ## [1.3.5] - 2026-07-21
 
 ### Changed
 
-- **ZKPassport `0.16.1`** — `@neus/sdk` optional dependency `@zkpassport/sdk` is now `^0.16.1`, aligning the SDK with the latest hosted verifier runtime patch.
-- **`@neus/sdk`** — `1.3.5`.
+- **ZKPassport `0.16.1`**, `@neus/sdk` optional dependency `@zkpassport/sdk` is now `^0.16.1`, aligning the SDK with the latest hosted verifier runtime patch.
+- **`@neus/sdk`**, `1.3.5`.
 
 ### Upgrade
 
@@ -109,19 +109,19 @@ npx -y -p @neus/sdk@1.3.5 neus doctor --live
 
 ### Added
 
-- **Portable proof verification** — `computePortableProofQHash`, `verifyPortableProofEnvelope`, and strict canonical JSON helpers support offline EIP-191 and Ed25519 verification, with provider-backed EIP-1271 checks.
-- **Interoperability fixture** — a deterministic, non-sensitive CAIP-380 EVM envelope and mutation vectors cover chain shape, Unicode normalization, nested ordering, null, invalid JSON values, and every canonical field.
+- **Portable proof verification**, `computePortableProofQHash`, `verifyPortableProofEnvelope`, and strict canonical JSON helpers support offline EIP-191 and Ed25519 verification, with provider-backed EIP-1271 checks.
+- **Interoperability fixture**, a deterministic, non-sensitive CAIP-380 EVM envelope and mutation vectors cover chain shape, Unicode normalization, nested ordering, null, invalid JSON values, and every canonical field.
 
 ### Fixed
 
-- **Exact signed-data binding** — qualifying wallet-signed envelopes hash the same canonical data used by the six-line signing message; nonces and timestamps inside `data` are no longer removed.
-- **Receipt classification** — only successfully verified wallet signatures with exactly one chain field produce `caip-380-envelope` responses. Session and service authorization continue producing regular `neus-receipt` responses.
-- **Privacy boundary** — complete portable envelopes are returned to their creator but are not persisted or copied into shared status caches by default.
+- **Exact signed-data binding**, qualifying wallet-signed envelopes hash the same canonical data used by the six-line signing message; nonces and timestamps inside `data` are no longer removed.
+- **Receipt classification**, only successfully verified wallet signatures with exactly one chain field produce `caip-380-envelope` responses. Session and service authorization continue producing regular `neus-receipt` responses.
+- **Privacy boundary**, complete portable envelopes are returned to their creator but are not persisted or copied into shared status caches by default.
 
 ### Changed
 
-- **`@neus/sdk`, `@neus/mcp-server`, and plugin metadata** — `1.3.5`.
-- **Public claims** — documentation distinguishes request integrity and signer authorization from verifier-result correctness.
+- **`@neus/sdk`, `@neus/mcp-server`, and plugin metadata**, `1.3.5`.
+- **Public claims**, documentation distinguishes request integrity and signer authorization from verifier-result correctness.
 
 ### Upgrade
 
@@ -135,15 +135,15 @@ npx -y -p @neus/sdk@1.3.4 neus doctor --live
 
 ### Added
 
-- **ZKPassport `0.16`** — `@neus/sdk` optional dependency `@zkpassport/sdk` is now `^0.16.0`, aligning the SDK with the latest hosted verifier runtime.
-- **GitHub Release automation** — tag pushes and `workflow_dispatch` from `main` now create or update the matching GitHub Release with extracted changelog notes; Latest follows npm latest.
-- **CLI dual-install detection** — `neus setup` now warns when both the Cursor **neus-trust** plugin and a `neus` entry in `~/.cursor/mcp.json` are present, and soft-skips writing the Cursor MCP config unless `--client cursor` is explicit. Prevents the duplicate-NEUS-MCP class of break.
-- **CLI identity in `neus doctor --live` / `neus check`** — live diagnostics now report handle, short wallet, trust receipt count, available tool count, and mounted agent label/id with status. No new `neus me` command.
+- **ZKPassport `0.16`**, `@neus/sdk` optional dependency `@zkpassport/sdk` is now `^0.16.0`, aligning the SDK with the latest hosted verifier runtime.
+- **GitHub Release automation**, tag pushes and `workflow_dispatch` from `main` now create or update the matching GitHub Release with extracted changelog notes; Latest follows npm latest.
+- **CLI dual-install detection**, `neus setup` now warns when both the Cursor **neus-trust** plugin and a `neus` entry in `~/.cursor/mcp.json` are present, and soft-skips writing the Cursor MCP config unless `--client cursor` is explicit. Prevents the duplicate-NEUS-MCP class of break.
+- **CLI identity in `neus doctor --live` / `neus check`**, live diagnostics now report handle, short wallet, trust receipt count, available tool count, and mounted agent label/id with status. No new `neus me` command.
 
 ### Changed
 
-- **Plugin and install docs** — `setup.md` and `docs/install` now state the rule explicitly: install the **neus-trust** plugin **or** run `neus setup --client cursor`, not both. Cursor duplicate-MCP guidance consolidated in one place.
-- **`@neus/sdk` and `@neus/mcp-server`** — `1.3.3`.
+- **Plugin and install docs**, `setup.md` and `docs/install` now state the rule explicitly: install the **neus-trust** plugin **or** run `neus setup --client cursor`, not both. Cursor duplicate-MCP guidance consolidated in one place.
+- **`@neus/sdk` and `@neus/mcp-server`**, `1.3.3`.
 
 ### Upgrade
 
@@ -157,14 +157,14 @@ npx -y -p @neus/sdk@1.3.3 neus doctor --live
 
 ### Fixed
 
-- **Cursor marketplace install** — the NEUS Trust plugin again ships the Cursor MCP config required for one-click install.
-- **Trust workflow skill** — clearer setup, trust-before-action flow, and NEUS Verify summaries (Passed / Action needed / Blocked).
-- **Docs and examples** — NEUS Verify examples match the live assistant guidance.
+- **Cursor marketplace install**, the NEUS Trust plugin again ships the Cursor MCP config required for one-click install.
+- **Trust workflow skill**, clearer setup, trust-before-action flow, and NEUS Verify summaries (Passed / Action needed / Blocked).
+- **Docs and examples**, NEUS Verify examples match the live assistant guidance.
 
 ### Changed
 
-- **Plugin and marketplace copy** — clearer language around identity, permissions, trust receipts, and Vault.
-- **`@neus/sdk` and `@neus/mcp-server`** — `1.3.2`.
+- **Plugin and marketplace copy**, clearer language around identity, permissions, trust receipts, and Vault.
+- **`@neus/sdk` and `@neus/mcp-server`**, `1.3.2`.
 
 ### Upgrade
 
@@ -178,8 +178,8 @@ npx -y -p @neus/sdk@1.3.2 neus doctor --live
 
 ### Changed
 
-- **Connect agent context** — `neus mount` and `@neus/sdk/runtime-mount` are the supported path for loading a Trusted Agent into a project.
-- **`@neus/sdk` and `@neus/mcp-server`** — `1.3.1`.
+- **Connect agent context**, `neus mount` and `@neus/sdk/runtime-mount` are the supported path for loading a Trusted Agent into a project.
+- **`@neus/sdk` and `@neus/mcp-server`**, `1.3.1`.
 
 ### Upgrade
 
@@ -193,20 +193,20 @@ npx -y -p @neus/sdk@1.3.1 neus doctor --live
 
 ### Added
 
-- **`llms.txt` and `pricing.txt`** — machine-readable product and pricing summaries for AI search and citation.
-- **Docs crawlability** — AI search crawlers can index the public docs.
+- **`llms.txt` and `pricing.txt`**, machine-readable product and pricing summaries for AI search and citation.
+- **Docs crawlability**, AI search crawlers can index the public docs.
 
 ### Changed
 
-- **SDK public API** — only documented integrator exports are public; CLI-only modules stay available through their own import paths.
-- **Docs home** — clearer landing page and primary call to action.
-- **Codex marketplace** — NEUS Trust plugin install metadata for Codex.
+- **SDK public API**, only documented integrator exports are public; CLI-only modules stay available through their own import paths.
+- **Docs home**, clearer landing page and primary call to action.
+- **Codex marketplace**, NEUS Trust plugin install metadata for Codex.
 
 ### Fixed
 
-- **TypeScript types** — mount and adapter declarations match the runtime SDK.
-- **`ai-content-moderation`** — content types match the published API.
-- **Docs samples** — correct runtime-mount import path; examples say “receipt ID” in user-facing copy.
+- **TypeScript types**, mount and adapter declarations match the runtime SDK.
+- **`ai-content-moderation`**, content types match the published API.
+- **Docs samples**, correct runtime-mount import path; examples say “receipt ID” in user-facing copy.
 
 ### Upgrade
 
@@ -220,13 +220,13 @@ npx -y -p @neus/sdk@1.3.0 neus doctor --live
 
 ### Added
 
-- **NEUS Trust plugin for every editor** — one install path for Cursor, Claude Code, Codex, and VS Code.
+- **NEUS Trust plugin for every editor**, one install path for Cursor, Claude Code, Codex, and VS Code.
 
 ### Changed
 
-- **Plugin branding** — crisp SVG mark in marketplaces, with PNG fallback where needed.
-- **Cursor install** — marketplace listing and MCP config match Cursor’s expected format.
-- **Brand assets** — plugin and docs icons match the live NEUS mark.
+- **Plugin branding**, crisp SVG mark in marketplaces, with PNG fallback where needed.
+- **Cursor install**, marketplace listing and MCP config match Cursor’s expected format.
+- **Brand assets**, plugin and docs icons match the live NEUS mark.
 
 ### Upgrade
 
@@ -240,7 +240,7 @@ npx -y -p @neus/sdk@1.2.5 neus doctor --live
 
 ### Fixed
 
-- **Version consistency** — SDK, MCP server, plugin, and trust workflow skill all report `1.2.4`.
+- **Version consistency**, SDK, MCP server, plugin, and trust workflow skill all report `1.2.4`.
 
 ### Upgrade
 
@@ -254,17 +254,17 @@ npx -y -p @neus/sdk@1.2.4 neus doctor --live
 
 ### Added
 
-- **VS Code** — `neus setup` and the install docs include VS Code alongside Cursor, Claude Code, and Codex.
-- **Editor sign-in** — marketplace installs discover NEUS OAuth automatically in supported editors.
+- **VS Code**, `neus setup` and the install docs include VS Code alongside Cursor, Claude Code, and Codex.
+- **Editor sign-in**, marketplace installs discover NEUS OAuth automatically in supported editors.
 
 ### Fixed
 
-- **`neus doctor --live`** — works with browser OAuth sessions, not only access keys.
-- **Reachability checks** — a sign-in challenge from the MCP server is treated as reachable, not down.
+- **`neus doctor --live`**, works with browser OAuth sessions, not only access keys.
+- **Reachability checks**, a sign-in challenge from the MCP server is treated as reachable, not down.
 
 ### Changed
 
-- **`@neus/sdk` and `@neus/mcp-server`** — `1.2.3`.
+- **`@neus/sdk` and `@neus/mcp-server`**, `1.2.3`.
 
 ### Upgrade
 
@@ -278,12 +278,12 @@ npx -y -p @neus/sdk@1.2.3 neus doctor --live
 
 ### Fixed
 
-- **OAuth docs** — install guidance matches the real editor sign-in flow: short-lived access tokens with silent refresh, long-lived session.
-- **Cursor setup** — no longer warns about a stale local token format.
+- **OAuth docs**, install guidance matches the real editor sign-in flow: short-lived access tokens with silent refresh, long-lived session.
+- **Cursor setup**, no longer warns about a stale local token format.
 
 ### Changed
 
-- **`@neus/sdk` and `@neus/mcp-server`** — `1.2.2`.
+- **`@neus/sdk` and `@neus/mcp-server`**, `1.2.2`.
 
 ### Upgrade
 
@@ -297,12 +297,12 @@ npx -y -p @neus/sdk@1.2.2 neus doctor --live
 
 ### Fixed
 
-- **npm install** — clean installs include the CLI and agent-context modules required by `neus setup` and `neus mount`.
-- **Browser / Next.js builds** — Node-only adapters are no longer pulled into the main `@neus/sdk` entry; import `@neus/sdk/runtime-adapters` only in CLI or server code.
+- **npm install**, clean installs include the CLI and agent-context modules required by `neus setup` and `neus mount`.
+- **Browser / Next.js builds**, Node-only adapters are no longer pulled into the main `@neus/sdk` entry; import `@neus/sdk/runtime-adapters` only in CLI or server code.
 
 ### Changed
 
-- **`@neus/sdk` and `@neus/mcp-server`** — `1.2.1`.
+- **`@neus/sdk` and `@neus/mcp-server`**, `1.2.1`.
 
 ### Upgrade
 
@@ -316,16 +316,16 @@ npx -y -p @neus/sdk@1.2.1 neus doctor --live
 
 ### Added
 
-- **Connect agent context** — load a Trusted Agent’s identity, permissions, skills, and receipt links into a project.
-- **`neus mount <agentId>`** — writes project context for Cursor, Claude Code, or Codex.
-- **`neus setup --agent <agentId>`** — MCP setup plus optional project mount.
-- **`neus_agent_mount`** — MCP tool to load the same agent context in-session.
-- **SDK** — `@neus/sdk/runtime-mount` and `@neus/sdk/runtime-adapters`.
+- **Connect agent context**, load a Trusted Agent’s identity, permissions, skills, and receipt links into a project.
+- **`neus mount <agentId>`**, writes project context for Cursor, Claude Code, or Codex.
+- **`neus setup --agent <agentId>`**, MCP setup plus optional project mount.
+- **`neus_agent_mount`**, MCP tool to load the same agent context in-session.
+- **SDK**, `@neus/sdk/runtime-mount` and `@neus/sdk/runtime-adapters`.
 
 ### Changed
 
-- **`neus doctor --live`** — reports whether the project agent context and Trusted Agent link are ready.
-- **Agent card** — **Connect in** copies the mount command for your editor.
+- **`neus doctor --live`**, reports whether the project agent context and Trusted Agent link are ready.
+- **Agent card**, **Connect in** copies the mount command for your editor.
 
 ### Upgrade
 
@@ -339,12 +339,12 @@ npx -y -p @neus/sdk@1.2.0 neus doctor --live
 
 ### Fixed
 
-- **Gate checkout** — `getGate` and `fulfillGate` call the correct hosted API paths.
-- **Revoke receipt** — `revokeOwnProof` no longer fails on response parsing.
+- **Gate checkout**, `getGate` and `fulfillGate` call the correct hosted API paths.
+- **Revoke receipt**, `revokeOwnProof` no longer fails on response parsing.
 
 ### Changed
 
-- **`@neus/sdk` and `@neus/mcp-server`** — `1.1.7`.
+- **`@neus/sdk` and `@neus/mcp-server`**, `1.1.7`.
 
 ### Upgrade
 
@@ -364,14 +364,14 @@ npx -y -p @neus/sdk@1.1.7 neus doctor --live
 
 ### Fixed
 
-- **`neus auth`** — browser sign-in no longer crashes on Node ESM.
-- **OAuth docs** — authorize flow documents the hosted login redirect; access-key guidance is clearer.
+- **`neus auth`**, browser sign-in no longer crashes on Node ESM.
+- **OAuth docs**, authorize flow documents the hosted login redirect; access-key guidance is clearer.
 
 ### Changed
 
-- **`@neus/sdk` and `@neus/mcp-server`** — `1.1.6`.
-- **`neus setup --oauth`** — forces browser sign-in even when an access key is present.
-- **`neus doctor`** — reports the installed package version.
+- **`@neus/sdk` and `@neus/mcp-server`**, `1.1.6`.
+- **`neus setup --oauth`**, forces browser sign-in even when an access key is present.
+- **`neus doctor`**, reports the installed package version.
 
 ### Upgrade
 
@@ -390,13 +390,13 @@ npx -y -p @neus/sdk@1.1.6 neus doctor --live
 
 ### Changed
 
-- **Install docs** — one install path at [docs.neus.network/install](https://docs.neus.network/install).
-- **First-touch copy** — README, install, MCP, plugin, and SDK lead with trust receipts and NEUS Verify.
-- **`@neus/sdk` and `@neus/mcp-server`** — `1.1.5`.
+- **Install docs**, one install path at [docs.neus.network/install](https://docs.neus.network/install).
+- **First-touch copy**, README, install, MCP, plugin, and SDK lead with trust receipts and NEUS Verify.
+- **`@neus/sdk` and `@neus/mcp-server`**, `1.1.5`.
 
 ### Removed
 
-- Redundant host install files — use `npx -y -p @neus/sdk neus setup` instead.
+- Redundant host install files, use `npx -y -p @neus/sdk neus setup` instead.
 
 ### Upgrade
 
@@ -416,9 +416,9 @@ npx -y -p @neus/sdk@1.1.5 neus doctor --live
 
 ### Highlights
 
-- **Install NEUS** — docs start from hosted MCP setup for supported editors.
-- **Claude Code plugin** — marketplace install loads the trust workflow skill correctly.
-- **Install router** — [docs.neus.network/install](https://docs.neus.network/install) routes by environment.
+- **Install NEUS**, docs start from hosted MCP setup for supported editors.
+- **Claude Code plugin**, marketplace install loads the trust workflow skill correctly.
+- **Install router**, [docs.neus.network/install](https://docs.neus.network/install) routes by environment.
 
 ### Added
 
@@ -449,11 +449,11 @@ npx -y -p @neus/sdk@1.1.3 neus doctor --live
 
 ### Added
 
-- **`@neus/sdk/mcp-hosts`** — helpers for MCP install URLs, setup commands, and “Open in” editor links.
+- **`@neus/sdk/mcp-hosts`**, helpers for MCP install URLs, setup commands, and “Open in” editor links.
 
 ### Changed
 
-- **`neus import --from auto`** — prefers Claude Code, Cursor, and Claude Desktop when multiple configs are found.
+- **`neus import --from auto`**, prefers Claude Code, Cursor, and Claude Desktop when multiple configs are found.
 - Docs keep assistant MCP setup separate from server-side setup.
 
 ### Fixed
@@ -464,15 +464,15 @@ npx -y -p @neus/sdk@1.1.3 neus doctor --live
 
 ### Highlights
 
-- **Signed-in MCP context** — `neus_context` returns the current profile when connected.
-- **One install story** — OAuth-first setup across Cursor, Codex, VS Code, and Claude Code.
+- **Signed-in MCP context**, `neus_context` returns the current profile when connected.
+- **One install story**, OAuth-first setup across Cursor, Codex, VS Code, and Claude Code.
 
 ### Changed
 
 - Clearer MCP tool descriptions and install discovery.
 - `neus setup` writes the correct config path for each editor.
 - Docs and plugin skill start with `neus_context`; `neus_me` is for refresh or public lookup only.
-- **`@neus/sdk` and `@neus/mcp-server`** — `1.1.1`.
+- **`@neus/sdk` and `@neus/mcp-server`**, `1.1.1`.
 
 ### Fixed
 
@@ -496,10 +496,10 @@ npx -y -p @neus/sdk@1.1.1 neus doctor --live
 
 ### Highlights
 
-- **OAuth-first MCP onboarding** — `neus setup` → sign in → `neus doctor --live`.
-- **`@neus/mcp-server` on npm** — discovery metadata for MCP registries and installers.
-- **Public MCP tools** — including encrypted Vault secrets (`neus_secret_*`).
-- **NEUS Trust plugin** — Claude Code marketplace install with the trust workflow skill.
+- **OAuth-first MCP onboarding**, `neus setup` → sign in → `neus doctor --live`.
+- **`@neus/mcp-server` on npm**, discovery metadata for MCP registries and installers.
+- **Public MCP tools**, including encrypted Vault secrets (`neus_secret_*`).
+- **NEUS Trust plugin**, Claude Code marketplace install with the trust workflow skill.
 
 ### Added
 

@@ -1,7 +1,7 @@
 {
   "name": "@neus/mcp-server",
   "version": "1.3.9",
-  "description": "Load agent identity and permissions before sensitive actions.",
+  "description": "The trust harness for AI agents. Set what an agent can do before it acts.",
   "type": "module",
   "main": "./index.mjs",
   "exports": {

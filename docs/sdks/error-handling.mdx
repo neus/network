@@ -57,5 +57,5 @@ const final = await client.pollProofStatus(qHash, {
 const privateData = await client.getPrivateProof(qHash, window.ethereum);
 ```
 
-- Don’t loop-create on ambiguous errors - keep stored qHashes for resume.
-- Say when a hosted step is required - avoid generic “error” only. 
+- Don't loop-create on ambiguous errors. Keep stored qHashes for resume.
+- Say when a hosted step is required. Avoid generic "error" only.

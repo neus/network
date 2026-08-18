@@ -1,6 +1,6 @@
 # Contributing
 
-**If you are integrating NEUS into a product**, use **[docs.neus.network](https://docs.neus.network)** and the live product first — the table below is for people proposing changes here.
+**If you are integrating NEUS into a product**, use **[docs.neus.network](https://docs.neus.network)** and the live product first. The table below is for people proposing changes here.
 
 | Need | Where |
 | --- | --- |

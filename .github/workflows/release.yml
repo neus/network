@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  # Node 24 ships npm 11.16.0 — meets the npm >= 11.5.1 requirement for OIDC trusted publishing.
+  # Node 24 ships npm 11.16.0 , meets the npm >= 11.5.1 requirement for OIDC trusted publishing.
   # Node 20 (npm 10.x) does NOT support OIDC and causes ENEEDAUTH / silent publish failures.
   NODE_VERSION: '24'
   NPM_REGISTRY: https://registry.npmjs.org
@@ -31,7 +31,7 @@ jobs:
       RELEASE_VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
       # NOTE: NODE_AUTH_TOKEN is intentionally NOT set here. npm OIDC trusted publishing
       # uses the GitHub Actions OIDC token (granted via id-token: write) instead of a
-      # long-lived npm token. Setting NODE_AUTH_TOKEN — even to an empty string — makes
+      # long-lived npm token. Setting NODE_AUTH_TOKEN , even to an empty string , makes
       # npm attempt token auth and never initiate the OIDC exchange, causing ENEEDAUTH.
     steps:
       - name: Checkout tag

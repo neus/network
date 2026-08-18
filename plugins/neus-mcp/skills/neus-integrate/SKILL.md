@@ -67,7 +67,7 @@ Read the proof ID (`qHash`) from the callback URL query string, then store it.
 
 ## Server: confirm access
 
-Before granting access or paying out, confirm the visitor still satisfies the gate. Every NEUS account has an address (passkey and OAuth included — no separate wallet required).
+Before granting access or paying out, confirm the visitor still satisfies the gate. Every NEUS account has an address (passkey and OAuth included, no separate wallet required).
 
 ```js
 import { NeusClient } from '@neus/sdk';
@@ -89,7 +89,7 @@ For server-only apps or CI, use a profile access key: `new NeusClient({ apiKey: 
 
 1. Run the app and navigate to the gated page.
 2. Confirm `VerifyGate` opens the NEUS sign-in flow.
-3. Complete sign-in (wallet, passkey, or OAuth — all work).
+3. Complete sign-in (wallet, passkey, or OAuth all work).
 4. Confirm the gated content renders.
 5. Call `gateCheck` from the server with the returned address. Confirm `allRequiredSatisfied` is `true`.
 
@@ -97,10 +97,10 @@ For server-only apps or CI, use a profile access key: `new NeusClient({ apiKey: 
 
 User-visible strings in the app should use plain language:
 
-- "gate" or "access" — not "verifier" or "trust check"
-- "proof" — not "qHash" or "portable proof" in UI text
-- "Sign in" or "Connect" — not "mount" or "authenticate"
-- "Your account" — not "wallet" or "DID" unless the user specifically chose a wallet flow
+- "gate" or "access", not "verifier" or "trust check"
+- "proof", not "qHash" or "portable proof" in UI text
+- "Sign in" or "Connect", not "mount" or "authenticate"
+- "Your account", not "wallet" or "DID" unless the user specifically chose a wallet flow
 
 Full copy guide: [references/quickstart.md](references/quickstart.md)
 
@@ -115,4 +115,4 @@ The integration is complete when:
 
 Do not add extra NEUS concepts, tools, or surfaces unless the developer asks.
 
-Docs: [docs.neus.network/quickstart](https://docs.neus.network/quickstart) · [Integration paths](https://docs.neus.network/integration)
+Docs: [docs.neus.network/quickstart](https://docs.neus.network/quickstart) and [Integration paths](https://docs.neus.network/integration)

@@ -1,0 +1,115 @@
+---
+title: Connect apps and services
+description: Link Gmail, Google Drive, Slack, GitHub, and 1,200+ apps to your NEUS assistant.
+icon: plug
+---
+
+Give your assistant access to your accounts. Connect once, and your assistant uses the right app when you ask. No per-app setup, no tokens in your code.
+
+## How it works
+
+```
+You connect an account → your assistant asks for access → NEUS checks your permissions → the app runs → you get a saved result
+```
+
+You keep your sign-in. NEUS adds the authority check before any app runs.
+
+## Connect an account
+
+1. Open your **Profile** in NEUS.
+2. Go to **Trust graph → Connections**.
+3. Pick an app and click **Connect**.
+4. Authorize in the provider's window.
+5. Done. Your assistant can now use that account when you ask.
+
+You can connect more than one account per provider (for example, two Google accounts). Each connection is separate.
+
+## What you can connect
+
+| App | What your assistant can do |
+| --- | --- |
+| Google | Read and send Gmail, search Google Drive, manage Calendar |
+| Microsoft | Read and send Outlook mail, access OneDrive |
+| GitHub | Read repos, create issues, review pull requests |
+| Linear | Read and create issues |
+| Slack | Read and send messages |
+| 1,200+ apps | Gmail, Drive, Notion, Salesforce, and more. Your assistant finds the right tool when you ask |
+
+The backend details (how each app is wired) stay under the hood. You just see "Connect" and "Connected."
+
+## Ask your assistant
+
+Once connected, just ask:
+
+- "Read my latest emails"
+- "Find the Q3 roadmap in my Drive"
+- "Send a Slack message to the engineering channel"
+- "Create a GitHub issue for this bug"
+
+Your assistant finds the right tool, checks your permissions, and runs. If you haven't connected the app yet, it tells you to connect first.
+
+## Permissions and control
+
+Your assistant only does what you allow. Every call goes through a permission check:
+
+- **Reads** (email, files, messages) run when you ask.
+- **Sends, creates, and deletes** go through your delegation policy. You can require approval for high-impact actions.
+- Every action is recorded as a saved result you can review.
+
+You can disconnect any account at any time from **Profile → Trust graph → Connections**.
+
+## For developers
+
+### Call a connected account from your app
+
+Use the NEUS SDK or API to call a connected account on behalf of a user. The user must have connected the account first.
+
+```javascript
+import { NeusClient } from '@neus/sdk';
+
+const neus = new NeusClient({ accessKey: 'npk_...' });
+
+// Call Google Gmail on behalf of a connected user
+const result = await neus.post('/api/v1/proofs/capability/call', {
+  provider: 'google',
+  method: 'GET',
+  path: '/gmail/api/v1/users/me/messages',
+  walletAddress: '0x...',
+});
+```
+
+### Search 1,200+ apps
+
+Use Composio-powered tool discovery to find the right tool for a natural-language query:
+
+```javascript
+// Search for a tool
+const search = await neus.post('/api/v1/auth/composio/search', {
+  query: 'send an email',
+});
+
+// Execute it
+const result = await neus.post('/api/v1/proofs/composio/execute', {
+  toolSlug: 'GMAIL_SEND_EMAIL',
+  arguments: { to: 'user@example.com', subject: 'Hello', body: 'Test' },
+  walletAddress: '0x...',
+});
+```
+
+### Add a custom MCP server
+
+For apps that expose their own MCP server (like Figma), connect the server URL directly:
+
+1. Go to **Profile → Trust graph → Connections**.
+2. Click **Add connection**.
+3. Paste the MCP server URL and API key.
+4. Your assistant discovers the server's tools at runtime.
+
+## Security
+
+- NEUS never stores your provider tokens for Composio-managed apps. Composio handles auth, refresh, and storage.
+- For native OAuth apps (Google, Microsoft, GitHub, Linear, Slack), tokens are encrypted and sealed in private storage, never exposed to the browser or assistant.
+- Every call is checked against your delegation policy before it runs.
+- Every action is saved as a verifiable result.
+
+**Next:** [Agents and authority](../agents/agent-verification-flow)

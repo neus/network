@@ -12,7 +12,7 @@ let viteBin;
 try {
   viteBin = require.resolve('vite/bin/vite.js');
 } catch {
-  console.error('Run npm install in examples/trust-receipts-demo first.');
+  console.error('Run npm install in examples/portable-proofs-demo first.');
   process.exit(1);
 }
 

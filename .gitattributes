@@ -36,7 +36,7 @@
 *.env text eol=lf
 *.example text eol=lf
 
-# Explicit binary files — never normalize
+# Explicit binary files , never normalize
 *.png binary
 *.jpg binary
 *.jpeg binary

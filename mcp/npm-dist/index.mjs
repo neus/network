@@ -1,5 +1,5 @@
 /**
- * @neus/mcp-server — discovery metadata only.
+ * @neus/mcp-server , discovery metadata only.
  * The hosted NEUS MCP server runs at https://mcp.neus.network/mcp, not inside this npm package.
  *
  * @see https://mcp.neus.network/mcp

@@ -1,5 +1,5 @@
 /**
- * NEUS docs tokens — colocated for Mintlify (styles.css must not @import outside docs/).
+ * NEUS docs tokens , colocated for Mintlify (styles.css must not @import outside docs/).
  * Keep aligned with neus/app/globals.css and neus/DESIGN.md typography map.
  */
 @import url('https://fonts.googleapis.com/css2?family=Mona+Sans:wght@400;500;600;700&family=Michroma&display=swap');
@@ -79,7 +79,7 @@
     0 0 0 1px rgba(90, 90, 90, 0.16),
     inset 0 1px 0 rgba(90, 90, 90, 0.14);
 
-  /* App card surface — match neus/app/globals.css .neus-card */
+  /* App card surface , match neus/app/globals.css .neus-card */
   --neus-glass-sheen-1: rgba(90, 90, 90, 0.12);
   --neus-glass-sheen-2: rgba(90, 90, 90, 0.05);
   --neus-surface-glass: linear-gradient(
@@ -141,7 +141,7 @@
     );
   --neus-page-grad-base: rgb(var(--neus-rgb-surface-canvas) / 1);
 
-  /* App shell chrome — match neus/app/globals.css (docs header glass) */
+  /* App shell chrome , match neus/app/globals.css (docs header glass) */
   --neus-shell-glass-fill: linear-gradient(
     180deg,
     rgb(var(--neus-rgb-surface-card-hover) / 0.4) 0%,

@@ -1,5 +1,5 @@
 /**
- * Runtime Mount adapters — write Trusted Agent context into host workspaces.
+ * Runtime Mount adapters: write Trusted Agent context into host workspaces.
  */
 
 import fs from 'node:fs';
@@ -43,12 +43,12 @@ export function bundleToCursorRules(bundle) {
     .join('\n');
 
   return `---
-description: Verified NEUS agent — ${label}
+description: Verified NEUS agent. ${label}
 globs:
 alwaysApply: true
 ---
 
-# NEUS Agent — ${label}
+# NEUS Agent. ${label}
 
 You are **${label}** (\`${id}\`). This project loaded your current NEUS identity and permissions.
 
@@ -78,7 +78,7 @@ ${denied ? `Denied actions (do not perform without new approval):\n${denied}` : 
 
 ## Proof references
 - Identity: ${bundle.trust.identityProofUrl}
-${bundle.trust.delegationProofUrl ? `- Permissions: ${bundle.trust.delegationProofUrl}` : '- Permissions: not on file — call `neus_agent_link` before acting as this agent.'}
+${bundle.trust.delegationProofUrl ? `- Permissions: ${bundle.trust.delegationProofUrl}` : '- Permissions: not on file. Call `neus_agent_link` before acting as this agent.'}
 `;
 }
 
@@ -88,7 +88,7 @@ ${bundle.trust.delegationProofUrl ? `- Permissions: ${bundle.trust.delegationPro
 export function bundleToClaudeMd(bundle) {
   const id = bundle.identity.agentId;
   const label = bundle.identity.agentLabel || id;
-  return `# NEUS Agent — ${label}
+  return `# NEUS Agent. ${label}
 
 Loaded from NEUS agent context (\`${RUNTIME_MOUNT_SCHEMA}\`).
 
@@ -103,8 +103,8 @@ ${bundle.identity.description || 'Verified agent on NEUS Network.'}
 ${bundle.identity.instructions || 'Use NEUS MCP before sensitive actions.'}
 
 ## Portable proofs
-- Identity: \`${bundle.trust.identityQHash}\` — ${bundle.trust.identityProofUrl}
-${bundle.trust.delegationQHash ? `- Permissions: \`${bundle.trust.delegationQHash}\` — ${bundle.trust.delegationProofUrl}` : ''}
+- Identity: \`${bundle.trust.identityQHash}\`. ${bundle.trust.identityProofUrl}
+${bundle.trust.delegationQHash ? `- Permissions: \`${bundle.trust.delegationQHash}\`. ${bundle.trust.delegationProofUrl}` : ''}
 
 ## Policy
 - Do not invent proof IDs or check outcomes.

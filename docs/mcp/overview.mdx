@@ -1,7 +1,7 @@
 ---
 title: MCP
 sidebarTitle: MCP
-description: Verifiable identity, provenance, and enforceable permissions for AI agents. Private by default.
+description: The trust harness for AI agents. One endpoint, one sign-in, same authority everywhere.
 icon: plug
 "og:image": "/images/og-mcp.png"
 "twitter:image": "/images/og-mcp.png"
@@ -11,7 +11,7 @@ One endpoint. One sign-in. Same authority everywhere.
 
 **Endpoint:** `https://mcp.neus.network/mcp`
 
-NEUS MCP gives any agent, editor, server, or API the same portable identity, permissions, proofs, provenance, and Vault.
+NEUS MCP gives any agent, editor, server, or API the same portable identity, permissions, proofs, provenance, and Vault. No wallet required.
 
 ### Identity
 
@@ -69,7 +69,7 @@ NEUS works alongside your agent framework, not instead of it. Your framework run
 
 ## Private cloud agents
 
-Identity, permissions, and proof history usually stay trapped in whichever environment the agent was set up in. NEUS makes them portable — the agent connects from wherever it runs, and its trust state travels with it.
+Identity, permissions, and proof history usually stay trapped in whichever environment the agent was set up in. NEUS makes them portable. The agent connects from wherever it runs, and its trust state travels with it.
 
 Optionally, a confidential compute runtime (such as [Phala dstack](https://phala.com/dstack)) can prove the environment itself is genuine with a TEE-attested hardware quote over the full app hash. This is an optional hardening layer; NEUS works without it.
 
@@ -82,7 +82,7 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Installs the NEUS skill and configures the MCP endpoint. Click **Connect** in your host or run `neus auth` to sign in. For servers, CI, or automation, use a profile access key.
+Installs the NEUS skill and configures the MCP endpoint. Click **Connect** in your host or run `neus auth` to sign in. No wallet required. For servers, CI, or automation, use a profile access key.
 
 Per-client setup: [MCP setup](./setup).
 

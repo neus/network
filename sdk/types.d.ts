@@ -51,7 +51,7 @@
 
     checkGate(params: CheckGateParams): Promise<CheckGateResult>;
 
-    /** Public gate snapshot (requirements, charge, schedule — never the secret reward value). */
+    /** Public gate snapshot (requirements, charge, schedule , never the secret reward value). */
     getGate(gateId: string): Promise<PublicGateSnapshot>;
 
     /** Post-verify reward delivery for hosted gate checkout (session or wallet-bound). */
@@ -515,7 +515,7 @@
     maxAgeMs?: number;
   }
 
-  /** Public snapshot returned by GET /api/v1/profile/gates/{gateId} — never includes the secret reward value. */
+  /** Public snapshot returned by GET /api/v1/profile/gates/{gateId} , never includes the secret reward value. */
   export interface PublicGateSnapshot {
     schemaVersion: number;
     gateId: string;
@@ -671,7 +671,7 @@
     optional?: boolean;
     minCount?: number;
     /**
-     * Either the protocol wire shape (array of { path, op, value } rows — what
+     * Either the protocol wire shape (array of { path, op, value } rows , what
      * published gates store) or a flat { path: value } map for client-side checks.
      */
     match?: GateMatchRowWire[] | Record<string, any>;
@@ -753,7 +753,7 @@
       projections?: Array<Record<string, any>> | null;
       criteria?: Record<string, any>;
       /**
-       * Per-requirement gate evaluation — present whenever `gateId` was passed.
+       * Per-requirement gate evaluation , present whenever `gateId` was passed.
        * `allRequiredSatisfied === true` is the ONLY readiness signal for gate
        * checkout; `eligible`/`matchedCount` alone are not sufficient.
        */

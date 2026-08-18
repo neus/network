@@ -1,8 +1,8 @@
 # @neus/sdk
 
-Portable Trust Harness for AI. SDK for checking who controls an agent and what it may do before your app allows an action.
+Don't restart from zero. One private profile for identity, context, permissions, and proof that works across apps, agents, services, and transactions. Built for people and AI.
 
-Proofs carry identity, provenance, and scoped authority. Connected gates check current state before access, payment, or execution — instead of re-proving the same facts every time.
+Prove identity, ownership, and authority once. Connected gates check current state before access, payment, or execution instead of re-proving the same facts every time. Same proof, every surface.
 
 ## Install (library)
 
@@ -22,6 +22,40 @@ npx -y -p @neus/sdk neus examples
 ```
 
 Then ask your assistant: **"Use NEUS before sensitive actions. Reuse my saved proofs, check authority, and keep an audit trail."**
+
+### Or paste this into your agent
+
+Copy the block below into Claude Code, Cursor, Codex, or any coding agent with NEUS MCP. The agent reads it, runs setup, signs you in, and starts carrying your authority.
+
+```text
+# NEUS connect in one prompt
+
+You are connecting this editor to NEUS so my identity, provenance, and
+authority travel with me. Follow these steps exactly.
+
+## 1. Register NEUS
+Run: npx -y -p @neus/sdk neus setup
+This installs the public workflow skill and writes MCP config for every
+supported host in this project. It does not open a browser.
+
+## 2. Sign in
+Run: npx -y -p @neus/sdk neus auth
+Or click Connect in the MCP client. Default sign-in is browser OAuth.
+No wallet required.
+
+## 3. Confirm the connection
+Run: npx -y -p @neus/sdk neus doctor --live
+A healthy result confirms the endpoint, auth, and public tools.
+
+## 4. What to do next
+After setup, reuse my existing proofs before asking me to verify again.
+Before any sensitive action (spend, publish, secrets, agent tool call),
+call neus_context once, then neus_proofs_check. Summarize as
+NEUS Verify: Passed, Action needed, or Blocked.
+
+Canonical endpoint: https://mcp.neus.network/mcp
+Docs: https://docs.neus.network/mcp/setup
+```
 
 ## Connect an agent to a project
 

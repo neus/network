@@ -53,4 +53,4 @@ NEUS Verify: Blocked. A required trust condition was not satisfied. Next: Do not
 
 Install, OAuth, access keys, and project mount: [references/setup.md](references/setup.md)
 
-Docs: [docs.neus.network](https://docs.neus.network) · Setup: [docs.neus.network/mcp/setup](https://docs.neus.network/mcp/setup)
+Docs: [docs.neus.network](https://docs.neus.network). Setup: [docs.neus.network/mcp/setup](https://docs.neus.network/mcp/setup)

@@ -1,4 +1,4 @@
-/* NEUS Mintlify skin — tokens colocated in docs/ (Mintlify CDN does not resolve ../examples imports). */
+/* NEUS Mintlify skin , tokens colocated in docs/ (Mintlify CDN does not resolve ../examples imports). */
 @import url('./neus-tokens.css');
 
 /* Docs cards use app neus-card surface (sheen + glass gradient). */
@@ -31,7 +31,7 @@ html {
 }
 
 /*
-  Mintlify decorative overlays only — never match [class*="shadow"] (breaks sidebar links
+  Mintlify decorative overlays only , never match [class*="shadow"] (breaks sidebar links
   with Tailwind text-shadow utilities) or broad gradient/backdrop selectors on <a>.
   Mintlify moved from bg-gradient-to-* to bg-linear-to-* (Tailwind v4); match both.
 */
@@ -57,7 +57,7 @@ main > span.absolute.inset-0.overflow-hidden.pointer-events-none:not(#background
 }
 
 /*
-  Frosted docs header — use Mintlify #navbar-transition as the glass plate (do not hide it).
+  Frosted docs header , use Mintlify #navbar-transition as the glass plate (do not hide it).
   Interactive chrome stays above the plate; no extra drop shadows on the shell.
 */
 #navbar {
@@ -95,7 +95,7 @@ main > span.absolute.inset-0.overflow-hidden.pointer-events-none:not(#background
 }
 
 /*
-  Header logo — primary mark only (full particle depth).
+  Header logo , primary mark only (full particle depth).
   Mintlify h-7 (28px) makes the ring/particles sub-pixel mush.
   docs.json serves a trim-cropped supersampled primary PNG; display at 48px.
 */
@@ -117,7 +117,7 @@ main > span.absolute.inset-0.overflow-hidden.pointer-events-none:not(#background
   object-fit: contain !important;
   flex-shrink: 0 !important;
   image-rendering: auto !important;
-  /* Hairline halo so fine particles read on the glass bar — does not alter geometry. */
+  /* Hairline halo so fine particles read on the glass bar , does not alter geometry. */
   filter: drop-shadow(0 0 0.6px rgb(152 192 239 / 0.85)) !important;
   transform: translateZ(0);
 }
@@ -133,7 +133,7 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
 @media (min-width: 1024px) {
   /*
     Mintlify row 1: one flex-1 wrapper containing logo | search | actions.
-    Target direct children only — the wrapper also has flex-1 + gap-x-4 and must stay full width.
+    Target direct children only , the wrapper also has flex-1 + gap-x-4 and must stay full width.
   */
   #navbar .flex.items-center.lg\:px-12.h-16 > .h-full.relative.flex-1 {
     display: flex !important;
@@ -178,7 +178,7 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
     white-space: nowrap;
   }
 
-  /* Tab strip — no full-width rule (design: spacing only, never section dividers). */
+  /* Tab strip , no full-width rule (design: spacing only, never section dividers). */
   #navbar .hidden.lg\:flex.px-12.h-12 {
     width: 100% !important;
     border-top: none !important;
@@ -194,7 +194,7 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
     gap: 0.25rem !important;
   }
 
-  /* Kill Mintlify hairline underlines — selected state is fill + accent text. */
+  /* Kill Mintlify hairline underlines , selected state is fill + accent text. */
   #navbar .nav-tabs a.nav-tabs-item > div.absolute.bottom-0,
   #navbar .nav-tabs a.nav-tabs-item > div.h-\[1\.5px\] {
     display: none !important;
@@ -213,7 +213,7 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
     align-self: center !important;
     width: auto !important;
     flex: 0 0 auto !important;
-    /* Kill Mintlify h-full — full-row height makes any rim read as an underline. */
+    /* Kill Mintlify h-full , full-row height makes any rim read as an underline. */
     height: 2rem !important;
     max-height: 2rem !important;
     min-height: 2rem !important;
@@ -238,7 +238,7 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
   }
 
   /*
-    Selected tab — graphite fill + white text. No blue wash (Linear/Cursor).
+    Selected tab , graphite fill + white text. No blue wash (Linear/Cursor).
   */
   #navbar .nav-tabs a.nav-tabs-item[aria-current],
   #navbar .nav-tabs a.nav-tabs-item[data-active="true"],
@@ -287,7 +287,7 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
 }
 
 /*
-  Active sidebar item — Linear/Cursor style: quiet graphite fill, no accent blue.
+  Active sidebar item , Linear/Cursor style: quiet graphite fill, no accent blue.
   Match app selected-row soft fill without primary wash.
 */
 #navigation-items a[aria-current="page"],
@@ -341,7 +341,7 @@ body {
 }
 
 /*
-  Layout — Mintlify ships flex-col on #content-area without display:flex, which
+  Layout , Mintlify ships flex-col on #content-area without display:flex, which
   collapses the column to ~243px and breaks card grids + three-column balance.
 */
 #content-container > .flex.flex-row-reverse {
@@ -383,7 +383,7 @@ body {
   max-width: 100% !important;
 }
 
-/* Mintlify prose grays — lift to NEUS tokens */
+/* Mintlify prose grays , lift to NEUS tokens */
 .prose.mdx-content,
 .mdx-content.prose {
   --tw-prose-body: var(--neus-text-primary);
@@ -401,7 +401,7 @@ body {
 }
 
 /*
-  Text selection — scoped to readable content only (do not fight nav/sidebar chrome).
+  Text selection , scoped to readable content only (do not fight nav/sidebar chrome).
   Mintlify sets -webkit-user-select: none globally; beat it inside MDX/prose only.
 */
 #body-content,
@@ -444,7 +444,7 @@ button,
 }
 
 /*
-  Typography — DESIGN.md scale; 16px body / 600 headings; no Mintlify gray-400 prose.
+  Typography , DESIGN.md scale; 16px body / 600 headings; no Mintlify gray-400 prose.
 */
 #content-area,
 #content,
@@ -558,7 +558,7 @@ button,
   color: var(--neus-text-muted) !important;
 }
 
-/* No zebra rows — flat spacing only (match app lists). */
+/* No zebra rows , flat spacing only (match app lists). */
 .mdx-content tbody tr:nth-child(even) {
   background: transparent !important;
 }
@@ -592,7 +592,7 @@ button,
 }
 
 /*
-  Shell — transparent wash-through on content column only.
+  Shell , transparent wash-through on content column only.
   Left tabs + sidebar: no NEUS overrides (Mintlify defaults). Do not set position on #sidebar/#navbar.
 */
 #header,
@@ -615,7 +615,7 @@ footer {
 
 /*
   Left nav: space between tab row (navbar) and first sidebar section label.
-  Mintlify’s top fade scrim was removed — replace with intentional padding (20px desktop).
+  Mintlify’s top fade scrim was removed , replace with intentional padding (20px desktop).
 */
 @media (min-width: 1024px) {
   #navigation-items {
@@ -857,7 +857,7 @@ a#topbar-cta-button:focus-visible,
     radial-gradient(90% 80% at 20% 0%, rgba(90, 90, 90, 0.18) 0%, transparent 72%) !important;
 }
 
-/* Hover highlight — gray only (DESIGN.md: blue is scarce; no accent wash on cards). */
+/* Hover highlight , gray only (DESIGN.md: blue is scarce; no accent wash on cards). */
 .card::after,
 .card-group .card::after {
   content: '' !important;

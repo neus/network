@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Verify all version surfaces match the release tag.
- * Called by .github/workflows/release.yml — kept as a committed script so
+ * Called by .github/workflows/release.yml , kept as a committed script so
  * bash never has to parse JS quoting (the inline node -e approach broke on
  * regex double-quotes inside bash double-quoted strings).
  *
@@ -79,4 +79,4 @@ if (metadataErrors.length) {
   process.exit(1);
 }
 
-console.log('All ' + Object.keys(surfaces).length + ' version surfaces at ' + target + ' — verified.');
+console.log('All ' + Object.keys(surfaces).length + ' version surfaces at ' + target + ' , verified.');

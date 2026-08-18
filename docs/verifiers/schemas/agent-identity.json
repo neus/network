@@ -84,7 +84,7 @@
     },
     "defaultRuntime": {
       "additionalProperties": false,
-      "description": "Default runtime display hints — NOT security-authoritative; delegation runtimePolicy overrides these. These are convenience metadata for UI and tooling, not proof of which model/provider the agent actually uses.",
+      "description": "Default runtime display hints, not security-authoritative. Delegation runtimePolicy overrides these. These are convenience metadata for UI and tooling, not proof of which model/provider the agent actually uses.",
       "properties": {
         "mode": {
           "description": "Default inference mode (e.g., \"openai-chat\", \"openai-responses\").",

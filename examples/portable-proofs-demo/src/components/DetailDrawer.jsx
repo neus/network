@@ -60,7 +60,7 @@ export function DetailDrawer({ claim, onClose, apiUrl, hostedCheckoutUrl, qHash,
       const data = res?.data && typeof res.data === 'object' ? res.data : {};
       setEligLine(
         data.eligible === true
-          ? 'Requirements met — a matching proof is available.'
+          ? 'Requirements met. A matching proof is available.'
           : 'No matching proof yet. Run a check to continue.'
       );
     } catch (e) {

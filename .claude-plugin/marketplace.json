@@ -5,14 +5,14 @@
     "email": "dev@neus.network"
   },
   "metadata": {
-    "description": "Portable Trust Harness for AI",
+    "description": "Portable trust infrastructure for people and AI. One private profile for identity, context, permissions, and proof. Don't restart from zero.",
     "version": "1.3.9"
   },
   "plugins": [
     {
       "name": "neus-mcp",
       "source": "./plugins/neus-mcp",
-      "description": "Add identity, private context, and enforceable permissions to any AI agent."
+      "description": "The trust harness for AI agents. Set what an agent can do before it acts."
     }
   ]
 }

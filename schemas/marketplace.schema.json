@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://cursor.com/schemas/cursor-plugin/marketplace.json",
   "title": "Cursor Plugin Marketplace",
-  "description": "Schema for .cursor-plugin/marketplace.json — defines a marketplace that indexes one or more Cursor plugins. Vendored from https://raw.githubusercontent.com/cursor/plugins/main/schemas/marketplace.schema.json.",
+  "description": "Schema for .cursor-plugin/marketplace.json , defines a marketplace that indexes one or more Cursor plugins. Vendored from https://raw.githubusercontent.com/cursor/plugins/main/schemas/marketplace.schema.json.",
   "type": "object",
   "required": ["name", "plugins"],
   "additionalProperties": false,

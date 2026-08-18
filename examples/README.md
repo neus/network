@@ -2,10 +2,10 @@
 
 | Example | Use it for |
 | ------- | ---------- |
-| [trust-receipts-demo](./trust-receipts-demo/README.md) | End-to-end **VerifyGate** + gate check demo |
+| [portable-proofs-demo](./portable-proofs-demo/README.md) | End-to-end **VerifyGate** + gate check demo |
 | [nodejs-basic](./nodejs-basic/README.md) | Server-side proof creation and checks |
 | [guarded-agent-action](./guarded-agent-action/README.md) | Load current agent permissions and allow or deny one host action |
 
 Run the demo locally, then follow the [Quickstart](https://docs.neus.network/quickstart) to add the same trust loop to your app.
 
-Docs: [Docs home](https://docs.neus.network) · [Quickstart](https://docs.neus.network/quickstart) · [Integration](https://docs.neus.network/integration) · [MCP](https://docs.neus.network/mcp/setup)
+Docs: [Docs home](https://docs.neus.network), [Quickstart](https://docs.neus.network/quickstart), [Integration](https://docs.neus.network/integration), [MCP](https://docs.neus.network/mcp/setup)

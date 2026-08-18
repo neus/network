@@ -1,7 +1,7 @@
 {
   "name": "neus-mcp",
   "displayName": "NEUS",
-  "description": "Check agent identity and permissions before sensitive actions.",
+  "description": "The trust harness for AI agents. Set what an agent can do before it acts.",
   "version": "1.3.9",
   "author": {
     "name": "NEUS",

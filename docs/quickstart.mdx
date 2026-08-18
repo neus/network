@@ -22,7 +22,7 @@ One access link owns the checks, price, and sign-in. Your app never runs the che
       <ProtectedContent />
     </VerifyGate>;
     ```
-    `VerifyGate` reuses a saved proof or opens hosted sign-in on NEUS when a new one is needed. Wallet, passkey, and OAuth all happen on NEUS — not inside your app.
+    `VerifyGate` reuses a saved proof or opens hosted sign-in on NEUS when a new one is needed. Wallet, passkey, and OAuth all happen on NEUS, not inside your app.
   </Step>
   <Step title="Show status with ProofBadge">
     ```jsx
@@ -33,7 +33,7 @@ One access link owns the checks, price, and sign-in. Your app never runs the che
     Optional: pass `showChains` when you want on-chain status in the badge.
   </Step>
   <Step title="Confirm on your server">
-    Pass the visitor's **account address** (from NEUS sign-in or the saved result — passkey and OAuth included, no separate wallet required):
+    Pass the visitor's **account address** (from NEUS sign-in or the saved result; passkey and OAuth included, no separate wallet required):
     ```js
     import { NeusClient } from '@neus/sdk';
 

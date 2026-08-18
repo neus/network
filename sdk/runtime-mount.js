@@ -1,5 +1,5 @@
 /**
- * Runtime Mount — Trusted Agent context bundle (neus.runtime-mount.v1).
+ * Runtime Mount , Trusted Agent context bundle (neus.runtime-mount.v1).
  * Shared shape for CLI, integrators, and the neus_agent_mount response.
  */
 

@@ -5,7 +5,7 @@ NEUS turns trust decisions into reusable **portable proofs** you can hold, look 
 ## Run it locally
 
 ```bash
-cd examples/trust-receipts-demo
+cd examples/portable-proofs-demo
 npm install
 npm run dev
 ```

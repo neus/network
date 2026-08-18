@@ -1,5 +1,5 @@
 /**
- * NEUS CLI command strings — SSOT for docs, MCP context, product UI, and skills.
+ * NEUS CLI command strings , SSOT for docs, MCP context, product UI, and skills.
  *
  * Golden path:
  * - Run the published CLI without relying on a global shim.
@@ -12,7 +12,7 @@ export const NEUS_PKG = '@neus/sdk';
 /** Recommended one-time install for builders using the CLI regularly. */
 export const NEUS_INSTALL_CLI = `npm i -g ${NEUS_PKG}`;
 
-/** Zero-install prefix — works without global install. */
+/** Zero-install prefix , works without global install. */
 export const NEUS_NPX = `npx -y -p ${NEUS_PKG} neus`;
 
 /** Short commands (after `NEUS_INSTALL_CLI`). */

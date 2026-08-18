@@ -35,9 +35,9 @@ No mainnet token. NEUSToken listed here is testnet-only (MIT) on Base Sepolia.
 
 ## Source Code
 
-- [`NEUSVerifierRegistry.sol`](./NEUSVerifierRegistry.sol) - Main verification registry
-- [`NEUSVoucherHub.sol`](./NEUSVoucherHub.sol) - Cross-chain hub
-- [`NEUSVoucherSpoke.sol`](./NEUSVoucherSpoke.sol) - Cross-chain spoke
-- [`NEUSToken.sol`](./NEUSToken.sol) - NEUS token (testnet)
-- [`INEUSVerifierRegistry.sol`](./INEUSVerifierRegistry.sol) - Registry interface
-- [`IVoucherHub.sol`](./IVoucherHub.sol) - Hub interface
+- [`NEUSVerifierRegistry.sol`](./NEUSVerifierRegistry.sol): Main verification registry
+- [`NEUSVoucherHub.sol`](./NEUSVoucherHub.sol): Cross-chain hub
+- [`NEUSVoucherSpoke.sol`](./NEUSVoucherSpoke.sol): Cross-chain spoke
+- [`NEUSToken.sol`](./NEUSToken.sol): NEUS token (testnet)
+- [`INEUSVerifierRegistry.sol`](./INEUSVerifierRegistry.sol): Registry interface
+- [`IVoucherHub.sol`](./IVoucherHub.sol): Hub interface

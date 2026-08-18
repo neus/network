@@ -25,7 +25,7 @@
 }
 
 @layer components {
-  /* —— Profile-aligned glass input (neus `input-glass`) —— */
+  /* Profile-aligned glass input (neus `input-glass`) */
   .input-glass {
     @apply w-full rounded-lg px-3 py-2 text-sm transition-all;
     background: linear-gradient(

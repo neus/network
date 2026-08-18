@@ -39,7 +39,7 @@ const PROJECT_CLIENTS = ['claude', 'cursor', 'vscode'];
 const CODEX_OAUTH_SCOPES = 'neus:core,neus:profile,neus:secrets,offline_access';
 
 // ---------------------------------------------------------------------------
-// OAuth token store (~/.neus/mcp-tokens.json — gitignored user-scope cache)
+// OAuth token store (~/.neus/mcp-tokens.json , gitignored user-scope cache)
 // ---------------------------------------------------------------------------
 // Holds the refresh token returned alongside the short-lived OAuth access
 // token. Powers the `neus refresh` escape hatch: when an IDE MCP client's
@@ -54,7 +54,7 @@ const CODEX_OAUTH_SCOPES = 'neus:core,neus:profile,neus:secrets,offline_access';
 const NEUS_HOME_DIR = path.join(os.homedir(), '.neus');
 const NEUS_TOKEN_STORE_PATH = path.join(NEUS_HOME_DIR, 'mcp-tokens.json');
 const NEUS_OAUTH_CLIENT_ID = 'neus-cli';
-// RFC 9207 — the expected issuer returned in the authorization response `iss`
+// RFC 9207 , the expected issuer returned in the authorization response `iss`
 // parameter. Matches the `issuer` field in /.well-known/oauth-authorization-server.
 const NEUS_OAUTH_ISSUER = 'https://neus.network';
 const NEUS_MCP_RESOURCE = 'https://mcp.neus.network/mcp';
@@ -267,7 +267,7 @@ function describeClientResult(command, result) {
   }
   if (result.changed) return 'updated';
   if (result.authConfigured) return 'signed in';
-  if (result.configured) return 'configured — sign in to connect';
+  if (result.configured) return 'configured , sign in to connect';
   return 'not configured';
 }
 
@@ -287,7 +287,7 @@ function printBuilderGuidance(command, results) {
     writeGuidanceLine(`NEUS MCP registered for ${cliOwned.map(label).join(', ')}.`);
   }
   if (cursorOk?.deferredToPlugin?.length) {
-    writeGuidanceLine(`Cursor: neus-mcp plugin owns registration — sign in via the plugin's Connect button.`);
+    writeGuidanceLine(`Cursor: neus-mcp plugin owns registration. Sign in via the plugin's Connect button.`);
   }
   writeGuidanceLine('Ask your assistant: "Use NEUS Verify before taking sensitive actions."');
 }
@@ -764,7 +764,7 @@ function cursorInstalled() {
 // The neus-mcp marketplace plugin bundles both the .mcp.json (for one-click MCP
 // registration + OAuth) and the neus-trust-workflow skill (so the trust workflow is
 // present without a separate CLI run). When the plugin is installed, the CLI defers
-// to it for both MCP registration and skill delivery — that avoids duplicate-MCP and
+// to it for both MCP registration and skill delivery , that avoids duplicate-MCP and
 // duplicate-skill entries without killing click-install.
 function cursorBundledMcpPlugins() {
   const homeDir = os.homedir();
@@ -1050,7 +1050,7 @@ function codexConfigPath() {
 function installCursor(scope, accessKey, dryRun, cwd, options = {}) {
   // When the neus-mcp marketplace plugin is installed in Cursor, it owns MCP
   // registration (its bundled .mcp.json auto-registers NEUS MCP on install and
-  // triggers Cursor's native OAuth flow — the same one-click experience Linear,
+  // triggers Cursor's native OAuth flow , the same one-click experience Linear,
   // Stripe, etc. ship). Defer to it instead of writing a competing user-level
   // entry, which is what caused the duplicate-NEUS-MCP bug.
   const pluginOwners = cursorBundledMcpPlugins();
@@ -1690,7 +1690,7 @@ async function runMount(options) {
     if (bundle.trust.delegationProofUrl) {
       writeGuidanceLine(`Permission proof: ${bundle.trust.delegationProofUrl}`);
     } else {
-      writeGuidanceLine('No permission proof yet — set up the agent on neus.network before it takes scoped actions.');
+      writeGuidanceLine('No permission proof yet. Set up the agent on neus.network before it takes scoped actions.');
     }
     if (applyResult) {
       for (const filePath of applyResult.written) {
@@ -1710,7 +1710,7 @@ async function runMount(options) {
 async function runLiveMcpDiagnostics(accessKey) {
   // Even without a static access key, attempt an unauthenticated initialize.
   // The MCP server responds with 401 + WWW-Authenticate (OAuth challenge) when
-  // unauthenticated — that confirms the server is reachable and OAuth is configured.
+  // unauthenticated , that confirms the server is reachable and OAuth is configured.
   // With an access key, the full authenticated flow runs.
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 15000);
@@ -1729,7 +1729,7 @@ async function runLiveMcpDiagnostics(accessKey) {
     if (!init.response.ok || init.json?.error) {
       // 401 means the server is reachable but requires authentication.
       // For URL-only OAuth configs (no accessKey), this is the expected
-      // response — the IDE handles OAuth, not the CLI. Report as reachable.
+      // response , the IDE handles OAuth, not the CLI. Report as reachable.
       const isAuthRequired = init.response.status === 401;
       return {
         live: true,
@@ -1911,7 +1911,7 @@ async function runAuthBrowser(options) {
         return;
       }
 
-      // RFC 9207 issuer validation — 2026-07-28 MCP auth hardening headline.
+      // RFC 9207 issuer validation , 2026-07-28 MCP auth hardening headline.
       // When the AS returns `iss`, the client MUST confirm it matches the expected
       // issuer (https://neus.network). A mismatch indicates an IdP mix-up attack.
       // When the AS omits `iss` (e.g. older deployments), we fail closed too,
@@ -2225,7 +2225,7 @@ async function runSetup(options) {
       logStep(
         'ok',
         skill.hosts.join(','),
-        'neus-mcp plugin bundles the trust skill — no user-level copy needed'
+        'neus-mcp plugin bundles the trust skill , no user-level copy needed'
       );
     } else {
       logStep(
@@ -2239,7 +2239,7 @@ async function runSetup(options) {
 
   // Setup installs config + skill, then stops. Authentication is owned by the
   // host (Cursor/Codex/VS Code/Claude native Connect) or by an explicit
-  // `neus auth` run — never auto-launched from setup. This avoids the surprise
+  // `neus auth` run , never auto-launched from setup. This avoids the surprise
   // browser and the "setup crossed into auth UX" confusion.
   if (!accessKey && !options.dryRun) {
     const authHint =
@@ -2457,7 +2457,7 @@ async function runDoctor(options) {
     logStep(
       'ok',
       'cursor',
-      `Cursor plugin is installed (${cursorPluginOwner.pluginOwners.join(', ')}) — use the plugin's Connect button to sign in`
+      `Cursor plugin is installed (${cursorPluginOwner.pluginOwners.join(', ')}). Use the plugin's Connect button to sign in`
     );
   }
   writeCliLine(paint('Profile connection', 'cyan'));
@@ -2465,7 +2465,7 @@ async function runDoctor(options) {
     if (!liveAccessKey) {
       // Check if any configured client uses URL-only OAuth (no Bearer header in
       // the config, but the IDE handles OAuth natively). This is a valid auth
-      // path — the credential lives in the IDE's OAuth lifecycle, not in a
+      // path , the credential lives in the IDE's OAuth lifecycle, not in a
       // static header. Don't say "No account credential found" when OAuth is set up.
       if (hasUrlOnlyOAuth) {
         writeGuidanceLine('Connected through your IDE session.');
@@ -2487,10 +2487,10 @@ async function runDoctor(options) {
     } else {
       if (payload.mcp.authenticated) {
         const handle = payload.mcp.profileHandle ? ` as ${payload.mcp.profileHandle}` : '';
-        const wallet = payload.mcp.sessionWallet ? ` · ${shortWallet(payload.mcp.sessionWallet)}` : '';
+        const wallet = payload.mcp.sessionWallet ? `, ${shortWallet(payload.mcp.sessionWallet)}` : '';
         const receipts =
-          payload.mcp.proofsTotal != null ? ` · ${payload.mcp.proofsTotal} proofs` : '';
-        const tools = payload.mcp.toolsCount ? ` · ${payload.mcp.toolsCount} tools available` : '';
+          payload.mcp.proofsTotal != null ? `, ${payload.mcp.proofsTotal} proofs` : '';
+        const tools = payload.mcp.toolsCount ? `, ${payload.mcp.toolsCount} tools available` : '';
         logStep('ok', 'profile', `connected${handle}${wallet}${receipts}${tools}`);
         writeGuidanceLine('Ask your assistant: "Use NEUS Verify before taking sensitive actions."');
         writeGuidanceLine('Run `npx -y -p @neus/sdk neus examples` for starter prompts.');
@@ -2506,7 +2506,7 @@ async function runDoctor(options) {
               : payload.missingDelegation
                 ? 'permissions missing'
                 : 'mount stale';
-          logStep('warn', 'mount', `${reason} — run \`npx -y -p @neus/sdk neus mount ${payload.mountAgentId || '<agentId>'} --apply cursor\``);
+          logStep('warn', 'mount', `${reason}. Run \`npx -y -p @neus/sdk neus mount ${payload.mountAgentId || '<agentId>'} --apply cursor\``);
           payload.hasErrors = true;
         } else if (payload.agentVerified) {
           logStep('ok', 'agent', 'identity and permissions linked');
@@ -2518,9 +2518,9 @@ async function runDoctor(options) {
         }
       } else {
         if (!payload.mcp.reachable) {
-          logStep('warn', 'profile', 'MCP server unreachable — check network or try again');
+          logStep('warn', 'profile', 'MCP server unreachable. Check network or try again');
         } else {
-          logStep('warn', 'profile', 'sign-in expired or invalid — run `npx -y -p @neus/sdk neus auth` to reconnect');
+          logStep('warn', 'profile', 'sign-in expired or invalid. Run `npx -y -p @neus/sdk neus auth` to reconnect');
         }
       }
     }
