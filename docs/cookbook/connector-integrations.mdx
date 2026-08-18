@@ -1,6 +1,6 @@
 ---
 title: Connect apps and services
-description: Link Gmail, Google Drive, Slack, GitHub, and 1,200+ apps to your NEUS assistant.
+description: Link Google, GitHub, Slack, Notion, and 1,200+ apps to your NEUS assistant.
 icon: plug
 ---
 
@@ -28,12 +28,12 @@ You can connect more than one account per provider (for example, two Google acco
 
 | App | What your assistant can do |
 | --- | --- |
-| Google | Read and send Gmail, search Google Drive, manage Calendar |
-| Microsoft | Read and send Outlook mail, access OneDrive |
+| Google | Sign in once. Gmail, Drive, and Calendar connect through Composio when you need them |
 | GitHub | Read repos, create issues, review pull requests |
-| Linear | Read and create issues |
-| Slack | Read and send messages |
-| 1,200+ apps | Gmail, Drive, Notion, Salesforce, and more. Your assistant finds the right tool when you ask |
+| Slack | Search channels and send messages |
+| Notion | Search and edit workspace pages |
+| Jira | Create and track issues and comments |
+| Browse all apps | 1,200+ more. Your assistant finds the right tool when you ask |
 
 The backend details (how each app is wired) stay under the hood. You just see "Connect" and "Connected."
 
@@ -108,7 +108,7 @@ For apps that expose their own MCP server (like Figma), connect the server URL d
 ## Security
 
 - NEUS never stores your provider tokens for Composio-managed apps. Composio handles auth, refresh, and storage.
-- For native OAuth apps (Google, Microsoft, GitHub, Linear, Slack), tokens are encrypted and sealed in private storage, never exposed to the browser or assistant.
+- For native OAuth apps (Google, GitHub), tokens are encrypted and sealed in private storage, never exposed to the browser or assistant.
 - Every call is checked against your delegation policy before it runs.
 - Every action is saved as a verifiable result.
 

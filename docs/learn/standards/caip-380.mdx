@@ -5,26 +5,28 @@ description: Move a verified result between apps without repeating the check.
 icon: file-signature
 ---
 
-CAIP-380 is an open [ChainAgnostic draft](https://github.com/ChainAgnostic/CAIPs/pull/380). This page describes the portable envelope emitted for wallet-signed NEUS verification requests.
+CAIP-380 is an open [ChainAgnostic](https://standards.chainagnostic.org/CAIPs/caip-380) standard at **Draft** status. NEUS is the driving reference implementation. This page describes the portable envelope emitted for wallet-signed NEUS verification requests. See the [standards chronology](/whitepaper#standards-and-interoperability) for lifecycle status and advancement path.
+
+The CAIP-380 specification text in this document is released under [CC0 1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/). Reference implementation code, schemas, and fixtures elsewhere in this repository are Apache-2.0.
 
 ## Scope of the proposal
 
 One wallet-signed envelope; apps validate off-chain; stable **qHash**.
 
-- Networks use CAIP-2 (`eip155:1`, `solana:mainnet`, ...)
-- Account ids use CAIP-10 (`eip155:1:0x...`, `solana:mainnet:...`) where an `*AccountId` field is emitted
+- Networks use CAIP-2 (`eip155:1`, `solana:mainnet`, `near:mainnet`, ...)
+- Account ids use CAIP-10 (`eip155:1:0x...`, `solana:mainnet:...`, `near:mainnet:alice.near`) where an `*AccountId` field is emitted
 - Stable profile and proof URLs use W3C `did:pkh` (`did:pkh:eip155:1:0x...`)
 
 ## Identity and chain glossary
 
 | Term | Shape | NEUS usage |
 |------|-------|------------|
-| CAIP-2 | `namespace:reference` | Network context. Use `chain` for non-EVM signing and account identity, for example `solana:mainnet`. |
+| CAIP-2 | `namespace:reference` | Network context. Use `chain` for any non-EVM signing and account identity, for example `solana:mainnet` or `near:mainnet`. |
 | CAIP-10 | `namespace:reference:account` | Account id fields such as `agentAccountId` and `controllerAccountId`. |
 | `did:pkh` | `did:pkh:namespace:reference:account` | Stable DID for profiles, proof subjects, and `/u/[did]` URLs. It is derived from the same chain and account context, but is not a bare CAIP-10 string. |
 | `chainId` | number | EVM-only compatibility field. For signer context it can be omitted by standard EVM integrations because NEUS resolves the hub chain. For asset verifiers, set the verifier-specific `chainId` inside `data`. |
 
-Rule of thumb: EVM browser flows can rely on hosted verify or pass an explicit EVM provider. Non-EVM flows pass the wallet/provider explicitly and include `chain` as a CAIP-2 value.
+Rule of thumb: EVM browser flows can rely on hosted verify or pass an explicit EVM provider. Any non-EVM flow passes the wallet or provider explicitly and includes `chain` as a CAIP-2 value. The envelope is chain-agnostic by design. Any namespace that publishes a CAIP-2 reference and a signing profile can participate.
 
 ## NEUS anchor
 
@@ -32,7 +34,7 @@ Rule of thumb: EVM browser flows can rely on hosted verify or pass an explicit E
 
 ## Inputs (conceptual)
 
-Account + chain, `verifierIds`, `data` (canonical JSON), `signedTimestamp`, EVM `chainId` or non-EVM `chain` (CAIP-2).
+Account + chain, `verifierIds`, `data` (canonical JSON), `signedTimestamp`, EVM `chainId` or any non-EVM `chain` (CAIP-2).
 
 Canonical JSON normalizes strings and keys to NFC, sorts object keys by Unicode code point, preserves array order and `null`, and rejects `undefined`, sparse arrays, non-finite numbers, functions, symbols, and bigint values. An envelope must contain exactly one of `chainId` or `chain`.
 
@@ -69,22 +71,29 @@ const result = await verifyPortableProofEnvelope(envelope);
 if (!result.valid) throw new Error(result.errors.join('; '));
 ```
 
-The helper recomputes `qHash`, checks the DID and chain binding, reconstructs the six-line message, and verifies EIP-191 or Ed25519 locally. EIP-1271 smart accounts require chain state; pass an ethers provider as `options.provider`.
+The helper recomputes `qHash`, checks the DID and chain binding, reconstructs the six-line message, and verifies the signature locally. EVM uses EIP-191, EIP-1271, and EIP-6492. Non-EVM chains use their native signing scheme (Ed25519 for Solana, NEAR's `near_sign` for NEAR, and so on). EIP-1271 smart accounts require chain state; pass an ethers provider as `options.provider`.
 
 Use the [small EVM fixture](https://github.com/neus/network/blob/main/examples/caip-380/minimal-evm.json) for adapter tests. Its timestamp is historical, so `fresh` can be false while its hash and signature remain valid.
 
-## Profiles
+## Signing profiles
 
-| | Chain | Signature |
-|--|-------|-----------|
-| EVM | `chainId` | EIP-191 / 1271 / 6492 |
-| Solana | `solana:…` | Ed25519 |
-| Other | CAIP-2 | Profile-specific |
+The envelope is chain-agnostic. Any chain with a CAIP-2 namespace and a signing scheme can produce a valid envelope. NEUS ships the profiles below and adds more as ecosystems publish signing specs.
+
+| Chain family | CAIP-2 example | Signature | Status | Offline fixture |
+|--|--|--|--|--|
+| EVM | `eip155:1` | EIP-191 / EIP-1271 / EIP-6492 | Live | [minimal-evm.json](https://github.com/neus/network/blob/main/examples/caip-380/minimal-evm.json) |
+| Solana | `solana:mainnet` | Ed25519 | First non-EVM profile, spec example and fixture published | [minimal-solana.json](https://github.com/neus/network/blob/main/examples/caip-380/minimal-solana.json) |
+| NEAR | `near:mainnet` | NEAR `near_sign` (Ed25519) | Profile defined by CAIP-2 namespace | Pending |
+| Other | Any CAIP-2 | Profile-specific | Add a profile when the ecosystem publishes a signing spec | Pending |
+
+To add a profile, extend the SDK verifier with the chain's signature scheme and ship an offline fixture. The `qHash` canonicalization, six-line signer string, and CAIP-2 / CAIP-10 / `did:pkh` binding stay the same across every profile.
 
 ## Freshness
 
 NEUS rejects a new request if `signedTimestamp` is older than 5 minutes or more than 60 seconds in the future. Historical offline verification reports freshness separately from cryptographic validity.
 
-## Spec
+## Spec and lifecycle
 
-[CAIP-380 (ChainAgnostic)](https://github.com/ChainAgnostic/CAIPs/pull/380)
+[CAIP-380 (ChainAgnostic)](https://standards.chainagnostic.org/CAIPs/caip-380). Status: Draft. NEUS is the reference implementation.
+
+CAIP-380 is at Draft status in the official CASA registry. Advancing to Review and Accepted requires at least two independent implementations and editor advancement. See [HISTORY.md](https://github.com/neus/network/blob/main/HISTORY.md) for the full standards chronology.

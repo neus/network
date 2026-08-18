@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+  <title id="title">Gate evaluation pipeline</title>
+  <desc id="desc">The gate resolves policy and receipts, validates bindings and current lifecycle state, applies scope and constraints, then allows, denies, or requires approval before execution.</desc>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#18366f"/></marker>
+    <style>
+      .bg{fill:#f7f9fc}.ink{fill:#101828}.navy{fill:#0a2055}.muted{fill:#667085}
+      .box{fill:#fff;stroke:#cbd5e1;stroke-width:2}.focus{fill:#eef3fb;stroke:#18366f;stroke-width:3}
+      .good{fill:#eaf8f1;stroke:#35a66f;stroke-width:2}.bad{fill:#fff2f0;stroke:#d75a4a;stroke-width:2}
+      .warn{fill:#fff8e8;stroke:#d6a438;stroke-width:2}.line{stroke:#18366f;stroke-width:3;fill:none;marker-end:url(#a)}
+      text{font-family:Inter,Arial,sans-serif}.h{font-size:28px;font-weight:700}.sh{font-size:20px;font-weight:700}
+      .b{font-size:16px}.s{font-size:14px}.n{font-size:15px;font-weight:800}
+    </style>
+  </defs>
+  <rect class="bg" width="1440" height="760"/>
+  <text x="70" y="66" class="h ink">Evaluate current trust before execution</text>
+
+  <rect x="70" y="128" width="930" height="524" rx="20" class="focus"/>
+  <text x="104" y="170" class="sh navy">Gate pipeline</text>
+
+  <rect x="104" y="196" width="862" height="58" rx="10" class="box"/>
+  <circle cx="138" cy="225" r="17" fill="#0a2055"/><text x="138" y="231" text-anchor="middle" fill="#fff" class="n">1</text>
+  <text x="174" y="231" class="b ink">Resolve relying-party policy, subject, action, resource, and context</text>
+
+  <path d="M535 254 V277" class="line"/>
+  <rect x="104" y="282" width="862" height="58" rx="10" class="box"/>
+  <circle cx="138" cy="311" r="17" fill="#0a2055"/><text x="138" y="317" text-anchor="middle" fill="#fff" class="n">2</text>
+  <text x="174" y="317" class="b ink">Retrieve candidate receipts by subject, receipt ID, or published gate requirements</text>
+
+  <path d="M535 340 V363" class="line"/>
+  <rect x="104" y="368" width="862" height="58" rx="10" class="box"/>
+  <circle cx="138" cy="397" r="17" fill="#0a2055"/><text x="138" y="403" text-anchor="middle" fill="#fff" class="n">3</text>
+  <text x="174" y="403" class="b ink">Validate issuer, verifier, subject/controller binding, and acceptable outcome</text>
+
+  <path d="M535 426 V449" class="line"/>
+  <rect x="104" y="454" width="862" height="58" rx="10" class="box"/>
+  <circle cx="138" cy="483" r="17" fill="#0a2055"/><text x="138" y="489" text-anchor="middle" fill="#fff" class="n">4</text>
+  <text x="174" y="489" class="b ink">Check expiry, revocation, current status, maximum age, and required freshness</text>
+
+  <path d="M535 512 V535" class="line"/>
+  <rect x="104" y="540" width="862" height="82" rx="10" class="box"/>
+  <circle cx="138" cy="569" r="17" fill="#0a2055"/><text x="138" y="575" text-anchor="middle" fill="#fff" class="n">5</text>
+  <text x="174" y="568" class="b ink">Apply action scope, explicit denials, resource and environment constraints,</text>
+  <text x="174" y="595" class="b ink">spend limits, and approval policy</text>
+
+  <path d="M1000 390 H1062" class="line"/>
+  <rect x="1066" y="128" width="304" height="142" rx="16" class="good"/>
+  <text x="1218" y="175" text-anchor="middle" class="sh navy">Allow</text>
+  <text x="1218" y="210" text-anchor="middle" class="b ink">policy satisfied</text>
+  <text x="1218" y="238" text-anchor="middle" class="s muted">execute protected action</text>
+
+  <rect x="1066" y="309" width="304" height="142" rx="16" class="warn"/>
+  <text x="1218" y="356" text-anchor="middle" class="sh navy">Require approval</text>
+  <text x="1218" y="391" text-anchor="middle" class="b ink">step-up condition</text>
+  <text x="1218" y="419" text-anchor="middle" class="s muted">pause before execution</text>
+
+  <rect x="1066" y="490" width="304" height="162" rx="16" class="bad"/>
+  <text x="1218" y="537" text-anchor="middle" class="sh navy">Deny</text>
+  <text x="1218" y="572" text-anchor="middle" class="b ink">missing or unacceptable</text>
+  <text x="1218" y="600" text-anchor="middle" class="s muted">do not execute</text>
+  <text x="1218" y="627" text-anchor="middle" class="s muted">record minimal decision context</text>
+
+  <text x="70" y="706" class="b muted">The decision is local: each relying party chooses accepted issuers, checks, age, scope, constraints, and failure behavior.</text>
+</svg>

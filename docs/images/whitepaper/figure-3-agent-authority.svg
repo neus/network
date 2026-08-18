@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="720" viewBox="0 0 1440 720" role="img" aria-labelledby="title desc">
+  <title id="title">Agent identity and authority model</title>
+  <desc id="desc">Agent identity describes the agent. A controller-signed delegation grants specific actions and limits. A runtime gate evaluates both before a protected tool call.</desc>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#18366f"/></marker>
+    <style>
+      .bg{fill:#f7f9fc}.ink{fill:#101828}.navy{fill:#0a2055}.muted{fill:#667085}
+      .box{fill:#fff;stroke:#cbd5e1;stroke-width:2}.focus{fill:#eef3fb;stroke:#18366f;stroke-width:3}
+      .good{fill:#eaf8f1;stroke:#35a66f;stroke-width:2}.line{stroke:#18366f;stroke-width:3;fill:none;marker-end:url(#a)}
+      text{font-family:Inter,Arial,sans-serif}.h{font-size:28px;font-weight:700}.sh{font-size:21px;font-weight:700}
+      .b{font-size:17px}.s{font-size:14px}.caps{font-size:14px;font-weight:700;letter-spacing:1.4px}
+    </style>
+  </defs>
+  <rect class="bg" width="1440" height="720"/>
+  <text x="70" y="66" class="h ink">Identity says what the agent is. Authority says what it may do.</text>
+
+  <text x="70" y="116" class="caps muted">DESCRIPTIVE STATE</text>
+  <rect x="70" y="140" width="380" height="220" rx="16" class="box"/>
+  <text x="100" y="184" class="sh navy">Agent identity receipt</text>
+  <text x="100" y="224" class="b ink">• agent ID + account binding</text>
+  <text x="100" y="256" class="b ink">• label, capabilities, services</text>
+  <text x="100" y="288" class="b ink">• self-signed by the agent account</text>
+  <text x="100" y="329" class="s muted">Capabilities describe what the agent can do.</text>
+
+  <text x="70" y="418" class="caps muted">AUTHORITY STATE</text>
+  <rect x="70" y="442" width="380" height="220" rx="16" class="focus"/>
+  <text x="100" y="486" class="sh navy">Agent delegation receipt</text>
+  <text x="100" y="526" class="b ink">• controller + exact agent binding</text>
+  <text x="100" y="558" class="b ink">• allowed and denied actions</text>
+  <text x="100" y="590" class="b ink">• scope, spend cap, expiry, approval</text>
+  <text x="100" y="631" class="s muted">Explicit denial wins over general allowance.</text>
+
+  <path d="M450 250 H586 V324" class="line"/>
+  <path d="M450 552 H586 V396" class="line"/>
+
+  <rect x="590" y="254" width="330" height="212" rx="18" class="good"/>
+  <text x="755" y="302" text-anchor="middle" class="sh navy">Runtime gate</text>
+  <text x="755" y="342" text-anchor="middle" class="b ink">current identity?</text>
+  <text x="755" y="374" text-anchor="middle" class="b ink">applicable authority?</text>
+  <text x="755" y="406" text-anchor="middle" class="b ink">within limits right now?</text>
+  <text x="755" y="440" text-anchor="middle" class="s muted">allow • deny • require approval</text>
+
+  <path d="M920 360 H1016" class="line"/>
+  <rect x="1020" y="254" width="350" height="212" rx="18" class="focus"/>
+  <text x="1195" y="302" text-anchor="middle" class="sh navy">Protected action</text>
+  <text x="1195" y="342" text-anchor="middle" class="b ink">tool invocation</text>
+  <text x="1195" y="374" text-anchor="middle" class="b ink">write or deployment</text>
+  <text x="1195" y="406" text-anchor="middle" class="b ink">payment or data access</text>
+  <text x="1195" y="440" text-anchor="middle" class="s muted">execution occurs after the check</text>
+
+  <text x="590" y="548" class="sh navy">What this changes</text>
+  <text x="590" y="582" class="b ink">A credential can authenticate an agent host.</text>
+  <text x="590" y="612" class="b ink">A delegation constrains a specific agent action.</text>
+  <text x="590" y="642" class="b ink">Both are needed when the operation is sensitive.</text>
+</svg>

@@ -3,10 +3,10 @@
   "info": {
     "title": "NEUS API, Public Integrator API",
     "version": "1.0.0",
-    "description": "Public HTTP API for NEUS integrators.\n\nRecommended integration order (simplest first):\n1. Browser: VerifyGate widget or hosted verify at https://neus.network/verify (wallet, passkey, and OAuth handled by NEUS).\n2. JavaScript: `@neus/sdk` `client.verify()` signs and submits for signature-based verifiers; use VerifyGate for hosted/interactive verifiers.\n3. Server gate checks: `GET /api/v1/proofs/check` with `gateId` or criteria before granting access.\n4. Raw HTTP: two-phase signing below only when you cannot use the SDK or hosted flows.\n\nRaw HTTP verification uses POST /api/v1/verification/standardize, sign signerString, then POST /api/v1/verification with the same body plus signature. Session-authenticated callers may skip the signature when a valid session is present.\n\nUse your deployment base URL (for example https://api.neus.network). Some verifiers require pro access. Administrative endpoints are not included in this specification.",
+    "description": "Public HTTP API for NEUS integrators.\n\nRecommended integration order (simplest first):\n1. Browser: VerifyGate widget or hosted verify at https://neus.network/verify (wallet, passkey, and OAuth handled by NEUS).\n2. JavaScript: `@neus/sdk` `client.verify()` signs and submits for signature-based verifiers; use VerifyGate for hosted/interactive verifiers.\n3. Server gate checks: `GET /api/v1/proofs/check` with `gateId` or criteria before granting access.\n4. Raw HTTP: two-phase signing below only when you cannot use the SDK or hosted flows.\n\nRaw HTTP verification uses POST /api/v1/verification/standardize → sign signerString → POST /api/v1/verification with the same body plus signature. Session-authenticated callers may skip the signature when a valid session is present.\n\nUse your deployment base URL (for example https://api.neus.network). Some verifiers require pro access. Administrative endpoints are not included in this specification.",
     "license": {
-      "name": "Business Source License 1.1",
-      "url": "https://mariadb.com/bsl11/"
+      "name": "Apache License 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
   "security": [],
@@ -246,7 +246,7 @@
           },
           "options": {
             "type": "object",
-            "description": "Optional verification options. By default the proof persists offchain with no on-chain transaction.",
+            "description": "Optional verification options. By default the trust receipt persists offchain with no on-chain transaction.",
             "properties": {
               "publishToHub": {
                 "type": "boolean",
@@ -1521,7 +1521,7 @@
           },
           "defaultRuntime": {
             "type": "object",
-            "description": "Default runtime display hints. NOT security-authoritative; delegation runtimePolicy overrides these. These are convenience metadata for UI and tooling, not proof of which model/provider the agent actually uses.",
+            "description": "Default runtime display hints, NOT security-authoritative; delegation runtimePolicy overrides these. These are convenience metadata for UI and tooling, not proof of which model/provider the agent actually uses.",
             "properties": {
               "provider": {
                 "type": "string",
@@ -1689,7 +1689,7 @@
           },
           "runtimePolicy": {
             "type": "object",
-            "description": "Runtime execution policy. Security-authoritative, overrides identity defaultRuntime. Owner-view-only: not included in public proof responses. Only include when model/provider constraints affect the permission boundary.",
+            "description": "Runtime execution policy, security-authoritative, overrides identity defaultRuntime. Owner-view-only: not included in public proof responses. Only include when model/provider constraints affect the permission boundary.",
             "properties": {
               "allowedProviders": {
                 "type": "array",

@@ -42,6 +42,9 @@ Then ask your assistant: "Use NEUS Verify before taking sensitive actions."
 5. MCP tools: https://docs.neus.network/mcp/tools
 6. API overview: https://docs.neus.network/api/overview
 7. Pricing: https://docs.neus.network/platform/pricing
+8. Technical Whitepaper: https://docs.neus.network/whitepaper
+9. CAIP-380 standard: https://docs.neus.network/learn/standards/caip-380
+10. Trust Center: https://docs.neus.network/platform/security-and-trust
 
 ## Pricing summary
 
@@ -58,7 +61,18 @@ ownership-basic, ownership-social, ownership-pseudonym, ownership-dns-txt, owner
 
 ## Standard
 
-Wallet-signed request envelopes follow the CAIP-380 (Portable Proof) ChainAgnostic draft. Their hash, DID binding, and signature can be verified without NEUS. Verifier outcomes remain part of the NEUS portable proof; session-authorized proofs are not CAIP-380 envelopes.
+NEUS is the driving reference implementation of CAIP-380 (Portable Proof), a ChainAgnostic standard at Draft status. Wallet-signed request envelopes have a deterministic SHAKE-256 hash (`qHash`), CAIP-2 chain context, and CAIP-10 / `did:pkh` identities. Their hash, DID binding, and signature can be verified without NEUS. The envelope is chain-agnostic and accepts any CAIP-2 namespace. NEUS ships EVM (EIP-191, EIP-1271, EIP-6492) and Solana (Ed25519) signing profiles today, with offline fixtures. Verifier outcomes remain part of the NEUS portable proof; session-authorized proofs are not CAIP-380 envelopes. Read the [Technical Whitepaper](https://docs.neus.network/whitepaper) for the full architecture and trust model, and the [standards chronology](https://github.com/neus/network/blob/main/HISTORY.md) for lifecycle status.
+
+## Audit
+
+Smart contracts were audited by SafeStack AI in March 2026. The audit completed with no critical, high, medium, or low severity findings. Details: https://docs.neus.network/platform/security-and-trust#smart-contract-audit
+
+## Partners and programs
+
+- Webacy, ZKPassport, Phala Network: integration partnerships for verification, zero-knowledge identity, and confidential compute
+- NVIDIA Inception: early-stage AI startup program
+- Google for Startups: cloud and AI startup program
+- Optimism Retro Funding Season 8: grant recipient
 
 ## Optional
 

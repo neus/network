@@ -41,7 +41,7 @@
   "tools": [
     {
       "name": "neus_context",
-      "description": "Start here. Returns the signed-in profile, available verifiers, and the recommended workflow in one call. Handles signed-in and offline modes , no separate profile tool needed."
+      "description": "Start here. Returns the signed-in profile, available verifiers, and the recommended workflow in one call. Handles signed-in and offline modes, no separate profile tool needed."
     },
     {
       "name": "neus_verifiers_catalog",

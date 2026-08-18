@@ -12,21 +12,27 @@ NEUS does not add compliance. It proves the architecture is operating according 
 ## Architecture
 
 ### Zero-trust execution
+
 Every action is authorized against identity, proof, policy, and delegated authority. Identity, ownership, login, or possession never automatically implies authority. Authority is checked against current policy and delegation at execution time.
 
 ### Private by default
+
 Proofs and receipts remain private unless explicitly shared. Public exposure, public indexing, IPFS, and chain anchoring are explicit choices. Off-chain is the default.
 
 ### Minimum disclosure
+
 A check returns the minimum claim or result required for the decision. The proof proves the decision without reproducing the underlying evidence. Apps and agents receive the result they need, not the sensitive source material.
 
 ### Server-side credentials
+
 Agents use connected tools without receiving the user's secrets. Credentials are resolved and injected inside trusted server execution. They are never intentionally handed to the model, exposed in a tool schema, proof, browser response, or public record.
 
 ### Auditable actions
+
 Critical decisions produce proofs that can be inspected, verified, and revoked without publicly exposing the underlying data. Store enough to reconstruct who authorized what, under which policy, against which proof, and what outcome occurred.
 
 ### Optional anchoring
+
 Off-chain is the default. Public or blockchain publication requires explicit intent.
 
 ## Invariants
@@ -58,7 +64,7 @@ For blockchain specifically, the EDPB's final July 2026 guidance makes the off-c
 
 Every feature (OAuth, Gmail, Drive, GitHub, payments, identity, ZK proofs, agents, MCP, API keys, AI inference, social connections, jobs) fits into one existing model.
 
-Evidence → Proof → Policy → Authority → Action → Proof
+Evidence → Proof → Policy → Authority → Action → Receipt
 
 Not a Google system, an AI safety system, a wallet system, a GDPR system, an agent approval system, and an audit system. That fragmentation would destroy the advantage already built.
 
@@ -105,6 +111,14 @@ For browser checkout, publish a gate and pass `gateId`. Visibility overrides bel
 ### Never ship publicly
 
 Raw signatures, owner-only payloads, private proof enumeration.
+
+## Smart contract audit
+
+NEUS smart contracts were audited by [SafeStack AI](https://safestackai.com) in March 2026. The audit completed with no critical, high, medium, or low severity findings.
+
+Scope: `NEUSVerifierRegistry.sol`, `NEUSVoucherHub.sol`, `NEUSVoucherSpoke.sol`, `NEUSToken.sol`.
+
+Contact [dev@neus.network](mailto:dev@neus.network) for the full report.
 
 ## Diligence material
 

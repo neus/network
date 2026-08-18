@@ -168,7 +168,7 @@ Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widge
 
 ## Open standard
 
-Wallet-signed request envelopes follow the [CAIP-380 (Portable Proof)](https://github.com/ChainAgnostic/CAIPs/pull/380) ChainAgnostic draft. Their hash, DID binding, and signature can be checked without NEUS; verifier outcomes remain part of the NEUS portable proof. See the [offline fixture](./examples/caip-380/minimal-evm.json) and [NEUS docs](https://docs.neus.network/learn/standards/caip-380).
+NEUS is the driving reference implementation of [CAIP-380 (Portable Proof)](https://standards.chainagnostic.org/CAIPs/caip-380), a ChainAgnostic standard at Draft status. Wallet-signed request envelopes have a deterministic SHAKE-256 hash (`qHash`), CAIP-2 chain context, and CAIP-10 / `did:pkh` identities. Their hash, DID binding, and signature can be checked without NEUS; verifier outcomes remain part of the NEUS portable proof. The envelope is chain-agnostic and accepts any CAIP-2 namespace. NEUS ships EVM (EIP-191, EIP-1271, EIP-6492) and Solana (Ed25519) signing profiles today, with offline fixtures. See the [EVM fixture](./examples/caip-380/minimal-evm.json), the [Solana fixture](./examples/caip-380/minimal-solana.json), the [CAIP-380 docs](https://docs.neus.network/learn/standards/caip-380), the [Technical Whitepaper](https://docs.neus.network/whitepaper), and the [standards chronology](./HISTORY.md).
 
 ## Support
 
@@ -185,7 +185,17 @@ Wallet-signed request envelopes follow the [CAIP-380 (Portable Proof)](https://g
 
 NEUS is under active development. Published APIs and verifier schemas may change between minor versions before the long-term stability freeze. We version everything we ship and document every breaking change in the [changelog](./CHANGELOG.md).
 
+## Audit
+
+Smart contracts were audited by [SafeStack AI](https://safestackai.com) in March 2026. The audit completed with no critical, high, medium, or low severity findings. See the [Trust Center](https://docs.neus.network/platform/security-and-trust#smart-contract-audit) for details.
+
+## Partners and programs
+
+- **Webacy, ZKPassport, Phala Network:** integration partnerships for verification, zero-knowledge identity, and confidential compute
+- **NVIDIA Inception:** early-stage AI startup program
+- **Google for Startups:** cloud and AI startup program
+- **Optimism Retro Funding Season 8:** grant recipient
+
 ## License
 
-- **SDK and tools:** Apache-2.0
-- **Smart contracts:** BUSL-1.1 to Apache-2.0 in August 2028
+All code in this repository is Apache-2.0, including the reference smart contracts. The CAIP-380 specification is released under CC0 1.0. NEUS names and logos are protected trademarks; see [TRADEMARKS.md](./TRADEMARKS.md).

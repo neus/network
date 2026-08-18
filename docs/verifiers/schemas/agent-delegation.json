@@ -119,7 +119,7 @@
     },
     "runtimePolicy": {
       "additionalProperties": false,
-      "description": "Runtime execution policy, security-authoritative. Overrides identity defaultRuntime. Owner-view-only, not included in public proof responses. Only include when model/provider constraints affect the permission boundary.",
+      "description": "Runtime execution policy, security-authoritative, overrides identity defaultRuntime. Owner-view-only: not included in public proof responses. Only include when model/provider constraints affect the permission boundary.",
       "properties": {
         "allowedModelClasses": {
           "description": "Allowed model class patterns (e.g., [\"gpt-4.1-*\", \"approved-public-content-models\"]).",

@@ -1,0 +1,210 @@
+---
+title: Technical Whitepaper
+description: NEUS Portable Trust Infrastructure for humans and AI. Architecture and trust model, version 1.0, August 2026.
+icon: book-open
+sidebarTitle: Whitepaper
+---
+
+# NEUS Technical Whitepaper
+
+## Portable Trust Infrastructure for Humans and AI
+
+Architecture and Trust Model. Version 1.0, August 2026.
+
+**Author:** Christopher Leal, Founder and Protocol Architect, NEUS Network, Inc.
+**Canonical version:** docs.neus.network/whitepaper
+**Contact:** dev@neus.network
+
+## Abstract
+
+Trust decisions still reset at application boundaries. Users repeatedly prove control of accounts, domains, wallets, and assets, while AI agents often operate with credentials that say little about what they are allowed to do at the moment of action.
+
+NEUS turns completed identity, ownership, risk, eligibility, and authority checks into portable proofs that other systems can evaluate and reuse under their own policy. A gate evaluates those proofs immediately before a protected action. Missing, stale, expired, revoked, or out-of-scope proofs stop the action or trigger the required verification.
+
+Proofs are private and offchain by default. [CAIP-380](/learn/standards/caip-380) supports signed wallet verification requests, while NEUS stores verifier results and lifecycle state separately. This separates request integrity from verification outcomes and current authority.
+
+**Document status.** This whitepaper is an architectural, non-normative description of the public NEUS trust model as of August 2026. Normative requirements are defined by the applicable standards and published NEUS specifications. Live schemas, verifier inputs, API behavior, SDK methods, and endpoint details are maintained in the developer documentation and public repository.
+
+## 1. Problem and design goals
+
+Authentication can identify a session. It does not carry a completed trust decision into the next system or define current authority for a sensitive action.
+
+Users and applications repeatedly rebuild checks for identity, ownership, eligibility, and risk. Agents add a more urgent problem: they are commonly given credentials that are broader than the action they need to perform. Possession of a session or API key says little about who approved a payout, which resource a grant covers, what limits apply, or whether approval is still current.
+
+NEUS treats trust as a current decision about a subject, an action, and a resource. It applies the same resource-centered principle used in zero-trust architectures: authority is not inferred from network location or possession of a broad credential. It is evaluated for the protected resource under current policy [10, 11].
+
+| Principle | Meaning |
+| --- | --- |
+| Reuse first | Look for an acceptable current proof before starting another check. |
+| Local policy | Each relying party decides which issuers, verifiers, freshness, scope, and assurance it accepts. |
+| Enforce at action time | Evaluate trust immediately before the protected action. |
+| Private by default | Routine proof creation and evaluation do not require public disclosure or a blockchain transaction. |
+
+## 2. Trust model and roles
+
+NEUS reduces the flow to five steps: resolve, check, verify, evaluate, then act or stop.
+
+<Frame caption="**Figure 1.** Reuse accepted current proofs, verify only missing or stale requirements, and enforce policy before execution.">
+  <img src="/images/whitepaper/figure-1-reuse-lifecycle.svg" alt="Reuse-first verification lifecycle: resolve, check current receipts, verify only missing or stale checks, evaluate policy, then act or stop." />
+</Frame>
+
+A proof can be reused only when the relying party accepts its source and it still satisfies current policy. NEUS does not create universal trust. It provides a common proof model that different systems can evaluate under their own policy. Related credential standards also separate issuers from verifiers; NEUS preserves that separation of roles [9].
+
+| Role | Responsibility |
+| --- | --- |
+| Subject | The human, organization, account, agent, wallet, domain, asset, or other object the proof describes. |
+| Verifier | Runs a defined check and returns a result limited to that check. |
+| Issuer | Attributes the proof to the service or verification path that produced it. |
+| Controller | Grants authority to an agent when delegation is required. |
+| Relying party | Chooses what it trusts and which policy must hold before an action. |
+| Gate | Evaluates current proofs and policy at the protected boundary. |
+
+<Frame caption="**Figure 2.** Public interfaces feed one verification engine. Gates evaluate current proof state at the protected boundary.">
+  <img src="/images/whitepaper/figure-2-system-architecture.svg" alt="NEUS system architecture: integration surfaces feed the verification engine, which produces saved results that gates evaluate before protected actions." />
+</Frame>
+
+The protected system must enforce the gate on the server or inside the trusted runtime. Any path that bypasses the gate bypasses the protection.
+
+## 3. Portable proofs
+
+A NEUS proof is a saved verification result that another accepted integration can evaluate without rerunning the original check. It records what was checked, the subject it applies to, the outcome, the issuer, current status, expiration, visibility, and any scope or constraints needed to evaluate the result.
+
+Portability means the result can move across integrations that choose to accept it. It does not mean every system must trust the issuer, that evidence becomes public, or that a historical copy remains valid forever.
+
+| State | Current use |
+| --- | --- |
+| Pending | Not acceptable until the required check has completed successfully. |
+| Passed and active | May be acceptable if issuer, subject, freshness, scope, and policy also pass. |
+| Failed | Does not satisfy a requirement that expects a passing result. |
+| Expired or revoked | Do not accept for future actions, even if the proof passed earlier. |
+
+Outcome and lifecycle are separate. A prior success never overrides expiry or revocation. High-value actions should check current status close to execution so that a decision does not rely on stale authority.
+
+### Privacy and anchoring
+
+Proofs are private and offchain by default. Public proof pages are a disclosure choice, not a higher assurance level. Optional onchain anchoring can create a durable reference, but the anchor is not the verifier result and does not replace a current status check.
+
+## 4. Agent identity and authority
+
+An agent needs two different records: one that identifies the agent and one that states what the agent may do. Combining them would turn descriptive capability into implied permission.
+
+<Frame caption="**Figure 3.** Agent identity and agent authority are separate. Sensitive actions require current, applicable delegation at runtime.">
+  <img src="/images/whitepaper/figure-3-agent-authority.svg" alt="Agent identity and authority model: agent identity receipt describes the agent, controller-signed delegation receipt grants specific actions and limits, runtime gate evaluates both before a protected tool call." />
+</Frame>
+
+Capabilities describe what an agent can do. Delegation determines what it is allowed to do. A payment-capable agent, for example, may still have no authority to pay a particular recipient or may be limited to a specific amount, network, resource, or time window.
+
+### Delegation boundaries
+
+- Bind the controller to the exact agent account that receives authority.
+- State allowed actions and explicit denied actions. A denial takes precedence over a general allowance.
+- Scope authority to the relevant resource, environment, payment type, or operation.
+- Apply spend limits and expiry for payments and other high-impact actions.
+- Require human approval when policy calls for an additional approval step.
+
+Delegation narrows what an agent is allowed to affect. It does not guarantee safe reasoning. Sandboxing, output validation, rate limits, secret handling, and human approval remain necessary controls around the runtime.
+
+## 5. Gate enforcement and security considerations
+
+A gate turns current proof state into an enforceable decision at the point where value, data, or infrastructure can change. The decision is local: two applications can evaluate the same proof differently because they accept different issuers, freshness windows, scopes, or risk levels.
+
+<Frame caption="**Figure 4.** Gate evaluation applies relying-party policy to current proof state before the protected action is allowed, constrained, approved, or denied.">
+  <img src="/images/whitepaper/figure-4-gate-evaluation.svg" alt="Gate evaluation pipeline: resolve policy and receipts, validate bindings and current lifecycle state, apply scope and constraints, then allow, require approval, or deny before execution." />
+</Frame>
+
+High-value decisions should bind policy to the exact action parameters. A payment can bind amount, asset, destination, and network. A deployment can bind repository, artifact, environment, and operation. This reduces the gap between what was approved and what actually runs.
+
+### Security considerations
+
+The security model depends on four explicit assumptions:
+
+- The relying party controls which issuers and verifiers it accepts.
+- The protected action cannot execute through a path that bypasses the gate.
+- Controller and subject signing keys remain uncompromised.
+- Current status and revocation data are available when policy requires them.
+
+### Threats addressed
+
+- **Replay and stale state.** Enforce freshness and current status. Expired or revoked proofs must not authorize a new action.
+- **Subject substitution.** Bind each proof to the actor and resource involved in the current action.
+- **Scope escalation.** Authority for one action, resource, destination, or amount does not imply broader authority.
+- **Gate bypass.** Do not expose an alternate path to the protected action that avoids evaluation.
+- **Verifier or issuer compromise.** Assurance is limited by the sources the relying party chooses to trust.
+- **Availability failure.** If required current status cannot be established, high-risk actions should fail closed.
+
+### Out of scope
+
+NEUS does not replace authentication, endpoint authorization, payment settlement, runtime sandboxing, secrets management, rate limiting, or observability. It does not guarantee that an agent will reason safely. Integrators remain responsible for those controls and for ensuring that protected actions cannot bypass the gate.
+
+## 6. Standards and interoperability
+
+NEUS uses existing standards for account identifiers, signatures, agent discovery, tool access, and payments rather than redefining those layers.
+
+### CAIP-380 Portable Proof
+
+[CAIP-380](/learn/standards/caip-380) is a Chain Agnostic Improvement Proposal in Draft status [1]. It defines a canonical signed envelope for wallet-based verification requests. NEUS implements the envelope for applicable requests and stores the verifier result separately as a NEUS proof.
+
+For CAIP-380 requests, `qHash` is a deterministic SHAKE-256 hash of the canonical request [1, 12]. NEUS can use the same value to correlate that request with its stored proof. `qHash` establishes correlation, not the verifier outcome. A valid request signature does not prove that a verifier ran or that a stored proof is still active.
+
+<Frame caption="**Figure 5.** `qHash` can correlate a CAIP-380 signed request with a NEUS proof, but request integrity and verifier outcome remain separate claims.">
+  <img src="/images/whitepaper/figure-5-envelope-and-receipt.svg" alt="CAIP-380 request envelope and NEUS trust receipt: the signed envelope proves request integrity, the NEUS receipt records the verifier outcome and lifecycle state, qHash correlates them but does not prove the result by itself." />
+</Frame>
+
+CAIP-380 uses CAIP-2 and CAIP-10 for chain and account identifiers and supports EVM and non-EVM signing profiles [1-4]. NEUS ships EVM (EIP-191, EIP-1271, EIP-6492) and Solana (Ed25519) profiles today, and the envelope accepts any CAIP-2 namespace. Detailed canonicalization and validation rules remain in the CAIP and implementation documentation.
+
+| Protocol | Role beside NEUS |
+| --- | --- |
+| CAIP-2 and CAIP-10 | Chain and account identifiers for cross-chain bindings [2]. |
+| CAIP-380 | Signed request envelope for applicable wallet verification [1]. |
+| MCP | Tool and context interface where proofs can be checked before sensitive actions [5]. |
+| A2A | Agent discovery, authentication, and interaction surface. NEUS can expose agent cards with proof context [6]. |
+| ERC-8004 | Draft agent identity, reputation, and validation registry standard. NEUS can expose compatible discovery data while retaining its own proof and authority model [7]. |
+| x402 | HTTP-native payment challenge and settlement. NEUS authority remains separate from settlement and can be checked before payment [8]. |
+
+These protocols solve different problems. An authenticated connection, discovery card, or payment rail is not proof of current authority. The relying party still evaluates accepted proofs and local policy before the protected action.
+
+## 7. Applications and implementation
+
+The same proof and gate model applies across browser flows, backend services, agent runtimes, and payment boundaries.
+
+- **Agent actions.** Check agent identity and scoped delegation before a tool call, write, deployment, payment, or private data access.
+- **Marketplace and partner access.** Combine ownership, risk, or eligibility proofs at the protected boundary and reuse them where the relying party accepts them.
+- **Organization and domain control.** Use domain, organization, account, and wallet proofs before partner handoff or sensitive API writes.
+- **Payments.** Evaluate identity, delegation, amount, asset, destination, and network before the settlement flow proceeds.
+
+### Implementation and stewardship
+
+NEUS Network, Inc. develops and operates the hosted NEUS trust service and maintains its public developer interfaces and implementation. Open standards used by NEUS remain governed through their respective standards processes. The live verifier catalog, schemas, API behavior, and SDK methods are maintained in the NEUS documentation and public repository.
+
+Smart contracts were audited by SafeStack AI in March 2026. The audit completed with no critical, high, medium, or low severity findings. See the [Trust Center](/platform/security-and-trust#smart-contract-audit) for details.
+
+## Conclusion
+
+NEUS separates proof from policy and identity from authority. It does not require applications to share one trust policy; it gives them a common proof model and a common point of enforcement. Completed checks can be reused where accepted, while current authority is evaluated at the moment an action matters. For agents, that creates a narrow, revocable path from identity to delegated authority to execution without treating login, capability, or payment as permission.
+
+### Implementation resources
+
+- Platform: [neus.network](https://neus.network)
+- Documentation: [docs.neus.network](https://docs.neus.network)
+- Public repository: [github.com/neus/network](https://github.com/neus/network)
+
+## References
+
+### Specifications and standards
+
+- **[1]** Chain Agnostic Improvement Proposals. [CAIP-380: Portable Proof](https://standards.chainagnostic.org/CAIPs/caip-380). Status: Draft.
+- **[2]** Chain Agnostic Improvement Proposals. CAIP-2: Blockchain ID Specification; CAIP-10: Account ID Specification.
+- **[3]** Ethereum Improvement Proposals. ERC-191 and ERC-1271.
+- **[4]** Ethereum Improvement Proposals. ERC-6492: Signature Validation for Predeploy Contracts.
+- **[5]** Model Context Protocol. Specification, 28 July 2026.
+- **[6]** A2A Protocol. Specification v1.0.
+- **[7]** Ethereum Improvement Proposals. ERC-8004: Trustless Agents. Status: Draft.
+- **[8]** x402 Foundation. x402 Version 2 Specification.
+
+### Informative references
+
+- **[9]** W3C. Verifiable Credentials Data Model v2.0. W3C Recommendation, 15 May 2025.
+- **[10]** NIST. SP 800-207: Zero Trust Architecture.
+- **[11]** Ward, R.; Beyer, B. BeyondCorp: A New Approach to Enterprise Security. ;login:, 39(6), 2014.
+- **[12]** NIST. FIPS PUB 202: SHA-3 Standard.
+- **[13]** Rescorla, E.; Korver, B. RFC 3552: Guidelines for Writing RFC Text on Security Considerations.

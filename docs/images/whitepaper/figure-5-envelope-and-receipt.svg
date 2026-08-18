@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+  <title id="title">CAIP-380 request envelope and NEUS trust receipt</title>
+  <desc id="desc">The signed request envelope proves request integrity and signer authorization. The NEUS receipt records the verifier outcome and lifecycle state. The qHash correlates them but does not prove the result by itself.</desc>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#18366f"/></marker>
+    <style>
+      .bg{fill:#f7f9fc}.ink{fill:#101828}.navy{fill:#0a2055}.muted{fill:#667085}
+      .box{fill:#fff;stroke:#cbd5e1;stroke-width:2}.focus{fill:#eef3fb;stroke:#18366f;stroke-width:3}
+      .good{fill:#eaf8f1;stroke:#35a66f;stroke-width:2}.warn{fill:#fff8e8;stroke:#d6a438;stroke-width:2}
+      .line{stroke:#18366f;stroke-width:3;fill:none;marker-end:url(#a)}
+      text{font-family:Inter,Arial,sans-serif}.h{font-size:28px;font-weight:700}.sh{font-size:21px;font-weight:700}
+      .b{font-size:17px}.s{font-size:14px}.mono{font-family:"SFMono-Regular",Consolas,monospace;font-size:16px}
+      .caps{font-size:14px;font-weight:700;letter-spacing:1.4px}
+    </style>
+  </defs>
+  <rect class="bg" width="1440" height="760"/>
+  <text x="70" y="66" class="h ink">One anchor, two different claims</text>
+
+  <text x="70" y="116" class="caps muted">OBJECT A — QUALIFYING WALLET-SIGNED REQUEST</text>
+  <rect x="70" y="142" width="520" height="390" rx="18" class="focus"/>
+  <text x="104" y="188" class="sh navy">CAIP-380 portable envelope</text>
+  <text x="104" y="232" class="mono ink">did</text>
+  <text x="104" y="266" class="mono ink">verifierIds[]</text>
+  <text x="104" y="300" class="mono ink">data{...}</text>
+  <text x="104" y="334" class="mono ink">signedTimestamp</text>
+  <text x="104" y="368" class="mono ink">chainId  |  chain</text>
+  <line x1="104" y1="395" x2="556" y2="395" stroke="#b8c7df" stroke-width="2"/>
+  <text x="104" y="430" class="b ink">canonical JSON → SHAKE-256 → qHash</text>
+  <text x="104" y="462" class="b ink">wallet signature over the signer string</text>
+  <text x="104" y="502" class="s muted">Proves request integrity and signer authorization.</text>
+
+  <path d="M590 334 H750" class="line"/>
+  <rect x="618" y="260" width="104" height="104" rx="52" fill="#0a2055"/>
+  <text x="670" y="304" text-anchor="middle" fill="#fff" class="s">correlation</text>
+  <text x="670" y="330" text-anchor="middle" fill="#fff" class="mono">qHash</text>
+
+  <text x="750" y="116" class="caps muted">OBJECT B — ISSUER-ATTRIBUTED RESULT</text>
+  <rect x="750" y="142" width="620" height="390" rx="18" class="good"/>
+  <text x="784" y="188" class="sh navy">NEUS trust receipt</text>
+  <text x="784" y="232" class="mono ink">qHash / receipt ID</text>
+  <text x="784" y="266" class="mono ink">subject + verifier result</text>
+  <text x="784" y="300" class="mono ink">issuer + issuing path</text>
+  <text x="784" y="334" class="mono ink">createdAt + expiresAt</text>
+  <text x="784" y="368" class="mono ink">visibility + current status</text>
+  <line x1="784" y1="395" x2="1336" y2="395" stroke="#a9d7c0" stroke-width="2"/>
+  <text x="784" y="430" class="b ink">Records what the verifier returned.</text>
+  <text x="784" y="462" class="b ink">Must be checked for expiry and revocation.</text>
+  <text x="784" y="502" class="s muted">Session-authorized receipts need not contain a portable wallet envelope.</text>
+
+  <rect x="70" y="584" width="1300" height="112" rx="16" class="warn"/>
+  <text x="102" y="626" class="sh navy">Critical boundary</text>
+  <text x="102" y="660" class="b ink">A valid signature and matching qHash do not prove that a verifier ran, that evidence was true, or that a receipt is still active.</text>
+</svg>

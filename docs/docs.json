@@ -216,7 +216,8 @@
               "platform/overview",
               "platform/setup",
               "platform/proofs",
-              "platform/security-and-trust"
+              "platform/security-and-trust",
+              "whitepaper"
             ]
           },
           {

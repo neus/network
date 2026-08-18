@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="680" viewBox="0 0 1440 680" role="img" aria-labelledby="title desc">
+  <title id="title">Reuse-first verification lifecycle</title>
+  <desc id="desc">A gate checks saved results first, runs only missing or stale checks, then evaluates policy and executes or blocks the action.</desc>
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#18366f"/></marker>
+    <style>
+      .bg{fill:#f7f9fc}.ink{fill:#101828}.navy{fill:#0a2055}.muted{fill:#667085}
+      .box{fill:#fff;stroke:#cbd5e1;stroke-width:2}.focus{fill:#eef3fb;stroke:#18366f;stroke-width:3}
+      .good{fill:#eaf8f1;stroke:#35a66f;stroke-width:2}.bad{fill:#fff2f0;stroke:#d75a4a;stroke-width:2}
+      .line{stroke:#18366f;stroke-width:3;fill:none;marker-end:url(#a)}
+      text{font-family:Inter,Arial,sans-serif}.h{font-size:28px;font-weight:700}.n{font-size:17px;font-weight:800}
+      .sh{font-size:20px;font-weight:700}.b{font-size:16px}.s{font-size:14px}
+    </style>
+  </defs>
+  <rect class="bg" width="1440" height="680"/>
+  <text x="70" y="66" class="h ink">Reuse first. Verify only what changed.</text>
+
+  <rect x="70" y="130" width="210" height="126" rx="14" class="box"/>
+  <circle cx="104" cy="164" r="18" fill="#0a2055"/><text x="104" y="170" text-anchor="middle" fill="#fff" class="n">1</text>
+  <text x="175" y="174" text-anchor="middle" class="sh navy">Resolve</text>
+  <text x="175" y="205" text-anchor="middle" class="b ink">subject + action</text>
+  <text x="175" y="230" text-anchor="middle" class="s muted">and gate policy</text>
+
+  <path d="M280 193 H326" class="line"/>
+  <rect x="330" y="130" width="210" height="126" rx="14" class="focus"/>
+  <circle cx="364" cy="164" r="18" fill="#0a2055"/><text x="364" y="170" text-anchor="middle" fill="#fff" class="n">2</text>
+  <text x="435" y="174" text-anchor="middle" class="sh navy">Check</text>
+  <text x="435" y="205" text-anchor="middle" class="b ink">current receipts</text>
+  <text x="435" y="230" text-anchor="middle" class="s muted">by subject + requirement</text>
+
+  <path d="M540 193 H586" class="line"/>
+  <rect x="590" y="130" width="210" height="126" rx="14" class="box"/>
+  <circle cx="624" cy="164" r="18" fill="#0a2055"/><text x="624" y="170" text-anchor="middle" fill="#fff" class="n">3</text>
+  <text x="695" y="174" text-anchor="middle" class="sh navy">Verify</text>
+  <text x="695" y="205" text-anchor="middle" class="b ink">missing or stale</text>
+  <text x="695" y="230" text-anchor="middle" class="s muted">checks only</text>
+
+  <path d="M800 193 H846" class="line"/>
+  <rect x="850" y="130" width="210" height="126" rx="14" class="focus"/>
+  <circle cx="884" cy="164" r="18" fill="#0a2055"/><text x="884" y="170" text-anchor="middle" fill="#fff" class="n">4</text>
+  <text x="955" y="174" text-anchor="middle" class="sh navy">Evaluate</text>
+  <text x="955" y="205" text-anchor="middle" class="b ink">status + scope</text>
+  <text x="955" y="230" text-anchor="middle" class="s muted">limits + local policy</text>
+
+  <path d="M1060 193 H1106" class="line"/>
+  <rect x="1110" y="130" width="260" height="126" rx="14" class="good"/>
+  <circle cx="1144" cy="164" r="18" fill="#268a5a"/><text x="1144" y="170" text-anchor="middle" fill="#fff" class="n">5</text>
+  <text x="1240" y="174" text-anchor="middle" class="sh navy">Act or stop</text>
+  <text x="1240" y="205" text-anchor="middle" class="b ink">execute only after</text>
+  <text x="1240" y="230" text-anchor="middle" class="s muted">an acceptable decision</text>
+
+  <path d="M435 256 V328 H695 V260" class="line"/>
+  <text x="555" y="317" text-anchor="middle" class="s muted">no acceptable current receipt</text>
+
+  <path d="M955 256 V338" class="line"/>
+  <rect x="772" y="342" width="366" height="126" rx="14" class="bad"/>
+  <text x="955" y="383" text-anchor="middle" class="sh navy">Fail closed for protected actions</text>
+  <text x="955" y="415" text-anchor="middle" class="b ink">missing • expired • revoked • out of scope</text>
+  <text x="955" y="442" text-anchor="middle" class="s muted">or status unavailable under strict policy</text>
+
+  <rect x="70" y="524" width="1300" height="90" rx="14" class="box"/>
+  <text x="98" y="558" class="sh navy">The gate is the security boundary.</text>
+  <text x="98" y="588" class="b ink">A browser widget can start the flow, but a server must still protect server-side data, writes, payments, and tools.</text>
+</svg>

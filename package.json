@@ -1,6 +1,7 @@
 {
   "name": "@neus/network",
   "description": "Public NEUS documentation, SDK, plugins, and examples for portable proofs.",
+  "license": "Apache-2.0",
   "private": true,
   "type": "module",
   "engines": {

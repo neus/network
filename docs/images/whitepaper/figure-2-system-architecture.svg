@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
+  <title id="title">NEUS system architecture</title>
+  <desc id="desc">Integration surfaces send authenticated requests to the verification engine. Modular verifiers produce saved results. Gates evaluate current receipts before protected actions.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#18366f"/>
+    </marker>
+    <style>
+      .bg{fill:#f7f9fc}.ink{fill:#101828}.navy{fill:#0a2055}.muted{fill:#667085}
+      .line{stroke:#18366f;stroke-width:3;fill:none;marker-end:url(#arrow)}
+      .box{fill:#fff;stroke:#cbd5e1;stroke-width:2}.strong{fill:#fff;stroke:#18366f;stroke-width:3}
+      .soft{fill:#eef3fb;stroke:#b8c7df;stroke-width:2}.accent{fill:#eaf8f1;stroke:#35a66f;stroke-width:2}
+      text{font-family:Inter,Arial,sans-serif}.h{font-size:28px;font-weight:700}.sh{font-size:21px;font-weight:700}
+      .b{font-size:18px}.s{font-size:15px}.caps{font-size:15px;font-weight:700;letter-spacing:1.5px}
+    </style>
+  </defs>
+  <rect class="bg" width="1440" height="760"/>
+  <text x="72" y="72" class="h ink">Portable trust, evaluated at the action boundary</text>
+
+  <text x="72" y="126" class="caps muted">INTEGRATION</text>
+  <rect x="72" y="148" width="252" height="76" rx="12" class="box"/>
+  <text x="198" y="194" text-anchor="middle" class="sh navy">Hosted Verify</text>
+  <rect x="72" y="240" width="252" height="76" rx="12" class="box"/>
+  <text x="198" y="286" text-anchor="middle" class="sh navy">API + SDK</text>
+  <rect x="72" y="332" width="252" height="76" rx="12" class="box"/>
+  <text x="198" y="378" text-anchor="middle" class="sh navy">React gates</text>
+  <rect x="72" y="424" width="252" height="76" rx="12" class="box"/>
+  <text x="198" y="470" text-anchor="middle" class="sh navy">MCP</text>
+
+  <path d="M324 324 H400" class="line"/>
+
+  <text x="400" y="126" class="caps muted">VERIFICATION ENGINE</text>
+  <rect x="400" y="148" width="590" height="352" rx="18" class="strong"/>
+  <rect x="432" y="180" width="526" height="76" rx="12" class="soft"/>
+  <text x="695" y="213" text-anchor="middle" class="sh navy">Authenticate + bind</text>
+  <text x="695" y="238" text-anchor="middle" class="s muted">session, app authorization, OAuth context, or wallet signature</text>
+  <rect x="432" y="276" width="526" height="76" rx="12" class="soft"/>
+  <text x="695" y="309" text-anchor="middle" class="sh navy">Route + execute</text>
+  <text x="695" y="334" text-anchor="middle" class="s muted">registry-selected modular verifiers</text>
+  <rect x="432" y="372" width="526" height="96" rx="12" class="soft"/>
+  <text x="695" y="407" text-anchor="middle" class="sh navy">Normalize + persist</text>
+  <text x="695" y="433" text-anchor="middle" class="s muted">receipt ID, subject index, outcome, visibility, expiry, status</text>
+
+  <path d="M990 324 H1066" class="line"/>
+
+  <text x="1066" y="126" class="caps muted">ENFORCEMENT</text>
+  <rect x="1066" y="148" width="302" height="160" rx="16" class="accent"/>
+  <text x="1217" y="195" text-anchor="middle" class="sh navy">Current receipt check</text>
+  <text x="1217" y="226" text-anchor="middle" class="b ink">issuer • subject • status</text>
+  <text x="1217" y="252" text-anchor="middle" class="b ink">scope • limits • freshness</text>
+  <text x="1217" y="278" text-anchor="middle" class="b ink">revocation • local policy</text>
+  <rect x="1066" y="340" width="302" height="160" rx="16" class="strong"/>
+  <text x="1217" y="387" text-anchor="middle" class="sh navy">Protected action</text>
+  <text x="1217" y="419" text-anchor="middle" class="b ink">access • tool call • write</text>
+  <text x="1217" y="446" text-anchor="middle" class="b ink">payment • deployment</text>
+  <text x="1217" y="473" text-anchor="middle" class="b ink">private data release</text>
+  <path d="M1217 308 V336" class="line"/>
+
+  <text x="72" y="574" class="caps muted">CURRENT VERIFIER FAMILIES</text>
+  <rect x="72" y="596" width="238" height="92" rx="12" class="box"/>
+  <text x="191" y="634" text-anchor="middle" class="sh navy">Identity</text>
+  <text x="191" y="661" text-anchor="middle" class="s muted">human, accounts, wallets</text>
+  <rect x="326" y="596" width="238" height="92" rx="12" class="box"/>
+  <text x="445" y="634" text-anchor="middle" class="sh navy">Ownership</text>
+  <text x="445" y="661" text-anchor="middle" class="s muted">domains, assets, contracts</text>
+  <rect x="580" y="596" width="238" height="92" rx="12" class="box"/>
+  <text x="699" y="634" text-anchor="middle" class="sh navy">Risk + safety</text>
+  <text x="699" y="661" text-anchor="middle" class="s muted">wallet and content signals</text>
+  <rect x="834" y="596" width="238" height="92" rx="12" class="box"/>
+  <text x="953" y="634" text-anchor="middle" class="sh navy">Agents</text>
+  <text x="953" y="661" text-anchor="middle" class="s muted">identity and authority</text>
+  <rect x="1088" y="596" width="280" height="92" rx="12" class="box"/>
+  <text x="1228" y="634" text-anchor="middle" class="sh navy">Custom policy</text>
+  <text x="1228" y="661" text-anchor="middle" class="s muted">the relying party decides</text>
+</svg>
