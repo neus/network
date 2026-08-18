@@ -24,7 +24,7 @@ MCP client discovers NEUS MCP
   → Client uses Bearer token on MCP requests
 ```
 
-`/oauth/authorize` validates OAuth parameters. Without a session it redirects to `https://neus.network/verify?intent=login&returnTo=/oauth/authorize?...`. After login it issues a single-use code (10-minute TTL) and redirects to `redirect_uri`.
+`/oauth/authorize` validates OAuth parameters. Without a session it redirects to `https://neus.network/verify?intent=mcp&returnTo=/oauth/authorize?...`. After login it issues a single-use code (10-minute TTL) and redirects to `redirect_uri`. Repeated identical `resource` values are accepted (RFC 8707).
 
 Token exchange and revocation are public OAuth endpoints on `neus.network`.
 
@@ -43,13 +43,9 @@ GET https://mcp.neus.network/.well-known/oauth-protected-resource
   "scopes_supported": [
     "neus:core",
     "neus:profile",
-    "neus:secrets",
-    "offline_access"
+    "neus:secrets"
   ],
-  "resource_documentation": "https://docs.neus.network/mcp/overview",
-  "resource_indicators_supported": true,
-  "resource_parameter_supported": true,
-  "resource_parameter_values": ["https://mcp.neus.network/mcp"]
+  "resource_documentation": "https://docs.neus.network/mcp/overview"
 }
 ```
 
@@ -57,7 +53,7 @@ When the MCP server receives an unauthenticated request:
 
 ```http
 HTTP/1.1 401 Unauthorized
-WWW-Authenticate: Bearer resource_metadata="https://mcp.neus.network/.well-known/oauth-protected-resource"
+WWW-Authenticate: Bearer resource_metadata="https://mcp.neus.network/mcp/.well-known/oauth-protected-resource", scope="neus:core neus:profile neus:secrets"
 ```
 
 ### Authorization server metadata
@@ -84,8 +80,6 @@ GET https://neus.network/.well-known/oauth-authorization-server
     "offline_access"
   ],
   "resource_indicators_supported": true,
-  "resource_parameter_supported": true,
-  "resource": "https://mcp.neus.network/mcp",
   "authorization_response_iss_parameter_supported": true
 }
 ```
@@ -115,7 +109,7 @@ GET https://neus.network/oauth/authorize
 | `code_challenge_method` | Yes | Must be `S256` |
 | `state` | Yes | CSRF protection: returned verbatim |
 | `scope` | No | Default: `neus:core neus:profile neus:secrets offline_access` |
-| `resource` | Yes | Must be `https://mcp.neus.network/mcp` |
+| `resource` | No | Missing defaults to `https://mcp.neus.network/mcp`. Repeated identical canonical values are accepted (RFC 8707). |
 | `iss` | Returned | The AS returns `iss=https://neus.network` on the callback. Clients MUST validate it matches the expected issuer (RFC 9207). |
 
 ## Token exchange
@@ -205,7 +199,7 @@ Revoking an access token also invalidates all associated refresh tokens.
 | `neus-cli` | NEUS SDK CLI (`neus auth`): loopback redirect on `127.0.0.1` only |
 | `neus-mcp-host` | Host MCP clients: issued by DCR for non-loopback flows |
 
-Hosted MCP clients use a **URL-only** MCP config. The host discovers OAuth metadata via `/.well-known/oauth-protected-resource`, runs its own Dynamic Client Registration (DCR) against `/oauth/register`, and owns its PKCE + silent-refresh lifecycle. DCR returns `neus-cli` for loopback (`127.0.0.1`) redirects and `neus-mcp-host` for host-managed clients. Do not pin `neus-cli` for host-owned OAuth.
+Hosted MCP clients use a **URL-only** MCP config. The host discovers OAuth metadata via `/.well-known/oauth-protected-resource`, runs its own Dynamic Client Registration (DCR) against `/oauth/register`, and owns its PKCE + silent-refresh lifecycle. DCR returns `neus-cli` only for the CLI loopback `http://127.0.0.1:<port>/callback`. Cursor (`/callback/<id>`, `localhost:8787`, or `https://www.cursor.com/agents/mcp/oauth/callback`) and other hosts receive `neus-mcp-host`. Do not pin `neus-cli` for host-owned OAuth.
 
 The OAuth examples above show `client_id=neus-cli` because they document the CLI loopback path (`neus auth`). Host clients receive their own `client_id` from DCR and send that instead, plus the same `resource=https://mcp.neus.network/mcp`.
 

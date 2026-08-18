@@ -75,7 +75,7 @@ When a client requests a protected resource without credentials, some hosts retu
 
 ```http
 HTTP/1.1 401 Unauthorized
-WWW-Authenticate: Bearer resource_metadata="https://mcp.neus.network/.well-known/oauth-protected-resource"
+WWW-Authenticate: Bearer resource_metadata="https://mcp.neus.network/mcp/.well-known/oauth-protected-resource", scope="neus:core neus:profile neus:secrets"
 ```
 
 Clients that support MCP OAuth follow that metadata to start browser sign-in. You can also connect with URL-only config and sign in through your host, or run **`neus auth`** from the CLI.

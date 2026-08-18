@@ -9,7 +9,7 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-`neus setup` registers hosted NEUS MCP and starts OAuth.
+`neus setup` registers hosted NEUS MCP. It does not open a browser. Click **Connect** in your host, or run `neus auth`.
 
 Servers and CI:
 
