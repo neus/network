@@ -39,7 +39,10 @@
     "MD009": false,
 
     // Lists should be surrounded by blank lines - relaxed for MDX
-    "MD032": false
+    "MD032": false,
+
+    // Sentence headings keep their period. Do not rewrite copy to satisfy this rule.
+    "MD026": false
   },
   "globs": [
     "README.md",
