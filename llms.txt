@@ -10,7 +10,7 @@ Don't restart from zero. Every app makes you reconnect yourself, rebuild context
 - **Gates:** Proof-based access to content, rewards, and member areas, with optional USDC or card checkout.
 - **Agent trust:** Verifiable agent identity, controller-approved authority, spend caps, and expiration. Checked before tools run.
 - **Unique-person checks:** Reuse proof-of-human and wallet-risk results across a product.
-- **MCP for assistants:** One setup writes supported editor configuration and signs the user in with OAuth. Same identity, provenance, and authority in Cursor, Claude Code, Codex, and VS Code.
+- **MCP for assistants:** The portable trust harness for AI. One endpoint, one sign-in. Identity, proofs, permissions, and trusted context on any MCP client. Private by default. https://mcp.neus.network/mcp
 - **Trust workflow skill:** https://github.com/neus/network/blob/main/sdk/skills/neus-trust-workflow/SKILL.md (canonical source, shipped in `@neus/sdk` and bundled in the `neus-mcp` plugin)
 - **Integrate skill:** https://github.com/neus/network/blob/main/sdk/skills/neus-integrate/SKILL.md (add NEUS access control to an app: gate, server check, and test flow)
 

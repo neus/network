@@ -83,7 +83,7 @@ Or use [hosted verify](../cookbook/auth-hosted-verify).
 | Field | Required | Description |
 |-------|----------|-------------|
 | `agentId` | Yes | Unique id (1–128 chars) |
-| `agentWallet` | Yes | Agent address (EVM or Solana) |
+| `agentWallet` | Yes | Agent wallet address in that chain's native format |
 | `agentChainRef` | Yes* | CAIP-2 chain for the agent wallet (e.g. `eip155:8453`). *Optional if the request supplies `chain` or `chainId` |
 | `agentLabel` | No | Display name |
 | `agentType` | No | `ai`, `bot`, `service`, `automation`, or `agent` |

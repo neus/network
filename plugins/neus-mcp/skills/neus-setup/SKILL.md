@@ -17,6 +17,4 @@ Then verify the connection, sign-in, and skill are healthy:
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-For a single client, add `--client cursor`, `--client codex`, `--client claude`, or `--client vscode`.
-
-In Cursor, installing `neus-mcp` from the marketplace registers NEUS without the CLI. Click **Connect** to sign in. If the plugin is present, the CLI skips a duplicate registration.
+If your host already has a `neus-mcp` marketplace plugin, install it and click **Connect**. The CLI skips a duplicate registration when the plugin is present.

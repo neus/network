@@ -1,8 +1,12 @@
 ---
-title: Setup
-description: "Connect any MCP client to NEUS: identity, permissions, proofs, and Vault."
+title: "Connect NEUS anywhere"
+description: "The portable trust harness for AI. Private by default. One endpoint. Any MCP client."
 icon: code
 ---
+
+The portable trust harness for AI.
+
+Bring your identity, proofs, permissions, agents, and trusted context to any MCP client. Private by default. One endpoint. One sign-in. Trust that travels.
 
 **Hosted endpoint:** `https://mcp.neus.network/mcp`
 
@@ -12,16 +16,7 @@ icon: code
 npx -y -p @neus/sdk neus setup
 ```
 
-This installs the public workflow skill and configures supported MCP clients. It does not open a browser or sign you in.
-
-To configure one client:
-
-```bash
-npx -y -p @neus/sdk neus setup --client cursor
-npx -y -p @neus/sdk neus setup --client codex
-npx -y -p @neus/sdk neus setup --client vscode
-npx -y -p @neus/sdk neus setup --client claude
-```
+This installs the public workflow skill and registers the hosted endpoint. It does not open a browser or sign you in.
 
 ## 2. Sign in
 
@@ -31,11 +26,7 @@ Click **Connect** in your MCP client, or run:
 npx -y -p @neus/sdk neus auth
 ```
 
-Codex manages its own OAuth session:
-
-```bash
-npx -y -p @neus/sdk neus auth --client codex
-```
+Default sign-in is browser OAuth. No wallet required.
 
 ## 3. Check the connection
 
@@ -43,26 +34,26 @@ npx -y -p @neus/sdk neus auth --client codex
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-A healthy result confirms that the endpoint is registered, authentication works, and the public MCP tools are available.
+A healthy result confirms the endpoint, auth, and public tools.
 
-## Or paste this into your agent
+## Or paste this into any agent
 
-Copy the block below into Claude Code, Cursor, Codex, or any coding agent with NEUS MCP. The agent reads it, runs the three steps above, and starts carrying your authority.
+The agent reads it, runs the three steps, and starts carrying your authority.
 
 ```text
 # NEUS connect in one prompt
 
-You are connecting this editor to NEUS so my identity, provenance, and
+You are connecting this client to NEUS so my identity, provenance, and
 authority travel with me. Follow these steps exactly.
 
 ## 1. Register NEUS
 Run: npx -y -p @neus/sdk neus setup
-This installs the public workflow skill and writes MCP config for every
-supported host in this project. It does not open a browser.
+This installs the public workflow skill and registers the hosted MCP
+endpoint. It does not open a browser.
 
 ## 2. Sign in
 Run: npx -y -p @neus/sdk neus auth
-Or click Connect in the MCP client. Default sign-in is browser OAuth.
+Or click Connect in your MCP client. Default sign-in is browser OAuth.
 No wallet required.
 
 ## 3. Confirm the connection
@@ -79,55 +70,9 @@ Canonical endpoint: https://mcp.neus.network/mcp
 Docs: https://docs.neus.network/mcp/setup
 ```
 
-## Client details
+## Any MCP client
 
-<Tabs sync={false}>
-  <Tab title="Cursor">
-
-Install `neus-mcp` from the NEUS marketplace, or use the CLI command above. The plugin registers the endpoint and bundles the public skills. When the plugin is installed, the CLI skips duplicate registration.
-
-```text
-Cursor → Settings → Cursor Plugins → Add marketplace
-Marketplace URL: https://github.com/neus/network
-Install: neus-mcp
-```
-
-  </Tab>
-  <Tab title="Codex">
-
-The CLI writes the MCP registration to `~/.codex/config.toml`. Install the optional skill bundle with:
-
-```text
-codex plugin marketplace add https://github.com/neus/network
-codex plugin install neus-mcp
-```
-
-  </Tab>
-  <Tab title="VS Code">
-
-| OS | User config |
-| --- | --- |
-| macOS | `~/Library/Application Support/Code/User/mcp.json` |
-| Linux | `~/.config/Code/User/mcp.json` |
-| Windows | `%APPDATA%\Code\User/mcp.json` |
-
-Project config: `./.vscode/mcp.json`
-
-  </Tab>
-  <Tab title="Claude Code">
-
-The CLI registers NEUS in `~/.claude.json`. Install the optional plugin with:
-
-```text
-/plugin marketplace add https://github.com/neus/network
-/plugin install neus-mcp@neus
-/neus-mcp:neus-setup
-```
-
-  </Tab>
-  <Tab title="Another MCP client">
-
-Add one remote server:
+Add one remote server. Your client discovers OAuth from the hosted endpoint.
 
 ```json
 {
@@ -139,20 +84,28 @@ Add one remote server:
 }
 ```
 
-Your client discovers NEUS OAuth metadata from the hosted endpoint.
+If your client requires the spec `type` field:
 
-  </Tab>
-</Tabs>
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "type": "http",
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
+}
+```
 
 ## Connect an agent to a project
 
 After creating a Trusted Agent on your profile, load its current identity and permissions:
 
 ```bash
-npx -y -p @neus/sdk neus mount <agentId> --apply cursor
+npx -y -p @neus/sdk neus mount <agentId> --apply <host>
 ```
 
-Replace `cursor` with `claude` or `codex` for those hosts. The command writes `.neus/mount.json` and the selected host adapter. See [Connect agent context](../agents/runtime-mount).
+The command writes `.neus/mount.json` and the selected host adapter. See [Connect agent context](../agents/runtime-mount).
 
 ## Access keys
 

@@ -46,7 +46,7 @@ Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are av
     neus setup
     neus doctor --live
     ```
-    Configures hosted NEUS MCP for Cursor, Codex, VS Code, or Claude Code.
+    Registers hosted NEUS MCP on any MCP client.
   </Step>
   <Step title="Check">
     Call **`neus_context`**, then **`neus_agent_link`** with the agent wallet.
@@ -60,7 +60,7 @@ Quick setup presets (`full-access`, `payments`, `readonly`, `automation`) are av
   <Step title="Mount">
     In your project repo:
     ```bash
-    neus mount <agentId> --apply cursor
+    neus mount <agentId> --apply <host>
     ```
     Loads the agent&apos;s verified identity, permissions, and rules into the project. [Connect agent context](./runtime-mount).
   </Step>

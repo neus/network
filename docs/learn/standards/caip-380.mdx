@@ -71,7 +71,7 @@ const result = await verifyPortableProofEnvelope(envelope);
 if (!result.valid) throw new Error(result.errors.join('; '));
 ```
 
-The helper recomputes `qHash`, checks the DID and chain binding, reconstructs the six-line message, and verifies the signature locally. EVM uses EIP-191, EIP-1271, and EIP-6492. Non-EVM chains use their native signing scheme (Ed25519 for Solana, NEAR's `near_sign` for NEAR, and so on). EIP-1271 smart accounts require chain state; pass an ethers provider as `options.provider`.
+The helper recomputes `qHash`, checks the DID and chain binding, reconstructs the six-line message, and verifies the signature locally. Each chain uses its native signing scheme. EIP-1271 smart accounts require chain state; pass an ethers provider as `options.provider`.
 
 Use the [small EVM fixture](https://github.com/neus/network/blob/main/examples/caip-380/minimal-evm.json) for adapter tests. Its timestamp is historical, so `fresh` can be false while its hash and signature remain valid.
 
@@ -82,7 +82,7 @@ The envelope is chain-agnostic. Any chain with a CAIP-2 namespace and a signing 
 | Chain family | CAIP-2 example | Signature | Status | Offline fixture |
 |--|--|--|--|--|
 | EVM | `eip155:1` | EIP-191 / EIP-1271 / EIP-6492 | Live | [minimal-evm.json](https://github.com/neus/network/blob/main/examples/caip-380/minimal-evm.json) |
-| Solana | `solana:mainnet` | Ed25519 | First non-EVM profile, spec example and fixture published | [minimal-solana.json](https://github.com/neus/network/blob/main/examples/caip-380/minimal-solana.json) |
+| Solana | `solana:mainnet` | Ed25519 | Live fixture | [minimal-solana.json](https://github.com/neus/network/blob/main/examples/caip-380/minimal-solana.json) |
 | NEAR | `near:mainnet` | NEAR `near_sign` (Ed25519) | Profile defined by CAIP-2 namespace | Pending |
 | Other | Any CAIP-2 | Profile-specific | Add a profile when the ecosystem publishes a signing spec | Pending |
 
@@ -96,4 +96,4 @@ NEUS rejects a new request if `signedTimestamp` is older than 5 minutes or more 
 
 [CAIP-380 (ChainAgnostic)](https://standards.chainagnostic.org/CAIPs/caip-380). Status: Draft. NEUS is the reference implementation.
 
-CAIP-380 is at Draft status in the official CASA registry. Advancing to Review and Accepted requires at least two independent implementations and editor advancement. See [HISTORY.md](https://github.com/neus/network/blob/main/HISTORY.md) for the full standards chronology.
+CAIP-380 is at Draft status in the official CASA registry. Advancing to Review and Accepted requires at least two independent implementations and editor advancement. See the [whitepaper standards section](/whitepaper#standards-and-interoperability) for lifecycle status.

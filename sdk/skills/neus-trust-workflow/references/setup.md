@@ -9,13 +9,7 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-`neus setup` configures hosted NEUS MCP for Cursor, Codex, VS Code, and Claude Code and starts the selected OAuth flow.
-
-Codex-only:
-
-```bash
-neus setup --client codex
-```
+`neus setup` registers hosted NEUS MCP and starts OAuth.
 
 Servers and CI:
 
@@ -32,13 +26,13 @@ Hosted MCP: **`https://mcp.neus.network/mcp`**
 After NEUS is connected on the machine:
 
 ```bash
-neus mount <agentId> --apply cursor
+neus mount <agentId> --apply <host>
 ```
 
 | Layer | Command |
 |-------|---------|
 | **Machine** | `neus setup` (once) |
-| **Project** | `neus mount <agentId> --apply cursor` |
+| **Project** | `neus mount <agentId> --apply <host>` |
 | **Session** | `neus_context` → `neus_agent_mount` when acting as the agent |
 
 Use `neus mount` only when acting as a registered profile agent. For proof checks and secrets, `neus setup` plus `neus_context` is enough.

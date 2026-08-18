@@ -1,110 +1,55 @@
 ---
-title: MCP
-sidebarTitle: MCP
-description: The trust harness for AI agents. One endpoint, one sign-in, same authority everywhere.
+title: "MCP"
+sidebarTitle: "MCP"
+description: "The portable trust harness for AI. Private by default. One endpoint. One sign-in. Trust that travels."
 icon: plug
 "og:image": "/images/og-mcp.png"
 "twitter:image": "/images/og-mcp.png"
 ---
 
-One endpoint. One sign-in. Same authority everywhere.
+## The portable trust harness for AI.
 
-**Endpoint:** `https://mcp.neus.network/mcp`
+Bring your **identity, proofs, permissions, agents, and trusted context** to any MCP client.
 
-NEUS MCP gives any agent, editor, server, or API the same portable identity, permissions, proofs, provenance, and Vault. No wallet required.
+**Private by default. Portable across models, apps, and runtimes.**
 
-### Identity
+**One endpoint. One sign-in. Trust that travels.**
 
-Verified identity for humans, organizations, and agents. Portable across every connected client.
-
-### Permissions
-
-Scoped authority with spend caps, end dates, and revocation. Checked before tools run.
-
-### Proofs
-
-Reusable verification records. Create once, reuse everywhere. Private by default.
-
-### Context
-
-Provenance that travels with the agent across sessions and environments.
-
-### Vault
-
-Encrypted secrets stored, listed, and revoked through MCP. No keys pasted into chat.
-
-### Gates
-
-Access rules that require current proof before access, payment, or execution.
-
-## Works with any MCP client
-
-Any client that speaks MCP can connect. Editors, agent frameworks, chat apps, servers, CI, and custom clients all use the same hosted URL. See [MCP setup](./setup) for per-client steps.
-
-## How it works
-
-Sign in once. NEUS loads your identity, permissions, and saved proofs.
-
-1. Look up a saved proof before a sensitive action
-2. Read proofs and saved context with `neus_proofs_get`
-3. Guide any missing verification step
-4. Confirm agent identity and authority before tools run
-5. Store or revoke Vault secrets when signed in
-
-You see **Passed**, **Action needed**, or **Blocked** in chat. Not raw tool output.
-
-## Agent frameworks
-
-NEUS works alongside your agent framework, not instead of it. Your framework runs the tools; NEUS checks identity and permission before they run.
-
-**Hermes Agent:** Connect NEUS MCP as a tool source. Hermes handles planning, memory, and skill creation. NEUS adds identity, permissions, and proof checks before sensitive actions.
-
-**OpenClaw:** Add the NEUS MCP URL as a remote server. OpenClaw orchestrates channels and subagents; NEUS checks who is acting and what they are allowed to do.
-
-**LangGraph, CrewAI, Microsoft Agent Framework:** Any framework that speaks MCP can connect. Your framework handles orchestration and state; NEUS handles the trust layer.
-
-**A2A and EIP-8004:** NEUS publishes per-agent A2A and EIP-8004 cards for agent-to-agent discovery. Your agents can discover and verify NEUS-registered agents through standard protocols.
-
-**ACP:** NEUS permission proofs complement Agent Communication Protocol. ACP handles inter-agent messaging; NEUS provides the identity and authority layer that says whether a message should be trusted.
-
-## Private cloud agents
-
-Identity, permissions, and proof history usually stay trapped in whichever environment the agent was set up in. NEUS makes them portable. The agent connects from wherever it runs, and its trust state travels with it.
-
-Optionally, a confidential compute runtime (such as [Phala dstack](https://phala.com/dstack)) can prove the environment itself is genuine with a TEE-attested hardware quote over the full app hash. This is an optional hardening layer; NEUS works without it.
-
-Full integration guide: [Private cloud agents](../cookbook/private-cloud-agents).
-
-## Quick start
+`https://mcp.neus.network/mcp`
 
 ```bash
 npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-Installs the NEUS skill and configures the MCP endpoint. Click **Connect** in your host or run `neus auth` to sign in. No wallet required. For servers, CI, or automation, use a profile access key.
+## Share proof. Not private data.
 
-Per-client setup: [MCP setup](./setup).
+Your AI uses the proof it needs. The data stays with you.
 
-## Reference
+Don't restart from zero. Same profile. New agent.
 
-<CardGroup cols={3}>
-  <Card title="MCP setup" icon="plug" href="./setup">
-    Per-client config and access keys.
-  </Card>
-  <Card title="OAuth" icon="shield-check" href="./oauth">
-    Sign-in flow and tokens.
-  </Card>
-  <Card title="Guarded action" icon="shield-check" href="./guarded-action">
-    Check permissions before a tool runs.
-  </Card>
-  <Card title="Private cloud agents" icon="shield-check" href="../cookbook/private-cloud-agents">
-    One trust state across every environment.
-  </Card>
-  <Card title="Agent setup" icon="robot" href="../cookbook/verifiable-agents">
-    Agent identity and authority.
-  </Card>
-  <Card title="Access keys" icon="key" href="./auth">
-    Headless and server auth.
-  </Card>
-</CardGroup>
+```text
+Private profile
+      │
+      ├── Identity
+      ├── Proofs
+      ├── Permissions
+      ├── Agents
+      ├── Context
+      └── Secrets
+             │
+             ▼
+          NEUS MCP
+             │
+     ┌───────┼───────┐
+     ▼       ▼       ▼
+   Cursor   Codex   Claude
+             │
+             ▼
+       Your runtime
+```
+
+Prove once. Verify anywhere.
+
+[Connect NEUS](./setup)

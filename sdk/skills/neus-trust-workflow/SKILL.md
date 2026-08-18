@@ -2,7 +2,7 @@
 name: neus-trust-workflow
 description: Checks identity, permissions, and reusable proofs before sensitive assistant actions. Use when verifying authority, mounting a Trusted Agent, managing Vault secrets, or when the user asks for NEUS Verify.
 license: Apache-2.0
-compatibility: Requires hosted NEUS MCP (https://mcp.neus.network/mcp) in Cursor, Claude Code, Codex, or VS Code.
+compatibility: Requires hosted NEUS MCP (https://mcp.neus.network/mcp). Works with any MCP client.
 metadata:
   author: NEUS
   version: "1.3.9"

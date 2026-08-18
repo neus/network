@@ -58,7 +58,7 @@ Give any agent the identity, context, tools, permissions, and proofs it needs wi
 
 ### One command for assistants
 
-Connect once. Your assistant carries your identity, provenance, and scoped authority across editors, reusing what's verified, checking limits before sensitive actions, and leaving a proof for every result.
+The portable trust harness for AI. Bring your identity, proofs, permissions, agents, and trusted context to any MCP client. Private by default. One endpoint. One sign-in. Trust that travels.
 
 ```bash
 npx -y -p @neus/sdk neus setup
@@ -68,39 +68,7 @@ npx -y -p @neus/sdk neus doctor --live
 
 `neus setup` registers MCP and installs the workflow skill. `neus auth` signs you in (or click **Connect** in your host). `neus doctor --live` confirms the connection.
 
-### Or paste this into your agent
-
-Copy the block below into Claude Code, Cursor, Codex, or any coding agent with NEUS MCP. The agent reads it, runs setup, signs you in, and starts carrying your authority.
-
-```text
-# NEUS connect in one prompt
-
-You are connecting this editor to NEUS so my identity, provenance, and
-authority travel with me. Follow these steps exactly.
-
-## 1. Register NEUS
-Run: npx -y -p @neus/sdk neus setup
-This installs the public workflow skill and writes MCP config for every
-supported host in this project. It does not open a browser.
-
-## 2. Sign in
-Run: npx -y -p @neus/sdk neus auth
-Or click Connect in the MCP client. Default sign-in is browser OAuth.
-No wallet required.
-
-## 3. Confirm the connection
-Run: npx -y -p @neus/sdk neus doctor --live
-A healthy result confirms the endpoint, auth, and public tools.
-
-## 4. What to do next
-After setup, reuse my existing proofs before asking me to verify again.
-Before any sensitive action (spend, publish, secrets, agent tool call),
-call neus_context once, then neus_proofs_check. Summarize as
-NEUS Verify: Passed, Action needed, or Blocked.
-
-Canonical endpoint: https://mcp.neus.network/mcp
-Docs: https://docs.neus.network/mcp/setup
-```
+Full steps: [MCP setup](https://docs.neus.network/mcp/setup).
 
 Then ask your assistant:
 
@@ -115,7 +83,7 @@ Then ask your assistant:
 | Server / API | [API overview](https://docs.neus.network/api/overview) |
 | Agent trust | [Agents overview](https://docs.neus.network/agents/overview) |
 
-Install **`neus-mcp`** from this repo's marketplace to connect Cursor in one click. See [MCP setup](https://docs.neus.network/mcp/setup).
+Install **`neus-mcp`** from this repo's marketplace, or run `neus setup`. See [MCP setup](https://docs.neus.network/mcp/setup).
 
 ### Add trust to an app
 
@@ -164,11 +132,11 @@ The live verifier catalog is documented at [docs.neus.network/verification/verif
 
 ## This repository
 
-Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widgets, examples, specs, and the **`neus-mcp`** editor plugin ([setup](https://docs.neus.network/mcp/setup)).
+Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widgets, examples, specs, and the **`neus-mcp`** plugin ([setup](https://docs.neus.network/mcp/setup)).
 
 ## Open standard
 
-NEUS is the driving reference implementation of [CAIP-380 (Portable Proof)](https://standards.chainagnostic.org/CAIPs/caip-380), a ChainAgnostic standard at Draft status. Wallet-signed request envelopes have a deterministic SHAKE-256 hash (`qHash`), CAIP-2 chain context, and CAIP-10 / `did:pkh` identities. Their hash, DID binding, and signature can be checked without NEUS; verifier outcomes remain part of the NEUS portable proof. The envelope is chain-agnostic and accepts any CAIP-2 namespace. NEUS ships EVM (EIP-191, EIP-1271, EIP-6492) and Solana (Ed25519) signing profiles today, with offline fixtures. See the [EVM fixture](./examples/caip-380/minimal-evm.json), the [Solana fixture](./examples/caip-380/minimal-solana.json), the [CAIP-380 docs](https://docs.neus.network/learn/standards/caip-380), the [Technical Whitepaper](https://docs.neus.network/whitepaper), and the [standards chronology](./HISTORY.md).
+NEUS is the driving reference implementation of [CAIP-380 (Portable Proof)](https://standards.chainagnostic.org/CAIPs/caip-380) ([PR](https://github.com/ChainAgnostic/CAIPs/pull/380)), a ChainAgnostic standard at Draft status. Wallet-signed request envelopes have a deterministic SHAKE-256 hash (`qHash`), CAIP-2 chain context, and CAIP-10 / `did:pkh` identities. Their hash, DID binding, and signature can be checked without NEUS; verifier outcomes remain part of the NEUS portable proof. The envelope is chain-agnostic. Any CAIP-2 namespace. Signing follows the chain's native scheme. See the [offline fixtures](./examples/caip-380), the [CAIP-380 docs](https://docs.neus.network/learn/standards/caip-380), and the [Technical Whitepaper](https://docs.neus.network/whitepaper).
 
 ## Support
 

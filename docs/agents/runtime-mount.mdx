@@ -19,15 +19,10 @@ Use it when an assistant or worker should act as a specific profile agent. One c
 
 ```bash
 neus setup
-neus mount my-agent --apply cursor
+neus mount my-agent --apply <host>
 ```
 
-This writes:
-
-- `.neus/mount.json`: machine-readable agent context
-- `.cursor/rules/neus-agent-my-agent.mdc`: agent instructions and trust workflow
-
-Start a **new** Agent chat in Cursor so the project rules load.
+This writes `.neus/mount.json` and the host adapter for that client. Start a new agent session so the project rules load.
 
 ## Assistant tool
 
@@ -48,24 +43,24 @@ import { resolveRuntimeBundleFromMcp } from '@neus/sdk/runtime-mount';
 import { applyRuntimeBundle } from '@neus/sdk/runtime-adapters';
 ```
 
-Use `resolveRuntimeBundleFromMcp` with your MCP transport, then `applyRuntimeBundle('cursor', bundle, cwd)` for project files. The same bundle shape is returned by the `neus_agent_mount` MCP tool and the `neus mount` CLI.
+Use `resolveRuntimeBundleFromMcp` with your MCP transport, then `applyRuntimeBundle(host, bundle, cwd)` for project files. The same bundle shape is returned by the `neus_agent_mount` MCP tool and the `neus mount` CLI.
 
 ## Where permissions are enforced
 
 | Surface | What NEUS provides |
 |--------|----------------------|
 | **NEUS agent tab** | Enforces permissions, tool access, and proof checks |
-| **Cursor and other editors** | Loads project rules and trust context; start a new chat after connecting |
+| **MCP clients** | Loads project rules and trust context; start a new session after connecting |
 | **Workers and backends** | Returns the bundle for your application to enforce in its own tool loop |
 
-Cursor controls third-party tools inside the editor. NEUS supplies verified context and permissions; your host remains responsible for enforcement.
+Your client controls its own tools. NEUS supplies verified context and permissions; your host remains responsible for enforcement.
 
 ## Profile UI
 
-**Connect in Cursor** on the agent card downloads the project files and copies:
+**Connect** on the agent card downloads the project files and copies:
 
 ```bash
-neus mount <agentId> --apply cursor
+neus mount <agentId> --apply <host>
 ```
 
 Run that command in your project repo for the full write path.

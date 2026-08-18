@@ -1,19 +1,16 @@
 ---
 title: Technical Whitepaper
-description: NEUS Portable Trust Infrastructure for humans and AI. Architecture and trust model, version 1.0, August 2026.
+description: NEUS Portable Trust Infrastructure for humans and AI.
 icon: book-open
 sidebarTitle: Whitepaper
 ---
-
-# NEUS Technical Whitepaper
 
 ## Portable Trust Infrastructure for Humans and AI
 
 Architecture and Trust Model. Version 1.0, August 2026.
 
 **Author:** Christopher Leal, Founder and Protocol Architect, NEUS Network, Inc.
-**Canonical version:** docs.neus.network/whitepaper
-**Contact:** dev@neus.network
+**Contact:** chris@neus.network
 
 ## Abstract
 
@@ -147,10 +144,10 @@ NEUS uses existing standards for account identifiers, signatures, agent discover
 For CAIP-380 requests, `qHash` is a deterministic SHAKE-256 hash of the canonical request [1, 12]. NEUS can use the same value to correlate that request with its stored proof. `qHash` establishes correlation, not the verifier outcome. A valid request signature does not prove that a verifier ran or that a stored proof is still active.
 
 <Frame caption="**Figure 5.** `qHash` can correlate a CAIP-380 signed request with a NEUS proof, but request integrity and verifier outcome remain separate claims.">
-  <img src="/images/whitepaper/figure-5-envelope-and-receipt.svg" alt="CAIP-380 request envelope and NEUS trust receipt: the signed envelope proves request integrity, the NEUS receipt records the verifier outcome and lifecycle state, qHash correlates them but does not prove the result by itself." />
+  <img src="/images/whitepaper/figure-5-envelope-and-receipt.svg" alt="CAIP-380 request envelope and NEUS proof: the signed envelope proves request integrity, the NEUS proof records the verifier outcome and lifecycle state, qHash correlates them but does not prove the result by itself." />
 </Frame>
 
-CAIP-380 uses CAIP-2 and CAIP-10 for chain and account identifiers and supports EVM and non-EVM signing profiles [1-4]. NEUS ships EVM (EIP-191, EIP-1271, EIP-6492) and Solana (Ed25519) profiles today, and the envelope accepts any CAIP-2 namespace. Detailed canonicalization and validation rules remain in the CAIP and implementation documentation.
+CAIP-380 uses CAIP-2 and CAIP-10 for chain and account identifiers [1-4]. Signing follows the chain's native scheme. The envelope accepts any CAIP-2 namespace. Detailed canonicalization and validation rules remain in the CAIP and implementation documentation.
 
 | Protocol | Role beside NEUS |
 | --- | --- |

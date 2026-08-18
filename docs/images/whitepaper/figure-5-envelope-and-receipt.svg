@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1440" height="760" viewBox="0 0 1440 760" role="img" aria-labelledby="title desc">
-  <title id="title">CAIP-380 request envelope and NEUS trust receipt</title>
-  <desc id="desc">The signed request envelope proves request integrity and signer authorization. The NEUS receipt records the verifier outcome and lifecycle state. The qHash correlates them but does not prove the result by itself.</desc>
+  <title id="title">CAIP-380 request envelope and NEUS proof</title>
+  <desc id="desc">The signed request envelope proves request integrity and signer authorization. The NEUS proof records the verifier outcome and lifecycle state. The qHash correlates them but does not prove the result by itself.</desc>
   <defs>
     <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#18366f"/></marker>
     <style>
@@ -36,7 +36,7 @@
 
   <text x="750" y="116" class="caps muted">OBJECT B — ISSUER-ATTRIBUTED RESULT</text>
   <rect x="750" y="142" width="620" height="390" rx="18" class="good"/>
-  <text x="784" y="188" class="sh navy">NEUS trust receipt</text>
+  <text x="784" y="188" class="sh navy">NEUS proof</text>
   <text x="784" y="232" class="mono ink">qHash / receipt ID</text>
   <text x="784" y="266" class="mono ink">subject + verifier result</text>
   <text x="784" y="300" class="mono ink">issuer + issuing path</text>

@@ -1,15 +1,15 @@
 ---
 title: Connect apps and services
-description: Link Google, GitHub, Slack, Notion, and 1,200+ apps to your NEUS assistant.
+description: Link Gmail, Slack, GitHub, Notion, and other accounts to your NEUS assistant. Choose what it can do, then sign in once.
 icon: plug
 ---
 
-Give your assistant access to your accounts. Connect once, and your assistant uses the right app when you ask. No per-app setup, no tokens in your code.
+Give your assistant access to your accounts. Connect once, choose what it can do, and your assistant uses the right app when you ask.
 
 ## How it works
 
 ```
-You connect an account → your assistant asks for access → NEUS checks your permissions → the app runs → you get a saved result
+You pick an app → choose what it can do → sign in once → your assistant uses only what you allowed
 ```
 
 You keep your sign-in. NEUS adds the authority check before any app runs.
@@ -18,24 +18,31 @@ You keep your sign-in. NEUS adds the authority check before any app runs.
 
 1. Open your **Profile** in NEUS.
 2. Go to **Trust graph → Connections**.
-3. Pick an app and click **Connect**.
-4. Authorize in the provider's window.
-5. Done. Your assistant can now use that account when you ask.
+3. Pick an app from the catalog.
+4. Choose the capabilities you want to allow — for example, **Read email** and **Send email**, but not **Delete email**.
+5. Click **Connect** and authorize in the provider's sign-in window.
+6. Done. Your assistant can now use only the capabilities you selected.
 
-You can connect more than one account per provider (for example, two Google accounts). Each connection is separate.
+You can connect more than one account per app (for example, two Gmail accounts). Each connection is separate.
+
+## Choose capabilities
+
+When you connect an app, you pick exactly what your assistant can do. For Gmail:
+
+- **Read email** — fetch and search messages
+- **Send email** — send and reply
+- **Drafts** — create and manage drafts
+- **Labels** — manage labels and filters
+- **Delete** — move to trash (off by default)
+- **Settings** — change account settings (off by default)
+
+Only the capabilities you enable are available to your assistant. If you turn off **Send email**, your assistant cannot send email through that connection.
+
+You can change capabilities any time. Removing a capability takes effect immediately. Adding a capability that needs broader provider permissions may require reconnecting.
 
 ## What you can connect
 
-| App | What your assistant can do |
-| --- | --- |
-| Google | Sign in once. Gmail, Drive, and Calendar connect through Composio when you need them |
-| GitHub | Read repos, create issues, review pull requests |
-| Slack | Search channels and send messages |
-| Notion | Search and edit workspace pages |
-| Jira | Create and track issues and comments |
-| Browse all apps | 1,200+ more. Your assistant finds the right tool when you ask |
-
-The backend details (how each app is wired) stay under the hood. You just see "Connect" and "Connected."
+The catalog is live. Common apps include Gmail, Google Drive, Slack, GitHub, Notion, Linear, and Salesforce. Search the catalog for the app you need. New apps appear automatically.
 
 ## Ask your assistant
 
@@ -46,70 +53,33 @@ Once connected, just ask:
 - "Send a Slack message to the engineering channel"
 - "Create a GitHub issue for this bug"
 
-Your assistant finds the right tool, checks your permissions, and runs. If you haven't connected the app yet, it tells you to connect first.
+Your assistant finds the right app, checks your selected capabilities, and runs. If you haven't connected the app yet, it tells you to connect first.
 
 ## Permissions and control
 
-Your assistant only does what you allow. Every call goes through a permission check:
+Your assistant only does what you allow:
 
-- **Reads** (email, files, messages) run when you ask.
-- **Sends, creates, and deletes** go through your delegation policy. You can require approval for high-impact actions.
-- Every action is recorded as a saved result you can review.
+1. **Your selected capabilities** — the allow list you chose at connect time.
+2. **Your permission settings** — sends, creates, and deletes go through your agent permissions. You can require approval for high-impact actions.
+
+Every action is recorded as a saved result you can review.
 
 You can disconnect any account at any time from **Profile → Trust graph → Connections**.
 
-## For developers
+## Add a custom server
 
-### Call a connected account from your app
-
-Use the NEUS SDK or API to call a connected account on behalf of a user. The user must have connected the account first.
-
-```javascript
-import { NeusClient } from '@neus/sdk';
-
-const neus = new NeusClient({ accessKey: 'npk_...' });
-
-// Call Google Gmail on behalf of a connected user
-const result = await neus.post('/api/v1/proofs/capability/call', {
-  provider: 'google',
-  method: 'GET',
-  path: '/gmail/api/v1/users/me/messages',
-  walletAddress: '0x...',
-});
-```
-
-### Search 1,200+ apps
-
-Use Composio-powered tool discovery to find the right tool for a natural-language query:
-
-```javascript
-// Search for a tool
-const search = await neus.post('/api/v1/auth/composio/search', {
-  query: 'send an email',
-});
-
-// Execute it
-const result = await neus.post('/api/v1/proofs/composio/execute', {
-  toolSlug: 'GMAIL_SEND_EMAIL',
-  arguments: { to: 'user@example.com', subject: 'Hello', body: 'Test' },
-  walletAddress: '0x...',
-});
-```
-
-### Add a custom MCP server
-
-For apps that expose their own MCP server (like Figma), connect the server URL directly:
+For apps that expose their own server URL, connect it directly:
 
 1. Go to **Profile → Trust graph → Connections**.
 2. Click **Add connection**.
-3. Paste the MCP server URL and API key.
+3. Paste the server URL and API key if the server requires one.
 4. Your assistant discovers the server's tools at runtime.
 
 ## Security
 
-- NEUS never stores your provider tokens for Composio-managed apps. Composio handles auth, refresh, and storage.
-- For native OAuth apps (Google, GitHub), tokens are encrypted and sealed in private storage, never exposed to the browser or assistant.
-- Every call is checked against your delegation policy before it runs.
+- NEUS never stores your provider sign-in tokens.
+- The capabilities you select are enforced at execution time — your assistant cannot use a capability you did not enable.
+- Every call is checked against your permission settings before it runs.
 - Every action is saved as a verifiable result.
 
 **Next:** [Agents and authority](../agents/agent-verification-flow)
