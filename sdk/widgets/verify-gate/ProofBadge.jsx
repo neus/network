@@ -4,6 +4,12 @@ import { NEUS_DEFAULT_MARK_URL } from '../../brand-mark.js';
 
 const DEFAULT_API_BASE = 'https://api.neus.network';
 
+const QHASH_RE = /^0x[0-9a-fA-F]{64}$/;
+
+function isValidQHash(value) {
+  return typeof value === 'string' && QHASH_RE.test(value);
+}
+
 const NeusLogo = ({ size = 12, logoUrl }) => (
   <img
     src={logoUrl ?? NEUS_DEFAULT_MARK_URL}
@@ -61,6 +67,10 @@ export function ProofBadge({
     let cancelled = false;
 
     async function checkStatus() {
+      if (!isValidQHash(resolvedQHash)) {
+        if (!cancelled) setStatus('failed');
+        return;
+      }
       try {
         const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedQHash}`, {
           headers: { Accept: 'application/json' }
@@ -100,7 +110,7 @@ export function ProofBadge({
   }, [resolvedQHash, proof, apiUrl, showChains]);
 
   const base = String(uiLinkBase).replace(/\/$/, '');
-  const href = resolvedQHash
+  const href = isValidQHash(resolvedQHash)
     ? `${base}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}`
     : base;
 
@@ -193,6 +203,10 @@ export function SimpleProofBadge({
     let cancelled = false;
 
     async function checkStatus() {
+      if (!isValidQHash(resolvedQHash)) {
+        if (!cancelled) setStatus('failed');
+        return;
+      }
       try {
         const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedQHash}`, {
           headers: { Accept: 'application/json' }
@@ -220,7 +234,7 @@ export function SimpleProofBadge({
   }, [resolvedQHash, proof, apiUrl]);
 
   const base = String(uiLinkBase).replace(/\/$/, '');
-  const href = resolvedQHash
+  const href = isValidQHash(resolvedQHash)
     ? `${base}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}`
     : base;
   const isSm = size === 'sm';
@@ -284,7 +298,9 @@ export function NeusPillLink({
 }) {
   const resolvedQHash = qHash;
   const base = String(uiLinkBase).replace(/\/$/, '');
-  const href = resolvedQHash ? `${base}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}` : base;
+  const href = isValidQHash(resolvedQHash)
+    ? `${base}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}`
+    : base;
 
   const isSm = size === 'sm';
   const logoSize = isSm ? 12 : 14;
@@ -344,7 +360,7 @@ export function VerifiedIcon({
   className = ''
 }) {
   const resolvedQHash = qHash;
-  const href = resolvedQHash
+  const href = isValidQHash(resolvedQHash)
     ? `${String(uiLinkBase).replace(/\/$/, '')}${String(proofUrlPattern).replace(':qHash', resolvedQHash)}`
     : undefined;
 

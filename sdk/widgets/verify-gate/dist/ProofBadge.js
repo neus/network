@@ -16,6 +16,10 @@ var NEUS_DEFAULT_OG_IMAGE_URL = brandPackUrl("social-share-card.png");
 // widgets/verify-gate/ProofBadge.jsx
 import { jsx, jsxs } from "react/jsx-runtime";
 var DEFAULT_API_BASE = "https://api.neus.network";
+var QHASH_RE = /^0x[0-9a-fA-F]{64}$/;
+function isValidQHash(value) {
+  return typeof value === "string" && QHASH_RE.test(value);
+}
 var NeusLogo = ({ size = 12, logoUrl }) => /* @__PURE__ */ jsx(
   "img",
   {
@@ -68,6 +72,10 @@ function ProofBadge({
     if (!resolvedQHash || proof) return;
     let cancelled = false;
     async function checkStatus() {
+      if (!isValidQHash(resolvedQHash)) {
+        if (!cancelled) setStatus("failed");
+        return;
+      }
       try {
         const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedQHash}`, {
           headers: { Accept: "application/json" }
@@ -99,7 +107,7 @@ function ProofBadge({
     };
   }, [resolvedQHash, proof, apiUrl, showChains]);
   const base = String(uiLinkBase).replace(/\/$/, "");
-  const href = resolvedQHash ? `${base}${String(proofUrlPattern).replace(":qHash", resolvedQHash)}` : base;
+  const href = isValidQHash(resolvedQHash) ? `${base}${String(proofUrlPattern).replace(":qHash", resolvedQHash)}` : base;
   const isSm = size === "sm";
   const logoSize = isSm ? 12 : 14;
   const fontSize = isSm ? 10 : 11;
@@ -175,6 +183,10 @@ function SimpleProofBadge({
     if (!resolvedQHash || proof) return;
     let cancelled = false;
     async function checkStatus() {
+      if (!isValidQHash(resolvedQHash)) {
+        if (!cancelled) setStatus("failed");
+        return;
+      }
       try {
         const res = await fetch(`${apiUrl}/api/v1/proofs/${resolvedQHash}`, {
           headers: { Accept: "application/json" }
@@ -197,7 +209,7 @@ function SimpleProofBadge({
     };
   }, [resolvedQHash, proof, apiUrl]);
   const base = String(uiLinkBase).replace(/\/$/, "");
-  const href = resolvedQHash ? `${base}${String(proofUrlPattern).replace(":qHash", resolvedQHash)}` : base;
+  const href = isValidQHash(resolvedQHash) ? `${base}${String(proofUrlPattern).replace(":qHash", resolvedQHash)}` : base;
   const isSm = size === "sm";
   const logoSize = isSm ? 12 : 14;
   const fontSize = isSm ? 10 : 11;
@@ -256,7 +268,7 @@ function NeusPillLink({
 }) {
   const resolvedQHash = qHash;
   const base = String(uiLinkBase).replace(/\/$/, "");
-  const href = resolvedQHash ? `${base}${String(proofUrlPattern).replace(":qHash", resolvedQHash)}` : base;
+  const href = isValidQHash(resolvedQHash) ? `${base}${String(proofUrlPattern).replace(":qHash", resolvedQHash)}` : base;
   const isSm = size === "sm";
   const logoSize = isSm ? 12 : 14;
   const fontSize = isSm ? 10 : 11;
@@ -313,7 +325,7 @@ function VerifiedIcon({
   className = ""
 }) {
   const resolvedQHash = qHash;
-  const href = resolvedQHash ? `${String(uiLinkBase).replace(/\/$/, "")}${String(proofUrlPattern).replace(":qHash", resolvedQHash)}` : void 0;
+  const href = isValidQHash(resolvedQHash) ? `${String(uiLinkBase).replace(/\/$/, "")}${String(proofUrlPattern).replace(":qHash", resolvedQHash)}` : void 0;
   const handleClick = (e) => {
     if (onClick) {
       e.preventDefault();
