@@ -1,19 +1,16 @@
 # neus-mcp
 
-The portable trust harness for AI. Marketplace plugin for hosted NEUS MCP. Install it, click **Connect**, and the host registers `https://mcp.neus.network/mcp`.
+The portable trust harness for AI. Marketplace plugin for the public NEUS trust skills.
 
-Thesis: [docs.neus.network/mcp/overview](https://docs.neus.network/mcp/overview)
-
-```text
-/plugin marketplace add https://github.com/neus/network
-/plugin install neus-mcp@neus
-```
-
-Or from any MCP client:
+Same install on every host:
 
 ```bash
 npx -y -p @neus/sdk neus setup
+npx -y -p @neus/sdk neus auth
+npx -y -p @neus/sdk neus doctor --live
 ```
+
+`neus setup` registers `https://mcp.neus.network/mcp`. This plugin does not register a second MCP server.
 
 Skills in this bundle: `neus-setup`, `neus-trust-workflow`, `neus-integrate`.
 

@@ -15,6 +15,7 @@ NEUS MCP uses **OAuth 2.0 Authorization Code with PKCE** for MCP clients. The us
 ```text
 MCP client discovers NEUS MCP
   → GET /.well-known/oauth-protected-resource
+  → GET /.well-known/oauth-protected-resource/mcp
   → GET /.well-known/oauth-authorization-server
   → GET /oauth/authorize (validates OAuth params; redirects to hosted login if needed)
   → User authenticates on neus.network (passkey, wallet, or Google/Microsoft)
@@ -34,6 +35,7 @@ Token exchange and revocation are public OAuth endpoints on `neus.network`.
 
 ```http
 GET https://mcp.neus.network/.well-known/oauth-protected-resource
+GET https://mcp.neus.network/.well-known/oauth-protected-resource/mcp
 ```
 
 ```json

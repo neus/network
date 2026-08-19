@@ -57,13 +57,13 @@ Your client controls its own tools. NEUS supplies verified context and permissio
 
 ## Profile UI
 
-**Connect** on the agent card downloads the project files and copies:
+**Connect in** on the agent card copies the mount command for your editor:
 
 ```bash
-neus mount <agentId> --apply <host>
+npx -y -p @neus/sdk neus mount <agentId> --apply <host>
 ```
 
-Run that command in your project repo for the full write path.
+`<host>` is `cursor`, `claude`, or `codex`. VS Code uses `--apply cursor`. Run the command in your project. It writes `.neus/mount.json` and the host adapter. Start a new agent session so the project rules load. If the host is not connected yet, run `neus setup` first. The browser never downloads a static rules file.
 
 ## Related
 

@@ -22,6 +22,7 @@ OAuth-capable clients discover NEUS metadata automatically from the hosted MCP s
 GET https://mcp.neus.network/.well-known/mcp.json
   → authorization.resource_metadata_url
 GET /.well-known/oauth-protected-resource
+GET /.well-known/oauth-protected-resource/mcp
 GET https://neus.network/.well-known/oauth-authorization-server
 → /oauth/authorize (HostedLoginFlow)
 → Token exchange

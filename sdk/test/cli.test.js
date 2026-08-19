@@ -590,29 +590,4 @@ describe('neus CLI', () => {
     await expect(runCli(['check', '--json'], context)).rejects.toMatchObject({ code: 1 });
   });
 
-  it('defers to the Cursor plugin when it bundles MCP (no duplicate, no hard-fail)', async () => {
-    const context = await makeCliContext();
-    const pluginDir = path.join(
-      context.homeDir,
-      '.cursor',
-      'plugins',
-      'cache',
-      'neus',
-      'neus-mcp',
-      'current-commit'
-    );
-    await fs.mkdir(pluginDir, { recursive: true });
-    await fs.writeFile(
-      path.join(pluginDir, 'mcp.json'),
-      JSON.stringify({ mcpServers: { neus: { url: 'https://mcp.neus.network/mcp' } } }),
-      'utf8'
-    );
-
-    const { stdout, stderr } = await runCli(['setup', '--client', 'cursor', '--json'], context);
-    expect(stderr).toBe('');
-    const payload = JSON.parse(stdout);
-    const cursorResult = payload.results.find(r => r.client === 'cursor');
-    expect(cursorResult.deferredToPlugin).toEqual(['neus-mcp']);
-    expect(cursorResult.changed).toBe(false);
-  });
 });

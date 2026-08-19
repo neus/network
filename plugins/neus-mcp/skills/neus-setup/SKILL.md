@@ -9,12 +9,8 @@ compatibility: Requires Node.js 20 or newer and an MCP-capable client.
 
 ```bash
 npx -y -p @neus/sdk neus setup
-```
-
-Then verify the connection, sign-in, and skill are healthy:
-
-```bash
+npx -y -p @neus/sdk neus auth
 npx -y -p @neus/sdk neus doctor --live
 ```
 
-If your host already has a `neus-mcp` marketplace plugin, install it and click **Connect**. The CLI skips a duplicate registration when the plugin is present.
+Same three commands on every host. `neus setup` registers the hosted endpoint.

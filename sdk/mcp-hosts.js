@@ -32,7 +32,7 @@ export const NEUS_MCP_SETUP_DOCS_URL = 'https://docs.neus.network/mcp/setup';
 /** CLI `neus setup --client` values. */
 export const MCP_INSTALL_CLIENTS = ['claude', 'codex', 'cursor', 'vscode'];
 
-/** Product Profile "Open in" hosts. */
+/** Product Profile "Connect in" hosts. */
 export const MCP_INSTALL_HOSTS = ['cursor', 'claude', 'codex', 'vscode'];
 
 export const IDE_HOST_LABELS = {

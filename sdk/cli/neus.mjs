@@ -274,7 +274,6 @@ function describeClientResult(command, result) {
 function printBuilderGuidance(command, results) {
   if (!['setup', 'auth', 'doctor'].includes(command)) return;
   const ok = results.filter(result => result.configured && !result.error);
-  const cursorOk = ok.find(result => result.client === 'cursor');
   const label = (client) => IDE_HOST_LABELS[client] || client;
   writeCliLine('');
   writeCliLine(paint('Next steps', 'cyan'));
@@ -282,12 +281,8 @@ function printBuilderGuidance(command, results) {
   if (ok.some(result => result.client === 'codex')) {
     writeGuidanceLine('Codex OAuth: `npx -y -p @neus/sdk neus auth --client codex` or `codex mcp login neus`.');
   }
-  const cliOwned = ok.filter(result => !result.deferredToPlugin).map(result => result.client);
-  if (cliOwned.length > 0) {
-    writeGuidanceLine(`NEUS MCP registered for ${cliOwned.map(label).join(', ')}.`);
-  }
-  if (cursorOk?.deferredToPlugin?.length) {
-    writeGuidanceLine(`Cursor: neus-mcp plugin owns registration. Sign in via the plugin's Connect button.`);
+  if (ok.length > 0) {
+    writeGuidanceLine(`NEUS MCP registered for ${ok.map(result => label(result.client)).join(', ')}.`);
   }
   writeGuidanceLine('Ask your assistant: "Use NEUS Verify before taking sensitive actions."');
 }
@@ -761,34 +756,6 @@ function cursorInstalled() {
   ].some(fileExists);
 }
 
-// The neus-mcp marketplace plugin bundles both the .mcp.json (for one-click MCP
-// registration + OAuth) and the neus-trust-workflow skill (so the trust workflow is
-// present without a separate CLI run). When the plugin is installed, the CLI defers
-// to it for both MCP registration and skill delivery , that avoids duplicate-MCP and
-// duplicate-skill entries without killing click-install.
-function cursorBundledMcpPlugins() {
-  const homeDir = os.homedir();
-  const conflicts = [];
-  for (const pluginName of ['neus-mcp']) {
-    const pluginCacheRoot = path.join(homeDir, '.cursor', 'plugins', 'cache', 'neus', pluginName);
-    if (!fileExists(pluginCacheRoot)) continue;
-    try {
-      const bundlesMcp = fs
-        .readdirSync(pluginCacheRoot, { withFileTypes: true })
-        .filter(entry => entry.isDirectory())
-        .some(
-          entry =>
-            fileExists(path.join(pluginCacheRoot, entry.name, 'mcp.json')) ||
-            fileExists(path.join(pluginCacheRoot, entry.name, '.mcp.json'))
-        );
-      if (bundlesMcp) conflicts.push(pluginName);
-    } catch {
-      conflicts.push(pluginName);
-    }
-  }
-  return conflicts;
-}
-
 // Detect whether the neus-mcp plugin is installed for a given host and bundles the
 // trust-workflow skill in its skills/ directory. Returns true when the plugin-owned
 // skill is present so the CLI can skip writing a user-level copy (avoids duplicates).
@@ -1047,28 +1014,7 @@ function codexConfigPath() {
   return path.join(os.homedir(), '.codex', 'config.toml');
 }
 
-function installCursor(scope, accessKey, dryRun, cwd, options = {}) {
-  // When the neus-mcp marketplace plugin is installed in Cursor, it owns MCP
-  // registration (its bundled .mcp.json auto-registers NEUS MCP on install and
-  // triggers Cursor's native OAuth flow , the same one-click experience Linear,
-  // Stripe, etc. ship). Defer to it instead of writing a competing user-level
-  // entry, which is what caused the duplicate-NEUS-MCP bug.
-  const pluginOwners = cursorBundledMcpPlugins();
-  if (pluginOwners.length > 0) {
-    return {
-      client: 'cursor',
-      scope,
-      configured: true,
-      authConfigured: false,
-      changed: false,
-      targetPath: cursorConfigPath(scope, cwd),
-      backupPath: null,
-      dryRun,
-      deferredToPlugin: pluginOwners,
-      note: `Cursor plugin (${pluginOwners.join(', ')}) is installed. Use the plugin's Connect button to sign in.`,
-      error: null
-    };
-  }
+function installCursor(scope, accessKey, dryRun, cwd) {
   const targetPath = cursorConfigPath(scope, cwd);
   const doc = readJsonFile(targetPath, { mcpServers: {} });
   const serverConfig = buildCursorServer(accessKey);
@@ -1091,7 +1037,6 @@ function installCursor(scope, accessKey, dryRun, cwd, options = {}) {
     targetPath,
     backupPath: writeResult.backupPath,
     dryRun,
-    deferredToPlugin: null,
     error: null
   };
 }
@@ -1292,7 +1237,7 @@ function authCodex(scope, dryRun, cwd, cliOptions = {}) {
 }
 
 function installClient(client, scope, accessKey, dryRun, cwd, options = {}) {
-  if (client === 'cursor') return installCursor(scope, accessKey, dryRun, cwd, options);
+  if (client === 'cursor') return installCursor(scope, accessKey, dryRun, cwd);
   if (client === 'vscode') return installVsCode(scope, accessKey, dryRun, cwd);
   if (client === 'claude') return installClaude(scope, accessKey, dryRun, cwd);
   if (client === 'codex') return installCodex(scope, accessKey, dryRun, cwd);
@@ -1301,30 +1246,24 @@ function installClient(client, scope, accessKey, dryRun, cwd, options = {}) {
 
 function inspectCursor(scope, cwd) {
   const targetPath = cursorConfigPath(scope, cwd);
-  const pluginOwners = cursorBundledMcpPlugins();
   if (!fileExists(targetPath)) {
     return {
       client: 'cursor',
       scope,
-      configured: pluginOwners.length > 0,
+      configured: false,
       authConfigured: false,
       targetPath,
-      pluginOwners,
-      pluginOwned: pluginOwners.length > 0,
       error: null
     };
   }
   const doc = readJsonFile(targetPath, {});
   const server = doc.mcpServers?.[NEUS_MCP_SERVER_NAME];
-  const configured = Boolean(server && server.url === NEUS_MCP_URL);
   return {
     client: 'cursor',
     scope,
-    configured: configured || pluginOwners.length > 0,
+    configured: Boolean(server && server.url === NEUS_MCP_URL),
     authConfigured: Boolean(server?.headers?.Authorization),
     targetPath,
-    pluginOwners,
-    pluginOwned: pluginOwners.length > 0,
     error: null
   };
 }
@@ -2331,12 +2270,6 @@ async function runDoctor(options) {
   const skills = inspectTrustSkill(clients);
   const configuredClients = inspected.filter(r => r.configured);
   const liveAccessKey = await resolveLiveAccessKeyWithRefresh(options, scope, cwd);
-  const pluginOwnedClients = inspected
-    .filter(result => result.pluginOwned)
-    .map(result => ({
-      client: result.client,
-      owners: result.pluginOwners || []
-    }));
   const hasUrlOnlyOAuth = inspected.some(
     result => result.configured && result.authConfigured === false
   );
@@ -2348,10 +2281,6 @@ async function runDoctor(options) {
     scope,
     clients: inspected,
     skills,
-    pluginOwnedConfig: {
-      found: pluginOwnedClients.length > 0,
-      clients: pluginOwnedClients
-    },
     configuredCount: configuredClients.length,
     accessKeyPresent: Boolean(liveAccessKey),
     authState: liveAccessKey ? 'access-key-or-cli-oauth' : hasUrlOnlyOAuth ? 'client-oauth' : 'not-connected',
@@ -2449,17 +2378,6 @@ async function runDoctor(options) {
     );
   }
   const hasCodex = inspected.some(result => result.client === 'codex');
-  const cursorPluginOwner = inspected.find(
-    result => result.client === 'cursor' && result.pluginOwned
-  );
-  if (cursorPluginOwner) {
-    writeCliLine(paint('Cursor', 'cyan'));
-    logStep(
-      'ok',
-      'cursor',
-      `Cursor plugin is installed (${cursorPluginOwner.pluginOwners.join(', ')}). Use the plugin's Connect button to sign in`
-    );
-  }
   writeCliLine(paint('Profile connection', 'cyan'));
   if (options.live && payload.mcp) {
     if (!liveAccessKey) {
