@@ -1,0 +1,62 @@
+---
+title: Standards & interoperability
+sidebarTitle: Standards
+description: How NEUS works with existing identity, authority, execution, payment, and evidence standards.
+icon: diagram-project
+---
+
+NEUS is portable trust infrastructure. Keep your sign-in, policy, agent tools, and payments. NEUS adds reusable proofs that those systems can require before access, payment, or action.
+
+Wallet-signed checks use the [CAIP-380](/learn/standards/caip-380) format. The [Technical Whitepaper](/whitepaper#standards-and-interoperability) covers the architecture.
+
+<Note>
+A signed CAIP-380 request proves who signed and that the request was not changed. A NEUS proof records the check result and whether it is still current. Those are related, not the same.
+</Note>
+
+## How NEUS uses these standards
+
+| Standard | What it provides | How NEUS uses it | Status | See |
+| --- | --- | --- | --- | --- |
+| CAIP-2 / CAIP-10 | Network and account identifiers | Accounts, agents, and profiles use the same chain and account IDs | Available | [Portable proofs](/learn/standards/caip-380), [Discover agents](/agents/named-agent-card) |
+| CAIP-380 Portable Proof | A wallet-signed request format with a stable proof ID | Wallet-signed NEUS checks use this format. Other signed-in checks still create NEUS proofs | Draft | [CAIP-380 spec](https://standards.chainagnostic.org/CAIPs/caip-380), [Portable proofs](/learn/standards/caip-380), [Examples](https://github.com/neus/network/tree/main/examples/caip-380) |
+| MCP | Tools and context for assistants | Hosted MCP checks identity, permissions, and current proofs before sensitive tools run | Available | [MCP setup](/mcp/setup) |
+| A2A | Agent discovery cards | Public cards show who the agent is and who approved it | Available | [Platform A2A card](https://neus.network/.well-known/a2a/agent-card.json), [Discover agents](/agents/named-agent-card) |
+| AuthZEN | A standard way to ask whether an action is allowed | A NEUS proof can be the evidence that decision uses | Works with | [First guarded action](/mcp/guarded-action), [Whitepaper](/whitepaper#standards-and-interoperability) |
+| AARM | Runtime checks before an agent acts | NEUS checks identity, limits, and current permission before an action, then records the result | Works with | [Agent setup](/agents/agent-verification-flow) |
+| ATF | Identity, behavior, access limits, and how to stop or revoke | NEUS covers those with identity, permission checks, deny, and revoke | Works with | [Agent setup](/agents/agent-verification-flow), [Proof lifecycle](/verification/lifecycle) |
+| ERC-8004 | Public agent discovery | NEUS publishes compatible discovery cards and keeps its own proof and permission model | Available | [Platform agent card](https://neus.network/.well-known/agent-card.json), [Discover agents](/agents/named-agent-card) |
+| x402 | Pay for a single HTTP call | Payment settles the call. NEUS can still require a current proof before the call proceeds | Available | [Pay per call](/platform/x402) |
+| Phala | Confidential compute | Hosted AI can run in a Phala-backed confidential environment. The same proofs work on a private deploy | Available | [Private cloud agents](/cookbook/private-cloud-agents) |
+
+NEUS uses these standards. It does not replace them. [CAIP-380](https://standards.chainagnostic.org/CAIPs/caip-380) remains the open specification for the signed request format.
+
+## Check an example
+
+Use a signed request from a check, or the published example:
+
+```javascript
+import { verifyPortableProofEnvelope } from '@neus/sdk';
+import envelope from '../../../examples/caip-380/minimal-evm.json' with { type: 'json' };
+
+const result = await verifyPortableProofEnvelope(envelope);
+if (!result.valid) throw new Error(result.errors.join('; '));
+```
+
+This checks the proof ID, account binding, and signature on your machine. Current status still comes from NEUS or another service that stores the result. See [Portable proofs](/learn/standards/caip-380).
+
+## Next
+
+<CardGroup cols={2}>
+  <Card title="Portable proofs" href="/learn/standards/caip-380">
+    How the signed request format works.
+  </Card>
+  <Card title="Whitepaper" href="/whitepaper#standards-and-interoperability">
+    Architecture and trust model.
+  </Card>
+  <Card title="First guarded action" href="/mcp/guarded-action">
+    Check permission before a tool runs.
+  </Card>
+  <Card title="Discover agents" href="/agents/named-agent-card">
+    Public agent pages and discovery cards.
+  </Card>
+</CardGroup>

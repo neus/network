@@ -29,10 +29,11 @@
   --neus-bg-elevated: rgb(var(--neus-rgb-surface-popover) / 1);
   --neus-bg-glass: rgb(var(--neus-rgb-surface-rail) / 0.72);
 
-  --neus-text-primary: rgba(255, 255, 255, 0.93);
-  --neus-text-secondary: rgba(255, 255, 255, 0.84);
-  --neus-text-muted: rgba(255, 255, 255, 0.68);
-  --neus-text-dimmed: rgba(255, 255, 255, 0.62);
+  /* Alphas match neus/design/tokens + DESIGN.md contrast contract (AA on canvas/card). */
+  --neus-text-primary: rgba(255, 255, 255, 0.98);
+  --neus-text-secondary: rgba(255, 255, 255, 0.9);
+  --neus-text-muted: rgba(255, 255, 255, 0.76);
+  --neus-text-dimmed: rgba(255, 255, 255, 0.68);
   --neus-text-subtle: var(--neus-text-dimmed);
 
   /* Typography scale (DESIGN.md / neus globals) */

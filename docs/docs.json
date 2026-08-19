@@ -91,6 +91,7 @@
               "verification/how-it-works",
               "verification/lifecycle",
               "verification/signing-format",
+              "learn/standards/index",
               "learn/standards/caip-380",
               "learn/proof-links",
               "verification/verifiers",
@@ -303,7 +304,11 @@
     },
     {
       "source": "/learn/standards-and-eips",
-      "destination": "/verification/verifiers"
+      "destination": "/learn/standards"
+    },
+    {
+      "source": "/standards",
+      "destination": "/learn/standards"
     },
     {
       "source": "/verifiers",

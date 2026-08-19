@@ -1,4 +1,4 @@
-<h1 align="center">NEUS: Portable Trust Infrastructure</h1>
+<h1 align="center">Portable Trust Infrastructure</h1>
 
 <p align="center">
   <img src="./docs/images/neus-social-card.png" alt="NEUS Network social card" width="640" />
@@ -136,7 +136,7 @@ Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widge
 
 ## Open standard
 
-NEUS is the driving reference implementation of [CAIP-380 (Portable Proof)](https://standards.chainagnostic.org/CAIPs/caip-380) ([PR](https://github.com/ChainAgnostic/CAIPs/pull/380)), a ChainAgnostic standard at Draft status. Wallet-signed request envelopes have a deterministic SHAKE-256 hash (`qHash`), CAIP-2 chain context, and CAIP-10 / `did:pkh` identities. Their hash, DID binding, and signature can be checked without NEUS; verifier outcomes remain part of the NEUS portable proof. The envelope is chain-agnostic. Any CAIP-2 namespace. Signing follows the chain's native scheme. See the [offline fixtures](./examples/caip-380), the [CAIP-380 docs](https://docs.neus.network/learn/standards/caip-380), and the [Technical Whitepaper](https://docs.neus.network/whitepaper).
+NEUS is the driving reference implementation of [CAIP-380 (Portable Proof)](https://standards.chainagnostic.org/CAIPs/caip-380) ([PR](https://github.com/ChainAgnostic/CAIPs/pull/380)), a ChainAgnostic standard at Draft status. Wallet-signed request envelopes have a deterministic SHAKE-256 hash (`qHash`), CAIP-2 chain context, and CAIP-10 / `did:pkh` identities. Their hash, DID binding, and signature can be checked without NEUS; verifier outcomes remain part of the NEUS portable proof. The envelope is chain-agnostic. Any CAIP-2 namespace. Signing follows the chain's native scheme. See [Standards & interoperability](https://docs.neus.network/learn/standards), the [offline examples](./examples/caip-380), the [CAIP-380 docs](https://docs.neus.network/learn/standards/caip-380), and the [Technical Whitepaper](https://docs.neus.network/whitepaper).
 
 ## Support
 

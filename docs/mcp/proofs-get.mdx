@@ -43,6 +43,7 @@ Keep tag values short and product-facing in your own app. Avoid exposing private
 | `tags` | Comma-separated proof tag filter |
 | `agentWallet` | Delegation (**`x-agent-wallet`**) |
 | `include` | `metadata` for the minimal index; `content` only when full proof bodies are required |
+| `qHash` | When set, returns that one record instead of a vault page |
 
 When `identifier` is a DID, NEUS resolves the DID to its native account. Non-EVM signing and account context still use CAIP-2 `chain`; see [CAIP-380 Portable Proof](../learn/standards/caip-380).
 

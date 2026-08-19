@@ -20,8 +20,6 @@ NEUS turns completed identity, ownership, risk, eligibility, and authority check
 
 Proofs are private and offchain by default. [CAIP-380](/learn/standards/caip-380) supports signed wallet verification requests, while NEUS stores verifier results and lifecycle state separately. This separates request integrity from verification outcomes and current authority.
 
-**Document status.** This whitepaper is an architectural, non-normative description of the public NEUS trust model as of August 2026. Normative requirements are defined by the applicable standards and published NEUS specifications. Live schemas, verifier inputs, API behavior, SDK methods, and endpoint details are maintained in the developer documentation and public repository.
-
 ## 1. Problem and design goals
 
 Authentication can identify a session. It does not carry a completed trust decision into the next system or define current authority for a sensitive action.
@@ -159,6 +157,8 @@ CAIP-380 uses CAIP-2 and CAIP-10 for chain and account identifiers [1-4]. Signin
 | x402 | HTTP-native payment challenge and settlement. NEUS authority remains separate from settlement and can be checked before payment [8]. |
 
 These protocols solve different problems. An authenticated connection, discovery card, or payment rail is not proof of current authority. The relying party still evaluates accepted proofs and local policy before the protected action.
+
+See [Standards & interoperability](/learn/standards) for the current list and links.
 
 ## 7. Applications and implementation
 

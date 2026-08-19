@@ -94,6 +94,18 @@ main > span.absolute.inset-0.overflow-hidden.pointer-events-none:not(#background
   text-shadow: none !important;
 }
 
+#navbar a.flex.items-center,
+#navbar a[href*="github.com"],
+#navbar a[href*="discussions"] {
+  color: var(--neus-text-secondary) !important;
+}
+
+#navbar a.flex.items-center:hover,
+#navbar a[href*="github.com"]:hover,
+#navbar a[href*="discussions"]:hover {
+  color: var(--neus-text-primary) !important;
+}
+
 /*
   Header logo , primary mark only (full particle depth).
   Mintlify h-7 (28px) makes the ring/particles sub-pixel mush.
@@ -223,7 +235,7 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
     border-radius: 0.5rem !important;
     background: transparent !important;
     box-shadow: none !important;
-    color: var(--neus-text-muted) !important;
+    color: var(--neus-text-secondary) !important;
     font-size: var(--neus-text-body-sm) !important;
     font-weight: var(--neus-weight-label) !important;
     line-height: 1 !important;
@@ -233,7 +245,7 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
   }
 
   #navbar .nav-tabs a.nav-tabs-item:hover {
-    color: var(--neus-text-secondary) !important;
+    color: var(--neus-text-primary) !important;
     background: rgb(255 255 255 / 0.05) !important;
   }
 
@@ -265,7 +277,7 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
   visibility: visible !important;
   opacity: 1 !important;
   pointer-events: auto !important;
-  color: var(--neus-text-muted) !important;
+  color: var(--neus-text-secondary) !important;
   background: transparent !important;
   box-shadow: none !important;
   border: none !important;
@@ -277,12 +289,12 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
 #navigation-items a [class*="icon"],
 #navigation-items a .text-primary,
 #navigation-items a [class*="text-primary"] {
-  color: var(--neus-text-muted) !important;
+  color: var(--neus-text-secondary) !important;
   fill: currentColor !important;
 }
 
 #navigation-items a:hover {
-  color: var(--neus-text-secondary) !important;
+  color: var(--neus-text-primary) !important;
   background: rgb(255 255 255 / 0.04) !important;
 }
 
@@ -396,7 +408,9 @@ body {
 }
 
 /* Mintlify auto-injects llms.txt index for agents; keep /llms.txt, hide in-page duplicate. */
-.mdx-content blockquote:has(a[href*="llms.txt"]) {
+.mdx-content blockquote:has(a[href*="llms.txt"]),
+blockquote[data-agent-docs-index],
+blockquote.sr-only:has(a[href*="llms.txt"]) {
   display: none !important;
 }
 
@@ -570,14 +584,31 @@ button,
   letter-spacing: 0.02em;
 }
 
-.mdx-content a:not([class*="button"]):focus-visible {
+.mdx-content a:not([class*="button"]):focus-visible,
+#navbar a:focus-visible,
+#navbar button:focus-visible,
+#navigation-items a:focus-visible,
+#navigation-items button:focus-visible,
+#table-of-contents-content a:focus-visible,
+#header a:focus-visible,
+#footer a:focus-visible,
+.card:focus-visible,
+a.card:focus-visible {
   border-radius: 0.25rem;
-  outline: 2px solid rgb(var(--neus-rgb-accent-primary) / 0.55) !important;
-  outline-offset: 2px;
+  outline: none !important;
+  box-shadow: 0 0 0 1px rgb(var(--neus-rgb-accent-primary) / 0.45) !important;
 }
 
+#header a:not([href*="/hub"]):not([class*="button"]),
 #table-of-contents-content a {
-  color: var(--neus-text-muted) !important;
+  color: var(--neus-text-secondary) !important;
+}
+
+#footer a[href*="mintlify"],
+#footer a[href*="mintlify"] span,
+footer a[href*="mintlify"],
+footer a[href*="mintlify"] span {
+  color: var(--neus-text-secondary) !important;
 }
 
 #table-of-contents-content a:hover,
@@ -956,10 +987,16 @@ a.card:hover {
 }
 
 .card p,
-.card-group .card p {
+.card [data-as="p"],
+.card [data-component-part="card-content"],
+.card [data-component-part="card-content"] *,
+.card-group .card p,
+.card-group .card [data-as="p"],
+.card-group .card [data-component-part="card-content"],
+.card-group .card [data-component-part="card-content"] * {
   font-size: var(--neus-text-body-sm) !important;
   line-height: 1.5 !important;
-  color: var(--neus-text-muted) !important;
+  color: var(--neus-text-secondary) !important;
 }
 
 .card:hover,
