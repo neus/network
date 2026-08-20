@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  Turn supported identity, ownership, risk, and permission checks into Portable Proofs for profiles, product gates, paid access, and AI agents.
+  Portable Proof carries verified identity, authority, and action evidence across apps, agents, and networks.
 </p>
 
 <p align="center">
@@ -47,11 +47,9 @@ NEUS does not replace authentication, specialist verification providers, applica
 
 ## Choose a path
 
-One command. Then click **Connect**.
+Add the hosted MCP remote, then click **Connect**.
 
-```bash
-npx -y -p @neus/sdk neus setup
-```
+`https://mcp.neus.network/mcp`
 
 Then ask:
 
@@ -79,7 +77,7 @@ After the connection is visible, test a protected action. NEUS answers **Passed*
 | [Widgets](https://docs.neus.network/widgets/overview) | `VerifyGate` and `ProofBadge` for React products |
 | [API](https://docs.neus.network/api/overview) | Server reads, checks, verifier catalog, and verification endpoints |
 | [Agents](https://docs.neus.network/agents/overview) | Agent identity, scoped authority, and audit-ready proofs |
-| [MCP](https://docs.neus.network/mcp/overview) | Profile, proof, and permission checks for supported MCP clients. `neus setup`; registry metadata: [`@neus/mcp-server`](https://www.npmjs.com/package/@neus/mcp-server) |
+| [MCP](https://docs.neus.network/mcp/overview) | Profile, identity and ownership checks, Portable Proofs, agent permissions, and private context in supported MCP clients. Endpoint `https://mcp.neus.network/mcp`; registry metadata: [`@neus/mcp-server`](https://www.npmjs.com/package/@neus/mcp-server) |
 | [Examples](./examples) | Runnable app and agent samples |
 | [Verifier catalog](https://docs.neus.network/verification/verifiers) | Live check IDs and inputs |
 

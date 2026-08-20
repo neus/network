@@ -8,7 +8,7 @@ Start with the smallest source that answers the task. Use the text export for mo
 
 ## Read first
 
-1. [Home](/) — one command, then Connect
+1. [Home](/) — hosted MCP endpoint, then Connect
 2. [Connect NEUS](../mcp/setup) for assistants
 3. [Agent setup](../agents/agent-verification-flow) to set identity and permissions
 4. [MCP tools](../mcp/tools) for exact tool behavior
@@ -20,7 +20,7 @@ Start with the smallest source that answers the task. Use the text export for mo
 **Product server:** `https://mcp.neus.network/mcp` for identity, proofs, delegation, verify.  
 **Not the product:** `https://docs.neus.network/mcp` for documentation search only (Mintlify).
 
-1. Run `npx -y -p @neus/sdk neus setup`.
+1. Register `https://mcp.neus.network/mcp` in the host (marketplace, registry, or URL-only config).
 2. Click **Connect** in the host.
 3. Follow the [MCP workflow](../mcp/overview) and reuse proofs before starting a new check.
 
@@ -49,7 +49,7 @@ curl https://docs.neus.network/llms-full.txt
 
 ## MCP JSON
 
-**Cursor** uses a URL-only entry inside `mcpServers` and discovers OAuth from the server's 401 challenge:
+Hosts that omit the spec `type` field (including Cursor) use a URL-only entry inside `mcpServers` and discover OAuth from the server's 401 challenge:
 
 ```json
 {
@@ -61,7 +61,7 @@ curl https://docs.neus.network/llms-full.txt
 }
 ```
 
-**VS Code, Claude Desktop, and other spec-compliant hosts** use `type: "http"`:
+Hosts that require the spec `type` field use `type: "http"`:
 
 ```json
 {

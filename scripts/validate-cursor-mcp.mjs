@@ -95,12 +95,7 @@ async function main() {
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
     const pluginDir = path.join(pluginsDir, entry.name);
-    // The neus-mcp Cursor plugin ships a Cursor-native mcp.json so click-install
-    // auto-registers NEUS MCP and fires Cursor's OAuth flow (Linear-style). The
-    // CLI defers to the plugin when present. Validate the mcp.json shape instead
-    // of rejecting its existence.
-    const hasSpecMcp = await pathExists(path.join(pluginDir, ".mcp.json"));
-    await validatePluginMcp(pluginDir, { requireFile: hasSpecMcp });
+    await validatePluginMcp(pluginDir, { requireFile: entry.name === "neus-mcp" });
   }
 
   summarizeAndExit();

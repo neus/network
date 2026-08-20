@@ -1,8 +1,8 @@
 # @neus/sdk
 
-Add hosted checks, Portable Proofs, product gates, paid access, and agent permissions to an app.
+Add hosted verification, Portable Proofs, product gates, paid access, and agent permissions without replacing your authentication, payment, or agent stack.
 
-NEUS saves a completed check as a portable proof. Connected apps can confirm its current status before access, payment, or execution.
+NEUS turns a supported identity, ownership, risk, or permission check into a Portable Proof. Connected products can evaluate its current status before access, payment, or execution.
 
 ## Install (library)
 
@@ -12,13 +12,17 @@ npm install @neus/sdk
 
 ## Connect a supported MCP client
 
-No install needed:
+Register the hosted remote, then click **Connect**:
+
+`https://mcp.neus.network/mcp`
+
+Ask: **"Show my NEUS profile and current proofs. Do not create anything."**
+
+Optional terminal installer (writes that URL and the public workflow skill):
 
 ```bash
 npx -y -p @neus/sdk neus setup
 ```
-
-Then click **Connect**. Ask: **"Show my NEUS profile and current proofs. Do not create anything."**
 
 Agent paste prompt: [MCP setup](https://docs.neus.network/mcp/setup).
 
@@ -36,11 +40,11 @@ Loads the agent's verified identity, scoped authority, and host rules into the p
 | Topic | Link |
 | ----- | ---- |
 | Setup, JSON snippets, and the connect prompt | [MCP setup](https://docs.neus.network/mcp/setup) |
-| Permission checks for assistants | [MCP overview](https://docs.neus.network/mcp/overview) |
+| Profile, proofs, permissions, and private context | [MCP overview](https://docs.neus.network/mcp/overview) |
 | Host action decision | [First guarded action](https://docs.neus.network/mcp/guarded-action) |
 | Discovery URLs | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints) |
 
-Prefer `neus setup` over hand-editing config files so every host stays on **`https://mcp.neus.network/mcp`**.
+The hosted endpoint is always **`https://mcp.neus.network/mcp`**. Marketplace, registry, URL-only config, or the terminal installer all register that same remote.
 
 ## What you can ship
 
@@ -65,7 +69,7 @@ const url = getHostedCheckoutUrl({
 window.location.assign(url);
 ```
 
-After completion, NEUS redirects back with a `qHash`. Store it with your user or record.
+After completion, NEUS redirects back with a proof ID in the `qHash` field. Store the proof ID with your user or record.
 
 Dedicated agent setup keeps the agent-signed identity step separate from the approving account:
 
@@ -166,7 +170,7 @@ Never ship access keys in browser code.
 | `getHostedCheckoutUrl()` | Send a user to Hosted Verify |
 | `client.verify()` | Create a proof (in-app signing) |
 | `client.verifyFromApp()` | Create a proof for an approved user (server; needs appId + origin) |
-| `client.getProof()` | Fetch a public proof by `qHash` |
+| `client.getProof()` | Fetch a public proof by its proof ID (`qHash`) |
 | `client.getPrivateProof()` | Fetch a private proof (wallet-bound) |
 | `client.pollProofStatus()` | Wait for async verification completion |
 | `client.getProofsByWallet()` | List a wallet's public proofs |
@@ -197,13 +201,7 @@ const client = new NeusClient({
 
 ## MCP step-by-step
 
-```bash
-npx -y -p @neus/sdk neus setup
-```
-
-`neus setup` registers MCP and installs the public workflow skill. Click **Connect** in your host to sign in. When `NEUS_ACCESS_KEY` is set, setup writes that server credential instead.
-
-No global install? Run `npx -y -p @neus/sdk neus setup` once.
+Register `https://mcp.neus.network/mcp`, then click **Connect** in the host MCP panel. Marketplace or registry install is enough. The terminal installer (`npx -y -p @neus/sdk neus setup`) writes that same URL and the public workflow skill when a plugin is not already present. When `NEUS_ACCESS_KEY` is set, setup writes that server credential instead.
 
 Marketplace install and host adapters: [MCP setup](https://docs.neus.network/mcp/setup).
 

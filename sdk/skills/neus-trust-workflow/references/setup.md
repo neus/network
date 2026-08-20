@@ -4,11 +4,21 @@ Load this file only when the user needs install, sign-in, access keys, or projec
 
 ## Install
 
+Register the hosted MCP remote, then click **Connect** in the host:
+
+`https://mcp.neus.network/mcp`
+
+If the host already has a NEUS marketplace plugin or registry listing, use that Connect path. Do not also write a second `neus` entry in the host MCP config.
+
+Use `neus auth --client codex` only for Codex. Use `neus auth --oauth` only for the CLI token store.
+
+Cursor-only: Settings → MCP → neus. Local and Cloud are separate sessions. If Local shows Logout and Unauthorized, click Logout, then Connect. Do not run `neus auth` — that writes `~/.neus` and Cursor ignores it. If a leftover `neus` entry exists in `~/.cursor/mcp.json`, remove it.
+
+Optional terminal installer (writes the same URL and this workflow skill when the plugin is not installed):
+
 ```bash
 npx -y -p @neus/sdk neus setup
 ```
-
-`neus setup` registers hosted NEUS MCP. Click **Connect** in your host. Use `neus auth` only if the host cannot start sign-in.
 
 Servers and CI:
 
@@ -28,12 +38,10 @@ After NEUS is connected on the machine:
 neus mount <agentId> --apply <host>
 ```
 
-| Layer | Command |
-|-------|---------|
-| **Machine** | `neus setup` (once) |
+| Layer | How |
+|-------|-----|
+| **Machine** | Marketplace, registry, or URL-only MCP config. Terminal installer optional. |
 | **Project** | `neus mount <agentId> --apply <host>` |
 | **Session** | `neus_context` → `neus_agent_mount` when acting as the agent |
 
-Use `neus mount` only when acting as a registered profile agent. For proof checks and secrets, `neus setup` plus `neus_context` is enough.
-
-The setup command installs this workflow skill together with the single hosted MCP registration.
+Use `neus mount` only when acting as a registered profile agent. For proof checks and secrets, Connect plus `neus_context` is enough.

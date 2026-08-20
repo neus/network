@@ -1,28 +1,47 @@
 ---
 title: "Connect NEUS to your assistant"
-description: "Run one command, finish browser sign-in, and protect the first sensitive action."
+description: "Add the hosted MCP endpoint, click Connect, then reuse existing proofs."
 icon: code
 ---
 
 Add a check before your assistant spends, publishes, uses secrets, or calls a sensitive tool. NEUS reuses a current proof when it can and asks only for the missing step.
 
+Register the hosted remote, then click **Connect**. The host discovers OAuth from the endpoint. No wallet or access key is required.
+
 **Hosted endpoint:** `https://mcp.neus.network/mcp`
 
-## 1. Run setup
+## Connect
 
-```bash
-npx -y -p @neus/sdk neus setup
+Add this remote server in the host MCP settings, marketplace, or registry:
+
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
+}
 ```
 
-This adds the NEUS connection and the instructions your assistant needs to use it.
+If the host requires the spec `type` field:
 
-## 2. Connect your account
+```json
+{
+  "mcpServers": {
+    "neus": {
+      "type": "http",
+      "url": "https://mcp.neus.network/mcp"
+    }
+  }
+}
+```
 
-Click **Connect** in your assistant and finish browser sign-in. You do not need a wallet or access key.
+Then click **Connect** and finish browser sign-in.
 
-If your host cannot start sign-in, run `npx -y -p @neus/sdk neus auth`.
+If the host already offers a NEUS marketplace plugin or registry listing, install that instead of adding a second `neus` entry by hand.
 
-## 3. Protect an action
+## Protect an action
 
 Ask:
 
@@ -38,9 +57,11 @@ NEUS answers **Passed**, **Action needed**, or **Blocked** before the action run
 You are connecting this client to NEUS so it can reuse completed checks
 and confirm permission before sensitive actions.
 
-1. Run: npx -y -p @neus/sdk neus setup
-2. Tell me to click Connect in this client if sign-in is still needed.
-   Default sign-in is browser OAuth. No wallet. No access key.
+1. Register the hosted MCP remote https://mcp.neus.network/mcp in this
+   host (marketplace plugin, registry listing, or URL-only MCP config).
+   Do not add a second neus entry.
+2. Tell me to click Connect in the host MCP panel if sign-in is not done.
+   Do not run neus auth unless this host cannot start sign-in.
 3. After connect, reuse my existing proofs before asking me to verify
    again. Before any sensitive action (spend, publish, secrets, agent
    tool call), load context once, then check proofs. Summarize as
@@ -50,32 +71,17 @@ Canonical endpoint: https://mcp.neus.network/mcp
 Docs: https://docs.neus.network/mcp/setup
 ```
 
-## Advanced: any MCP client
+## From a terminal
 
-Add one remote server. Your client discovers OAuth from the hosted endpoint.
+Optional. Writes the same hosted endpoint and the public workflow skill:
 
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "url": "https://mcp.neus.network/mcp"
-    }
-  }
-}
+```bash
+npx -y -p @neus/sdk neus setup
 ```
 
-If your client requires the spec `type` field:
+If a NEUS plugin is already installed, setup skips a second `neus` entry.
 
-```json
-{
-  "mcpServers": {
-    "neus": {
-      "type": "http",
-      "url": "https://mcp.neus.network/mcp"
-    }
-  }
-}
-```
+Codex: after the endpoint is registered, run `npx -y -p @neus/sdk neus auth --client codex`. `neus auth --oauth` is only the CLI token store.
 
 ## Advanced: connect a Trusted Agent to a project
 
@@ -106,10 +112,16 @@ neus disconnect --access-key <token>
 
 ## Troubleshooting
 
-- **No tools appear:** restart the MCP client after setup.
-- **Authentication required:** click **Connect**, or run `neus auth`.
-- **Confirm the connection:** `neus doctor --live`.
+- **No tools appear:** restart the MCP client after the endpoint is registered.
+- **No Connect button, or Unauthorized with Logout visible:** click **Logout**, then **Connect**. Do not run `neus auth` for a host that owns its own sign-in.
+- **Two neus servers:** a marketplace plugin and a user MCP config both registered NEUS. Remove the extra `neus` key from the host MCP config. If you used the terminal installer, run `npx -y -p @neus/sdk neus setup` again to drop the leftover user entry.
+- **Authentication required:** sign in in the host MCP panel. Codex: `neus auth --client codex`. CLI/doctor only: `neus auth --oauth`.
+- **Confirm the connection:** `neus doctor --live` (Node).
 - **Agent permission missing:** create or refresh the agent permission on NEUS, then run `neus mount` again.
 - **Search-only endpoint:** use `https://mcp.neus.network/mcp`. `https://docs.neus.network/mcp` only searches documentation.
+
+### Cursor
+
+Cursor Local and Cloud are separate sessions. Ignore Cloud unless you want Cloud Agents to use NEUS. Do not run `neus auth` — that writes `~/.neus` and Cursor does not use it. If Local shows **Logout** and **Unauthorized**, click **Logout**, then **Connect**. If both the marketplace plugin and `~/.cursor/mcp.json` registered NEUS, remove the `neus` key from `~/.cursor/mcp.json` or run `npx -y -p @neus/sdk neus setup --client cursor`.
 
 Next: [Run your first guarded action](./guarded-action) after the first Passed.

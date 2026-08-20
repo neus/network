@@ -1,7 +1,7 @@
 {
   "name": "@neus/mcp-server",
   "version": "1.3.9",
-  "description": "Portable trust infrastructure for humans and AI. Hosted MCP with OAuth.",
+  "description": "Portable trust harness for AI. Identity, proofs, permissions, and private context in any MCP client.",
   "type": "module",
   "main": "./index.mjs",
   "exports": {

@@ -421,7 +421,9 @@ describe('neus CLI', () => {
 
     expect(payload.accessKeyConfigured).toBe(false);
     expect(payload.authRequired).toBe(true);
-    expect(payload.nextCommand).toBe('npx -y -p @neus/sdk neus auth');
+    expect(payload.nextCommand).toBeNull();
+    expect(payload.hostSignInHint).toContain('Logout');
+    expect(payload.hostSignInHint).toContain('Do not run neus auth for Cursor');
 
     const cursorConfig = JSON.parse(
       await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
@@ -581,6 +583,127 @@ describe('neus CLI', () => {
     expect(payload.command).toBe('examples');
     expect(payload.prompts).toContain('Use NEUS Verify before taking sensitive actions.');
     expect(payload.prompts).toHaveLength(6);
+  });
+
+  it('tells Cursor to Logout then Connect instead of neus auth', async () => {
+    const context = await makeCliContext();
+
+    const { stderr } = await runCli(['setup', '--client', 'cursor'], context);
+
+    expect(stderr).toContain('Logout');
+    expect(stderr).toContain('Do not run neus auth for Cursor');
+    expect(stderr).not.toContain('or click Connect in your host');
+  });
+
+  it('auth --client cursor registers URL-only config and does not start CLI OAuth', async () => {
+    const context = await makeCliContext();
+
+    const { stdout, stderr } = await runCli(['auth', '--client', 'cursor', '--json'], context);
+    const payload = JSON.parse(stdout);
+
+    expect(stderr).toBe('');
+    expect(payload.authMethod).toBe('host-oauth');
+    expect(payload.hostSignInHint).toContain('Do not run neus auth for Cursor');
+    expect(payload.results[0].authConfigured).toBe(false);
+
+    const cursorConfig = JSON.parse(
+      await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
+    );
+    expect(cursorConfig.mcpServers.neus).toEqual({
+      url: 'https://mcp.neus.network/mcp'
+    });
+  });
+
+  it('defers the Cursor trust skill when the marketplace plugin already bundles it', async () => {
+    const context = await makeCliContext();
+    const pluginSkill = path.join(
+      context.homeDir,
+      '.cursor',
+      'plugins',
+      'cache',
+      'marketplace-test',
+      'neus-mcp',
+      'abc123',
+      'skills',
+      'neus-trust-workflow',
+      'SKILL.md'
+    );
+    await fs.mkdir(path.dirname(pluginSkill), { recursive: true });
+    await fs.writeFile(pluginSkill, '# skill\n', 'utf8');
+
+    const { stdout } = await runCli(['setup', '--client', 'cursor', '--json'], context);
+    const payload = JSON.parse(stdout);
+
+    expect(payload.skills[0].deferredToPlugin).toBe(true);
+    await expect(
+      fs.access(path.join(context.homeDir, '.agents', 'skills', 'neus-trust-workflow', 'SKILL.md'))
+    ).rejects.toMatchObject({ code: 'ENOENT' });
+  });
+
+  it('skips writing ~/.cursor/mcp.json when the plugin already registers MCP', async () => {
+    const context = await makeCliContext();
+    const pluginDir = path.join(
+      context.homeDir,
+      '.cursor',
+      'plugins',
+      'cache',
+      'marketplace-test',
+      'neus-mcp',
+      'abc123'
+    );
+    await fs.mkdir(pluginDir, { recursive: true });
+    await fs.writeFile(
+      path.join(pluginDir, 'mcp.json'),
+      JSON.stringify({
+        mcpServers: { neus: { url: 'https://mcp.neus.network/mcp' } }
+      }),
+      'utf8'
+    );
+
+    const { stdout } = await runCli(['setup', '--client', 'cursor', '--json'], context);
+    const payload = JSON.parse(stdout);
+
+    expect(payload.results[0].deferredToPlugin).toBe(true);
+    await expect(fs.access(path.join(context.homeDir, '.cursor', 'mcp.json'))).rejects.toMatchObject({
+      code: 'ENOENT'
+    });
+  });
+
+  it('removes a leftover user neus entry when the plugin registers MCP', async () => {
+    const context = await makeCliContext();
+    const pluginDir = path.join(
+      context.homeDir,
+      '.cursor',
+      'plugins',
+      'cache',
+      'cursor-public',
+      'neus-mcp',
+      'deadbeef'
+    );
+    await fs.mkdir(pluginDir, { recursive: true });
+    await fs.writeFile(
+      path.join(pluginDir, 'mcp.json'),
+      JSON.stringify({
+        mcpServers: { neus: { url: 'https://mcp.neus.network/mcp' } }
+      }),
+      'utf8'
+    );
+    const userMcpPath = path.join(context.homeDir, '.cursor', 'mcp.json');
+    await writeJson(userMcpPath, {
+      mcpServers: {
+        neus: { url: 'https://mcp.neus.network/mcp' },
+        other: { url: 'https://example.com/mcp' }
+      }
+    });
+
+    const { stdout } = await runCli(['setup', '--client', 'cursor', '--json'], context);
+    const payload = JSON.parse(stdout);
+    const cursorConfig = JSON.parse(await fs.readFile(userMcpPath, 'utf8'));
+
+    expect(payload.results[0].deferredToPlugin).toBe(true);
+    expect(payload.results[0].removedUserRegistration).toBe(true);
+    expect(cursorConfig.mcpServers.neus).toBeUndefined();
+    expect(cursorConfig.mcpServers.other.url).toBe('https://example.com/mcp');
   });
 
   it('rejects removed command aliases', async () => {

@@ -5,14 +5,14 @@
     "email": "dev@neus.network"
   },
   "metadata": {
-    "description": "Set what AI agents can access, spend, or do, then check those limits before action.",
+    "description": "Portable Trust Infrastructure for Humans and AI. Identity, proofs, permissions, and private context.",
     "version": "1.3.9"
   },
   "plugins": [
     {
       "name": "neus-mcp",
       "source": "./plugins/neus-mcp",
-      "description": "The trust harness for AI agents. Set what an agent can do before it acts."
+      "description": "Portable trust harness for AI. Identity, proofs, permissions, and private context in any MCP client."
     }
   ]
 }

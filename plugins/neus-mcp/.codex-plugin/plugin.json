@@ -1,7 +1,7 @@
 {
   "name": "neus-mcp",
   "version": "1.3.9",
-  "description": "The trust harness for AI agents. Set what an agent can do before it acts.",
+  "description": "Portable trust harness for AI. Identity, proofs, permissions, and private context in any MCP client.",
   "author": {
     "name": "NEUS",
     "email": "dev@neus.network",
@@ -28,8 +28,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "NEUS",
-    "shortDescription": "Agent identity and permissions",
-    "longDescription": "NEUS checks who controls an agent and what it may do before a sensitive action.",
+    "shortDescription": "Portable trust for AI",
+    "longDescription": "Use one NEUS profile for identity checks, Portable Proofs, agent permissions, and private context across supported MCP clients.",
     "developerName": "NEUS",
     "category": "Security",
     "capabilities": [

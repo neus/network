@@ -47,17 +47,17 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "Set what an AI agent may access, spend, or do, then check those limits before action.",
-      "og:title": "NEUS Docs | Control what AI agents can do",
-      "og:description": "Set what an AI agent may access, spend, or do, then check those limits before action.",
+      "description": "Portable Trust Infrastructure for Humans and AI. Build with Portable Proofs across apps, agents, and networks.",
+      "og:title": "NEUS Docs | Portable Trust Infrastructure",
+      "og:description": "Portable Proof carries verified identity, authority, and action evidence across apps, agents, and networks.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
       "og:type": "website",
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
-      "twitter:title": "NEUS Docs | Control what AI agents can do",
-      "twitter:description": "Set what an AI agent may access, spend, or do, then check those limits before action.",
+      "twitter:title": "NEUS Docs | Portable Trust Infrastructure",
+      "twitter:description": "Portable Proof carries verified identity, authority, and action evidence across apps, agents, and networks.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },

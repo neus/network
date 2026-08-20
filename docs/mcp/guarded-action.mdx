@@ -20,10 +20,10 @@ The assistant uses `neus_agent_create` and returns the one required setup step w
 Run this in the project where the host will enforce the decision:
 
 ```bash
-npx -y -p @neus/sdk neus mount guarded-demo --apply codex
+npx -y -p @neus/sdk neus mount guarded-demo --apply <host>
 ```
 
-Replace `codex` with `cursor` or `claude` for that host. The command writes the current `neus.runtime-mount.v1` bundle to `.neus/mount.json`.
+`<host>` is `cursor`, `claude`, or `codex`. The command writes the current `neus.runtime-mount.v1` bundle to `.neus/mount.json`.
 
 ## 3. Evaluate before the tool call
 

@@ -50,7 +50,7 @@ export const NEUS_QUICKSTART_NPX = NEUS_SETUP_NPX;
 
 /** Per-repo agent bind (after auth on the machine). */
 export const NEUS_MOUNT_WORKFLOW = `${NEUS_AUTH_CLI}
-neus mount <agentId> --apply cursor
+neus mount <agentId> --apply <host>
 ${NEUS_DOCTOR_CLI}`;
 
 /**

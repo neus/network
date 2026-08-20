@@ -1,8 +1,8 @@
 # NEUS
 
-> Portable Trust Infrastructure for people and AI. One private profile for identity, context, permissions, and proof.
+> Portable Trust Infrastructure for Humans and AI. Portable Proof carries identity, authority, and action evidence across apps, agents, and networks.
 
-Your AI has access. NEUS gives it authority. Prove once. Verify anywhere.
+AI-native: The portable trust harness for AI. One profile for checks, Portable Proofs, permissions, and private context.
 
 ## Start
 
@@ -11,17 +11,20 @@ Assistant setup: https://docs.neus.network/mcp/setup · https://neus.network/ins
 App check: https://docs.neus.network/cookbook/auth-hosted-verify
 Hosted MCP: https://mcp.neus.network/mcp
 
-```bash
-npx -y -p @neus/sdk neus setup
-```
+Add the hosted MCP remote `https://mcp.neus.network/mcp`, then click Connect. Optional terminal installer: `npx -y -p @neus/sdk neus setup`.
 
-Then click Connect. Ask: "Before you take a sensitive action, use NEUS. Reuse what I already have."
+Ask: "Before you take a sensitive action, use NEUS. Reuse what I already have."
 
 Load context once per session. Reuse an existing proof before a new check. OAuth for people. Profile access keys (`npk_*`) for servers and CI only — never paste keys into chat.
 
 ## Rules
 
 - MCP, SDK, and API are ways to connect to NEUS, not separate products.
+- Platform hosts verification, proofs, gates, listings, agent permissions, and payment rules.
+- SDK embeds hosted flows, gates, and server checks in an existing product.
+- CLI configures hosted MCP and loads trusted agent context.
+- MCP brings the same profile, checks, proofs, permissions, and private context to supported clients.
+- Keep existing authentication, payments, models, and agent frameworks. NEUS composes with them.
 - Summarize checks as Passed, Action needed, or Blocked.
 - Never invent proof IDs, check IDs, accounts, or URLs.
 

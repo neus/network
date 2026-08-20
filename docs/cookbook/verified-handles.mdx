@@ -4,7 +4,7 @@ description: Bind a pseudonymous handle to a wallet, display a verified badge, a
 icon: badge-check
 ---
 
-Use NEUS to make creator handles portable and verifiable. A user claims a handle, NEUS binds it to their wallet with the `ownership-pseudonym` verifier, and your app gets a reusable `qHash` you can badge, link, and gate.
+Use NEUS to make creator handles portable and verifiable. A user claims a handle, NEUS binds it to their wallet with the `ownership-pseudonym` verifier, and your app gets a reusable proof ID it can badge, link, and gate.
 
 ## When to use this
 
@@ -22,8 +22,8 @@ Use NEUS to make creator handles portable and verifiable. A user claims a handle
 
 1. User claims a handle in your app.
 2. Your app asks NEUS to bind `handle` + `namespace` + `walletAddress`.
-3. NEUS returns a `qHash` and a proof URL.
-4. Your app stores the `qHash` with the user record.
+3. NEUS returns a proof ID in `qHash` and a proof URL.
+4. Your app stores the proof ID with the user record.
 5. Surface a verified badge that links to the public proof page.
 6. Before any privileged action, check the proof on your server.
 
@@ -55,7 +55,7 @@ const proof = await client.verify({
 
 ## Hosted Verify (no in-app signing)
 
-Send the user to NEUS and get the `qHash` back on return.
+Send the user to NEUS and get the proof ID back on return.
 
 ```js
 import { getHostedCheckoutUrl } from '@neus/sdk';
@@ -68,7 +68,7 @@ const url = getHostedCheckoutUrl({
 window.location.assign(url);
 ```
 
-Read the `qHash` from the callback URL or popup message and store it.
+Read the proof ID from the `qHash` field in the callback URL or popup message and store it.
 
 ## Show the badge
 

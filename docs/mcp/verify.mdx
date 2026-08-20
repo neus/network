@@ -24,7 +24,7 @@ When signed in, **omit `walletAddress`**. The tool uses your profile account fro
 | `signature` | No | Provided in the finalize step |
 | `signedTimestamp` | No | Provided in the finalize step |
 | `options.returnUrl` | No | Where to send the user if a hosted step is needed |
-| `options.publishToHub` | No | Make the proof discoverable on your profile |
+| `options.publishToHub` | No | Record the proof on the hub chain. Offchain by default. Does not change who can see the proof. |
 
 ```json
 { "verifierIds": ["ownership-basic"], "data": { "content": "Hello NEUS" } }

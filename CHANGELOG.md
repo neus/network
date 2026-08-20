@@ -4,6 +4,26 @@ Release notes for **`@neus/sdk`**, **`@neus/mcp-server`**, docs, and examples.
 
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Fixed
+
+- **Cursor setup no longer tells you to run `neus auth`.** `neus auth` is `neus-cli` loopback into `~/.neus/mcp-tokens.json`. Cursor Local OAuth lives in the host secret store. If Local shows Logout and Unauthorized, click Logout, then Connect. Cloud is a separate Cursor session.
+- **CLI finds the real Cursor plugin cache.** Detection now includes `~/.cursor/plugins/cache/<publisher>/neus-mcp/` (official `cursor-public`, marketplace checkouts, and private installs), not only `cache/neus/neus-mcp`.
+- **CLI skips `~/.cursor/mcp.json` when the plugin registers MCP**, and removes a leftover user `neus` entry so marketplace Install and `neus setup` cannot both create a server.
+
+### Added
+
+- **Cursor marketplace one-click Connect.** The `neus-mcp` plugin ships a Cursor-native `mcp.json` (URL only) and `.cursor-plugin/plugin.json` points `mcpServers` at that file, the same Install → Connect path as Linear, Stripe, and Google Drive.
+
+### Changed
+
+- **Public MCP and plugin docs lead with the hosted MCP remote.** Setup is `https://mcp.neus.network/mcp` plus host Connect. `npx neus setup` is the optional terminal installer. Host names appear only where install or sign-in actually differs: Cursor marketplace dual-register and Local/Cloud sessions, Codex `neus auth --client codex`, Cursor OAuth callbacks, and `--apply` host values.
+- **MCP discovery now leads with The portable trust harness.** Server card and plugin copy use that AI label, then the existing before-action sentence. Company docs keep Portable Trust Infrastructure for Humans and AI.
+- **`publishToHub` docs no longer say the proof becomes discoverable on a profile.** That option records the proof on the hub chain. Visibility stays on privacy and display settings.
+- **`neus auth` without `--oauth` uses host Connect** for Cursor, VS Code, and Claude Code. Codex still uses `codex mcp login`. `--oauth` remains the explicit CLI token store.
+- **`neus doctor --live` no longer treats `~/.neus` as Cursor Local.** URL-only Cursor config is host OAuth, not a CLI session.
+
 ## [1.3.9] - 2026-08-13
 
 ### Fixed

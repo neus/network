@@ -177,8 +177,8 @@ async function main() {
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
     // neus-mcp ships a Cursor-native mcp.json (no "type" field) validated by
-    // validate-cursor-mcp.mjs. The spec-compliant .mcp.json (type: "http") is
-    // for Claude Code / Codex, which consume the plugin as skill-only via the CLI.
+    // validate-cursor-mcp.mjs. Claude Code and Codex stay skill-only here:
+    // those hosts register MCP through `neus setup`, not a plugin .mcp.json.
     if (entry.name === "neus-mcp") continue;
     if (await pathExists(path.join(pluginsDir, entry.name, ".mcp.json"))) {
       await validateSpecMcp(path.join(pluginsDir, entry.name), entry.name);

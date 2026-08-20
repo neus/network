@@ -7,10 +7,10 @@ This example loads the current NEUS runtime mount and makes one permission decis
 ```bash
 npm install
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus mount <agentId> --apply cursor
+npx -y -p @neus/sdk neus mount <agentId> --apply <host>
 ```
 
-Click **Connect** after setup. Use `neus auth` only if the host cannot start sign-in. Replace `cursor` with `claude` or `codex` when that is the host enforcing the decision.
+Click **Connect** after setup. Use `neus auth` only if the host cannot start sign-in. `<host>` is `cursor`, `claude`, or `codex`.
 
 ## Check an action
 

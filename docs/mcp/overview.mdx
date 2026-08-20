@@ -1,23 +1,23 @@
 ---
-title: "Protect AI actions in any MCP client"
+title: "Portable Trust Harness for AI"
 sidebarTitle: "MCP"
-description: "Connect once, then check what an assistant may access, spend, or do before it acts."
+description: "Bring your NEUS profile, checks, Portable Proofs, agent permissions, and private context to any supported MCP client."
 icon: plug
 "og:image": "/images/og-mcp.png"
 "twitter:image": "/images/og-mcp.png"
 ---
 
-Connect NEUS once. Your assistant can then reuse your current checks and permissions before it spends, publishes, uses secrets, or calls a sensitive tool.
+Bring the NEUS trust stack into any supported MCP client: your profile, identity and ownership checks, Portable Proofs, agent permissions, and private Vault context.
 
-Keep your model and agent framework. NEUS adds the decision before action.
+MCP connects the assistant to tools and context. NEUS supplies portable trust across those connections. Keep your model, agent framework, sign-in, and application policy.
 
 ## Connect
 
-```bash
-npx -y -p @neus/sdk neus setup
-```
+Register the hosted remote, then click **Connect**:
 
-Click **Connect** in your assistant and finish browser sign-in. No wallet or access key is required.
+`https://mcp.neus.network/mcp`
+
+The host discovers OAuth from that endpoint. Use a marketplace plugin or registry listing when the host offers one. From a terminal, `npx -y -p @neus/sdk neus setup` writes the same URL.
 
 Then ask:
 
@@ -31,14 +31,11 @@ One endpoint. One sign-in. Trust that travels.
 
 What carries between assistants:
 
-- Your profile and current permissions
+- Your profile, agent identities, and current permissions
 - Completed checks that are still valid
-- A portable proof another connected app can confirm
+- Portable Proofs another connected product can confirm
+- Private Vault context when you explicitly allow the client to use it
 
-NEUS returns the check result and proof, not the private data used to complete the check.
-
-The same hosted endpoint works with Cursor, Codex, Claude, VS Code, and other remote MCP clients:
-
-`https://mcp.neus.network/mcp`
+NEUS returns the check result and proof, not the private data used to complete the check. Proofs are private by default. The client or runtime must enforce that result.
 
 Next: [Connect NEUS](./setup), then [protect your first action](./guarded-action).

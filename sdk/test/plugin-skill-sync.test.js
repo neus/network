@@ -69,4 +69,14 @@ describe('plugin skill sync (all SDK skills)', () => {
       });
     });
   }
+
+  it('ships Cursor-native plugin MCP for marketplace Connect', () => {
+    const mcpPath = path.join(repoRoot, 'plugins', 'neus-mcp', 'mcp.json');
+    const pluginPath = path.join(repoRoot, 'plugins', 'neus-mcp', '.cursor-plugin', 'plugin.json');
+    const mcp = JSON.parse(readFileSync(mcpPath, 'utf8'));
+    const plugin = JSON.parse(readFileSync(pluginPath, 'utf8'));
+
+    expect(mcp.mcpServers.neus).toEqual({ url: 'https://mcp.neus.network/mcp' });
+    expect(plugin.mcpServers).toBe('./mcp.json');
+  });
 });

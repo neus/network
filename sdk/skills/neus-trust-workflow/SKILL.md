@@ -24,7 +24,7 @@ Use this before an assistant runs sensitive tools or takes another verification-
 ## Workflow
 
 1. **`neus_context`** once per session. Prefer signed-in profile context; omit wallet fields on check/verify tools.
-2. **Profile agent:** **`neus_agent_mount`** (or `neus mount <agentId> --apply cursor`) for identity, permissions, skills, and context.
+2. **Profile agent:** **`neus_agent_mount`** (or `neus mount <agentId> --apply <host>`) for identity, permissions, skills, and context.
 3. **Trust before action:** **`neus_proofs_check`** → **`neus_verify_or_guide`**. When signed in, ownership checks continue with **`neus_verify`**. Share a browser link only when a tool returns one.
 4. **Trusted Agent:** **`neus_agent_link`** → **`neus_verify_or_guide`** if needed.
 5. **Proofs:** **`neus_proofs_get`** for exact fields.

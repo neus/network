@@ -1,7 +1,7 @@
 {
   "name": "@neus/sdk",
   "version": "1.3.9",
-  "description": "SDK for sign-in, reusable checks, and before-action enforcement in apps and AI agents.",
+  "description": "SDK and CLI for hosted verification, Portable Proofs, gates, paid access, and agent permissions.",
   "bin": {
     "neus": "cli/neus.mjs"
   },
@@ -90,7 +90,13 @@
     "authentication",
     "passwordless",
     "proof",
+    "portable-proof",
     "ownership",
+    "authorization",
+    "access-control",
+    "verifiers",
+    "receipts",
+    "trust-infrastructure",
     "sdk",
     "mcp",
     "model-context-protocol",
