@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   buildRuntimeBundle,
+  normalizeQHash,
   pickActiveDelegation,
   pickIdentity,
   resolveRuntimeBundleFromMcp,
@@ -58,6 +59,14 @@ describe('runtime-mount', () => {
     expect(bundle.effectiveRuntime).toEqual({ provider: 'openai', model: 'gpt-4.1' });
   });
 
+  it('normalizes qHashes and rejects malformed proof references at the bundle boundary', () => {
+    expect(normalizeQHash(identity.qHash.slice(2).toUpperCase())).toBe(identity.qHash);
+    expect(normalizeQHash('not-a-proof')).toBe('');
+    expect(() => buildRuntimeBundle({ identity: { ...identity, qHash: 'not-a-proof' } })).toThrow(
+      /verified agent identity/,
+    );
+  });
+
   it('prefers delegation runtime over identity default', () => {
     const runtime = resolveEffectiveRuntime(identity, delegation);
     expect(runtime?.model).toBe('gpt-4.1');
@@ -86,8 +95,15 @@ describe('runtime-mount', () => {
         return {
           ok: true,
           payload: {
-            principal: { primaryAccount: delegation.controllerWallet },
-            agents: [{ agentId: identity.agentId, agentWallet: identity.agentWallet }]
+            profileContext: {
+              status: 'ok',
+              principal: { primaryAccount: delegation.controllerWallet },
+              agents: [{
+                agentId: identity.agentId,
+                agentWallet: identity.agentWallet,
+                identityQHash: identity.qHash
+              }]
+            }
           }
         };
       }
@@ -140,6 +156,46 @@ describe('runtime-mount', () => {
     const proofReads = calls.filter(call => call.name === 'neus_proofs_get');
     expect(proofReads).toHaveLength(2);
     expect(proofReads.every(call => call.args.include === 'content')).toBe(true);
+  });
+
+  it('builds an identity-only fallback from the authenticated profile association', async () => {
+    const calls = [];
+    const callMcpTool = async request => {
+      calls.push(request);
+      if (request.name === 'neus_agent_mount') {
+        return { ok: true, payload: { error: 'identity_not_found' } };
+      }
+      if (request.name === 'neus_context') {
+        return {
+          ok: true,
+          payload: {
+            profileContext: {
+              status: 'ok',
+              principal: { primaryAccount: identity.agentWallet },
+              agents: [{
+                agentId: identity.agentId,
+                agentWallet: identity.agentWallet,
+                identityQHash: identity.qHash
+              }]
+            }
+          }
+        };
+      }
+      if (request.name === 'neus_proofs_get') {
+        return { ok: true, payload: { data: { proofs: [] } } };
+      }
+      return { ok: false, error: 'unexpected call' };
+    };
+
+    const bundle = await resolveRuntimeBundleFromMcp({
+      callMcpTool,
+      accessKey: 'test-access-key',
+      agentId: identity.agentId
+    });
+
+    expect(bundle.identity.agentId).toBe(identity.agentId);
+    expect(bundle.trust.identityQHash).toBe(identity.qHash);
+    expect(bundle.delegation).toBeNull();
   });
 
   it('writes cursor adapter files', () => {

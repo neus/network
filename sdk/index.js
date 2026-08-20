@@ -64,6 +64,7 @@ export { fetchSponsorGrant } from './sponsor.js';
 export {
   RUNTIME_MOUNT_SCHEMA,
   normalizeWallet,
+  normalizeQHash,
   isDelegationExpired,
   pickIdentity,
   pickActiveDelegation,

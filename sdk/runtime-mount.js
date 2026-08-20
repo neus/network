@@ -18,6 +18,16 @@ export function normalizeWallet(value) {
 /**
  * @param {unknown} value
  */
+export function normalizeQHash(value) {
+  const normalized = String(value || '').trim().toLowerCase();
+  if (!normalized) return '';
+  const with0x = normalized.startsWith('0x') ? normalized : `0x${normalized}`;
+  return /^0x[a-f0-9]{64}$/.test(with0x) ? with0x : '';
+}
+
+/**
+ * @param {unknown} value
+ */
 function asString(value) {
   const trimmed = String(value ?? '').trim();
   return trimmed.length > 0 ? trimmed : '';
@@ -59,9 +69,9 @@ export function isDelegationExpired(expiresAt) {
  */
 export function pickIdentity(identities, selector) {
   const list = Array.isArray(identities) ? identities : [];
-  const qHash = asString(selector.identityQHash).toLowerCase();
+  const qHash = normalizeQHash(selector.identityQHash);
   if (qHash) {
-    return list.find(row => asString(row.qHash).toLowerCase() === qHash) || null;
+    return list.find(row => normalizeQHash(row.qHash) === qHash) || null;
   }
   const agentId = asString(selector.agentId).toLowerCase();
   const agentWallet = normalizeWallet(selector.agentWallet);
@@ -195,8 +205,10 @@ export function extractAgentContextFromProofs(proofs) {
 export function buildRuntimeBundle(input) {
   const identity = input.identity || {};
   const delegation = input.delegation || null;
-  const identityQHash = asString(input.identityQHash || identity.qHash);
-  const delegationQHash = delegation ? asString(input.delegationQHash || delegation.qHash) : null;
+  const identityQHash = normalizeQHash(input.identityQHash || identity.qHash);
+  const delegationQHash = delegation
+    ? normalizeQHash(input.delegationQHash || delegation.qHash) || null
+    : null;
   const agentId = asString(identity.agentId);
   const agentWallet = normalizeWallet(identity.agentWallet);
 
@@ -304,6 +316,7 @@ export function buildRuntimeBundle(input) {
  */
 export function profileAgentToIdentitySeed(profileAgent) {
   return {
+    qHash: normalizeQHash(profileAgent.identityQHash || profileAgent.qHash) || null,
     agentId: profileAgent.agentId,
     agentWallet: profileAgent.agentWallet,
     agentLabel: profileAgent.agentLabel || profileAgent.name,
@@ -312,8 +325,7 @@ export function profileAgentToIdentitySeed(profileAgent) {
     instructions: profileAgent.instructions,
     capabilities: capabilitiesToArray(profileAgent.capabilities),
     skills: Array.isArray(profileAgent.skills) ? profileAgent.skills : [],
-    services: Array.isArray(profileAgent.services) ? profileAgent.services : [],
-    identityQHash: profileAgent.identityQHash || profileAgent.qHash
+    services: Array.isArray(profileAgent.services) ? profileAgent.services : []
   };
 }
 
@@ -346,7 +358,7 @@ export async function resolveRuntimeBundleFromMcp(input) {
   const selector = {
     agentId: input.agentId,
     agentWallet: input.agentWallet,
-    identityQHash: input.identityQHash
+    identityQHash: normalizeQHash(input.identityQHash) || undefined
   };
   if (!selector.agentId && !selector.agentWallet && !selector.identityQHash) {
     throw new Error('Provide agentId, agentWallet, or identityQHash.');
@@ -393,13 +405,17 @@ export async function resolveRuntimeBundleFromMcp(input) {
     throw new Error(ctx.error || 'Could not load profile context. Run `neus auth` and retry.');
   }
   const ctxPayload = /** @type {Record<string, unknown>} */ (ctx.payload || {});
-  if (ctxPayload.status === 'auth_required') {
+  const profileContext =
+    ctxPayload.profileContext && typeof ctxPayload.profileContext === 'object'
+      ? /** @type {Record<string, unknown>} */ (ctxPayload.profileContext)
+      : ctxPayload;
+  if (profileContext.status === 'auth_required') {
     throw new Error('Profile authentication required. Run `neus auth` or set NEUS_ACCESS_KEY.');
   }
 
-  const principal = /** @type {Record<string, unknown>} */ (ctxPayload.principal || {});
+  const principal = /** @type {Record<string, unknown>} */ (profileContext.principal || {});
   const controllerWallet = normalizeWallet(principal.primaryAccount);
-  const profileAgents = Array.isArray(ctxPayload.agents) ? ctxPayload.agents : [];
+  const profileAgents = Array.isArray(profileContext.agents) ? profileContext.agents : [];
 
   let agentWallet = normalizeWallet(selector.agentWallet);
   let agentId = asString(selector.agentId);

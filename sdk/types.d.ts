@@ -1385,6 +1385,7 @@ declare module '@neus/sdk/runtime-mount' {
   }
 
   export function normalizeWallet(value: unknown): string;
+  export function normalizeQHash(value: unknown): string;
   export function isDelegationExpired(expiresAt: number | null | undefined): boolean;
   export function pickIdentity(
     identities: AgentIdentityRow[],
