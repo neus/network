@@ -6,10 +6,9 @@ Load this file only when the user needs install, sign-in, access keys, or projec
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
 ```
 
-`neus setup` registers hosted NEUS MCP. It does not open a browser. Click **Connect** in your host, or run `neus auth`.
+`neus setup` registers hosted NEUS MCP. Click **Connect** in your host. Use `neus auth` only if the host cannot start sign-in.
 
 Servers and CI:
 

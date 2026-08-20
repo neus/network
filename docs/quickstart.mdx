@@ -1,12 +1,17 @@
 ---
-title: Quickstart
-description: Sell access, drop in VerifyGate, and confirm on your server.
+title: Sell access with one gate
+sidebarTitle: Sell access
+description: Publish a free or paid access rule, add one component, and confirm the result on your server.
 icon: rocket
 "og:image": "/images/og-quickstart.png"
 "twitter:image": "/images/og-quickstart.png"
 ---
 
-One access link owns the checks, price, and sign-in. Your app never runs the check logic. Visitors need no NEUS account and no API key.
+<Info>
+  This is the selling-access recipe. Connecting an assistant? [Start with one command](./mcp/setup). Adding sign-in to an app? [Use hosted sign-in](./cookbook/auth-hosted-verify).
+</Info>
+
+Publish once. One listing owns the checks, price, and hosted sign-in. Your app adds the gate and confirms the result; it never recreates the check logic. Visitors never need an API key.
 
 ## Build it
 
@@ -14,7 +19,7 @@ One access link owns the checks, price, and sign-in. Your app never runs the che
   <Step title="Publish a listing">
     Sign in at [neus.network](https://neus.network) → **Listings**. Choose checks, set pricing, **Publish**. Copy your `gateId`.
   </Step>
-  <Step title="Gate and monetize with VerifyGate">
+  <Step title="Add VerifyGate">
     ```jsx
     import { VerifyGate } from '@neus/sdk/widgets';
 
@@ -23,14 +28,6 @@ One access link owns the checks, price, and sign-in. Your app never runs the che
     </VerifyGate>;
     ```
     `VerifyGate` reuses a saved proof or opens hosted sign-in on NEUS when a new one is needed. Wallet, passkey, and OAuth all happen on NEUS, not inside your app.
-  </Step>
-  <Step title="Show status with ProofBadge">
-    ```jsx
-    import { ProofBadge } from '@neus/sdk/widgets';
-
-    <ProofBadge qHash={proof.qHash} />;
-    ```
-    Optional: pass `showChains` when you want on-chain status in the badge.
   </Step>
   <Step title="Confirm on your server">
     Pass the visitor's **account address** (from NEUS sign-in or the saved result; passkey and OAuth included, no separate wallet required):
@@ -52,6 +49,18 @@ One access link owns the checks, price, and sign-in. Your app never runs the che
 
 The visitor’s proof is theirs. If they return or visit another gate that needs the same checks, they can reuse it.
 
+You choose who pays. Use your NEUS credits for free access, or turn on visitor checkout and set a price. See [Billing](./platform/billing) for card, USDC, and metered API options.
+
+## Optional: show proof status
+
+```jsx
+import { ProofBadge } from '@neus/sdk/widgets';
+
+<ProofBadge qHash={proof.qHash} />;
+```
+
+Pass `showChains` only when on-chain status matters in your interface.
+
 ## Not using React? Send users to NEUS for sign-in
 
 ```js
@@ -67,9 +76,9 @@ window.location.assign(
 
 Read the **proof ID** (`qHash`) from the callback URL or popup message, then store it. Details: [Hosted sign-in](./cookbook/auth-hosted-verify).
 
-## Adding an assistant instead?
+## Connecting an assistant instead?
 
-[Run setup](/), then ask: **"Before I take a sensitive action, use NEUS. Reuse what I already have."**
+[Connect NEUS](./mcp/setup), then ask: **"Before I take a sensitive action, use NEUS. Reuse what I already have."**
 
 ## Next
 
@@ -80,8 +89,8 @@ Read the **proof ID** (`qHash`) from the callback URL or popup message, then sto
   <Card title="Hosted sign-in" icon="key" href="./cookbook/auth-hosted-verify">
     The browser flow on NEUS.
   </Card>
-  <Card title="Integration" icon="compass" href="./integration">
-    Browser, server, and assistant paths.
+  <Card title="Start" icon="bolt" href="/">
+    One command for assistants. Hosted sign-in for apps.
   </Card>
 </CardGroup>
 

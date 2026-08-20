@@ -5,8 +5,8 @@
     "version": "1.0.0",
     "description": "Public HTTP API for NEUS integrators.\n\nRecommended integration order (simplest first):\n1. Browser: VerifyGate widget or hosted verify at https://neus.network/verify (wallet, passkey, and OAuth handled by NEUS).\n2. JavaScript: `@neus/sdk` `client.verify()` signs and submits for signature-based verifiers; use VerifyGate for hosted/interactive verifiers.\n3. Server gate checks: `GET /api/v1/proofs/check` with `gateId` or criteria before granting access.\n4. Raw HTTP: two-phase signing below only when you cannot use the SDK or hosted flows.\n\nRaw HTTP verification uses POST /api/v1/verification/standardize → sign signerString → POST /api/v1/verification with the same body plus signature. Session-authenticated callers may skip the signature when a valid session is present.\n\nUse your deployment base URL (for example https://api.neus.network). Some verifiers require pro access. Administrative endpoints are not included in this specification.",
     "license": {
-      "name": "Apache License 2.0",
-      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+      "name": "Proprietary — all rights reserved",
+      "url": "https://neus.network/legal/terms-of-use"
     }
   },
   "security": [],

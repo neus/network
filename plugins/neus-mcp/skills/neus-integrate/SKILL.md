@@ -115,4 +115,4 @@ The integration is complete when:
 
 Do not add extra NEUS concepts, tools, or surfaces unless the developer asks.
 
-Docs: [docs.neus.network/quickstart](https://docs.neus.network/quickstart) and [Integration paths](https://docs.neus.network/integration)
+Docs: [Start](https://docs.neus.network) · [Hosted sign-in](https://docs.neus.network/cookbook/auth-hosted-verify) · [Sell access](https://docs.neus.network/quickstart)

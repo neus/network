@@ -7,9 +7,9 @@ icon: shield-check
 
 **Yes/no lookup only.** Use this before a new check or hosted handoff. It never creates results and never opens hosted flows.
 
-Private results count only with that user's **Bearer** ([Auth](./auth)). Signed-in owners omit `wallet` and get `{ eligible, matchedCount }` from their own proofs without paying. Public third-party checks may return `payment_required`.
+Private results count only for the signed-in account ([Auth](./auth)). Signed-in owners omit `wallet` and get `{ eligible, matchedCount }` from their own proofs without paying. Public third-party checks may return `payment_required`.
 
-If **`eligible`** is true, continue silently. If false, use **`neus_proofs_get`** when you need exact state, or **`neus_verify_or_guide`** when setup or browser-only consent is missing.
+If **`eligible`** is true, continue. If false, use **`neus_proofs_get`** when you need exact state, or **`neus_verify_or_guide`**. When signed in, ownership checks continue with **`neus_verify`**.
 
 ## Input
 

@@ -21,6 +21,6 @@ Profile context can include `profileSummary.proofsSummary`: a compact proof summ
 | `tools` | Map of available NEUS MCP tools |
 | `profileSummary` | Signed-in profile context, including `proofsSummary` |
 
-When signed in, let account-based tools use the current profile and check existing proofs before opening a browser link.
+When signed in, let account-based tools use the current profile. Ownership checks finish with **`neus_verify`**. Share a hosted link only when a tool returns one.
 
-Session flow recap: **[Overview](./overview)**. Reuse existing proofs first; use hosted links only when the next step needs a browser.
+Session flow recap: **[Overview](./overview)**. Reuse existing proofs first; use hosted links only when the next step needs an outside login, payment, or a different account.

@@ -1,53 +1,44 @@
 ---
-title: "NEUS MCP"
+title: "Protect AI actions in any MCP client"
 sidebarTitle: "MCP"
-description: "The portable trust harness for AI. Private by default. One endpoint. One sign-in. Trust that travels."
+description: "Connect once, then check what an assistant may access, spend, or do before it acts."
 icon: plug
 "og:image": "/images/og-mcp.png"
 "twitter:image": "/images/og-mcp.png"
 ---
 
-Bring your **identity, proofs, permissions, agents, and trusted context** to any MCP client.
+Connect NEUS once. Your assistant can then reuse your current checks and permissions before it spends, publishes, uses secrets, or calls a sensitive tool.
 
-**Private by default. Portable across models, apps, and runtimes.**
+Keep your model and agent framework. NEUS adds the decision before action.
 
-**One endpoint. One sign-in. Trust that travels.**
-
-`https://mcp.neus.network/mcp`
+## Connect
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
-npx -y -p @neus/sdk neus doctor --live
 ```
+
+Click **Connect** in your assistant and finish browser sign-in. No wallet or access key is required.
+
+Then ask:
+
+> Before you take a sensitive action, use NEUS. Reuse what I already have.
+
+NEUS answers **Passed**, **Action needed**, or **Blocked** before the action runs.
 
 ## Share proof. Not private data.
 
-Your AI uses the proof it needs. The data stays with you.
+One endpoint. One sign-in. Trust that travels.
 
-Don't restart from zero. Same profile. New agent.
+What carries between assistants:
 
-```text
-Private profile
-      │
-      ├── Identity
-      ├── Proofs
-      ├── Permissions
-      ├── Agents
-      ├── Context
-      └── Secrets
-             │
-             ▼
-          NEUS MCP
-             │
-     ┌───────┼───────┐
-     ▼       ▼       ▼
-   Cursor   Codex   Claude
-             │
-             ▼
-       Your runtime
-```
+- Your profile and current permissions
+- Completed checks that are still valid
+- A portable proof another connected app can confirm
 
-Prove once. Verify anywhere.
+NEUS returns the check result and proof, not the private data used to complete the check.
 
-[Connect NEUS](./setup)
+The same hosted endpoint works with Cursor, Codex, Claude, VS Code, and other remote MCP clients:
+
+`https://mcp.neus.network/mcp`
+
+Next: [Connect NEUS](./setup), then [protect your first action](./guarded-action).

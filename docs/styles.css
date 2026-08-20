@@ -244,6 +244,10 @@ html.dark #navbar img.nav-logo[alt="light logo"] {
     transition: color 120ms ease, background-color 120ms ease;
   }
 
+  #navbar .nav-tabs a.nav-tabs-item:focus-visible {
+    box-shadow: 0 0 0 2px rgb(var(--neus-rgb-accent-primary)) !important;
+  }
+
   #navbar .nav-tabs a.nav-tabs-item:hover {
     color: var(--neus-text-primary) !important;
     background: rgb(255 255 255 / 0.05) !important;
@@ -596,7 +600,7 @@ button,
 a.card:focus-visible {
   border-radius: 0.25rem;
   outline: none !important;
-  box-shadow: 0 0 0 1px rgb(var(--neus-rgb-accent-primary) / 0.45) !important;
+  box-shadow: 0 0 0 2px rgb(var(--neus-rgb-accent-primary)) !important;
 }
 
 #header a:not([href*="/hub"]):not([class*="button"]),
@@ -1023,6 +1027,10 @@ a.card:hover {
 }
 
 @media (max-width: 639px) {
+  #content-container > .flex.flex-row-reverse {
+    padding-top: 5.5rem !important;
+  }
+
   .card-group {
     grid-template-columns: 1fr !important;
   }

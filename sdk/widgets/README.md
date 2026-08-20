@@ -36,4 +36,4 @@ import { ProofBadge } from '@neus/sdk/widgets';
 
 - [Widgets overview](https://docs.neus.network/widgets/overview)
 - [VerifyGate](https://docs.neus.network/widgets/verifygate)
-- [Quickstart](https://docs.neus.network/quickstart)
+- [Sell access](https://docs.neus.network/quickstart)

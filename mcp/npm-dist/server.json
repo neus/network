@@ -53,11 +53,11 @@
     },
     {
       "name": "neus_verify",
-      "description": "Create or refresh a portable proof after checking that one is needed. Omit the wallet when signed in; the session authorizes the request."
+      "description": "Create or refresh a portable proof after checking that one is needed. Omit the wallet when signed in; the session authorizes the request. Signed-in ownership checks finish here. Share a hosted link only when this tool returns one."
     },
     {
       "name": "neus_verify_or_guide",
-      "description": "Reuse a qualifying portable proof or return the one next step needed to complete the check. Omit the wallet when signed in."
+      "description": "Reuse a qualifying portable proof or return the one next step needed to complete the check. Omit the wallet when signed in. Signed-in ownership checks continue with neus_verify. A hosted link is returned only for an outside login, payment, or different account."
     },
     {
       "name": "neus_proofs_get",

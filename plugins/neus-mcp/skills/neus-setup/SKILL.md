@@ -9,8 +9,6 @@ compatibility: Requires Node.js 20 or newer and an MCP-capable client.
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
-npx -y -p @neus/sdk neus doctor --live
 ```
 
-Same three commands on every host. `neus setup` registers the hosted endpoint.
+Then click **Connect** in the host. `neus setup` registers the hosted endpoint.

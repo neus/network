@@ -1,11 +1,11 @@
 ---
 title: Check or guide (`neus_verify_or_guide`)
 sidebarTitle: Check or guide
-description: Reuse a saved result, or return the next hosted step.
+description: Reuse a saved result, or return the next step.
 icon: signs-post
 ---
 
-**Default reuse-or-check tool.** Looks up existing results first, then returns the next hosted step when a new check is required.
+**Default reuse-or-check tool.** Looks up existing results first. When signed in, ownership checks continue with **`neus_verify`**. A hosted link is returned only for outside login, payment, or a different account.
 
 When signed in, **omit `walletAddress`** to use your profile wallet from `neus_context`.
 
@@ -13,9 +13,10 @@ When signed in, **omit `walletAddress`** to use your profile wallet from `neus_c
 
 1. Checks existing proofs for the required checks
 2. If satisfied → `already_verified` (continue silently)
-3. If not → returns one next step (hosted verify link or in-MCP verify path)
+3. If not, and signed in for an instant check → `next_action: call_neus_verify` (no hosted link)
+4. If not, and an outside step is required → one hosted link
 
-Summarize the outcome for users as **Passed**, **Action needed**, or **Blocked**.
+Summarize the outcome for users as **Passed**, **Action needed**, or **Blocked**. Do not ask the user to open a browser unless this tool returned a hosted link.
 
 ## Input
 
@@ -29,7 +30,7 @@ Summarize the outcome for users as **Passed**, **Action needed**, or **Blocked**
 
 ## Output
 
-`action` (`already_verified` | `verification_required`), `eligible`, `hostedVerifyUrl` when a browser step is required.
+`action` (`already_verified` | `verification_required`), `eligible`, `next_action`. `hostedVerifyUrl` only when a browser step is required.
 
 After hosted completion, read proof state with **`neus_proofs_get`**.
 

@@ -1,84 +1,42 @@
 # NEUS
 
-> Portable Trust Infrastructure for people and AI. One private profile for identity, context, permissions, and proof that works across apps, agents, services, and transactions.
+> Portable Trust Infrastructure for people and AI. One private profile for identity, context, permissions, and proof.
 
-Don't restart from zero. Every app makes you reconnect yourself, rebuild context, re-prove ownership, and reconfigure permissions. NEUS changes that with one private profile that travels with you. Prove once, carry it with you, let any system verify it when it matters. Connected gates check current state before access, payment, or execution. Built for people and AI.
+Your AI has access. NEUS gives it authority. Prove once. Verify anywhere.
 
-## What NEUS does
+## Start
 
-- **Portable proofs:** A reusable verification asset for identity, ownership, or permission. Show it on a profile, require it for access, or confirm it through the API. Same proof, every surface.
-- **Gates:** Proof-based access to content, rewards, and member areas, with optional USDC or card checkout.
-- **Agent trust:** Verifiable agent identity, controller-approved authority, spend caps, and expiration. Checked before tools run.
-- **Unique-person checks:** Reuse proof-of-human and wallet-risk results across a product.
-- **MCP for assistants:** The portable trust harness for AI. One endpoint, one sign-in. Identity, proofs, permissions, and trusted context on any MCP client. Private by default. https://mcp.neus.network/mcp
-- **Trust workflow skill:** https://github.com/neus/network/blob/main/sdk/skills/neus-trust-workflow/SKILL.md (canonical source, shipped in `@neus/sdk` and bundled in the `neus-mcp` plugin)
-- **Integrate skill:** https://github.com/neus/network/blob/main/sdk/skills/neus-integrate/SKILL.md (add NEUS access control to an app: gate, server check, and test flow)
-
-## Quick start
-
-Install the SDK and wire MCP for your editor:
+Canonical start: https://docs.neus.network
+Assistant setup: https://docs.neus.network/mcp/setup · https://neus.network/install
+App check: https://docs.neus.network/cookbook/auth-hosted-verify
+Hosted MCP: https://mcp.neus.network/mcp
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
 ```
 
-Then ask your assistant: "Use NEUS Verify before taking sensitive actions."
+Then click Connect. Ask: "Before you take a sensitive action, use NEUS. Reuse what I already have."
 
-## Core surfaces
+Load context once per session. Reuse an existing proof before a new check. OAuth for people. Profile access keys (`npk_*`) for servers and CI only — never paste keys into chat.
 
-- Hosted Verify: https://neus.network/verify
-- Hosted MCP: https://mcp.neus.network/mcp
-- JavaScript SDK: https://www.npmjs.com/package/@neus/sdk
-- API base: https://api.neus.network
-- Proof pages: https://neus.network/proof/{qHash}
+## Rules
 
-## Read in order
+- MCP, SDK, and API are ways to connect to NEUS, not separate products.
+- Summarize checks as Passed, Action needed, or Blocked.
+- Never invent proof IDs, check IDs, accounts, or URLs.
 
-1. Home: https://docs.neus.network
-2. Quickstart: https://docs.neus.network/quickstart
-3. Integration guide: https://docs.neus.network/integration
-4. JavaScript SDK: https://docs.neus.network/sdks/javascript
-5. MCP tools: https://docs.neus.network/mcp/tools
-6. API overview: https://docs.neus.network/api/overview
-7. Pricing: https://docs.neus.network/platform/pricing
-8. Technical Whitepaper: https://docs.neus.network/whitepaper
-9. Standards & interoperability: https://docs.neus.network/learn/standards
-10. CAIP-380 standard: https://docs.neus.network/learn/standards/caip-380
-11. Trust Center: https://docs.neus.network/platform/security-and-trust
+## Reference
 
-## Pricing summary
-
-- Free (Basic): 500 credits / month
-- Pro: $19.99 / month (or $199.90 / year), 10,000 credits / month
-- Enterprise: Custom, 500,000+ credits / month. Contact https://neus.network/contact?topic=Enterprise
-- Credit rate: $0.0025 per credit (USD)
-- x402 pay-per-call: when credits run short, NEUS returns HTTP 402 with a signed quote; pay (USDC or native ETH) and retry with one header.
-- Full details: https://neus.network/pricing
-
-## Verifier catalog (14 public checks)
-
-ownership-basic, ownership-social, ownership-pseudonym, ownership-dns-txt, ownership-org-oauth, proof-of-human, wallet-risk, wallet-link, nft-ownership, token-holding, contract-ownership, ai-content-moderation, agent-identity, agent-delegation
-
-## Standard
-
-NEUS is the driving reference implementation of CAIP-380 (Portable Proof), a ChainAgnostic standard at Draft status. Wallet-signed request envelopes have a deterministic SHAKE-256 hash (`qHash`), CAIP-2 chain context, and CAIP-10 / `did:pkh` identities. Their hash, DID binding, and signature can be verified without NEUS. The envelope is chain-agnostic and accepts any CAIP-2 namespace. NEUS ships EVM (EIP-191, EIP-1271, EIP-6492) and Solana (Ed25519) signing profiles today, with offline fixtures. Verifier outcomes remain part of the NEUS portable proof; session-authorized proofs are not CAIP-380 envelopes. Read the [Technical Whitepaper](https://docs.neus.network/whitepaper) for the full architecture and trust model, and [Standards & interoperability](https://docs.neus.network/learn/standards) for how NEUS uses these standards.
-
-## Audit
-
-Smart contracts were audited by SafeStack AI in March 2026. The audit completed with no critical, high, medium, or low severity findings. Details: https://docs.neus.network/platform/security-and-trust#smart-contract-audit
-
-## Partners and programs
-
-- Webacy, ZKPassport, Phala Network: integration partnerships for verification, zero-knowledge identity, and confidential compute
-- NVIDIA Inception: early-stage AI startup program
-- Google for Startups: cloud and AI startup program
-- Optimism Retro Funding Season 8: grant recipient
-
-## Optional
-
-- Examples: https://github.com/neus/network/tree/main/examples
-- Verifier schemas: https://github.com/neus/network/tree/main/docs/verifiers/schemas
-- Verifier index (machine-readable): https://github.com/neus/network/blob/main/spec/VERIFIERS.json
-- OpenAPI reference: https://docs.neus.network/api/openapi/public-api.json
-- MCP server card: https://github.com/neus/network/blob/main/mcp/npm-dist/server.json
+- Docs: https://docs.neus.network
+- SDK: https://docs.neus.network/sdks/javascript
+- MCP tools: https://docs.neus.network/mcp/tools
+- API: https://docs.neus.network/api/overview · https://api.neus.network
+- Standards: https://docs.neus.network/learn/standards
+- Solutions: https://neus.network/solutions
+- AI and automation: https://neus.network/solutions/ai-automation
+- Agent authority: https://neus.network/solutions/control-agents
+- Security: https://neus.network/solutions/security-platform
+- Analytics: https://neus.network/solutions/analytics-observability
+- Pricing: https://neus.network/pricing
+- Agent card: https://neus.network/AGENTS.md
+- Trust Center: https://neus.network/trust-center#smart-contract-audit

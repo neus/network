@@ -6,6 +6,6 @@
 | [nodejs-basic](./nodejs-basic/README.md) | Server-side proof creation and checks |
 | [guarded-agent-action](./guarded-agent-action/README.md) | Load current agent permissions and allow or deny one host action |
 
-Run the demo locally, then follow the [Quickstart](https://docs.neus.network/quickstart) to add the same trust loop to your app.
+Run the demo locally, then follow [Sell access](https://docs.neus.network/quickstart) to add the same listing loop to your app.
 
-Docs: [Docs home](https://docs.neus.network), [Quickstart](https://docs.neus.network/quickstart), [Integration](https://docs.neus.network/integration), [MCP](https://docs.neus.network/mcp/setup)
+Docs: [Start](https://docs.neus.network), [MCP](https://docs.neus.network/mcp/setup), [Hosted sign-in](https://docs.neus.network/cookbook/auth-hosted-verify), [Sell access](https://docs.neus.network/quickstart)

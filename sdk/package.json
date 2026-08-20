@@ -1,7 +1,7 @@
 {
   "name": "@neus/sdk",
   "version": "1.3.9",
-  "description": "Don't restart from zero. SDK for portable trust infrastructure, one private profile for identity, context, permissions, and proof that works across apps, agents, services, and transactions.",
+  "description": "SDK for sign-in, reusable checks, and before-action enforcement in apps and AI agents.",
   "bin": {
     "neus": "cli/neus.mjs"
   },

@@ -45,16 +45,16 @@ export const IDE_HOST_LABELS = {
 /**
  * IDE host brand logo paths.
  *
- * These four paths mirror `FIRST_PARTY_ASSETS.brandLogos.{cursor,anthropic,openai,microsoft}`
- * in the product `utils/imageUtils.ts`. This file is the shared CLI/SDK source mirrored
- * in the product repo as `utils/neusSdkMcpHosts.js`. When a logo path changes, update
- * both files in sync. The product contract test guards against drift.
+ * These four URLs mirror `FIRST_PARTY_ASSETS.brandLogos.{cursor,anthropic,openai,microsoft}`
+ * in the product `utils/imageUtils.ts` (LobeHub catalog). This file is the shared
+ * CLI/SDK source mirrored in the product repo as `utils/neusSdkMcpHosts.js`.
+ * When a logo URL changes, update both files in sync.
  */
 export const IDE_HOST_BRAND_LOGOS = {
-  cursor: '/images/brandLogos/cursor.svg',
-  claude: '/images/brandLogos/anthropic.svg',
-  codex: '/images/brandLogos/openai.svg',
-  vscode: '/images/brandLogos/microsoft.svg'
+  cursor: 'https://unpkg.com/@lobehub/icons-static-png@1.91.0/dark/cursor.png',
+  claude: 'https://unpkg.com/@lobehub/icons-static-png@1.91.0/dark/anthropic.png',
+  codex: 'https://unpkg.com/@lobehub/icons-static-png@1.91.0/dark/openai.png',
+  vscode: 'https://unpkg.com/@lobehub/icons-static-svg@1.91.0/icons/microsoft-color.svg'
 };
 
 /**

@@ -1,87 +1,67 @@
 ---
-title: "Portable Trust Infrastructure"
+title: "Control what AI agents can do before they act"
 sidebarTitle: "Home"
-description: "Don't restart from zero. NEUS is portable trust infrastructure for people and AI, one private profile for identity, context, permissions, and proof that works across apps, agents, services, and transactions."
+description: "Portable Trust Infrastructure for AI. Set what an agent may access, spend, or do, then check those limits before action."
 icon: house
 "og:image": "/images/og-default.png"
 "twitter:image": "/images/og-default.png"
 ---
 
-Every new app makes you reconnect yourself. Re-prove ownership. Reconfigure permissions. Reattach tools. NEUS collapses that cost. One private profile for your identity, context, permissions, and proof. Portable across apps, agents, services, and transactions. Built for people and AI.
+**Your AI has access. NEUS gives it authority.**
+
+Prove who controls an agent, set exactly what it can do, and check those limits before it uses a sensitive tool, moves money, or accesses protected data.
+
+Keep your current model, agent framework, sign-in, and payment stack. NEUS adds the check before action.
 
 <CardGroup cols={3}>
-  <Card title="Profile" icon="user">
-    What should persist. Identity, context, permissions, and proof in one private place.
+  <Card title="Connect an assistant" icon="plug" href="./mcp/setup">
+    One command, browser sign-in, then your first protected action.
   </Card>
-  <Card title="Provenance" icon="brackets-curly">
-    What travels. Who owns it, who approved it, and the proof any connected system can check.
+  <Card title="Protect an app action" icon="shield-check" href="./cookbook/auth-hosted-verify">
+    Use hosted sign-in, then confirm the result on your server.
   </Card>
-  <Card title="Gate" icon="shield-check">
-    What is allowed. Enforce authority before access, action, or payment.
+  <Card title="Sell gated access" icon="rocket" href="./quickstart">
+    Publish the checks and price once. Add one component to your app.
   </Card>
 </CardGroup>
 
-## Your AI shouldn't start from zero either
+**Sign-ups. Markets. Payouts. Partners.** The same check-before-action flow works across each one.
 
-Give any agent the identity, context, tools, permissions, and proofs it needs without rebuilding everything for every model or framework. Same profile. New agent. Your AI has access. NEUS gives it authority.
+## Start here
 
-## Connect in one command
+One command. Then click **Connect** in your assistant.
 
 ```bash
 npx -y -p @neus/sdk neus setup
 ```
 
-Confirm the connection is live:
+Then ask:
 
-```bash
-npx -y -p @neus/sdk neus doctor --live
-```
+> Before you take a sensitive action, use NEUS. Reuse what I already have.
 
-One setup. Same identity, provenance, and limits on every MCP client.
+NEUS answers **Passed**, **Action needed**, or **Blocked**. You now have a clear decision before the action runs.
 
-Need the agent to do it? [MCP setup](./mcp/setup).
+Need the agent to do it? [Connect NEUS](./mcp/setup).
 
-## What you can build
+## Add a check to an app
 
-<CardGroup cols={3}>
-  <Card title="Control an agent" icon="robot" href="./agents/agent-verification-flow">
-    Identity, spend caps, revocation. Enforced before action.
-  </Card>
-  <Card title="Gate and monetize" icon="rocket" href="./quickstart">
-    Gate once. Monetize every qualified visitor.
-  </Card>
-  <Card title="Ship with the SDK" icon="code" href="./sdks/overview">
-    Hosted check, server confirm, React gate.
-  </Card>
-</CardGroup>
+Keep your sign-in. Send visitors to NEUS for the check, then confirm on your server.
 
-<CardGroup cols={3}>
-  <Card title="Wire MCP tools" icon="plug" href="./mcp/overview">
-    One endpoint. Any MCP client.
-  </Card>
-  <Card title="Check before action" icon="shield-check" href="./verification/overview">
-    Run once, save the proof, reuse everywhere.
-  </Card>
-  <Card title="Read the API" icon="terminal" href="./api/overview">
-    Hosted checks, proofs, authority, billing. OpenAPI.
-  </Card>
-</CardGroup>
+[Hosted sign-in](./cookbook/auth-hosted-verify) · [JavaScript SDK](./sdks/javascript)
 
 ## How it works
 
 Verify once. Carry the proof. Enforce before action.
 
-Frameworks run tools. Models think. NEUS checks identity, provenance, and authority before sensitive actions.
-
 1. **Verify once.** Run a check through the hosted screen, MCP, or SDK.
-2. **Carry the proof.** NEUS saves the result with its status, allowed use, and expiration.
+2. **Carry the proof.** NEUS saves the result with its current status and expiration when one applies.
 3. **Enforce before action.** Connected apps require that proof before access, payment, or execution.
 
-Read the full flow in [How verification works](./verification/how-it-works), [Proof lifecycle](./verification/lifecycle), and [Proof links and versioning](./learn/proof-links). See [Standards & interoperability](./learn/standards) for how NEUS uses existing identity, authority, execution, and payment protocols.
+Read the full flow in [How verification works](./verification/how-it-works) and [Standards & interoperability](./learn/standards).
 
 ## Where NEUS sits
 
-Login gets them in. Authority decides what they do next. NEUS records that authority as a portable proof any connected app can check, so trust travels with the actor, not the app.
+Login gets them in. Authority decides what they can do next. NEUS records the completed check as a portable proof another connected app can reuse.
 
 - Keep your sign-in, identity provider, payment, and agent framework.
 - Add NEUS via SDK, API, or MCP. No replacement required.

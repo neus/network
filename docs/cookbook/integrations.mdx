@@ -4,13 +4,13 @@ description: Backend proof creation and profile access keys when Hosted Verify i
 icon: server
 ---
 
-Most products use [Quickstart](../quickstart): **VerifyGate** or **Hosted Verify**, then **`gateCheck`** on the server with the visitor’s **account address**. Use this page only when your backend creates proofs directly, or when you automate NEUS as your own profile.
+Most products use [Sell access](../quickstart) or [Hosted sign-in](./auth-hosted-verify): **VerifyGate** or **Hosted Verify**, then **`gateCheck`** on the server with the visitor’s **account address**. Use this page only when your backend creates proofs directly, or when you automate NEUS as your own profile.
 
 ## When you need this
 
 | Need | Use |
 |------|-----|
-| Visitor verifies in the browser; you only check later | [Quickstart](../quickstart). No access key |
+| Visitor verifies in the browser; you only check later | [Sell access](../quickstart). No access key |
 | Your server creates proofs for an approved user | `verifyFromApp` after one-time approval |
 | MCP, CI, or raw HTTP as **your** NEUS profile | Profile access key (`npk_*`) |
 

@@ -5,7 +5,7 @@
     "email": "dev@neus.network"
   },
   "metadata": {
-    "description": "Portable trust infrastructure for people and AI. One private profile for identity, context, permissions, and proof. Don't restart from zero.",
+    "description": "Set what AI agents can access, spend, or do, then check those limits before action.",
     "version": "1.3.9"
   },
   "plugins": [

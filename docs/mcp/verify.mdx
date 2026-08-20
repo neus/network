@@ -5,11 +5,13 @@ description: "Create a saved proof from inside an MCP session."
 icon: circle-check
 ---
 
-Use **`neus_verify`** to create a proof when the signed-in account can complete the check in-session. For steps that need a browser (OAuth, personhood, payment, wallet connect), use **[`neus_verify_or_guide`](./verify-or-guide)** instead. It returns a hosted link.
+Use **`neus_verify`** to create a proof when the signed-in account can complete the check in-session. Ownership checks finish here. Share a hosted link only when this tool returns one.
+
+For an outside login, payment, or a different account, use **[`neus_verify_or_guide`](./verify-or-guide)**.
 
 Always run **`neus_proofs_check`** first and reuse an existing proof before creating a new one.
 
-When signed in, **omit `walletAddress`**. The tool uses your profile account from `neus_context`.
+When signed in, **omit `walletAddress`**. The tool uses your profile account from `neus_context`. For `ownership-basic`, omit `owner`. The signed-in account is filled in.
 
 ## Input
 
@@ -28,12 +30,8 @@ When signed in, **omit `walletAddress`**. The tool uses your profile account fro
 { "verifierIds": ["ownership-basic"], "data": { "content": "Hello NEUS" } }
 ```
 
-## Signing flow
-
-`neus_verify` is two-phase when a signature is required. The first call returns the exact signing material once; complete it with the bound account and submit it back to finalize. Do not restart the preparation step blindly. Finalize with the material you were given.
+Signed-in sessions do not send `signature` or `signedTimestamp`. Those fields exist only when the session cannot authorize the account.
 
 ## Output
 
-A plain-language **Passed**, **Action needed**, or **Blocked** result. On success, the tool also returns the proof ID in `qHash` for your server. If a browser step is required, it returns a `next_action` link.
-
-**Prefer verify-or-guide for most assistants:** [`neus_verify_or_guide`](./verify-or-guide).
+A plain-language **Passed**, **Action needed**, or **Blocked** result. On success, the tool also returns the proof ID in `qHash` for your server. A hosted link appears only when the check needs an outside step.

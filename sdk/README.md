@@ -1,8 +1,8 @@
 # @neus/sdk
 
-Don't restart from zero. One private profile for identity, context, permissions, and proof that works across apps, agents, services, and transactions. Built for people and AI.
+Add sign-in, reusable checks, and before-action enforcement to an app or AI agent.
 
-Prove identity, ownership, and authority once. Connected gates check current state before access, payment, or execution instead of re-proving the same facts every time. Same proof, every surface.
+NEUS saves a completed check as a portable proof. Connected apps can confirm its current status before access, payment, or execution.
 
 ## Install (library)
 
@@ -16,12 +16,9 @@ No install needed:
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
-npx -y -p @neus/sdk neus doctor --live
-npx -y -p @neus/sdk neus examples
 ```
 
-Then ask your assistant: **"Use NEUS before sensitive actions. Reuse my saved proofs, check authority, and keep an audit trail."**
+Then click **Connect**. Ask: **"Before you take a sensitive action, use NEUS. Reuse what I already have."**
 
 Agent paste prompt: [MCP setup](https://docs.neus.network/mcp/setup).
 
@@ -30,7 +27,6 @@ Agent paste prompt: [MCP setup](https://docs.neus.network/mcp/setup).
 ```bash
 neus setup
 neus mount <agentId> --apply <host>
-neus doctor --live
 ```
 
 Loads the agent's verified identity, scoped authority, and host rules into the project. See [Connect Agent Context](https://docs.neus.network/agents/runtime-mount).
@@ -203,10 +199,9 @@ const client = new NeusClient({
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
 ```
 
-`neus setup` registers MCP and installs the public workflow skill. It does not open a browser. Click **Connect** in your host or run `neus auth` to sign in. When `NEUS_ACCESS_KEY` is set, setup writes that server credential instead.
+`neus setup` registers MCP and installs the public workflow skill. Click **Connect** in your host to sign in. When `NEUS_ACCESS_KEY` is set, setup writes that server credential instead.
 
 No global install? Run `npx -y -p @neus/sdk neus setup` once.
 
@@ -214,7 +209,8 @@ Marketplace install and host adapters: [MCP setup](https://docs.neus.network/mcp
 
 ## Docs
 
-- Quickstart: https://docs.neus.network/quickstart
+- Start: https://docs.neus.network
+- Sell access: https://docs.neus.network/quickstart
 - JavaScript SDK: https://docs.neus.network/sdks/javascript
 - Ownership Basic: https://docs.neus.network/verification/ownership-basic
 - Widgets: https://docs.neus.network/widgets/overview

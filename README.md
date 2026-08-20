@@ -5,15 +5,15 @@
 </p>
 
 <p align="center">
-  <strong>Don't restart from zero.</strong>
+  <strong>Your AI has access. NEUS gives it authority.</strong>
 </p>
 
 <p align="center">
-  One private profile for your identity, context, permissions, and proof. Portable across apps, agents, services, and transactions.
+  Prove who controls an agent, set exactly what it can do, and check those limits before it acts.
 </p>
 
 <p align="center">
-  <em>Built for people and AI.</em>
+  <em>Private by default. Works with any agent framework.</em>
 </p>
 
 <p align="center">
@@ -56,50 +56,24 @@ Give any agent the identity, context, tools, permissions, and proofs it needs wi
 
 ## Start building
 
-### One command for assistants
-
-The portable trust harness for AI. Bring your identity, proofs, permissions, agents, and trusted context to any MCP client. Private by default. One endpoint. One sign-in. Trust that travels.
+One command. Then click **Connect**.
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
-npx -y -p @neus/sdk neus doctor --live
 ```
 
-`neus setup` registers MCP and installs the workflow skill. `neus auth` signs you in (or click **Connect** in your host). `neus doctor --live` confirms the connection.
+Then ask:
 
-Full steps: [MCP setup](https://docs.neus.network/mcp/setup).
+> Before you take a sensitive action, use NEUS. Reuse what I already have.
 
-Then ask your assistant:
-
-> Use NEUS so my identity, provenance, and authority travel with me. Reuse proofs when you can, verify when you must, and check authority before sensitive actions.
+NEUS answers **Passed**, **Action needed**, or **Blocked**. Full steps: [MCP setup](https://docs.neus.network/mcp/setup). Hosted URL `https://mcp.neus.network/mcp`.
 
 | Path | Next step |
 | ---- | --------- |
-| AI assistants | [MCP setup](https://docs.neus.network/mcp/setup). Hosted URL `https://mcp.neus.network/mcp` |
-| First app integration | [Quickstart](https://docs.neus.network/quickstart) |
-| Reuse everywhere | [Integration guide](https://docs.neus.network/integration) |
-| React gate | [VerifyGate](https://docs.neus.network/widgets/verifygate) |
-| Server / API | [API overview](https://docs.neus.network/api/overview) |
-| Agent trust | [Agents overview](https://docs.neus.network/agents/overview) |
-
-Install **`neus-mcp`** from this repo's marketplace, or run `neus setup`. See [MCP setup](https://docs.neus.network/mcp/setup).
-
-### Add trust to an app
-
-Drop in Hosted Verify, `VerifyGate`, or the SDK when your app needs portable trust: provenance at the gate, authority before access, proofs you can audit later.
-
-- [Quickstart](https://docs.neus.network/quickstart) to register your app and ship the first proof.
-- Pattern: [prove once, reuse everywhere](https://docs.neus.network/integration).
-- [Hosted Verify](https://docs.neus.network/cookbook/auth-hosted-verify) for browser sign-in and checks.
-
-### Add trust to an agent
-
-Give agents identity and scoped authority as proofs so tools run under real limits and every action stays auditable.
-
-- [Agents overview](https://docs.neus.network/agents/overview): identity, permissions, and reusable proofs.
-- Register identity with [`agent-identity`](https://docs.neus.network/agents/agent-identity).
-- Add permissions with [`agent-delegation`](https://docs.neus.network/agents/agent-delegation).
+| Assistant | [Connect NEUS](https://docs.neus.network/mcp/setup) |
+| App | [Hosted sign-in](https://docs.neus.network/cookbook/auth-hosted-verify) |
+| Sell access | [Recipe](https://docs.neus.network/quickstart) |
+| Agent limits | [Agents](https://docs.neus.network/agents/overview) |
 
 ---
 
@@ -155,7 +129,7 @@ NEUS is under active development. Published APIs and verifier schemas may change
 
 ## Audit
 
-Smart contracts were audited by [SafeStack AI](https://safestackai.com) in March 2026. The audit completed with no critical, high, medium, or low severity findings. See the [Trust Center](https://docs.neus.network/platform/security-and-trust#smart-contract-audit) for details.
+Smart contracts were audited by [SafeStack AI](https://safestackai.com) in March 2026. The audit completed with no critical, high, medium, or low severity findings. See the [Trust Center](https://neus.network/trust-center#smart-contract-audit) for details.
 
 ## Partners and programs
 

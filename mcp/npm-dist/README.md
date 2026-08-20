@@ -10,9 +10,9 @@ Thesis: [docs.neus.network/mcp/overview](https://docs.neus.network/mcp/overview)
 
 ```bash
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus auth
-npx -y -p @neus/sdk neus doctor --live
 ```
+
+Then click **Connect**.
 
 `server.json` is the public tool catalog and OAuth discovery manifest used by MCP registries.
 

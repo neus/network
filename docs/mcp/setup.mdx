@@ -1,74 +1,56 @@
 ---
-title: "Connect NEUS anywhere"
-description: "The portable trust harness for AI. Private by default. One endpoint. Any MCP client."
+title: "Connect NEUS to your assistant"
+description: "Run one command, finish browser sign-in, and protect the first sensitive action."
 icon: code
 ---
 
-Bring your identity, proofs, permissions, agents, and trusted context to any MCP client. Private by default. One endpoint. One sign-in. Trust that travels.
+Add a check before your assistant spends, publishes, uses secrets, or calls a sensitive tool. NEUS reuses a current proof when it can and asks only for the missing step.
 
 **Hosted endpoint:** `https://mcp.neus.network/mcp`
 
-## 1. Register NEUS
+## 1. Run setup
 
 ```bash
 npx -y -p @neus/sdk neus setup
 ```
 
-This installs the public workflow skill and registers the hosted endpoint. It does not open a browser or sign you in.
+This adds the NEUS connection and the instructions your assistant needs to use it.
 
-## 2. Sign in
+## 2. Connect your account
 
-Click **Connect** in your MCP client, or run:
+Click **Connect** in your assistant and finish browser sign-in. You do not need a wallet or access key.
 
-```bash
-npx -y -p @neus/sdk neus auth
-```
+If your host cannot start sign-in, run `npx -y -p @neus/sdk neus auth`.
 
-Default sign-in is browser OAuth. No wallet required.
+## 3. Protect an action
 
-## 3. Check the connection
+Ask:
 
-```bash
-npx -y -p @neus/sdk neus doctor --live
-```
+> Before you take a sensitive action, use NEUS. Reuse what I already have.
 
-A healthy result confirms the endpoint, auth, and public tools.
+NEUS answers **Passed**, **Action needed**, or **Blocked** before the action runs.
 
-## Or paste this into any agent
-
-The agent reads it, runs the three steps, and starts carrying your authority.
+## Let your assistant run setup
 
 ```text
 # NEUS connect in one prompt
 
-You are connecting this client to NEUS so my identity, provenance, and
-authority travel with me. Follow these steps exactly.
+You are connecting this client to NEUS so it can reuse completed checks
+and confirm permission before sensitive actions.
 
-## 1. Register NEUS
-Run: npx -y -p @neus/sdk neus setup
-This installs the public workflow skill and registers the hosted MCP
-endpoint. It does not open a browser.
-
-## 2. Sign in
-Run: npx -y -p @neus/sdk neus auth
-Or click Connect in your MCP client. Default sign-in is browser OAuth.
-No wallet required.
-
-## 3. Confirm the connection
-Run: npx -y -p @neus/sdk neus doctor --live
-A healthy result confirms the endpoint, auth, and public tools.
-
-## 4. What to do next
-After setup, reuse my existing proofs before asking me to verify again.
-Before any sensitive action (spend, publish, secrets, agent tool call),
-call neus_context once, then neus_proofs_check. Summarize as
-NEUS Verify: Passed, Action needed, or Blocked.
+1. Run: npx -y -p @neus/sdk neus setup
+2. Tell me to click Connect in this client if sign-in is still needed.
+   Default sign-in is browser OAuth. No wallet. No access key.
+3. After connect, reuse my existing proofs before asking me to verify
+   again. Before any sensitive action (spend, publish, secrets, agent
+   tool call), load context once, then check proofs. Summarize as
+   NEUS Verify: Passed, Action needed, or Blocked.
 
 Canonical endpoint: https://mcp.neus.network/mcp
 Docs: https://docs.neus.network/mcp/setup
 ```
 
-## Any MCP client
+## Advanced: any MCP client
 
 Add one remote server. Your client discovers OAuth from the hosted endpoint.
 
@@ -95,7 +77,7 @@ If your client requires the spec `type` field:
 }
 ```
 
-## Connect an agent to a project
+## Advanced: connect a Trusted Agent to a project
 
 After creating a Trusted Agent on your profile, load its current identity and permissions:
 
@@ -105,14 +87,13 @@ npx -y -p @neus/sdk neus mount <agentId> --apply <host>
 
 The command writes `.neus/mount.json` and the selected host adapter. See [Connect agent context](../agents/runtime-mount).
 
-## Access keys
+## Advanced: access keys
 
 Use OAuth for interactive clients. Use a [profile access key](https://neus.network/profile?tab=account) only when browser OAuth is unavailable, such as a server or CI job.
 
 ```bash
 export NEUS_ACCESS_KEY=npk_...
 npx -y -p @neus/sdk neus setup
-npx -y -p @neus/sdk neus doctor --live
 ```
 
 Treat the key like a password. Never paste it into chat or commit it to a repository.
@@ -125,9 +106,10 @@ neus disconnect --access-key <token>
 
 ## Troubleshooting
 
-- **No tools appear:** restart the MCP client after setup, then run `neus doctor --live`.
-- **Authentication required:** click **Connect** or run `neus auth`.
+- **No tools appear:** restart the MCP client after setup.
+- **Authentication required:** click **Connect**, or run `neus auth`.
+- **Confirm the connection:** `neus doctor --live`.
 - **Agent permission missing:** create or refresh the agent permission on NEUS, then run `neus mount` again.
 - **Search-only endpoint:** use `https://mcp.neus.network/mcp`. `https://docs.neus.network/mcp` only searches documentation.
 
-Next: [Run your first guarded action](./guarded-action).
+Next: [Run your first guarded action](./guarded-action) after the first Passed.

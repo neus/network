@@ -7,8 +7,8 @@ icon: wrench
 | Topic | Detail |
 |-------|--------|
 | Session context | Call **`neus_context`** first. When signed in, it includes the current profile context. Handles signed-in and offline modes. |
-| Create in-session | **`neus_verify`** when the signed-in wallet can complete the check without a browser. |
-| Interactive | **`neus_verify_or_guide`** when a step needs a browser (OAuth, personhood, payment, wallet connect). Returns a hosted link. |
+| Create in-session | **`neus_verify`** when signed in and the check can finish here (ownership). |
+| Interactive | **`neus_verify_or_guide`** reuses a proof, then continues with **`neus_verify`** or returns a hosted link for an outside login, payment, or different account. |
 
 ## Field names
 
@@ -49,7 +49,7 @@ Same flow as [Overview](./overview).
     Create a proof in-session when possible.
   </Card>
   <Card title="Verify or guide" icon="signs-post" href="./verify-or-guide">
-    Reuse a proof or return the next hosted step.
+    Reuse a proof or return the next step.
   </Card>
   <Card title="Proofs get" icon="receipt" href="./proofs-get">
     Read proof records and current status.

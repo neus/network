@@ -47,17 +47,17 @@
     "metatags": {
       "theme-color": "#101113",
       "color-scheme": "dark",
-      "description": "Portable trust infrastructure for people and AI. One private profile for identity, context, permissions, and proof. Don't restart from zero.",
-      "og:title": "NEUS Docs | Don't restart from zero.",
-      "og:description": "Portable trust infrastructure for people and AI. One private profile for identity, context, permissions, and proof.",
+      "description": "Set what an AI agent may access, spend, or do, then check those limits before action.",
+      "og:title": "NEUS Docs | Control what AI agents can do",
+      "og:description": "Set what an AI agent may access, spend, or do, then check those limits before action.",
       "og:image": "https://docs.neus.network/images/og-default.png",
       "og:image:width": "1200",
       "og:image:height": "630",
       "og:type": "website",
       "og:site_name": "NEUS Docs",
       "twitter:card": "summary_large_image",
-      "twitter:title": "NEUS Docs | Don't restart from zero.",
-      "twitter:description": "Portable trust infrastructure for people and AI. One private profile for identity, context, permissions, and proof.",
+      "twitter:title": "NEUS Docs | Control what AI agents can do",
+      "twitter:description": "Set what an AI agent may access, spend, or do, then check those limits before action.",
       "twitter:image": "https://docs.neus.network/images/og-default.png"
     }
   },
@@ -74,19 +74,68 @@
     ],
     "primary": {
       "type": "button",
-      "label": "Open Hub",
+      "label": "Start free",
       "href": "https://neus.network/hub"
     }
   },
   "navigation": {
     "tabs": [
       {
+        "tab": "Start",
+        "groups": [
+          {
+            "group": "Start",
+            "pages": [
+              "index",
+              "mcp/setup",
+              "cookbook/auth-hosted-verify",
+              "quickstart",
+              "sdks/javascript"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Build",
         "groups": [
           {
-            "group": "Home",
+            "group": "Agents",
             "pages": [
-              "index",
+              "agents/overview",
+              "agents/concepts",
+              "agents/team-agents",
+              "agents/agent-identity",
+              "agents/agent-delegation",
+              "agents/runtime-mount",
+              "agents/agent-verification-flow",
+              "agents/named-agent-card"
+            ]
+          },
+          {
+            "group": "Recipes",
+            "pages": [
+              "mcp/guarded-action",
+              "cookbook/overview",
+              "cookbook/integrations",
+              "cookbook/connector-integrations",
+              "cookbook/domain-verification",
+              "cookbook/nft-gating",
+              "cookbook/sybil-resistance",
+              "cookbook/verifiable-agents",
+              "cookbook/verified-handles",
+              "cookbook/private-cloud-agents",
+              "widgets/overview",
+              "widgets/verifygate"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Concepts",
+        "groups": [
+          {
+            "group": "Trust",
+            "pages": [
               "verification/overview",
               "verification/how-it-works",
               "verification/lifecycle",
@@ -118,58 +167,12 @@
         ]
       },
       {
-        "tab": "Guides",
+        "tab": "Reference",
         "groups": [
           {
-            "group": "Playbooks",
-            "pages": [
-              "quickstart",
-              "cookbook/overview",
-              "cookbook/auth-hosted-verify",
-              "cookbook/integrations",
-              "cookbook/connector-integrations",
-              "cookbook/domain-verification",
-              "cookbook/nft-gating",
-              "cookbook/sybil-resistance",
-              "cookbook/verifiable-agents",
-              "cookbook/verified-handles",
-              "cookbook/private-cloud-agents"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Agents",
-        "groups": [
-          {
-            "group": "Agents",
-            "pages": [
-              "agents/overview",
-              "agents/concepts",
-              "agents/team-agents",
-              "agents/agent-identity",
-              "agents/agent-delegation",
-              "agents/runtime-mount",
-              "agents/agent-verification-flow",
-              "agents/named-agent-card"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "MCP",
-        "groups": [
-          {
-            "group": "Start",
+            "group": "MCP",
             "pages": [
               "mcp/overview",
-              "mcp/setup",
-              "mcp/guarded-action"
-            ]
-          },
-          {
-            "group": "Reference",
-            "pages": [
               "mcp/tools",
               "mcp/oauth",
               "mcp/auth",
@@ -185,37 +188,26 @@
               "mcp/agent-create",
               "mcp/secrets"
             ]
-          }
-        ]
-      },
-      {
-        "tab": "SDK",
-        "groups": [
+          },
           {
             "group": "SDK",
             "pages": [
               "sdks/overview",
-              "sdks/javascript",
               "sdks/authentication",
               "sdks/verifications",
               "sdks/error-handling",
-              "sdks/security",
-              {
-                "group": "React widgets",
-                "pages": ["widgets/overview", "widgets/verifygate"]
-              }
+              "sdks/security"
             ]
           }
         ]
       },
       {
-        "tab": "Ecosystem",
+        "tab": "Platform",
         "groups": [
           {
             "group": "Ecosystem",
             "pages": [
               "platform/overview",
-              "platform/setup",
               "platform/proofs",
               "platform/security-and-trust",
               "whitepaper"
@@ -251,6 +243,10 @@
   },
   "redirects": [
     {
+      "source": "/integration",
+      "destination": "/cookbook/integrations"
+    },
+    {
       "source": "/agents/a2a",
       "destination": "/agents/named-agent-card"
     },
@@ -268,7 +264,7 @@
     },
     {
       "source": "/choose-an-integration-path",
-      "destination": "/integration"
+      "destination": "/"
     },
     {
       "source": "/onboarding",
@@ -332,11 +328,11 @@
     },
     {
       "source": "/content/get-started/choose-an-integration-path",
-      "destination": "/integration"
+      "destination": "/"
     },
     {
       "source": "/content/get-started/integration",
-      "destination": "/integration"
+      "destination": "/cookbook/integrations"
     },
     {
       "source": "/content/get-started/brand-kit",
@@ -352,11 +348,11 @@
     },
     {
       "source": "/get-started/choose-an-integration-path",
-      "destination": "/integration"
+      "destination": "/"
     },
     {
       "source": "/get-started/integration",
-      "destination": "/integration"
+      "destination": "/cookbook/integrations"
     },
     {
       "source": "/get-started/brand-kit",
@@ -400,19 +396,23 @@
     },
     {
       "source": "/platform/hub",
-      "destination": "/platform/setup"
+      "destination": "/quickstart"
     },
     {
       "source": "/content/platform/hub",
-      "destination": "/platform/setup"
+      "destination": "/quickstart"
     },
     {
       "source": "/cookbook/hub-integrator",
-      "destination": "/platform/setup"
+      "destination": "/quickstart"
     },
     {
       "source": "/content/cookbook/hub-integrator",
-      "destination": "/platform/setup"
+      "destination": "/quickstart"
+    },
+    {
+      "source": "/platform/setup",
+      "destination": "/quickstart"
     },
     {
       "source": "/content/platform/billing",
@@ -532,11 +532,11 @@
     },
     {
       "source": "/content/ecosystems/overview",
-      "destination": "/integration"
+      "destination": "/"
     },
     {
       "source": "/ecosystems/overview",
-      "destination": "/integration"
+      "destination": "/"
     },
     {
       "source": "/ecosystems/verifiers",
@@ -616,7 +616,7 @@
     },
     {
       "source": "/how-to-prove-whats-real",
-      "destination": "/integration"
+      "destination": "/verification/how-it-works"
     },
     {
       "source": "/cookbook/server-advanced",
@@ -668,12 +668,12 @@
     "options": [
       {
         "title": "Connect an assistant",
-        "description": "Run the setup command",
+        "description": "One command. Then click Connect.",
         "icon": "plug",
         "href": "/mcp/setup"
       },
       {
-        "title": "Gate and monetize",
+        "title": "Sell access",
         "description": "Set checks and price, embed one link",
         "icon": "rocket",
         "iconType": "solid",
