@@ -55,6 +55,57 @@ for (const file of mdxFiles) {
   routes.add(pageRoute(relative));
 }
 
+function readFrontmatter(source, file) {
+  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+  if (!match) {
+    errors.push(`${path.relative(repoRoot, file)} is missing frontmatter`);
+    return null;
+  }
+
+  const fields = {};
+  for (const line of match[1].split(/\r?\n/)) {
+    const field = line.match(/^(title|description):\s*(.+?)\s*$/);
+    if (!field) continue;
+    fields[field[1]] = field[2].replace(/^(["'])([\s\S]*)\1$/, '$2').trim();
+  }
+
+  return { fields, body: source.slice(match[0].length) };
+}
+
+const uniqueFrontmatterFields = new Map([
+  ['title', new Map()],
+  ['description', new Map()],
+]);
+
+for (const file of mdxFiles) {
+  const source = fs.readFileSync(file, 'utf8');
+  const frontmatter = readFrontmatter(source, file);
+  if (!frontmatter) continue;
+
+  for (const [fieldName, seenValues] of uniqueFrontmatterFields) {
+    const value = frontmatter.fields[fieldName];
+    if (!value) {
+      errors.push(`${path.relative(repoRoot, file)} is missing frontmatter ${fieldName}`);
+      continue;
+    }
+
+    const normalizedValue = value.toLocaleLowerCase('en-US');
+    const firstFile = seenValues.get(normalizedValue);
+    if (firstFile) {
+      errors.push(
+        `Duplicate ${fieldName} "${value}": ${path.relative(repoRoot, firstFile)} and ${path.relative(repoRoot, file)}`,
+      );
+    } else {
+      seenValues.set(normalizedValue, file);
+    }
+  }
+
+  const description = frontmatter.fields.description;
+  if (description && frontmatter.body.includes(description)) {
+    errors.push(`${path.relative(repoRoot, file)} repeats its frontmatter description verbatim in the page body`);
+  }
+}
+
 const redirects = Array.isArray(config.redirects) ? config.redirects : [];
 const redirectSources = new Set(redirects.map(row => row.source));
 for (const redirect of redirects) {

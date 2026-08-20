@@ -7,27 +7,23 @@ icon: house
 "twitter:image": "/images/og-default.png"
 ---
 
-Portable Proof carries verified identity, authority, and action evidence across apps, agents, and networks.
+NEUS runs supported checks and saves each current result as a Portable Proof. Connected apps read that proof before access, payment, or execution.
 
-NEUS provides the hosted infrastructure to create, verify, enforce, and audit those proofs. Keep your current sign-in, identity provider, payment stack, model, and agent framework.
+The receiving product decides what it accepts and enforces the result.
 
-The receiving product owns the decision and enforces it.
-
-Choose the shortest integration path for the decision your product already needs to make.
+Choose the integration path that matches the decision your product needs to make.
 
 <CardGroup cols={3}>
-  <Card title="Connect an assistant" icon="plug" href="./mcp/setup">
-    Add the hosted MCP endpoint, sign in, then protect an action.
+  <Card title="Set up MCP" icon="plug" href="./mcp/setup">
+    Load your NEUS profile and proofs inside a supported assistant.
   </Card>
   <Card title="Add Hosted Verify" icon="shield-check" href="./cookbook/auth-hosted-verify">
-    Use hosted sign-in, then confirm the result on your server.
+    Open a hosted flow for supported identity, ownership, risk, or permission checks.
   </Card>
   <Card title="Sell protected access" icon="rocket" href="./quickstart">
     Publish the checks and price once. Add one component to your app.
   </Card>
 </CardGroup>
-
-**Sign-ups. Markets. Payouts. Partners.** The same check-before-action flow works across each one.
 
 ## Connect an AI assistant
 
@@ -43,15 +39,7 @@ NEUS answers **Passed**, **Action needed**, or **Blocked**. You now have a clear
 
 Continue with [MCP setup](./mcp/setup) and [the NEUS trust stack for MCP](./mcp/overview).
 
-## Add a check to an app
-
-Keep your sign-in. Send visitors to NEUS for the check, then confirm on your server.
-
-[Hosted sign-in](./cookbook/auth-hosted-verify) · [JavaScript SDK](./sdks/javascript)
-
-## How it works
-
-Verify once. Carry the proof. Enforce before action.
+## Create, carry, and enforce a proof
 
 1. **Verify once.** Run a check through the hosted screen, MCP, or SDK.
 2. **Carry the proof.** NEUS saves the result with its current status and expiration when one applies.
@@ -69,6 +57,6 @@ Login gets them in. Authority decides what they can do next. NEUS records the co
 
 See how teams put this to work in [Solutions](https://neus.network/solutions).
 
-## Status
+## Release status
 
 NEUS is under active development. Published APIs and verifier schemas may change between minor versions before the long-term stability freeze. We version everything we ship and document every breaking change in the [changelog](https://github.com/neus/network/blob/main/CHANGELOG.md).
