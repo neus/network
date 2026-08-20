@@ -1,19 +1,15 @@
-<h1 align="center">Portable Trust Infrastructure</h1>
+<h1 align="center">NEUS Network</h1>
 
 <p align="center">
-  <img src="./docs/images/neus-social-card.png" alt="NEUS Network social card" width="640" />
+  <strong>Portable Trust Infrastructure for Humans and AI.</strong>
 </p>
 
 <p align="center">
-  <strong>Your AI has access. NEUS gives it authority.</strong>
+  Turn supported identity, ownership, risk, and permission checks into Portable Proofs for profiles, product gates, paid access, and AI agents.
 </p>
 
 <p align="center">
-  Prove who controls an agent, set exactly what it can do, and check those limits before it acts.
-</p>
-
-<p align="center">
-  <em>Private by default. Works with any agent framework.</em>
+  <em>Run a check once. Save the result. Reuse it where accepted.</em>
 </p>
 
 <p align="center">
@@ -26,7 +22,7 @@
 
 <p align="center">
   <a href="#why-neus"><strong>Why NEUS</strong></a>
-  | <a href="#start-building"><strong>Start building</strong></a>
+  | <a href="#choose-a-path"><strong>Choose a path</strong></a>
   | <a href="#live-surfaces"><strong>Live surfaces</strong></a>
   | <a href="#support"><strong>Support</strong></a>
 </p>
@@ -35,26 +31,21 @@
 
 ## Why NEUS
 
-Every new app makes you reconnect yourself. Rebuild identity. Re-prove ownership. Reconfigure permissions. Reattach tools. Create another isolated audit trail. Starting over every time is the tax every app, agent, and transaction pays.
+People and products repeat the same identity, ownership, risk, and permission work in every new system. NEUS saves supported results as Portable Proofs so a connected product can evaluate them under its own rules.
 
-NEUS collapses that cost. One private profile holds what you've proven and what you're allowed to do. Carry it across apps, agents, services, and transactions. Any connected system can check it when it matters.
+Use one proof model for profiles, product gates, paid access, and AI agents. A proof is reusable only when the receiving product accepts its source and the proof still meets its policy.
 
-A proof is something you already earned. Who someone is, what they own, what they are allowed to do. Put it on a profile, require it at a gate, or check it from your API. Same proof, every surface.
-
-### Your AI shouldn't start from zero either
-
-Give any agent the identity, context, tools, permissions, and proofs it needs without rebuilding everything for every model or framework. Same profile. New agent. Your AI has access. NEUS gives it authority.
+NEUS does not replace authentication, specialist verification providers, application policy, payment processing, agent runtimes, or complete audit logs. The integration must call the check and enforce the result on the protected path.
 
 | Need | What you get with NEUS |
 | ---- | ------------------------ |
-| Stop re-proving the same facts in every product | One portable proof apps and agents can reuse |
-| Carry identity and ownership with the actor | Profiles and ownership proofs that travel across gates |
-| Authorize actions with clear limits | Scoped permissions, current status, and enforce-before-act checks |
-| Keep provenance with people and AI | Live proofs in the editor, product, and API |
-| Audit who did what, and under which authority | Proof pages, stable references, and reviewable history |
-| Gate once. Monetize every qualified visitor | Published gates own the checks, price, and sign-in |
+| Reuse a completed check | A proof with source, status, scope, and expiry |
+| Keep proofs in one profile | Private-by-default proof management and selective sharing |
+| Add verification to an app | Hosted sign-in, API, SDK, and React widgets |
+| Sell protected access | Published checks, price, hosted checkout, and a server confirmation |
+| Set limits on an AI agent | Owner, allowed and denied actions, spend limit, expiry, and revocation |
 
-## Start building
+## Choose a path
 
 One command. Then click **Connect**.
 
@@ -64,9 +55,9 @@ npx -y -p @neus/sdk neus setup
 
 Then ask:
 
-> Before you take a sensitive action, use NEUS. Reuse what I already have.
+> Show my NEUS profile and current proofs. Do not create anything.
 
-NEUS answers **Passed**, **Action needed**, or **Blocked**. Full steps: [MCP setup](https://docs.neus.network/mcp/setup). Hosted URL `https://mcp.neus.network/mcp`.
+After the connection is visible, test a protected action. NEUS answers **Passed**, **Action needed**, or **Blocked** when a check is requested. Full steps: [MCP setup](https://docs.neus.network/mcp/setup). Hosted URL `https://mcp.neus.network/mcp`.
 
 | Path | Next step |
 | ---- | --------- |
@@ -88,7 +79,7 @@ NEUS answers **Passed**, **Action needed**, or **Blocked**. Full steps: [MCP set
 | [Widgets](https://docs.neus.network/widgets/overview) | `VerifyGate` and `ProofBadge` for React products |
 | [API](https://docs.neus.network/api/overview) | Server reads, checks, verifier catalog, and verification endpoints |
 | [Agents](https://docs.neus.network/agents/overview) | Agent identity, scoped authority, and audit-ready proofs |
-| [MCP](https://docs.neus.network/mcp/overview) | Portable identity, provenance, and authority for any client. `neus setup`; registry metadata: [`@neus/mcp-server`](https://www.npmjs.com/package/@neus/mcp-server) |
+| [MCP](https://docs.neus.network/mcp/overview) | Profile, proof, and permission checks for supported MCP clients. `neus setup`; registry metadata: [`@neus/mcp-server`](https://www.npmjs.com/package/@neus/mcp-server) |
 | [Examples](./examples) | Runnable app and agent samples |
 | [Verifier catalog](https://docs.neus.network/verification/verifiers) | Live check IDs and inputs |
 

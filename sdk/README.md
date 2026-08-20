@@ -1,6 +1,6 @@
 # @neus/sdk
 
-Add sign-in, reusable checks, and before-action enforcement to an app or AI agent.
+Add hosted checks, Portable Proofs, product gates, paid access, and agent permissions to an app.
 
 NEUS saves a completed check as a portable proof. Connected apps can confirm its current status before access, payment, or execution.
 
@@ -10,7 +10,7 @@ NEUS saves a completed check as a portable proof. Connected apps can confirm its
 npm install @neus/sdk
 ```
 
-## Connect any MCP client
+## Connect a supported MCP client
 
 No install needed:
 
@@ -18,7 +18,7 @@ No install needed:
 npx -y -p @neus/sdk neus setup
 ```
 
-Then click **Connect**. Ask: **"Before you take a sensitive action, use NEUS. Reuse what I already have."**
+Then click **Connect**. Ask: **"Show my NEUS profile and current proofs. Do not create anything."**
 
 Agent paste prompt: [MCP setup](https://docs.neus.network/mcp/setup).
 
@@ -36,7 +36,7 @@ Loads the agent's verified identity, scoped authority, and host rules into the p
 | Topic | Link |
 | ----- | ---- |
 | Setup, JSON snippets, and the connect prompt | [MCP setup](https://docs.neus.network/mcp/setup) |
-| Portable trust harness | [MCP overview](https://docs.neus.network/mcp/overview) |
+| Permission checks for assistants | [MCP overview](https://docs.neus.network/mcp/overview) |
 | Host action decision | [First guarded action](https://docs.neus.network/mcp/guarded-action) |
 | Discovery URLs | [Discovery and endpoints](https://docs.neus.network/mcp/endpoints) |
 
@@ -48,7 +48,7 @@ Prefer `neus setup` over hand-editing config files so every host stays on **`htt
 - Server checks before access, rewards, payments, or actions
 - React gates with `VerifyGate`
 - Agent identity, controller-approved authority, and per-payment limits
-- MCP setup so assistants carry identity, provenance, and authority on every client
+- MCP setup so supported clients can access the same profile, proofs, and permissions
 
 ## Hosted Verify
 

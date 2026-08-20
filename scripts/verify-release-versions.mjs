@@ -25,6 +25,7 @@ const canonicalPlugin = readJson('plugins/neus-mcp/.cursor-plugin/plugin.json');
 const surfaces = {
   'sdk/package.json': readJson('sdk/package.json').version,
   'sdk/package-lock.json': readJson('sdk/package-lock.json').version,
+  'docs/openapi/public-api.json': readJson('docs/openapi/public-api.json').info?.version,
   'mcp/npm-dist/package.json': mcpPackage.version,
   'mcp/npm-dist/server.json': mcpServer.version,
   'plugins/neus-mcp/.cursor-plugin/plugin.json': readJson('plugins/neus-mcp/.cursor-plugin/plugin.json').version,
