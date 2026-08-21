@@ -16,7 +16,7 @@ Register the hosted remote, then click **Connect**:
 
 `https://mcp.neus.network/mcp`
 
-Ask: **"Show my NEUS profile and current proofs. Do not create anything."**
+Ask: **"Reuse what I already have. Before a sensitive action, check my current proofs."**
 
 Optional terminal installer (writes that URL and the public workflow skill):
 
@@ -24,7 +24,7 @@ Optional terminal installer (writes that URL and the public workflow skill):
 npx -y -p @neus/sdk neus setup
 ```
 
-Agent paste prompt: [MCP setup](https://docs.neus.network/mcp/setup).
+Full steps: [MCP setup](https://docs.neus.network/mcp/setup).
 
 ## Connect an agent to a project
 

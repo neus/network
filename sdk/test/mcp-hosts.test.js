@@ -63,9 +63,10 @@ describe('mcp-hosts', () => {
     );
   });
 
-  it('builds Codex-specific auth command', () => {
+  it('builds Codex-specific auth command and host-connect setup for Cursor', () => {
     expect(buildAuthCommandForClient('codex')).toContain('--client codex');
-    expect(buildAuthCommandForClient('cursor')).not.toContain('--client');
+    expect(buildAuthCommandForClient('cursor')).toContain('neus setup');
+    expect(buildAuthCommandForClient('cursor')).not.toContain('neus auth');
   });
 
   it('maps product hosts to CLI clients', () => {

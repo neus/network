@@ -8,21 +8,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Fixed
 
-- **Cursor setup no longer tells you to run `neus auth`.** `neus auth` is `neus-cli` loopback into `~/.neus/mcp-tokens.json`. Cursor Local OAuth lives in the host secret store. If Local shows Logout and Unauthorized, click Logout, then Connect. Cloud is a separate Cursor session.
-- **CLI finds the real Cursor plugin cache.** Detection now includes `~/.cursor/plugins/cache/<publisher>/neus-mcp/` (official `cursor-public`, marketplace checkouts, and private installs), not only `cache/neus/neus-mcp`.
-- **CLI skips `~/.cursor/mcp.json` when the plugin registers MCP**, and removes a leftover user `neus` entry so marketplace Install and `neus setup` cannot both create a server.
-
-### Added
-
-- **Cursor marketplace one-click Connect.** The `neus-mcp` plugin ships a Cursor-native `mcp.json` (URL only) and `.cursor-plugin/plugin.json` points `mcpServers` at that file, the same Install → Connect path as Linear, Stripe, and Google Drive.
+- Host Connect is the interactive sign-in path. If the host shows Logout and Unauthorized, click Logout, then Connect. `neus auth --oauth` writes the CLI token store only.
+- CLI finds the plugin cache under `~/.cursor/plugins/cache/<publisher>/neus-mcp/` and skips a user `neus` entry when the plugin already registers MCP.
 
 ### Changed
 
-- **Public MCP and plugin docs lead with the hosted MCP remote.** Setup is `https://mcp.neus.network/mcp` plus host Connect. `npx neus setup` is the optional terminal installer. Host names appear only where install or sign-in actually differs: Cursor marketplace dual-register and Local/Cloud sessions, Codex `neus auth --client codex`, Cursor OAuth callbacks, and `--apply` host values.
-- **MCP discovery now leads with The portable trust harness.** Server card and plugin copy use that AI label, then the existing before-action sentence. Company docs keep Portable Trust Infrastructure for Humans and AI.
-- **`publishToHub` docs no longer say the proof becomes discoverable on a profile.** That option records the proof on the hub chain. Visibility stays on privacy and display settings.
-- **`neus auth` without `--oauth` uses host Connect** for Cursor, VS Code, and Claude Code. Codex still uses `codex mcp login`. `--oauth` remains the explicit CLI token store.
-- **`neus doctor --live` no longer treats `~/.neus` as Cursor Local.** URL-only Cursor config is host OAuth, not a CLI session.
+- Public first-run is `https://mcp.neus.network/mcp` plus host Connect. `npx neus setup` is optional.
+- `publishToHub` records the proof on the hub chain. Visibility stays on privacy and display settings.
 
 ## [1.3.9] - 2026-08-13
 
@@ -72,7 +64,7 @@ npx -y -p @neus/sdk@1.3.8 neus doctor --live
 
 ### Fixed
 
-- **Restored marketplace click-install for Cursor.** The `neus-mcp` plugin ships a Cursor-native `.mcp.json` again, so clicking **Install** registers NEUS and signs you in, the same one-click experience as Linear, Stripe, and other marketplace plugins. The CLI defers to the plugin when present (no duplicate entry, no hard-fail).
+- **Restored marketplace click-install for Cursor.** The `neus-mcp` plugin ships a Cursor-native `.mcp.json` again, so clicking **Install** registers the hosted MCP URL. **Connect** in the host signs you in. The CLI defers to the plugin when present (no duplicate entry, no hard-fail).
 - **OAuth `invalid_target` on hosted MCP.** Normalized the RFC 8707 `resource` parameter in the authorize and token endpoints so clients that canonicalize the URL (adding a trailing slash) are accepted instead of rejected.
 
 ### Upgrade

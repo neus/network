@@ -88,6 +88,7 @@
             "pages": [
               "index",
               "mcp/setup",
+              "cookbook/private-cloud-agents",
               "cookbook/auth-hosted-verify",
               "quickstart",
               "sdks/javascript"
@@ -102,6 +103,7 @@
             "group": "Agents",
             "pages": [
               "agents/overview",
+              "cookbook/private-cloud-agents",
               "agents/concepts",
               "agents/team-agents",
               "agents/agent-identity",
@@ -123,7 +125,6 @@
               "cookbook/sybil-resistance",
               "cookbook/verifiable-agents",
               "cookbook/verified-handles",
-              "cookbook/private-cloud-agents",
               "widgets/overview",
               "widgets/verifygate"
             ]
@@ -667,8 +668,8 @@
     "display": "toc",
     "options": [
       {
-        "title": "Connect an assistant",
-        "description": "One command. Then click Connect.",
+        "title": "Connect NEUS",
+        "description": "Add the endpoint, sign in, and reuse your current proofs.",
         "icon": "plug",
         "href": "/mcp/setup"
       },

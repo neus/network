@@ -37,7 +37,7 @@ Publish once. One listing owns the checks, price, and hosted sign-in. Your app a
     const client = new NeusClient();
     const result = await client.gateCheck({
       gateId: 'gate_your-app-name',
-      address: user.accountAddress, // from Hosted Verify / stored proof subject
+      address: user.accountAddress, // from hosted sign-in / stored proof subject
     });
 
     if (!result.data?.gate?.allRequiredSatisfied) {

@@ -44,7 +44,7 @@ NEUS Verify: Blocked. A required trust condition was not satisfied. Next: Do not
 
 ## Hard rules
 
-- Proofs stay **offchain by default**. Do not prompt for wallet connection or a blockchain record unless the user asks.
+- Proofs stay off the chain unless the user asks for a blockchain record. Do not prompt for a wallet otherwise.
 - Use proof IDs only from tool responses. Prefer “proof ID” / “portable proof” in user text.
 - Store secrets only via **`neus_secret_create`**. Confirm stored name + proof ID. Never paste tokens into chat.
 - Use live check IDs from **`neus_context`** / **`neus_verifiers_catalog`**. Do not hardcode a second catalog.

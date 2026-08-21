@@ -1,12 +1,29 @@
 ---
-title: MCP Tools Overview
-description: Reuse-first MCP flow, address fields, and tool reference.
+title: MCP tools
+description: Reuse a current proof before you create another.
 icon: wrench
 ---
 
+Call **`neus_context`** once. Reuse a current proof before you create another.
+
+| Job | Tool | What it does |
+|---|---|---|
+| Start | `neus_context` | Signed-in profile, available checks, and the recommended flow. |
+| List checks | `neus_verifiers_catalog` | Required inputs and supported networks. |
+| Reuse a proof | `neus_proofs_check` | Read-only. Reports whether a current proof already satisfies the request. |
+| Finish a missing check | `neus_verify_or_guide` | Reuses a proof, or returns the next step. |
+| Create or refresh a proof | `neus_verify` | Creates the proof after a check is needed. |
+| Read a proof | `neus_proofs_get` | Current proof records and status. |
+| Create a Trusted Agent | `neus_agent_create` | Identity and permissions for a named agent. |
+| Confirm the agent is ready | `neus_agent_link` | Matching identity and permission proofs, or one setup step. |
+| Load the agent | `neus_agent_mount` | Identity, permissions, skills, and current settings. |
+| Store a secret | `neus_secret_create` | Encrypted Vault secret. |
+| List secrets | `neus_secret_list` | Stored names and details. Never the secret itself. |
+| Revoke a secret | `neus_secret_revoke` | Removes a stored secret by proof ID. |
+
 | Topic | Detail |
 |-------|--------|
-| Session context | Call **`neus_context`** first. When signed in, it includes the current profile context. Handles signed-in and offline modes. |
+| Session context | Call **`neus_context`** first. After Connect it includes the signed-in profile. |
 | Create in-session | **`neus_verify`** when signed in and the check can finish here (ownership). |
 | Interactive | **`neus_verify_or_guide`** reuses a proof, then continues with **`neus_verify`** or returns a hosted link for an outside login, payment, or different account. |
 
@@ -36,8 +53,8 @@ Same flow as [Overview](./overview).
 ## Reference pages
 
 <CardGroup cols={2}>
-  <Card title="Session start" icon="plug" href="./context">
-    Load profile, verifiers, and workflow once per session.
+  <Card title="Context" icon="plug" href="./context">
+    Load profile, checks, and workflow once per session.
   </Card>
   <Card title="Catalog" icon="list-tree" href="./verifiers-catalog">
     Live verifier schemas and required inputs.

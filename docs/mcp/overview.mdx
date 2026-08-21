@@ -1,41 +1,56 @@
 ---
-title: "Portable Trust Harness for AI"
+title: "NEUS MCP"
 sidebarTitle: "MCP"
-description: "Bring your NEUS profile, checks, Portable Proofs, agent permissions, and private context to any supported MCP client."
+description: "The portable trust harness for AI. Profile, proofs, permissions, and private context in any MCP client."
 icon: plug
 "og:image": "/images/og-mcp.png"
 "twitter:image": "/images/og-mcp.png"
 ---
 
-Bring the NEUS trust stack into any supported MCP client: your profile, identity and ownership checks, Portable Proofs, agent permissions, and private Vault context.
-
-MCP connects the assistant to tools and context. NEUS supplies portable trust across those connections. Keep your model, agent framework, sign-in, and application policy.
-
-## Connect
+The portable trust harness for AI. NEUS MCP makes your profile, proofs, permissions, and private context available in a client.
 
 Register the hosted remote, then click **Connect**:
 
 `https://mcp.neus.network/mcp`
 
-The host discovers OAuth from that endpoint. Use a marketplace plugin or registry listing when the host offers one. From a terminal, `npx -y -p @neus/sdk neus setup` writes the same URL.
+Use a marketplace plugin or registry listing when the host offers one. `npx -y -p @neus/sdk neus setup` writes the same URL from a terminal.
 
 Then ask:
 
-> Before you take a sensitive action, use NEUS. Reuse what I already have.
+> Reuse what I already have. Before a sensitive action, check my current proofs.
 
-NEUS answers **Passed**, **Action needed**, or **Blocked** before the action runs.
+NEUS answers **Passed**, **Action needed**, or **Blocked**.
 
-## Share proof. Not private data.
+## Tools
 
-One endpoint. One sign-in. Trust that travels.
+Call `neus_context` once. Reuse a current proof before you create another.
 
-What carries between assistants:
+| Job | Tool | What it does |
+|---|---|---|
+| Start | `neus_context` | Signed-in profile, available checks, and the recommended flow. Call once. |
+| List checks | `neus_verifiers_catalog` | Required inputs and supported networks. |
+| Reuse a proof | `neus_proofs_check` | Read-only. Reports whether a current proof already satisfies the request. |
+| Finish a missing check | `neus_verify_or_guide` | Reuses a proof, or returns the next step. |
+| Create or refresh a proof | `neus_verify` | Creates the proof after a check is needed. Signed-in ownership finishes here. |
+| Read a proof | `neus_proofs_get` | Current proof records and status. Request the body only when you need it. |
+| Create a Trusted Agent | `neus_agent_create` | Identity and permissions for a named agent. |
+| Confirm the agent is ready | `neus_agent_link` | Matching identity and permission proofs, or one setup step. |
+| Load the agent | `neus_agent_mount` | Identity, permissions, skills, and current settings. |
+| Store a secret | `neus_secret_create` | Encrypted Vault secret. Confirm the name and proof ID. |
+| List secrets | `neus_secret_list` | Stored names and details. Never the secret itself. |
+| Revoke a secret | `neus_secret_revoke` | Removes a stored secret by proof ID. |
 
-- Your profile, agent identities, and current permissions
+Field names and per-tool pages: [MCP tools](./tools).
+
+## Privacy
+
+NEUS returns the check result and the proof. It does not return the private data used to complete the check. Proofs are private by default. The client or runtime must enforce that result.
+
+What you can reuse across clients:
+
+- Your profile and current permissions
 - Completed checks that are still valid
-- Portable Proofs another connected product can confirm
-- Private Vault context when you explicitly allow the client to use it
+- Proofs another connected product can confirm
+- Vault context when you allow it
 
-NEUS returns the check result and proof, not the private data used to complete the check. Proofs are private by default. The client or runtime must enforce that result.
-
-Next: [Connect NEUS](./setup), then [protect your first action](./guarded-action).
+[Connect NEUS](./setup). To load a Trusted Agent into a project, see [Connect agent context](../agents/runtime-mount). For a laptop, server, or confidential VM, see [Private Cloud Trust Harness](../cookbook/private-cloud-agents).

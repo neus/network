@@ -2,11 +2,14 @@
 
 > Portable Trust Infrastructure for Humans and AI. Portable Proof carries identity, authority, and action evidence across apps, agents, and networks.
 
-AI-native: The portable trust harness for AI. One profile for checks, Portable Proofs, permissions, and private context.
+The portable trust harness for AI. Private Cloud Trust Harness. Portable trusted agents. One profile for checks, Portable Proofs, permissions, and private context.
+
+Live Private Cloud Trust Harness: https://phala.com/posts/neusphalabuildagenttrustlayer
+NEUS proof: https://neus.network/proof/0x9dbf361cca234f26b2fbbd5a6ffb53f6154630dfe58300fa7ac9ad299ba43e73
 
 ## Start
 
-Canonical start: https://docs.neus.network
+Docs: https://docs.neus.network
 Assistant setup: https://docs.neus.network/mcp/setup · https://neus.network/install
 App check: https://docs.neus.network/cookbook/auth-hosted-verify
 Hosted MCP: https://mcp.neus.network/mcp

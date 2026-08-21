@@ -1788,6 +1788,7 @@ export class NeusClient {
    * @param {string} [params.walletAddress] Wallet bound to the proof (required without a session cookie)
    * @param {string} [params.paymentCheckoutSessionId] Stripe checkout session id (card rail)
    * @param {string} [params.paymentTxHash] USDC payment transaction hash (wallet rail)
+   * @param {object} [params.accessGrant] Buyer-approved listing access when the snapshot includes requestedAccess
    * @returns {Promise<object>} `{ success, data: { gateId, qHash, fulfillment, successReturnUrl? } }`
    */
   async fulfillGate(params = {}) {
@@ -1806,6 +1807,9 @@ export class NeusClient {
     if (paymentCheckoutSessionId) body.paymentCheckoutSessionId = paymentCheckoutSessionId;
     const paymentTxHash = String(params.paymentTxHash || '').trim();
     if (paymentTxHash) body.paymentTxHash = paymentTxHash;
+    if (params.accessGrant && typeof params.accessGrant === 'object' && !Array.isArray(params.accessGrant)) {
+      body.accessGrant = params.accessGrant;
+    }
 
     const response = await this._makeRequest(
       'POST',

@@ -565,6 +565,13 @@
     paymentCheckoutSessionId?: string;
     /** USDC payment transaction hash for paid gates (wallet rail). */
     paymentTxHash?: string;
+    /** Buyer-approved listing access. Required when the gate snapshot includes requestedAccess. */
+    accessGrant?: {
+      resources?: Array<{ kind: string; id: string }>;
+      connectionQHash?: string;
+      connectedAccountId?: string;
+      toolkitSlug?: string;
+    };
   }
 
   export interface GateFulfillmentResult {

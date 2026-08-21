@@ -1,13 +1,15 @@
 ---
-title: Private cloud agents
-sidebarTitle: Private cloud agents
-description: Run agents on a laptop, server, private cloud, or confidential VM while keeping the same NEUS identity, permissions, proofs, context, and Vault.
-icon: shield-check
+title: Private Cloud Trust Harness
+sidebarTitle: Private Cloud Trust Harness
+description: The portable trust harness for AI on a laptop, server, private cloud, or confidential VM. Same identity, permissions, proofs, context, and Vault.
+icon: cloud
 ---
 
-Compute is already portable. Frameworks make orchestration portable. The trust state has not been. Identity, permissions, and proof history stay trapped in whichever environment the agent was set up in.
+This is the **Private Cloud Trust Harness**: portable trusted agents that keep one identity, one authority, and one history across environments.
 
-NEUS fixes that. The agent connects to the same endpoint from wherever it runs.
+Live story: [NEUS × Phala](https://phala.com/posts/neusphalabuildagenttrustlayer) · [NEUS proof](https://neus.network/proof/0x9dbf361cca234f26b2fbbd5a6ffb53f6154630dfe58300fa7ac9ad299ba43e73)
+
+The agent connects to the same NEUS endpoint from a laptop, server, private cloud, or confidential VM.
 
 **What travels with it:**
 - **Identity:** who the agent is
@@ -50,7 +52,7 @@ Redeploy the same compose file on a different backend. AWS, GCP, Azure, Phala Cl
 
 ### 4. Verify the trust chain
 
-- **NEUS** provides the agent identity and permission proofs. Verify with `neus_proofs_get` or `GET /api/v1/proofs/{qHash}`.
+- **NEUS** provides the agent identity and permission proofs. Verify with `neus_proofs_get` or `GET /api/v1/proofs/{qHash}` (proof ID).
 - **The access key** ties the deployed agent to a NEUS Profile. The profile owns the identity, permissions, and proof history.
 - **The environment** can optionally prove it is genuine (see confidential compute below).
 
@@ -113,21 +115,21 @@ Any agent that speaks MCP can connect. Package it as a Docker Compose, deploy an
 
 ## Portability
 
-A laptop today, a VPS tomorrow, a production cluster next week. The trust state stays the same. Confidential compute can attest each environment on top.
+Move the same agent from a laptop to a VPS or production cluster. The trust state stays the same. Confidential compute can attest each environment.
 
 ## Related
 
 <CardGroup cols={2}>
   <Card title="MCP overview" icon="plug" href="../mcp/overview">
-    The trust layer.
+    The portable trust harness for AI.
   </Card>
   <Card title="MCP setup" icon="code" href="../mcp/setup">
-    Access keys and headless setup.
+    Add the endpoint and click Connect.
   </Card>
   <Card title="Agent setup" icon="robot" href="./verifiable-agents">
     Agent identity and authority.
   </Card>
-  <Card title="Phala dstack" icon="external-link" href="https://phala.com/dstack">
-    A confidential compute runtime.
+  <Card title="NEUS × Phala" icon="external-link" href="https://phala.com/posts/neusphalabuildagenttrustlayer">
+    Live Private Cloud Trust Harness.
   </Card>
 </CardGroup>

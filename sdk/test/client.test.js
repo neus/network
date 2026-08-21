@@ -573,7 +573,12 @@ describe('NeusClient', () => {
       const out = await client.fulfillGate({
         gateId: 'gate_demo',
         qHash,
-        walletAddress: EVM_A
+        walletAddress: EVM_A,
+        accessGrant: {
+          connectedAccountId: 'ca_1',
+          toolkitSlug: 'github',
+          resources: [{ kind: 'repository', id: 'neus/network' }]
+        }
       });
 
       expect(out.success).toBe(true);
@@ -585,7 +590,12 @@ describe('NeusClient', () => {
       expect(init.method).toBe('POST');
       expect(JSON.parse(init.body)).toMatchObject({
         qHash,
-        walletAddress: EVM_A
+        walletAddress: EVM_A,
+        accessGrant: {
+          connectedAccountId: 'ca_1',
+          toolkitSlug: 'github',
+          resources: [{ kind: 'repository', id: 'neus/network' }]
+        }
       });
     });
   });

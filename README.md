@@ -53,13 +53,13 @@ Add the hosted MCP remote, then click **Connect**.
 
 Then ask:
 
-> Show my NEUS profile and current proofs. Do not create anything.
+> Reuse what I already have. Before a sensitive action, check my current proofs.
 
-After the connection is visible, test a protected action. NEUS answers **Passed**, **Action needed**, or **Blocked** when a check is requested. Full steps: [MCP setup](https://docs.neus.network/mcp/setup). Hosted URL `https://mcp.neus.network/mcp`.
+NEUS answers **Passed**, **Action needed**, or **Blocked**. Full steps: [MCP setup](https://docs.neus.network/mcp/setup).
 
 | Path | Next step |
 | ---- | --------- |
-| Assistant | [Connect NEUS](https://docs.neus.network/mcp/setup) |
+| MCP client | [Connect NEUS](https://docs.neus.network/mcp/setup) |
 | App | [Hosted sign-in](https://docs.neus.network/cookbook/auth-hosted-verify) |
 | Sell access | [Recipe](https://docs.neus.network/quickstart) |
 | Agent limits | [Agents](https://docs.neus.network/agents/overview) |
@@ -71,13 +71,13 @@ After the connection is visible, test a protected action. NEUS answers **Passed*
 | Surface | Use it for |
 | ------- | ---------- |
 | [Product](https://neus.network) | Profiles, gates, and hosted product UX |
-| [Hosted Verify](https://neus.network/verify) | Browser verification for people and orgs |
+| [Hosted sign-in](https://neus.network/verify) | Browser verification for people and orgs |
 | [Proofs](https://docs.neus.network/platform/proofs) | Portable records of identity, authority, and outcomes |
 | [SDK](https://docs.neus.network/sdks/javascript) ([@neus/sdk](https://www.npmjs.com/package/@neus/sdk)) | Issue, poll, and check proofs from your app |
 | [Widgets](https://docs.neus.network/widgets/overview) | `VerifyGate` and `ProofBadge` for React products |
 | [API](https://docs.neus.network/api/overview) | Server reads, checks, verifier catalog, and verification endpoints |
-| [Agents](https://docs.neus.network/agents/overview) | Agent identity, scoped authority, and audit-ready proofs |
-| [MCP](https://docs.neus.network/mcp/overview) | Profile, identity and ownership checks, Portable Proofs, agent permissions, and private context in supported MCP clients. Endpoint `https://mcp.neus.network/mcp`; registry metadata: [`@neus/mcp-server`](https://www.npmjs.com/package/@neus/mcp-server) |
+| [Agents](https://docs.neus.network/agents/overview) | Agent identity, permissions, and proof history |
+| [MCP](https://docs.neus.network/mcp/overview) | Profile, checks, proofs, and permissions in any MCP client. Registry metadata: [`@neus/mcp-server`](https://www.npmjs.com/package/@neus/mcp-server) |
 | [Examples](./examples) | Runnable app and agent samples |
 | [Verifier catalog](https://docs.neus.network/verification/verifiers) | Live check IDs and inputs |
 
@@ -99,7 +99,7 @@ Public docs, SDK (`@neus/sdk`), MCP registry package (`@neus/mcp-server`), widge
 
 ## Open standard
 
-NEUS is the driving reference implementation of [CAIP-380 (Portable Proof)](https://standards.chainagnostic.org/CAIPs/caip-380) ([PR](https://github.com/ChainAgnostic/CAIPs/pull/380)), a ChainAgnostic standard at Draft status. Wallet-signed request envelopes have a deterministic SHAKE-256 hash (`qHash`), CAIP-2 chain context, and CAIP-10 / `did:pkh` identities. Their hash, DID binding, and signature can be checked without NEUS; verifier outcomes remain part of the NEUS portable proof. The envelope is chain-agnostic. Any CAIP-2 namespace. Signing follows the chain's native scheme. See [Standards & interoperability](https://docs.neus.network/learn/standards), the [offline examples](./examples/caip-380), the [CAIP-380 docs](https://docs.neus.network/learn/standards/caip-380), and the [Technical Whitepaper](https://docs.neus.network/whitepaper).
+NEUS is a reference implementation of [CAIP-380 (Portable Proof)](https://standards.chainagnostic.org/CAIPs/caip-380) ([PR](https://github.com/ChainAgnostic/CAIPs/pull/380)), a ChainAgnostic standard at Draft status. Wallet-signed request envelopes use a deterministic SHAKE-256 hash (`qHash`), CAIP-2 chain context, and CAIP-10 / `did:pkh` identities. The hash, DID binding, and signature can be checked without NEUS. Verifier outcomes remain part of the NEUS portable proof. The envelope works with any CAIP-2 namespace and that chain’s native signing scheme. See [Standards & interoperability](https://docs.neus.network/learn/standards), the [offline examples](./examples/caip-380), the [CAIP-380 docs](https://docs.neus.network/learn/standards/caip-380), and the [Technical Whitepaper](https://docs.neus.network/whitepaper).
 
 ## Support
 
@@ -114,7 +114,7 @@ NEUS is the driving reference implementation of [CAIP-380 (Portable Proof)](http
 
 ## Status
 
-NEUS is under active development. Published APIs and verifier schemas may change between minor versions before the long-term stability freeze. We version everything we ship and document every breaking change in the [changelog](./CHANGELOG.md).
+NEUS is under active development. Published APIs and verifier schemas may change between minor versions. Breaking changes are listed in the [changelog](./CHANGELOG.md).
 
 ## Audit
 

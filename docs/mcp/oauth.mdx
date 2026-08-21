@@ -7,7 +7,7 @@ icon: shield-check
 NEUS MCP uses **OAuth 2.0 Authorization Code with PKCE** for MCP clients. The user signs in on NEUS (same passkey/wallet flow as the product).
 
 <Note>
-  **Default install:** `neus setup`. Use this page for custom MCP hosts, security review, standalone sign-in, or raw HTTP integration.
+  **Default:** add `https://mcp.neus.network/mcp` and click **Connect**. Optional terminal installer: `npx -y -p @neus/sdk neus setup`. Use this page for custom MCP hosts, security review, standalone sign-in, or raw HTTP integration.
 </Note>
 
 ## Flow overview
@@ -51,7 +51,7 @@ GET https://mcp.neus.network/.well-known/oauth-protected-resource/mcp
 }
 ```
 
-When the MCP server receives an unauthenticated request:
+`tools/list` and `ping` stay public for marketplace listing. Unauthenticated `initialize` and every `tools/call` return:
 
 ```http
 HTTP/1.1 401 Unauthorized
@@ -88,7 +88,7 @@ GET https://neus.network/.well-known/oauth-authorization-server
 
 ## Authorization
 
-The example below shows the **NEUS SDK CLI** loopback flow (`neus auth`). Host MCP clients use the same endpoint with the `client_id` issued to them by DCR and their own loopback `redirect_uri`. Never use `neus-cli` for host clients.
+The example below shows the **NEUS SDK CLI** loopback flow (`neus auth --oauth`). Host MCP clients use the same endpoint with the `client_id` issued to them by DCR and their own loopback `redirect_uri`. Never use `neus-cli` for host clients.
 
 ```http
 GET https://neus.network/oauth/authorize
@@ -198,12 +198,12 @@ Revoking an access token also invalidates all associated refresh tokens.
 
 | `client_id` | Use |
 |-------------|-----|
-| `neus-cli` | NEUS SDK CLI (`neus auth`): loopback redirect on `127.0.0.1` only |
+| `neus-cli` | NEUS SDK CLI (`neus auth --oauth`): loopback redirect on `127.0.0.1` only |
 | `neus-mcp-host` | Host MCP clients: issued by DCR for non-loopback flows |
 
-Hosted MCP clients use a **URL-only** MCP config. The host discovers OAuth metadata via `/.well-known/oauth-protected-resource`, runs its own Dynamic Client Registration (DCR) against `/oauth/register`, and owns its PKCE + silent-refresh lifecycle. DCR returns `neus-cli` only for the CLI loopback `http://127.0.0.1:<port>/callback`. Cursor (`/callback/<id>`, `localhost:8787`, or `https://www.cursor.com/agents/mcp/oauth/callback`) and other hosts receive `neus-mcp-host`. Do not pin `neus-cli` for host-owned OAuth.
+Hosted MCP clients use a **URL-only** MCP config. The host discovers OAuth metadata via `/.well-known/oauth-protected-resource`, runs its own Dynamic Client Registration (DCR) against `/oauth/register`, and owns its PKCE + silent-refresh lifecycle. DCR returns `neus-cli` only for the CLI loopback `http://127.0.0.1:<port>/callback`. Every other redirect URI receives `neus-mcp-host`. Do not pin `neus-cli` for host-owned OAuth.
 
-The OAuth examples above show `client_id=neus-cli` because they document the CLI loopback path (`neus auth`). Host clients receive their own `client_id` from DCR and send that instead, plus the same `resource=https://mcp.neus.network/mcp`.
+The OAuth examples above show `client_id=neus-cli` because they document the CLI loopback path (`neus auth --oauth`). Host clients receive their own `client_id` from DCR and send that instead, plus the same `resource=https://mcp.neus.network/mcp`.
 
 ## Security properties
 

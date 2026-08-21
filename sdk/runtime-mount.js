@@ -402,7 +402,7 @@ export async function resolveRuntimeBundleFromMcp(input) {
     signal: input.signal
   });
   if (!ctx.ok) {
-    throw new Error(ctx.error || 'Could not load profile context. Run `neus auth` and retry.');
+    throw new Error(ctx.error || 'Could not load profile context. Run `neus auth --oauth` or set NEUS_ACCESS_KEY and retry.');
   }
   const ctxPayload = /** @type {Record<string, unknown>} */ (ctx.payload || {});
   const profileContext =
@@ -410,7 +410,7 @@ export async function resolveRuntimeBundleFromMcp(input) {
       ? /** @type {Record<string, unknown>} */ (ctxPayload.profileContext)
       : ctxPayload;
   if (profileContext.status === 'auth_required') {
-    throw new Error('Profile authentication required. Run `neus auth` or set NEUS_ACCESS_KEY.');
+    throw new Error('Profile authentication required. Run `neus auth --oauth` or set NEUS_ACCESS_KEY.');
   }
 
   const principal = /** @type {Record<string, unknown>} */ (profileContext.principal || {});

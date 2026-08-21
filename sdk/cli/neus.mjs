@@ -274,9 +274,9 @@ function describeClientResult(command, result) {
   if (result.changed) return 'updated';
   if (result.authConfigured) return 'signed in';
   if (result.configured && isHostConnectClient(result.client) && result.authConfigured === false) {
-    return 'registered , sign in in the host MCP panel';
+    return 'registered. Sign in in the host MCP panel';
   }
-  if (result.configured) return 'configured , sign in to connect';
+  if (result.configured) return 'configured. Sign in to connect';
   return 'not configured';
 }
 
@@ -312,7 +312,6 @@ function isHostConnectClient(client) {
 
 function hostConnectHint(clients) {
   const unique = [...new Set((clients || []).filter(Boolean))];
-  const hasCursor = unique.includes('cursor');
   const hasCodex = unique.includes('codex');
   const hostClients = unique.filter(isHostConnectClient);
   const codexHint = ' For Codex, run `npx -y -p @neus/sdk neus auth --client codex`.';
@@ -322,22 +321,11 @@ function hostConnectHint(clients) {
       nextCommand: 'npx -y -p @neus/sdk neus auth --client codex'
     };
   }
-  if (hasCursor) {
-    return {
-      hint:
-        'In Cursor: Settings → MCP → neus. Local and Cloud are separate sessions. If Local shows Logout and Unauthorized, click Logout, then Connect.' +
-        (hasCodex ? codexHint : '') +
-        ' Do not run neus auth for Cursor.',
-      nextCommand: null
-    };
-  }
   if (hostClients.length) {
-    const labels = hostClients.map(client => IDE_HOST_LABELS[client] || client).join(', ');
     return {
       hint:
-        `Click Connect on neus in ${labels}.` +
-        (hasCodex ? codexHint : '') +
-        ' Do not run neus auth unless the host cannot start sign-in.',
+        'Click Connect on neus in the host MCP panel. If the host shows Logout and Unauthorized, click Logout, then Connect.' +
+        (hasCodex ? codexHint : ''),
       nextCommand: null
     };
   }
@@ -348,7 +336,7 @@ function hostConnectHint(clients) {
     };
   }
   return {
-    hint: 'Run `npx -y -p @neus/sdk neus auth --oauth` only for the CLI token store, not for Cursor.',
+    hint: 'Run `npx -y -p @neus/sdk neus auth --oauth` only for the CLI token store.',
     nextCommand: 'npx -y -p @neus/sdk neus auth --oauth'
   };
 }
@@ -494,8 +482,8 @@ function resolveLiveCredential(options, scope, cwd) {
   const installed = readInstalledAccessKey(scope, cwd);
   if (installed) return { key: installed, source: 'mcp-header' };
   // Browser OAuth stores the access token in ~/.neus/mcp-tokens.json (not in
-  // the IDE config, which is URL-only for IDE-native OAuth). Doctor may probe
-  // with that CLI session, but it is not Cursor Local / Cloud OAuth.
+  // the host MCP config, which is URL-only for host-owned OAuth). Doctor may
+  // probe with that CLI session; it is not the host MCP session.
   const store = readTokenStore();
   if (store?.accessToken && !isTokenExpired(store)) {
     return { key: store.accessToken, source: 'cli-store' };
@@ -883,6 +871,8 @@ function pluginDirRegistersMcp(pluginDir) {
 }
 
 function hostPluginRegistersMcp(host) {
+  // Defer CLI writes only when a plugin already ships mcp.json.
+  // Claude and Codex plugins are skill-only; the CLI remains their registrar.
   if (host !== 'cursor') return false;
   return cursorNeusMcpPluginDirs().some(pluginDirRegistersMcp);
 }
@@ -1037,7 +1027,7 @@ function printUsage(exitCode = 0) {
     '',
     'Commands:',
     '  setup         Configure hosted NEUS MCP for supported clients',
-    '  auth          Sign in (host Connect for Cursor/VS Code/Claude; Codex login; --oauth for CLI store)',
+    '  auth          Sign in (host Connect, or --oauth for the CLI store)',
     '  refresh       Rotate the stored OAuth token using the saved refresh token (requires `neus auth --oauth` first)',
     '  disconnect    Disconnect NEUS MCP (revoke the stored OAuth token or access key)',
     '  status        Show current NEUS MCP setup',
@@ -2247,7 +2237,7 @@ async function runRefresh(options = {}) {
       writeCliLine('');
       logStep('ok', 'token', `rotated; valid until ${expiresAtDate}`);
       writeCliLine('');
-      writeGuidanceLine('Skip this if your IDE handles OAuth (Cursor URL-only config). It is an escape hatch for clients whose own refresh is absent or buggy.');
+      writeGuidanceLine('Skip this if the host handles OAuth. It is an escape hatch for clients whose own refresh is absent or buggy.');
     }
     return refreshed;
   } catch (err) {
@@ -2354,7 +2344,7 @@ async function runSetup(options) {
       logStep(
         'ok',
         skill.hosts.join(','),
-        'neus-mcp plugin bundles the trust skill , no user-level copy needed'
+        'neus-mcp plugin bundles the trust skill. No user-level copy needed'
       );
     } else {
       logStep(
@@ -2366,8 +2356,8 @@ async function runSetup(options) {
   }
   writeCliLine('');
 
-  // Setup installs config + skill, then stops. Cursor / VS Code / Claude sign-in
-  // is host Connect (Logout first if Unauthorized). Codex uses `neus auth --client
+  // Setup installs config + skill, then stops. Host sign-in is Connect
+  // (Logout first if Unauthorized). Codex uses `neus auth --client
   // codex`. `neus auth --oauth` is the CLI token store only.
   if (!accessKey && !options.dryRun) {
     const follow = hostConnectHint(clients);
@@ -2580,23 +2570,23 @@ async function runDoctor(options) {
   if (inspected.some(result => result.pluginConflict)) {
     writeCliLine(paint('Registration', 'cyan'));
     writeGuidanceLine(
-      'Plugin and ~/.cursor/mcp.json both register neus. Remove the user mcp.json entry; keep one registration.'
+      'Plugin and a user MCP config both register neus. Remove the extra user entry; keep one registration.'
     );
     payload.hasErrors = true;
   }
   const hasCodex = inspected.some(result => result.client === 'codex');
   writeCliLine(paint('Profile connection', 'cyan'));
   if (options.live && payload.mcp) {
-    if (credential.source === 'cli-store' && clients.includes('cursor')) {
+    if (credential.source === 'cli-store' && hasUrlOnlyOAuth) {
       writeGuidanceLine(
-        'CLI ~/.neus session is not Cursor Local. Cloud Connected is a different Cursor session.'
+        'CLI ~/.neus session is not the host MCP session.'
       );
     }
     if (!liveAccessKey) {
       if (hasUrlOnlyOAuth) {
         writeGuidanceLine(follow.hint);
         if (payload.mcp.reachable) {
-          writeGuidanceLine('Hosted MCP is reachable. CLI cannot see Cursor Local OAuth.');
+          writeGuidanceLine('Hosted MCP is reachable. CLI cannot see host OAuth.');
         } else {
           writeGuidanceLine(
             'MCP server was not reachable. Check your network or run `npx -y -p @neus/sdk neus doctor --live` again.'

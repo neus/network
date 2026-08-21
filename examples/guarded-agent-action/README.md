@@ -10,7 +10,7 @@ npx -y -p @neus/sdk neus setup
 npx -y -p @neus/sdk neus mount <agentId> --apply <host>
 ```
 
-Click **Connect** after setup. Use `neus auth` only if the host cannot start sign-in. `<host>` is `cursor`, `claude`, or `codex`.
+Click **Connect** after setup. `<host>` is the adapter your CLI accepts (`cursor`, `claude`, or `codex`).
 
 ## Check an action
 

@@ -9,15 +9,16 @@ icon: house
 
 NEUS runs supported checks and saves each current result as a Portable Proof. Connected apps read that proof before access, payment, or execution.
 
-The receiving product decides what it accepts and enforces the result.
+The receiving product owns the decision and enforces the result.
 
-Choose the integration path that matches the decision your product needs to make.
-
-<CardGroup cols={3}>
-  <Card title="Set up MCP" icon="plug" href="./mcp/setup">
-    Load your NEUS profile and proofs inside a supported assistant.
+<CardGroup cols={2}>
+  <Card title="Connect NEUS" icon="plug" href="./mcp/setup">
+    Add the endpoint, sign in, and reuse your current proofs.
   </Card>
-  <Card title="Add Hosted Verify" icon="shield-check" href="./cookbook/auth-hosted-verify">
+  <Card title="Private Cloud Agents" icon="cloud" href="./cookbook/private-cloud-agents">
+    Portable trusted agents on a laptop, server, or confidential VM. Identity, permissions, proofs, and Vault travel with them.
+  </Card>
+  <Card title="Add hosted sign-in" icon="shield-check" href="./cookbook/auth-hosted-verify">
     Open a hosted flow for supported identity, ownership, risk, or permission checks.
   </Card>
   <Card title="Sell protected access" icon="rocket" href="./quickstart">
@@ -25,19 +26,19 @@ Choose the integration path that matches the decision your product needs to make
   </Card>
 </CardGroup>
 
-## Connect an AI assistant
+## Connect NEUS
 
-**The portable trust harness for AI.** Add the hosted MCP endpoint, click **Connect**, and the same profile, checks, Portable Proofs, permissions, and private context are available in that client.
+Add the hosted MCP endpoint, click **Connect**, and reuse your profile, proofs, permissions, and private context in that client.
 
 `https://mcp.neus.network/mcp`
 
 Then ask:
 
-> Before you take a sensitive action, use NEUS. Reuse what I already have.
+> Reuse what I already have. Before a sensitive action, check my current proofs.
 
-NEUS answers **Passed**, **Action needed**, or **Blocked**. You now have a clear decision before the action runs.
+NEUS answers **Passed**, **Action needed**, or **Blocked**.
 
-Continue with [MCP setup](./mcp/setup) and [the NEUS trust stack for MCP](./mcp/overview).
+Continue with [MCP setup](./mcp/setup) and [MCP overview](./mcp/overview).
 
 ## Create, carry, and enforce a proof
 
@@ -49,14 +50,14 @@ Read the full flow in [How verification works](./verification/how-it-works) and 
 
 ## Where NEUS sits
 
-Login gets them in. Authority decides what they can do next. NEUS records the completed check as a portable proof another connected app can reuse.
+Sign-in gets the user in. Authority decides what they can do next. NEUS records the completed check as a portable proof another connected app can reuse.
 
 - Keep your sign-in, identity provider, payment, and agent framework.
-- Add NEUS via SDK, API, or MCP. No replacement required.
-- No wallet required. Work accounts, domains, social accounts, and passkeys all work. Wallet checks are optional.
+- Add NEUS via SDK, API, or MCP.
+- Work accounts, domains, social accounts, and passkeys all work. Wallet checks are optional.
 
-See how teams put this to work in [Solutions](https://neus.network/solutions).
+Browse [Solutions](https://neus.network/solutions).
 
 ## Release status
 
-NEUS is under active development. Published APIs and verifier schemas may change between minor versions before the long-term stability freeze. We version everything we ship and document every breaking change in the [changelog](https://github.com/neus/network/blob/main/CHANGELOG.md).
+NEUS is under active development. Published APIs and verifier schemas may change between minor versions. Breaking changes are listed in the [changelog](https://github.com/neus/network/blob/main/CHANGELOG.md).

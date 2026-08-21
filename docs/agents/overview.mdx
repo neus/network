@@ -1,13 +1,13 @@
 ---
 title: Agents
 sidebarTitle: Agents
-description: Set what each agent may do and spend. Connected apps enforce that before a sensitive action runs.
+description: Portable trusted agents. Set what each agent may do and spend. Connected apps enforce that before a sensitive action runs.
 icon: robot
 "og:image": "/images/og-agents.png"
 "twitter:image": "/images/og-agents.png"
 ---
 
-Name the agent. Set what it may do and how much it may spend. Connected runtimes enforce that authority before access or a sensitive tool runs.
+Portable trusted agents. Name the agent. Set what it may do and how much it may spend. Connected runtimes enforce that authority before access or a sensitive tool runs.
 
 | Need | How |
 |------|-----|
@@ -42,10 +42,7 @@ Quick setup presets (`assistant` default, `advisor`, `operator`, `payments`) are
 
 <Steps>
   <Step title="Connect">
-    ```bash
-    neus setup
-    ```
-    Registers hosted NEUS MCP. Click **Connect** in the host.
+    Add `https://mcp.neus.network/mcp`, then click **Connect**. Optional: `npx -y -p @neus/sdk neus setup`.
   </Step>
   <Step title="Check">
     Call **`neus_context`**, then **`neus_agent_link`** with the agent wallet.
@@ -71,6 +68,9 @@ Quick setup presets (`assistant` default, `advisor`, `operator`, `payments`) are
 ## Next
 
 <CardGroup cols={2}>
+  <Card title="Private Cloud Trust Harness" icon="cloud" href="../cookbook/private-cloud-agents">
+    Same trust state on a laptop, server, or confidential VM.
+  </Card>
   <Card title="Agent setup" icon="diagram-project" href="./agent-verification-flow">
     Step-by-step order.
   </Card>
@@ -90,6 +90,6 @@ Quick setup presets (`assistant` default, `advisor`, `operator`, `payments`) are
     Load identity and permissions into a project.
   </Card>
   <Card title="MCP setup" icon="plug" href="../mcp/setup">
-    OAuth or access key.
+    Add the endpoint and click Connect.
   </Card>
 </CardGroup>

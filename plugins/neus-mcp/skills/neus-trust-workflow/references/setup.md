@@ -10,9 +10,7 @@ Register the hosted MCP remote, then click **Connect** in the host:
 
 If the host already has a NEUS marketplace plugin or registry listing, use that Connect path. Do not also write a second `neus` entry in the host MCP config.
 
-Use `neus auth --client codex` only for Codex. Use `neus auth --oauth` only for the CLI token store.
-
-Cursor-only: Settings → MCP → neus. Local and Cloud are separate sessions. If Local shows Logout and Unauthorized, click Logout, then Connect. Do not run `neus auth` — that writes `~/.neus` and Cursor ignores it. If a leftover `neus` entry exists in `~/.cursor/mcp.json`, remove it.
+If Connect is missing, use the host’s own MCP login after the endpoint is registered.
 
 Optional terminal installer (writes the same URL and this workflow skill when the plugin is not installed):
 

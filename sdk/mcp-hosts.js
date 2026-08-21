@@ -83,18 +83,17 @@ function normalizeAccessKey(accessKey) {
  * - `npk_…` Profile access keys are durable (never expire). Written as a static
  *   `Authorization: Bearer npk_…` header. Used for servers, CI, and automation
  *   where browser OAuth is unavailable.
- * - OAuth (default for Cursor, VS Code, Claude Code, Codex): we return a URL-only
- *   config (no `headers`). The IDE MCP client discovers OAuth metadata from the
- *   server's `401 + WWW-Authenticate` challenge, then runs its own DCR + PKCE +
- *   silent-refresh lifecycle (matching Linear, GitHub, Notion). The access token
- *   is a short-lived JWT refreshed silently by the host for up to 30 days via the
- *   `offline_access` refresh token , the session is long-lived, the access token
- *   is not
+ * - OAuth (default): we return a URL-only config (no `headers`). The host
+ *   discovers OAuth metadata from the server's `401 + WWW-Authenticate`
+ *   challenge, then runs its own DCR + PKCE + silent-refresh lifecycle.
+ *   The access token is a short-lived JWT refreshed silently by the host
+ *   for up to 30 days via the `offline_access` refresh token; the session
+ *   is long-lived, the access token is not.
  *
  * A raw OAuth access token (JWT) is never written as a static Bearer header: IDE
  * MCP clients cannot refresh a static header, and writing one would create a
  * session that dies when the access token expires. URL-only config is the correct
- * OAuth path and is what `neus setup`/`neus auth` produce for browser-OAuth clients.
+ * OAuth path and is what `neus setup` produces for host-Connect clients.
  *
  * @param {string | null | undefined} accessKey
  * @returns {{ type: 'http'; url: string; headers?: { Authorization: string } }}
@@ -147,7 +146,7 @@ export function buildAuthCommandForClient(client) {
   if (client === 'codex') {
     return `${NEUS_AUTH_NPX} --client codex`;
   }
-  return NEUS_AUTH_NPX;
+  return NEUS_SETUP_NPX;
 }
 
 /**

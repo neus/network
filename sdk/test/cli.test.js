@@ -423,7 +423,8 @@ describe('neus CLI', () => {
     expect(payload.authRequired).toBe(true);
     expect(payload.nextCommand).toBeNull();
     expect(payload.hostSignInHint).toContain('Logout');
-    expect(payload.hostSignInHint).toContain('Do not run neus auth for Cursor');
+    expect(payload.hostSignInHint).toContain('Connect');
+    expect(payload.hostSignInHint).not.toContain('Do not run neus auth');
 
     const cursorConfig = JSON.parse(
       await fs.readFile(path.join(context.homeDir, '.cursor', 'mcp.json'), 'utf8')
@@ -585,13 +586,14 @@ describe('neus CLI', () => {
     expect(payload.prompts).toHaveLength(6);
   });
 
-  it('tells Cursor to Logout then Connect instead of neus auth', async () => {
+  it('tells host-connect clients to Logout then Connect instead of neus auth', async () => {
     const context = await makeCliContext();
 
     const { stderr } = await runCli(['setup', '--client', 'cursor'], context);
 
     expect(stderr).toContain('Logout');
-    expect(stderr).toContain('Do not run neus auth for Cursor');
+    expect(stderr).toContain('Connect');
+    expect(stderr).not.toContain('Do not run neus auth');
     expect(stderr).not.toContain('or click Connect in your host');
   });
 
@@ -603,7 +605,8 @@ describe('neus CLI', () => {
 
     expect(stderr).toBe('');
     expect(payload.authMethod).toBe('host-oauth');
-    expect(payload.hostSignInHint).toContain('Do not run neus auth for Cursor');
+    expect(payload.hostSignInHint).toContain('Connect');
+    expect(payload.hostSignInHint).not.toContain('Do not run neus auth');
     expect(payload.results[0].authConfigured).toBe(false);
 
     const cursorConfig = JSON.parse(

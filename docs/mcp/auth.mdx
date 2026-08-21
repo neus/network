@@ -1,22 +1,27 @@
 ---
-title: MCP Auth & Security
-description: OAuth 2.0 with PKCE for MCP clients, access key fallback, and token security.
+title: MCP auth
+description: Host Connect for interactive MCP clients, access key fallback, and token security.
 icon: lock
 ---
 
-Compatible interactive MCP clients authenticate through **OAuth 2.0 with PKCE**. The host can refresh the session for up to 30 days.
+Interactive MCP clients sign in through the host. Register `https://mcp.neus.network/mcp`, click **Connect**, and finish browser sign-in. The host runs OAuth 2.0 with PKCE and can refresh the session for up to 30 days.
 
 For servers, CI, and environments that cannot open a browser, use a durable profile access key instead.
 
-## OAuth sign-in
+## Sign in
+
+1. Register the hosted remote once (plugin, registry listing, or URL-only MCP config).
+2. Click **Connect** in the host MCP panel.
+
+Optional terminal installer (writes the same URL):
 
 ```bash
-neus auth
+npx -y -p @neus/sdk neus setup
 ```
 
-The CLI opens your browser to the NEUS hosted sign-in page. After you authenticate with a passkey or wallet, the CLI receives an MCP access token through the standard OAuth code exchange.
+See [Connect NEUS](./setup).
 
-OAuth-capable clients discover NEUS metadata automatically from the hosted MCP server:
+OAuth-capable hosts discover NEUS metadata from the hosted MCP server:
 
 ```text
 GET https://mcp.neus.network/.well-known/mcp.json
@@ -26,10 +31,10 @@ GET /.well-known/oauth-protected-resource/mcp
 GET https://neus.network/.well-known/oauth-authorization-server
 → /oauth/authorize (HostedLoginFlow)
 → Token exchange
-→ Authenticated MCP session (Bearer on MCP requests)
+→ Authenticated MCP session (Bearer on protected MCP requests)
 ```
 
-When a protected resource returns `401` + `WWW-Authenticate`, OAuth-capable clients follow that metadata to sign you in and refresh tokens. Anonymous proof checking is still available through the web UI and the HTTP API.
+`tools/list` and `ping` stay public so marketplaces can list tools. Unauthenticated `initialize` and every `tools/call` return `401` + `WWW-Authenticate` so the host shows **Connect**, stores the access token, and sends it on later calls. A GET probe on `/mcp` is not a login challenge.
 
 For full OAuth mechanics, see [MCP OAuth](./oauth).
 
@@ -45,12 +50,12 @@ neus setup --access-key <npk_...>
 
 | Mode | Best for |
 |------|----------|
-| **OAuth** | Interactive clients: browser sign-in, no manual keys, silent refresh for 30 days |
+| **Host Connect (OAuth)** | Interactive clients: browser sign-in, no manual keys, silent refresh for 30 days |
 | **Access key (`npk_*`)** | Servers, CI, and automation with stable environment variables. Durable and never expires |
 
-Both modes send the same `Authorization: Bearer <token>` header against the same NEUS Profile and Account. `npk_*` keys are long-lived credentials. OAuth sessions are long-lived too. Your MCP host refreshes the short-lived access token silently for up to 30 days via the `offline_access` refresh token, exactly like Linear, GitHub, and Notion MCP hosts.
+Both modes send the same `Authorization: Bearer <token>` header against the same NEUS Profile and Account. `npk_*` keys are long-lived credentials. OAuth sessions are long-lived too. The host refreshes the short-lived access token silently for up to 30 days via the `offline_access` refresh token.
 
-Hosted MCP requires authentication on every request. Anonymous proof checking and verifier catalog reads are available through the web UI and the HTTP API.
+Anonymous proof checking and verifier catalog reads stay available through the web UI and the HTTP API.
 
 ## Authorization header
 
@@ -72,14 +77,14 @@ Disconnect revokes OAuth MCP tokens through the OAuth revocation endpoint. For `
 
 ## MCP server auth challenge
 
-When a client requests a protected resource without credentials, some hosts return:
+When a client calls a **protected** method without credentials, the server returns:
 
 ```http
 HTTP/1.1 401 Unauthorized
 WWW-Authenticate: Bearer resource_metadata="https://mcp.neus.network/mcp/.well-known/oauth-protected-resource", scope="neus:core neus:profile neus:secrets"
 ```
 
-Clients that support MCP OAuth follow that metadata to start browser sign-in. You can also connect with URL-only config and sign in through your host, or run **`neus auth`** from the CLI.
+Hosts that support MCP OAuth follow that metadata and open Connect. Stateless streamable HTTP has no GET SSE stream: GET and DELETE on `/mcp` return **405** with no `WWW-Authenticate`. Do not treat a GET probe as a sign-in prompt.
 
 ## Interactive verification flows
 
@@ -89,8 +94,8 @@ Clients that support MCP OAuth follow that metadata to start browser sign-in. Yo
 
 | Topic | Rule |
 | --- | --- |
-| OAuth tokens | Stored by MCP client, never in query strings |
-| Access keys | Server or IDE MCP configuration only |
+| OAuth tokens | Stored by the MCP host, never in query strings |
+| Access keys | Server or automation configuration only. Never in interactive host `mcp.json` when Connect works |
 | Browser exposure | Never expose tokens or access keys in browser code |
 | Rotation | Re-issue access keys from [Access Keys](https://neus.network/profile?tab=account) if exposed |
 | Refresh tokens | Rotated on each use, old token invalidated |
